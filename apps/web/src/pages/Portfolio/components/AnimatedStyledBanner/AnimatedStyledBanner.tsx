@@ -1,9 +1,9 @@
-import gridDarkSvg from 'assets/images/portfolio-connect-wallet-banner-grid/dark.svg'
-import gridLightSvg from 'assets/images/portfolio-connect-wallet-banner-grid/light.svg'
-import { AnimatedEmblems } from 'pages/Portfolio/components/AnimatedStyledBanner/AnimatedEmblems'
-import { CONNECT_WALLET_BANNER_HEIGHT } from 'pages/Portfolio/constants'
 import { Flex, useIsDarkMode, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
+import gridDarkSvg from '~/assets/images/portfolio-connect-wallet-banner-grid/dark.svg'
+import gridLightSvg from '~/assets/images/portfolio-connect-wallet-banner-grid/light.svg'
+import { AnimatedEmblems } from '~/pages/Portfolio/components/AnimatedStyledBanner/AnimatedEmblems'
+import { CONNECT_WALLET_BANNER_HEIGHT } from '~/pages/Portfolio/constants'
 
 export function AnimatedStyledBanner({ children }: { children: React.ReactNode | React.ReactNode[] }) {
   const isDarkMode = useIsDarkMode()

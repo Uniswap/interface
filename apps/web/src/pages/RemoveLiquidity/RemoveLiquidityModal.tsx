@@ -1,19 +1,19 @@
-import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
-import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
-import { useModalState } from 'hooks/useModalState'
-import { RemoveLiquidityForm } from 'pages/RemoveLiquidity/RemoveLiquidityForm'
-import {
-  DecreaseLiquidityStep,
-  RemoveLiquidityModalContextProvider,
-  useRemoveLiquidityModalContext,
-} from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
-import { RemoveLiquidityReview } from 'pages/RemoveLiquidity/RemoveLiquidityReview'
-import { RemoveLiquidityTxContextProvider } from 'pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { useTranslation } from 'react-i18next'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
+import { useLPSlippageValue } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
+import { LiquidityModalHeader } from '~/components/Liquidity/LiquidityModalHeader'
+import { useModalState } from '~/hooks/useModalState'
+import { RemoveLiquidityForm } from '~/pages/RemoveLiquidity/RemoveLiquidityForm'
+import {
+  DecreaseLiquidityStep,
+  RemoveLiquidityModalContextProvider,
+  useRemoveLiquidityModalContext,
+} from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import { RemoveLiquidityReview } from '~/pages/RemoveLiquidity/RemoveLiquidityReview'
+import { RemoveLiquidityTxContextProvider } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
 
 function RemoveLiquidityModalInner() {
   const { closeModal } = useModalState(ModalName.RemoveLiquidity)

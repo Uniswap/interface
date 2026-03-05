@@ -2,18 +2,17 @@ import { renderHook } from '@testing-library/react'
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import type { MockedFunction } from 'vitest'
 
-jest.mock('ui/src/hooks/useDeviceInsets', () => ({
-  useDeviceInsets: jest.fn(),
+vi.mock('ui/src/hooks/useDeviceInsets', () => ({
+  useDeviceInsets: vi.fn(),
 }))
-jest.mock('uniswap/src/features/settings/hooks', () => ({
-  useTestnetModeBannerHeight: jest.fn(),
+vi.mock('uniswap/src/features/settings/hooks', () => ({
+  useTestnetModeBannerHeight: vi.fn(),
 }))
 
-const mockUseDeviceInsets = useDeviceInsets as jest.MockedFunction<typeof useDeviceInsets>
-const mockUseTestnetModeBannerHeight = useTestnetModeBannerHeight as jest.MockedFunction<
-  typeof useTestnetModeBannerHeight
->
+const mockUseDeviceInsets = useDeviceInsets as MockedFunction<typeof useDeviceInsets>
+const mockUseTestnetModeBannerHeight = useTestnetModeBannerHeight as MockedFunction<typeof useTestnetModeBannerHeight>
 
 const mocks = {
   insets: {
@@ -33,7 +32,7 @@ const mocks = {
 
 describe('useAppInsets', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseDeviceInsets.mockReturnValue(mocks.insets)
     mockUseTestnetModeBannerHeight.mockReturnValue(mocks.testnetBannerHeight)
   })

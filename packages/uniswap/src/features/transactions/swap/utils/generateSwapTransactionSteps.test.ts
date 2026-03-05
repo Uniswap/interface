@@ -14,10 +14,18 @@ import {
   createMockUniswapXTrade,
 } from 'uniswap/src/test/fixtures/transactions/swap'
 
-const UserAgentMock = jest.requireMock('utilities/src/platform')
-jest.mock('utilities/src/platform', () => ({
-  ...jest.requireActual('utilities/src/platform'),
-}))
+// Use vi.hoisted to create a mutable mock state that can be changed between tests
+const mockPlatformState = vi.hoisted(() => ({ isWebApp: false }))
+
+vi.mock('utilities/src/platform', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('utilities/src/platform')>()
+  return {
+    ...actual,
+    get isWebApp(): boolean {
+      return mockPlatformState.isWebApp
+    },
+  }
+})
 
 const mockTxRequest = {
   chainId: 1,
@@ -129,7 +137,7 @@ describe('Swap', () => {
 
     it('should return steps for classic trade with approval and permit required', () => {
       // We only expect `SwapTransactionAsync` step when on interface swap (unsigned w/o a wallet interaction)
-      UserAgentMock.isWebApp = true
+      mockPlatformState.isWebApp = true
 
       const swapTxContext = {
         ...baseSwapTxContext,

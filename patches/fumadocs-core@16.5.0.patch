@@ -1,0 +1,22 @@
+diff --git a/dist/toc.js b/dist/toc.js
+index d653c770734e4ecedfcab1b4ce8e4f1dfb143917..6f43df5e1dab3787d030aec38c16bfdf74045187 100644
+--- a/dist/toc.js
++++ b/dist/toc.js
+@@ -1,9 +1,16 @@
+ 'use client';
+ 
+-import { createContext, useContext, useEffect, useEffectEvent, useLayoutEffect, useMemo, useRef, useState } from "react";
++import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+ import { jsx } from "react/jsx-runtime";
+ import scrollIntoView from "scroll-into-view-if-needed";
+ 
++// Shim for useEffectEvent (React 19.2+ feature, not available in 19.0.x)
++function useEffectEvent(callback) {
++	const callbackRef = useRef(callback);
++	callbackRef.current = callback;
++	return useCallback((...args) => callbackRef.current(...args), []);
++}
++
+ //#region src/utils/merge-refs.ts
+ function mergeRefs(...refs) {
+ 	return (value) => {

@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
-import { filterTokensBySearch } from 'pages/Portfolio/Tokens/utils/filterTokensBySearch'
-import { TEST_TOKEN_1 } from 'test-utils/constants'
+import { filterTokensBySearch } from '~/pages/Portfolio/Tokens/utils/filterTokensBySearch'
+import { TEST_TOKEN_1 } from '~/test-utils/constants'
 
 // Mock the doesTokenMatchSearchTerm function to have full control over test scenarios
 vi.mock('uniswap/src/utils/search/doesTokenMatchSearchTerm', () => ({

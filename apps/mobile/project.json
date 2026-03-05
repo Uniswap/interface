@@ -1,4 +1,5 @@
 {
+  "tags": ["scope:mobile", "type:app"],
   "targets": {
     "build": {
       "executor": "nx:noop"
@@ -112,40 +113,41 @@
       }
     },
     "e2e:prepare": {
-      "command": "bun run e2e:generate-ids && bun run e2e:build-js",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
+      "executor": "nx:noop",
+      "dependsOn": ["e2e:generate-ids", "e2e:build-js"]
     },
     "e2e:generate-ids": {
-      "command": "mkdir -p .maestro/scripts/dist && ts-node .maestro/scripts/tooling/generateTestIds.ts > .maestro/scripts/dist/testIds.js",
+      "command": "mkdir -p .maestro/scripts/dist && bun run .maestro/scripts/tooling/generateTestIds.ts > .maestro/scripts/dist/testIds.js",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "e2e:build-js": {
-      "command": "ts-node .maestro/scripts/tooling/buildPerformanceScripts.ts",
+      "command": "bun run .maestro/scripts/tooling/buildPerformanceScripts.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "e2e": {
-      "command": "bun run e2e:prepare && maestro test .maestro/flows",
+      "command": "maestro test .maestro",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["e2e:prepare"]
     },
     "e2e:onboarding": {
-      "command": "bun run e2e:prepare && maestro test .maestro/flows/onboarding",
+      "command": "maestro test .maestro/flows/onboarding",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["e2e:prepare"]
     },
     "e2e:swap": {
-      "command": "bun run e2e:prepare && maestro test .maestro/flows/swap",
+      "command": "maestro test .maestro/flows/swap",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["e2e:prepare"]
     },
     "e2e:clear-logs": {
       "command": "rm -rf $HOME/.maestro/tests",
@@ -154,16 +156,17 @@
       }
     },
     "e2e:local:submit-metrics": {
-      "command": "cd .maestro/scripts/performance && ./submit-local.sh && cd ../../..",
+      "command": ".maestro/scripts/performance/submit-local.sh metrics.jsonl",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "e2e:local:extract-metrics": {
-      "command": "cd .maestro/scripts/performance && ./extract-metrics.sh && cd ../../..",
+      "command": "bun .maestro/scripts/performance/dist/utils/extract-metrics.js $HOME/.maestro/tests metrics.jsonl",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["e2e:build-js"]
     },
     "e2e:local:process-metrics": {
       "command": "bun run e2e:local:extract-metrics && bun run e2e:local:submit-metrics",
@@ -172,10 +175,11 @@
       }
     },
     "e2e:interactive": {
-      "command": "bun run e2e:prepare && ts-node .maestro/scripts/yarn/e2e-interactive.ts",
+      "command": "bun run .maestro/scripts/e2e-interactive.ts",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["e2e:prepare"]
     },
     "firestore:deploy:rules": {
       "command": "firebase deploy --only firestore:rules",
@@ -190,7 +194,7 @@
       }
     },
     "check:circular": {
-      "command": "../../scripts/check-circular-imports.sh ./src/app/App.tsx 0",
+      "command": "bunx madge --circular ./src/app/App.tsx",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -202,7 +206,7 @@
       }
     },
     "ios:interactive": {
-      "command": "ts-node scripts/ios-build-interactive/main.ts",
+      "command": "bun run scripts/ios-build-interactive/main.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -268,7 +272,14 @@
       "command": "node --max-old-space-size=8912 ../../node_modules/.bin/jest",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "inputs": [
+        "sourceFiles",
+        "mobileGlobals",
+        "^production",
+        "{projectRoot}/**/*.test.*",
+        "{projectRoot}/**/*.spec.*"
+      ]
     },
     "snapshots": {
       "command": "jest -u",
@@ -277,6 +288,7 @@
       }
     },
     "typecheck": {},
+    "typecheck:tsgo": {},
     "unicons": {
       "command": "cd scripts && python3 populate_svgs.py && cd .. && bun run lint --fix",
       "options": {

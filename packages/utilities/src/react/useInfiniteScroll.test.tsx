@@ -1,13 +1,8 @@
+import 'utilities/src/logger/mocks'
 import { act, render, renderHook } from '@testing-library/react'
 import { useEffect } from 'react'
 import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    warn: vi.fn(),
-  },
-}))
 
 // Mock IntersectionObserver
 const mockObserve = vi.fn()

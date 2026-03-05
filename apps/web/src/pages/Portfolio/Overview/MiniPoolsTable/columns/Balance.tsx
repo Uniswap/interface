@@ -1,11 +1,11 @@
-import { PositionInfo } from 'components/Liquidity/types'
-import { EmptyTableCell } from 'pages/Portfolio/EmptyTableCell'
 import { memo } from 'react'
 import { Text } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
 
 // Fourth column cell component - Balance in USD
 export const PoolBalanceCell = memo(function PoolBalanceCell({ position }: { position: PositionInfo }) {

@@ -92,11 +92,11 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
         >
           <Flex row alignItems="center" gap="$spacing12">
             {currentScreenState === ScannerModalState.ScanQr ? (
-              <QrCode color="$neutral1" size="$icon.24" />
+              <QrCode color={colors.neutral1.val} size="$icon.24" />
             ) : (
-              <Scan color="$neutral1" size="$icon.24" />
+              <Scan color={colors.neutral1.val} size="$icon.24" />
             )}
-            <Text color="$neutral1" variant="buttonLabel2">
+            <Text color={colors.neutral1.val} variant="buttonLabel2">
               {currentScreenState === ScannerModalState.ScanQr
                 ? t('qrScanner.recipient.action.show')
                 : t('qrScanner.recipient.action.scan')}

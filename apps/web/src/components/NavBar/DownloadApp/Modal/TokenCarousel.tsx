@@ -1,6 +1,6 @@
-import { approvedERC20 } from 'pages/Landing/assets/approvedTokens'
 import { Flex, useSporeColors } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { approvedERC20 } from '~/pages/Landing/assets/approvedTokens'
 
 const TOKEN_SIZE = 40
 

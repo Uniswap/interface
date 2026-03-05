@@ -1,93 +1,107 @@
-import { DefaultPriceStrategy } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { getClosestTick } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/getClosestTick'
-import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
+import { DefaultPriceStrategy } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { snapTickToSpacing } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
 
-// Price tolerance for detecting strategy matches (1%)
-const PRICE_TOLERANCE = 0.01
+// Tick tolerance for detecting strategy matches (number of ticks)
+const TICK_TOLERANCE = 2
 
-// Calculate expected prices for a given strategy
-export function calculateStrategyPrices({
+// Calculate expected ticks for a given strategy
+export function calculateStrategyTicks({
   priceStrategy,
-  currentPrice,
-  liquidityData,
-  defaultMinPrice,
-  defaultMaxPrice,
+  currentTick,
+  tickSpacing,
+  defaultMinTick,
+  defaultMaxTick,
 }: {
   priceStrategy: DefaultPriceStrategy
-  currentPrice: number
-  liquidityData: ChartEntry[]
-  defaultMinPrice?: number
-  defaultMaxPrice?: number
-}): { minPrice: number; maxPrice: number } {
-  const { index } = getClosestTick(liquidityData, currentPrice)
-  const nextTick = liquidityData[index + 1]
-  const prevTick = liquidityData[index - 1]
+  currentTick: number
+  tickSpacing: number
+  defaultMinTick?: number
+  defaultMaxTick?: number
+}): { minTick: number; maxTick: number } {
+  // Get usable min/max ticks aligned to tickSpacing
+  const usableMinTick = nearestUsableTick(TickMath.MIN_TICK, tickSpacing)
+  const usableMaxTick = nearestUsableTick(TickMath.MAX_TICK, tickSpacing)
 
   switch (priceStrategy) {
     case DefaultPriceStrategy.STABLE: {
-      // For stable pairs, use ±3 ticks instead of percentage
-      const minTickIndex = Math.max(0, index - 3)
-      const maxTickIndex = Math.min(liquidityData.length - 1, index + 3)
+      // For stable pairs, use ±3 ticks (considering tickSpacing)
+      const minTick = snapTickToSpacing(currentTick - 3 * tickSpacing, tickSpacing)
+      const maxTick = snapTickToSpacing(currentTick + 3 * tickSpacing, tickSpacing)
 
       return {
-        minPrice: liquidityData[minTickIndex].price0,
-        maxPrice: liquidityData[maxTickIndex].price0,
+        minTick: Math.max(usableMinTick, minTick),
+        maxTick: Math.min(usableMaxTick, maxTick),
       }
     }
-    case DefaultPriceStrategy.WIDE:
-      return {
-        minPrice: currentPrice * 0.5,
-        maxPrice: currentPrice * 2,
-      }
-    case DefaultPriceStrategy.ONE_SIDED_UPPER:
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!nextTick) {
-        throw new Error('No next tick found')
-      }
+    case DefaultPriceStrategy.WIDE: {
+      // -50% lower: find tick at half the current price
+      // price = 1.0001^tick, so half price = 1.0001^(tick + delta)
+      // 0.5 * price = 1.0001^newTick => newTick = tick + log(0.5)/log(1.0001)
+      const halfPriceTickDelta = Math.round(Math.log(0.5) / Math.log(1.0001))
+      const minTick = snapTickToSpacing(currentTick + halfPriceTickDelta, tickSpacing)
 
+      // +100% upper: find the tick that is 100% above the current tick
+      const hundredPriceTickDelta = Math.round(Math.log(2) / Math.log(1.0001))
+      const maxTick = snapTickToSpacing(currentTick + hundredPriceTickDelta, tickSpacing)
       return {
-        minPrice: nextTick.price0,
-        maxPrice: currentPrice * 2,
+        minTick: Math.max(usableMinTick, minTick),
+        maxTick: Math.min(usableMaxTick, maxTick),
       }
-    case DefaultPriceStrategy.ONE_SIDED_LOWER:
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!prevTick) {
-        throw new Error('No previous tick found')
-      }
-
+    }
+    case DefaultPriceStrategy.ONE_SIDED_UPPER: {
+      // Start just above current tick
+      const minTick = snapTickToSpacing(currentTick + tickSpacing, tickSpacing)
+      // +100% upper: find the tick that is 100% above the current tick
+      const hundredPriceTickDelta = Math.round(Math.log(2) / Math.log(1.0001))
+      const maxTick = snapTickToSpacing(currentTick + hundredPriceTickDelta, tickSpacing)
       return {
-        minPrice: currentPrice * 0.5,
-        maxPrice: prevTick.price0,
+        minTick,
+        maxTick: Math.min(usableMaxTick, maxTick),
       }
+    }
+    case DefaultPriceStrategy.ONE_SIDED_LOWER: {
+      // -50% lower (same as WIDE), go to just below current tick
+      const halfPriceTickDelta = Math.round(Math.log(0.5) / Math.log(1.0001))
+      const minTick = snapTickToSpacing(currentTick + halfPriceTickDelta, tickSpacing)
+      const maxTick = snapTickToSpacing(currentTick - tickSpacing, tickSpacing)
+      return {
+        minTick: Math.max(usableMinTick, minTick),
+        maxTick,
+      }
+    }
     case DefaultPriceStrategy.FULL_RANGE:
       return {
-        minPrice: liquidityData[0]?.price0 ?? 0,
-        maxPrice: liquidityData[liquidityData.length - 1]?.price0 ?? Infinity,
+        minTick: usableMinTick,
+        maxTick: usableMaxTick,
       }
     case DefaultPriceStrategy.CUSTOM:
-      return { minPrice: defaultMinPrice ?? currentPrice, maxPrice: defaultMaxPrice ?? currentPrice }
+      return {
+        minTick: defaultMinTick ?? currentTick,
+        maxTick: defaultMaxTick ?? currentTick,
+      }
     default:
-      return { minPrice: currentPrice, maxPrice: currentPrice }
+      return { minTick: currentTick, maxTick: currentTick }
   }
 }
 
-// Detect which strategy matches the current min/max prices
-export function detectPriceStrategy({
-  minPrice,
-  maxPrice,
-  currentPrice,
-  liquidityData,
+// Detect which strategy matches the current min/max ticks
+export function detectTickStrategy({
+  minTick,
+  maxTick,
+  currentTick,
+  tickSpacing,
 }: {
-  minPrice?: number
-  maxPrice?: number
-  currentPrice: number
-  liquidityData: ChartEntry[]
+  minTick?: number
+  maxTick?: number
+  currentTick: number
+  tickSpacing: number
 }): DefaultPriceStrategy | undefined {
-  if (!minPrice || !maxPrice) {
+  if (minTick === undefined || maxTick === undefined) {
     return undefined
   }
 
-  const priceStrategies = [
+  const strategies = [
     DefaultPriceStrategy.STABLE,
     DefaultPriceStrategy.WIDE,
     DefaultPriceStrategy.ONE_SIDED_LOWER,
@@ -95,19 +109,15 @@ export function detectPriceStrategy({
     DefaultPriceStrategy.FULL_RANGE,
   ]
 
-  for (const priceStrategy of priceStrategies) {
-    const expectedPrices = calculateStrategyPrices({ priceStrategy, currentPrice, liquidityData })
+  for (const strategy of strategies) {
+    const expectedTicks = calculateStrategyTicks({ priceStrategy: strategy, currentTick, tickSpacing })
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (expectedPrices.minPrice === undefined || expectedPrices.maxPrice === undefined) {
-      continue
-    }
+    const minDiff = Math.abs(minTick - expectedTicks.minTick)
+    const maxDiff = Math.abs(maxTick - expectedTicks.maxTick)
 
-    const minDiff = Math.abs(minPrice - expectedPrices.minPrice) / expectedPrices.minPrice
-    const maxDiff = Math.abs(maxPrice - expectedPrices.maxPrice) / expectedPrices.maxPrice
-
-    if (minDiff <= PRICE_TOLERANCE && maxDiff <= PRICE_TOLERANCE) {
-      return priceStrategy
+    // Allow tolerance of a few ticks
+    if (minDiff <= TICK_TOLERANCE * tickSpacing && maxDiff <= TICK_TOLERANCE * tickSpacing) {
+      return strategy
     }
   }
 

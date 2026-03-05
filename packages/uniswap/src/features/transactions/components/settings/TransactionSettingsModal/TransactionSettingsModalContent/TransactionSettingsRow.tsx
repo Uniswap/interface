@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { iconSizes } from 'ui/src/theme'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 
@@ -59,7 +58,7 @@ export function TransactionSettingRow({ setting, setSelectedSetting }: Transacti
             onPress={onPressControl}
           >
             <Control />
-            {Screen && <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon24} />}
+            {Screen && <RotatableChevron color="$neutral3" direction="right" size="$icon.24" />}
           </TouchableArea>
         </Flex>
         {InfoModal && <InfoModal isOpen={showInfoModal} onClose={(): void => setShowInfoModal(false)} />}

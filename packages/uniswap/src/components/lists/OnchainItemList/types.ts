@@ -5,6 +5,7 @@ export enum OnchainItemSectionName {
   RecentSearches = 'recentSearches',
 
   YourTokens = 'yourTokens',
+  HiddenTokens = 'hiddenTokens',
   TrendingTokens = 'trendingTokens',
   FavoriteTokens = 'favoriteTokens',
   SuggestedTokens = 'suggestedTokens',
@@ -26,4 +27,5 @@ export type OnchainItemSection<T extends OnchainItemListOption> = {
   name?: string
   rightElement?: JSX.Element
   endElement?: JSX.Element
+  sectionHeader?: JSX.Element
 }

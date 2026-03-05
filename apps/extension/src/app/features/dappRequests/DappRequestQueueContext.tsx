@@ -1,39 +1,40 @@
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
-import { createContext, PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { confirmRequest, confirmRequestNoDappInfo, rejectRequest } from 'src/app/features/dappRequests/actions'
 import { useTransactionConfirmationTracker } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
 import { isDappRequestWithDappInfo } from 'src/app/features/dappRequests/saga'
 import type { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
-import { selectAllDappRequests } from 'src/app/features/dappRequests/slice'
+import { selectAllDappRequests, type WithMetadata } from 'src/app/features/dappRequests/slice'
 import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestAction } from 'uniswap/src/features/telemetry/types'
-import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { type TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { useEvent } from 'utilities/src/react/hooks'
-import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { type SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import { type Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface DappRequestQueueContextValue {
   forwards: boolean // direction of sliding animation
   increasing: boolean // direction of number increasing animation
-  request: DappRequestStoreItem | undefined
+  request: WithMetadata<DappRequestStoreItem> | undefined
   currentAccount: Account // Account the request is going to (not necessarily the active account)
   dappUrl: string
+  frameUrl?: string
   dappIconUrl: string
   currentIndex: number
   totalRequestCount: number
   onPressNext: () => void
   onPressPrevious: () => void
   onConfirm: (params: {
-    request: DappRequestStoreItem
+    request: WithMetadata<DappRequestStoreItem>
     transactionTypeInfo?: TransactionTypeInfo
     preSignedTransaction?: SignedTransactionRequest
   }) => Promise<void>
-  onCancel: (request: DappRequestStoreItem) => Promise<void>
+  onCancel: (request: WithMetadata<DappRequestStoreItem>) => Promise<void>
 }
 
 const DappRequestQueueContext = createContext<DappRequestQueueContextValue | undefined>(undefined)
@@ -69,6 +70,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
   }, [totalRequestCount])
 
   const dappUrl = extractBaseUrl(request?.senderTabInfo.url) || ''
+  const frameUrl = extractBaseUrl(request?.senderTabInfo.frameUrl) || undefined
   const dappIconUrl = request?.senderTabInfo.favIconUrl || ''
 
   let currentAccount = activeAccount
@@ -83,7 +85,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
 
   const onConfirm = useEvent(
     async (params: {
-      request: DappRequestStoreItem
+      request: WithMetadata<DappRequestStoreItem>
       transactionTypeInfo?: TransactionTypeInfo
       preSignedTransaction?: SignedTransactionRequest
     }): Promise<void> => {
@@ -122,7 +124,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
     },
   )
 
-  const onCancel = useEvent(async (requestToCancel: DappRequestStoreItem): Promise<void> => {
+  const onCancel = useEvent(async (requestToCancel: WithMetadata<DappRequestStoreItem>): Promise<void> => {
     if (requestToCancel.dappInfo) {
       const { activeConnectedAddress, lastChainId } = requestToCancel.dappInfo
       const connectedAddresses = requestToCancel.dappInfo.connectedAccounts.map((account) => account.address)
@@ -166,6 +168,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
     totalRequestCount,
     request,
     dappUrl,
+    frameUrl,
     dappIconUrl,
     currentAccount,
     onConfirm,

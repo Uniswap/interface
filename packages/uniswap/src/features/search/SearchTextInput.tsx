@@ -98,6 +98,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       cancelBehaviorType = CancelBehaviorType.CancelButton,
       keyboardType = 'default',
       inputMode: inputModeProp,
+      placeholderTextColor = '$neutral2',
     } = props
 
     const inputMode = inputModeProp ?? 'text'
@@ -149,7 +150,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             x={CANCEL_CHEVRON_X_OFFSET}
           >
             <TouchableArea hitSlop={16} onPress={onPressCancel}>
-              <RotatableChevron color="$neutral1" direction="left" height={iconSizes.icon20} width={iconSizes.icon20} />
+              <RotatableChevron color="$neutral1" direction="left" size="$icon.20" />
             </TouchableArea>
           </Flex>
         )}
@@ -194,7 +195,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 outlineWidth={0}
                 p="$none"
                 placeholder={placeholder}
-                placeholderTextColor="$neutral2"
+                placeholderTextColor={placeholderTextColor}
                 position="absolute"
                 returnKeyType="done"
                 testID={TestID.ExploreSearchInput}
@@ -228,7 +229,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 exitStyle={ENTER_EXIT_STYLE}
                 onPress={onClose}
               >
-                <RotatableChevron color="$neutral3" direction="up" height={iconSizes.icon20} width={iconSizes.icon20} />
+                <RotatableChevron color="$neutral3" direction="up" size="$icon.20" />
               </TouchableArea>
             )}
           </AnimatePresence>

@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Flex, styled, Text } from 'ui/src'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
+import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 
 interface NftAmountDisplayProps {
   nftImageUrl?: string

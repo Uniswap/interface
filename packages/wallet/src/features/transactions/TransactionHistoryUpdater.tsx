@@ -32,26 +32,33 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
 
   const activeAccountAddress = useActiveAccountAddress()
   const nonActiveAccountAddresses = useMemo(() => {
-    return Object.keys(allAccounts).filter((address) => address !== activeAccountAddress)
+    // Filter out any empty/falsy addresses to prevent validation errors
+    return Object.keys(allAccounts).filter((address) => address && address !== activeAccountAddress)
   }, [activeAccountAddress, allAccounts])
 
   const { gqlChains } = useEnabledChains()
 
   // Poll at different intervals to reduce requests made for non active accounts.
+  // IMPORTANT: Disable polling when no addresses to prevent race condition where
+  // empty arrays are sent to GraphQL before skip condition is evaluated.
 
   const activeAddresses = activeAccountAddress ? [activeAccountAddress] : []
+  const shouldSkipActiveQuery = activeAddresses.length === 0
+
   const { data: activeAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
     variables: { addresses: activeAddresses, chains: gqlChains },
-    pollInterval: PollingInterval.KindaFast,
+    pollInterval: shouldSkipActiveQuery ? 0 : PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
-    skip: activeAddresses.length === 0,
+    skip: shouldSkipActiveQuery,
   })
+
+  const shouldSkipNonActiveQuery = nonActiveAccountAddresses.length === 0
 
   const { data: nonActiveAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
     variables: { addresses: nonActiveAccountAddresses, chains: gqlChains },
-    pollInterval: PollingInterval.Normal,
+    pollInterval: shouldSkipNonActiveQuery ? 0 : PollingInterval.Normal,
     fetchPolicy: 'network-only', // Ensure latest data.
-    skip: nonActiveAccountAddresses.length === 0,
+    skip: shouldSkipNonActiveQuery,
   })
 
   const combinedPortfoliosData = [...(activeAccountData?.portfolios ?? []), ...(nonActiveAccountData?.portfolios ?? [])]

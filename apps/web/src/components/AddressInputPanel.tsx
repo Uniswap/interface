@@ -1,14 +1,14 @@
-import { AutoColumn } from 'components/deprecated/Column'
-import { RowBetween } from 'components/deprecated/Row'
-import { useAccount } from 'hooks/useAccount'
-import { deprecatedStyled } from 'lib/styled-components'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ExternalLink } from 'theme/components/Links'
-import { flexColumnNoWrap } from 'theme/styles'
 import { Text, useSporeColors } from 'ui/src'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { AutoColumn } from '~/components/deprecated/Column'
+import { RowBetween } from '~/components/deprecated/Row'
+import { useAccount } from '~/hooks/useAccount'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ExternalLink } from '~/theme/components/Links'
+import { flexColumnNoWrap } from '~/theme/styles'
 
 const InputPanel = deprecatedStyled.div`
   ${flexColumnNoWrap};

@@ -48,8 +48,8 @@ describe(PriceText, () => {
     const wholePart = await within(animatedText).findByTestId('wholePart')
     const decimalPart = await within(animatedText).findByTestId('decimalPart')
 
-    expect(wholePart.props.text).toBe(`$${amounts.sm().value}`)
-    expect(decimalPart.props.text).toBe(`.00`)
+    expect(wholePart.props['text']).toBe(`$${amounts.sm().value}`)
+    expect(decimalPart.props['text']).toBe(`.00`)
   })
 })
 
@@ -88,7 +88,7 @@ describe(RelativeChangeText, () => {
     const tree = render(<RelativeChangeText loading={false} />)
 
     const text = await tree.findByTestId('relative-change-text')
-    expect(text.props.value).toBe(`10.00%`)
+    expect(text.props['text']).toBe(`10.00%`)
   })
 })
 
@@ -100,6 +100,7 @@ describe(DatetimeText, () => {
     })
     const tree = render(<DatetimeText loading={false} />)
 
+    expect(tree.toJSON()).toHaveStyle({ opacity: 1 })
     expect(tree).toMatchSnapshot()
   })
 
@@ -110,6 +111,6 @@ describe(DatetimeText, () => {
     })
     const tree = render(<DatetimeText loading={true} />)
 
-    expect(tree).toMatchSnapshot()
+    expect(tree.toJSON()).toHaveStyle({ opacity: 0 })
   })
 })

@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, getTokenValue, Separator, Text, useSporeColors, VerticalDottedLineSeparator } from 'ui/src'
@@ -24,21 +25,21 @@ interface ProgressIndicatorProps {
   isChainedAction?: boolean
 }
 
-function areStepsEqual(
-  currentStep: TransactionStep | undefined,
-  isChainedAction: boolean,
-): (step: TransactionStep) => boolean {
+// TODO(SWAP-838): Remove implicit chained actions patterns
+function isFailedChainedActionStep(step: TransactionStep): boolean {
+  return 'status' in step && step.status === TradingApi.PlanStepStatus.STEP_ERROR
+}
+function isDifferentChainedActionStepIndex(compareStep: TransactionStep, currentStep: TransactionStep): boolean {
+  return 'stepIndex' in compareStep && 'stepIndex' in currentStep && compareStep.stepIndex !== currentStep.stepIndex
+}
+
+function createIsCurrentStep(currentStep: TransactionStep | undefined): (step: TransactionStep) => boolean {
   return (step: TransactionStep) => {
     if (step.type !== currentStep?.type) {
       return false
     }
 
-    if (
-      isChainedAction &&
-      'stepIndex' in step &&
-      'stepIndex' in currentStep &&
-      step.stepIndex !== currentStep.stepIndex
-    ) {
+    if (isDifferentChainedActionStepIndex(step, currentStep)) {
       return false
     }
 
@@ -60,11 +61,18 @@ export function ProgressIndicator({
 }: ProgressIndicatorProps): JSX.Element | null {
   const { t } = useTranslation()
   function getStatus(targetStep: TransactionStep): StepStatus {
-    const currentIndex = steps.findIndex(areStepsEqual(currentStep?.step, isChainedAction))
+    const isCurrentStep = createIsCurrentStep(currentStep?.step)
+    const currentIndex = steps.findIndex(isCurrentStep)
     const targetIndex = steps.indexOf(targetStep)
+
+    const isCurrent = currentIndex === targetIndex
+
+    if (isFailedChainedActionStep(targetStep)) {
+      return isCurrent ? StepStatus.Failed : StepStatus.Replaced
+    }
     if (currentIndex < targetIndex) {
       return StepStatus.Preview
-    } else if (currentIndex === targetIndex) {
+    } else if (isCurrent) {
       return currentStep?.accepted ? StepStatus.InProgress : StepStatus.Active
     } else {
       return StepStatus.Complete
@@ -139,7 +147,7 @@ function StepRowSeparator({ isActiveAdjacent }: { isActiveAdjacent: boolean }): 
   const rowHeight = getTokenValue(STEP_ROW_HEIGHT)
   const iconSize = getTokenValue(STEP_ROW_ICON_SIZE)
 
-  const strokeWidth = 1.5
+  const strokeWidth = 2
   const marginLeftForStroke = rowHeight / 2 - strokeWidth / 2
   const marginTop = (rowHeight + iconSize) / 2
   const extraMarginTop = marginTop + 2 // extra margin for the active step's bigger size
@@ -204,6 +212,7 @@ function Step({
     case TransactionStepType.SwapTransactionAsync:
     case TransactionStepType.UniswapXSignature:
     case TransactionStepType.UniswapXPlanSignature:
+    case TransactionStepType.SwapTransactionBatched:
       if (isPlanStep) {
         return <SwapTransactionPlanStepRow step={step as SwapSteps} {...commonProps} />
       }

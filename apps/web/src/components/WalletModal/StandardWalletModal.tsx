@@ -1,12 +1,12 @@
-import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
-import { WalletModalLayout } from 'components/WalletModal/WalletModalLayout'
-import { WalletOptionsGrid } from 'components/WalletModal/WalletOptionsGrid'
 import { useReducer } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Separator, Text } from 'ui/src'
 import { DoubleChevron } from 'ui/src/components/icons/DoubleChevron'
 import { DoubleChevronInverted } from 'ui/src/components/icons/DoubleChevronInverted'
+import { UniswapWalletOptions } from '~/components/WalletModal/UniswapWalletOptions'
+import { WalletModalLayout } from '~/components/WalletModal/WalletModalLayout'
+import { WalletOptionsGrid } from '~/components/WalletModal/WalletOptionsGrid'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export function StandardWalletModal(): JSX.Element {
   const { t } = useTranslation()

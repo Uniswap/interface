@@ -1,4 +1,4 @@
-import { parseCurrencyAmountParts } from 'pages/Portfolio/components/ValueWithFadedDecimals/parseCurrencyAmountParts'
+import { parseCurrencyAmountParts } from '~/pages/Portfolio/components/ValueWithFadedDecimals/parseCurrencyAmountParts'
 
 describe('parseCurrencyAmountParts', () => {
   describe('with symbol at front', () => {

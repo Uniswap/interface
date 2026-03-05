@@ -15,6 +15,7 @@ export interface ActionCardItem {
   onPress?: () => void
   backgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
   shadowProps?: ReturnType<typeof useShadowPropsShort>
+  testId?: string
 }
 
 export const ActionCard = ({
@@ -29,6 +30,7 @@ export const ActionCard = ({
   backgroundImageWrapperCallback,
   borderRadius,
   shadowProps,
+  testId,
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
     <TouchableArea
@@ -38,6 +40,7 @@ export const ActionCard = ({
       borderWidth="$spacing1"
       overflow="hidden"
       hoverStyle={hoverStyle}
+      testID={testId}
       onPress={onPress}
       {...shadowProps}
     >

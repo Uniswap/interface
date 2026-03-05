@@ -1,7 +1,7 @@
-import type { ExternalConnector } from 'features/accounts/store/types'
-import { ignoreExpectedConnectionErrors } from 'features/wallet/connection/connectors/utils'
-import type { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
 import type { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import type { ExternalConnector } from '~/features/accounts/store/types'
+import { ignoreExpectedConnectionErrors } from '~/features/wallet/connection/connectors/utils'
+import type { ConnectionService } from '~/features/wallet/connection/services/IConnectionService'
 
 export type GetConnectorFn = <P extends Platform>(connectorId: string, platform: P) => ExternalConnector<P> | undefined
 

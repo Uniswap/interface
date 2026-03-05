@@ -1,19 +1,21 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { HelpModal } from 'components/HelpModal/HelpModal'
-import { MenuItem, MenuSection, MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
-import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
-import { NavDropdown } from 'components/NavBar/NavDropdown'
-import { useTabsVisible } from 'components/NavBar/ScreenSizes'
-import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { Socials } from 'pages/Landing/sections/Footer'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { ExternalLink } from 'theme/components/Links'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Flex, Separator, styled, Text } from 'ui/src'
-import { TextVariantTokens } from 'ui/src/theme'
+import { Anchor, Flex, Separator, styled, Text, TouchableArea } from 'ui/src'
+import { spacing, TextVariantTokens } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isMobileWeb } from 'utilities/src/platform'
+import { HelpModal } from '~/components/HelpModal/HelpModal'
+import { MenuItem, MenuSection, MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
+import { LegalAndPrivacyMenu } from '~/components/NavBar/LegalAndPrivacyMenu'
+import { NavDropdown } from '~/components/NavBar/NavDropdown'
+import { useTabsVisible } from '~/components/NavBar/ScreenSizes'
+import { useTabsContent } from '~/components/NavBar/Tabs/TabsContent'
+import { Socials } from '~/pages/Landing/sections/Footer'
+import { ExternalLink } from '~/theme/components/Links'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 const Container = styled(Flex, {
   width: '400px',
@@ -29,6 +31,7 @@ const LinkStyle = {
   textDecoration: 'none',
   height: 'unset',
   padding: 0,
+  paddingTop: spacing.spacing4,
 }
 
 const LinkTextStyle = {
@@ -38,6 +41,17 @@ const LinkTextStyle = {
   },
 }
 
+// On mobile web, use the Link component to omit long-press styling
+const PlatformExternalLink = isMobileWeb ? Link : ExternalLink
+const MobileTouchableArea = isMobileWeb ? TouchableArea : Fragment
+
+const TouchableAreaProps = isMobileWeb
+  ? {
+      row: true,
+      gap: '$gap8',
+    }
+  : {}
+
 export function MenuLink({
   label,
   href,
@@ -45,25 +59,32 @@ export function MenuLink({
   closeMenu,
   textVariant = 'body3',
   icon,
+  elementName,
 }: MenuItem & { textVariant?: TextVariantTokens }) {
-  return internal ? (
+  const content = internal ? (
     <Link to={href} onClick={closeMenu} style={LinkStyle}>
-      <Flex row gap="$gap8">
+      <MobileTouchableArea {...TouchableAreaProps}>
         {icon}
         <Text variant={textVariant} {...LinkTextStyle}>
           {label}
         </Text>
-      </Flex>
+      </MobileTouchableArea>
     </Link>
   ) : (
-    <ExternalLink href={href} onClick={closeMenu} style={{ ...LinkStyle, stroke: 'unset' }}>
-      <Flex row gap="$gap8">
+    <PlatformExternalLink to={href} href={href} onClick={closeMenu} style={{ ...LinkStyle, stroke: 'unset' }}>
+      <MobileTouchableArea {...TouchableAreaProps}>
         {icon}
         <Text variant={textVariant} {...LinkTextStyle}>
           {label}
         </Text>
-      </Flex>
-    </ExternalLink>
+      </MobileTouchableArea>
+    </PlatformExternalLink>
+  )
+
+  return (
+    <Trace logPress element={elementName}>
+      {content}
+    </Trace>
   )
 }
 function Section({ title, items, closeMenu }: MenuSection) {
@@ -80,6 +101,7 @@ function Section({ title, items, closeMenu }: MenuSection) {
           internal={item.internal}
           overflow={item.overflow}
           closeMenu={closeMenu}
+          elementName={item.elementName}
         />
       ))}
     </Flex>
@@ -95,26 +117,27 @@ function ProductSection({ items }: { items: MenuItem[] }) {
       </Text>
       <Flex row gap="$gap16" flexWrap="wrap">
         {items.map((item, index) => (
-          <Anchor
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            {...ClickableTamaguiStyle}
-            key={`${item.label}_${index}}`}
-            aria-label={item.label}
-          >
-            <Flex row gap="$gap8" minWidth={168}>
-              <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$accent2">
-                {item.icon}
+          <Trace logPress element={item.elementName} key={`${item.label}_${index}}`}>
+            <Anchor
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              {...ClickableTamaguiStyle}
+              aria-label={item.label}
+            >
+              <Flex row gap="$gap8" minWidth={168}>
+                <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$accent2">
+                  {item.icon}
+                </Flex>
+                <Flex>
+                  <Text variant="body3">{item.label}</Text>
+                  <Text fontSize={10} lineHeight={14} color="$neutral2">
+                    {item.body}
+                  </Text>
+                </Flex>
               </Flex>
-              <Flex>
-                <Text variant="body3">{item.label}</Text>
-                <Text fontSize={10} lineHeight={14} color="$neutral2">
-                  {item.body}
-                </Text>
-              </Flex>
-            </Flex>
-          </Anchor>
+            </Anchor>
+          </Trace>
         ))}
       </Flex>
     </Flex>
@@ -139,6 +162,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
         href: tab.href,
         internal: true,
         overflow: false,
+        elementName: tab.elementName,
       }
     })
   }, [tabs])
@@ -168,7 +192,11 @@ export function MenuDropdown({ close }: { close?: () => void }) {
             alignItems="center"
             $xl={{ flexDirection: 'column', gap: '$spacing16', alignItems: 'flex-start' }}
           >
-            {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
+            {isConversionTrackingEnabled && (
+              <Flex flex={1} width="100%">
+                <LegalAndPrivacyMenu closeMenu={close} />
+              </Flex>
+            )}
             <Flex row alignSelf="flex-end" alignItems="center" justifyContent="space-between" $xl={{ width: '100%' }}>
               <Flex display="none" $xl={{ display: 'flex' }}>
                 <HelpModal showOnXL />

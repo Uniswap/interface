@@ -2,9 +2,12 @@ import {
   BridgeTransactionInfo,
   ConfirmedSwapTransactionInfo,
   FINAL_STATUSES,
+  FinalizedPlanTXDetails,
   FinalizedTransactionDetails,
   FinalizedTransactionStatus,
   InterfaceTransactionDetails,
+  PlanTransactionDetails,
+  PlanTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -26,8 +29,20 @@ export function isBridgeTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is Bri
   return typeInfo.type === TransactionType.Bridge
 }
 
+export function isPlanTransactionDetails(tx: TransactionDetails): tx is PlanTransactionDetails {
+  return isPlanTransactionInfo(tx.typeInfo)
+}
+
+export function isPlanTransactionInfo(tx: TransactionTypeInfo): tx is PlanTransactionInfo {
+  return tx.type === TransactionType.Plan
+}
+
 export function isFinalizedTxStatus(status: TransactionStatus): status is FinalizedTransactionStatus {
   return FINAL_STATUSES.some((finalStatus) => finalStatus === status)
+}
+
+export function isFinalizedPlanTXDetails(tx: FinalizedTransactionDetails): tx is FinalizedPlanTXDetails {
+  return isPlanTransactionDetails(tx)
 }
 
 export function isFinalizedTx(
@@ -35,6 +50,12 @@ export function isFinalizedTx(
 ): tx is FinalizedTransactionDetails {
   const validateFinalizedTx = (): FinalizedTransactionDetails | undefined => {
     const { status, hash } = tx
+    if (isPlanTransactionDetails(tx)) {
+      if (isFinalizedTxStatus(status)) {
+        return { ...tx, status }
+      }
+      return undefined
+    }
     if (status === TransactionStatus.Success) {
       if (!hash) {
         return undefined

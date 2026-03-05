@@ -62,6 +62,8 @@ export function Permit2TransactionStepRow({
 
   const title = {
     [StepStatus.Preview]: t('common.approvePermitTx', { indexText }),
+    [StepStatus.Failed]: t('common.approvePermitTx', { indexText }),
+    [StepStatus.Replaced]: t('common.approvePermitTx', { indexText }),
     [StepStatus.Active]: t('common.approvePermitTx.active', { indexText }),
     [StepStatus.InProgress]: t('common.approvePermitTx.pending', { indexText }),
     [StepStatus.Complete]: t('common.approvePermitTx', { indexText }),

@@ -1,16 +1,17 @@
 import { getOverrides, StatsigContext } from '@universe/gating'
-import { RowBetween } from 'components/deprecated/Row'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useModalState } from 'hooks/useModalState'
 import { useContext, useState } from 'react'
-import { Flag, Settings } from 'react-feather'
 import { useDispatch } from 'react-redux'
-import { ThemedText } from 'theme/components'
 import { Button, Flex, useShadowPropsShort } from 'ui/src'
+import { Flag } from 'ui/src/components/icons/Flag'
+import { Settings } from 'ui/src/components/icons/Settings'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
+import { RowBetween } from '~/components/deprecated/Row'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useModalState } from '~/hooks/useModalState'
+import { ThemedText } from '~/theme/components'
 
 const Override = (name: string, value: any) => {
   return (
@@ -88,12 +89,12 @@ export default function DevFlagsBox() {
                 toggleFeatureFlagsModal()
               }}
             >
-              <Settings width={15} height={15} />
+              <Settings size="$icon.16" />
             </Flex>
           </MouseoverTooltip>
         </RowBetween>
       ) : (
-        <Flag />
+        <Flag size="$icon.16" />
       )}
 
       {isOpen && (hasOverrides ? overrides : <ThemedText.LabelSmall>No overrides</ThemedText.LabelSmall>)}

@@ -1,10 +1,10 @@
-import { useStickyHeaderBorder } from 'hooks/useStickyHeaderBorder'
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { assert } from 'utilities/src/errors'
+import { useStickyHeaderBorder } from '~/hooks/useStickyHeaderBorder'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface PoolProgressStep {
   label: string

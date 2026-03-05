@@ -8,6 +8,7 @@ import {
 import { dappRequestApprovalWatcher } from 'src/app/features/dappRequests/dappRequestApprovalWatcherSaga'
 import { dappRequestWatcher } from 'src/app/features/dappRequests/saga'
 import { call, spawn } from 'typed-redux-saga'
+import { getMonitoredSagaReducers, type MonitoredSaga } from 'uniswap/src/utils/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
 import { deviceLocaleWatcher } from 'wallet/src/features/i18n/deviceLocaleWatcherSaga'
@@ -19,6 +20,10 @@ import {
   removeDelegationSagaName,
 } from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
 import {
+  executePlanActions,
+  executePlanReducer,
+  executePlanSaga,
+  executePlanSagaName,
   executeSwapActions,
   executeSwapReducer,
   executeSwapSaga,
@@ -42,10 +47,9 @@ import {
   createAccountsSaga,
   createAccountsSagaName,
 } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 // Stateful sagas that are registered with the store on startup
-export const monitoredSagas: Record<string, MonitoredSaga> = {
+const monitoredSagas: Record<string, MonitoredSaga> = {
   [authSagaName]: {
     name: authSagaName,
     wrappedSaga: authSaga,
@@ -75,6 +79,12 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: executeSwapSaga,
     reducer: executeSwapReducer,
     actions: executeSwapActions,
+  },
+  [executePlanSagaName]: {
+    name: executePlanSagaName,
+    wrappedSaga: executePlanSaga,
+    reducer: executePlanReducer,
+    actions: executePlanActions,
   },
   [removeDelegationSagaName]: {
     name: removeDelegationSagaName,
@@ -110,6 +120,6 @@ export function* rootExtensionSaga() {
   yield* spawn(transactionWatcher, { apolloClient })
 
   for (const m of Object.values(monitoredSagas)) {
-    yield* spawn(m.wrappedSaga)
+    yield* spawn(m['wrappedSaga'])
   }
 }

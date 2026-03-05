@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { CurrencyId } from 'uniswap/src/types/currency'
+import { type CurrencyId } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
@@ -101,10 +101,15 @@ const slice = createSlice({
         }
       })
     },
+    resetPortfolio: () => initialPortfolioState,
   },
 })
 
-export const { addTokensToBalanceOverride, removeTokenFromBalanceOverride, removeExpiredBalanceOverrides } =
-  slice.actions
+export const {
+  addTokensToBalanceOverride,
+  removeTokenFromBalanceOverride,
+  removeExpiredBalanceOverrides,
+  resetPortfolio,
+} = slice.actions
 
 export const portfolioReducer = slice.reducer

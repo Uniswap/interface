@@ -8,7 +8,7 @@ describe('useChainIdsChangeEffect', () => {
     { skip: false, name: 'with skipInitialCallback=false' },
   ])('$name', ({ skip }) => {
     it(`should ${skip ? 'not ' : ''}trigger callback on first render`, () => {
-      const callback = jest.fn()
+      const callback = vi.fn()
 
       renderHook(() =>
         useChainIdsChangeEffect({
@@ -73,7 +73,7 @@ describe('useChainIdsChangeEffect', () => {
       shouldCallback: false,
     },
   ])('should detect when $scenario', ({ chainStates, expectedChanges, shouldCallback = true }) => {
-    const callback = jest.fn()
+    const callback = vi.fn()
     let inputChainId = chainStates[0]!.inputChainId
     let outputChainId = chainStates[0]!.outputChainId
 
@@ -131,7 +131,7 @@ describe('useChainIdsChangeEffect', () => {
       expectedChanges: { input: false, output: true },
     },
   ])('should handle $scenario', ({ chainStates, expectedChanges }) => {
-    const callback = jest.fn()
+    const callback = vi.fn()
     let inputChainId = chainStates[0]!.inputChainId
     let outputChainId = chainStates[0]!.outputChainId
 
@@ -186,7 +186,7 @@ describe('useChainIdsChangeEffect', () => {
   })
 
   it('should handle consecutive chain changes', () => {
-    const callback = jest.fn()
+    const callback = vi.fn()
     let inputChainId = UniverseChainId.Mainnet
     const outputChainId = UniverseChainId.Optimism
 

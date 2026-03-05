@@ -2,7 +2,7 @@ import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { fireEvent, render, screen } from 'uniswap/src/test/test-utils'
 
 describe('ExpandoRow', () => {
-  const mockOnPress = jest.fn()
+  const mockOnPress = vi.fn()
   const defaultProps = {
     isExpanded: false,
     onPress: mockOnPress,
@@ -10,7 +10,7 @@ describe('ExpandoRow', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('matches snapshot when collapsed', () => {

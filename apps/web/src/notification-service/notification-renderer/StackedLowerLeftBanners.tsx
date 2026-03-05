@@ -3,10 +3,11 @@
 import type { InAppNotification } from '@universe/api'
 import { InlineBannerNotification, type NotificationClickTarget } from '@universe/notifications'
 import { AnimatePresence, motion } from 'framer-motion'
-import { calculateStackingProps, MAX_STACKED_BANNERS } from 'notification-service/notification-renderer/stackingUtils'
 import { memo, useEffect } from 'react'
 import { Portal, useMedia } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
+import { calculateStackingProps, MAX_STACKED_BANNERS } from '~/notification-service/notification-renderer/stackingUtils'
 
 interface StackedLowerLeftBannersProps {
   notifications: InAppNotification[]
@@ -52,7 +53,7 @@ export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
   }, [topNotificationId, handleNotificationShown])
 
   return (
-    <Portal>
+    <Portal zIndex={zIndexes.fixed + 10}>
       <AnimatePresence initial={false} mode="sync">
         {stackedNotifications.map((notification, index) => {
           const { scale, offsetY, zIndex } = calculateStackingProps(index, stackedNotifications.length)
@@ -79,7 +80,11 @@ export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
                 willChange: 'transform, opacity',
               }}
             >
-              <InlineBannerNotification notification={notification} onNotificationClick={onNotificationClick} />
+              <InlineBannerNotification
+                notification={notification}
+                onNotificationClick={onNotificationClick}
+                renderButton
+              />
             </motion.div>
           )
         })}

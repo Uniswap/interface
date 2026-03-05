@@ -1,4 +1,4 @@
-import { SVGProps } from 'constants/icons/types'
+import { SVGProps } from '~/constants/icons/types'
 
 const COP_ICON = (props: SVGProps) => {
   return (

@@ -70,7 +70,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const enablePermitMismatchUx = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const enableEip5792Methods = useFeatureFlag(FeatureFlags.Eip5792Methods)
   const hasSmartWalletConsent = useHasSmartWalletConsent()
-  const blockaidTransactionScanning = useFeatureFlag(FeatureFlags.BlockaidTransactionScanning)
 
   const tx: providers.TransactionRequest | undefined = useMemo(() => {
     if (isTransactionRequest(request)) {
@@ -139,11 +138,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       return false
     }
 
-    // If Blockaid scanning is enabled, disable confirm based on risk level and confirmation state
-    if (blockaidTransactionScanning) {
-      if (shouldDisableConfirm({ riskLevel, confirmedRisk })) {
-        return false
-      }
+    if (shouldDisableConfirm({ riskLevel, confirmedRisk })) {
+      return false
     }
 
     if (getDoesMethodCostGas(request)) {

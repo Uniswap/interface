@@ -1,5 +1,5 @@
 import type { WalletName as SolanaWalletName } from '@solana/wallet-adapter-base'
-import type { CustomConnectorId } from 'features/wallet/connection/types/CustomConnectorId'
+import type { CustomConnectorId } from '~/features/wallet/connection/types/CustomConnectorId'
 
 type AtLeastOne<T, K extends keyof T = keyof T> = K extends keyof T
   ? { [P in K]-?: NonNullable<T[P]> } & Partial<Omit<T, K>>

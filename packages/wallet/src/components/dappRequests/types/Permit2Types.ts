@@ -84,9 +84,11 @@ const DutchOrderMessageSchema = z.object({
     baseInputEndAmount: z.string(),
     baseInputStartAmount: z.string(),
     baseInputToken: z.string(),
-    baseOutputs: z.array(BaseOutputSchema).nonempty(),
+    // z.tuple([T], T) preserves non-empty tuple type [T, ...T[]] from v3's .nonempty()
+    // .array().min(1) infers as T[] in v4 — see https://zod.dev/v4/changelog#nonempty
+    baseOutputs: z.tuple([BaseOutputSchema], BaseOutputSchema),
     cosigner: z.string(),
-    info: z.object({}).passthrough(), // allows any additional fields in info
+    info: z.looseObject({}), // allows any additional fields in info
   }),
 })
 

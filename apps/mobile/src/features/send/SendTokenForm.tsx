@@ -22,7 +22,7 @@ import {
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
@@ -33,7 +33,7 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNati
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
-import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
+import { EmptyGasFeeRow, GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
 import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -333,8 +333,10 @@ export function SendTokenForm(): JSX.Element {
               ) : null}
             </Flex>
             <Flex py="$spacing12">
-              {!transferWarning && currencyIn?.chainId && !isBlocked && fiatOrTokenGreaterThanZero && (
+              {!transferWarning && currencyIn?.chainId && !isBlocked && fiatOrTokenGreaterThanZero ? (
                 <GasFeeRow chainId={currencyIn.chainId} gasFee={gasFee} />
+              ) : (
+                <EmptyGasFeeRow />
               )}
             </Flex>
             {transferWarning && !isBlocked && !isInsufficientGasFundsWarning ? (

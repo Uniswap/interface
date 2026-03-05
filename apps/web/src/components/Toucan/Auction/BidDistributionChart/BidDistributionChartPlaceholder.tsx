@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
@@ -15,9 +16,10 @@ const PlaceholderBar = styled(Flex, {
 
 interface BidDistributionChartPlaceholderProps {
   height?: number
+  children?: ReactNode
 }
 
-export function BidDistributionChartPlaceholder({ height = 400 }: BidDistributionChartPlaceholderProps) {
+export function BidDistributionChartPlaceholder({ height = 400, children }: BidDistributionChartPlaceholderProps) {
   const { t } = useTranslation()
   const shortestBarHeight = 20
   const patternIterations = 3
@@ -41,8 +43,8 @@ export function BidDistributionChartPlaceholder({ height = 400 }: BidDistributio
         zIndex={zIndexes.default}
         centered
       >
-        <Text variant="body1" color="$neutral2">
-          {t('toucan.auction.notStarted')}
+        <Text textAlign="center" variant="body1" color="$neutral2">
+          {children ?? t('toucan.auction.notStarted')}
         </Text>
       </Flex>
     </Flex>

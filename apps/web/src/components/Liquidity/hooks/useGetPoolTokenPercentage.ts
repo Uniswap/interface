@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
-import { PositionInfo } from 'components/Liquidity/types'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { PositionInfo } from '~/components/Liquidity/types'
 
 export function useGetPoolTokenPercentage(positionInfo?: PositionInfo) {
   const { totalSupply, liquidityAmount } = positionInfo ?? {}

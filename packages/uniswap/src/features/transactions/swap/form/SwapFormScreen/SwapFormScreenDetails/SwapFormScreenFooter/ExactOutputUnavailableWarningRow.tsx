@@ -8,44 +8,50 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 type ExactOutputUnavailableWarningRowProps = {
   currencies: DerivedSwapInfo['currencies']
   outputTokenHasBuyTax: boolean
+  isCrossChain: boolean
 }
 
 export function ExactOutputUnavailableWarningRow({
   currencies,
   outputTokenHasBuyTax,
+  isCrossChain,
 }: ExactOutputUnavailableWarningRowProps): JSX.Element {
   const { t } = useTranslation()
 
-  // Check if either currency is Solana
-  const inputChainId = toSupportedChainId(currencies[CurrencyField.INPUT]?.currency.chainId)
-  const outputChainId = toSupportedChainId(currencies[CurrencyField.OUTPUT]?.currency.chainId)
-  const hasSolanaToken = (inputChainId && isSVMChain(inputChainId)) || (outputChainId && isSVMChain(outputChainId))
-
-  // For Solana, show a different message
-  if (hasSolanaToken) {
-    return (
-      <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }}>
-        <Text color="$statusCritical" textAlign="center" variant="body3">
-          {t('swap.form.warning.output.solana')}
-        </Text>
-      </Flex>
-    )
-  }
-
-  // For FOT tokens, show the existing message
-  const fotCurrencySymbol = outputTokenHasBuyTax
-    ? currencies[CurrencyField.OUTPUT]?.currency.symbol
-    : currencies[CurrencyField.INPUT]?.currency.symbol
+  const warningMessage = getWarningMessage({ currencies, outputTokenHasBuyTax, isCrossChain, t })
 
   return (
     <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }}>
       <Text color="$statusCritical" textAlign="center" variant="body3">
-        {fotCurrencySymbol
-          ? t('swap.form.warning.output.fotFees', {
-              fotCurrencySymbol,
-            })
-          : t('swap.form.warning.output.fotFees.fallback')}
+        {warningMessage}
       </Text>
     </Flex>
   )
+}
+
+function getWarningMessage({
+  currencies,
+  outputTokenHasBuyTax,
+  isCrossChain,
+  t,
+}: ExactOutputUnavailableWarningRowProps & { t: ReturnType<typeof useTranslation>['t'] }): string {
+  if (isCrossChain) {
+    return t('swap.form.warning.output.crossChain')
+  }
+
+  const inputChainId = toSupportedChainId(currencies[CurrencyField.INPUT]?.currency.chainId)
+  const outputChainId = toSupportedChainId(currencies[CurrencyField.OUTPUT]?.currency.chainId)
+  const hasSolanaToken = (inputChainId && isSVMChain(inputChainId)) || (outputChainId && isSVMChain(outputChainId))
+
+  if (hasSolanaToken) {
+    return t('swap.form.warning.output.solana')
+  }
+
+  const fotCurrencySymbol = outputTokenHasBuyTax
+    ? currencies[CurrencyField.OUTPUT]?.currency.symbol
+    : currencies[CurrencyField.INPUT]?.currency.symbol
+
+  return fotCurrencySymbol
+    ? t('swap.form.warning.output.fotFees', { fotCurrencySymbol })
+    : t('swap.form.warning.output.fotFees.fallback')
 }

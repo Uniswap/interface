@@ -23,6 +23,7 @@ export function processSectionsToRows(sections: OnchainItemSection<OnchainItemLi
       rightElement: section.rightElement,
       endElement: section.endElement,
       name: section.name,
+      sectionHeader: section.sectionHeader,
     }
 
     result.push({

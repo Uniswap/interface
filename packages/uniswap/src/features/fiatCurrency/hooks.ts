@@ -56,6 +56,7 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.JapaneseYen]: t('currency.jpy'),
     [FiatCurrency.SouthKoreanWon]: t('currency.krw'),
     [FiatCurrency.MexicanPeso]: t('currency.mxn'),
+    [FiatCurrency.NewZealandDollar]: t('currency.nzd'),
     [FiatCurrency.NigerianNaira]: t('currency.ngn'),
     [FiatCurrency.PakistaniRupee]: t('currency.pkr'),
     [FiatCurrency.RussianRuble]: t('currency.rub'),
@@ -80,6 +81,7 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.JapaneseYen]: '¥',
     [FiatCurrency.SouthKoreanWon]: '₩',
     [FiatCurrency.MexicanPeso]: '$',
+    [FiatCurrency.NewZealandDollar]: '$',
     [FiatCurrency.NigerianNaira]: '₦',
     [FiatCurrency.PakistaniRupee]: 'Rs',
     [FiatCurrency.RussianRuble]: '₽',
@@ -117,7 +119,7 @@ export function useFiatCurrencyInfo(currency: FiatCurrency): FiatCurrencyInfo {
 function useUrlLocalCurrency(): FiatCurrency | undefined {
   const { useParsedQueryString } = useUrlContext()
   const parsed = useParsedQueryString()
-  const parsedLocalCurrency = parsed.cur
+  const parsedLocalCurrency = parsed['cur']
 
   if (typeof parsedLocalCurrency !== 'string') {
     return undefined

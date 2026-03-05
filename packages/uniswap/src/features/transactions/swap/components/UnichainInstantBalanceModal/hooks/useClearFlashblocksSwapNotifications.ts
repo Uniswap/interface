@@ -1,11 +1,12 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
 /**
  * Clears the notification queue when the provided `trigger` flag is true **and**
@@ -14,8 +15,8 @@ import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
  */
 export function useClearFlashblocksSwapNotifications(isClearingNotifications: boolean): void {
   const dispatch = useDispatch()
-  const accountAddress = useWallet().evmAccount?.address
-  const addressNotifications = useSelectAddressNotifications(accountAddress ?? null)
+  const evmAddress = useActiveAddress(Platform.EVM)
+  const addressNotifications = useSelectAddressNotifications(evmAddress ?? null)
 
   const shouldClearNotifications = useMemo(() => {
     if (!isClearingNotifications || !addressNotifications || addressNotifications.length === 0) {

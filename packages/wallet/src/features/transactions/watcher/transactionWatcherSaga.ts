@@ -1,14 +1,21 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { fork, put, select, take } from 'typed-redux-saga'
+import { fork, put, select, take, takeEvery } from 'typed-redux-saga'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { selectIncompleteTransactions } from 'uniswap/src/features/transactions/selectors'
-import { addTransaction, transactionActions, updateTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  addTransaction,
+  cancelRemoteUniswapXOrder,
+  transactionActions,
+  updateTransaction,
+} from 'uniswap/src/features/transactions/slice'
+import { PlanWatcher } from 'uniswap/src/features/transactions/swap/plan/planWatcherSaga'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { QueuedOrderStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
+import { attemptCancelRemoteUniswapXOrder } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { isFORTransaction } from 'wallet/src/features/transactions/utils'
 import { OrderWatcher } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import { watchFiatOnRampTransaction } from 'wallet/src/features/transactions/watcher/watchFiatOnRampSaga'
@@ -27,6 +34,13 @@ export function* transactionWatcher({
 
   // Start the order watcher to allow off-chain order updates to propagate to watchTransaction
   yield* fork(OrderWatcher.initialize)
+
+  yield* fork(PlanWatcher.initialize)
+
+  // Listen for remote UniswapX order cancellation requests (orders not in local Redux state)
+  yield* fork(function* watchRemoteOrderCancellation() {
+    yield* takeEvery(cancelRemoteUniswapXOrder.type, attemptCancelRemoteUniswapXOrder)
+  })
 
   // First, fork off watchers for any incomplete txs that are already in store
   // This allows us to detect completions if a user closed the app before a tx finished

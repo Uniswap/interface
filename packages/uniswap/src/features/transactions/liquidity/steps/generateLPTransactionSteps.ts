@@ -118,7 +118,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             permit: createPermit2SignatureStep(txContext.permit.typedData),
             migrate: createMigratePositionAsyncStep(
               txContext.migratePositionRequestArgs,
-              txContext.permit.typedData.values.deadline as number,
+              txContext.permit.typedData.values['deadline'] as number,
             ),
             positionTokenPermitTransaction: undefined,
             approvalPositionToken: undefined,
@@ -145,8 +145,8 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             token1PermitTransaction: undefined,
             increasePosition:
               txContext.type === 'increase'
-                ? createIncreasePositionAsyncStep(txContext.increasePositionRequestArgs)
-                : createCreatePositionAsyncStep(txContext.createPositionRequestArgs),
+                ? createIncreasePositionAsyncStep(txContext.increasePositionRequestArgs, txContext.delegatedAddress)
+                : createCreatePositionAsyncStep(txContext.createPositionRequestArgs, txContext.delegatedAddress),
           })
         } else {
           const steps = orderIncreaseLiquiditySteps({

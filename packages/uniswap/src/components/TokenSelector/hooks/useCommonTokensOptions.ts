@@ -5,16 +5,15 @@ import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { useAllCommonBaseCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useAllCommonBaseCurrencies'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export function useCommonTokensOptions({
-  evmAddress,
-  svmAddress,
+  addresses,
   chainFilter,
 }: {
-  evmAddress: Address | undefined
-  svmAddress: Address | undefined
+  addresses: AddressGroup
   chainFilter: UniverseChainId | null
 }): GqlResult<TokenOption[] | undefined> {
   const {
@@ -22,7 +21,7 @@ export function useCommonTokensOptions({
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPorfolioBalancesById,
-  } = usePortfolioBalancesForAddressById({ evmAddress, svmAddress })
+  } = usePortfolioBalancesForAddressById(addresses)
 
   const {
     data: commonBaseCurrencies,

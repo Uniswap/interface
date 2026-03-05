@@ -109,29 +109,29 @@ describe('createTestUrlBuilder', () => {
     it('should add multiple enabled feature flags', () => {
       const buildUrl = createTestUrlBuilder({ basePath: 'https://uniswap.org' })
       const url = buildUrl({
-        featureFlags: { [FeatureFlags.AATestWeb]: true, [FeatureFlags.PortfolioPage]: true },
+        featureFlags: { [FeatureFlags.AATestWeb]: true, [FeatureFlags.PortfolioDefiTab]: true },
       })
       expect(url).toContain('featureFlagOverride=')
       expect(url).toContain('aatest_web')
-      expect(url).toContain('portfolio_page')
+      expect(url).toContain('portfolio_defi_tab')
     })
 
     it('should add multiple disabled feature flags', () => {
       const buildUrl = createTestUrlBuilder({ basePath: 'https://uniswap.org' })
       const url = buildUrl({
-        featureFlags: { [FeatureFlags.AATestWeb]: false, [FeatureFlags.PortfolioPage]: false },
+        featureFlags: { [FeatureFlags.AATestWeb]: false, [FeatureFlags.PortfolioDefiTab]: false },
       })
       expect(url).toContain('featureFlagOverrideOff=')
       expect(url).toContain('aatest_web')
-      expect(url).toContain('portfolio_page')
+      expect(url).toContain('portfolio_defi_tab')
     })
 
     it('should separate enabled and disabled feature flags', () => {
       const buildUrl = createTestUrlBuilder({ basePath: 'https://uniswap.org' })
-      const url = buildUrl({ featureFlags: { [FeatureFlags.AATestWeb]: true, [FeatureFlags.PortfolioPage]: false } })
+      const url = buildUrl({ featureFlags: { [FeatureFlags.AATestWeb]: true, [FeatureFlags.PortfolioDefiTab]: false } })
 
       expect(url).toContain('featureFlagOverride=aatest_web')
-      expect(url).toContain('featureFlagOverrideOff=portfolio_page')
+      expect(url).toContain('featureFlagOverrideOff=portfolio_defi_tab')
     })
 
     it('should use default feature flags', () => {
@@ -148,19 +148,19 @@ describe('createTestUrlBuilder', () => {
         basePath: 'https://uniswap.org',
         defaultFeatureFlags: { [FeatureFlags.AATestWeb]: true },
       })
-      const url = buildUrl({ featureFlags: { [FeatureFlags.PortfolioPage]: true } })
+      const url = buildUrl({ featureFlags: { [FeatureFlags.PortfolioDefiTab]: true } })
       expect(url).toContain('featureFlagOverride=')
       expect(url).toContain('aatest_web')
-      expect(url).toContain('portfolio_page')
+      expect(url).toContain('portfolio_defi_tab')
     })
 
     it('should override default feature flags with custom ones', () => {
       const buildUrl = createTestUrlBuilder({
         basePath: 'https://uniswap.org',
-        defaultFeatureFlags: { [FeatureFlags.PortfolioPage]: true },
+        defaultFeatureFlags: { [FeatureFlags.PortfolioDefiTab]: true },
       })
-      const url = buildUrl({ featureFlags: { [FeatureFlags.PortfolioPage]: false } })
-      expect(url).toBe('https://uniswap.org/?featureFlagOverrideOff=portfolio_page')
+      const url = buildUrl({ featureFlags: { [FeatureFlags.PortfolioDefiTab]: false } })
+      expect(url).toBe('https://uniswap.org/?featureFlagOverrideOff=portfolio_defi_tab')
       expect(url).not.toContain('featureFlagOverride=')
     })
   })
@@ -171,12 +171,12 @@ describe('createTestUrlBuilder', () => {
       const url = buildUrl({
         subPath: '/swap',
         queryParams: { chain: 'mainnet' },
-        featureFlags: { [FeatureFlags.AATestWeb]: true, [FeatureFlags.PortfolioPage]: false },
+        featureFlags: { [FeatureFlags.AATestWeb]: true, [FeatureFlags.PortfolioDefiTab]: false },
       })
       expect(url).toContain('/swap')
       expect(url).toContain('chain=mainnet')
       expect(url).toContain('featureFlagOverride=aatest_web')
-      expect(url).toContain('featureFlagOverrideOff=portfolio_page')
+      expect(url).toContain('featureFlagOverrideOff=portfolio_defi_tab')
     })
 
     it('should combine relative baseUrl with all options', () => {
@@ -188,13 +188,13 @@ describe('createTestUrlBuilder', () => {
       const url = buildUrl({
         subPath: '/swap',
         queryParams: { token: 'ETH' },
-        featureFlags: { [FeatureFlags.PortfolioPage]: false },
+        featureFlags: { [FeatureFlags.PortfolioDefiTab]: false },
       })
       expect(url).toContain('/test/swap')
       expect(url).toContain('env=test')
       expect(url).toContain('token=ETH')
       expect(url).toContain('featureFlagOverride=aatest_web')
-      expect(url).toContain('featureFlagOverrideOff=portfolio_page')
+      expect(url).toContain('featureFlagOverrideOff=portfolio_defi_tab')
     })
   })
 

@@ -1,15 +1,18 @@
 import { ErrorBoundary as DatadogErrorBoundary } from '@datadog/browser-rum-react'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { deprecatedStyled } from 'lib/styled-components'
-import { PropsWithChildren, useState } from 'react'
+import { type PropsWithChildren, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { CopyToClipboard } from 'theme/components/CopyHelper'
-import { ExternalLink } from 'theme/components/Links'
-import { Button, Flex, TouchableArea } from 'ui/src'
+import { Button, Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { logger } from 'utilities/src/logger/logger'
+import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { persistor } from '~/state'
+import { useAppStateResetter } from '~/state/reset/appResetter'
+import { ThemedText } from '~/theme/components'
+import { CopyToClipboard } from '~/theme/components/CopyHelper'
+import { ExternalLink } from '~/theme/components/Links'
 
 const Code = deprecatedStyled.code`
   font-weight: 485;
@@ -31,25 +34,67 @@ const Separator = deprecatedStyled.div`
 const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) => {
   const { t } = useTranslation()
   const isMobile = useIsMobile()
+  const appStateResetter = useAppStateResetter()
 
   const errorDetails = error.stack || error.message
 
+  const [isClearDataEnabled, setIsClearDataEnabled] = useState(false)
+  const [isReloading, setIsReloading] = useState(false)
+  const handleReload = useCallback(async () => {
+    setIsReloading(true)
+    if (isClearDataEnabled) {
+      try {
+        await appStateResetter.resetAll()
+        // Flush persistor to ensure state is written to storage before reload
+        await persistor.flush()
+      } catch (e) {
+        logger.error(e, {
+          tags: {
+            file: 'ErrorBoundary',
+            function: 'handleReload',
+          },
+        })
+      }
+    }
+    window.location.reload()
+  }, [isClearDataEnabled, appStateResetter])
+
   return (
-    <Flex height="100%" width="100%" position="absolute" centered top={0} left={0} right={0} bottom={0}>
+    <Flex
+      height="100%"
+      width="100%"
+      position="absolute"
+      centered
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      backgroundColor="$surface1"
+    >
       <Flex
-        gap="$gap24"
+        gap="$gap16"
         width="100%"
         p={isMobile ? '$spacing16' : '$spacing1'}
         maxWidth={isMobile ? '100%' : 500}
         centered
       >
         <ErrorDetailsSection errorDetails={errorDetails} eventId={eventId} />
-        <Flex width="100%" row gap="$gap12">
-          <Flex row flexBasis={0} flexGrow={1}>
-            <Button emphasis="primary" size="small" variant="branded" onPress={() => window.location.reload()}>
-              {t('common.reload.label')}
-            </Button>
+        <Flex
+          alignSelf="stretch"
+          backgroundColor="$surface2"
+          borderRadius="$rounded16"
+          gap="$spacing8"
+          p={isMobile ? '$spacing12' : '$spacing16'}
+        >
+          <Flex row alignItems="center" justifyContent="space-between">
+            <Text variant="subheading2">{t('errors.crash.resetData.title')}</Text>
+            <Switch checked={isClearDataEnabled} variant="default" onCheckedChange={setIsClearDataEnabled} />
           </Flex>
+          <Text color="$neutral2" variant="body3">
+            {t('errors.crash.resetData.description.web')}
+          </Text>
+        </Flex>
+        <Flex width="100%" row gap="$gap12">
           <ExternalLink
             style={{ flexGrow: 1, flexBasis: 0 }}
             id="get-support-on-discord"
@@ -57,11 +102,22 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             target="_blank"
           >
             <Flex row>
-              <Button emphasis="secondary" size="small" variant="branded">
+              <Button emphasis="secondary" size="small">
                 {t('common.getSupport.button')}
               </Button>
             </Flex>
           </ExternalLink>
+          <Flex row flexBasis={0} flexGrow={1}>
+            <Button
+              emphasis="primary"
+              size="small"
+              loading={isReloading}
+              isDisabled={isReloading}
+              onPress={handleReload}
+            >
+              {t('common.reload.label')}
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </Flex>
@@ -80,7 +136,7 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
 
   return (
     <>
-      <Flex gap="$gap8">
+      <Flex gap="$gap8" mb="$spacing8">
         <Title textAlign="center">{t('common.card.error.description')}</Title>
         <Description textAlign="center" color="neutral2">
           {eventId ? t('error.request.provideId') : t('common.error.request')}
@@ -90,7 +146,7 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
         alignSelf="stretch"
         backgroundColor="$surface2"
         gap="$spacing8"
-        p={isMobile ? '$spacing16' : '$spacing24'}
+        p={isMobile ? '$spacing12' : '$spacing16'}
         borderRadius="$rounded24"
       >
         <Flex row gap="$gap16" alignItems="center" justifyContent="space-between">
@@ -110,7 +166,7 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
           <ThemedText.Link color="neutral2">
             {isExpanded ? t('common.showLess.button') : t('common.showMore.button')}
           </ThemedText.Link>
-          <RotatableChevron width="$icon.20" height="$icon.20" direction={isExpanded ? 'up' : 'down'} />
+          <RotatableChevron size="$icon.20" direction={isExpanded ? 'up' : 'down'} />
         </TouchableArea>
       </Flex>
     </>

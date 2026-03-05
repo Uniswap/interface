@@ -1,5 +1,4 @@
 import { TradingApi } from '@universe/api'
-import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -8,6 +7,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { logSwapFinalized, logUniswapXSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: vi.fn(),
@@ -58,7 +58,13 @@ describe('swapFlowLoggers', () => {
       chain_id_out: mockChainId,
       id: mockHash,
       batch_id: mockBatchId,
-      is_final_step: true,
+      swap_start_timestamp: undefined,
+      plan_id: undefined,
+      step_index: undefined,
+      total_steps: undefined,
+      total_non_error_steps: undefined,
+      step_type: undefined,
+      is_final_step: undefined,
       ...mockAnalyticsContext,
     })
   })
@@ -88,7 +94,13 @@ describe('swapFlowLoggers', () => {
       order_hash: mockOrderHash,
       chain_id: mockChainId,
       id: 'mockId',
-      is_final_step: true,
+      swap_start_timestamp: undefined,
+      plan_id: undefined,
+      step_index: undefined,
+      total_steps: undefined,
+      total_non_error_steps: undefined,
+      step_type: undefined,
+      is_final_step: undefined,
       ...mockAnalyticsContext,
     })
   })

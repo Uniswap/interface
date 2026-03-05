@@ -10,12 +10,12 @@ function createNoopSessionService(): SessionService {
     challengeType: ChallengeType.UNSPECIFIED,
     extra: {},
   })
-  const upgradeSession: SessionService['upgradeSession'] = async () => ({ retry: false })
+  const verifySession: SessionService['verifySession'] = async () => ({ retry: false })
 
   return {
     initSession,
     requestChallenge,
-    upgradeSession,
+    verifySession,
     removeSession,
     getSessionState,
   }

@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { logger } from 'utilities/src/logger/logger'
+import ConfiguredJsonRpcProvider from '~/rpc/ConfiguredJsonRpcProvider'
 
 /**
  * A controller which marks itself disabled on an error, and re-enables itself using exponential backoff.

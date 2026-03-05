@@ -2,8 +2,7 @@ import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { ScrollView } from 'react-native-gesture-handler'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { KeyboardStickyView } from 'react-native-keyboard-controller'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -105,17 +104,18 @@ export function EditProfileSettingsModal({
       >
         <Text variant="body1">{t('settings.setting.wallet.action.editProfile')}</Text>
       </BackHeader>
-      <KeyboardAwareScrollView ScrollViewComponent={ScrollView} contentContainerStyle={styles.base}>
+      <Flex style={styles.base}>
         {unitag && (
           <EditUnitagProfileContent
             address={address}
             unitag={unitag}
             entryPoint={entryPoint}
+            SaveButtonWrapper={KeyboardStickyView}
             onNavigate={onNavigate}
             onButtonClick={onButtonClick}
           />
         )}
-      </KeyboardAwareScrollView>
+      </Flex>
       {showDeleteUnitagModal && unitag && (
         <DeleteUnitagModal address={address} unitag={unitag} onSuccess={onBack} onClose={onCloseDeleteModal} />
       )}

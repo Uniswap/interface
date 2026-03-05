@@ -1,8 +1,8 @@
-import { EmptyCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/EmptyCell'
-import { TokenAmountDisplay } from 'pages/Portfolio/Activity/ActivityTable/TokenAmountDisplay'
 import { Flex, Text } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { EmptyCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/EmptyCell'
+import { TokenAmountDisplay } from '~/pages/Portfolio/Activity/ActivityTable/TokenAmountDisplay'
 
 const AMOUNT_COLUMN_WIDTH = 180
 const AMOUNT_COLUMN_SEPARATOR_WIDTH = 24

@@ -1,7 +1,7 @@
-import { expect, getTest } from 'playwright/fixtures'
-import { setupWebAuthn } from 'playwright/mocks/webAuthn'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { expect, getTest } from '~/playwright/fixtures'
+import { setupWebAuthn } from '~/playwright/mocks/webAuthn'
 
 const test = getTest()
 
@@ -10,9 +10,9 @@ const UNITAG_NAME = 'newunitag'
 test.describe(
   'User onboarding',
   {
-    tag: '@team:apps-growth',
+    tag: '@team:apps-portfolio',
     annotation: [
-      { type: 'DD_TAGS[team]', description: 'apps-growth' },
+      { type: 'DD_TAGS[team]', description: 'apps-portfolio' },
       { type: 'DD_TAGS[test.type]', description: 'web-e2e' },
     ],
   },

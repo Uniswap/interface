@@ -1,7 +1,3 @@
-import { ClosestTimeIndexFinder } from 'components/Charts/BandsIndicator/helpers/closest-index'
-import { UpperLowerInRange } from 'components/Charts/BandsIndicator/helpers/min-max-in-range'
-import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
-import { PluginBase } from 'components/Charts/BandsIndicator/plugin-base'
 import { CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   Coordinate,
@@ -14,6 +10,10 @@ import {
   SeriesType,
   Time,
 } from 'lightweight-charts'
+import { ClosestTimeIndexFinder } from '~/components/Charts/BandsIndicator/helpers/closest-index'
+import { UpperLowerInRange } from '~/components/Charts/BandsIndicator/helpers/min-max-in-range'
+import { cloneReadonly } from '~/components/Charts/BandsIndicator/helpers/simple-clone'
+import { PluginBase } from '~/components/Charts/BandsIndicator/plugin-base'
 
 interface BandRendererData {
   x: Coordinate | number

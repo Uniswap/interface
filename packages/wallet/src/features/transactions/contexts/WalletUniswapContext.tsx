@@ -16,6 +16,7 @@ import type {
 import { createHasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { getLogger, logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -79,15 +80,28 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
     navigateToPoolDetails,
     navigateToNftCollection,
     handleShareToken,
+    navigateToAdvancedSettings,
   } = useWalletNavigation()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
   const navigateToSwapFromCurrencyIds = useCallback(
-    ({ inputCurrencyId, outputCurrencyId }: { inputCurrencyId?: string; outputCurrencyId?: string }) => {
+    ({
+      inputCurrencyId,
+      outputCurrencyId,
+      exactCurrencyField,
+      exactAmountToken,
+    }: {
+      inputCurrencyId?: string
+      outputCurrencyId?: string
+      exactCurrencyField?: CurrencyField
+      exactAmountToken?: string
+    }) => {
       const initialState = prepareSwapFormState({
         inputCurrencyId,
         outputCurrencyId,
         defaultChainId: UniverseChainId.Mainnet,
+        exactCurrencyField,
+        exactAmountToken,
       })
       navigateToSwapFlow({ initialState })
     },
@@ -120,6 +134,7 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       navigateToNftCollection={navigateToNftCollection}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
+      navigateToAdvancedSettings={navigateToAdvancedSettings}
       signer={signer}
       useProviderHook={useWalletProvider}
       useWalletDisplayName={useDisplayName}

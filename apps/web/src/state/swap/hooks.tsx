@@ -1,12 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useCurrency } from 'hooks/Tokens'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { CurrencyState, SerializedCurrencyState, SwapState } from 'state/swap/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -18,7 +13,12 @@ import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { getParsedChainId } from 'utils/chainParams'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useCurrency } from '~/hooks/Tokens'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { CurrencyState, SerializedCurrencyState, SwapState } from '~/state/swap/types'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
+import { getParsedChainId } from '~/utils/chainParams'
 
 export function useOnSwitchTokens(): () => void {
   const { setCurrencyState } = useSwapAndLimitContext()
@@ -127,11 +127,15 @@ export function serializeSwapAddressesToURLParameters({
   outputTokenAddress,
   chainId,
   outputChainId,
+  exactCurrencyField,
+  exactAmountToken,
 }: {
   inputTokenAddress?: string
   outputTokenAddress?: string
   chainId?: UniverseChainId | null
   outputChainId?: UniverseChainId | null
+  exactCurrencyField?: CurrencyField
+  exactAmountToken?: string
 }): string {
   const chainIdOrDefault = chainId ?? UniverseChainId.Mainnet
 
@@ -150,6 +154,8 @@ export function serializeSwapAddressesToURLParameters({
           ? NATIVE_CHAIN_ID
           : outputTokenAddress
         : undefined,
+      typedValue: exactAmountToken,
+      independentField: exactCurrencyField,
     }).toString()
   )
 }
@@ -230,9 +236,9 @@ export function useInitialCurrencyState(): {
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
     // Default to native if no query params or chain is not compatible with testnet or mainnet mode
     if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
-      const initialChainId = persistedFilteredChainIds?.input
+      const initialChainId = persistedFilteredChainIds?.input ?? defaultChainId
       return {
-        initialInputCurrencyAddress: getNativeAddress(initialChainId ?? defaultChainId),
+        initialInputCurrencyAddress: getNativeAddress(initialChainId),
         initialChainId,
       }
     }

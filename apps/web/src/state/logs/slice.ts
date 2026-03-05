@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type { Filter } from '@ethersproject/providers'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { filterToKey, Log } from 'state/logs/utils'
+import { filterToKey, Log } from '~/state/logs/utils'
 
 export interface LogsState {
   [chainId: number]: {
@@ -102,8 +102,9 @@ const slice = createSlice({
       }
       state[chainId][key].listeners--
     },
+    resetLogs: () => ({}),
   },
 })
 
 export default slice.reducer
-export const { fetchedLogs, fetchedLogsError, fetchingLogs } = slice.actions
+export const { fetchedLogs, fetchedLogsError, fetchingLogs, resetLogs } = slice.actions

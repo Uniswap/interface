@@ -31,7 +31,7 @@ describe('createHasMismatchUtil', () => {
       expected: true,
     },
   ])('$name', async ({ isDelegated, isAtomicSupported, expected }) => {
-    const mockOnMismatchDetected = jest.fn()
+    const mockOnMismatchDetected = vi.fn()
     const hasMismatch = createHasMismatchUtil({
       delegationService: {
         getIsAddressDelegated: async (): Promise<DelegatedResult> =>

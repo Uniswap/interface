@@ -1,18 +1,3 @@
-import { ApproveAmountCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ApproveAmountCell'
-import { CompactLayout } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/CompactLayout'
-import { DualTokenLayout } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/DualTokenLayout'
-import { EmptyCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/EmptyCell'
-import {
-  createSplitLogo,
-  createTokenLogo,
-  formatAmountWithSymbol,
-  formatCompactAmountText,
-  formatSingleCompactAmountText,
-  getTransactionTypeLabel,
-  getUsdValue,
-} from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/utils'
-import { NftAmountDisplay } from 'pages/Portfolio/Activity/ActivityTable/NftAmountDisplay'
-import { buildActivityRowFragments } from 'pages/Portfolio/Activity/ActivityTable/registry'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
@@ -30,6 +15,22 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ApproveAmountCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ApproveAmountCell'
+import { CompactLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/CompactLayout'
+import { DualTokenLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/DualTokenLayout'
+import { EmptyCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/EmptyCell'
+import { GenericCompactLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/GenericCompactLayout'
+import {
+  createSplitLogo,
+  createTokenLogo,
+  formatAmountWithSymbol,
+  formatCompactAmountText,
+  formatSingleCompactAmountText,
+  getTransactionTypeLabel,
+  getUsdValue,
+} from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/utils'
+import { NftAmountDisplay } from '~/pages/Portfolio/Activity/ActivityTable/NftAmountDisplay'
+import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registry'
 
 interface ActivityAmountCellProps {
   transaction: TransactionDetails
@@ -41,7 +42,7 @@ function _ActivityAmountCell({ transaction, variant = 'full' }: ActivityAmountCe
   const { t } = useTranslation()
   const { chainId } = transaction
   const fragments = buildActivityRowFragments(transaction)
-  const { amount } = fragments
+  const { amount, protocolInfo } = fragments
 
   // Hook up currency info based on amount model
   const inputCurrencyInfo = useCurrencyInfo(amount?.kind === 'pair' ? amount.inputCurrencyId : undefined)
@@ -127,6 +128,15 @@ function _ActivityAmountCell({ transaction, variant = 'full' }: ActivityAmountCe
   })
 
   if (transaction.status === TransactionStatus.Failed) {
+    if (variant === 'compact') {
+      return (
+        <GenericCompactLayout
+          transaction={transaction}
+          protocolInfo={protocolInfo}
+          labelOverride={t('transaction.status.confirm.failed')}
+        />
+      )
+    }
     return (
       <Text variant="body3" color="$neutral2">
         {t('notification.transaction.unknown.fail.short')}
@@ -135,6 +145,9 @@ function _ActivityAmountCell({ transaction, variant = 'full' }: ActivityAmountCe
   }
 
   if (!amount) {
+    if (variant === 'compact') {
+      return <GenericCompactLayout transaction={transaction} protocolInfo={protocolInfo} />
+    }
     return <EmptyCell />
   }
 

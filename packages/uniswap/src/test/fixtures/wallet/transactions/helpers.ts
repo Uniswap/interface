@@ -3,6 +3,7 @@ import { formatEther } from '@ethersproject/units'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import merge from 'lodash/merge'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ClassicTransactionDetails,
@@ -89,6 +90,7 @@ export const getTxFixtures = <T extends ClassicTransactionDetails>(
       tokenSymbol: nativeCurrency.symbol,
       tokenAddress: nativeCurrency.address,
       chainId: txDetailsPending.chainId,
+      valueType: ValueType.Exact,
     },
   })
   const txDetailsFailed = finalizedTransactionDetails({

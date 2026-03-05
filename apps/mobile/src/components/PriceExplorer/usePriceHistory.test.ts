@@ -250,7 +250,7 @@ describe(useTokenPriceHistory, () => {
     const { resolvers } = queryResolvers({
       // eslint-disable-next-line max-params
       tokenProjects: (parent, args, context, info) => {
-        switch (info.variableValues.duration) {
+        switch (info.variableValues['duration']) {
           case GraphQLApi.HistoryDuration.Day:
             return [dayTokenProject]
           case GraphQLApi.HistoryDuration.Week:

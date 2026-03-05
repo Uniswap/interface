@@ -1,0 +1,18 @@
+{
+  "tokens": [
+    {
+      "tokenId": "TOKEN:1:0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "chainId": 1,
+      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "decimals": 18,
+      "symbol": "UNI",
+      "name": "Uniswap",
+      "standard": "ERC20",
+      "projectName": "Uniswap",
+      "logoUrl": "https://token-icons.s3.amazonaws.com/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984.png",
+      "isSpam": "false",
+      "safetyLevel": "VERIFIED"
+    }
+  ],
+  "pools": []
+}

@@ -1,3 +1,6 @@
+import { ReactElement } from 'react'
+import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import {
   EmblemA,
   EmblemB,
@@ -7,10 +10,7 @@ import {
   EmblemF,
   EmblemG,
   EmblemH,
-} from 'pages/Portfolio/components/AnimatedStyledBanner/Emblems'
-import { ReactElement } from 'react'
-import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
+} from '~/pages/Portfolio/components/AnimatedStyledBanner/Emblems'
 
 interface AnimatedEmblemProps {
   children: ReactElement

@@ -1,7 +1,7 @@
-import NotFoundModal from 'components/NotFoundModal/NotFoundModal'
-import { useModalState } from 'hooks/useModalState'
 import { useTranslation } from 'react-i18next'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import NotFoundModal from '~/components/NotFoundModal/NotFoundModal'
+import { useModalState } from '~/hooks/useModalState'
 
 function TokenNotFoundModal() {
   const { t } = useTranslation()

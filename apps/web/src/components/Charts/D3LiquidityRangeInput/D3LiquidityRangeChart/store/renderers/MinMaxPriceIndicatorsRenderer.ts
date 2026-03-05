@@ -1,11 +1,11 @@
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import * as d3 from 'd3'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import type {
   ChartActions,
   ChartState,
   Renderer,
   RenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import * as d3 from 'd3'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 
 const BACKGROUND_CLASSES = {
   RANGE_INDICATOR: 'range-indicator',
@@ -34,10 +34,10 @@ export function createMinMaxPriceIndicatorsRenderer({
   const minMaxPriceIndicatorsGroup = g.append('g').attr('class', 'min-max-price-indicators-group')
 
   const draw = (): void => {
-    const { colors, dimensions, priceToY } = context
-    const { minPrice, maxPrice, isFullRange } = getState()
+    const { colors, dimensions, tickToY } = context
+    const { minTick, maxTick, isFullRange } = getState()
 
-    if (minPrice === undefined || maxPrice === undefined) {
+    if (minTick === undefined || maxTick === undefined) {
       return
     }
 
@@ -52,13 +52,13 @@ export function createMinMaxPriceIndicatorsRenderer({
     minMaxPriceIndicatorsGroup.selectAll('*').remove()
 
     // Check if handles are outside the visible viewport
-    const isPastMaxHandle = priceToY({ price: maxPrice, tickAlignment: 'top' }) < 0
-    const isPastMinHandle = priceToY({ price: minPrice, tickAlignment: 'bottom' }) > dimensions.height
+    const isPastMaxHandle = tickToY({ tick: maxTick, tickAlignment: 'top' }) < 0
+    const isPastMinHandle = tickToY({ tick: minTick, tickAlignment: 'bottom' }) > dimensions.height
 
     // Check if the range is partially visible (use white) vs completely out of view (use pink)
     const isRangePartiallyVisible =
-      priceToY({ price: maxPrice, tickAlignment: 'top' }) < dimensions.height &&
-      priceToY({ price: minPrice, tickAlignment: 'bottom' }) > 0
+      tickToY({ tick: maxTick, tickAlignment: 'top' }) < dimensions.height &&
+      tickToY({ tick: minTick, tickAlignment: 'bottom' }) > 0
     const iconColor = isRangePartiallyVisible ? colors.white.val : colors.accent1.val
 
     // Draw dynamic range indicator line inside the border grey line
@@ -78,8 +78,8 @@ export function createMinMaxPriceIndicatorsRenderer({
     }
 
     // Calculate range positions with minimum height constraint
-    const maxY = priceToY({ price: maxPrice, tickAlignment: 'top' })
-    const minY = priceToY({ price: minPrice, tickAlignment: 'bottom' })
+    const maxY = tickToY({ tick: maxTick, tickAlignment: 'top' })
+    const minY = tickToY({ tick: minTick, tickAlignment: 'bottom' })
     const indicatorHeight = minY - maxY
 
     // Ensure minimum height for visual indicator

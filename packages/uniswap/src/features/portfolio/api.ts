@@ -93,7 +93,7 @@ async function getOnChainBalancesFetchEVM(params: BalanceLookupParams): Promise<
 
   // erc20 lookup
   const erc20Contract = new Contract(currencyAddress, ERC20_ABI, provider)
-  const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
+  const balance = await erc20Contract.callStatic['balanceOf']?.(accountAddress)
   return { balance: balance.toString() }
 }
 

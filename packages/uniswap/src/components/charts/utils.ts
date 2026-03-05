@@ -1,6 +1,15 @@
 import { GraphQLApi } from '@universe/api'
 
-const STABLECOIN_VARIANCE_PERCENT_THRESHOLD = 0.5
+// Shorter timeframes use higher thresholds since stablecoins naturally show more price noise on smaller windows
+const STABLECOIN_VARIANCE_THRESHOLDS: Record<GraphQLApi.HistoryDuration, number> = {
+  [GraphQLApi.HistoryDuration.FiveMinute]: 1.5, // not used in the UI
+  [GraphQLApi.HistoryDuration.Hour]: 1.5,
+  [GraphQLApi.HistoryDuration.Day]: 1.5,
+  [GraphQLApi.HistoryDuration.Week]: 0.5,
+  [GraphQLApi.HistoryDuration.Month]: 0.5,
+  [GraphQLApi.HistoryDuration.Year]: 0.5,
+  [GraphQLApi.HistoryDuration.Max]: 0.5,
+}
 
 /**
  * Determines if a price range has low variance (typically indicating a stablecoin).
@@ -22,13 +31,12 @@ export function isLowVarianceRange({
     return false
   }
 
-  // Always return false for 1H time windows
-  if (duration === GraphQLApi.HistoryDuration.Hour) {
+  if (!duration) {
     return false
   }
 
   const priceRange = max - min
   const priceVariancePercent = (priceRange / min) * 100
 
-  return priceVariancePercent < STABLECOIN_VARIANCE_PERCENT_THRESHOLD
+  return priceVariancePercent < STABLECOIN_VARIANCE_THRESHOLDS[duration]
 }

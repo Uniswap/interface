@@ -1,10 +1,10 @@
-import { UseMutationOptions, UseMutationResult, useMutation } from '@tanstack/react-query'
-import { useModalState } from 'hooks/useModalState'
+import { MutationFunctionContext, UseMutationOptions, UseMutationResult, useMutation } from '@tanstack/react-query'
 import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { PasskeysHelpModalTypes } from 'uniswap/src/features/passkey/PasskeysHelpModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
+import { useModalState } from '~/hooks/useModalState'
 
 export const PasskeysHelpModalTypeAtom = atom<PasskeysHelpModalTypes>(PasskeysHelpModalTypes.Default)
 
@@ -27,10 +27,15 @@ export function usePasskeyAuthWithHelpModal<TData = unknown, TError = Error, TVa
     mutationFn,
     ...options,
     // eslint-disable-next-line max-params
-    onError: (error: TError, variables: TVariables, context: TContext | undefined) => {
+    onError: (
+      error: TError,
+      variables: TVariables,
+      onMutateResult: TContext | undefined,
+      mutationContext: MutationFunctionContext,
+    ) => {
       const errorContext = {
         variables,
-        context,
+        context: onMutateResult,
         message: '',
         type: PasskeysHelpModalTypes.Default,
       }
@@ -57,7 +62,7 @@ export function usePasskeyAuthWithHelpModal<TData = unknown, TError = Error, TVa
         extra: errorContext,
       })
       openPasskeysHelpModal()
-      options?.onError?.(error, variables, context)
+      options?.onError?.(error, variables, onMutateResult, mutationContext)
     },
   })
 }

@@ -1,19 +1,6 @@
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { type Currency } from '@uniswap/sdk-core'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { isInputGreaterThanDecimals } from 'components/NumericalInput'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { AlternateCurrencyDisplay } from 'pages/Swap/common/AlternateCurrencyDisplay'
-import { NumericalInputMimic, NumericalInputSymbolContainer, StyledNumericalInput } from 'pages/Swap/common/shared'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { SendInputError } from 'state/send/hooks'
-import { useSendContext } from 'state/send/SendContext'
-import { type CurrencyState } from 'state/swap/types'
-import { ThemedText } from 'theme/components'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, type ButtonProps, Flex, styled, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useCurrencyInputFontSize } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
@@ -26,11 +13,25 @@ import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/featu
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
-import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { isSafeNumber } from 'utilities/src/primitives/integer'
+import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { isInputGreaterThanDecimals } from '~/components/NumericalInput'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
+import { NumericalInputMimic, NumericalInputSymbolContainer, StyledNumericalInput } from '~/pages/Swap/common/shared'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { SendInputError } from '~/state/send/hooks'
+import { useSendContext } from '~/state/send/SendContext'
+import { type CurrencyState } from '~/state/swap/types'
+import { ThemedText } from '~/theme/components'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { maxAmountSpend } from '~/utils/maxAmountSpend'
 
 const Wrapper = styled(Flex, {
   opacity: 1,
@@ -145,6 +146,7 @@ export default function SendCurrencyInputForm({
   const fiatBalanceValue = useUSDCValue(currencyBalance)
   const displayValue = inputInFiat ? exactAmountFiat : exactAmountToken
   const hiddenObserver = useResizeObserver<HTMLElement>()
+  const prefixObserver = useResizeObserver<HTMLElement>()
 
   const { fontSize, lineHeight, onLayout } = useCurrencyInputFontSize({
     value: displayValue,
@@ -158,6 +160,13 @@ export default function SendCurrencyInputForm({
 
   const handleUserInput = useCallback(
     (newValue: string) => {
+      const hasMoreThanTwoDecimals = inputInFiat && newValue.includes('.') && newValue.split('.')[1]?.length > 2
+
+      // Omit parsing errors by checking if amount has more than two decimals or exceeds Number range limit
+      if (hasMoreThanTwoDecimals || !isSafeNumber(newValue)) {
+        return
+      }
+
       setSendState((prev) => ({
         ...prev,
         [inputInFiat ? 'exactAmountFiat' : 'exactAmountToken']: newValue,
@@ -230,7 +239,7 @@ export default function SendCurrencyInputForm({
     [maxInputAmount, setSendState],
   )
 
-  const adjustedWidth = displayValue && hiddenObserver.width ? hiddenObserver.width + 40 : undefined
+  const adjustedWidth = displayValue && hiddenObserver.width ? hiddenObserver.width : undefined
 
   return (
     <Wrapper disabled={disabled}>
@@ -238,10 +247,11 @@ export default function SendCurrencyInputForm({
         <Flex width="100%" pt="$spacing16" px="$spacing16">
           <Text>{t('send.youAreSending')}</Text>
         </Flex>
-        <Flex px="$spacing16" py="$spacing60" gap="$spacing16" maxWidth="100%">
+        <Flex px="$spacing16" py="$spacing60" gap="$spacing16" width="100%" alignItems="center">
           <Flex row maxWidth="100%" position="relative" width="max-content">
             {inputInFiat && (
               <NumericalInputSymbolContainer
+                ref={prefixObserver.ref}
                 showPlaceholder={!displayValue}
                 style={{ lineHeight: `${lineHeight}px`, fontSize: `${fontSize}px` }}
               >
@@ -258,6 +268,7 @@ export default function SendCurrencyInputForm({
               maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
               $fontSize={fontSize}
               style={{ lineHeight: `${lineHeight}px` }}
+              $prefixWidth={prefixObserver.width}
               testId={TestID.SendFormAmountInput}
             />
             <NumericalInputMimic

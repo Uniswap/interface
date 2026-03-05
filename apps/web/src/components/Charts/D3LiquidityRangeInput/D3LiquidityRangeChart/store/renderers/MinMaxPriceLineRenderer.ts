@@ -1,11 +1,11 @@
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import * as d3 from 'd3'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import type {
   ChartActions,
   ChartState,
   Renderer,
   RenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import * as d3 from 'd3'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 
 const SOLID_PRICE_LINE_CLASSES = {
   MIN_LINE: 'min-price-line',
@@ -34,11 +34,11 @@ export function createMinMaxPriceLineRenderer({
     // Clear previous price line elements
     priceLineGroup.selectAll('*').remove()
 
-    const { colors, dimensions, priceToY } = context
-    const { minPrice, maxPrice } = getState()
+    const { colors, dimensions, tickToY } = context
+    const { minTick, maxTick } = getState()
 
     // Only draw if both prices are set
-    if (minPrice === undefined || maxPrice === undefined) {
+    if (minTick === undefined || maxTick === undefined) {
       return
     }
 
@@ -53,14 +53,8 @@ export function createMinMaxPriceLineRenderer({
       .attr('class', `price-range-element ${SOLID_PRICE_LINE_CLASSES.MIN_LINE}`)
       .attr('x1', 0) // Start from left margin
       .attr('x2', dimensions.width + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge
-      .attr(
-        'y1',
-        priceToY({ price: minPrice, tickAlignment: 'bottom' }) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2,
-      )
-      .attr(
-        'y2',
-        priceToY({ price: minPrice, tickAlignment: 'bottom' }) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2,
-      )
+      .attr('y1', tickToY({ tick: minTick, tickAlignment: 'bottom' }) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+      .attr('y2', tickToY({ tick: minTick, tickAlignment: 'bottom' }) + CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
       .attr('stroke', colors.accent1.val)
       .attr('stroke-width', CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT)
       .attr('opacity', 0.08)
@@ -71,8 +65,8 @@ export function createMinMaxPriceLineRenderer({
       .attr('class', `price-range-element ${SOLID_PRICE_LINE_CLASSES.MAX_LINE}`)
       .attr('x1', 0) // Start from left margin
       .attr('x2', dimensions.width + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge
-      .attr('y1', priceToY({ price: maxPrice, tickAlignment: 'top' }) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
-      .attr('y2', priceToY({ price: maxPrice, tickAlignment: 'top' }) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+      .attr('y1', tickToY({ tick: maxTick, tickAlignment: 'top' }) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
+      .attr('y2', tickToY({ tick: maxTick, tickAlignment: 'top' }) - CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT / 2)
       .attr('stroke', colors.accent1.val)
       .attr('stroke-width', CHART_DIMENSIONS.SOLID_MIN_MAX_LINE_HEIGHT)
       .attr('opacity', 0.08)
@@ -83,8 +77,8 @@ export function createMinMaxPriceLineRenderer({
       .attr('class', `price-range-element ${TRANSPARENT_PRICE_LINE_CLASSES.MIN_LINE}`)
       .attr('x1', 0) // Start from left margin
       .attr('x2', dimensions.width + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge before liquidity section
-      .attr('y1', priceToY({ price: minPrice, tickAlignment: 'bottom' }))
-      .attr('y2', priceToY({ price: minPrice, tickAlignment: 'bottom' }))
+      .attr('y1', tickToY({ tick: minTick, tickAlignment: 'bottom' }))
+      .attr('y2', tickToY({ tick: minTick, tickAlignment: 'bottom' }))
       .attr('stroke', colors.accent1.val)
       .attr('stroke-width', CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
       .attr('opacity', 0)
@@ -97,8 +91,8 @@ export function createMinMaxPriceLineRenderer({
       .attr('class', `price-range-element ${TRANSPARENT_PRICE_LINE_CLASSES.MAX_LINE}`)
       .attr('x1', 0) // Start from left margin
       .attr('x2', dimensions.width + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge before liquidity section
-      .attr('y1', priceToY({ price: maxPrice, tickAlignment: 'top' }))
-      .attr('y2', priceToY({ price: maxPrice, tickAlignment: 'top' }))
+      .attr('y1', tickToY({ tick: maxTick, tickAlignment: 'top' }))
+      .attr('y2', tickToY({ tick: maxTick, tickAlignment: 'top' }))
       .attr('stroke', colors.accent1.val)
       .attr('stroke-width', CHART_DIMENSIONS.TRANSPARENT_MIN_MAX_LINE_HEIGHT)
       .attr('opacity', 0)

@@ -1,11 +1,13 @@
 export enum InterfacePageName {
   AboutPage = 'about-page',
+  AuctionDetailsPage = 'auction-details-page',
   Buy = 'buy-page',
   CreatePosition = 'create-position-page',
   ExplorePage = 'explore-page',
   ExtensionPasskeySignInPage = 'extension-passkey-sign-in-page',
   ExtensionUninstall = 'extension-uninstall',
   LandingPage = 'landing-page',
+  LaunchAuctionPage = 'launch-auction-page',
   Limit = 'limit-page',
   MigrateV2 = 'migrate-v2-page',
   MigrateV2Pair = 'migrate-v2-pair-page',

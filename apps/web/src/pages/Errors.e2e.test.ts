@@ -1,7 +1,7 @@
-import { expect, getTest } from 'playwright/fixtures'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { expect, getTest } from '~/playwright/fixtures'
 
 const test = getTest()
 

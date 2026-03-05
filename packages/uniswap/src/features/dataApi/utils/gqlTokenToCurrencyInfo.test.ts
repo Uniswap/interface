@@ -25,6 +25,7 @@ describe(gqlTokenToCurrencyInfo, () => {
       isSpam: token.project.isSpam,
       isBridged: token.isBridged,
       bridgedWithdrawalInfo: token.bridgedWithdrawalInfo,
+      projectId: token.project.id,
     })
   })
 

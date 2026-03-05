@@ -1,0 +1,218 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Delta > should render correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <svg
+      aria-label="up"
+      class="c0"
+      fill="none"
+      height="16"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Delta > should render correctly when delta is negative 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: #E10F0F;
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <svg
+      aria-label="down"
+      class="c0"
+      fill="none"
+      height="16"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Delta > should render correctly when delta is positive 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: #0C8911;
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <svg
+      aria-label="up"
+      class="c0"
+      fill="none"
+      height="16"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Delta > should render negative zero when delta is close to zero but negative 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <svg
+      aria-label="up"
+      class="c0"
+      fill="none"
+      height="16"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Delta > should render positive zero when delta is 0 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <svg
+      aria-label="up"
+      class="c0"
+      fill="none"
+      height="16"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Delta > should render positive zero when delta is close to zero but positive 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <svg
+      aria-label="up"
+      class="c0"
+      fill="none"
+      height="16"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Delta > should render positive zero when delta is parsed as positive zero 1`] = `
+<DocumentFragment>
+  .c0 {
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <svg
+      aria-label="up"
+      class="c0"
+      fill="none"
+      height="16"
+      viewBox="0 0 24 24"
+      width="16"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+        fill="currentColor"
+      />
+    </svg>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

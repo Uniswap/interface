@@ -1,3 +1,11 @@
+/**
+ * Test helpers for testing migrations run in sequence.
+ *
+ * Called by migrations.test.ts to verify migrations work correctly with realistic
+ * data that has passed through all prior migrations in the chain.
+ *
+ * For unit tests of individual migrations, see uniswapMigrations.test.ts.
+ */
 /* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'

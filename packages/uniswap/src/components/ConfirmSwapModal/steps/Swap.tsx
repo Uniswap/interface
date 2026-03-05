@@ -51,6 +51,8 @@ export function SwapTransactionStepRow({
     ranOutOfTimeTitle ??
     {
       [StepStatus.Preview]: t('swap.confirmSwap'),
+      [StepStatus.Failed]: t('swap.confirmSwap'),
+      [StepStatus.Replaced]: t('swap.confirmSwap'),
       [StepStatus.Active]: t('common.confirmSwap'),
       [StepStatus.InProgress]: t('common.swapPending'),
       [StepStatus.Complete]: t('swap.confirmSwap'),

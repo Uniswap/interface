@@ -21,21 +21,24 @@
       "path": "../../packages/sessions"
     },
     {
+      "path": "../../packages/notifications"
+    },
+    {
       "path": "../../packages/gating"
     },
     {
       "path": "../../packages/api"
-    },
-    {
-      "path": "../../packages/gating"
     }
   ],
   "compilerOptions": {
-    "baseUrl": "./",
     "moduleResolution": "Bundler",
     "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "preserve",
     "resolveJsonModule": true,
-    "types": ["chrome", "jest", "node"]
+    "types": ["chrome", "jest", "node"],
+    "paths": {
+      "src/*": ["./src/*"],
+      "e2e/*": ["./e2e/*"]
+    }
   }
 }

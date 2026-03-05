@@ -5,21 +5,25 @@ import type { FrontendSupportedProtocol } from 'uniswap/src/features/transaction
 import { useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { useQuoteRoutingParams } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { renderHook } from 'uniswap/src/test/test-utils'
+import type { Mock } from 'vitest'
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn(),
-}))
-jest.mock('uniswap/src/features/transactions/swap/utils/protocols', () => ({
-  useProtocolsForChain: jest.fn((protocols) => protocols),
-  DEFAULT_PROTOCOL_OPTIONS: jest.requireActual('uniswap/src/features/transactions/swap/utils/protocols')
-    .DEFAULT_PROTOCOL_OPTIONS,
-  FrontendSupportedProtocol: jest.requireActual('uniswap/src/features/transactions/swap/utils/protocols')
-    .FrontendSupportedProtocol,
-}))
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
+  return {
+    ...actual,
+    useFeatureFlag: vi.fn(),
+  }
+})
+vi.mock('uniswap/src/features/transactions/swap/utils/protocols', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/transactions/swap/utils/protocols')>()
+  return {
+    ...actual,
+    useProtocolsForChain: vi.fn((protocols) => protocols),
+  }
+})
 
-const mockUseFeatureFlag = useFeatureFlag as jest.Mock
-const mockUseProtocolsForChain = useProtocolsForChain as jest.Mock
+const mockUseFeatureFlag = useFeatureFlag as Mock
+const mockUseProtocolsForChain = useProtocolsForChain as Mock
 
 describe('useQuoteRoutingParams', () => {
   const tokenInChainId = UniverseChainId.Mainnet

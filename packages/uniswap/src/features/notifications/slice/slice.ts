@@ -52,6 +52,10 @@ const slice = createSlice({
     clearNotificationQueue: (state) => {
       state.notificationQueue = []
     },
+    clearNotificationsByType: (state, action: PayloadAction<{ types: AppNotification['type'][] }>) => {
+      const { types } = action.payload
+      state.notificationQueue = state.notificationQueue.filter((notification) => !types.includes(notification.type))
+    },
     resetNotifications: () => initialNotificationsState,
     setNotificationStatus: (state, action: PayloadAction<{ address: Address; hasNotifications: boolean }>) => {
       const { address, hasNotifications } = action.payload
@@ -69,6 +73,7 @@ export const {
   popNotification,
   setNotificationViewed,
   clearNotificationQueue,
+  clearNotificationsByType,
   resetNotifications,
   setNotificationStatus,
   setLastTxNotificationUpdate,

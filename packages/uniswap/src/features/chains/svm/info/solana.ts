@@ -36,7 +36,7 @@ export const SOLANA_CHAIN_INFO = {
   supportsV4: false,
   supportsNFTs: false,
   explorer: {
-    name: 'Solana Explorer',
+    name: 'Solscan',
     url: 'https://solscan.io/',
     apiURL: 'https://api.explorer.solana.com',
   },

@@ -59,6 +59,7 @@ export const AVALANCHE_CHAIN_INFO = {
     logo: AVALANCHE_LOGO,
   },
   networkLayer: NetworkLayer.L1,
+  blockTimeMs: 2000,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Avalanche)] },

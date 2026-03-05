@@ -3,7 +3,7 @@ import {
   ensureValidatedCapabilities,
   isValidCapabilitiesEntry,
   isValidCapabilitiesObject,
-} from 'state/walletCapabilities/lib/ensureValidatedCapabilities'
+} from '~/state/walletCapabilities/lib/ensureValidatedCapabilities'
 
 const validationTestCases = [
   // isValidCapabilitiesObject tests

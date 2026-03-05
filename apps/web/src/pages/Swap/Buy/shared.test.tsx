@@ -1,15 +1,9 @@
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import 'utilities/src/logger/mocks'
 
 // Mock the navigatorLocale function
-vi.mock('uniswap/src/features/language/hooks', () => ({
+vi.mock('uniswap/src/features/language/navigatorLocale', () => ({
   navigatorLocale: vi.fn(),
-}))
-
-// Mock the logger
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: vi.fn(),
-  },
 }))
 
 // Mock UI components to avoid React Native imports
@@ -25,10 +19,10 @@ vi.mock('ui/src/assets/backgrounds/for-connecting-v2.svg', () => ({
   ReactComponent: 'svg',
 }))
 
-// Import after mocks
-import { getCountryFromLocale } from 'pages/Swap/Buy/shared'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { navigatorLocale } from 'uniswap/src/features/language/hooks'
+import { navigatorLocale } from 'uniswap/src/features/language/navigatorLocale'
+// Import after mocks
+import { getCountryFromLocale } from '~/pages/Swap/Buy/shared'
 
 describe('getCountryFromLocale', () => {
   const mockNavigatorLocale = vi.mocked(navigatorLocale)

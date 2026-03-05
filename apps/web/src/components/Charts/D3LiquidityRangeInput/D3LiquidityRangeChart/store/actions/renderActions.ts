@@ -1,20 +1,19 @@
-import { CHART_BEHAVIOR } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import { createCurrentTickRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/CurrentTickRenderer'
-import { createLiquidityBarsOverlayRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/LiquidityBarsOverlayRenderer'
-import { createLiquidityBarsRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/LiquidityBarsRenderer'
-import { createLiquidityRangeAreaRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/LiquidityRangeAreaRenderer'
-import { createMinMaxPriceIndicatorsRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/MinMaxPriceIndicatorsRenderer'
-import { createMinMaxPriceLineRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/MinMaxPriceLineRenderer'
-import { createPriceLineRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/PriceLineRenderer'
-import { createScrollbarContainerRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/ScrollbarContainerRenderer'
-import { createTimescaleRenderer } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/TimescaleRenderer'
+import { CHART_BEHAVIOR } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import { createCurrentTickRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/CurrentTickRenderer'
+import { createLiquidityBarsOverlayRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/LiquidityBarsOverlayRenderer'
+import { createLiquidityBarsRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/LiquidityBarsRenderer'
+import { createLiquidityRangeAreaRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/LiquidityRangeAreaRenderer'
+import { createMinMaxPriceIndicatorsRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/MinMaxPriceIndicatorsRenderer'
+import { createMinMaxPriceLineRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/MinMaxPriceLineRenderer'
+import { createPriceLineRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/PriceLineRenderer'
+import { createScrollbarContainerRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/ScrollbarContainerRenderer'
+import { createTimescaleRenderer } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/renderers/TimescaleRenderer'
 import type {
   AnimationParams,
   ChartStoreState,
   RenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { getClosestTick } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/getClosestTick'
-import * as d3 from 'd3'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { snapTickToSpacing } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
 
 export const createRenderActions = (
   set: (fn: (state: ChartStoreState) => ChartStoreState) => void,
@@ -32,16 +31,24 @@ export const createRenderActions = (
     const getState = () => {
       const state = get()
       return {
+        baseCurrency: state.baseCurrency,
+        quoteCurrency: state.quoteCurrency,
         dimensions: state.dimensions,
         dragStartY: state.dragStartY,
-        dynamicZoomMin: state.dynamicZoomMin,
         initialViewSet: state.initialViewSet,
         inputMode: state.inputMode,
         isFullRange: state.isFullRange,
         maxPrice: state.maxPrice,
         minPrice: state.minPrice,
+        minTick: state.minTick,
+        maxTick: state.maxTick,
         panY: state.panY,
+        priceInverted: state.priceInverted,
+        protocolVersion: state.protocolVersion,
+        renderedBuckets: state.renderedBuckets,
+        hoveredSegment: state.hoveredSegment,
         selectedHistoryDuration: state.selectedHistoryDuration,
+        tickSpacing: state.tickSpacing,
         zoomLevel: state.zoomLevel,
       }
     }
@@ -49,7 +56,7 @@ export const createRenderActions = (
     const getActions = () => get().actions
 
     const priceLineRenderer = createPriceLineRenderer({ g, context, getState })
-    const liquidityBarsRenderer = createLiquidityBarsRenderer({ g, context, getState })
+    const liquidityBarsRenderer = createLiquidityBarsRenderer({ g, context, getState, getActions })
     const liquidityRangeAreaRenderer = createLiquidityRangeAreaRenderer({ g, context, getState, getActions })
     const minMaxPriceLineRenderer = createMinMaxPriceLineRenderer({ g, context, getState, getActions })
     const scrollbarContainerRenderer = createScrollbarContainerRenderer({ g, context })
@@ -119,11 +126,11 @@ export const createRenderActions = (
   animateToState: ({
     targetZoom,
     targetPan,
-    targetMinPrice,
-    targetMaxPrice,
+    targetMinTick,
+    targetMaxTick,
     duration = CHART_BEHAVIOR.ANIMATION_DURATION,
   }: AnimationParams) => {
-    const { zoomLevel, panY, minPrice, maxPrice, renderingContext } = get()
+    const { zoomLevel, panY, minTick, maxTick, renderingContext } = get()
 
     if (!renderingContext) {
       return
@@ -131,8 +138,8 @@ export const createRenderActions = (
 
     const startZoom = zoomLevel
     const startPan = panY
-    const startMinPrice = minPrice ?? 0
-    const startMaxPrice = maxPrice ?? 0
+    const startMinTick = minTick ?? 0
+    const startMaxTick = maxTick ?? 0
     const startTime = Date.now()
     const animate = () => {
       const elapsed = Date.now() - startTime
@@ -143,21 +150,22 @@ export const createRenderActions = (
       const currentZoom = startZoom + (targetZoom - startZoom) * easeProgress
       const currentPan = startPan + (targetPan - startPan) * easeProgress
       // Interpolate price range if targets provided
-      let currentMinPrice = startMinPrice
-      let currentMaxPrice = startMaxPrice
-      if (targetMinPrice !== undefined && targetMaxPrice !== undefined) {
-        currentMinPrice = startMinPrice + (targetMinPrice - startMinPrice) * easeProgress
-        currentMaxPrice = startMaxPrice + (targetMaxPrice - startMaxPrice) * easeProgress
+      let currentMinTick = startMinTick
+      let currentMaxTick = startMaxTick
+      if (targetMinTick !== undefined && targetMaxTick !== undefined) {
+        currentMinTick = startMinTick + (targetMinTick - startMinTick) * easeProgress
+        currentMaxTick = startMaxTick + (targetMaxTick - startMaxTick) * easeProgress
       }
 
-      const { tick: minTick } = getClosestTick(renderingContext.liquidityData, currentMinPrice)
-      const { tick: maxTick } = getClosestTick(renderingContext.liquidityData, currentMaxPrice)
+      // Snap interpolated ticks to valid tick boundaries
+      const snappedMinTick = snapTickToSpacing(currentMinTick, renderingContext.tickSpacing)
+      const snappedMaxTick = snapTickToSpacing(currentMaxTick, renderingContext.tickSpacing)
       set((state) => ({
         ...state,
         zoomLevel: currentZoom,
         panY: currentPan,
-        minPrice: minTick.price0,
-        maxPrice: maxTick.price0,
+        minTick: snappedMinTick,
+        maxTick: snappedMaxTick,
       }))
       if (progress < 1) {
         requestAnimationFrame(animate)

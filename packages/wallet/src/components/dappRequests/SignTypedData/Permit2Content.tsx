@@ -37,7 +37,7 @@ export function Permit2Content({ typedData }: Permit2ContentProps): JSX.Element 
           {t('dapp.request.permit2.description')}
         </Text>
         <TouchableArea onPress={toggleOpen}>
-          <RotatableChevron color="$neutral2" direction={open ? 'up' : 'down'} height={16} width={16} />
+          <RotatableChevron color="$neutral2" direction={open ? 'up' : 'down'} size="$icon.16" />
         </TouchableArea>
       </Flex>
       {open && (

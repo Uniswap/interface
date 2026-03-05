@@ -13,8 +13,8 @@ import {
 import { render } from 'uniswap/src/test/test-utils'
 
 const mockWalletAddress = (): Address => SAMPLE_SEED_ADDRESS_1
-jest.mock('uniswap/src/features/wallet/hooks/useWallet', () => ({
-  useWallet: jest.fn().mockReturnValue({
+vi.mock('uniswap/src/features/wallet/hooks/useWallet', () => ({
+  useWallet: vi.fn().mockReturnValue({
     evmAccount: { address: mockWalletAddress },
   }),
 }))
@@ -37,7 +37,7 @@ const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
   }
 }
 
-jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
+vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: (currencyIdString: string | undefined): Maybe<CurrencyInfo> => {
     if (!currencyIdString) {
       return null
@@ -51,19 +51,22 @@ jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   },
 }))
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useDynamicConfigValue: jest
-    .fn()
-    .mockImplementation(({ defaultValue }: { config: unknown; key: unknown; defaultValue: unknown }) => {
-      return defaultValue
-    }),
-  useFeatureFlag: jest.fn().mockReturnValue(true),
-  getFeatureFlag: jest.fn().mockReturnValue(true),
-  useExperimentValue: jest.fn().mockReturnValue('CLASSIC'),
-}))
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
+  return {
+    ...actual,
+    useDynamicConfigValue: vi
+      .fn()
+      .mockImplementation(({ defaultValue }: { config: unknown; key: unknown; defaultValue: unknown }) => {
+        return defaultValue
+      }),
+    useFeatureFlag: vi.fn().mockReturnValue(true),
+    getFeatureFlag: vi.fn().mockReturnValue(true),
+    useExperimentValue: vi.fn().mockReturnValue('CLASSIC'),
+  }
+})
 
-jest.mock('ui/src/loading/Skeleton', () => ({
+vi.mock('ui/src/loading/Skeleton', () => ({
   Skeleton: (): JSX.Element => <></>,
 }))
 
@@ -77,7 +80,7 @@ const swapTypeInfo = {
 
 describe('SwapTransactionDetails Component', () => {
   it('renders SwapTransactionDetails without error', () => {
-    const onClose = jest.fn()
+    const onClose = vi.fn()
 
     const tree = render(<SwapTransactionDetails typeInfo={swapTypeInfo} onClose={onClose} />)
 

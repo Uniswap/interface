@@ -1,4 +1,5 @@
 {
+  "tags": ["scope:ui", "type:lib"],
   "targets": {
     "build": {
       "dependsOn": ["^build", "build:icons"]
@@ -29,13 +30,13 @@
       ],
       "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
     },
-    "check:deps:usage": {
-      "command": "depcheck",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
+    "check:deps:usage": {},
+    "typecheck": {
+      "dependsOn": ["build:icons", "^typecheck"]
     },
-    "typecheck": {},
+    "typecheck:tsgo": {
+      "dependsOn": ["build:icons"]
+    },
     "lint:biome": {},
     "lint:biome:fix": {},
     "lint:eslint": {},
@@ -44,6 +45,12 @@
     "lint:fix": {},
     "test": {
       "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:coverage": {
+      "command": "vitest run --coverage",
       "options": {
         "cwd": "{projectRoot}"
       }

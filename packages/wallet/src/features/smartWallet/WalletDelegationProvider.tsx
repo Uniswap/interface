@@ -1,18 +1,18 @@
-import { QueryKey, queryOptions, UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query'
-import { TradingApi } from '@universe/api'
+import { type QueryKey, queryOptions, type UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query'
+import { type TradingApi } from '@universe/api'
 import React, { useContext, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { type SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { MAX_REACT_QUERY_CACHE_TIME_MS, ONE_HOUR_MS } from 'utilities/src/time/time'
-import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
+import { type DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
 import {
   doesAccountNeedDelegationForChain,
   isNonUniswapDelegation,
@@ -78,6 +78,7 @@ export function useGetSwapDelegationInfoForActiveAccount(): (chainId?: UniverseC
     return {
       delegationAddress: delegationDetails?.contractAddress,
       delegationInclusion: delegationDetails?.needsDelegation ?? false,
+      isWalletDelegatedToUniswap: delegationDetails?.isWalletDelegatedToUniswap,
     }
   })
 }
@@ -106,7 +107,7 @@ interface WalletDelegationProviderProps {
 
 export function WalletDelegationProvider({
   children,
-  pollingInterval = 5 * ONE_HOUR_MS,
+  pollingInterval = ONE_HOUR_MS,
 }: WalletDelegationProviderProps): JSX.Element {
   const { chains } = useEnabledChains()
 
@@ -163,7 +164,6 @@ export function WalletDelegationProvider({
   const refreshDelegationData = useEvent(async (): Promise<void> => {
     logger.debug('WalletDelegationProvider', 'refreshDelegationData', 'refreshing delegation data')
     await queryClient.invalidateQueries({ queryKey: delegationQueryOptions.queryKey })
-    await queryClient.refetchQueries({ queryKey: delegationQueryOptions.queryKey })
   })
 
   const contextValue = useMemo(

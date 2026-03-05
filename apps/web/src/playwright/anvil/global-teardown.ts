@@ -1,4 +1,4 @@
-import { getAnvilManager } from 'playwright/anvil/anvil-manager'
+import { getAnvilManager } from '~/playwright/anvil/anvil-manager'
 
 /**
  * Global teardown function for Playwright tests using Anvil.

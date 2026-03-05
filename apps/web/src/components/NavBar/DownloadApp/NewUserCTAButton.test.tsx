@@ -1,5 +1,5 @@
-import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
-import { render, screen } from 'test-utils/render'
+import { NewUserCTAButton } from '~/components/NavBar/DownloadApp/NewUserCTAButton'
+import { render, screen } from '~/test-utils/render'
 
 vi.mock('@universe/gating', async (importOriginal) => {
   return {

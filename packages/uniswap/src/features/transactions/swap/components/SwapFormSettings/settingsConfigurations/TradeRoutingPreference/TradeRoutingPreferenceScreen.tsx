@@ -18,7 +18,6 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
@@ -53,11 +52,11 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
       isV4HookPoolsEnabled,
     }),
   )
-  const uniswapXEnabledFlag = useFeatureFlag(FeatureFlags.UniswapX)
+  const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
+  const allowUniswapXOnly = useFeatureFlag(FeatureFlags.AllowUniswapXOnlyRoutesInSwapSettings)
 
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const isUniswapXSupported = getIsUniswapXSupported?.(chainId)
-  const uniswapXEnabled = uniswapXEnabledFlag && chainId !== UniverseChainId.MonadTestnet
   const v4SwapEnabled = useV4SwapEnabled(chainId)
   const chainName = getChainInfo(chainId).name
   const restrictionDescription = t('swap.settings.protection.subtitle.unavailable', { chainName })
@@ -74,8 +73,10 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
   }).length
 
   // Prevent the user from deselecting all on-chain protocols (AKA only selecting UniswapX)
-  const onlyOneClassicProtocolSelected =
-    (classicProtocolsCount === 1 && !isV4HookPoolsEnabled) || (classicProtocolsCount === 0 && isV4HookPoolsEnabled)
+  // unless the `AllowUniswapXOnlyRoutesInSwapSettings` flag is enabled (this is for local testing only! the flag is always false in production).
+  const shouldPreventClassicProtocolDeselection =
+    !allowUniswapXOnly &&
+    ((classicProtocolsCount === 1 && !isV4HookPoolsEnabled) || (classicProtocolsCount === 0 && isV4HookPoolsEnabled))
 
   const toggleV4Hooks = useCallback(() => {
     setIsV4HookPoolsEnabled(!isV4HookPoolsEnabled)
@@ -113,18 +114,15 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
         onSelect={toggleDefault}
       />
       <HeightAnimator open={!isDefault} animationDisabled={isMobileApp || isMobileWeb}>
-        {uniswapXEnabledFlag && (
+        {uniswapXEnabled && (
           <OptionRow
             active={
-              isUniswapXSupported === false
-                ? false
-                : uniswapXEnabled && selectedProtocols.includes(TradingApi.ProtocolItems.UNISWAPX_V2)
+              isUniswapXSupported === false ? false : selectedProtocols.includes(TradingApi.ProtocolItems.UNISWAPX_V2)
             }
             elementName={ElementName.SwapRoutingPreferenceUniswapX}
             title={getProtocolTitle(TradingApi.ProtocolItems.UNISWAPX_V2)}
             cantDisable={onlyOneProtocolSelected}
-            disabled={isUniswapXSupported === false || !uniswapXEnabled}
-            description={!uniswapXEnabled ? restrictionDescription : undefined}
+            disabled={isUniswapXSupported === false}
             onSelect={() => toggleProtocol(TradingApi.ProtocolItems.UNISWAPX_V2)}
           />
         )}
@@ -132,7 +130,7 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
           active={v4SwapEnabled && selectedProtocols.includes(TradingApi.ProtocolItems.V4)}
           elementName={ElementName.SwapRoutingPreferenceV4}
           title={getProtocolTitle(TradingApi.ProtocolItems.V4)}
-          cantDisable={onlyOneClassicProtocolSelected}
+          cantDisable={shouldPreventClassicProtocolDeselection}
           disabled={!v4SwapEnabled}
           description={!v4SwapEnabled ? restrictionDescription : undefined}
           onSelect={() => toggleProtocol(TradingApi.ProtocolItems.V4)}
@@ -141,7 +139,7 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
           active={isV4HookPoolsEnabled}
           elementName={ElementName.SwapRoutingPreferenceV4Hooks}
           title={<V4HooksInfo />}
-          cantDisable={onlyOneClassicProtocolSelected}
+          cantDisable={shouldPreventClassicProtocolDeselection}
           disabled={!v4SwapEnabled}
           onSelect={toggleV4Hooks}
         />
@@ -149,14 +147,14 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
           active={selectedProtocols.includes(TradingApi.ProtocolItems.V3)}
           elementName={ElementName.SwapRoutingPreferenceV3}
           title={getProtocolTitle(TradingApi.ProtocolItems.V3)}
-          cantDisable={onlyOneClassicProtocolSelected}
+          cantDisable={shouldPreventClassicProtocolDeselection}
           onSelect={() => toggleProtocol(TradingApi.ProtocolItems.V3)}
         />
         <OptionRow
           active={selectedProtocols.includes(TradingApi.ProtocolItems.V2)}
           elementName={ElementName.SwapRoutingPreferenceV2}
           title={getProtocolTitle(TradingApi.ProtocolItems.V2)}
-          cantDisable={onlyOneClassicProtocolSelected}
+          cantDisable={shouldPreventClassicProtocolDeselection}
           onSelect={() => toggleProtocol(TradingApi.ProtocolItems.V2)}
         />
       </HeightAnimator>

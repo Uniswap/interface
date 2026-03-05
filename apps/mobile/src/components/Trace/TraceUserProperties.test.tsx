@@ -24,6 +24,17 @@ function mockFn(module: any, func: string, returnValue: any): jest.SpyInstance<a
   return jest.spyOn(module, func).mockImplementation(() => returnValue)
 }
 
+jest.mock('@tanstack/react-query', () => ({
+  ...jest.requireActual('@tanstack/react-query'),
+  useQuery: jest.fn().mockReturnValue({ data: undefined }),
+}))
+jest.mock('@universe/api', () => ({
+  ...jest.requireActual('@universe/api'),
+  provideUniswapIdentifierService: {},
+}))
+jest.mock('@universe/sessions', () => ({
+  uniswapIdentifierQuery: jest.fn().mockReturnValue({}),
+}))
 jest.mock('react-native/Libraries/Utilities/useColorScheme')
 jest.mock('wallet/src/features/gating/userPropertyHooks')
 jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {

@@ -1,12 +1,14 @@
-import { Wiggle } from 'components/animations/Wiggle'
-import { MenuItem, MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
-import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
-import { useModalState } from 'hooks/useModalState'
-import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
+import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Flex, FlexProps, Separator, styled, Text } from 'ui/src'
+import { Anchor, Flex, FlexProps, Separator, styled, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isMobileWeb } from 'utilities/src/platform'
+import { Wiggle } from '~/components/animations/Wiggle'
+import { MenuItem, MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
+import { MenuLink } from '~/components/NavBar/CompanyMenu/MenuDropdown'
+import { useModalState } from '~/hooks/useModalState'
+import { Discord, Github, Twitter } from '~/pages/Landing/components/Icons'
 
 const SOCIAL_ICONS_SIZE = `${iconSizes.icon32}px`
 
@@ -24,24 +26,32 @@ const PolicyLink = styled(Text, {
   style: { transition: '100ms' },
 })
 
+const MobileTouchableArea = isMobileWeb ? TouchableArea : Fragment
+
 export function Socials({ iconSize, gap }: { iconSize?: string; gap?: FlexProps['gap'] }) {
   return (
     <Flex row gap={gap ?? '$spacing24'} maxHeight={iconSize} alignItems="flex-start">
-      <SocialIcon iconColor="#00C32B">
-        <Anchor href="https://github.com/Uniswap" target="_blank">
-          <Github size={iconSize} fill="inherit" />
-        </Anchor>
-      </SocialIcon>
-      <SocialIcon iconColor="#20BAFF">
-        <Anchor href="https://x.com/Uniswap" target="_blank">
-          <Twitter size={iconSize} fill="inherit" />
-        </Anchor>
-      </SocialIcon>
-      <SocialIcon iconColor="#5F51FF">
-        <Anchor href="https://discord.com/invite/uniswap" target="_blank">
-          <Discord size={iconSize} fill="inherit" />
-        </Anchor>
-      </SocialIcon>
+      <MobileTouchableArea>
+        <SocialIcon iconColor="#00C32B">
+          <Anchor href="https://github.com/Uniswap" target="_blank">
+            <Github size={iconSize} fill="inherit" />
+          </Anchor>
+        </SocialIcon>
+      </MobileTouchableArea>
+      <MobileTouchableArea>
+        <SocialIcon iconColor="#20BAFF">
+          <Anchor href="https://x.com/Uniswap" target="_blank">
+            <Twitter size={iconSize} fill="inherit" />
+          </Anchor>
+        </SocialIcon>
+      </MobileTouchableArea>
+      <MobileTouchableArea>
+        <SocialIcon iconColor="#5F51FF">
+          <Anchor href="https://discord.com/invite/uniswap" target="_blank">
+            <Discord size={iconSize} fill="inherit" />
+          </Anchor>
+        </SocialIcon>
+      </MobileTouchableArea>
     </Flex>
   )
 }
@@ -58,6 +68,7 @@ function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
             href={item.href}
             internal={item.internal}
             overflow={item.overflow}
+            elementName={item.elementName}
             textVariant="subheading2"
           />
         ))}
@@ -74,10 +85,11 @@ export function Footer() {
   const protocolSection = sectionContent[MenuSectionTitle.Protocol]
   const companySection = sectionContent[MenuSectionTitle.Company]
   const needHelpSection = sectionContent[MenuSectionTitle.NeedHelp]
-  const brandAssets = {
+  const brandAssets: MenuItem = {
     label: t('common.brandAssets'),
     href: 'https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip',
     internal: false,
+    elementName: ElementName.NavbarCompanyMenuBrandAssets,
   }
   const currentYear = new Date().getFullYear()
 

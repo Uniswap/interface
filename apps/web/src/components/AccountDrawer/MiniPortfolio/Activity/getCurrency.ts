@@ -1,5 +1,3 @@
-import { apolloClient } from 'appGraphql/data/apollo/client'
-import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
 import { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
@@ -8,6 +6,8 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { apolloClient } from '~/appGraphql/data/apollo/client'
+import { gqlTokenToCurrencyInfo } from '~/appGraphql/data/types'
 
 export async function getCurrencyFromCurrencyId(currencyId: CurrencyId): Promise<Currency | undefined> {
   // Split currencyId and confirm validity

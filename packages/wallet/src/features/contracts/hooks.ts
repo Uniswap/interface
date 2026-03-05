@@ -23,7 +23,7 @@ export function useIsErc20Contract(
     }
     const contract = new Contract(address, ERC20_ABI, provider)
     try {
-      await Promise.all([contract.name(), contract.symbol(), contract.decimals(), contract.totalSupply()])
+      await Promise.all([contract['name'](), contract['symbol'](), contract['decimals'](), contract['totalSupply']()])
       return true
     } catch (_e) {
       return false

@@ -1,9 +1,8 @@
-import { ArrowContainer, ArrowWrapper } from 'components/swap/styled'
-import { deprecatedStyled } from 'lib/styled-components'
-import { ArrowDown } from 'react-feather'
-import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { styled, useSporeColors } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { Flex, styled, Text } from 'ui/src'
+import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
+import { ArrowContainer, ArrowWrapper } from '~/components/swap/styled'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 const StyledArrowWrapper = styled(ArrowWrapper, {
   position: 'absolute',
@@ -36,16 +35,6 @@ const ModuleBlob = deprecatedStyled(Blob)`
   height: 36px;
 `
 
-const TitleColumn = deprecatedStyled.div`
-  padding: 8px;
-`
-
-const Row = deprecatedStyled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-
 const InputColumn = deprecatedStyled.div`
   display: flex;
   flex-flow: column;
@@ -61,21 +50,20 @@ const OutputWrapper = deprecatedStyled.div`
 `
 
 function Title() {
+  const { t } = useTranslation()
   return (
-    <TitleColumn>
-      <ThemedText.SubHeader>
-        <Trans i18nKey="common.swap" />
-      </ThemedText.SubHeader>
-    </TitleColumn>
+    <Flex p="$spacing8">
+      <Text variant="subheading1">{t('common.swap')}</Text>
+    </Flex>
   )
 }
 
 function FloatingInput() {
   return (
-    <Row>
+    <Flex row justifyContent="space-between" alignItems="center">
       <ModuleBlob width={60} />
       <ModuleBlob width={100} radius={16} />
-    </Row>
+    </Flex>
   )
 }
 
@@ -84,8 +72,6 @@ function FloatingButton() {
 }
 
 export function SwapSkeleton() {
-  const colors = useSporeColors()
-
   return (
     <LoadingWrapper>
       <Title />
@@ -95,7 +81,7 @@ export function SwapSkeleton() {
       <OutputWrapper>
         <StyledArrowWrapper clickable={false}>
           <ArrowContainer>
-            <ArrowDown size="16" color={colors.neutral3.val} />
+            <ArrowDown size="$icon.16" color="$neutral3" />
           </ArrowContainer>
         </StyledArrowWrapper>
         <InputColumn>

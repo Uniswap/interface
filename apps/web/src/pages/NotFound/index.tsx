@@ -1,14 +1,13 @@
-import darkImage from 'assets/images/404-page-dark.png'
-import lightImage from 'assets/images/404-page-light.png'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Button, Flex } from 'ui/src'
+import { Button, Flex, useIsDarkMode } from 'ui/src'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import darkImage from '~/assets/images/404-page-dark.png'
+import lightImage from '~/assets/images/404-page-light.png'
+import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
 
 const Image = deprecatedStyled.img`
   max-width: 510px;

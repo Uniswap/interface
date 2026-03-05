@@ -30,7 +30,11 @@ fun MnemonicWordBank(
   FlowRow(
     modifier = Modifier
       .fillMaxWidth()
-      .wrapContentHeight(),
+      .wrapContentHeight()
+      .padding(
+        vertical = UniswapTheme.spacing.spacing16,
+        horizontal = UniswapTheme.spacing.spacing8
+      ),
     mainAxisSpacing = if (shouldShowSmallText) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
     crossAxisSpacing = if (shouldShowSmallText) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
     mainAxisAlignment = MainAxisAlignment.Center,

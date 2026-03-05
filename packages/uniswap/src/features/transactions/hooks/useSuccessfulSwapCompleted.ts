@@ -1,23 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const ACCEPTABLE_TIME_DIFF = 5 * ONE_SECOND_MS
 
 export function useSuccessfulSwapCompleted(onSwapCompleted: (transaction: TransactionDetails) => void): void {
-  const { evmAccount } = useWallet()
+  const evmAddress = useActiveAddress(Platform.EVM)
   const transactions = useSelector(selectTransactions)
 
   const successfulSwapTransactions = useMemo((): TransactionDetails[] => {
-    if (!evmAccount?.address) {
+    if (!evmAddress) {
       return []
     }
 
@@ -28,14 +29,14 @@ export function useSuccessfulSwapCompleted(onSwapCompleted: (transaction: Transa
         if (
           txNested.typeInfo.type === TransactionType.Swap &&
           txNested.status === TransactionStatus.Success &&
-          txNested.from === evmAccount.address
+          txNested.from === evmAddress
         ) {
           swapTransactions.push(txNested)
         }
       }),
     )
     return swapTransactions
-  }, [evmAccount?.address, transactions])
+  }, [evmAddress, transactions])
 
   const [lastProcessedTimestamp, setLastProcessedTimestamp] = useState<number>(0)
 

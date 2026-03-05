@@ -2,17 +2,18 @@ import { CellContainer, FlashList } from '@shopify/flash-list'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
-import { Flex } from 'ui/src'
+import { Flex, UniversalImage } from 'ui/src'
 import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
 import { Buy as BuyIcon } from 'ui/src/components/icons/Buy'
 import { PaperStack } from 'ui/src/components/icons/PaperStack'
+import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { borderRadii } from 'ui/src/theme'
-import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
-import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
+import { ActionCard, type ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 enum ActionOption {
   Buy = 'Buy',
@@ -55,6 +56,7 @@ export function PortfolioEmptyState({
         icon: <BuyIcon color="$accent1" size="$icon.28" />,
         onPress: onPressBuy,
         backgroundImageWrapperCallback,
+        testId: TestID.EmptyStateBuy,
       },
       [ActionOption.Receive]: {
         title: t('home.tokens.empty.action.receive.title'),
@@ -62,7 +64,7 @@ export function PortfolioEmptyState({
         elementName: ElementName.EmptyStateReceive,
         icon:
           cexTransferProviders.length > 0 ? (
-            <OverlappingLogos logos={cexTransferProviders.map((provider) => provider.logos.lightLogo)} />
+            <OverlappingLogos logos={cexTransferProviders.map((provider) => provider.logos?.lightLogo ?? '')} />
           ) : (
             <ArrowDownCircle color="$accent1" size="$icon.28" />
           ),
@@ -130,15 +132,14 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       exitStyle={{ opacity: 0 }}
       style={iconContainerStyle}
     >
-      <ImageUri
-        imageStyle={{
-          borderRadius: borderRadii.rounded8,
-          height: ICON_SIZE - 3,
-          overflow: 'hidden',
-          width: ICON_SIZE - 3,
-        }}
-        resizeMode="cover"
+      <UniversalImage
         uri={uri}
+        size={{
+          height: ICON_SIZE - 3,
+          width: ICON_SIZE - 3,
+          resizeMode: UniversalImageResizeMode.Cover,
+        }}
+        style={{ image: { borderRadius: borderRadii.rounded8 } }}
       />
     </Flex>
   )

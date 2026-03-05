@@ -7,7 +7,9 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { isExtensionApp } from 'utilities/src/platform'
 
 interface TokensListEmptyStateProps {
+  buttonDataTestId?: string
   containerStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
+  dataTestId?: string
   title?: string
   description?: string | null
   buttonLabel?: string
@@ -15,7 +17,9 @@ interface TokensListEmptyStateProps {
 }
 
 export function TokensListEmptyState({
+  buttonDataTestId,
   containerStyle,
+  dataTestId,
   title,
   description,
   buttonLabel,
@@ -27,7 +31,9 @@ export function TokensListEmptyState({
     <Flex centered pt="$spacing48" px="$spacing36" style={containerStyle}>
       <BaseCard.EmptyState
         buttonLabel={buttonLabel ?? (isExtensionApp ? t('tokens.list.none.button') : undefined)}
+        buttonDataTestId={buttonDataTestId}
         description={description === undefined ? t('tokens.list.none.description.default') : description}
+        dataTestId={dataTestId}
         icon={<NoTokens color="$neutral3" size="$icon.100" />}
         title={title ?? t('tokens.list.none.title')}
         onPress={onPress}

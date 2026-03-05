@@ -1,4 +1,3 @@
-import { migration58 } from 'state/migrations/58'
 import { Language } from 'uniswap/src/features/language/constants'
 
 const previousState = {

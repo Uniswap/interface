@@ -5,6 +5,7 @@ import {
   migratePendingDappRequestsToRecord,
   migrateUnknownBackupAccountsToMaybeManualBackup,
   removeDappInfoToChromeLocalStorage,
+  setLanguageToNavigatorLanguage,
 } from 'src/store/extensionMigrations'
 import {
   addActivityVisibility,
@@ -71,6 +72,7 @@ export const migrations = {
   28: addDismissedBridgedAndCompatibleWarnings,
   29: addActivityVisibility,
   30: migrateDismissedTokenWarnings,
+  31: setLanguageToNavigatorLanguage,
 }
 
-export const EXTENSION_STATE_VERSION = 30
+export const EXTENSION_STATE_VERSION = 31

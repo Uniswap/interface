@@ -15,7 +15,7 @@ type ValuePropCardProps = FlexProps & {
 }
 
 export default function ValuePropCard(props: ValuePropCardProps) {
-  const { color, alignTextToBottom, href, to, title, children, bodyText, button, smaller, subtitle, ...rest } = props
+  const { color, alignTextToBottom, href, to, title, children, bodyText, button, subtitle, ...rest } = props
   const navigate = useNavigate()
 
   const handleClick = () => {
@@ -50,14 +50,6 @@ export default function ValuePropCard(props: ValuePropCardProps) {
         maxWidth: '100%',
         height: 'auto',
       }}
-      $xl={{
-        ...(smaller && {
-          pr: 0,
-        }),
-      }}
-      {...(smaller && {
-        pr: '16%',
-      })}
       {...rest}
     >
       <Flex
@@ -107,6 +99,7 @@ export default function ValuePropCard(props: ValuePropCardProps) {
           $xl={{
             fontSize: 18,
             lineHeight: 24,
+            width: '100%',
           }}
           $lg={{
             variant: 'heading3',

@@ -44,3 +44,24 @@ vi.mock('@datadog/browser-logs', () => ({
     logger: {},
   },
 }))
+
+// Mock utilities/src/platform - provide all platform exports with default test values
+vi.mock('utilities/src/platform', () => ({
+  isAndroid: false,
+  isIOS: false,
+  isWebPlatform: true,
+  isMobileWeb: false,
+  isWebIOS: false,
+  isWebAndroid: false,
+  isTouchable: false,
+  isHoverable: true,
+  isChrome: true,
+  isSafari: false,
+  isMobileWebSafari: false,
+  isMobileWebAndroid: false,
+  isBrowser: true,
+  isExtensionApp: false,
+  isMobileApp: false,
+  isWebApp: true,
+  isWebAppDesktop: true,
+}))

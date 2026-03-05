@@ -24,7 +24,8 @@ export function useCurrencyInputFontSize({
 } {
   const maxFontSize = options?.maxFontSize ?? MAX_INPUT_FONT_SIZE
   const minFontSize = options?.minFontSize ?? MIN_INPUT_FONT_SIZE
-  const charPixelWidth = options?.maxCharWidthAtMaxFontSize ?? MAX_CHAR_PIXEL_WIDTH
+  const defaultCharPixelWidth = (maxFontSize / MAX_INPUT_FONT_SIZE) * MAX_CHAR_PIXEL_WIDTH
+  const charPixelWidth = options?.maxCharWidthAtMaxFontSize ?? defaultCharPixelWidth
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
     maxCharWidthAtMaxFontSize: charPixelWidth,

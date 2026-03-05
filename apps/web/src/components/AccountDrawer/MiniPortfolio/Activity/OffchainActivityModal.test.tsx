@@ -1,11 +1,7 @@
-import 'test-utils/tokens/mocks'
-
+import '~/test-utils/tokens/mocks'
+import 'utilities/src/logger/mocks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
-import { mocked } from 'test-utils/mocked'
-import { render } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -15,18 +11,17 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { OrderContent } from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
+import { render } from '~/test-utils/render'
 
-vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
-  formatTimestamp: vi.fn(),
+vi.mock('uniswap/src/features/language/localizedDayjs', () => ({
+  useFormattedDateTime: vi.fn(() => 'Mock Date'),
+  useLocalizedDayjs: vi.fn(() => (timestamp: number) => timestamp), // Returns timestamp as-is since useFormattedDateTime is mocked
+  FORMAT_DATE_TIME_SHORT: 'lll',
+  FORMAT_DATE_TIME_MEDIUM: 'LLL',
 }))
 
 describe('OrderContent', () => {
-  beforeEach(() => {
-    mocked(formatTimestamp).mockImplementation(() => {
-      return 'Mock Date' // This ensures consistent test behavior across local and CI
-    })
-  })
-
   it('should render without error, filled order', () => {
     const order: UniswapXOrderDetails = {
       hash: '0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564',

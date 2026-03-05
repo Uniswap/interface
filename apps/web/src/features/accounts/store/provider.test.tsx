@@ -1,13 +1,13 @@
 import { WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useAccountsStoreContext } from 'features/accounts/store/provider'
-import { mocked } from 'test-utils/mocked'
-import { renderHook } from 'test-utils/render'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
 import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Session'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { useAccountsStoreContext } from '~/features/accounts/store/provider'
+import { mocked } from '~/test-utils/mocked'
+import { renderHook } from '~/test-utils/render'
 
 // Mock wagmi hooks
 const mockUseWagmiAccount = vitest.fn()
@@ -32,7 +32,7 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-vi.mock('features/wallet/connection/connectors/state', () => ({
+vi.mock('~/features/wallet/connection/connectors/state', () => ({
   usePendingConnectorId: () => mockUsePendingConnectorId(),
 }))
 

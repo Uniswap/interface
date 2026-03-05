@@ -1,19 +1,16 @@
-import { StatsigClient } from '@statsig/react-bindings'
+import { type StatsigClient } from '@statsig/react-bindings'
 import { StatsigClientRN } from '@statsig/react-native-bindings'
 import { getConfig } from '@universe/config'
 import { LocalOverrideAdapterWrapper } from '@universe/gating/src/LocalOverrideAdapterWrapper'
 
 const config = getConfig()
 
+export type { StatsigOptions, StatsigUser, StorageProvider, TypedReturn } from '@statsig/react-native-bindings'
 export {
   StatsigClient,
   StatsigContext,
-  StatsigOptions,
   StatsigProviderRN as StatsigProvider,
-  StatsigUser,
   Storage,
-  StorageProvider,
-  TypedReturn,
   useClientAsyncInitRN as useClientAsyncInit,
   useDynamicConfig,
   useExperiment,

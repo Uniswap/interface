@@ -240,7 +240,7 @@ describe('parseSwapLink', () => {
 
     it('should handle cross-chain testnet swaps', () => {
       const url = new URL(
-        'https://app.uniswap.org/swap?inputCurrency=ETH&chain=ethereum_sepolia&outputCurrency=0x31d0220469e10c4E71834a79b1f276d740d3768F&outputChain=astrochain_sepolia&value=1.0',
+        'https://app.uniswap.org/swap?inputCurrency=ETH&chain=ethereum_sepolia&outputCurrency=0x31d0220469e10c4E71834a79b1f276d740d3768F&outputChain=unichain_sepolia&value=1.0',
       )
 
       const result = parseSwapLinkWebFormatOrThrow(url)

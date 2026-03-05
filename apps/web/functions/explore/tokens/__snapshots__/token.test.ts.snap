@@ -31,6 +31,10 @@ window.$RefreshSig$ = () => (type) => type;</script>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Cloudflare Turnstile script - loaded early for CSP compliance -->
+    <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin />
+    <script id="cf-turnstile-script" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
 
     <style>
       * {
@@ -171,6 +175,10 @@ window.$RefreshSig$ = () => (type) => type;</script>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Cloudflare Turnstile script - loaded early for CSP compliance -->
+    <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin />
+    <script id="cf-turnstile-script" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
 
     <style>
       * {
@@ -311,6 +319,10 @@ window.$RefreshSig$ = () => (type) => type;</script>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Cloudflare Turnstile script - loaded early for CSP compliance -->
+    <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin />
+    <script id="cf-turnstile-script" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
 
     <style>
       * {
@@ -451,6 +463,10 @@ window.$RefreshSig$ = () => (type) => type;</script>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Cloudflare Turnstile script - loaded early for CSP compliance -->
+    <link rel="preconnect" href="https://challenges.cloudflare.com" crossorigin />
+    <script id="cf-turnstile-script" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>
 
     <style>
       * {

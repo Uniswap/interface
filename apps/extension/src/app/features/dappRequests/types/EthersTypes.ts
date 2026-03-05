@@ -32,7 +32,7 @@ const BytesLikeSchema = z.string().refine((data) => isHexString(data))
 const AccessListishSchema = z.union([
   AccessListSchema,
   z.array(z.tuple([z.string(), z.array(z.string())])), // Array of 2-element Arrays format
-  z.record(z.array(z.string())), // Object with addresses as keys and arrays of storage keys as values
+  z.record(z.string(), z.array(z.string())), // Object with addresses as keys and arrays of storage keys as values
 ])
 
 export const EthersTransactionRequestSchema = z.object({
@@ -49,6 +49,6 @@ export const EthersTransactionRequestSchema = z.object({
   maxPriorityFeePerGas: BigNumberishSchema.optional(),
   maxFeePerGas: BigNumberishSchema.optional(),
   // eslint-disable-next-line no-restricted-syntax
-  customData: z.record(z.any()).optional(),
+  customData: z.record(z.string(), z.any()).optional(),
   ccipReadEnabled: z.boolean().optional(),
 })

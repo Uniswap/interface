@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { Flex } from 'ui/src'
-import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'

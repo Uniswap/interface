@@ -1,5 +1,3 @@
-import { buildActivityRowFragments } from 'pages/Portfolio/Activity/ActivityTable/registry'
-import { getTransactionTypeFilterOptions } from 'pages/Portfolio/Activity/Filters/utils'
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -7,6 +5,8 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registry'
+import { getTransactionTypeFilterOptions } from '~/pages/Portfolio/Activity/Filters/utils'
 
 const COMPACT_TOKEN_LOGO_SIZE = iconSizes.icon24
 

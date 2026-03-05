@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
@@ -39,8 +38,6 @@ export function useRecentlySearchedOptions({
   activeTab: SearchTab
   numberOfRecentSearchResults: number
 }): SearchModalOption[] {
-  const viewExternalWalletsFeatureEnabled = useFeatureFlag(FeatureFlags.ViewExternalWalletsOnWeb)
-  const walletSearchEnabledOnWeb = isWebApp && viewExternalWalletsFeatureEnabled
   const recentHistory = useSelector(selectSearchHistory)
     .filter((searchResult) => {
       switch (activeTab) {
@@ -65,7 +62,7 @@ export function useRecentlySearchedOptions({
           return (
             isTokenSearchHistoryResult(searchResult) ||
             isPoolSearchHistoryResult(searchResult) ||
-            (walletSearchEnabledOnWeb && isWalletSearchHistoryResult(searchResult))
+            (isWebApp && isWalletSearchHistoryResult(searchResult))
           )
       }
     })
@@ -79,7 +76,8 @@ export function useRecentlySearchedOptions({
     .slice(0, numberOfRecentSearchResults)
 
   // Fetch updated currencyInfos for each recent token search result
-  // Token info may change since last stored in redux (protectionInfo/feeData/logoUrl/etc), so we should refetch currencyInfos from saved chain+address. See PORT-419
+  // Token info may change since last stored in redux (protectionInfo/feeData/logoUrl/etc),
+  // so we should refetch currencyInfos from saved chain+address. See CONS-419
   const currencyIds = recentHistory.filter(isTokenSearchHistoryResult).map((searchResult) => {
     const id = searchResult.address
       ? buildCurrencyId(searchResult.chainId, searchResult.address)

@@ -1,11 +1,13 @@
 import { Token } from '@uniswap/sdk-core'
 import { createMigrate } from 'redux-persist'
-import { migration1 } from 'state/migrations/1'
-import { migration2 } from 'state/migrations/2'
-import { migration3, PersistAppStateV3 } from 'state/migrations/3'
-import { RouterPreference } from 'state/routing/types'
-import { SlippageTolerance } from 'state/user/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { createThrowingProxy } from 'utilities/src/test/utils'
+import { vi } from 'vitest'
+import { migration1 } from '~/state/migrations/1'
+import { migration2 } from '~/state/migrations/2'
+import { migration3, type PersistAppStateV3 } from '~/state/migrations/3'
+import { RouterPreference } from '~/state/routing/types'
+import { SlippageTolerance } from '~/state/user/types'
 
 const previousState: PersistAppStateV3 = {
   user: {
@@ -71,5 +73,33 @@ describe('migration to v3', () => {
     )
 
     expect(result?._persist.version).toEqual(3)
+  })
+
+  it('should handle errors gracefully and return state with updated version', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    const throwingTokens = createThrowingProxy({}, { throwingMethods: ['*'], errorMessage: 'Migration failed' })
+    const corruptedState: PersistAppStateV3 = {
+      user: {
+        userLocale: null,
+        userRouterPreference: RouterPreference.API,
+        userHideClosedPositions: false,
+        userSlippageTolerance: SlippageTolerance.Auto,
+        userSlippageToleranceHasBeenMigratedToAuto: true,
+        userDeadline: 1800,
+        tokens: throwingTokens,
+        pairs: {},
+        timestamp: Date.now(),
+      },
+      _persist: {
+        version: 2,
+        rehydrated: true,
+      },
+    }
+
+    const result = migration3(corruptedState)
+
+    expect(result?._persist.version).toEqual(3)
+    expect(result?.user?.tokens).toEqual({})
   })
 })

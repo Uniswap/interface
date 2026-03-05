@@ -190,6 +190,7 @@ const AccountNotificationRow = memo(function AccountNotificationRow({
           size={iconSizes.icon32}
           variant="subheading2"
           captionVariant="body3"
+          alignItems="center"
         />
       </Flex>
       <AddressNotificationsSwitch address={address} />

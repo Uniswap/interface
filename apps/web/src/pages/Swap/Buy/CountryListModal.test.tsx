@@ -1,6 +1,6 @@
-import { CountryListModal } from 'pages/Swap/Buy/CountryListModal'
-import { US } from 'test-utils/constants'
-import { act, fireEvent, render, screen } from 'test-utils/render'
+import { CountryListModal } from '~/pages/Swap/Buy/CountryListModal'
+import { US } from '~/test-utils/constants'
+import { act, fireEvent, render, screen } from '~/test-utils/render'
 
 vi.mock('react-virtualized-auto-sizer', () => {
   return {

@@ -1,4 +1,3 @@
-import { useMeldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,15 +10,17 @@ import {
 import {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
+} from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import {
   FiatCurrencyInfo,
   FiatOnRampCurrency,
   FORCountry,
   OffRampTransferDetailsRequest,
+  RampDirection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 // biome-ignore lint/style/noRestrictedImports: Buy hooks need direct SDK imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
+import { useMeldSupportedCurrencyToCurrencyInfo } from '~/appGraphql/data/types'
 
 type FiatOnRampCurrencyInfo = {
   meldSupportedFiatCurrency: FiatCurrencyInfo
@@ -78,6 +79,7 @@ export function useFiatOnRampSupportedTokens(
     fiatCurrency: fiatCurrency.code,
     countryCode: countryCode ?? 'US',
     isSolanaEnabled,
+    rampDirection: RampDirection.ON_RAMP,
   })
   const { meldSupportedCurrencyToCurrencyInfo } = useMeldSupportedCurrencyToCurrencyInfo()
 
@@ -92,7 +94,7 @@ export function useFiatOnRampSupportedTokens(
   }, [quoteCurrencyOptions?.supportedTokens, meldSupportedCurrencyToCurrencyInfo])
 }
 
-export function useOffRampTransferDetailsRequest(): Maybe<OffRampTransferDetailsRequest> {
+export function useOffRampTransferDetailsRequest(): OffRampTransferDetailsRequest | null {
   const [searchParams] = useSearchParams()
 
   const externalTransactionId = searchParams.get('externalTransactionId')
@@ -108,11 +110,11 @@ export function useOffRampTransferDetailsRequest(): Maybe<OffRampTransferDetails
           baseCurrencyAmount: Number(baseCurrencyAmount),
           depositWalletAddress,
         },
-      }
+      } as unknown as OffRampTransferDetailsRequest
     } else if (externalTransactionId) {
       return {
         meldDetails: { sessionId: externalTransactionId },
-      }
+      } as unknown as OffRampTransferDetailsRequest
     }
 
     return null

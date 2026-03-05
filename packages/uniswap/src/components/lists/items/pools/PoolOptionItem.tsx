@@ -65,11 +65,11 @@ function _PoolOptionItem({
           <Badge size="small" placement="start">
             {ProtocolVersion[protocolVersion].toLowerCase()}
           </Badge>
-          {hookAddress && (
+          {hookAddress ? (
             <Badge size="small" placement="middle">
               {shortenAddress({ address: hookAddress, chars: 4 })}
             </Badge>
-          )}
+          ) : null}
           <Badge size="small" placement="end">
             {feeTier / BIPS_BASE}%
           </Badge>

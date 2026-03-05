@@ -1,11 +1,11 @@
-import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
 import { GraphQLApi } from '@universe/api'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { DAI, nativeOnChain, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { removeSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { gqlTokenToCurrencyInfo } from '~/appGraphql/data/types'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 
 const MAINNET_NATIVE_GQL_TOKEN = {
   __typename: 'Token',

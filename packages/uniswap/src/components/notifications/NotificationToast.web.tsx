@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Flex, styled } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import { NotificationToastProps } from 'uniswap/src/components/notifications/NotificationToast'
 import { NotificationToastContent } from 'uniswap/src/components/notifications/NotificationToastContent'
 import { HIDE_OFFSET_Y } from 'uniswap/src/features/notifications/constants'
@@ -10,11 +11,12 @@ const WebToastEntryAnimation = styled(Flex, {
   animation: 'semiBouncy',
   y: 0,
   top: '$spacing12',
+  left: '$spacing12',
+  right: '$spacing12',
   '$platform-web': {
     position: 'fixed',
   },
-  width: '100%',
-  zIndex: '$overlay',
+  zIndex: zIndexes.toast,
   opacity: 1,
   pointerEvents: 'none',
   enterStyle: {

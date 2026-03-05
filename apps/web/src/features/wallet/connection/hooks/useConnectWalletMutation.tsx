@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { ExternalWallet } from 'features/accounts/store/types'
-import { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
 import { createContext, useContext, useMemo } from 'react'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useEvent } from 'utilities/src/react/hooks'
+import { ExternalWallet } from '~/features/accounts/store/types'
+import { ConnectionService } from '~/features/wallet/connection/services/IConnectionService'
 
 export interface ConnectWalletMutationParams {
   connectionService: ConnectionService

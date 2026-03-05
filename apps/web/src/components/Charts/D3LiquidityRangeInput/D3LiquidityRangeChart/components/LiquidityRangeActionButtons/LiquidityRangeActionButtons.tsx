@@ -1,7 +1,7 @@
-import { ResetActionButton } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/ResetActionButton/ResetActionButton'
-import { TimePeriodOptionButtons } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/TimePeriodOptionButtons/TimePeriodOptionButtons'
-import { ZoomButtons } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/ZoomButtons/ZoomButtons'
 import { Flex } from 'ui/src'
+import { ResetActionButton } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/ResetActionButton/ResetActionButton'
+import { TimePeriodOptionButtons } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/TimePeriodOptionButtons/TimePeriodOptionButtons'
+import { ZoomButtons } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/ZoomButtons/ZoomButtons'
 
 export function LiquidityRangeActionButtons() {
   return (

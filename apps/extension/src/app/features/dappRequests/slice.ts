@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { confirmRequest, confirmRequestNoDappInfo } from 'src/app/features/dappRequests/actions'
 import type { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
 import { DappRequestStatus } from 'src/app/features/dappRequests/shared'
@@ -11,7 +11,7 @@ import {
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 
 type RequestId = string
-type WithMetadata<T> = T & {
+export type WithMetadata<T> = T & {
   createdAt: number
   status: DappRequestStatus
 }
@@ -26,22 +26,22 @@ const initialDappRequestState: DappRequestState = {
 }
 
 // Enforces that a request object in state is for an eth send txn request
-export interface DappRequestStoreItemForEthSendTxn extends DappRequestStoreItem {
-  dappRequest: WithMetadata<SendTransactionRequest>
+export interface DappRequestStoreItemForEthSendTxn extends WithMetadata<DappRequestStoreItem> {
+  dappRequest: SendTransactionRequest
 }
 
 export function isDappRequestStoreItemForEthSendTxn(
-  request: DappRequestStoreItem,
+  request: WithMetadata<DappRequestStoreItem>,
 ): request is DappRequestStoreItemForEthSendTxn {
   return isSendTransactionRequest(request.dappRequest)
 }
 
-export interface DappRequestStoreItemForSendCallsTxn extends DappRequestStoreItem {
+export interface DappRequestStoreItemForSendCallsTxn extends WithMetadata<DappRequestStoreItem> {
   dappRequest: SendCallsRequest
 }
 
 export function isDappRequestStoreItemForSendCallsTxn(
-  request: DappRequestStoreItem,
+  request: WithMetadata<DappRequestStoreItem>,
 ): request is DappRequestStoreItemForSendCallsTxn {
   return isSendCallsRequest(request.dappRequest)
 }
@@ -85,6 +85,7 @@ const slice = createSlice({
     setMostRecent5792DappUrl: (state, action: PayloadAction<string | null>) => {
       state.mostRecent5792DappUrl = action.payload
     },
+    reset: () => initialDappRequestState,
   },
   extraReducers: (builder) => {
     // update status of request to confirming
@@ -92,7 +93,7 @@ const slice = createSlice({
     builder.addMatcher(
       (action) => action.type === confirmRequest.type || action.type === confirmRequestNoDappInfo.type,
       (state, action) => {
-        const { dappRequest } = action.payload
+        const { dappRequest } = action['payload']
         const request = state.requests[dappRequest.requestId]
         if (request) {
           request.status = DappRequestStatus.Confirming
@@ -102,8 +103,9 @@ const slice = createSlice({
   },
 })
 
-export const selectAllDappRequests = (state: { dappRequests: DappRequestState }): DappRequestStoreItem[] =>
-  selectDappRequestsArray(state.dappRequests)
+export const selectAllDappRequests = (state: {
+  dappRequests: DappRequestState
+}): WithMetadata<DappRequestStoreItem>[] => selectDappRequestsArray(state.dappRequests)
 
 export const selectIsRequestConfirming = (state: { dappRequests: DappRequestState }, requestId: string): boolean =>
   state.dappRequests.requests[requestId]?.status === DappRequestStatus.Confirming

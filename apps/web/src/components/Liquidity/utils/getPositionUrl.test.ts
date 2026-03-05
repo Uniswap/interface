@@ -1,12 +1,12 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
 import JSBI from 'jsbi'
-import { TEST_TOKEN_1, TEST_TOKEN_2 } from 'test-utils/constants'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { describe, expect, it } from 'vitest'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { getPositionUrl } from '~/components/Liquidity/utils/getPositionUrl'
+import { TEST_TOKEN_1, TEST_TOKEN_2 } from '~/test-utils/constants'
 
 const currency0Amount = CurrencyAmount.fromRawAmount(TEST_TOKEN_1, JSBI.BigInt(100))
 const currency1Amount = CurrencyAmount.fromRawAmount(TEST_TOKEN_2, JSBI.BigInt(100))

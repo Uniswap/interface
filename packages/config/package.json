@@ -7,6 +7,7 @@
   },
   "devDependencies": {
     "@types/node": "22.13.1",
+    "@typescript/native-preview": "7.0.0-dev.20260108.1",
     "@uniswap/eslint-config": "workspace:^",
     "depcheck": "1.4.7",
     "eslint": "8.57.1",
@@ -14,8 +15,14 @@
   },
   "scripts": {
     "typecheck": "nx typecheck config",
+    "typecheck:tsgo": "nx typecheck:tsgo config",
     "lint": "nx lint config",
-    "lint:fix": "nx lint:fix config"
+    "lint:fix": "nx lint:fix config",
+    "lint:biome": "nx lint:biome config",
+    "lint:biome:fix": "nx lint:biome:fix config",
+    "lint:eslint": "nx lint:eslint config",
+    "lint:eslint:fix": "nx lint:eslint:fix config",
+    "check:deps:usage": "nx check:deps:usage config"
   },
   "nx": {
     "includedScripts": []

@@ -8,11 +8,12 @@ import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassi
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { AnimatePresence, Flex } from 'ui/src'
 import { Edit, Ellipsis, Trash } from 'ui/src/components/icons'
+import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
-import { MenuContentItem } from 'wallet/src/components/menu/types'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal'
 import { DeleteUnitagModal } from 'wallet/src/features/unitags/DeleteUnitagModal'
 import { EditUnitagProfileContent } from 'wallet/src/features/unitags/EditUnitagProfileContent'
@@ -40,8 +41,9 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
 
   const [showDeleteUnitagModal, setShowDeleteUnitagModal] = useState(false)
   const [showChangeUnitagModal, setShowChangeUnitagModal] = useState(false)
+  const { value: isMenuOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
 
-  const menuOptions = useMemo((): MenuContentItem[] => {
+  const menuOptions = useMemo((): MenuOptionItem[] => {
     return [
       {
         label: t('unitags.profile.action.edit'),
@@ -69,7 +71,13 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
         noTopPadding
         title={t('settings.setting.wallet.action.editProfile')}
         endAdornment={
-          <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
+          <ContextMenu
+            menuItems={menuOptions}
+            triggerMode={ContextMenuTriggerMode.Primary}
+            isOpen={isMenuOpen}
+            openMenu={openMenu}
+            closeMenu={closeMenu}
+          >
             <Flex>
               <Ellipsis color="$neutral2" size="$icon.24" />
             </Flex>

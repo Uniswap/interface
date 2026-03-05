@@ -4,8 +4,8 @@
     "protocolVersion": "PROTOCOL_VERSION_V3",
     "v3Position": {
       "tokenId": "1035132",
-      "tickLower": "195940",
-      "tickUpper": "197450",
+      "tickLower": "887260",
+      "tickUpper": "887270",
       "liquidity": "247135844098",
       "token0": {
         "chainId": 1,

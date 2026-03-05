@@ -1,22 +1,7 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useMenuState } from 'components/AccountDrawer/menuState'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
-import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
-import { useConnectionStatus } from 'features/accounts/store/hooks'
-import { useAccountsStoreContext } from 'features/accounts/store/provider'
-import { useAccount } from 'hooks/useAccount'
-import { useEthersProvider } from 'hooks/useEthersProvider'
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useModalState } from 'hooks/useModalState'
-import { useOneClickSwapSetting } from 'pages/Swap/settings/OneClickSwap'
 import React, { PropsWithChildren, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
-import { serializeSwapAddressesToURLParameters } from 'state/swap/hooks'
-import { useIsAtomicBatchingSupportedByChainIdCallback } from 'state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
-import { useHasMismatchCallback, useShowMismatchToast } from 'state/walletCapabilities/hooks/useMismatchAccount'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
@@ -31,11 +16,29 @@ import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getPoolDetailsURL, getTokenDetailsURL } from 'uniswap/src/utils/linking'
+import { getFiatOnRampURL, getPoolDetailsURL, getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
-import { showSwitchNetworkNotification } from 'utils/showSwitchNetworkNotification'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useMenuState } from '~/components/AccountDrawer/menuState'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
+import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { useAccountsStoreContext } from '~/features/accounts/store/provider'
+import { useAccount } from '~/hooks/useAccount'
+import { useEthersProvider } from '~/hooks/useEthersProvider'
+import { useEthersSigner } from '~/hooks/useEthersSigner'
+import { useModalState } from '~/hooks/useModalState'
+import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { useOneClickSwapSetting } from '~/pages/Swap/settings/OneClickSwap'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { serializeSwapAddressesToURLParameters } from '~/state/swap/hooks'
+import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
+import { useHasMismatchCallback, useShowMismatchToast } from '~/state/walletCapabilities/hooks/useMismatchAccount'
+import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 // Adapts useEthersProvider to fit uniswap context hook shape
 function useWebProvider(chainId: number) {
@@ -62,18 +65,31 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const location = useLocation()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
-  const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`), [navigate])
+  const { chainId } = useMultichainContext()
 
+  const { closeModal: closeSendModal } = useModalState(ModalName.Send)
   const { closeModal: closeSearchModal } = useModalState(ModalName.Search)
   const { openModal: openSendModal } = useModalState(ModalName.Send)
 
   const navigateToSwapFlow = useCallback(
-    ({ inputCurrencyId, outputCurrencyId }: { inputCurrencyId?: string; outputCurrencyId?: string }) => {
+    ({
+      inputCurrencyId,
+      outputCurrencyId,
+      exactCurrencyField,
+      exactAmountToken,
+    }: {
+      inputCurrencyId?: string
+      outputCurrencyId?: string
+      exactCurrencyField?: CurrencyField
+      exactAmountToken?: string
+    }) => {
       const queryParams = serializeSwapAddressesToURLParameters({
         inputTokenAddress: inputCurrencyId ? currencyIdToAddress(inputCurrencyId) : undefined,
         outputTokenAddress: outputCurrencyId ? currencyIdToAddress(outputCurrencyId) : undefined,
         chainId: inputCurrencyId ? currencyIdToChain(inputCurrencyId) : undefined,
         outputChainId: outputCurrencyId ? currencyIdToChain(outputCurrencyId) : undefined,
+        exactCurrencyField,
+        exactAmountToken,
       })
       navigate(`/swap${queryParams}`)
       closeSearchModal()
@@ -91,17 +107,43 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     [navigate, closeSearchModal],
   )
 
+  const navigateToFiatOnRamp = useCallback(() => navigate(getFiatOnRampURL()), [navigate])
+
+  const navigateToBuyOrReceiveWithEmptyWallet = useCallback(() => {
+    const url = getFiatOnRampURL(chainId ?? undefined)
+    navigate(url)
+    closeSendModal()
+  }, [navigate, chainId, closeSendModal])
+
   const navigateToSendFlow = useCallback(
-    ({ chainId, currencyAddress }: { chainId: UniverseChainId; currencyAddress?: Address }) => {
+    ({
+      chainId,
+      currencyAddress,
+      recipient,
+    }: {
+      chainId: UniverseChainId
+      currencyAddress?: Address
+      recipient?: Address
+    }) => {
       const chainUrlParam = getChainInfo(chainId).urlParam
+      const params = new URLSearchParams(location.search)
+
       openSendModal()
       closeSearchModal()
 
+      // When we are in portfolio, we want to keep the previous state of selected network.
+      // Thus, we keep the state of the `chain` parameter and append it to the new URL.
+      const openingInPortfolio = location.pathname.includes('/portfolio')
+      const retainedNetworkParam = openingInPortfolio && params.has('chain') ? `chain=${params.get('chain')}&` : ''
+
       const newPathname = location.pathname === '/' ? '/send' : location.pathname
       const currencyAddressParam = currencyAddress ? `&sendCurrency=${currencyAddress}` : ''
-      navigate(`${newPathname}?sendChain=${chainUrlParam}${currencyAddressParam}`)
+      const recipientParam = recipient ? `&sendRecipient=${recipient}` : ''
+      navigate(
+        `${newPathname}?${retainedNetworkParam}sendChain=${chainUrlParam}${currencyAddressParam}${recipientParam}`,
+      )
     },
-    [openSendModal, closeSearchModal, navigate, location],
+    [openSendModal, closeSearchModal, navigate, location.pathname, location.search],
   )
 
   const navigateToReceive = useOpenReceiveCryptoModal({
@@ -138,8 +180,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
 
   const navigateToExternalProfile = useCallback(
     ({ address }: { address: Address }) => {
-      // TODO: this will need to be updated upstack
-      navigate(`/portfolio?address=${address}`)
+      navigate(buildPortfolioUrl({ externalAddress: address }))
       closeSearchModal()
     },
     [navigate, closeSearchModal],
@@ -202,6 +243,11 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     }
   })
 
+  const navigateToAdvancedSettings = useCallback(() => {
+    accountDrawer.open()
+    accountDrawerMenu.setMenuState({ variant: MenuStateVariant.ADVANCED_SETTINGS })
+  }, [accountDrawer, accountDrawerMenu])
+
   const navigateToNftDetails = useNavigateToNftExplorerLink()
 
   useAccountChainIdEffect()
@@ -216,12 +262,14 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToSendFlow={navigateToSendFlow}
       navigateToReceive={navigateToReceive}
+      navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
+      navigateToAdvancedSettings={navigateToAdvancedSettings}
       onConnectWallet={onConnectWallet}
       getCanSignPermits={getCanSignPermits}
       getIsUniswapXSupported={getIsUniswapXSupported}

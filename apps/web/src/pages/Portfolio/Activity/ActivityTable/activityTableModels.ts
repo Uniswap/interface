@@ -4,7 +4,7 @@
  * Each adapter returns raw IDs, amounts, addresses, and translation keys.
  */
 
-import { ActivityFilterType } from 'pages/Portfolio/Activity/Filters/utils'
+import { ActivityFilterType } from '~/pages/Portfolio/Activity/Filters/utils'
 
 /**
  * Represents the amount/token data for different transaction types

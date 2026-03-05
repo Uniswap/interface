@@ -1,13 +1,13 @@
-import { Hero } from 'pages/Landing/sections/Hero'
 import { lazy, memo, Suspense, useRef } from 'react'
 import { Flex, styled } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { Hero } from '~/pages/Landing/sections/Hero'
 
 // The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.
 const Fold = lazy(() => import(/* webpackPreload: true */ './Fold'))
 
-const Rive = lazy(() => import(/* webpackPreload: true */ 'setupRive'))
+const Rive = lazy(() => import(/* webpackPreload: true */ '~/setupRive'))
 
 const Grain = styled(Flex, {
   position: 'absolute',

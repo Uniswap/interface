@@ -169,44 +169,16 @@ exports[`FavoriteWalletCard renders without error 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
-              "height": 20,
               "position": "relative",
-              "width": 20,
             }
           }
           testID="account-icon"
         >
           <View
-            collapsable={false}
-            forwardedRef={[Function]}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 0,
-                },
-              }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "flexDirection": "column",
-                },
-              ]
-            }
             style={
-              [
-                {
-                  "flexDirection": "column",
-                },
-                {
-                  "opacity": 0,
-                },
-              ]
+              {
+                "flexDirection": "column",
+              }
             }
           >
             <View
@@ -280,8 +252,8 @@ exports[`FavoriteWalletCard renders without error 1`] = `
         <View
           style={
             {
-              "alignItems": "center",
               "flexDirection": "row",
+              "flexGrow": 1,
             }
           }
         >

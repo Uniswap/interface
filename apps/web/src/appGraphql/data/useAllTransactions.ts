@@ -1,9 +1,9 @@
 import { GraphQLApi } from '@universe/api'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useCallback, useMemo, useRef } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import i18n from 'uniswap/src/i18n'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 
 export enum TransactionType {
   SWAP = 'Swap',

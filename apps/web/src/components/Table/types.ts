@@ -10,4 +10,5 @@ export type TableBodyProps<T extends RowData = unknown> = {
   loadingRowsCount?: number
   rowHeight?: number
   compactRowHeight?: number
+  hasPinnedColumns?: boolean
 }

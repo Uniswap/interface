@@ -1,5 +1,5 @@
-import { ErrorCallout } from 'components/ErrorCallout'
-import { render } from 'test-utils/render'
+import { ErrorCallout } from '~/components/ErrorCallout'
+import { render } from '~/test-utils/render'
 
 describe('ErrorCallout', () => {
   it('should render defaults', () => {

@@ -1,7 +1,7 @@
-import { deprecatedStyled } from 'lib/styled-components'
 import { Trans } from 'react-i18next'
-import { ExternalLink } from 'theme/components/Links'
 import { Text } from 'ui/src'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ExternalLink } from '~/theme/components/Links'
 
 const StyledLink = deprecatedStyled(ExternalLink)`
   font-weight: 535;

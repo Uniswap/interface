@@ -5,9 +5,12 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { isMobileApp } from 'utilities/src/platform'
 
-export const createConnectTransportWithDefaults = (options: Partial<ConnectTransportOptions> = {}): Transport =>
+export const createConnectTransportWithDefaults = (
+  options: Partial<ConnectTransportOptions> = {},
+  apiUrlOverride?: string,
+): Transport =>
   getTransport({
-    getBaseUrl: () => uniswapUrls.apiBaseUrlV2,
+    getBaseUrl: () => apiUrlOverride ?? uniswapUrls.apiBaseUrlV2,
     getHeaders: () => (isMobileApp ? BASE_UNISWAP_HEADERS : {}),
     options,
   })
@@ -33,3 +36,10 @@ export const ALL_NETWORKS_ARG = 'ALL_NETWORKS'
     return useQuery(newService, input, { transport: uniswapGetTransport })
   }
  */
+
+export const dataApiGetTransport = createConnectTransportWithDefaults(
+  { useHttpGet: true },
+  uniswapUrls.dataApiBaseUrlV2,
+)
+
+export const dataApiPostTransport = createConnectTransportWithDefaults(undefined, uniswapUrls.dataApiBaseUrlV2)

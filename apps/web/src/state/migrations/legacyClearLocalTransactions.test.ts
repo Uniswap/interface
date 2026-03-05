@@ -1,4 +1,4 @@
-import { legacyCreateLocalTransactionClearingMigration } from 'state/migrations/legacyClearLocalTransactions'
+import { legacyCreateLocalTransactionClearingMigration } from '~/state/migrations/legacyClearLocalTransactions'
 
 const previousStateWithLocalTransactions = {
   _persist: {

@@ -56,7 +56,7 @@ export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Ele
             loading={shouldShowLoading}
             isDisabled={disabled}
             backgroundColor={buttonBackgroundColor}
-            size={isShortMobileDevice ? 'small' : 'large'}
+            size={isShortMobileDevice ? 'medium' : 'large'}
             testID={TestID.ReviewSwap}
             animation="simple"
             onPress={promptWebFORNudge ? setIsShowingWebFORNudgeHandler : handleOnReviewPress}

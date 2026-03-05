@@ -1,25 +1,22 @@
-import { CHART_BEHAVIOR } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import { useChartPriceState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
-import { ChartState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { boundPanY } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/boundPanY'
-import { calculateDynamicZoomMin } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/chartUtils'
-import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { useEffect } from 'react'
+import { CHART_BEHAVIOR } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import { useChartPriceState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
+import { ChartState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { boundPanY } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/boundPanY'
+import { calculateMaxZoom } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/rangeViewportUtils'
 
 export function useLiquidityChartInteractions({
   svgRef,
-  liquidityData,
   zoomLevel,
   panY,
   setChartState,
-  dynamicZoomMin,
+  tickSpacing,
 }: {
   svgRef: React.RefObject<SVGSVGElement | null>
-  liquidityData: ChartEntry[]
   zoomLevel?: number
   panY?: number
   setChartState: (state: Partial<ChartState>) => void
-  dynamicZoomMin?: number
+  tickSpacing: number
 }) {
   const { isFullRange } = useChartPriceState()
 
@@ -52,21 +49,21 @@ export function useLiquidityChartInteractions({
           Math.min(CHART_BEHAVIOR.PINCH_ZOOM_FACTOR_MAX, 1 + deltaScale),
         )
 
-        const minZoom = dynamicZoomMin ?? calculateDynamicZoomMin(liquidityData.length)
-        const newZoomLevel = Math.max(minZoom, Math.min(CHART_BEHAVIOR.ZOOM_MAX, zoomLevel * zoomFactor))
+        const maxZoom = calculateMaxZoom(tickSpacing)
+        const newZoomLevel = Math.max(CHART_BEHAVIOR.ZOOM_MIN, Math.min(maxZoom, zoomLevel * zoomFactor))
 
         // Adjust panY to keep mouse position fixed during zoom
         const zoomRatio = newZoomLevel / zoomLevel
         const newPanY = centerY - (centerY - panY) * zoomRatio
 
-        const constrainedPanY = boundPanY({ panY: newPanY, viewportHeight, liquidityData, zoomLevel: newZoomLevel })
+        const constrainedPanY = boundPanY({ panY: newPanY, viewportHeight, zoomLevel: newZoomLevel })
 
         setChartState({ zoomLevel: newZoomLevel, panY: constrainedPanY })
       } else {
         const scrollAmount = -event.deltaY
         const newPanY = panY + scrollAmount
 
-        const constrainedPanY = boundPanY({ panY: newPanY, viewportHeight, liquidityData, zoomLevel })
+        const constrainedPanY = boundPanY({ panY: newPanY, viewportHeight, zoomLevel })
 
         setChartState({ panY: constrainedPanY })
       }
@@ -79,5 +76,5 @@ export function useLiquidityChartInteractions({
     return () => {
       svgElement.removeEventListener('wheel', handleWheel)
     }
-  }, [liquidityData, zoomLevel, panY, dynamicZoomMin, isFullRange, setChartState, svgRef])
+  }, [zoomLevel, panY, isFullRange, setChartState, svgRef, tickSpacing])
 }

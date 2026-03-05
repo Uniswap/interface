@@ -1,17 +1,22 @@
-import { D3RangeAmountInput } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3RangeAmountInput'
-import { useChartPriceState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Token } from '@uniswap/sdk-core'
+import { useCallback, useMemo, useState } from 'react'
+import { Flex } from 'ui/src'
+import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
+import { D3RangeAmountInput } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3RangeAmountInput'
+import { useChartPriceState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
 import {
   useLiquidityChartStorePriceDifferences,
   useLiquidityChartStoreRenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
-import { TickNavigationParams } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
-import { RangeSelectionInput } from 'components/Liquidity/Create/RangeAmountInput'
-import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
-import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
-import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
-import { useCallback, useMemo, useState } from 'react'
-import { Flex } from 'ui/src'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
+import { TickNavigationParams } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { useLiquidityChartStoreActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
+import { RangeSelectionInput } from '~/components/Liquidity/Create/RangeAmountInput'
+import { RangeAmountInputPriceMode } from '~/components/Liquidity/Create/types'
+import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
+import { getTicksAtLimit, tryParseV4Tick } from '~/components/Liquidity/utils/priceRangeInfo'
+import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { tryParseTick } from '~/state/mint/v3/utils'
 
 // Convert user input to price based on the input mode
 function usePercentageToPrice() {
@@ -43,7 +48,7 @@ function usePercentageToPrice() {
 }
 
 export function D3LiquidityMinMaxInput() {
-  const { ticksAtLimit, setPriceRangeState, priceRangeState, positionState, currencies } = useCreateLiquidityContext()
+  const { setPriceRangeState, priceRangeState, positionState, currencies } = useCreateLiquidityContext()
   const [typedValue, setTypedValue] = useState({ [RangeSelectionInput.MIN]: '', [RangeSelectionInput.MAX]: '' })
   const percentageToPrice = usePercentageToPrice()
   const [displayUserTypedValue, setDisplayUserTypedValue] = useState({
@@ -63,20 +68,29 @@ export function D3LiquidityMinMaxInput() {
 
   // Navigation params for increment/decrement actions
   const tickNavigationParams: TickNavigationParams | undefined = useMemo(() => {
-    if (!positionState.fee?.tickSpacing || !currencies.display.TOKEN0 || !currencies.display.TOKEN1) {
+    if (!positionState.fee?.tickSpacing || !currencies.sdk.TOKEN0 || !currencies.sdk.TOKEN1) {
       return undefined
     }
 
-    const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.display, priceRangeState.priceInverted)
+    const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.sdk, priceRangeState.priceInverted)
 
     return {
       tickSpacing: positionState.fee.tickSpacing,
+      feeAmount: positionState.fee.feeAmount,
       baseCurrency,
       quoteCurrency,
-      priceInverted: priceRangeState.priceInverted,
       protocolVersion: positionState.protocolVersion,
     }
-  }, [positionState.fee?.tickSpacing, currencies.display, priceRangeState.priceInverted, positionState.protocolVersion])
+  }, [positionState.fee, currencies.sdk, priceRangeState.priceInverted, positionState.protocolVersion])
+
+  const ticksAtLimit = useMemo(() => {
+    return getTicksAtLimit({
+      tickSpacing: positionState.fee?.tickSpacing ?? DEFAULT_TICK_SPACING,
+      lowerTick: priceRangeState.minTick,
+      upperTick: priceRangeState.maxTick,
+      fullRange: isFullRange,
+    })
+  }, [positionState.fee?.tickSpacing, priceRangeState.minTick, priceRangeState.maxTick, isFullRange])
 
   // Get display value based on input mode
   const getDisplayValue = useCallback(
@@ -121,8 +135,10 @@ export function D3LiquidityMinMaxInput() {
       const priceToSet = percentageToPrice({ value, inputMode, currentPrice, fallbackPrice })
 
       if (input === RangeSelectionInput.MIN) {
+        // @ts-expect-error: minPrice can be set here
         setChartState({ minPrice: priceToSet })
       } else {
+        // @ts-expect-error: maxPrice can be set here
         setChartState({ maxPrice: priceToSet })
       }
 
@@ -135,15 +151,36 @@ export function D3LiquidityMinMaxInput() {
   // Updates liquidity context
   const onBlur = useCallback(
     (input: RangeSelectionInput, value: string) => {
-      if (input === RangeSelectionInput.MIN) {
-        setPriceRangeState((prev) => ({ ...prev, minPrice: value }))
+      if (!tickNavigationParams) {
+        return
+      }
+
+      let tickToSet: number | undefined
+      if (positionState.protocolVersion === ProtocolVersion.V4) {
+        tickToSet = tryParseV4Tick({
+          baseToken: tickNavigationParams.baseCurrency,
+          quoteToken: tickNavigationParams.quoteCurrency,
+          value,
+          tickSpacing: tickNavigationParams.tickSpacing,
+        })
       } else {
-        setPriceRangeState((prev) => ({ ...prev, maxPrice: value }))
+        tickToSet = tryParseTick({
+          baseToken: tickNavigationParams.baseCurrency as Token,
+          quoteToken: tickNavigationParams.quoteCurrency as Token,
+          value,
+          feeAmount: tickNavigationParams.feeAmount,
+        })
+      }
+
+      if (input === RangeSelectionInput.MIN) {
+        setPriceRangeState((prev) => ({ ...prev, minTick: tickToSet }))
+      } else {
+        setPriceRangeState((prev) => ({ ...prev, maxTick: tickToSet }))
       }
 
       setDisplayUserTypedValue((prev) => ({ ...prev, [input]: false }))
     },
-    [setPriceRangeState],
+    [setPriceRangeState, tickNavigationParams, positionState],
   )
 
   return (

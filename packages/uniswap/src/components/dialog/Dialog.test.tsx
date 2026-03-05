@@ -6,21 +6,22 @@ import type { DialogPreferencesService } from 'uniswap/src/dialog-preferences'
 import { DialogVisibilityId } from 'uniswap/src/dialog-preferences/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { renderWithProviders } from 'uniswap/src/test/render'
+import type { Mocked } from 'vitest'
 
 // Mock the Modal component to avoid BottomSheetModal context issues
-jest.mock('uniswap/src/components/modals/Modal', () => ({
+vi.mock('uniswap/src/components/modals/Modal', () => ({
   Modal: ({ children, isModalOpen }: { children: React.ReactNode; isModalOpen: boolean }): JSX.Element | null => {
     return isModalOpen ? <>{children}</> : null
   },
 }))
 
-const mockOnClose = jest.fn()
-const mockPrimaryClick = jest.fn()
-const mockSecondaryClick = jest.fn()
+const mockOnClose = vi.fn()
+const mockPrimaryClick = vi.fn()
+const mockSecondaryClick = vi.fn()
 
 describe('Dialog component', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   const renderDialog = (props = {}): ReturnType<typeof renderWithProviders> => {
@@ -111,15 +112,15 @@ describe('Dialog component', () => {
   })
 
   describe('dialog visibility preferences', () => {
-    let mockService: jest.Mocked<DialogPreferencesService>
+    let mockService: Mocked<DialogPreferencesService>
 
     beforeEach(() => {
       mockService = {
-        shouldShowDialog: jest.fn(),
-        markDialogHidden: jest.fn(),
-        resetDialog: jest.fn(),
+        shouldShowDialog: vi.fn(),
+        markDialogHidden: vi.fn(),
+        resetDialog: vi.fn(),
       }
-      jest.clearAllMocks()
+      vi.clearAllMocks()
       // Clear React Query cache to prevent test pollution
       SharedQueryClient.clear()
     })
@@ -127,7 +128,7 @@ describe('Dialog component', () => {
     it('automatically closes when shouldShow is false', async () => {
       // This service returns false, indicating the user has saved a preference to "don't show again"
       mockService.shouldShowDialog.mockResolvedValue(false)
-      const onCloseSpy = jest.fn()
+      const onCloseSpy = vi.fn()
 
       const { queryByText } = renderWithProviders(
         <Dialog
@@ -154,7 +155,7 @@ describe('Dialog component', () => {
 
     it('does not call onClose multiple times if shouldShow remains false', async () => {
       mockService.shouldShowDialog.mockResolvedValue(false)
-      const onCloseSpy = jest.fn()
+      const onCloseSpy = vi.fn()
 
       const { rerender } = renderWithProviders(
         <Dialog
@@ -195,7 +196,7 @@ describe('Dialog component', () => {
 
     it('renders normally when shouldShow is true', async () => {
       mockService.shouldShowDialog.mockResolvedValue(true)
-      const onCloseSpy = jest.fn()
+      const onCloseSpy = vi.fn()
 
       const { getByText } = renderWithProviders(
         <Dialog
@@ -222,7 +223,7 @@ describe('Dialog component', () => {
 
     it('does not call onClose when dialog is already closed (isOpen=false)', async () => {
       mockService.shouldShowDialog.mockResolvedValue(false)
-      const onCloseSpy = jest.fn()
+      const onCloseSpy = vi.fn()
 
       renderWithProviders(
         <Dialog

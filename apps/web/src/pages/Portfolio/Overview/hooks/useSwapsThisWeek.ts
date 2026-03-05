@@ -1,17 +1,17 @@
-import {
-  ActivityFilterType,
-  filterTransactionDetailsFromActivityItems,
-  getTransactionTypesForFilter,
-} from 'pages/Portfolio/Activity/Filters/utils'
-import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
-import { useSwapUSDValuesFromGraphQL } from 'pages/Portfolio/Overview/hooks/useSwapUSDValuesFromGraphQL'
 import { useMemo } from 'react'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
+import {
+  ActivityFilterType,
+  filterTransactionDetailsFromActivityItems,
+  getTransactionTypesForFilter,
+} from '~/pages/Portfolio/Activity/Filters/utils'
+import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { useSwapUSDValuesFromGraphQL } from '~/pages/Portfolio/Overview/hooks/useSwapUSDValuesFromGraphQL'
 
 function filterSwapsTypeLast7Days(transactions: ActivityItem[]): TransactionDetails[] {
   const allowedTypes = getTransactionTypesForFilter(ActivityFilterType.Swaps)

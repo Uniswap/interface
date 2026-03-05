@@ -1,7 +1,7 @@
 import { WalletContextState } from '@solana/wallet-adapter-react'
 import { renderHook } from '@testing-library/react'
-import { useSolanaConnectionService } from 'features/wallet/connection/connectors/solana'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useSolanaConnectionService } from '~/features/wallet/connection/connectors/solana'
 
 // Mock dependencies
 vi.mock('@solana/wallet-adapter-react', () => ({
@@ -16,13 +16,13 @@ vi.mock('utilities/src/time/timing', () => ({
 import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { ExternalConnector, ExternalWallet } from 'features/accounts/store/types'
-import { GetConnectorFn } from 'features/wallet/connection/services/createConnectionService'
-import { mocked } from 'test-utils/mocked'
 import { AccessPattern, ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { sleep } from 'utilities/src/time/timing'
+import { ExternalConnector, ExternalWallet } from '~/features/accounts/store/types'
+import { GetConnectorFn } from '~/features/wallet/connection/services/createConnectionService'
+import { mocked } from '~/test-utils/mocked'
 
 const mockSleep = vi.mocked(sleep)
 const mockUseWallet = vi.mocked(useWallet)

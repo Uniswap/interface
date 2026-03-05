@@ -1,5 +1,5 @@
-import { css } from 'lib/styled-components'
 import { TextStyle } from 'ui/src'
+import { css } from '~/lib/deprecated-styled'
 
 /** @deprecated use tamagui and EllipsisTamaguiStyle instead */
 export const EllipsisStyle = css`

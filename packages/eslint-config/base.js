@@ -117,6 +117,11 @@ module.exports = {
           },
         ],
         curly: 'error',
+
+        // Disable dot-notation to allow TypeScript's noPropertyAccessFromIndexSignature
+        'dot-notation': 'off',
+        '@typescript-eslint/dot-notation': 'off',
+
         '@typescript-eslint/prefer-enum-initializers': 'error',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',

@@ -39,5 +39,6 @@ export function gqlTokenToCurrencyInfo(token: GqlTokenToCurrencyInfoToken): Curr
     isSpam: project?.isSpam ?? false,
     isBridged,
     bridgedWithdrawalInfo,
+    projectId: project?.id,
   })
 }

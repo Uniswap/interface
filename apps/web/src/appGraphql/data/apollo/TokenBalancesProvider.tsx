@@ -1,16 +1,16 @@
-import { AdaptiveTokenBalancesProvider } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { apolloClient } from 'appGraphql/data/apollo/client'
 import { useQueryClient } from '@tanstack/react-query'
 import { GraphQLApi } from '@universe/api'
-import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
-import { useWatchTransactionsCallback } from 'state/sagas/transactions/watcherSaga'
-import { usePendingTransactions } from 'state/transactions/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // biome-ignore lint/style/noRestrictedImports: This import is needed for fetching portfolio value modifiers despite being restricted
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { AdaptiveTokenBalancesProvider } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { apolloClient } from '~/appGraphql/data/apollo/client'
+import { usePendingActivity } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { useAccount } from '~/hooks/useAccount'
+import { useWatchTransactionsCallback } from '~/state/sagas/transactions/watcherSaga'
+import { usePendingTransactions } from '~/state/transactions/hooks'
 
 function useHasAccountUpdate() {
   // Used to detect account updates without relying on subscription data.

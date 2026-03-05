@@ -1,3 +1,5 @@
+// Mock the logger to suppress debug logs during tests
+import 'utilities/src/logger/mocks'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
   CosignedPriorityOrder,
@@ -15,39 +17,33 @@ import {
   OrderCancellationParams,
 } from 'uniswap/src/features/transactions/cancel/cancelOrderFactory'
 import { createPermit2Contract } from 'uniswap/src/features/transactions/utils/permit2'
-
-// Mock the logger to suppress debug logs during tests
-jest.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  },
-}))
+import type { Mock } from 'vitest'
 
 // Mock the uniswapx-sdk functions
-jest.mock('@uniswap/uniswapx-sdk', () => ({
-  ...jest.requireActual('@uniswap/uniswapx-sdk'),
-  getCancelSingleParams: jest.fn(),
-  getCancelMultipleParams: jest.fn(),
-  CosignedV2DutchOrder: {
-    parse: jest.fn(),
-  },
-  CosignedV3DutchOrder: {
-    parse: jest.fn(),
-  },
-  CosignedPriorityOrder: {
-    parse: jest.fn(),
-  },
-  DutchOrder: {
-    parse: jest.fn(),
-  },
-}))
+vi.mock('@uniswap/uniswapx-sdk', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@uniswap/uniswapx-sdk')>()
+  return {
+    ...actual,
+    getCancelSingleParams: vi.fn(),
+    getCancelMultipleParams: vi.fn(),
+    CosignedV2DutchOrder: {
+      parse: vi.fn(),
+    },
+    CosignedV3DutchOrder: {
+      parse: vi.fn(),
+    },
+    CosignedPriorityOrder: {
+      parse: vi.fn(),
+    },
+    DutchOrder: {
+      parse: vi.fn(),
+    },
+  }
+})
 
 // Mock the permit2 contract creation
-jest.mock('uniswap/src/features/transactions/utils/permit2', () => ({
-  createPermit2Contract: jest.fn(),
+vi.mock('uniswap/src/features/transactions/utils/permit2', () => ({
+  createPermit2Contract: vi.fn(),
 }))
 
 describe('cancelOrderFactory', () => {
@@ -57,7 +53,7 @@ describe('cancelOrderFactory', () => {
 
   const mockPermit2 = {
     populateTransaction: {
-      invalidateUnorderedNonces: jest.fn().mockResolvedValue({
+      invalidateUnorderedNonces: vi.fn().mockResolvedValue({
         to: '0xpermit2address',
         data: '0xcanceldata',
         value: '0x0',
@@ -67,24 +63,24 @@ describe('cancelOrderFactory', () => {
 
   beforeEach(() => {
     // Reset all mocks
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     // Setup mock for permit2 creation
-    ;(createPermit2Contract as jest.Mock).mockReturnValue(mockPermit2)
+    ;(createPermit2Contract as Mock).mockReturnValue(mockPermit2)
 
     // Setup default mock behavior
-    const getCancelSingleParamsMock = getCancelSingleParams as jest.Mock
-    const getCancelMultipleParamsMock = getCancelMultipleParams as jest.Mock
+    const getCancelSingleParamsMock = getCancelSingleParams as Mock
+    const getCancelMultipleParamsMock = getCancelMultipleParams as Mock
     getCancelSingleParamsMock.mockReturnValue({ word: '0x123', mask: '0x456' })
     getCancelMultipleParamsMock.mockReturnValue([{ word: '0x789', mask: '0xabc' }])
 
     const mockParsedOrder = {
       info: { nonce: mockNonce },
     }
-    const cosignedV2Parse = CosignedV2DutchOrder.parse as jest.Mock
-    const cosignedV3Parse = CosignedV3DutchOrder.parse as jest.Mock
-    const cosignedPriorityParse = CosignedPriorityOrder.parse as jest.Mock
-    const dutchOrderParse = DutchOrder.parse as jest.Mock
+    const cosignedV2Parse = CosignedV2DutchOrder.parse as Mock
+    const cosignedV3Parse = CosignedV3DutchOrder.parse as Mock
+    const cosignedPriorityParse = CosignedPriorityOrder.parse as Mock
+    const dutchOrderParse = DutchOrder.parse as Mock
     cosignedV2Parse.mockReturnValue(mockParsedOrder)
     cosignedV3Parse.mockReturnValue(mockParsedOrder)
     cosignedPriorityParse.mockReturnValue(mockParsedOrder)
@@ -116,7 +112,7 @@ describe('cancelOrderFactory', () => {
     })
 
     it('should return null when order parsing fails', async () => {
-      const cosignedV2Parse = CosignedV2DutchOrder.parse as jest.Mock
+      const cosignedV2Parse = CosignedV2DutchOrder.parse as Mock
       cosignedV2Parse.mockImplementationOnce(() => {
         throw new Error('Parse error')
       })
@@ -137,19 +133,19 @@ describe('cancelOrderFactory', () => {
         const order = { ...mockOrder, routing }
         await buildSingleCancellation(order, mockFrom)
 
-        let parseMethod: jest.Mock
+        let parseMethod: Mock
         switch (parser) {
           case 'CosignedV2DutchOrder':
-            parseMethod = CosignedV2DutchOrder.parse as jest.Mock
+            parseMethod = CosignedV2DutchOrder.parse as Mock
             break
           case 'CosignedV3DutchOrder':
-            parseMethod = CosignedV3DutchOrder.parse as jest.Mock
+            parseMethod = CosignedV3DutchOrder.parse as Mock
             break
           case 'CosignedPriorityOrder':
-            parseMethod = CosignedPriorityOrder.parse as jest.Mock
+            parseMethod = CosignedPriorityOrder.parse as Mock
             break
           case 'DutchOrder':
-            parseMethod = DutchOrder.parse as jest.Mock
+            parseMethod = DutchOrder.parse as Mock
             break
           default:
             throw new Error(`Unknown parser: ${parser}`)
@@ -160,7 +156,7 @@ describe('cancelOrderFactory', () => {
     })
 
     it('should return null when nonce extraction fails', async () => {
-      const cosignedV2Parse = CosignedV2DutchOrder.parse as jest.Mock
+      const cosignedV2Parse = CosignedV2DutchOrder.parse as Mock
       cosignedV2Parse.mockReturnValue({ info: {} }) // Missing nonce
 
       const result = await buildSingleCancellation(mockOrder, mockFrom)
@@ -213,7 +209,7 @@ describe('cancelOrderFactory', () => {
     })
 
     it('should handle multiple word/mask pairs', async () => {
-      const getCancelMultipleParamsMock = getCancelMultipleParams as jest.Mock
+      const getCancelMultipleParamsMock = getCancelMultipleParams as Mock
       getCancelMultipleParamsMock.mockReturnValue([
         { word: '0x111', mask: '0x222' },
         { word: '0x333', mask: '0x444' },
@@ -229,7 +225,7 @@ describe('cancelOrderFactory', () => {
     })
 
     it('should filter out invalid orders', async () => {
-      const cosignedV3Parse = CosignedV3DutchOrder.parse as jest.Mock
+      const cosignedV3Parse = CosignedV3DutchOrder.parse as Mock
       cosignedV3Parse.mockImplementationOnce(() => {
         throw new Error('Parse error')
       })
@@ -241,8 +237,8 @@ describe('cancelOrderFactory', () => {
     })
 
     it('should return null if all orders are invalid', async () => {
-      const cosignedV2Parse = CosignedV2DutchOrder.parse as jest.Mock
-      const cosignedV3Parse = CosignedV3DutchOrder.parse as jest.Mock
+      const cosignedV2Parse = CosignedV2DutchOrder.parse as Mock
+      const cosignedV3Parse = CosignedV3DutchOrder.parse as Mock
       cosignedV2Parse.mockImplementation(() => {
         throw new Error('Parse error')
       })
@@ -280,7 +276,7 @@ describe('cancelOrderFactory', () => {
     })
 
     it('should return null when getCancelMultipleParams returns empty array', async () => {
-      const getCancelMultipleParamsMock = getCancelMultipleParams as jest.Mock
+      const getCancelMultipleParamsMock = getCancelMultipleParams as Mock
       getCancelMultipleParamsMock.mockReturnValue([])
 
       const result = await buildBatchCancellation(mockOrders, mockFrom)
@@ -288,7 +284,7 @@ describe('cancelOrderFactory', () => {
     })
 
     it('should return null when getCancelMultipleParams first param is undefined', async () => {
-      const getCancelMultipleParamsMock = getCancelMultipleParams as jest.Mock
+      const getCancelMultipleParamsMock = getCancelMultipleParams as Mock
       getCancelMultipleParamsMock.mockReturnValue([undefined])
 
       const result = await buildBatchCancellation(mockOrders, mockFrom)
@@ -298,7 +294,7 @@ describe('cancelOrderFactory', () => {
 
   describe('error handling', () => {
     it('should handle permit2 contract creation failure', async () => {
-      const mockCreatePermit2Contract = createPermit2Contract as jest.Mock
+      const mockCreatePermit2Contract = createPermit2Contract as Mock
       mockCreatePermit2Contract.mockImplementation(() => {
         throw new Error('Contract creation failed')
       })

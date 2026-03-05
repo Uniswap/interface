@@ -2,6 +2,7 @@ ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
     "openapi-typescript-codegen",
     "typescript",
+    "@typescript/native-preview",
     "depcheck",
     "graphql",
     "@graphql-codegen/*",

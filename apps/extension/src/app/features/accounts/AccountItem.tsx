@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { BaseSyntheticEvent, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
@@ -10,6 +10,8 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { CopySheets, Edit, Ellipsis, Globe, TrashFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
@@ -18,10 +20,9 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { NumberType } from 'utilities/src/format/types'
-import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
-import { MenuContentItem } from 'wallet/src/components/menu/types'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -41,6 +42,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
   const formattedBalance = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
 
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
+  const { value: isContextMenuOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
 
   const accounts = useSignerAccounts()
   const displayName = useDisplayName(address)
@@ -63,30 +65,21 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
     )
   }, [accounts, address, dispatch])
 
-  const onPressCopyAddress = useCallback(
-    async (e: BaseSyntheticEvent) => {
-      // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
-      // means that without it the TouchableArea handler will get called
-      // TODO(EXT-1325): Use a different ContextMenu component that works inside a TouchableArea
-      e.preventDefault()
-      e.stopPropagation()
+  const onPressCopyAddress = useCallback(async (): Promise<void> => {
+    await setClipboard(address)
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Copied,
+        copyType: CopyNotificationType.Address,
+      }),
+    )
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.CopyAddress,
+      modal: ModalName.AccountSwitcher,
+    })
+  }, [address, dispatch])
 
-      await setClipboard(address)
-      dispatch(
-        pushNotification({
-          type: AppNotificationType.Copied,
-          copyType: CopyNotificationType.Address,
-        }),
-      )
-      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-        element: ElementName.CopyAddress,
-        modal: ModalName.AccountSwitcher,
-      })
-    },
-    [address, dispatch],
-  )
-
-  const menuOptions = useMemo((): MenuContentItem[] => {
+  const menuOptions = useMemo((): MenuOptionItem[] => {
     return [
       {
         label: t('account.wallet.menu.copy.title'),
@@ -97,12 +90,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         label: !accountHasUnitag
           ? t('account.wallet.menu.edit.title')
           : t('settings.setting.wallet.action.editProfile'),
-        onPress: async (e: BaseSyntheticEvent): Promise<void> => {
-          // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
-          // means that without it the TouchableArea handler will get called
-          e.preventDefault()
-          e.stopPropagation()
-
+        onPress: async (): Promise<void> => {
           if (accountHasUnitag) {
             await focusOrCreateUnitagTab(address, UnitagClaimRoutes.EditProfile)
           } else {
@@ -113,29 +101,20 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
       },
       {
         label: t('account.wallet.menu.manageConnections'),
-        onPress: (e: BaseSyntheticEvent): void => {
-          // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
-          // means that without it the TouchableArea handler will get called
-          e.preventDefault()
-          e.stopPropagation()
-
-          navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)
+        onPress: async (): Promise<void> => {
+          navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}?address=${address}`)
         },
         Icon: Globe,
       },
       {
         label: t('account.wallet.menu.remove.title'),
-        onPress: (e: BaseSyntheticEvent): void => {
-          // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
-          // means that without it the TouchableArea handler will get called
-          e.preventDefault()
-          e.stopPropagation()
-
+        onPress: (): void => {
           setShowRemoveWalletModal(true)
         },
-        textProps: { color: '$statusCritical' },
+        textColor: '$statusCritical',
         Icon: TrashFilled,
-        iconProps: { color: '$statusCritical' },
+        iconColor: '$statusCritical',
+        destructive: true,
       },
     ]
   }, [accountHasUnitag, onPressCopyAddress, navigateTo, t, address])
@@ -171,16 +150,22 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
             size={iconSizes.icon40}
             variant="subheading2"
           />
-          <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
+          <ContextMenu
+            menuItems={menuOptions}
+            triggerMode={ContextMenuTriggerMode.Primary}
+            isOpen={isContextMenuOpen}
+            openMenu={openMenu}
+            closeMenu={closeMenu}
+          >
             <Flex centered>
-              <Text $group-hover={{ opacity: 0 }} color="$neutral2" opacity={1} variant="body3">
+              <Text $group-hover={{ opacity: 0 }} color="$neutral2" opacity={isContextMenuOpen ? 0 : 1} variant="body3">
                 {formattedBalance}
               </Text>
               <Flex
                 $group-hover={{ opacity: 1 }}
                 borderRadius="$roundedFull"
                 hoverStyle={{ backgroundColor: '$surface2Hovered' }}
-                opacity={0}
+                opacity={isContextMenuOpen ? 1 : 0}
                 position="absolute"
                 p="$spacing8"
                 right={0}

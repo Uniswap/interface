@@ -1,15 +1,15 @@
-import { getTest } from 'playwright/fixtures'
-import { mockUnitagResponse, openAccountDrawerAndVerify } from 'playwright/fixtures/account'
-import { HAYDEN_ADDRESS, HAYDEN_ENS, UNITAG_NAME } from 'playwright/fixtures/wallets'
+import { getTest } from '~/playwright/fixtures'
+import { mockUnitagResponse, openAccountDrawerAndVerify } from '~/playwright/fixtures/account'
+import { HAYDEN_ADDRESS, HAYDEN_ENS, UNITAG_NAME } from '~/playwright/fixtures/wallets'
 
 const test = getTest({ withAnvil: true })
 
 test.describe(
   'AuthenticatedHeader unitag and ENS display',
   {
-    tag: '@team:apps-growth',
+    tag: '@team:apps-portfolio',
     annotation: [
-      { type: 'DD_TAGS[team]', description: 'apps-growth' },
+      { type: 'DD_TAGS[team]', description: 'apps-portfolio' },
       { type: 'DD_TAGS[test.type]', description: 'web-e2e' },
     ],
   },

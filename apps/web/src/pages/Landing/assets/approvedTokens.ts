@@ -1,6 +1,6 @@
 import { GraphQLApi } from '@universe/api'
-import ethereumLogo from 'assets/images/ethereum-logo.png'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import ethereumLogo from '~/assets/images/ethereum-logo.png'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 
 export interface InteractiveToken {
   name: string

@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
-import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
-import { TEST_TOKEN_1, TEST_TOKEN_2 } from 'test-utils/constants'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { useAllFeeTierPoolData } from '~/components/Liquidity/hooks/useAllFeeTierPoolData'
+import { TEST_TOKEN_1, TEST_TOKEN_2 } from '~/test-utils/constants'
 
 vi.mock('uniswap/src/data/rest/getPools', () => ({
   useGetPoolsByTokens: vi.fn(),

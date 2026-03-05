@@ -1,11 +1,4 @@
 import { TradingApi } from '@universe/api'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import { useHandleUniswapXActivityUpdate } from 'hooks/useHandleUniswapXActivityUpdate'
-import { ActivityUpdateTransactionType, type UniswapXOrderUpdate } from 'state/activity/types'
-import { mocked } from 'test-utils/mocked'
-import { renderHook } from 'test-utils/render'
-import { logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
@@ -15,10 +8,17 @@ import {
   type UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { useHandleUniswapXActivityUpdate } from '~/hooks/useHandleUniswapXActivityUpdate'
+import { ActivityUpdateTransactionType, type UniswapXOrderUpdate } from '~/state/activity/types'
+import { mocked } from '~/test-utils/mocked'
+import { renderHook } from '~/test-utils/render'
+import { logUniswapXSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 const dispatchMock = vi.fn()
-vi.mock('state/hooks', async () => {
-  const actual = await vi.importActual('state/hooks')
+vi.mock('~/state/hooks', async () => {
+  const actual = await vi.importActual('~/state/hooks')
   return {
     ...actual,
     useAppDispatch: () => dispatchMock,
@@ -29,13 +29,13 @@ vi.mock('@uniswap/analytics', () => ({
   useTrace: vi.fn(() => ({ trace: 'mock-trace' })),
 }))
 
-vi.mock('components/Popups/registry', () => ({
+vi.mock('~/components/Popups/registry', () => ({
   popupRegistry: {
     addPopup: vi.fn(),
   },
 }))
 
-vi.mock('tracing/swapFlowLoggers', () => ({
+vi.mock('~/tracing/swapFlowLoggers', () => ({
   logUniswapXSwapFinalized: vi.fn(),
 }))
 
@@ -65,6 +65,13 @@ describe('useHandleUniswapXActivityUpdate', () => {
       minimumOutputCurrencyAmountRaw: '1900000000000000000',
       expectedOutputCurrencyAmountRaw: '2000000000000000000',
       settledOutputCurrencyAmountRaw: '2000000000000000000',
+      isFinalStep: true,
+      swapStartTimestamp: 1700000000000,
+      planId: 'mock-plan-id',
+      stepIndex: 0,
+      totalSteps: 2,
+      totalNonErrorSteps: 2,
+      stepType: 'SwapTransaction',
     },
     routing: TradingApi.Routing.DUTCH_V2,
     orderHash: '0xOrderHash',
@@ -263,6 +270,15 @@ describe('useHandleUniswapXActivityUpdate', () => {
         analyticsContext: { trace: 'mock-trace' },
         routing: TradingApi.Routing.DUTCH_V2,
         status: TransactionStatus.Success,
+        swapStartTimestamp: 1700000000000,
+        planAnalytics: {
+          isFinalStep: true,
+          planId: 'mock-plan-id',
+          stepIndex: 0,
+          totalSteps: 2,
+          totalNonErrorSteps: 2,
+          stepType: 'SwapTransaction',
+        },
       })
     })
 
@@ -309,6 +325,15 @@ describe('useHandleUniswapXActivityUpdate', () => {
         analyticsContext: { trace: 'mock-trace' },
         routing: TradingApi.Routing.DUTCH_V2,
         status: TransactionStatus.Canceled,
+        swapStartTimestamp: 1700000000000,
+        planAnalytics: {
+          isFinalStep: true,
+          planId: 'mock-plan-id',
+          stepIndex: 0,
+          totalSteps: 2,
+          totalNonErrorSteps: 2,
+          stepType: 'SwapTransaction',
+        },
       })
     })
 
@@ -336,6 +361,15 @@ describe('useHandleUniswapXActivityUpdate', () => {
         analyticsContext: { trace: 'mock-trace' },
         routing: TradingApi.Routing.DUTCH_V2,
         status: TransactionStatus.Expired,
+        swapStartTimestamp: 1700000000000,
+        planAnalytics: {
+          isFinalStep: true,
+          planId: 'mock-plan-id',
+          stepIndex: 0,
+          totalSteps: 2,
+          totalNonErrorSteps: 2,
+          stepType: 'SwapTransaction',
+        },
       })
     })
 

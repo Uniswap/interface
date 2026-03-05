@@ -167,7 +167,7 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
  * @param input - UseTradeArgs: the input to prepare the trade input for
  * @returns The validated trade input, or null if the input is falsy, skipped, or USD quote
  */
-function prepareTradingApiTradeInput(input?: UseTradeArgs): ValidatedTradeInput | null {
+export function prepareTradingApiTradeInput(input?: UseTradeArgs): ValidatedTradeInput | null {
   // Step 1: Early exit if skipped
   if (!input || input.skip) {
     return null

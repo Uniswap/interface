@@ -1,7 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import React, { memo } from 'react'
 import { Flex, useSporeColors } from 'ui/src'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
@@ -10,12 +7,16 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { ReactComponent as UnknownStatus } from '~/assets/svg/contract-interaction.svg'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 
 interface PortfolioLogoProps {
   chainId: UniverseChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: Array<string | undefined>
+  fallbackSymbols?: Array<string | undefined>
   size?: number
   style?: React.CSSProperties
   customIcon?: React.ReactNode
@@ -38,7 +39,15 @@ export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoPro
 })
 
 function getLogo(
-  { accountAddress, currencies, images, chainId, customIcon, size = LOGO_DEFAULT_SIZE }: PortfolioLogoProps,
+  {
+    accountAddress,
+    currencies,
+    images,
+    fallbackSymbols,
+    chainId,
+    customIcon,
+    size = LOGO_DEFAULT_SIZE,
+  }: PortfolioLogoProps,
   colors: UseSporeColorsReturn,
 ) {
   if (accountAddress) {
@@ -47,11 +56,14 @@ function getLogo(
   if (currencies && currencies.length) {
     return <DoubleCurrencyLogo currencies={currencies} size={size} customIcon={customIcon} />
   }
+
   if (images && images.length >= 2) {
     return (
       <SplitLogo
         inputLogoUrl={images[0]}
         outputLogoUrl={images[1]}
+        inputFallbackSymbol={fallbackSymbols?.[0]}
+        outputFallbackSymbol={fallbackSymbols?.[1]}
         inputCurrencyInfo={null}
         outputCurrencyInfo={null}
         chainId={chainId}
@@ -60,7 +72,7 @@ function getLogo(
     )
   }
   if (images && images.length === 1) {
-    return <TokenLogo url={images[0]} size={size} chainId={chainId} />
+    return <TokenLogo url={images[0]} size={size} chainId={chainId} symbol={fallbackSymbols?.[0]} />
   }
   return <UnknownStatus width={size} height={size} color={colors.neutral2.val} />
 }

@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
-import { tryParsePrice } from 'state/mint/v3/utils'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { tryParsePrice } from '~/state/mint/v3/utils'
 
 describe('hooks', () => {
   describe('#tryParsePrice', () => {

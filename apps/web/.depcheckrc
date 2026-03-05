@@ -83,7 +83,6 @@ ignores: [
     'lib',
     'locales',
     'nft',
-    'notification-service',
     'pages',
     'polyfills',
     'rpc',

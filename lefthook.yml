@@ -38,8 +38,10 @@ pre-commit:
 post-checkout:
   commands:
     generate-biome-config:
-      files: git diff --name-only {1} {2}
-      glob: "packages/biome-config/**"
       run: |
-        echo "Biome config files changed, regenerating config..."
-        bun biome-config prepare
+        # {1} = old HEAD, {2} = new HEAD
+        changed_files=$(git diff --name-only {1} {2} -- packages/biome-config/ 2>/dev/null || true)
+        if [ -n "$changed_files" ]; then
+          echo "Biome config files changed, regenerating config..."
+          bun biome-config prepare
+        fi

@@ -1,3 +1,4 @@
+import 'utilities/src/logger/mocks'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { type Token as SearchToken } from '@uniswap/client-search/dist/search/v1/api_pb'
 import * as searchTokensAndPools from 'uniswap/src/data/rest/searchTokensAndPools'
@@ -5,22 +6,10 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { fetchOnChainBalancesRest } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/fetchOnChainBalancesRest'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import type { MockedFunction } from 'vitest'
 
-jest.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  },
-  createLogger: jest.fn(() => ({
-    debug: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  })),
-}))
-
-jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery', () => ({
-  fetchTradingApiIndicativeQuote: jest.fn().mockResolvedValue({
+vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery', () => ({
+  fetchTradingApiIndicativeQuote: vi.fn().mockResolvedValue({
     output: {
       token: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
       chainId: 8453,
@@ -29,20 +18,21 @@ jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQu
   }),
 }))
 
-jest.mock('uniswap/src/features/portfolio/api', () => ({
-  fetchOnChainCurrencyBalance: jest.fn(),
+vi.mock('uniswap/src/features/portfolio/api', () => ({
+  fetchOnChainCurrencyBalance: vi.fn(),
 }))
 
-jest.mock('uniswap/src/data/rest/searchTokensAndPools', () => ({
-  ...jest.requireActual('uniswap/src/data/rest/searchTokensAndPools'),
-  fetchTokenByAddress: jest.fn(),
-}))
+vi.mock('uniswap/src/data/rest/searchTokensAndPools', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/data/rest/searchTokensAndPools')>()
+  return {
+    ...actual,
+    fetchTokenByAddress: vi.fn(),
+  }
+})
 
-const mockGetOnChainBalancesFetch = fetchOnChainCurrencyBalance as jest.MockedFunction<
-  typeof fetchOnChainCurrencyBalance
->
+const mockGetOnChainBalancesFetch = fetchOnChainCurrencyBalance as MockedFunction<typeof fetchOnChainCurrencyBalance>
 
-const mockFetchTokenByAddress = searchTokensAndPools.fetchTokenByAddress as jest.MockedFunction<
+const mockFetchTokenByAddress = searchTokensAndPools.fetchTokenByAddress as MockedFunction<
   typeof searchTokensAndPools.fetchTokenByAddress
 >
 
@@ -93,7 +83,7 @@ const mockCachedPortfolio = {
 
 describe('fetchOnChainBalancesRest', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('fetches on-chain balances for valid currency IDs', async () => {

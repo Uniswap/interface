@@ -1,9 +1,9 @@
-import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/Charts/LiquidityRangeInput/svg'
 import { BrushBehavior, brushY, D3BrushEvent, ScaleLinear, select } from 'd3'
-import usePrevious from 'hooks/usePrevious'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
+import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from '~/components/Charts/LiquidityRangeInput/svg'
+import usePrevious from '~/hooks/usePrevious'
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20

@@ -80,29 +80,17 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
       >
         <svg
           fill="none"
-          height="20px"
-          stroke="#E10F0F"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke="currentColor"
           stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
           viewBox="0 0 24 24"
-          width="20px"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="9"
-            y2="13"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="17"
-            y2="17"
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
         </svg>
       </div>
@@ -208,29 +196,17 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       >
         <svg
           fill="none"
-          height="20px"
-          stroke="#E10F0F"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke="currentColor"
           stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
           viewBox="0 0 24 24"
-          width="20px"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="9"
-            y2="13"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="17"
-            y2="17"
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
         </svg>
       </div>
@@ -336,29 +312,17 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       >
         <svg
           fill="none"
-          height="20px"
-          stroke="#E10F0F"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke="currentColor"
           stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
           viewBox="0 0 24 24"
-          width="20px"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="9"
-            y2="13"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="17"
-            y2="17"
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
         </svg>
       </div>
@@ -464,29 +428,17 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       >
         <svg
           fill="none"
-          height="20px"
-          stroke="#E10F0F"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke="currentColor"
           stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
           viewBox="0 0 24 24"
-          width="20px"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="9"
-            y2="13"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="17"
-            y2="17"
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
         </svg>
       </div>
@@ -592,29 +544,17 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
       >
         <svg
           fill="none"
-          height="20px"
-          stroke="#E10F0F"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke="currentColor"
           stroke-width="1"
+          style="width: 20px; height: 20px; color: rgb(225, 15, 15);"
           viewBox="0 0 24 24"
-          width="20px"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-          />
-          <line
-            x1="12"
-            x2="12"
-            y1="9"
-            y2="13"
-          />
-          <line
-            x1="12"
-            x2="12.01"
-            y1="17"
-            y2="17"
+            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
           />
         </svg>
       </div>

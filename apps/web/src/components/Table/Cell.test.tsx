@@ -1,6 +1,6 @@
-import { Cell } from 'components/Table/Cell'
-import { render, screen } from 'test-utils/render'
 import { vi } from 'vitest'
+import { Cell } from '~/components/Table/Cell'
+import { render, screen } from '~/test-utils/render'
 
 describe('Table Cell', () => {
   it('shows loading bubble', () => {

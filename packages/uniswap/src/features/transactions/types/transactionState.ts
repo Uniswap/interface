@@ -35,6 +35,8 @@ export const prepareSwapFormState = ({
   outputCurrencyId,
   defaultChainId,
   filteredChainIdsOverride,
+  exactCurrencyField,
+  exactAmountToken,
 }: {
   inputCurrencyId?: CurrencyId
   outputCurrencyId?: CurrencyId
@@ -43,10 +45,12 @@ export const prepareSwapFormState = ({
     [CurrencyField.INPUT]?: UniverseChainId
     [CurrencyField.OUTPUT]?: UniverseChainId
   }
+  exactCurrencyField?: CurrencyField
+  exactAmountToken?: string
 }): TransactionState => {
   return {
-    exactCurrencyField: CurrencyField.INPUT,
-    exactAmountToken: '',
+    exactCurrencyField: exactCurrencyField ?? CurrencyField.INPUT,
+    exactAmountToken: exactAmountToken ?? '',
     [CurrencyField.INPUT]: inputCurrencyId
       ? {
           address: currencyIdToAddress(inputCurrencyId),

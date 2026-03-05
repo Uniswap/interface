@@ -1,10 +1,10 @@
-import Row from 'components/deprecated/Row'
-import { css, deprecatedStyled } from 'lib/styled-components'
-import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { ClickableStyle } from 'theme/components/styles'
+import { X } from 'ui/src/components/icons/X'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import Row from '~/components/deprecated/Row'
+import { css, deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
+import { ClickableStyle } from '~/theme/components/styles'
 
 interface LimitPriceButtonProps {
   priceAdjustmentPercentage: number
@@ -132,7 +132,7 @@ export function LimitCustomMarketPriceButton({
       </Container>
       {customAdjustmentPercentage && (
         <HighlightedContainerXButton onClick={onSetAdjustmentPercentage}>
-          <X size={16} />
+          <X size="$icon.16" />
         </HighlightedContainerXButton>
       )}
     </Row>

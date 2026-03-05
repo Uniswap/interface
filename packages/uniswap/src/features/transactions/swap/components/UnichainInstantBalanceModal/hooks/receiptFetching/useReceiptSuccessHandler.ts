@@ -2,6 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider, TransactionReceipt } from '@ethersproject/providers'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { updateTransactionWithoutWatch } from 'uniswap/src/features/transactions/slice'
 import { getOutputAmountUsingSwapLogAndFormData } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/getOutputAmountFromSwapLogAndFormData.ts/getOutputAmountFromSwapLogAndFormData'
@@ -19,7 +21,6 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { receiptFromEthersReceipt } from 'uniswap/src/features/transactions/utils/receipt'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isWebApp } from 'utilities/src/platform'
 
@@ -35,7 +36,7 @@ interface ReceiptSuccessParams {
 export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Promise<void> {
   const { setScreen } = useTransactionModalContext()
   const dispatch = useDispatch()
-  const accountAddress = useWallet().evmAccount?.address
+  const evmAddress = useActiveAddress(Platform.EVM)
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
 
   const derivedSwapInfo = useSwapDependenciesStore((s) => s.derivedSwapInfo)
@@ -59,7 +60,7 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
       isFlashblockTxWithinThreshold,
       provider,
     }: ReceiptSuccessParams): Promise<void> => {
-      if (!outputCurrencyInfo || !accountAddress) {
+      if (!outputCurrencyInfo || !evmAddress) {
         throw new Error('Missing required data for receipt processing')
       }
 
@@ -94,7 +95,7 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
       const outputAmountFromOutputTransferLog = getOutputAmountUsingOutputTransferLog({
         outputCurrencyInfo,
         receipt,
-        accountAddress,
+        accountAddress: evmAddress,
       })
 
       if (outputAmountFromOutputTransferLog.gt(0)) {
@@ -145,7 +146,7 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
         }
 
         // Get current balance from subblock
-        const currentBalanceHex = await provider.send('eth_getBalance', [accountAddress, 'pending'])
+        const currentBalanceHex = await provider.send('eth_getBalance', [evmAddress, 'pending'])
         const currentBalance = BigNumber.from(currentBalanceHex)
 
         // Calculate gas costs
@@ -169,7 +170,7 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
 
         const blockBeforeTx = receipt.blockNumber - 1
         const balanceBeforeTxHex = await provider.send('eth_getBalance', [
-          accountAddress,
+          evmAddress,
           `0x${blockBeforeTx.toString(16)}`,
         ])
         const balanceBeforeTx = BigNumber.from(balanceBeforeTxHex)
@@ -191,7 +192,7 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
     [
       outputBalanceFromForm,
       outputCurrencyInfo,
-      accountAddress,
+      evmAddress,
       updateSwapForm,
       dispatch,
       setScreen,

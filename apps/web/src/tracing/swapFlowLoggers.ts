@@ -1,17 +1,19 @@
 import { TradingApi } from '@universe/api'
-import type { ConfirmedTransactionDetails } from 'state/transactions/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapRouting } from 'uniswap/src/features/telemetry/types'
+import { planAnalyticsToSnakeCase } from 'uniswap/src/features/transactions/swap/plan/types'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import {
+  type PlanSwapTransactionInfoFields,
   TransactionOriginType,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import type { ConfirmedTransactionDetails } from '~/state/transactions/types'
 
 type OnChainSwapTransactionType = TransactionType.Swap | TransactionType.Bridge
 const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapRouting> = {
@@ -28,8 +30,8 @@ export function logSwapFinalized({
   analyticsContext,
   status,
   type,
-  isFinalStep,
   swapStartTimestamp,
+  planAnalytics,
 }: {
   id: string
   hash: string | undefined
@@ -39,8 +41,8 @@ export function logSwapFinalized({
   analyticsContext: ITraceContext
   status: ConfirmedTransactionDetails['status']
   type: OnChainSwapTransactionType
-  isFinalStep?: boolean
   swapStartTimestamp?: number
+  planAnalytics?: PlanSwapTransactionInfoFields
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -49,7 +51,7 @@ export function logSwapFinalized({
     status === TransactionStatus.Success ? SwapEventName.SwapTransactionCompleted : SwapEventName.SwapTransactionFailed
 
   sendAnalyticsEvent(event, {
-    routing: TRANSACTION_TYPE_TO_SWAP_ROUTING[type],
+    routing: planAnalytics?.stepRouting ?? TRANSACTION_TYPE_TO_SWAP_ROUTING[type],
     // We only log the time-to-swap metric for the first swap of a session,
     // so if it was previously set we log undefined here.
     time_to_swap: hasSetSwapSuccess ? undefined : elapsedTime,
@@ -63,8 +65,8 @@ export function logSwapFinalized({
     chain_id_in: chainInId,
     chain_id_out: chainOutId,
     transactionOriginType: TransactionOriginType.Internal,
-    is_final_step: isFinalStep ?? true, // If no `isFinalStep` is provided, we assume it's not a multi-step transaction and default to `true`
     swap_start_timestamp: swapStartTimestamp,
+    ...planAnalyticsToSnakeCase(planAnalytics),
     ...analyticsContext,
   })
 
@@ -94,8 +96,8 @@ export function logUniswapXSwapFinalized({
   analyticsContext,
   routing,
   status,
-  isFinalStep,
   swapStartTimestamp,
+  planAnalytics,
 }: {
   id: string
   hash?: string
@@ -104,8 +106,8 @@ export function logUniswapXSwapFinalized({
   analyticsContext: ITraceContext
   routing: TradingApi.Routing
   status: TransactionStatus
-  isFinalStep?: boolean
   swapStartTimestamp?: number
+  planAnalytics?: PlanSwapTransactionInfoFields
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -126,8 +128,8 @@ export function logUniswapXSwapFinalized({
     id,
     hash,
     chain_id: chainId,
-    is_final_step: isFinalStep ?? true, // If no `isFinalStep` is provided, we assume it's not a multi-step transaction and default to `true`
     swap_start_timestamp: swapStartTimestamp,
+    ...planAnalyticsToSnakeCase(planAnalytics),
     ...analyticsContext,
   })
 }

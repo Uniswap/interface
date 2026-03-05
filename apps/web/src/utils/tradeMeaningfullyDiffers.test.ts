@@ -1,6 +1,6 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v3-sdk'
-import { ClassicTrade, QuoteMethod } from 'state/routing/types'
+import { ClassicTrade, QuoteMethod } from '~/state/routing/types'
 import {
   TEST_POOL_13,
   TEST_TOKEN_1,
@@ -8,8 +8,8 @@ import {
   TEST_TRADE_EXACT_INPUT,
   TEST_TRADE_EXACT_OUTPUT,
   toCurrencyAmount,
-} from 'test-utils/constants'
-import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
+} from '~/test-utils/constants'
+import { tradeMeaningfullyDiffers } from '~/utils/tradeMeaningFullyDiffer'
 
 describe('tradeMeaningfullyDiffers', () => {
   const slippage = new Percent('1', '100') // Assuming 1% slippage for simplicity

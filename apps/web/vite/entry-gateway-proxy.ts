@@ -21,9 +21,7 @@ function getEntryGatewayProxyTarget(): string {
   const isBeta = process.env.REACT_APP_STAGING === 'true'
 
   // Determine URL based on environment
-  if (nodeEnv === 'development') {
-    return DEV_ENTRY_GATEWAY_API_BASE_URL
-  } else if (isBeta) {
+  if (nodeEnv === 'development' || isBeta) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
   } else {
     return PROD_ENTRY_GATEWAY_API_BASE_URL
@@ -35,7 +33,7 @@ export function createEntryGatewayProxy(ctx: {
   getLogger: () => {
     log: typeof console.log
   }
-}) {
+}): ProxyOptions {
   const { getLogger } = ctx
   // Use VITE_BACKEND_URL if set, otherwise use environment-aware URL
   const target = process.env.VITE_BACKEND_URL || getEntryGatewayProxyTarget()
@@ -146,5 +144,5 @@ export function createEntryGatewayProxy(ctx: {
         getLogger().log('[Proxy] Error:', err)
       })
     },
-  } satisfies ProxyOptions
+  }
 }

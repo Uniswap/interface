@@ -132,6 +132,18 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         chainId,
       }),
     )
+  } else if (typeInfo.type === TransactionType.Plan) {
+    yield* put(
+      pushNotification({
+        ...baseNotificationData,
+        inputCurrencyId: typeInfo.inputCurrencyId,
+        outputCurrencyId: typeInfo.outputCurrencyId,
+        inputCurrencyAmountRaw: typeInfo.inputCurrencyAmountRaw,
+        outputCurrencyAmountRaw: typeInfo.outputCurrencyAmountRaw,
+        type: AppNotificationType.Transaction,
+        txType: TransactionType.Plan,
+      }),
+    )
   } else if (typeInfo.type === TransactionType.Unknown) {
     yield* put(
       pushNotification({

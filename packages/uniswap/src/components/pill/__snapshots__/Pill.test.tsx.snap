@@ -1,114 +1,55 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders a Pill with border 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "borderBottomColor": "#21C95E",
-      "borderBottomLeftRadius": 999999,
-      "borderBottomRightRadius": 999999,
-      "borderBottomWidth": 1,
-      "borderLeftColor": "#21C95E",
-      "borderLeftWidth": 1,
-      "borderRightColor": "#21C95E",
-      "borderRightWidth": 1,
-      "borderStyle": "solid",
-      "borderTopColor": "#21C95E",
-      "borderTopLeftRadius": 999999,
-      "borderTopRightRadius": 999999,
-      "borderTopWidth": 1,
-      "flexDirection": "row",
-      "gap": 8,
-      "justifyContent": "center",
-      "paddingBottom": 8,
-      "paddingLeft": 4,
-      "paddingRight": 4,
-      "paddingTop": 8,
-    }
-  }
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 22.1,
-      }
-    }
-    suppressHighlighting={true}
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    Icon
-  </Text>
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": undefined,
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 22.1,
-        "paddingTop": 1,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    My Second Pill Label
-  </Text>
-</View>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopColor-statusSucce3680 _borderRightColor-statusSucce3680 _borderBottomColor-statusSucce3680 _borderLeftColor-statusSucce3680 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa94665589 _pl-t-space-spa94665589 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    >
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+        data-disable-theme="true"
+      >
+        Icon
+      </span>
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+        data-disable-theme="true"
+        style="padding-top: 1px;"
+      >
+        My Second Pill Label
+      </span>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
 exports[`renders a Pill without image 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "backgroundColor": "#1F1F1F",
-      "borderBottomColor": "transparent",
-      "borderBottomLeftRadius": 999999,
-      "borderBottomRightRadius": 999999,
-      "borderBottomWidth": 1,
-      "borderLeftColor": "transparent",
-      "borderLeftWidth": 1,
-      "borderRightColor": "transparent",
-      "borderRightWidth": 1,
-      "borderStyle": "solid",
-      "borderTopColor": "transparent",
-      "borderTopLeftRadius": 999999,
-      "borderTopRightRadius": 999999,
-      "borderTopWidth": 1,
-      "flexDirection": "row",
-      "gap": 8,
-      "justifyContent": "center",
-      "paddingBottom": 8,
-      "paddingLeft": 4,
-      "paddingRight": 4,
-      "paddingTop": 8,
-    }
-  }
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#000",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 22.1,
-        "paddingTop": 1,
-      }
-    }
-    suppressHighlighting={true}
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    My Pill Label
-  </Text>
-</View>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa94665589 _pl-t-space-spa94665589 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    >
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+        data-disable-theme="true"
+        style="color: rgb(0, 0, 0); padding-top: 1px;"
+      >
+        My Pill Label
+      </span>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

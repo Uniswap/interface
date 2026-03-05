@@ -1,9 +1,9 @@
-import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
-import { EmptyTableCell } from 'pages/Portfolio/EmptyTableCell'
-import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { memo, useMemo } from 'react'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { ValueWithFadedDecimals } from '~/pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
+import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
+import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 
 export const Price = memo(function Price({ price }: { price: TokenData['price'] }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()

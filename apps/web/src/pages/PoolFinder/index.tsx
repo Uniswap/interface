@@ -1,32 +1,32 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { CurrencySelector } from 'components/Liquidity/Create/SelectTokenStep'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { V2Unsupported } from 'components/V2Unsupported'
-import { useAccount } from 'hooks/useAccount'
-import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
-import { useTotalSupply } from 'hooks/useTotalSupply'
-import { useV2Pair } from 'hooks/useV2Pairs'
 import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
-import { Trans, useTranslation } from 'react-i18next'
-import { useTokenBalance } from 'state/connection/hooks'
-import { usePairAdder } from 'state/user/hooks'
-import { PositionField } from 'types/position'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
+import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
+import { CurrencySelector } from '~/components/Liquidity/Create/SelectTokenStep'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { V2Unsupported } from '~/components/V2Unsupported'
+import { useAccount } from '~/hooks/useAccount'
+import { useNetworkSupportsV2 } from '~/hooks/useNetworkSupportsV2'
+import { useTotalSupply } from '~/hooks/useTotalSupply'
+import { useV2Pair } from '~/hooks/useV2Pairs'
+import { useTokenBalance } from '~/state/connection/hooks'
+import { usePairAdder } from '~/state/user/hooks'
+import { PositionField } from '~/types/position'
 
 export default function PoolFinder() {
   const account = useAccount()
@@ -83,7 +83,7 @@ export default function PoolFinder() {
       <Flex width="100%" py="$spacing48" px="$spacing40" maxWidth={650}>
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
           <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-            <ArrowLeft size={14} /> <Trans i18nKey="pool.positions.title" />
+            <ArrowLeft size="$icon.16" /> {t('pool.positions.title')}
           </BreadcrumbNavLink>
         </BreadcrumbNavContainer>
 

@@ -1,7 +1,7 @@
-import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useMemo } from 'react'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTimeout } from 'utilities/src/time/timing'
+import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from '~/constants/misc'
 
 interface UseShowPendingAfterDelayParams {
   hasPendingActivity: boolean

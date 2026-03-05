@@ -5,8 +5,24 @@ import { getBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-jest.mock('utilities/src/platform', () => ({
+vi.mock('utilities/src/platform', () => ({
+  isAndroid: false,
+  isIOS: false,
   isWebPlatform: true,
+  isMobileWeb: false,
+  isWebIOS: false,
+  isWebAndroid: false,
+  isTouchable: false,
+  isHoverable: true,
+  isChrome: true,
+  isSafari: false,
+  isMobileWebSafari: false,
+  isMobileWebAndroid: false,
+  isBrowser: true,
+  isExtensionApp: false,
+  isMobileApp: false,
+  isWebApp: true,
+  isWebAppDesktop: true,
 }))
 
 const MOCK_CURRENCY_ADDRESS = '0x1234567890123456789012345678901234567890'

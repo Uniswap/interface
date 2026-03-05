@@ -1,6 +1,6 @@
 import { mix } from 'polished'
-import { colors } from 'theme/colors'
 import { hex } from 'wcag-contrast'
+import { colors } from '~/theme/colors'
 
 // The WCAG AA standard color contrast threshold
 const MIN_COLOR_CONTRAST_THRESHOLD = 1.95

@@ -15,7 +15,6 @@ import {
   type NotificationDataSource,
   type NotificationTracker,
 } from '@universe/notifications'
-import store from 'state/index'
 import {
   BRIDGED_ASSETS_V2_WEB_BANNER,
   NO_FEES_ICON,
@@ -28,6 +27,7 @@ import {
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
+import store from '~/state/index'
 
 // Legacy storage keys from the old banner implementation
 const LEGACY_SOLANA_PROMO_STORAGE_KEY = 'solanaPromoHidden'
@@ -194,7 +194,7 @@ async function fetchNotifications(isDarkMode: boolean): Promise<InAppNotificatio
  * The processor will filter based on tracked state.
  */
 async function checkNoUniswapInterfaceFeesBanner(isDarkMode: boolean): Promise<InAppNotification | null> {
-  const isEnabled = getFeatureFlag(FeatureFlags.NoUniswapInterfaceFees)
+  const isEnabled = getFeatureFlag(FeatureFlags.NoUniswapInterfaceFeesNotification)
 
   if (!isEnabled) {
     return null

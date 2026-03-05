@@ -1,9 +1,9 @@
-import { useChartPriceState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
-import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 import { Flex, TouchableArea, TouchableAreaProps } from 'ui/src'
 import { Expand } from 'ui/src/components/icons/Expand'
 import { SearchMinus } from 'ui/src/components/icons/SearchMinus'
 import { SearchPlus } from 'ui/src/components/icons/SearchPlus'
+import { useChartPriceState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
+import { useLiquidityChartStoreActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 
 const ZoomOptionButton = ({ children, ...props }: TouchableAreaProps) => {
   return (

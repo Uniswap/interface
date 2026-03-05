@@ -27,9 +27,9 @@ const handleSilentPush = (payload: Record<string, unknown>): void => {
   logger.debug('SilentPush', 'handleSilentPush', 'Silent push received', payload)
 
   // Onesignal Silent Push payload stores the template id in the 'custom' object with key 'i'
-  if ('custom' in payload && payload.custom) {
+  if ('custom' in payload && payload['custom']) {
     try {
-      const customPayload = typeof payload.custom === 'string' ? JSON.parse(payload.custom) : payload.custom
+      const customPayload = typeof payload['custom'] === 'string' ? JSON.parse(payload['custom']) : payload['custom']
 
       if (!('i' in customPayload) || typeof customPayload.i !== 'string') {
         return

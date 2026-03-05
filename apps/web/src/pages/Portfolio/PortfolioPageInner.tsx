@@ -1,9 +1,9 @@
-import { PortfolioConnectWalletBanner } from 'pages/Portfolio/ConnectWalletBanner'
-import { ConnectWalletFixedBottomButton } from 'pages/Portfolio/ConnectWalletFixedBottomButton'
-import { PortfolioHeader } from 'pages/Portfolio/Header/Header'
-import useIsConnected from 'pages/Portfolio/Header/hooks/useIsConnected'
-import { PortfolioContent } from 'pages/Portfolio/PortfolioContent'
 import { Flex } from 'ui/src'
+import { PortfolioConnectWalletBanner } from '~/pages/Portfolio/ConnectWalletBanner'
+import { ConnectWalletFixedBottomButton } from '~/pages/Portfolio/ConnectWalletFixedBottomButton'
+import { PortfolioHeader } from '~/pages/Portfolio/Header/Header'
+import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
+import { PortfolioContent } from '~/pages/Portfolio/PortfolioContent'
 
 interface PortfolioPageInnerProps {
   scrollY: number
@@ -12,7 +12,7 @@ interface PortfolioPageInnerProps {
 }
 
 export function PortfolioPageInner({ scrollY, isBannerVisible, mb }: PortfolioPageInnerProps): JSX.Element {
-  const isConnected = useIsConnected()
+  const showDemoView = useShowDemoView()
 
   return (
     <Flex
@@ -26,10 +26,10 @@ export function PortfolioPageInner({ scrollY, isBannerVisible, mb }: PortfolioPa
       mb={mb}
       $sm={{ p: '$spacing8' }}
     >
-      {!isConnected && <PortfolioConnectWalletBanner />}
-      {!isConnected && <ConnectWalletFixedBottomButton shouldShow={!isBannerVisible} />}
+      {showDemoView && <PortfolioConnectWalletBanner />}
+      {showDemoView && <ConnectWalletFixedBottomButton shouldShow={!isBannerVisible} />}
 
-      {isConnected ? (
+      {!showDemoView ? (
         <>
           <PortfolioHeader scrollY={scrollY} />
 

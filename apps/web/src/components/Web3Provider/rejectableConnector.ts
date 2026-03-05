@@ -1,6 +1,6 @@
-import type { Page } from 'playwright'
 import { UserRejectedRequestError } from 'viem'
 import { mock } from 'wagmi/connectors'
+import type { Page } from '~/playwright/fixtures'
 
 /**
  * A mock connector that can be programmatically told to reject transactions.

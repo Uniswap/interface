@@ -1,11 +1,11 @@
-import { usePoolData } from 'appGraphql/data/pools/usePoolData'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { GraphQLApi } from '@universe/api'
-import { validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
-import { renderHook } from 'test-utils/render'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { GQL_MAINNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { usePoolData } from '~/appGraphql/data/pools/usePoolData'
+import { validBEPoolToken0, validBEPoolToken1 } from '~/test-utils/pools/fixtures'
+import { renderHook } from '~/test-utils/render'
 
 const { mockV4Query, mockV3Query, mockV2Query, mockUseEnabledChains } = vi.hoisted(() => {
   const mockV4Query = vi.fn()

@@ -1,8 +1,8 @@
-import uImage from 'assets/images/big_unicorn.png'
-import noise from 'assets/images/noise.png'
-import xlUnicorn from 'assets/images/xl_uni.png'
-import { AutoColumn } from 'components/deprecated/Column'
-import { deprecatedStyled } from 'lib/styled-components'
+import uImage from '~/assets/images/big_unicorn.png'
+import noise from '~/assets/images/noise.png'
+import xlUnicorn from '~/assets/images/xl_uni.png'
+import { AutoColumn } from '~/components/deprecated/Column'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 export const CardBGImage = deprecatedStyled.span<{ desaturate?: boolean }>`
   background: url(${uImage});

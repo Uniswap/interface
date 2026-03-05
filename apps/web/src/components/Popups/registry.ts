@@ -1,5 +1,5 @@
-import { PopupContent } from 'components/Popups/types'
 import { toast } from 'sonner'
+import { PopupContent } from '~/components/Popups/types'
 
 type PopupListener = (content: PopupContent, key: string, removeAfterMs?: number) => string | number
 

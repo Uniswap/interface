@@ -123,8 +123,8 @@ export function ChangeUnitagModal({
             title: t('unitags.notification.username.title'),
           }),
         )
-        onSuccess?.()
         onClose()
+        onSuccess?.()
       }
     } catch (e) {
       // If some other error occurs, log it and display a generic error message
@@ -194,7 +194,7 @@ export function ChangeUnitagModal({
                   px="$none"
                   py="$spacing20"
                   returnKeyType="done"
-                  value={newUnitag}
+                  defaultValue={newUnitag}
                   width="100%"
                   onChangeText={(text: string) => setNewUnitag(text.trim().toLowerCase())}
                   onSubmitEditing={onFinishEditing}
@@ -284,8 +284,8 @@ function ChangeUnitagConfirmModal({
         <Text color="$neutral2" textAlign="center" variant={isExtensionApp ? 'body3' : 'body2'}>
           {t('unitags.editUsername.confirm.subtitle')}
         </Text>
-        <Flex py="$spacing32">
-          <UnitagName animateText name={unitag} textProps={{ fontSize: fonts.heading3.fontSize }} />
+        <Flex pt="$spacing24" pb="$spacing32">
+          <UnitagName animateText displayIconInline name={unitag} textProps={{ fontSize: fonts.heading3.fontSize }} />
         </Flex>
         <Flex row gap="$spacing12" width="100%">
           {isMobileApp && (

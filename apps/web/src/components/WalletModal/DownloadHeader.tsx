@@ -1,13 +1,13 @@
-import { downloadAppModalPageAtom, Page } from 'components/NavBar/DownloadApp/Modal'
-import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
-import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useOrderedWallets } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
-import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import { Flex } from 'ui/src'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
+import { downloadAppModalPageAtom, Page } from '~/components/NavBar/DownloadApp/Modal'
+import { DownloadWalletRow } from '~/components/WalletModal/DownloadWalletRow'
+import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { useOrderedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
+import { useModalState } from '~/hooks/useModalState'
 
 interface DownloadHeaderProps {
   showOnMobile?: boolean

@@ -141,6 +141,8 @@ function getStatusText(params: {
     switch (status) {
       case StepStatus.Preview:
       case StepStatus.Active:
+      case StepStatus.Failed:
+      case StepStatus.Replaced:
         return t('swap.review.bridge.idle', commonParams)
       case StepStatus.InProgress:
         return t('swap.review.bridge.pending', commonParams)
@@ -158,6 +160,8 @@ function getStatusText(params: {
     switch (status) {
       case StepStatus.Preview:
       case StepStatus.Active:
+      case StepStatus.Failed:
+      case StepStatus.Replaced:
         return t('swap.review.swap.idle', commonParams)
       case StepStatus.InProgress:
         return t('swap.review.swap.pending', commonParams)

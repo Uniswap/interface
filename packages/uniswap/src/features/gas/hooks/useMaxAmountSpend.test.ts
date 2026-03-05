@@ -6,11 +6,12 @@ import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSp
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { MAINNET_CURRENCY } from 'uniswap/src/test/fixtures/wallet/currencies'
 
-const mockUseDynamicConfigValue = jest.fn()
+const mockUseDynamicConfigValue = vi.fn()
 
-jest.mock('@universe/gating', () => {
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
   return {
-    ...jest.requireActual('@universe/gating'),
+    ...actual,
     useDynamicConfigValue: (params: { config: unknown; key: unknown; defaultValue: unknown }): unknown =>
       mockUseDynamicConfigValue(params),
   }
@@ -127,6 +128,55 @@ describe(useMaxAmountSpend, () => {
     // Both should still have spendable amounts
     expect(JSBI.greaterThan(solanaSpend!.quotient, JSBI.BigInt(0))).toBe(true)
     expect(JSBI.greaterThan(ethSpend!.quotient, JSBI.BigInt(0))).toBe(true)
+  })
+
+  it('uses actualGasFee instead of static reservation when provided', () => {
+    const amount = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, '1000000000000000000') // 1 ETH
+
+    // With static reservation (default swap = 0.015 ETH = 15000000000000000 wei)
+    const staticSpend = useMaxAmountSpend({ currencyAmount: amount })
+
+    // With actual gas fee of 0.003 ETH = 3000000000000000 wei (much less than static)
+    const actualGasFee = '3000000000000000'
+    const actualSpend = useMaxAmountSpend({ currencyAmount: amount, actualGasFee })
+
+    expect(staticSpend).toBeDefined()
+    expect(actualSpend).toBeDefined()
+    // Actual gas fee is smaller, so more should be spendable
+    expect(JSBI.greaterThan(actualSpend!.quotient, staticSpend!.quotient)).toBe(true)
+  })
+
+  it('applies 10% buffer on top of actualGasFee', () => {
+    const actualGasFee = '1000000000000000' // 0.001 ETH
+    const amount = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, '1000000000000000000') // 1 ETH
+
+    const spendable = useMaxAmountSpend({ currencyAmount: amount, actualGasFee })
+
+    // Expected reservation = 0.001 ETH + 10% buffer = 0.0011 ETH = 1100000000000000 wei
+    // Spendable = 1 ETH - 0.0011 ETH = 0.9989 ETH
+    const expectedSpendable = JSBI.BigInt('998900000000000000')
+    expect(spendable).toBeDefined()
+    expect(spendable!.quotient.toString()).toBe(expectedSpendable.toString())
+  })
+
+  it('returns zero when actualGasFee exceeds balance', () => {
+    const actualGasFee = '2000000000000000000' // 2 ETH (more than balance)
+    const amount = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, '1000000000000000000') // 1 ETH
+
+    const spendable = useMaxAmountSpend({ currencyAmount: amount, actualGasFee })
+
+    expect(spendable).toBeDefined()
+    expect(spendable!.quotient.toString()).toBe('0')
+  })
+
+  it('ignores actualGasFee for non-native tokens', () => {
+    const tokenAmount = CurrencyAmount.fromRawAmount(DAI, '100000000000000000000') // 100 DAI
+    const actualGasFee = '1000000000000000' // 0.001 ETH
+
+    const spendable = useMaxAmountSpend({ currencyAmount: tokenAmount, actualGasFee })
+
+    // Non-native tokens are unaffected by gas reservation
+    expect(spendable).toBe(tokenAmount)
   })
 
   it('applies both isExtraTx and txType modifiers correctly', () => {

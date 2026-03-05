@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency, Percent } from '@uniswap/sdk-core'
 import {
@@ -9,32 +9,10 @@ import {
   useDynamicConfigValue,
   useFeatureFlag,
 } from '@universe/gating'
-import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
-import { ErrorCallout } from 'components/ErrorCallout'
-import { AddHook } from 'components/Liquidity/Create/AddHook'
-import { AdvancedButton } from 'components/Liquidity/Create/AdvancedButton'
-import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
-import type { FeeData } from 'components/Liquidity/Create/types'
-import { DEFAULT_POSITION_STATE } from 'components/Liquidity/Create/types'
-import { HookModal } from 'components/Liquidity/HookModal'
-import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
-import { getDefaultFeeTiersWithData, getFeeTierKey, isDynamicFeeTier } from 'components/Liquidity/utils/feeTiers'
-import { hasLPFoTTransferError } from 'components/Liquidity/utils/hasLPFoTTransferError'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { BIPS_BASE } from 'constants/misc'
-import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
-import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import type { FlexProps } from 'ui/src'
 import { Button, DropdownButton, Flex, HeightAnimator, Shine, styled, Text } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
@@ -50,7 +28,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
@@ -58,7 +35,32 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
+import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import CreatingPoolInfo from '~/components/CreatingPoolInfo/CreatingPoolInfo'
+import { ErrorCallout } from '~/components/ErrorCallout'
+import { AddHook } from '~/components/Liquidity/Create/AddHook'
+import { AdvancedButton } from '~/components/Liquidity/Create/AdvancedButton'
+import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { PoolParsingError } from '~/components/Liquidity/Create/PoolParsingError'
+import type { FeeData } from '~/components/Liquidity/Create/types'
+import { DEFAULT_POSITION_STATE } from '~/components/Liquidity/Create/types'
+import { HookModal } from '~/components/Liquidity/HookModal'
+import { useAllFeeTierPoolData } from '~/components/Liquidity/hooks/useAllFeeTierPoolData'
+import { getDefaultFeeTiersWithData, getFeeTierKey, isDynamicFeeTier } from '~/components/Liquidity/utils/feeTiers'
+import { hasLPFoTTransferError } from '~/components/Liquidity/utils/hasLPFoTTransferError'
+import { isUnsupportedLPChain } from '~/components/Liquidity/utils/isUnsupportedLPChain'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { LpIncentivesAprDisplay } from '~/components/LpIncentives/LpIncentivesAprDisplay'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { MouseoverTooltip } from '~/components/Tooltip'
+import { BIPS_BASE } from '~/constants/misc'
+import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/hooks/useNetworkSupportsV2'
+import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { serializeSwapStateToURLParameters } from '~/state/swap/hooks'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 interface WrappedNativeWarning {
   wrappedToken: Currency
@@ -126,22 +128,6 @@ const FeeTierContainer = styled(Flex, {
   position: 'relative',
   ...ClickableTamaguiStyle,
 })
-
-function isUnsupportedLPChain(chainId: UniverseChainId | undefined, protocolVersion: ProtocolVersion): boolean {
-  if (chainId && isSVMChain(chainId)) {
-    return true
-  }
-
-  if (protocolVersion === ProtocolVersion.V2) {
-    return Boolean(chainId && !SUPPORTED_V2POOL_CHAIN_IDS.includes(chainId))
-  }
-
-  if (protocolVersion === ProtocolVersion.V4) {
-    return isV4UnsupportedChain(chainId)
-  }
-
-  return false
-}
 
 const FeeTier = ({
   feeTier,
@@ -232,6 +218,7 @@ export function SelectTokensStep({
     protocolVersion,
     creatingPoolOrPair,
     currencies,
+    poolOrPairLoading,
     poolOrPair,
     setFeeTierSearchModalOpen,
   } = useCreateLiquidityContext()
@@ -245,8 +232,6 @@ export function SelectTokensStep({
   const isToken1Unsupported = isUnsupportedLPChain(token1?.chainId, protocolVersion)
   const unsupportedChainId = isToken0Unsupported ? token0?.chainId : isToken1Unsupported ? token1?.chainId : undefined
   const isUnsupportedTokenSelected = isToken0Unsupported || isToken1Unsupported
-
-  const continueButtonEnabled = creatingPoolOrPair || poolOrPair
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -423,6 +408,18 @@ export function SelectTokensStep({
 
   const hasError = isUnsupportedTokenSelected || Boolean(fotErrorToken)
 
+  const currentFeeTierKey = useMemo(
+    () =>
+      fee
+        ? getFeeTierKey({
+            feeTier: fee.feeAmount,
+            tickSpacing: fee.tickSpacing,
+            isDynamicFee: fee.isDynamic,
+          })
+        : undefined,
+    [fee],
+  )
+
   const lpIncentiveRewardApr = useMemo(() => {
     if (!isLpIncentivesEnabled || protocolVersion !== ProtocolVersion.V4) {
       return undefined
@@ -437,10 +434,10 @@ export function SelectTokensStep({
           feeTier: tier.fee.feeAmount,
           tickSpacing: tier.fee.tickSpacing,
           isDynamicFee: tier.fee.isDynamic,
-        }) === getFeeTierKey({ feeTier: fee?.feeAmount, tickSpacing: fee?.tickSpacing, isDynamicFee: fee?.isDynamic }),
+        }) === currentFeeTierKey,
     )
     return matchingFeeTier?.boostedApr && matchingFeeTier.boostedApr > 0 ? matchingFeeTier.boostedApr : undefined
-  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, fee?.feeAmount, fee?.isDynamic, fee?.tickSpacing])
+  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, currentFeeTierKey])
 
   const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion })
 
@@ -541,11 +538,7 @@ export function SelectTokensStep({
                           )}
                         </Text>
                         {fee &&
-                        getFeeTierKey({
-                          feeTier: fee.feeAmount,
-                          tickSpacing: fee.tickSpacing,
-                          isDynamicFee: fee.isDynamic,
-                        }) ===
+                        currentFeeTierKey ===
                           (mostUsedFeeTier &&
                             getFeeTierKey({
                               feeTier: mostUsedFeeTier.fee.feeAmount,
@@ -566,20 +559,8 @@ export function SelectTokensStep({
                               </Text>
                             </Flex>
                           </MouseoverTooltip>
-                        ) : fee &&
-                          defaultFeeTiers.find(
-                            (tier) =>
-                              getFeeTierKey({
-                                feeTier: tier.value.feeAmount,
-                                tickSpacing: tier.value.tickSpacing,
-                                isDynamicFee: tier.value.isDynamic,
-                              }) ===
-                              getFeeTierKey({
-                                feeTier: fee.feeAmount,
-                                tickSpacing: fee.tickSpacing,
-                                isDynamicFee: fee.isDynamic,
-                              }),
-                          ) ? null : fee ? (
+                          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                        ) : currentFeeTierKey && !feeTierData[currentFeeTierKey]?.created ? (
                           <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
                             <Text variant="buttonLabel4">
                               <Trans i18nKey="fee.tier.new" />
@@ -614,13 +595,7 @@ export function SelectTokensStep({
                       emphasis="secondary"
                       onPress={toggleShowMoreFeeTiersEnabled}
                       $md={{ width: 32 }}
-                      icon={
-                        <RotatableChevron
-                          direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
-                          width={iconSizes.icon20}
-                          height={iconSizes.icon20}
-                        />
-                      }
+                      icon={<RotatableChevron direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'} size="$icon.20" />}
                       iconPosition="after"
                     >
                       {isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}
@@ -714,12 +689,15 @@ export function SelectTokensStep({
               size="large"
               key="SelectTokensStep-continue"
               onPress={handleOnContinue}
-              loading={Boolean(!continueButtonEnabled && token0 && token1 && fee)}
-              isDisabled={!continueButtonEnabled || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)}
+              loading={Boolean(poolOrPairLoading && token0 && token1 && fee)}
+              isDisabled={
+                !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
+              }
             >
               {t('common.button.continue')}
             </Button>
           </Flex>
+          <PoolParsingError formComplete={Boolean(token0 && token1 && fee)} />
           {showWrappedNativeWarning && wrappedNativeWarning && (
             <SelectStepError
               isUnsupportedTokenSelected={false}

@@ -12,6 +12,8 @@ interface NftsListEmptyStateProps {
   description?: string | null
   buttonLabel?: string
   onPress?: () => void
+  dataTestId?: string
+  buttonDataTestId?: string
 }
 
 export function NftsListEmptyState({
@@ -20,6 +22,8 @@ export function NftsListEmptyState({
   description,
   buttonLabel,
   onPress,
+  dataTestId,
+  buttonDataTestId,
 }: NftsListEmptyStateProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -27,7 +31,9 @@ export function NftsListEmptyState({
     <Flex centered pt="$spacing48" px="$spacing36" style={containerStyle}>
       <BaseCard.EmptyState
         buttonLabel={buttonLabel ?? (isExtensionApp ? t('tokens.nfts.list.none.button') : undefined)}
+        buttonDataTestId={buttonDataTestId}
         description={description === undefined ? t('tokens.nfts.list.none.description.default') : description}
+        dataTestId={dataTestId}
         icon={<NoNfts color="$neutral3" size="$icon.100" />}
         title={title ?? t('tokens.nfts.list.none.title')}
         onPress={onPress}

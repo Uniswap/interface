@@ -1,7 +1,7 @@
 import { ONE_DAY_MS, ONE_HOUR_MS, ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
-export function getDurationRemainingString(expirationTime: number): string {
-  const { days, hours, minutes, seconds, isPast } = getDurationRemaining(expirationTime)
+export function getDurationRemainingString(expirationTime: number, currentTime?: number): string {
+  const { days, hours, minutes, seconds, isPast } = getDurationRemaining(expirationTime, currentTime)
 
   let result: string
   if (days !== undefined) {
@@ -17,14 +17,17 @@ export function getDurationRemainingString(expirationTime: number): string {
   return isPast ? `${result} ago` : result
 }
 
-export function getDurationRemaining(expirationTime: number): {
+export function getDurationRemaining(
+  expirationTime: number,
+  currentTime: number = Date.now(),
+): {
   seconds: number
   minutes?: number
   hours?: number
   days?: number
   isPast?: boolean
 } {
-  const timeLeft = expirationTime - Date.now()
+  const timeLeft = expirationTime - currentTime
   const isPast = timeLeft < 0
   const absTimeLeft = Math.abs(timeLeft)
 

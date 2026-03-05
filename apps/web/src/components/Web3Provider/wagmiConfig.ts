@@ -1,8 +1,4 @@
 import { getWagmiConnectorV2 } from '@binance/w3w-wagmi-connector-v2'
-import { PLAYWRIGHT_CONNECT_ADDRESS } from 'components/Web3Provider/constants'
-import { createRejectableMockConnector } from 'components/Web3Provider/rejectableConnector'
-import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
-import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
 import { porto } from 'porto/wagmi'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
@@ -10,6 +6,8 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import type { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ORDERED_EVM_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { createObservableTransport } from 'uniswap/src/features/providers/observability/createObservableTransport'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
@@ -18,6 +16,10 @@ import { createClient } from 'viem'
 import type { Config } from 'wagmi'
 import { createConfig, fallback, http } from 'wagmi'
 import { coinbaseWallet, injected, safe, walletConnect } from 'wagmi/connectors'
+import { PLAYWRIGHT_CONNECT_ADDRESS } from '~/components/Web3Provider/constants'
+import { createRejectableMockConnector } from '~/components/Web3Provider/rejectableConnector'
+import { WC_PARAMS } from '~/components/Web3Provider/walletConnect'
+import { embeddedWallet } from '~/connection/EmbeddedWalletConnector'
 
 // Get the appropriate Binance connector based on the environment
 const getBinanceConnector = () => {
@@ -116,7 +118,13 @@ function createWagmiConfig(params: {
         pollingInterval: 12_000,
         transport: fallback(
           orderedTransportUrls(chain).map((url) =>
-            http(url, { onFetchResponse: (response) => onFetchResponse(response, chain, url) }),
+            createObservableTransport({
+              baseTransportFactory: http(url, {
+                onFetchResponse: (response) => onFetchResponse(response, chain, url),
+              }),
+              observer: getRpcObserver(),
+              meta: { chainId: chain.id, url },
+            }),
           ),
         ),
       })

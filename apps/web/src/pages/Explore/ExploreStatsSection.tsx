@@ -1,12 +1,12 @@
-import { LoadingBubble } from 'components/Tokens/loading'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
 import { AnimatePresence, Flex, isTouchable, Popover, Text, useMedia, useShadowPropsMedium } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
+import { LoadingBubble } from '~/components/Tokens/loading'
+import { use24hProtocolVolume, useDailyTVLWithChange } from '~/state/explore/protocolStats'
 
 interface ExploreStatSectionData {
   label: string
@@ -18,7 +18,7 @@ interface ExploreStatSectionData {
   }[]
 }
 
-const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideStats?: boolean }) => {
+export const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideStats?: boolean }) => {
   const media = useMedia()
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -115,8 +115,6 @@ const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideStats?: bo
     </AnimatePresence>
   )
 }
-
-export default ExploreStatsSection
 
 interface StatDisplayProps {
   data: ExploreStatSectionData

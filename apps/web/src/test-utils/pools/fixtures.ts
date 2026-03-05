@@ -1,12 +1,12 @@
-import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
 import { GraphQLApi } from '@universe/api'
-import { PoolStat } from 'state/explore/types'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { PoolData } from '~/appGraphql/data/pools/usePoolData'
+import { PoolStat } from '~/state/explore/types'
 
 export const validParams = { poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }
 
@@ -69,7 +69,7 @@ const validPoolToken1 = {
 export const validBEPoolToken1 = validPoolToken1 as GraphQLApi.Token
 export const validRestPoolToken1 = validPoolToken1 as unknown as PoolStat['token0']
 
-export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
+const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
 const pool = new Pool(
   USDC_MAINNET,

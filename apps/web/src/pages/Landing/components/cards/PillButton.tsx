@@ -1,5 +1,5 @@
 import { Flex, Text } from 'ui/src'
-import { RightArrow } from 'ui/src/components/icons/RightArrow'
+import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 
 type PillButtonProps = {
   label: string
@@ -31,7 +31,7 @@ export function PillButton({ label, icon, color, onClick, cursor, backgroundColo
         <Text variant="buttonLabel1" color={color}>
           {label}
         </Text>
-        {!icon && <RightArrow size="$icon.24" color={color} />}
+        {!icon && <ArrowRight size="$icon.24" color={color} />}
       </Flex>
     </Flex>
   )

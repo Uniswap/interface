@@ -4,8 +4,8 @@ import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { render } from 'uniswap/src/test/test-utils'
 
 const mockWalletAddress = (): Address => SAMPLE_SEED_ADDRESS_1
-jest.mock('uniswap/src/features/wallet/hooks/useWallet', () => ({
-  useWallet: jest.fn().mockReturnValue({
+vi.mock('uniswap/src/features/wallet/hooks/useWallet', () => ({
+  useWallet: vi.fn().mockReturnValue({
     evmAccount: { address: mockWalletAddress },
   }),
 }))
@@ -40,14 +40,14 @@ const mockTransaction = {
   },
 } as TransactionDetails
 
-// Mock the ImageUri component
-jest.mock('uniswap/src/components/nfts/images/ImageUri', () => ({
-  ImageUri: jest.fn(() => null),
+// Mock the UniversalImage component
+vi.mock('ui/src/components/UniversalImage/UniversalImage', () => ({
+  UniversalImage: vi.fn(() => null),
 }))
 
 describe('NftTransactionDetails Component', () => {
   it('renders NftTransactionDetails without error', () => {
-    const onClose = jest.fn()
+    const onClose = vi.fn()
 
     const tree = render(
       <NftTransactionDetails transactionDetails={mockTransaction} typeInfo={nftTypeInfo} onClose={onClose} />,

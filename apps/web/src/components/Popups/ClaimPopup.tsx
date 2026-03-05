@@ -1,15 +1,15 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import tokenLogo from 'assets/images/token-logo.png'
-import { CardBGImage, CardNoise } from 'components/earn/styled'
-import { useAccount } from 'hooks/useAccount'
-import { useModalState } from 'hooks/useModalState'
 import { useEffect } from 'react'
-import { Heart } from 'react-feather'
-import { Trans } from 'react-i18next'
-import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
+import { Trans, useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Heart } from 'ui/src/components/icons/Heart'
 import { X } from 'ui/src/components/icons/X'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import tokenLogo from '~/assets/images/token-logo.png'
+import { CardBGImage, CardNoise } from '~/components/earn/styled'
+import { useAccount } from '~/hooks/useAccount'
+import { useModalState } from '~/hooks/useModalState'
+import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/state/claim/hooks'
 
 const rotateKeyframe = `
   @keyframes rotate {
@@ -24,7 +24,7 @@ const rotateKeyframe = `
 
 export default function ClaimPopup() {
   const account = useAccount()
-
+  const { t } = useTranslation()
   // dont store these in persisted state yet
   const { isOpen: claimPopupIsOpen, toggleModal: toggleClaimPopup } = useModalState(ModalName.ClaimPopup)
 
@@ -90,7 +90,7 @@ export default function ClaimPopup() {
                 <span role="img" aria-label="party">
                   🎉
                 </span>{' '}
-                <Trans i18nKey="claim.uni.arrived" />{' '}
+                {t('claim.uni.arrived')}{' '}
                 <span role="img" aria-label="party">
                   🎉
                 </span>
@@ -99,14 +99,14 @@ export default function ClaimPopup() {
                 <Trans
                   i18nKey="claim.thanks"
                   components={{
-                    heart: <Heart size={12} />,
+                    heart: <Heart size="$icon.12" color="$accent1" />,
                   }}
                 />
               </Text>
             </Flex>
             <Flex centered zIndex={10}>
               <Button variant="branded" fill={false} onPress={toggleClaimModal}>
-                <Trans i18nKey="common.claimUnis" />
+                {t('common.claimUnis')}
               </Button>
             </Flex>
           </Flex>

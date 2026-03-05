@@ -24,14 +24,12 @@ else
   DRY_RUN=""
 fi
 
-# Extract metrics from latest test logs
-echo "Extracting metrics from Maestro logs..."
-"$SCRIPT_DIR/extract-metrics.sh" "$MAESTRO_LOGS_DIR" "$METRICS_FILE"
-
-# Check if metrics were extracted
+# Check if metrics file already exists (extracted by e2e:local:extract-metrics)
 if [ ! -s "$METRICS_FILE" ]; then
   echo "❌ No metrics found in logs"
   exit 1
+else
+  echo "✅ Using existing metrics file: $METRICS_FILE"
 fi
 
 # Add local development tags

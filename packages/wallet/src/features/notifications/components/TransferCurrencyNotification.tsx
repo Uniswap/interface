@@ -1,3 +1,4 @@
+import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
@@ -8,9 +9,12 @@ import { TransferCurrencyTxNotification } from 'uniswap/src/features/notificatio
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { isAndroid } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { formTransferCurrencyNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+
+const platformAdjustedUnitagYPosition = isAndroid ? -1 : -2
 
 export function TransferCurrencyNotification({
   notification,
@@ -54,7 +58,13 @@ export function TransferCurrencyNotification({
       address={address}
       hideDelay={hideDelay}
       icon={icon}
-      postCaptionElement={showUnicon ? <Unitag size="$icon.24" /> : undefined}
+      postCaptionElement={
+        showUnicon ? (
+          <Flex y={platformAdjustedUnitagYPosition}>
+            <Unitag size="$icon.24" />
+          </Flex>
+        ) : undefined
+      }
       title={title}
       onPress={navigateToAccountActivityList}
     />

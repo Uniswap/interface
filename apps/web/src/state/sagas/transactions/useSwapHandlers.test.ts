@@ -1,7 +1,4 @@
 import { FeeType, TradingApi } from '@universe/api'
-import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
-import { useSwapHandlers, validateWrapParams } from 'state/sagas/transactions/useSwapHandlers'
-import { renderHook } from 'test-utils/render'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -13,6 +10,9 @@ import {
 import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { useSwapCallback } from '~/state/sagas/transactions/swapSaga'
+import { useSwapHandlers, validateWrapParams } from '~/state/sagas/transactions/useSwapHandlers'
+import { renderHook } from '~/test-utils/render'
 
 // Create mock functions in hoisted scope so they're available to vi.mock
 const { mockSwapCallbackFn, mockWrapCallbackFn } = vi.hoisted(() => ({
@@ -21,17 +21,17 @@ const { mockSwapCallbackFn, mockWrapCallbackFn } = vi.hoisted(() => ({
 }))
 
 // Mock dependencies - only mock the hooks, not the sagas themselves
-vi.mock('state/sagas/transactions/swapSaga', () => ({
+vi.mock('~/state/sagas/transactions/swapSaga', () => ({
   useSwapCallback: vi.fn(() => mockSwapCallbackFn),
-  swapSaga: {
-    wrappedSaga: vi.fn(),
-    actions: {
-      trigger: vi.fn(),
-    },
+  swapSagaName: 'swapSaga',
+  swapSaga: vi.fn(function* () {}),
+  swapReducer: (state = { status: null, error: null }, _action: any) => state,
+  swapActions: {
+    trigger: vi.fn(),
   },
 }))
 
-vi.mock('state/sagas/transactions/wrapSaga', () => ({
+vi.mock('~/state/sagas/transactions/wrapSaga', () => ({
   useWrapCallback: vi.fn(() => mockWrapCallbackFn),
   wrapSaga: {
     wrappedSaga: vi.fn(),
@@ -98,12 +98,13 @@ describe('validateWrapParams', () => {
 
   it('should return validated params when all required fields are present', () => {
     const params: ExecuteSwapParams = {
-      account: mockAccount,
+      address: mockAccount.address,
       swapTxContext: mockSwapTxContext,
       isAutoSlippage: true,
       onSuccess: vi.fn(),
       onFailure: vi.fn(),
       onPending: vi.fn(),
+      onClearForm: vi.fn(),
       setCurrentStep: vi.fn(),
       setSteps: vi.fn(),
       wrapType: WrapType.Wrap,
@@ -120,12 +121,13 @@ describe('validateWrapParams', () => {
 
   it('should throw error when inputCurrencyAmount is missing', () => {
     const params: ExecuteSwapParams = {
-      account: mockAccount,
+      address: mockAccount.address,
       swapTxContext: mockSwapTxContext,
       isAutoSlippage: true,
       onSuccess: vi.fn(),
       onFailure: vi.fn(),
       onPending: vi.fn(),
+      onClearForm: vi.fn(),
       setCurrentStep: vi.fn(),
       setSteps: vi.fn(),
       wrapType: WrapType.Wrap,
@@ -137,12 +139,13 @@ describe('validateWrapParams', () => {
 
   it('should throw error when wrapType is missing', () => {
     const params: ExecuteSwapParams = {
-      account: mockAccount,
+      address: mockAccount.address,
       swapTxContext: mockSwapTxContext,
       isAutoSlippage: true,
       onSuccess: vi.fn(),
       onFailure: vi.fn(),
       onPending: vi.fn(),
+      onClearForm: vi.fn(),
       setCurrentStep: vi.fn(),
       setSteps: vi.fn(),
       wrapType: undefined,
@@ -154,12 +157,13 @@ describe('validateWrapParams', () => {
 
   it('should throw error when both wrapType and inputCurrencyAmount are missing', () => {
     const params: ExecuteSwapParams = {
-      account: mockAccount,
+      address: mockAccount.address,
       swapTxContext: mockSwapTxContext,
       isAutoSlippage: true,
       onSuccess: vi.fn(),
       onFailure: vi.fn(),
       onPending: vi.fn(),
+      onClearForm: vi.fn(),
       setCurrentStep: vi.fn(),
       setSteps: vi.fn(),
       wrapType: undefined,
@@ -176,6 +180,7 @@ describe('useSwapHandlers', () => {
   const mockOnPending = vi.fn()
   const mockSetCurrentStep = vi.fn()
   const mockSetSteps = vi.fn()
+  const mockOnClearForm = vi.fn()
 
   const mockAccount: SignerMnemonicAccountDetails = {
     platform: Platform.EVM,
@@ -223,12 +228,13 @@ describe('useSwapHandlers', () => {
   }
 
   const baseExecuteParams: ExecuteSwapParams = {
-    account: mockAccount,
+    address: mockAccount.address,
     swapTxContext: mockSwapTxContext,
     isAutoSlippage: true,
     onSuccess: mockOnSuccess,
     onFailure: mockOnFailure,
     onPending: mockOnPending,
+    onClearForm: mockOnClearForm,
     setCurrentStep: mockSetCurrentStep,
     setSteps: mockSetSteps,
   }
@@ -277,7 +283,7 @@ describe('useSwapHandlers', () => {
         await result.current.execute(params)
 
         expect(mockWrapCallbackFn).toHaveBeenCalledWith({
-          account: mockAccount,
+          address: mockAccount.address,
           inputCurrencyAmount: mockInputCurrencyAmount,
           txRequest: mockSwapTxContext.txRequests![0],
           txId: 'test-tx-id',
@@ -371,7 +377,6 @@ describe('useSwapHandlers', () => {
         await result.current.execute(params)
 
         expect(mockSwapCallbackFn).toHaveBeenCalledWith({
-          account: mockAccount,
           swapTxContext: mockSwapTxContext,
           currencyInAmountUSD: mockCurrencyInAmountUSD,
           currencyOutAmountUSD: mockCurrencyOutAmountUSD,
@@ -381,6 +386,7 @@ describe('useSwapHandlers', () => {
           onSuccess: mockOnSuccess,
           onFailure: mockOnFailure,
           onPending: mockOnPending,
+          onClearForm: mockOnClearForm,
           txId: 'test-swap-tx-id',
           setCurrentStep: mockSetCurrentStep,
           setSteps: mockSetSteps,
@@ -399,7 +405,6 @@ describe('useSwapHandlers', () => {
         await result.current.execute(params)
 
         expect(mockSwapCallbackFn).toHaveBeenCalledWith({
-          account: mockAccount,
           swapTxContext: mockSwapTxContext,
           currencyInAmountUSD: undefined,
           currencyOutAmountUSD: undefined,
@@ -409,6 +414,7 @@ describe('useSwapHandlers', () => {
           onSuccess: mockOnSuccess,
           onFailure: mockOnFailure,
           onPending: mockOnPending,
+          onClearForm: mockOnClearForm,
           txId: undefined,
           setCurrentStep: mockSetCurrentStep,
           setSteps: mockSetSteps,

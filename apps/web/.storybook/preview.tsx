@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react'
 import { Provider } from 'react-redux'
-import store from 'state'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import store from '~/state'
 import { TamaguiProvider } from '../src/theme/tamaguiProvider'
 
 import '@reach/dialog/styles.css'

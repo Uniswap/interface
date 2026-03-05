@@ -4,7 +4,10 @@ import type { FlexProps } from 'ui/src'
 import { Flex } from 'ui/src'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
-import { filterSettingsByPlatform } from 'uniswap/src/features/transactions/components/settings/utils'
+import {
+  filterSettingsByPlatformAndTradeRouting,
+  getShouldSettingApplyToRouting,
+} from 'uniswap/src/features/transactions/components/settings/utils'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/SwapFormSettings'
@@ -25,7 +28,6 @@ import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
 interface SwapFormScreenProps {
@@ -55,16 +57,20 @@ export function SwapFormScreen({
   }))
 
   const { trade, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({ trade: s.trade, chainId: s.chainId }))
+  const tradeRouting = trade.trade?.routing
 
-  const filteredSettings = filterSettingsByPlatform(settings, chainIdToPlatform(chainId))
+  const filteredSettings = filterSettingsByPlatformAndTradeRouting(settings, {
+    platform: chainIdToPlatform(chainId),
+    tradeRouting,
+  })
+  const isZeroSlippage = !getShouldSettingApplyToRouting(Slippage, tradeRouting)
 
   const showTokenSelector = !hideContent && !!selectingCurrencyField
-  const isBridgeTrade = trade instanceof BridgeTrade
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
       {!isWebApp && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
-      {!hideSettings && <SwapFormSettings settings={filteredSettings} isBridgeTrade={isBridgeTrade} />}
+      {!hideSettings && <SwapFormSettings settings={filteredSettings} isZeroSlippage={isZeroSlippage} />}
 
       {!hideContent && (
         <SwapFormScreenStoreContextProvider tokenColor={tokenColor}>

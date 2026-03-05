@@ -17,7 +17,7 @@ export function TransactionSendingSection({ assets }: TransactionSendingSectionP
       <TransactionAssetList
         assets={assets}
         icon={SendAlt}
-        iconColor="$statusCritical"
+        iconColor="$neutral2"
         titleText={t('walletConnect.request.details.label.sending')}
         showUsdValue={true}
       />

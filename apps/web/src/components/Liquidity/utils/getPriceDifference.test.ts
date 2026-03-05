@@ -1,9 +1,9 @@
 import { Currency, Price } from '@uniswap/sdk-core'
-import { getPriceDifference } from 'components/Liquidity/utils/getPriceDifference'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { ETH_MAINNET } from 'test-utils/constants'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { USDT } from 'uniswap/src/constants/tokens'
+import { getPriceDifference } from '~/components/Liquidity/utils/getPriceDifference'
+import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { ETH_MAINNET } from '~/test-utils/constants'
 
 // eslint-disable-next-line max-params
 function getInitialPrice(base: Currency, quote: Currency, input: string) {

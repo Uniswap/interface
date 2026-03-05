@@ -175,6 +175,34 @@ export function getRPCErrorCategory(error: Error): string {
   }
 }
 
+/**
+ * Parses the incoming error from an attempted RPC call and returns
+ * the network that the error came from.
+ */
+export function getRPCProvider(error: Error): string {
+  const message = error.message
+  switch (true) {
+    case message.includes('quicknode'):
+      return 'quicknode'
+    case message.includes('infura'):
+      return 'infura'
+    case message.includes('flashbots'):
+      return 'flashbots'
+    default:
+      return 'n/a'
+  }
+}
+
+/**
+ * Parses the incoming error from an attempted RPC call and returns
+ * the code of the error from the RPC provider. Will truncate if it's
+ * too long.
+ */
+export function getRPCErrorCode(error: Error): string | undefined {
+  const message = error.message
+  return message.split('code=')[1]?.split(',')[0]?.trim().slice(0, 50) || undefined
+}
+
 export function buildNetworkFeeFromReceipt({
   receipt,
   nativeCurrency,
@@ -189,6 +217,7 @@ export function buildNetworkFeeFromReceipt({
     tokenSymbol: nativeCurrency.symbol,
     tokenAddress: nativeCurrency.address,
     chainId,
+    valueType: ValueType.Exact,
   }
 }
 

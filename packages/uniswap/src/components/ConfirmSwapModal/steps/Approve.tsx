@@ -21,6 +21,8 @@ export function TokenApprovalTransactionStepRow({
 
   const title = {
     [StepStatus.Preview]: t('common.approveSpend', { symbol }),
+    [StepStatus.Failed]: t('common.approveSpend', { symbol }),
+    [StepStatus.Replaced]: t('common.approveSpend', { symbol }),
     [StepStatus.Active]: t('common.wallet.approve'),
     [StepStatus.InProgress]: t('common.approvePending'),
     [StepStatus.Complete]: t('common.approvedSpend', { symbol }),
@@ -52,6 +54,8 @@ export function TokenRevocationTransactionStepRow(props: StepRowProps<TokenRevoc
 
   const title = {
     [StepStatus.Preview]: t('common.resetLimit', { symbol }),
+    [StepStatus.Failed]: t('common.resetLimit', { symbol }),
+    [StepStatus.Replaced]: t('common.resetLimit', { symbol }),
     [StepStatus.Active]: t('common.resetLimitWallet', { symbol }),
     [StepStatus.InProgress]: t('common.resettingLimit', { symbol }),
     [StepStatus.Complete]: t('common.resetLimit', { symbol }),

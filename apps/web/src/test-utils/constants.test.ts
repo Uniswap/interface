@@ -30,7 +30,7 @@ import {
   USE_DISCONNECTED_ACCOUNT,
   WBTC_INFO,
   WETH_INFO,
-} from 'test-utils/constants'
+} from '~/test-utils/constants'
 
 describe('test-utils/constants', () => {
   it('should load all token constants', () => {

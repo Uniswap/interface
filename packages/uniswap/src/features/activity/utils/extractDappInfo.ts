@@ -21,5 +21,18 @@ export function extractDappInfo(transaction: OnChainTransaction): DappInfoTransa
     }
   }
 
+  if (
+    transaction.label === OnChainTransactionLabel.AUCTION_SUBMIT_BID ||
+    transaction.label === OnChainTransactionLabel.AUCTION_CLAIM_TOKENS ||
+    transaction.label === OnChainTransactionLabel.AUCTION_EXIT_BID ||
+    transaction.label === OnChainTransactionLabel.AUCTION_EXIT_PARTIALLY_FILLED_BID ||
+    transaction.label === OnChainTransactionLabel.AUCTION_CLAIM_TOKENS_BATCHED
+  ) {
+    return {
+      name: 'Uniswap CCA',
+      icon: 'https://protocol-icons.s3.amazonaws.com/icons/uniswap-v4.jpg',
+    }
+  }
+
   return undefined
 }

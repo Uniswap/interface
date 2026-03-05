@@ -1,12 +1,17 @@
 /* eslint-disable max-params */
-import { supportedChainIdFromGQLChain } from 'appGraphql/data/util'
+
 import type { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { Flex, styled, Text } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import {
+  CrossChainCurrencyRow,
+  CrossChainCurrencyRowProps,
+} from 'uniswap/src/features/transactions/swap/components/CrossChainCurrencyRow'
 import i18n from 'uniswap/src/i18n'
+import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
 
 function getChainIdFromGqlTokenOrCurrency(token?: GraphQLApi.TokenAssetPartsFragment | Currency): number | null {
   if (!token) {
@@ -51,4 +56,8 @@ export function getBridgeDescriptor({
       </StyledBridgeAmountText>
     </Flex>
   )
+}
+
+export function getCrossChainDescriptor(params: CrossChainCurrencyRowProps) {
+  return <CrossChainCurrencyRow {...params} />
 }

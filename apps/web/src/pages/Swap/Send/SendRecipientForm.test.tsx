@@ -1,11 +1,11 @@
-import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
-import { MultichainContext } from 'state/multichain/types'
-import { SendContext, SendContextType } from 'state/send/SendContext'
-import { SwapAndLimitContext } from 'state/swap/types'
-import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
+import { SendRecipientForm } from '~/pages/Swap/Send/SendRecipientForm'
+import { MultichainContext } from '~/state/multichain/types'
+import { SendContext, SendContextType } from '~/state/send/SendContext'
+import { SwapAndLimitContext } from '~/state/swap/types'
+import { render, screen } from '~/test-utils/render'
 
 const mockMultichainContextValue = {
   reset: vi.fn(),

@@ -12,15 +12,22 @@
   },
   "devDependencies": {
     "@types/node": "22.13.1",
+    "@typescript/native-preview": "7.0.0-dev.20260108.1",
     "@uniswap/eslint-config": "workspace:^",
     "depcheck": "1.4.7",
-    "eslint": "8.44.0",
-    "typescript": "5.3.3"
+    "eslint": "8.57.1",
+    "typescript": "5.8.3"
   },
   "scripts": {
     "typecheck": "nx typecheck gating",
+    "typecheck:tsgo": "nx typecheck:tsgo gating",
     "lint": "nx lint gating",
-    "lint:fix": "nx lint:fix gating"
+    "lint:fix": "nx lint:fix gating",
+    "lint:biome": "nx lint:biome gating",
+    "lint:biome:fix": "nx lint:biome:fix gating",
+    "lint:eslint": "nx lint:eslint gating",
+    "lint:eslint:fix": "nx lint:eslint:fix gating",
+    "check:deps:usage": "nx check:deps:usage gating"
   },
   "nx": {
     "includedScripts": []

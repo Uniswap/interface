@@ -1,8 +1,8 @@
 /* eslint-disable import/no-unused-modules */
 import { ContentStyle, type InAppNotification } from '@universe/api'
 import { createNotificationRenderer, type NotificationRenderer } from '@universe/notifications'
-import { type NotificationState } from 'notification-service/notification-renderer/notificationStore'
 import { type StoreApi, type UseBoundStore } from 'zustand'
+import { type NotificationState } from '~/notification-service/notification-renderer/notificationStore'
 
 export interface CreateWebNotificationRendererContext {
   store: UseBoundStore<StoreApi<NotificationState>>

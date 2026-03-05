@@ -76,6 +76,7 @@ export function createMockDerivedSwapInfo({
 }): DerivedSwapInfo {
   return {
     chainId: UniverseChainId.Mainnet,
+
     currencies: {
       [CurrencyField.INPUT]: {
         currency: inputCurrency,

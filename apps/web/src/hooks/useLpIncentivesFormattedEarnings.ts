@@ -1,13 +1,13 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { PositionInfo } from 'components/Liquidity/types'
-import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { LP_INCENTIVES_REWARD_TOKEN } from '~/components/LpIncentives/constants'
 
 interface UseLpIncentivesFormattedEarningsProps {
   liquidityPosition: PositionInfo

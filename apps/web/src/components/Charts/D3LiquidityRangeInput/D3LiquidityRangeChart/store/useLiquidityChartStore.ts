@@ -1,8 +1,8 @@
-import { LiquidityChartStoreContext } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
-import type { ChartActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { useContext } from 'react'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/react/shallow'
+import { LiquidityChartStoreContext } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
+import type { ChartActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 
 function useLiquidityChartStore() {
   const store = useContext(LiquidityChartStoreContext)

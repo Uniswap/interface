@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react'
-import { MatchType, PageType, useIsPage } from 'hooks/useIsPage'
 import { BrowserRouter } from 'react-router'
+import { MatchType, PageType, useIsPage } from '~/hooks/useIsPage'
 
 describe('useIsPage', () => {
   it.each([

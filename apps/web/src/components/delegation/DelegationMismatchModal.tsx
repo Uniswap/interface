@@ -1,8 +1,4 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { WalletAlertBadge } from 'components/Badge/WalletAlertBadge'
-import { useWalletDisplay } from 'components/Web3Status/RecentlyConnectedModal'
-import { useAccount } from 'hooks/useAccount'
-import { useDisconnect } from 'hooks/useDisconnect'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
@@ -13,6 +9,10 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
+import { WalletAlertBadge } from '~/components/Badge/WalletAlertBadge'
+import { useWalletDisplay } from '~/components/Web3Status/RecentlyConnectedModal'
+import { useAccount } from '~/hooks/useAccount'
+import { useDisconnect } from '~/hooks/useDisconnect'
 
 interface DelegationMismatchModalProps {
   onClose: () => void

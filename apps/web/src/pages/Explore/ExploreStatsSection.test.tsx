@@ -1,11 +1,11 @@
-import ExploreStatsSection from 'pages/Explore/ExploreStatsSection'
-import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
-import { render, screen } from 'test-utils/render'
 import type { Mock } from 'vitest'
 import { vi } from 'vitest'
+import { ExploreStatsSection } from '~/pages/Explore/ExploreStatsSection'
+import { use24hProtocolVolume, useDailyTVLWithChange } from '~/state/explore/protocolStats'
+import { render, screen } from '~/test-utils/render'
 
 // Mock the protocol stats hooks
-vi.mock('state/explore/protocolStats', () => ({
+vi.mock('~/state/explore/protocolStats', () => ({
   use24hProtocolVolume: vi.fn(),
   useDailyTVLWithChange: vi.fn(),
 }))

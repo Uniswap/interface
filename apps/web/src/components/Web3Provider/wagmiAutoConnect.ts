@@ -1,15 +1,14 @@
-import { PLAYWRIGHT_CONNECT_ADDRESS } from 'components/Web3Provider/constants'
-import { createRejectableMockConnector } from 'components/Web3Provider/rejectableConnector'
-import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isAddress } from 'viem'
 import { connect } from 'wagmi/actions'
+import { PLAYWRIGHT_CONNECT_ADDRESS } from '~/components/Web3Provider/constants'
+import { createRejectableMockConnector } from '~/components/Web3Provider/rejectableConnector'
+import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
 
 export function setupWagmiAutoConnect() {
-  const isEagerlyConnect = !window.location.search.includes('eagerlyConnect=false')
-  const eagerlyConnectAddress = window.location.search.includes('eagerlyConnectAddress=')
-    ? window.location.search.split('eagerlyConnectAddress=')[1]
-    : undefined
+  const params = new URLSearchParams(window.location.search)
+  const isEagerlyConnect = params.get('eagerlyConnect') !== 'false'
+  const eagerlyConnectAddress = params.get('eagerlyConnectAddress') ?? undefined
 
   // Automatically connect if running under Playwright (used by E2E tests)
   if (isPlaywrightEnv() && isEagerlyConnect) {

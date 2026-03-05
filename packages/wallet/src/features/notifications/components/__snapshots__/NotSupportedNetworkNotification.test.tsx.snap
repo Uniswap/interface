@@ -12,14 +12,15 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
   jestAnimatedStyle={
     {
       "value": {
+        "left": 12,
         "opacity": 0,
+        "right": 12,
         "top": 12,
         "transform": [
           {
             "translateY": -150,
           },
         ],
-        "width": "100%",
       },
     }
   }
@@ -27,7 +28,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
     [
       {
         "flexDirection": "column",
-        "zIndex": 100010,
+        "zIndex": 100020,
       },
     ]
   }
@@ -36,17 +37,18 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
     [
       {
         "flexDirection": "column",
-        "zIndex": 100010,
+        "zIndex": 100020,
       },
       {
+        "left": 12,
         "opacity": 0,
+        "right": 12,
         "top": 12,
         "transform": [
           {
             "translateY": -150,
           },
         ],
-        "width": "100%",
       },
     ]
   }
@@ -89,6 +91,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           "flexDirection": "row",
           "flexShrink": 1,
           "justifyContent": "center",
+          "maxWidth": 420,
         }
       }
     >
@@ -115,6 +118,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
               "borderTopLeftRadius": 999999,
               "borderTopRightRadius": 999999,
               "flexDirection": "column",
+              "maxWidth": "100%",
               "opacity": 1,
               "paddingBottom": 12,
               "paddingLeft": 12,
@@ -148,6 +152,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
               "borderTopLeftRadius": 999999,
               "borderTopRightRadius": 999999,
               "flexDirection": "column",
+              "maxWidth": "100%",
               "opacity": 1,
               "paddingBottom": 12,
               "paddingLeft": 12,
@@ -167,7 +172,6 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           style={
             {
               "alignItems": "center",
-              "color": "#222222",
               "flexDirection": "row",
               "gap": 8,
               "justifyContent": "flex-start",
@@ -245,14 +249,14 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
             </RNSVGSvgView>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit={false}
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
               {
                 "color": "#131313",
-                "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
+                "fontFamily": "Basel Grotesk",
                 "fontSize": 16,
                 "fontWeight": "400",
                 "lineHeight": 20.8,

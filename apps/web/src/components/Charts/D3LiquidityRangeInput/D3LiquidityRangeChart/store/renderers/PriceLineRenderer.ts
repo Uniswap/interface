@@ -1,9 +1,9 @@
+import * as d3 from 'd3'
 import type {
   ChartState,
   Renderer,
   RenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import * as d3 from 'd3'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 
 export function createPriceLineRenderer({
   g,
@@ -20,8 +20,8 @@ export function createPriceLineRenderer({
     // Clear previous price line elements
     priceLineGroup.selectAll('*').remove()
 
-    const { colors, dimensions, priceData, priceToY } = context
-    const { minPrice, maxPrice } = getState()
+    const { colors, dimensions, priceData, priceToY, tickToY } = context
+    const { minTick, maxTick } = getState()
 
     // Map price data for D3
     const priceDataMapped = priceData.map((d) => ({
@@ -52,13 +52,13 @@ export function createPriceLineRenderer({
     const linePathData = line(priceDataMapped)
 
     // Draw price line with conditional coloring
-    if (minPrice !== undefined && maxPrice !== undefined) {
+    if (minTick !== undefined && maxTick !== undefined) {
       // Create mask for active range only
       const maskId = 'price-line-active-mask'
       const defs = priceLineGroup.append('defs')
 
-      const minPriceY = priceToY({ price: minPrice })
-      const maxPriceY = priceToY({ price: maxPrice })
+      const minPriceY = tickToY({ tick: minTick })
+      const maxPriceY = tickToY({ tick: maxTick })
 
       // Active range mask
       defs

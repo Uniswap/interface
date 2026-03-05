@@ -1,6 +1,6 @@
 import { createStore, Store } from 'redux'
-import reducer, { ApplicationState, setCloseModal, setOpenModal, updateChainId } from 'state/application/reducer'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import reducer, { ApplicationState, setCloseModal, setOpenModal, updateChainId } from '~/state/application/reducer'
 
 describe('application reducer', () => {
   let store: Store<ApplicationState>

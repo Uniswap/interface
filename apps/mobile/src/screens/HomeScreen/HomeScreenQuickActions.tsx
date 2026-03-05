@@ -7,13 +7,14 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { ArrowDownCircle, Bank, SendAction, SwapDotted } from 'ui/src/components/icons'
+import { ArrowDownCircle, Bank, MinusCircle, PlusCircle, SendAction, SwapDotted } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { useIsPortfolioZero } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsPortfolioZero'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -21,7 +22,13 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 
 const MIN_BUTTON_WIDTH = 102
 
-type IconComponent = typeof SwapDotted | typeof Bank | typeof SendAction | typeof ArrowDownCircle
+type IconComponent =
+  | typeof SwapDotted
+  | typeof Bank
+  | typeof PlusCircle
+  | typeof MinusCircle
+  | typeof SendAction
+  | typeof ArrowDownCircle
 type ActionItem = {
   Icon: IconComponent
   label: string
@@ -52,6 +59,8 @@ export function HomeScreenQuickActions(): JSX.Element {
   const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
   const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
   const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+  const isMultichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const isPortfolioZero = useIsPortfolioZero()
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
@@ -84,29 +93,44 @@ export function HomeScreenQuickActions(): JSX.Element {
     await triggerHaptics()
   }, [openReceiveModal, triggerHaptics])
 
-  const onPressBuy = useCallback(async (): Promise<void> => {
-    await triggerHaptics()
-    if (isTestnetModeEnabled) {
-      navigate(ModalName.TestnetMode, {
-        unsupported: true,
-        descriptionCopy: t('tdp.noTestnetSupportDescription'),
-      })
-      return
-    }
-    disableForKorea
-      ? navigate(ModalName.KoreaCexTransferInfoModal)
-      : dispatch(
-          openModal({
-            name: ModalName.FiatOnRampAggregator,
-          }),
-        )
-  }, [triggerHaptics, isTestnetModeEnabled, disableForKorea, dispatch, t])
+  const onPressFORAction = useCallback(
+    async (entry: 'onramp' | 'offramp'): Promise<void> => {
+      await triggerHaptics()
+      if (isTestnetModeEnabled) {
+        navigate(ModalName.TestnetMode, {
+          unsupported: true,
+          descriptionCopy: t('tdp.noTestnetSupportDescription'),
+        })
+        return
+      }
+      // When multichain UX is enabled, show the interstitial sheet unless
+      // the user has zero balance (in which case go straight to FOR).
+      // Korea check is handled inside the modal and below for the direct path.
+      if (isMultichainTokenUxEnabled && !isPortfolioZero) {
+        navigate(ModalName.FiatOnRampAction, { entry })
+        return
+      }
+      if (disableForKorea) {
+        navigate(ModalName.KoreaCexTransferInfoModal)
+        return
+      }
+      dispatch(
+        openModal({
+          name: ModalName.FiatOnRampAggregator,
+          ...(entry === 'offramp' && { initialState: { isOfframp: true } }),
+        }),
+      )
+    },
+    [triggerHaptics, isTestnetModeEnabled, disableForKorea, isMultichainTokenUxEnabled, isPortfolioZero, dispatch, t],
+  )
 
   // PR #4621 Necessary to declare these as direct dependencies due to race
   // condition with initializing react-i18next and useMemo
   const forLabel = t('home.label.for')
   const sendLabel = t('home.label.send')
   const receiveLabel = t('home.label.receive')
+  const buyLabel = t('common.buy.label')
+  const sellLabel = t('common.sell.label')
   const actions = useMemo(
     () => [
       ...(isBottomTabsEnabled
@@ -120,11 +144,11 @@ export function HomeScreenQuickActions(): JSX.Element {
           ]
         : []),
       {
-        Icon: Bank,
+        Icon: isMultichainTokenUxEnabled ? PlusCircle : Bank,
         eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
-        label: forLabel,
+        label: isMultichainTokenUxEnabled ? buyLabel : forLabel,
         name: ElementName.Buy,
-        onPress: onPressBuy,
+        onPress: () => onPressFORAction('onramp'),
       },
       {
         Icon: SendAction,
@@ -138,8 +162,31 @@ export function HomeScreenQuickActions(): JSX.Element {
         name: ElementName.Receive,
         onPress: onPressReceive,
       },
+      ...(isMultichainTokenUxEnabled
+        ? [
+            {
+              Icon: MinusCircle,
+              eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
+              label: sellLabel,
+              name: ElementName.Sell,
+              onPress: () => onPressFORAction('offramp'),
+            },
+          ]
+        : []),
     ],
-    [isBottomTabsEnabled, onPressSwap, forLabel, onPressBuy, sendLabel, onPressSend, receiveLabel, onPressReceive],
+    [
+      isBottomTabsEnabled,
+      onPressSwap,
+      isMultichainTokenUxEnabled,
+      buyLabel,
+      forLabel,
+      onPressFORAction,
+      sendLabel,
+      onPressSend,
+      receiveLabel,
+      onPressReceive,
+      sellLabel,
+    ],
   )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +activeScale
@@ -151,6 +198,7 @@ export function HomeScreenQuickActions(): JSX.Element {
           mr="$spacing8"
           scaleTo={activeScale}
           dd-action-name={name}
+          testID={name}
           onPress={onPress}
         >
           <Flex
@@ -179,7 +227,7 @@ export function HomeScreenQuickActions(): JSX.Element {
       <Flex centered row gap="$spacing8" px="$spacing12">
         {actions.map(({ eventName, name, label, Icon, onPress }) => (
           <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
-            <TouchableArea flex={1} dd-action-name={name} scaleTo={activeScale} onPress={onPress}>
+            <TouchableArea flex={1} dd-action-name={name} testID={name} scaleTo={activeScale} onPress={onPress}>
               <Flex
                 fill
                 backgroundColor="$accent2"

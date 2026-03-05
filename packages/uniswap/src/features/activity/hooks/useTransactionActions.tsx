@@ -7,7 +7,7 @@ import { Clear } from 'ui/src/components/icons/Clear'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
-import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -18,21 +18,31 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { submitActivitySpamReport } from 'uniswap/src/features/reporting/reports'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CancelConfirmationView } from 'uniswap/src/features/transactions/components/cancel/CancelConfirmationView'
+import {
+  CancelConfirmationView,
+  PlanCancellationInfo,
+} from 'uniswap/src/features/transactions/components/cancel/CancelConfirmationView'
 import { useIsCancelable } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
-import { cancelTransaction, finalizeTransaction } from 'uniswap/src/features/transactions/slice'
-import { isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { useSelectTransaction } from 'uniswap/src/features/transactions/hooks/useSelectTransaction'
+import {
+  cancelPlanStep,
+  cancelRemoteUniswapXOrder,
+  cancelTransaction,
+  finalizeTransaction,
+} from 'uniswap/src/features/transactions/slice'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
+  UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { useIsActivityHidden } from 'uniswap/src/features/visibility/hooks/useIsActivityHidden'
 import { setActivityVisibility } from 'uniswap/src/features/visibility/slice'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openFORSupportLink, openUri } from 'uniswap/src/utils/linking'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -52,12 +62,14 @@ export function useTransactionActions({
   onClose,
   onReportSuccess,
   onUnhideTransaction,
+  onCopySuccess,
 }: {
   transaction: TransactionDetails
   authTrigger?: AuthTrigger
   onClose?: () => void
   onReportSuccess?: () => void
   onUnhideTransaction?: () => void
+  onCopySuccess?: () => void
 }): {
   renderModals: () => JSX.Element
   openCancelModal: () => void
@@ -76,23 +88,59 @@ export function useTransactionActions({
 
   const isCancelable = useIsCancelable(transaction) && !readonly
 
+  // Check if this transaction exists in local Redux state (vs only in remote activity feed)
+  const isInLocalState =
+    useSelectTransaction({
+      address: transaction.from,
+      chainId: transaction.chainId,
+      txId: transaction.id,
+    }) !== undefined
+
   const baseActionItems = useTransactionActionItems({
     transactionDetails: transaction,
     onUnhideTransaction,
     showReportModal,
+    onCopySuccess,
   })
 
-  const handleCancel = useEvent((txRequest: providers.TransactionRequest): void => {
-    dispatch(
-      cancelTransaction({
-        chainId: transaction.chainId,
-        id: transaction.id,
-        address: transaction.from,
-        cancelRequest: txRequest,
-      }),
-    )
-    hideCancelModal()
-  })
+  const handleCancel = useEvent(
+    (txRequest: providers.TransactionRequest, planCancellationInfo?: PlanCancellationInfo): void => {
+      if (planCancellationInfo?.isPlanCancellation) {
+        dispatch(
+          cancelPlanStep({
+            chainId: transaction.chainId,
+            id: transaction.id,
+            address: transaction.from,
+            cancelRequest: txRequest,
+            planId: planCancellationInfo.planId,
+            cancelableStepInfo: planCancellationInfo.cancelableStepInfo,
+          }),
+        )
+      } else if (!isInLocalState && isUniswapX(transaction)) {
+        // Remote UniswapX order (e.g. submitted from web app) — bypass Redux cancelTransaction
+        // reducer and directly submit the Permit2 nonce invalidation transaction via saga.
+        dispatch(
+          cancelRemoteUniswapXOrder({
+            chainId: transaction.chainId,
+            address: transaction.from,
+            orderHash: (transaction as UniswapXOrderDetails).orderHash ?? transaction.id,
+            cancelRequest: txRequest,
+          }),
+        )
+      } else {
+        dispatch(
+          cancelTransaction({
+            chainId: transaction.chainId,
+            id: transaction.id,
+            address: transaction.from,
+            cancelRequest: txRequest,
+          }),
+        )
+      }
+      hideCancelModal()
+      onClose?.()
+    },
+  )
 
   const onReportTransaction = useEvent((): void => {
     // Send analytics report
@@ -182,14 +230,16 @@ function useTransactionActionItems({
   transactionDetails,
   onUnhideTransaction,
   showReportModal,
+  onCopySuccess,
 }: {
   transactionDetails: TransactionDetails
   onUnhideTransaction?: () => void
   showReportModal: () => void
+  onCopySuccess?: () => void
 }): MenuOptionItem[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const transactionId = getTransactionId(transactionDetails)
+  const transactionIds = getTransactionId(transactionDetails)
 
   const isHiddenActivity = useIsActivityHidden(transactionDetails.id)
 
@@ -202,25 +252,32 @@ function useTransactionActionItems({
 
   const transactionActionItems: MenuOptionItem[] = useMemo(() => {
     const items: MenuOptionItem[] = []
-
-    if (transactionId) {
-      const copyLabel = onRampProviderName
-        ? t('transaction.action.copyProvider', {
-            providerName: onRampProviderName,
-          })
-        : t('transaction.action.copy')
+    if (transactionIds && transactionIds.length > 0) {
+      const { copyString = transactionIds.toString(), copyLabel } =
+        transactionIds.length > 1
+          ? {
+              copyString: t('transaction.action.multipleHashes', { hashes: transactionIds.join(', ') }),
+              copyLabel: t('transaction.action.copyPlural'),
+            }
+          : {
+              copyString: transactionIds[0],
+              copyLabel: onRampProviderName
+                ? t('transaction.action.copyProvider', { providerName: onRampProviderName })
+                : t('transaction.action.copy'),
+            }
 
       items.push({
         label: copyLabel,
         Icon: CopySheets,
         onPress: async (): Promise<void> => {
-          await setClipboard(transactionId)
+          await setClipboard(copyString)
           dispatch(
             pushNotification({
               type: AppNotificationType.Copied,
               copyType: CopyNotificationType.TransactionId,
             }),
           )
+          onCopySuccess?.()
         },
       })
     }
@@ -283,10 +340,11 @@ function useTransactionActionItems({
     onRampProviderName,
     t,
     transactionDetails,
-    transactionId,
+    transactionIds,
     onUnhideTransaction,
     isHiddenActivity,
     showReportModal,
+    onCopySuccess,
   ])
 
   return transactionActionItems
@@ -310,14 +368,22 @@ async function openSupportLink(transactionDetails: TransactionDetails): Promise<
   }
 }
 
-function getTransactionId(transactionDetails: TransactionDetails): string | undefined {
+function getTransactionId(transactionDetails: TransactionDetails): string[] | undefined {
   switch (transactionDetails.typeInfo.type) {
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
-      return transactionDetails.typeInfo.id
+      return [transactionDetails.typeInfo.id]
     case TransactionType.OffRampSale:
       return transactionDetails.typeInfo.providerTransactionId
+        ? [transactionDetails.typeInfo.providerTransactionId]
+        : undefined
+    case TransactionType.Plan: {
+      return (
+        transactionDetails.typeInfo.transactionHashes ??
+        transactionDetails.typeInfo.stepDetails.map((step) => step.hash).filter((hash) => hash !== undefined)
+      )
+    }
     default:
-      return transactionDetails.hash
+      return transactionDetails.hash ? [transactionDetails.hash] : undefined
   }
 }

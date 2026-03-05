@@ -1,3 +1,6 @@
+import { useQuery } from '@tanstack/react-query'
+import { provideUniswapIdentifierService } from '@universe/api'
+import { uniswapIdentifierQuery } from '@universe/sessions'
 import { useEffect, useMemo } from 'react'
 import { NativeModules, useWindowDimensions } from 'react-native'
 import { OneSignal } from 'react-native-onesignal'
@@ -58,13 +61,15 @@ export function TraceUserProperties(): null {
   // Effects must check this and ensure they are setting properties for when analytics is reenabled
   const allowAnalytics = useSelector(selectAllowAnalytics)
 
+  const { data: uniswapIdentifier } = useQuery(uniswapIdentifierQuery(provideUniswapIdentifierService))
+
   useGatingUserPropertyUsernames()
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run this when allowAnalytics changes
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.AppVersion, getFullAppVersion())
     if (isAndroid) {
-      NativeModules.AndroidDeviceModule.getPerformanceClass().then((perfClass: number) => {
+      NativeModules['AndroidDeviceModule'].getPerformanceClass().then((perfClass: number) => {
         setUserProperty(MobileUserPropertyName.AndroidPerfClass, perfClass)
       })
     }
@@ -91,8 +96,8 @@ export function TraceUserProperties(): null {
   // Set user properties for datadog
 
   useEffect(() => {
-    setDatadogUserWithUniqueId(activeAccount?.address)
-  }, [activeAccount?.address])
+    setDatadogUserWithUniqueId(activeAccount?.address, uniswapIdentifier)
+  }, [activeAccount?.address, uniswapIdentifier])
 
   // Set user properties for amplitude
 

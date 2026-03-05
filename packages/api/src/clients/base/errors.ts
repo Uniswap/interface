@@ -23,6 +23,10 @@ export function isRateLimitFetchError(error: unknown): boolean {
   )
 }
 
+export function is401Error(error: unknown): boolean {
+  return error instanceof FetchError && error.response.status === 401
+}
+
 export function is404Error(error: unknown): boolean {
   return error instanceof FetchError && !!error.response.status && error.response.status === 404
 }

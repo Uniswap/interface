@@ -5,6 +5,7 @@ export enum WalletStatus {
   Inactive = 'Inactive',
   Unavailable = 'Unavailable',
   ActionRequired = 'ActionRequired',
+  Pending = 'Pending',
 }
 
 export interface ActiveDelegation {

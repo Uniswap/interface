@@ -1,8 +1,8 @@
-import { deprecatedStyled } from 'lib/styled-components'
-import { Body } from 'pages/App/Body'
-import { Header } from 'pages/App/Header'
-import { GRID_AREAS } from 'pages/App/utils/shared'
 import { breakpoints } from 'ui/src/theme'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { Body } from '~/pages/App/Body'
+import { Header } from '~/pages/App/Header'
+import { GRID_AREAS } from '~/pages/App/utils/shared'
 
 const AppContainer = deprecatedStyled.div`
   min-height: 100vh;
@@ -24,7 +24,6 @@ const AppBody = deprecatedStyled.div`
   position: relative;
   align-items: center;
   flex: 1;
-  position: relative;
   margin: auto;
 
   @media screen and (max-width: ${breakpoints.md}px) {

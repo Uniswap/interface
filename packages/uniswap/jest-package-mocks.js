@@ -1,5 +1,7 @@
 /**
- * Common mocks for this package. This file is intended to be imported in the jest-setup.js file of the package.
+ * Common Jest mocks for packages that depend on uniswap.
+ * Note: The uniswap package itself has migrated to Vitest (see vitest-package-mocks.ts).
+ * This file is kept for other packages (e.g., mobile, extension, wallet) that still use Jest.
  *
  * Notes:
  * * Try not to add test specific mocks here.
@@ -18,6 +20,10 @@ jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => 
 
 jest.mock('utilities/src/device/uniqueId', () => {
   return jest.requireActual('uniswap/src/test/mocks/uniqueId')
+})
+
+jest.mock('uniswap/src/data/getVersionHeader', () => {
+  return jest.requireActual('uniswap/src/data/getVersionHeader.web')
 })
 
 jest.mock('@universe/gating', () => {

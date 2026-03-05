@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
-import { createCurrencyParsersWithValidation } from 'components/Liquidity/parsers/urlParsers'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useCurrencyWithLoading } from 'hooks/Tokens'
 import { useMemo } from 'react'
+import { createCurrencyParsersWithValidation } from '~/components/Liquidity/parsers/urlParsers'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useCurrencyWithLoading } from '~/hooks/Tokens'
 
 export function useCurrencyValidation({
   currencyA,

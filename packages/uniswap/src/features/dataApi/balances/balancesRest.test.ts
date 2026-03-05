@@ -1,4 +1,7 @@
-import { createPortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import {
+  convertRestBalanceToPortfolioBalance,
+  createPortfolioCacheUpdater,
+} from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 const mockPortfolioData = {
@@ -50,11 +53,78 @@ const mockPortfolioBalance2 = {
   relativeChange24: 0,
 }
 
+describe(convertRestBalanceToPortfolioBalance, () => {
+  it('should return undefined when amount.amount is zero', () => {
+    const balance = {
+      token: { chainId: 1, address: '0x1', decimals: 18, symbol: 'TEST', name: 'Test Token', metadata: {} },
+      amount: { amount: 0, raw: '0' },
+      valueUsd: 0,
+      pricePercentChange1d: 0,
+      isHidden: false,
+    }
+
+    const result = convertRestBalanceToPortfolioBalance(balance as never, '0xuser')
+    expect(result).toBeUndefined()
+  })
+
+  it('should return undefined when amount.amount is negative', () => {
+    const balance = {
+      token: { chainId: 1, address: '0x1', decimals: 18, symbol: 'TEST', name: 'Test Token', metadata: {} },
+      amount: { amount: -1, raw: '0' },
+      valueUsd: 0,
+      pricePercentChange1d: 0,
+      isHidden: false,
+    }
+
+    const result = convertRestBalanceToPortfolioBalance(balance as never, '0xuser')
+    expect(result).toBeUndefined()
+  })
+
+  it('should return undefined when amount.amount is undefined', () => {
+    const balance = {
+      token: { chainId: 1, address: '0x1', decimals: 18, symbol: 'TEST', name: 'Test Token', metadata: {} },
+      amount: { amount: undefined, raw: '0' },
+      valueUsd: 0,
+      pricePercentChange1d: 0,
+      isHidden: false,
+    }
+
+    const result = convertRestBalanceToPortfolioBalance(balance as never, '0xuser')
+    expect(result).toBeUndefined()
+  })
+
+  it('should return undefined when amount is missing', () => {
+    const balance = {
+      token: { chainId: 1, address: '0x1', decimals: 18, symbol: 'TEST', name: 'Test Token', metadata: {} },
+      amount: undefined,
+      valueUsd: 0,
+      pricePercentChange1d: 0,
+      isHidden: false,
+    }
+
+    const result = convertRestBalanceToPortfolioBalance(balance as never, '0xuser')
+    expect(result).toBeUndefined()
+  })
+
+  it('should return undefined when token is missing', () => {
+    const balance = {
+      token: undefined,
+      amount: { amount: 1, raw: '1000000000000000000' },
+      valueUsd: 10,
+      pricePercentChange1d: 0,
+      isHidden: false,
+    }
+
+    const result = convertRestBalanceToPortfolioBalance(balance as never, '0xuser')
+    expect(result).toBeUndefined()
+  })
+})
+
 describe(createPortfolioCacheUpdater, () => {
   it('updates balance visibility and total value when hiding', () => {
     const ctx = {
-      getCurrentData: jest.fn().mockReturnValue(mockPortfolioData),
-      updateData: jest.fn(),
+      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
+      updateData: vi.fn(),
     }
 
     const updater = createPortfolioCacheUpdater(ctx)({
@@ -72,7 +142,7 @@ describe(createPortfolioCacheUpdater, () => {
     })
 
     // Test the updater function that was passed to setQueryData
-    const updaterFn = ctx.updateData.mock.calls[0][1]
+    const updaterFn = ctx.updateData.mock.calls[0]![1]
     const result = updaterFn(mockPortfolioData)
 
     expect(result.portfolio.balances[0].isHidden).toBe(true)
@@ -83,8 +153,8 @@ describe(createPortfolioCacheUpdater, () => {
 
   it('updates balance visibility and total value when un-hiding', () => {
     const ctx = {
-      getCurrentData: jest.fn().mockReturnValue(mockPortfolioData),
-      updateData: jest.fn(),
+      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
+      updateData: vi.fn(),
     }
 
     const updater = createPortfolioCacheUpdater(ctx)({
@@ -102,7 +172,7 @@ describe(createPortfolioCacheUpdater, () => {
     })
 
     // Test the updater function that was passed to setQueryData
-    const updaterFn = ctx.updateData.mock.calls[0][1]
+    const updaterFn = ctx.updateData.mock.calls[0]![1]
     const result = updaterFn(mockPortfolioData)
 
     expect(result.portfolio.balances[0].isHidden).toBe(false)

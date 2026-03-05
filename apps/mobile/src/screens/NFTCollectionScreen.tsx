@@ -18,7 +18,7 @@ import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/componen
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
+import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -162,7 +162,6 @@ export function NFTCollectionScreen({
             <NFTViewer
               autoplay
               svgRenderingDisabled
-              squareGridView
               imageDimensions={item.imageDimensions}
               limitGIFSize={ESTIMATED_ITEM_SIZE}
               placeholderContent={item.name || item.collectionName}

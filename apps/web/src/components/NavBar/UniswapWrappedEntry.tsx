@@ -2,14 +2,16 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Snowflake } from 'ui/src/components/icons/Snowflake'
 import { zIndexes } from 'ui/src/theme'
 import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb } from 'utilities/src/platform'
+import { useAppDispatch, useAppSelector } from '~/state/hooks'
 
 const snowflakeHoverKeyframes = `
   @keyframes snowflakeHover {
@@ -52,15 +54,17 @@ export function UniswapWrappedEntry() {
         <style>{snowflakeHoverKeyframes}</style>
         <Tooltip placement="bottom" offset={{ mainAxis: 8 }} delay={{ open: 300 }}>
           <Tooltip.Trigger>
-            <Text
-              className="snowflake-icon"
-              color="$neutral2"
-              hoverStyle={{ color: '$accent1' }}
-              height="$spacing24"
-              onPress={handlePress}
-            >
-              <Snowflake size="$icon.24" color="inherit" />
-            </Text>
+            <Trace logPress element={ElementName.UniswapWrappedNavbarButton}>
+              <Text
+                className="snowflake-icon"
+                color="$neutral2"
+                hoverStyle={{ color: '$accent1' }}
+                height="$spacing24"
+                onPress={handlePress}
+              >
+                <Snowflake size="$icon.24" color="inherit" />
+              </Text>
+            </Trace>
           </Tooltip.Trigger>
           <Tooltip.Content zIndex={zIndexes.overlay} display={isMobileWeb ? 'none' : 'flex'}>
             <Tooltip.Arrow />

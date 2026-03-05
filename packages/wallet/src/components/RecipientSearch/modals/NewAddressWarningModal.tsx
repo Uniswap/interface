@@ -89,7 +89,6 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
                   lineHeight={fonts.body3.lineHeight}
                   size={16}
                   variant="body3"
-                  disableForcedWidth={true}
                 />
               }
             />

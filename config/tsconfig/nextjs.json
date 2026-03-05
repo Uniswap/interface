@@ -3,14 +3,13 @@
   "display": "NextJS",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es2019",
+    "allowJs": true,
+    "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
     "paths": {
       "react-native": ["react-native-web"]
     },
-    "allowJs": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve"
+    "target": "es2019"
   }
 }

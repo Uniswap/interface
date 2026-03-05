@@ -1,18 +1,19 @@
-import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
-import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
-import Updater from 'state/fiatOnRampTransactions/updater'
-import { mocked } from 'test-utils/mocked'
-import { act, render } from 'test-utils/render'
+import { ForApiClient } from 'uniswap/src/data/apiClients/forApi/ForApiClient'
+import { useFiatOnRampTransactions } from '~/state/fiatOnRampTransactions/hooks'
+import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
+import Updater from '~/state/fiatOnRampTransactions/updater'
+import { mocked } from '~/test-utils/mocked'
+import { act, render } from '~/test-utils/render'
 
 const dispatchMock = vi.fn()
-vi.mock('state/hooks', async () => {
-  const actual = await vi.importActual('state/hooks')
+vi.mock('~/state/hooks', async () => {
+  const actual = await vi.importActual('~/state/hooks')
   return {
     ...actual,
     useAppDispatch: () => dispatchMock,
   }
 })
-vi.mock('state/fiatOnRampTransactions/hooks')
+vi.mock('~/state/fiatOnRampTransactions/hooks')
 
 describe('FiatOnRampTransactions Updater', () => {
   beforeEach(() => {
@@ -57,9 +58,7 @@ describe('FiatOnRampTransactions Updater', () => {
         provider: 'COINBASE_PAY',
       },
     })
-    const fetchSpy = vi
-      .spyOn(window, 'fetch')
-      .mockResolvedValue({ json: vi.fn().mockReturnValue({ transaction: 'test' }) } as any)
+    const fetchSpy = vi.spyOn(ForApiClient, 'getTransaction').mockResolvedValue({ transaction: 'test' } as any)
 
     render(<Updater />)
 
@@ -104,9 +103,7 @@ describe('FiatOnRampTransactions Updater', () => {
         provider: 'COINBASE_PAY',
       },
     })
-    const fetchSpy = vi
-      .spyOn(window, 'fetch')
-      .mockResolvedValue({ json: vi.fn().mockReturnValue({ transaction: 'test' }) } as any)
+    const fetchSpy = vi.spyOn(ForApiClient, 'getTransaction').mockResolvedValue({ transaction: 'test' } as any)
 
     render(<Updater />)
 

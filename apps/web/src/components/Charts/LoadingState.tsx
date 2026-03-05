@@ -1,15 +1,15 @@
-import { ChartType } from 'components/Charts/utils'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import { ChartBarCrossedWithBackground } from 'components/Table/ErrorBox'
-import { deprecatedStyled } from 'lib/styled-components'
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { textFadeIn } from 'theme/styles'
 import { useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
+import { ChartType } from '~/components/Charts/utils'
+import Column from '~/components/deprecated/Column'
+import Row from '~/components/deprecated/Row'
+import { ChartBarCrossedWithBackground } from '~/components/Table/ErrorBox'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
+import { textFadeIn } from '~/theme/styles'
 
 const ChartErrorContainer = deprecatedStyled(Row)`
   position: absolute;
@@ -31,7 +31,7 @@ const ErrorTextColumn = deprecatedStyled(Column)`
   white-space: normal;
 `
 
-export function ChartErrorView({ children }: PropsWithChildren) {
+function ChartErrorView({ children }: PropsWithChildren) {
   return (
     <ChartErrorContainer data-cy="chart-error-view">
       <ChartBarCrossedWithBackground />

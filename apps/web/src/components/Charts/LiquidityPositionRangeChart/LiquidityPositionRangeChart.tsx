@@ -1,45 +1,43 @@
+/* eslint-disable max-lines */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { GraphQLApi } from '@universe/api'
-import { ActiveLiquidityChart } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
-import { BandsIndicator } from 'components/Charts/BandsIndicator/bands-indicator'
-import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
+import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
+import { useMemo, useState } from 'react'
+import { ColorTokens, Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
+import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
+import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
+import { opacify, zIndexes } from 'ui/src/theme'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import useResizeObserver from 'use-resize-observer'
+// Not using the formatters in a react context, so we need to import the formatter directly.
+// biome-ignore lint/style/noRestrictedImports: Need direct formatter import for chart formatting outside React context
+import { formatNumber } from 'utilities/src/format/localeBased'
+import { isMobileWeb } from 'utilities/src/platform'
+import { ActiveLiquidityChart } from '~/components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
+import { BandsIndicator } from '~/components/Charts/BandsIndicator/bands-indicator'
+import { cloneReadonly } from '~/components/Charts/BandsIndicator/helpers/simple-clone'
 import {
   Chart,
   ChartModel,
   ChartModelParams,
   DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
   DEFAULT_TOP_PRICE_SCALE_MARGIN,
-} from 'components/Charts/ChartModel'
-import { getCrosshairProps, priceToNumber } from 'components/Charts/LiquidityPositionRangeChart/utils'
-import { useDensityChartData } from 'components/Charts/LiquidityRangeInput/hooks'
-import { PriceChartData } from 'components/Charts/PriceChart'
-import { formatTickMarks, PriceChartType } from 'components/Charts/utils'
-import ErrorBoundary from 'components/ErrorBoundary'
-import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
-import { getPoolIdOrAddressFromCreatePositionInfo } from 'components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
-import { isOutOfRange } from 'components/Liquidity/utils/priceRangeInfo'
-import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
-import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
-import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
-import { useMemo, useState } from 'react'
-import { ColorTokens, Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
-import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
-import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
-import { opacify } from 'ui/src/theme'
-import { zIndexes } from 'ui/src/theme/zIndexes'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import useResizeObserver from 'use-resize-observer'
-
-// Not using the formatters in a react context, so we need to import the formatter directly.
-// biome-ignore lint/style/noRestrictedImports: Need direct formatter import for chart formatting outside React context
-import { formatNumber } from 'utilities/src/format/localeBased'
-import { isMobileWeb } from 'utilities/src/platform'
+} from '~/components/Charts/ChartModel'
+import { getCrosshairProps, priceToNumber } from '~/components/Charts/LiquidityPositionRangeChart/utils'
+import { useDensityChartData } from '~/components/Charts/LiquidityRangeInput/hooks'
+import { PriceChartData } from '~/components/Charts/PriceChart'
+import { DataQuality, formatTickMarks, PriceChartType } from '~/components/Charts/utils'
+import ErrorBoundary from '~/components/ErrorBoundary'
+import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
+import { getPoolIdOrAddressFromCreatePositionInfo } from '~/components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
+import { isOutOfRange } from '~/components/Liquidity/utils/priceRangeInfo'
+import { usePoolPriceChartData } from '~/hooks/usePoolPriceChartData'
 
 export const CHART_HEIGHT = 52
 export const CHART_WIDTH = 224
@@ -90,7 +88,7 @@ interface LPPriceChartModelParams extends ChartModelParams<PriceChartData> {
   disableExtendedTimeScale?: boolean
 }
 
-export class LPPriceChartModel extends ChartModel<PriceChartData> {
+class LPPriceChartModel extends ChartModel<PriceChartData> {
   protected series: ISeriesApi<'Area'>
   private rangeBandSeries?: ISeriesApi<'Line'>
   private extendedData?: PriceChartData[]
@@ -264,8 +262,8 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
     if (params.positionPriceLower !== undefined && params.positionPriceUpper !== undefined) {
       if (!this.bandIndicator) {
         this.bandIndicator = new BandsIndicator({
-          lineColor: opacify(40, params.theme.neutral1),
-          fillColor: params.theme.surface3,
+          lineColor: opacify(40, params.colors.neutral1.val),
+          fillColor: params.colors.surface3.val,
           lineWidth: 1.5,
           upperValue: this.positionRangeMax,
           lowerValue: this.positionRangeMin,
@@ -273,8 +271,8 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
         this.rangeBandSeries?.attachPrimitive(this.bandIndicator)
       } else {
         this.bandIndicator.updateOptions({
-          lineColor: opacify(10, params.theme.neutral1),
-          fillColor: params.theme.surface3,
+          lineColor: opacify(10, params.colors.neutral1.val),
+          fillColor: params.colors.surface3.val,
           lineWidth: 1,
           upperValue: this.positionRangeMax,
           lowerValue: this.positionRangeMin,

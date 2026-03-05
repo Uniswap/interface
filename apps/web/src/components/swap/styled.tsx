@@ -46,43 +46,6 @@ export const ArrowWrapper = styled(Flex, {
   },
 })
 
-// styles
-const dotsKeyframe = `
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
-    `
-
-const DotsComponent = styled(Flex, {
-  display: 'inline',
-  className: 'dots-animation',
-})
-
-export const Dots = ({ children }: { children: ReactNode }) => {
-  return (
-    <>
-      <style>{`
-      ${dotsKeyframe}
-      .dots-animation::after {
-        display: inline-block;
-        animation: ellipsis 1.25s infinite;
-        content: '.';
-        width: 1em;
-        text-align: left;
-      }`}</style>
-      <DotsComponent>{children}</DotsComponent>
-    </>
-  )
-}
-
 const SwapCallbackErrorInner = styled(Flex, {
   flexDirection: 'row',
   backgroundColor: '$statusCritical2',

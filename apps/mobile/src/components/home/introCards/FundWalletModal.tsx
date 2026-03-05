@@ -1,5 +1,5 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { PropsWithChildren, useCallback, useMemo } from 'react'
+import React, { type PropsWithChildren, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -7,12 +7,12 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, useShadowPropsShort } from 'ui/src'
+import { Flex, UniversalImage, useShadowPropsShort } from 'ui/src'
 import { ArrowDownCircle, Buy } from 'ui/src/components/icons'
+import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
-import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
+import { ActionCard, type ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePortfolioEmptyStateBackground } from 'wallet/src/components/portfolio/empty'
@@ -69,8 +69,10 @@ export function FundWalletModal(): JSX.Element {
           icon:
             cexTransferProviders.length > 0 ? (
               <OverlappingLogos
-                // biome-ignore lint/correctness/useJsxKeyInIterable: Array items are static and don't require keys
-                logos={[<ReceiveCryptoIcon />, ...cexTransferProviders.map((provider) => provider.logos.lightLogo)]}
+                logos={[
+                  <ReceiveCryptoIcon key="receive-icon" />,
+                  ...cexTransferProviders.map((provider) => provider.logos?.lightLogo ?? ''),
+                ]}
               />
             ) : (
               <ArrowDownCircle color="$accent1" size="$icon.24" />
@@ -150,14 +152,14 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       borderWidth="$spacing2"
       overflow="hidden"
     >
-      <ImageUri
-        imageStyle={{
-          borderRadius: borderRadii.rounded8,
+      <UniversalImage
+        uri={uri}
+        size={{
           height: iconSizes.icon24,
           width: iconSizes.icon24,
+          resizeMode: UniversalImageResizeMode.Cover,
         }}
-        resizeMode="cover"
-        uri={uri}
+        style={{ image: { borderRadius: borderRadii.rounded8 } }}
       />
     </Flex>
   )

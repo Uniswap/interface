@@ -1,11 +1,13 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
 import { useMemo } from 'react'
-import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { useRoutingAPIArguments } from '~/lib/hooks/routing/useRoutingAPIArguments'
+import { useGetQuoteQuery, useGetQuoteQueryState } from '~/state/routing/slice'
 import {
   ClassicTrade,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
@@ -14,9 +16,7 @@ import {
   RouterPreference,
   SubmittableTrade,
   TradeState,
-} from 'state/routing/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+} from '~/state/routing/types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined, currentData: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined, currentData: undefined } as const

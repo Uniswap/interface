@@ -6,32 +6,40 @@
 
 Before running the extension, you need to get the environment variables from 1password in order to get full functionality. Run the command `bun extension env:local:download` to copy them to your root folder.
 
+### Build Systems
+
+The extension supports two build systems during the migration from Webpack to WXT:
+
+- **WXT** (new) - Preferred for local development. Opens browser automatically.
+- **Webpack** (legacy) - Still used for production builds during the transition.
+
 ### Running the extension locally
 
-To run the extension, run the following from the top level of the monorepo:
+First, install dependencies from the top level of the monorepo:
 
 ```bash
 bun install
-bun extension start
 ```
 
-Then, load the extension into Chrome (if using Webpack):
+---
 
-1. Go to **chrome://extensions**
-2. At the top right, turn on **Developer mode**
-3. Click **Load unpacked**
-4. Find and select the extension folder (apps/extension/dev)
+#### Option 1: WXT (recommended)
 
-## Configuring WXT Browser-opening behavior
+```bash
+bun extension dev
+```
 
-To customize the default WXT behavior, create a file `web-ext.config.ts` in this directory.
+WXT automatically opens a browser window with the extension loaded.
 
-``` web-ext.config.ts
+##### Configuring WXT browser behavior
+
+To customize the browser WXT opens, create a file `web-ext.config.ts` in this directory:
+
+```ts
+// web-ext.config.ts
 import { defineWebExtConfig } from 'wxt';
 
 export default defineWebExtConfig({
-  // ...
-
   // Option 1: Connect to already running Chrome (requires Chrome to be started with --remote-debugging-port=9222)
   // chromiumPort: 9222,
 
@@ -47,38 +55,59 @@ export default defineWebExtConfig({
     // Sync with your Google account to get bookmarks, extensions, etc.
     // '--enable-sync',
   ],
-
-  // ...
 });
 ```
 
-## Running the extension locally with an absolute path (for testing scantastic)
-
-Our scantastic API requires a consistent origin header so the build must be loaded from an absolute path. This works because Chrome generates a consistent ID for the extension based on the path it was loaded from.
-
-To run the extension, run the following from the top level of the monorepo:
-
-Mac:
+##### Running WXT with absolute paths (for Scantastic testing)
 
 ```bash
-bun
+# Mac
 bun extension start:absolute
-```
 
-Windows:
-
-```bash
-bun
+# Windows
 bun extension start:absolute:windows
 ```
 
-Then, load the extension into Chrome (if using Webpack):
+---
+
+#### Option 2: Webpack (legacy)
+
+```bash
+bun extension start:webpack
+```
+
+Then manually load the extension into Chrome:
 
 1. Go to **chrome://extensions**
 2. At the top right, turn on **Developer mode**
 3. Click **Load unpacked**
-4. Find and select the extension folder with an absolute path (`/Users/Shared/stretch` on Mac and `C:/ProgramData/stretch` on Windows)
-5. Your chrome extension url should be `chrome-extension://ceofpnbcmdjbibjjdniemjemmgaibeih` on Mac and `chrome-extension://ffogefanhjekjafbpofianlhkonejcoe` on Windows. The backend allows this origin and the ID will be consistently generated based off an absolute path that is consistent on all machines.
+4. Find and select the extension folder (`apps/extension/dev`)
+
+##### Running Webpack with absolute paths (for Scantastic testing)
+
+Our Scantastic API requires a consistent origin header, so the build must be loaded from an absolute path. Chrome generates a consistent extension ID based on the path it was loaded from.
+
+```bash
+# Mac
+bun extension start:webpack:absolute
+
+# Windows
+bun extension start:webpack:absolute:windows
+```
+
+Then manually load the extension into Chrome:
+
+1. Go to **chrome://extensions**
+2. At the top right, turn on **Developer mode**
+3. Click **Load unpacked**
+4. Find and select the extension folder with an absolute path:
+   - Mac: `/Users/Shared/stretch`
+   - Windows: `C:/ProgramData/stretch`
+5. Your extension URL should be:
+   - Mac: `chrome-extension://ceofpnbcmdjbibjjdniemjemmgaibeih`
+   - Windows: `chrome-extension://ffogefanhjekjafbpofianlhkonejcoe`
+
+The backend allows these origins, and the ID is consistently generated based on the absolute path.
 
 ## Migrations
 

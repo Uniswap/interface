@@ -1,13 +1,14 @@
 import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
-import { expect, getTest } from 'playwright/fixtures'
-import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
-import { Mocks } from 'playwright/mocks/mocks'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { assume0xAddress } from 'utils/wagmi'
+import { ONE_MILLION_USDT } from '~/playwright/anvil/utils'
+import { expect, getTest } from '~/playwright/fixtures'
+import { stubLiquidityServiceEndpoint } from '~/playwright/fixtures/liquidityService'
+import { Mocks } from '~/playwright/mocks/mocks'
+import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 
@@ -22,7 +23,7 @@ test.describe(
   },
   () => {
     test('should increase liquidity of a position', async ({ page, anvil }) => {
-      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.increaseLp })
+      await stubLiquidityServiceEndpoint({ page, endpoint: LiquidityService.methods.increaseLPPosition })
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.route(
         `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
@@ -38,7 +39,7 @@ test.describe(
 
       await page.getByRole('button', { name: 'Review' }).click()
       await page.getByRole('button', { name: 'Confirm' }).click()
-      await expect(page.getByText('Approved')).toBeVisible()
+      await expect(page.getByText('Approved').first()).toBeVisible()
     })
 
     test.describe('error handling', () => {
@@ -57,17 +58,17 @@ test.describe(
 
         await page.getByRole('button', { name: 'Review' }).click()
         await page.getByRole('button', { name: 'Confirm' }).click()
-        await expect(page.getByText('Approved')).toBeVisible()
+        await expect(page.getByText('Approved').first()).toBeVisible()
 
         await expect(page.getByText('Something went wrong')).toBeVisible()
-        await expect(page.getByText('Insufficient balance for transaction cost')).toBeVisible()
+        await expect(page.getByText('Request failed')).toBeVisible()
         await expect(page.getByRole('button', { name: 'Review' })).toBeVisible()
 
         await page.getByTestId(TestID.AmountInputIn).nth(1).click()
         await page.getByTestId(TestID.AmountInputIn).nth(1).fill('2')
 
         await expect(page.getByText('Something went wrong')).not.toBeVisible()
-        await expect(page.getByText('Insufficient balance for transaction cost')).not.toBeVisible()
+        await expect(page.getByText('Request failed')).not.toBeVisible()
         await expect(page.getByRole('button', { name: 'Review' })).toBeVisible()
       })
 
@@ -79,11 +80,11 @@ test.describe(
             await route.fulfill({ path: Mocks.Positions.get_v4_position })
           },
         )
-        await stubTradingApiEndpoint({
+        await stubLiquidityServiceEndpoint({
           page,
-          endpoint: uniswapUrls.tradingApiPaths.lpApproval,
+          endpoint: LiquidityService.methods.checkLPApproval,
           modifyResponseData: (data) => {
-            return { ...data, token1Approval: null, permitData: null }
+            return { ...data, token1Approval: null, permitBatchData: null }
           },
         })
         await anvil.setErc20Allowance({ address: assume0xAddress(USDT.address), spender: PERMIT2_ADDRESS })

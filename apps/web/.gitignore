@@ -21,6 +21,7 @@
 /.swc
 /test-results
 /src/playwright-report
+anvil-test-*.log
 bundlemeta.json
 
 # builds

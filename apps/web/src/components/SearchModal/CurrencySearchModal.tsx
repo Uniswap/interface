@@ -1,6 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
 import { memo } from 'react'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import {
@@ -10,6 +8,8 @@ import {
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import { CurrencySearch } from '~/components/SearchModal/CurrencySearch'
 
 interface CurrencySearchModalProps {
   isOpen: boolean

@@ -48,7 +48,7 @@ export class ApplicationTransport extends BaseTransport implements Transport {
     }
 
     if (this.originOverride) {
-      headers.Origin = this.originOverride
+      headers['Origin'] = this.originOverride
     }
 
     if (this.appBuild) {

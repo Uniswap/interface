@@ -1,4 +1,5 @@
 /* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
+
 import { InMemoryCache, Resolvers } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
@@ -20,29 +21,31 @@ import { UrlContext } from 'uniswap/src/contexts/UrlContext'
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
 import 'uniswap/src/i18n'
 import { UniswapState, uniswapReducer } from 'uniswap/src/state/uniswapReducer'
+import { createMockFn } from 'uniswap/src/test/mockFn'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 
 export const mockUniswapContext = {
-  navigateToBuyOrReceiveWithEmptyWallet: jest.fn(),
-  navigateToFiatOnRamp: jest.fn(),
-  navigateToSwapFlow: jest.fn(),
-  navigateToSendFlow: jest.fn(),
-  navigateToReceive: jest.fn(),
-  navigateToTokenDetails: jest.fn(),
-  navigateToExternalProfile: jest.fn(),
-  navigateToNftDetails: jest.fn(),
-  navigateToNftCollection: jest.fn(),
-  navigateToPoolDetails: jest.fn(),
-  handleShareToken: jest.fn(),
-  onSwapChainsChanged: jest.fn(),
+  navigateToBuyOrReceiveWithEmptyWallet: createMockFn(),
+  navigateToFiatOnRamp: createMockFn(),
+  navigateToSwapFlow: createMockFn(),
+  navigateToSendFlow: createMockFn(),
+  navigateToReceive: createMockFn(),
+  navigateToTokenDetails: createMockFn(),
+  navigateToExternalProfile: createMockFn(),
+  navigateToNftDetails: createMockFn(),
+  navigateToNftCollection: createMockFn(),
+  navigateToPoolDetails: createMockFn(),
+  handleShareToken: createMockFn(),
+  navigateToAdvancedSettings: createMockFn(),
+  onSwapChainsChanged: createMockFn(),
   isSwapTokenSelectorOpen: false,
-  setSwapOutputChainId: jest.fn(),
-  setIsSwapTokenSelectorOpen: jest.fn(),
+  setSwapOutputChainId: createMockFn(),
+  setIsSwapTokenSelectorOpen: createMockFn(),
   signer: undefined,
-  useProviderHook: jest.fn(),
-  useWalletDisplayName: jest.fn(),
-  onConnectWallet: jest.fn(),
-  useAccountsStoreContextHook: jest.fn(),
+  useProviderHook: createMockFn(),
+  useWalletDisplayName: createMockFn(),
+  onConnectWallet: createMockFn(),
+  useAccountsStoreContextHook: createMockFn(),
 }
 
 // This type extends the default options for render from RTL, as well

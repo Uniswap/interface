@@ -28,6 +28,7 @@ type TokenBalanceListContextState = {
   refetch: (() => void) | undefined
   hiddenTokensCount: number
   hiddenTokensExpanded: boolean
+  isPortfolioBalancesLoading: boolean
   isWarmLoading: boolean
   rows: Array<TokenBalanceListRow>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
@@ -54,6 +55,7 @@ export function TokenBalanceListContextProvider({
     data: balancesById,
     networkStatus,
     refetch,
+    loading: isPortfolioBalancesLoading,
   } = usePortfolioBalances({
     evmAddress: evmOwner,
     svmAddress: svmOwner,
@@ -128,6 +130,7 @@ export function TokenBalanceListContextProvider({
       balancesById,
       hiddenTokensCount: hiddenTokens?.length ?? 0,
       hiddenTokensExpanded,
+      isPortfolioBalancesLoading,
       isWarmLoading,
       networkStatus,
       onPressToken,
@@ -141,6 +144,7 @@ export function TokenBalanceListContextProvider({
       balancesById,
       hiddenTokens?.length,
       hiddenTokensExpanded,
+      isPortfolioBalancesLoading,
       isWarmLoading,
       networkStatus,
       onPressToken,

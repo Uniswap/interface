@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Button, Flex, FlexProps, Input, InputProps, Text, TextProps, TouchableArea } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -27,7 +27,7 @@ import {
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
+import { isChrome, isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -38,13 +38,40 @@ const MAX_UNITAG_CHAR_LENGTH = 20
 const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 22
 const MAX_CHAR_PIXEL_WIDTH = 20
-const SLIDE_IN_AMOUNT = isWebPlatform ? 0 : 40
+// Because .uni.eth suffix doesn't trail username in other browsers than Chrome,
+// we don't want to slide when there's no place for that.
+const SLIDE_IN_AMOUNT = isWebPlatform && !isChrome ? 0 : 40
 
 // Used in dynamic font size width calculation to ignore `.` characters
 const UNITAG_SUFFIX_CHARS_ONLY = UNITAG_SUFFIX.replaceAll('.', '')
 
 // Accounts for height of image, gap between image and name, and spacing from top of titles
-const UNITAG_NAME_ANIMATE_DISTANCE_Y = imageSizes.image100 + spacing.spacing48 + spacing.spacing24
+const UNITAG_NAME_ANIMATE_DISTANCE_Y = imageSizes.image100 + spacing.spacing24 + spacing.spacing20
+
+const WEB_STYLING: FlexProps = isWebPlatform
+  ? {
+      backgroundColor: '$surface1',
+      borderRadius: '$rounded20',
+      borderWidth: 1,
+      borderColor: '$surface3',
+      py: '$spacing12',
+      px: '$spacing20',
+      mb: '$spacing20',
+      width: '100%',
+    }
+  : {}
+
+const SUFFIX_STYLING: TextProps & InputProps = !isWebPlatform
+  ? {
+      editable: false,
+      placeholderTextColor: '$neutral3',
+      value: UNITAG_SUFFIX,
+    }
+  : { children: UNITAG_SUFFIX }
+
+// This is a workaround for aligning a unitag suffix with a unitag name.
+// Some devices render text inside text input and text component vertically shifted.
+const SuffixComponent = !isWebPlatform ? TextInput : Text
 
 export type ClaimUnitagContentProps = {
   unitagAddress?: string
@@ -75,8 +102,8 @@ export function ClaimUnitagContent({
   const [isUnitagAvailable, setIsUnitagAvailable] = useState(false)
   const [unitagAvailableError, setUnitagAvailableError] = useState<string>()
   const [showVerificationLoading, setShowVerificationLoading] = useState(false)
-
   const [unitagNameinputMinWidth, setUnitagNameInputMinWidth] = useState<number | undefined>(undefined)
+
   const [addressError, setAddressError] = useState<string>()
 
   const addressViewOpacity = useSharedValue(1)
@@ -86,6 +113,12 @@ export function ClaimUnitagContent({
       opacity: addressViewOpacity.value,
     }
   }, [addressViewOpacity])
+
+  const unitagInputContainerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: animateY ? unitagInputContainerTranslateY.value : 0 }],
+    }
+  }, [animateY, unitagInputContainerTranslateY])
 
   const debouncedInputValue = useDebounce(unitagInputValue, VERIFICATION_DEBOUNCE_MS)
   const { error: canClaimUnitagNameError, loading: isCheckingUnitag } = useCanClaimUnitagName(
@@ -229,22 +262,8 @@ export function ClaimUnitagContent({
     }
   })
 
-  const webStyling: FlexProps = isWebPlatform
-    ? {
-        backgroundColor: '$surface1',
-        borderRadius: '$rounded20',
-        borderWidth: 1,
-        borderColor: '$surface3',
-        py: '$spacing12',
-        px: '$spacing20',
-        mb: '$spacing20',
-        width: '100%',
-        justifyContent: 'space-between',
-      }
-    : {}
-
   const getInitialUnitagNameInputWidth = (event: LayoutChangeEvent): void => {
-    if (unitagNameinputMinWidth) {
+    if (isWebPlatform || unitagNameinputMinWidth) {
       return
     }
 
@@ -252,6 +271,8 @@ export function ClaimUnitagContent({
     // Sets input minWidth to initial input width + 1 point. Initial width is not sufficient after clearing the input.
     setUnitagNameInputMinWidth(event.nativeEvent.layout.width + 1)
   }
+
+  const supportsFieldSizing = isChrome && CSS.supports('field-sizing', 'content')
 
   return (
     <>
@@ -268,7 +289,7 @@ export function ClaimUnitagContent({
           centered
           width="100%"
           height={fonts.heading2.lineHeight}
-          style={{ transform: [{ translateY: animateY ? unitagInputContainerTranslateY : 0 }] }}
+          style={unitagInputContainerAnimatedStyle}
         >
           {!showTextInputView && (
             <Flex position="absolute">
@@ -284,10 +305,13 @@ export function ClaimUnitagContent({
                 enterStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                 exitStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                 gap="$none"
-                {...webStyling}
+                {...WEB_STYLING}
               >
                 <TextInput
                   ref={textInputRef}
+                  // @ts-expect-error - field-sizing is a web CSS prop, not yet registered as a valid prop,
+                  // that allows to automatically resize the input width to the content
+                  style={supportsFieldSizing ? { fieldSizing: 'content' } : undefined}
                   autoFocus={!isMobileApp}
                   blurOnSubmit={!isWebPlatform}
                   autoCapitalize="none"
@@ -305,23 +329,24 @@ export function ClaimUnitagContent({
                   testID={TestID.WalletNameInput}
                   textAlign="left"
                   value={unitagInputValue}
-                  width={isWebPlatform ? '100%' : undefined}
-                  minWidth={unitagNameinputMinWidth}
                   allowFontScaling={false}
                   maxFontSizeMultiplier={1}
+                  minWidth={!isWebPlatform ? unitagNameinputMinWidth : undefined}
                   onChangeText={onChangeTextInput}
                   onSubmitEditing={onPressContinue}
                   onLayout={getInitialUnitagNameInputWidth}
+                  // field-sizing css prop is supported only on Chrome. On other browsers, we want to
+                  // fully expand the username TextInput to the available space.
+                  {...(isWebPlatform && !supportsFieldSizing && { flexGrow: 1 })}
                 />
                 <Flex
                   animation="lazy"
                   enterStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                   exitStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                 >
-                  {/* This is a workaround for aligning a unitag suffix with a unitag name.*/}
-                  {/* Some devices render text inside text input and text component vertically shifted.*/}
-                  <TextInput
-                    editable={false}
+                  <SuffixComponent
+                    // Value of the suffix is provided in the suffixStyling object.
+                    {...SUFFIX_STYLING}
                     borderWidth="$none"
                     borderRadius={isWebPlatform ? 0 : undefined}
                     fontFamily="$heading"
@@ -329,9 +354,7 @@ export function ClaimUnitagContent({
                     fontWeight="$book"
                     numberOfLines={1}
                     p="$none"
-                    placeholderTextColor="$neutral3"
                     textAlign="left"
-                    value={UNITAG_SUFFIX}
                     allowFontScaling={false}
                     maxFontSizeMultiplier={1}
                   />

@@ -71,8 +71,7 @@ const SettingsPageLayout = ({
                   ? '$transparent'
                   : '$neutral3'
               }
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
+              size="$icon.24"
             />
           </TouchableArea>
           <Text textAlign="center" variant="body1">

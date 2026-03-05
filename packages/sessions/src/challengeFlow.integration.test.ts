@@ -6,9 +6,11 @@ import {
   InitSessionResponse,
   SignoutResponse,
   VerifyResponse,
+  VerifySuccess,
 } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { createChallengeSolverService } from '@universe/sessions/src/challenge-solvers/createChallengeSolverService'
 import type { ChallengeSolver } from '@universe/sessions/src/challenge-solvers/types'
+import type { PerformanceTracker } from '@universe/sessions/src/performance/types'
 import {
   createSessionInitializationService,
   type SessionInitializationService,
@@ -25,6 +27,24 @@ import {
   type MockEndpoints,
 } from '@universe/sessions/src/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+// Helper: create a VerifyResponse with a success outcome (proto3 validation requires outcome.case)
+function createSuccessVerifyResponse(): VerifyResponse {
+  const response = new VerifyResponse({ retry: false })
+  response.outcome = { case: 'success', value: new VerifySuccess({}) }
+  return response
+}
+
+// Mock performance tracker for testing
+function createMockPerformanceTracker(): PerformanceTracker {
+  let time = 0
+  return {
+    now: (): number => {
+      time += 100
+      return time
+    },
+  }
+}
 
 // Mock Turnstile solver for integration tests
 const mockTurnstileSolve = vi.fn()
@@ -62,9 +82,7 @@ describe('Challenge Flow Integration Tests', () => {
         })
       },
       '/uniswap.platformservice.v1.SessionService/Verify': async (): Promise<VerifyResponse> => {
-        return new VerifyResponse({
-          retry: false,
-        })
+        return createSuccessVerifyResponse()
       },
       '/uniswap.platformservice.v1.SessionService/DeleteSession': async (): Promise<DeleteSessionResponse> => {
         return new DeleteSessionResponse({})
@@ -114,6 +132,7 @@ describe('Challenge Flow Integration Tests', () => {
     sessionInitializationService = createSessionInitializationService({
       getSessionService: () => sessionService,
       challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
       getIsSessionUpgradeAutoEnabled: () => true,
     })
   })
@@ -211,6 +230,8 @@ describe('Challenge Flow Integration Tests', () => {
       extra: {
         challengeData: '{"siteKey":"0x4AAAAAABiAHneWOWZHzZtO","action":"session_verification"}',
       },
+      challengeData: { case: undefined },
+      authorizeUrl: undefined,
     })
 
     // Verify mock solver is configured
@@ -218,38 +239,40 @@ describe('Challenge Flow Integration Tests', () => {
 
     // Simulate solving the challenge and upgrading session
     const solution = 'test-turnstile-solution-token'
-    const upgradeResponse = await sessionService.upgradeSession({
+    const upgradeResponse = await sessionService.verifySession({
       solution,
       challengeId: challengeResponse.challengeId,
+      challengeType: challengeResponse.challengeType,
     })
     expect(upgradeResponse.retry).toBe(false)
   })
 
-  it('reuses existing session without re-initialization', async () => {
-    // When the check is re-enabled, this test should pass
-
+  it('always calls initSession even with existing session - backend handles reuse', async () => {
     // Pre-populate storage with existing session
     await sessionStorage.set({ sessionId: 'existing-session-123' })
     await deviceIdService.setDeviceId('existing-device-123')
 
     // Track calls
-    const initCalls: any[] = []
-    const originalInit = mockEndpoints['/uniswap.platformservice.v1.SessionService/InitSession']
-    mockEndpoints['/uniswap.platformservice.v1.SessionService/InitSession'] = async (
-      request,
-      headers,
-    ): Promise<InitSessionResponse> => {
-      initCalls.push({ request, headers })
-      return originalInit(request, headers)
-    }
+    let initCallCount = 0
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/InitSession'] =
+      async (): Promise<InitSessionResponse> => {
+        initCallCount++
+        // Backend returns the same session ID (simulating session reuse)
+        return new InitSessionResponse({
+          sessionId: 'existing-session-123',
+          needChallenge: false,
+          extra: {},
+        })
+      }
 
-    // Initialize should skip API call
+    // Initialize should call API - backend decides whether to reuse session
+    // (in production, existing session ID is sent via X-Session-ID header)
     await sessionInitializationService.initialize()
 
-    // Verify no initialization call was made
-    expect(initCalls).toHaveLength(0)
+    // Verify initialization call was made (previously this was skipped)
+    expect(initCallCount).toBe(1)
 
-    // Verify existing session is still in storage
+    // Verify session in storage matches what backend returned
     const storedSession = await sessionStorage.get()
     expect(storedSession?.sessionId).toBe('existing-session-123')
   })
@@ -272,7 +295,7 @@ describe('Challenge Flow Integration Tests', () => {
       if (verifyAttempts === 1) {
         return new VerifyResponse({ retry: true })
       }
-      return new VerifyResponse({ retry: false })
+      return createSuccessVerifyResponse()
     }
 
     // Track challenge calls
@@ -389,5 +412,216 @@ describe('Challenge Flow Integration Tests', () => {
     // Verify only session ID was included in headers
     expect(capturedHeaders['X-Device-ID']).toBeUndefined()
     expect(capturedHeaders['X-Session-ID']).toBe('test-session-123')
+  })
+
+  it('submits empty solution when solver throws, allowing verify-retry fallback', async () => {
+    // Set up to require challenge
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/InitSession'] =
+      async (): Promise<InitSessionResponse> => {
+        return new InitSessionResponse({
+          sessionId: 'error-session-123',
+          needChallenge: true,
+          extra: {},
+        })
+      }
+
+    // Make Turnstile solver throw (e.g. domain not approved on Vercel preview)
+    mockTurnstileSolve.mockRejectedValue(new Error('Turnstile error: domain not allowed'))
+
+    // Verify endpoint accepts empty solution (no retry needed for this test)
+    const verifyCalls: Array<{ request: any }> = []
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/Verify'] = async (request): Promise<VerifyResponse> => {
+      verifyCalls.push({ request })
+      return createSuccessVerifyResponse()
+    }
+
+    const challengeSolverService = createChallengeSolverService()
+    challengeSolverService.getSolver = (type: ChallengeType): ChallengeSolver | null => {
+      if (type === ChallengeType.TURNSTILE) {
+        return { solve: mockTurnstileSolve }
+      }
+      return null
+    }
+
+    const initService = createSessionInitializationService({
+      getSessionService: () => sessionService,
+      challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
+      getIsSessionUpgradeAutoEnabled: () => true,
+    })
+
+    // Should NOT throw — empty solution is submitted instead
+    await initService.initialize()
+
+    // Solver was called once and threw
+    expect(mockTurnstileSolve).toHaveBeenCalledTimes(1)
+    // Verify was called with empty solution
+    expect(verifyCalls).toHaveLength(1)
+    expect(verifyCalls[0].request.solution).toBe('solver-failed')
+  })
+
+  it('Turnstile solver fails → empty verify → retry → Hashcash succeeds end-to-end', async () => {
+    // Set up to require challenge
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/InitSession'] =
+      async (): Promise<InitSessionResponse> => {
+        return new InitSessionResponse({
+          sessionId: 'fallback-e2e-session',
+          needChallenge: true,
+          extra: {},
+        })
+      }
+
+    // First challenge returns Turnstile, second returns Hashcash
+    let challengeRequestCount = 0
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/Challenge'] = async (): Promise<ChallengeResponse> => {
+      challengeRequestCount++
+      if (challengeRequestCount === 1) {
+        return new ChallengeResponse({
+          challengeId: 'turnstile-challenge-id',
+          challengeType: ChallengeType.TURNSTILE,
+          extra: {
+            challengeData: '{"siteKey":"0x4AAAAAABiAHneWOWZHzZtO","action":"session_verification"}',
+          },
+        })
+      }
+      return new ChallengeResponse({
+        challengeId: 'hashcash-challenge-id',
+        challengeType: ChallengeType.HASHCASH,
+        extra: {
+          challengeData: '{"difficulty":10}',
+        },
+      })
+    }
+
+    // First verify rejects empty solution, second succeeds
+    let verifyCount = 0
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/Verify'] = async (): Promise<VerifyResponse> => {
+      verifyCount++
+      if (verifyCount === 1) {
+        return new VerifyResponse({ retry: true })
+      }
+      return createSuccessVerifyResponse()
+    }
+
+    // Turnstile solver throws (domain mismatch), Hashcash solver succeeds
+    mockTurnstileSolve.mockRejectedValue(new Error('Turnstile error 110200: domain not allowed'))
+    const mockHashcashSolve = vi.fn().mockResolvedValue('hashcash-solution-token')
+
+    const challengeSolverService = createChallengeSolverService()
+    challengeSolverService.getSolver = (type: ChallengeType): ChallengeSolver | null => {
+      if (type === ChallengeType.TURNSTILE) {
+        return { solve: mockTurnstileSolve }
+      }
+      if (type === ChallengeType.HASHCASH) {
+        return { solve: mockHashcashSolve }
+      }
+      return null
+    }
+
+    const initService = createSessionInitializationService({
+      getSessionService: () => sessionService,
+      challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
+      getIsSessionUpgradeAutoEnabled: () => true,
+    })
+
+    // Full flow: Turnstile throws → empty verify → retry → Hashcash succeeds
+    await initService.initialize()
+
+    // Turnstile solver was called once (and threw)
+    expect(mockTurnstileSolve).toHaveBeenCalledTimes(1)
+    // Hashcash solver was called once (and succeeded)
+    expect(mockHashcashSolve).toHaveBeenCalledTimes(1)
+    // Two challenge requests: Turnstile then Hashcash
+    expect(challengeRequestCount).toBe(2)
+    // Two verify calls: first rejected empty solution, second accepted Hashcash
+    expect(verifyCount).toBe(2)
+
+    // Session should be stored
+    const storedSession = await sessionStorage.get()
+    expect(storedSession?.sessionId).toBe('fallback-e2e-session')
+  })
+
+  it('falls back to Hashcash via verify-retry when mock Turnstile token is rejected', async () => {
+    // Set up to require challenge
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/InitSession'] =
+      async (): Promise<InitSessionResponse> => {
+        return new InitSessionResponse({
+          sessionId: 'fallback-session-123',
+          needChallenge: true,
+          extra: {},
+        })
+      }
+
+    // First challenge returns Turnstile, second returns Hashcash
+    // (backend switches after failed verification)
+    let challengeRequestCount = 0
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/Challenge'] = async (): Promise<ChallengeResponse> => {
+      challengeRequestCount++
+      if (challengeRequestCount === 1) {
+        return new ChallengeResponse({
+          challengeId: 'turnstile-challenge-id',
+          challengeType: ChallengeType.TURNSTILE,
+          extra: {
+            challengeData: '{"siteKey":"0x4AAAAAABiAHneWOWZHzZtO","action":"session_verification"}',
+          },
+        })
+      }
+      return new ChallengeResponse({
+        challengeId: 'hashcash-challenge-id',
+        challengeType: ChallengeType.HASHCASH,
+        extra: {
+          challengeData: '{"difficulty":10}',
+        },
+      })
+    }
+
+    // First verify rejects mock token, second succeeds
+    let verifyCount = 0
+    mockEndpoints['/uniswap.platformservice.v1.SessionService/Verify'] = async (): Promise<VerifyResponse> => {
+      verifyCount++
+      if (verifyCount === 1) {
+        return new VerifyResponse({ retry: true })
+      }
+      return createSuccessVerifyResponse()
+    }
+
+    // Mock Turnstile returns a fake token (doesn't throw), Hashcash succeeds
+    const mockHashcashSolve = vi.fn().mockResolvedValue('hashcash-solution-token')
+    mockTurnstileSolve.mockResolvedValue('mock-turnstile-token')
+
+    const challengeSolverService = createChallengeSolverService()
+    challengeSolverService.getSolver = (type: ChallengeType): ChallengeSolver | null => {
+      if (type === ChallengeType.TURNSTILE) {
+        return { solve: mockTurnstileSolve }
+      }
+      if (type === ChallengeType.HASHCASH) {
+        return { solve: mockHashcashSolve }
+      }
+      return null
+    }
+
+    const initService = createSessionInitializationService({
+      getSessionService: () => sessionService,
+      challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
+      getIsSessionUpgradeAutoEnabled: () => true,
+    })
+
+    // Flow: mock Turnstile token → verify rejects → retry → backend sends Hashcash → succeeds
+    await initService.initialize()
+
+    // Mock Turnstile was called (returned fake token)
+    expect(mockTurnstileSolve).toHaveBeenCalledTimes(1)
+    // Hashcash was used as fallback after verify rejected mock token
+    expect(mockHashcashSolve).toHaveBeenCalledTimes(1)
+    // Two challenge requests (Turnstile, then Hashcash after failed verify)
+    expect(challengeRequestCount).toBe(2)
+    // Two verify calls (first rejected mock token, second accepted Hashcash)
+    expect(verifyCount).toBe(2)
+
+    // Session should be stored
+    const storedSession = await sessionStorage.get()
+    expect(storedSession?.sessionId).toBe('fallback-session-123')
   })
 })

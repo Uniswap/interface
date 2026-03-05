@@ -1,10 +1,10 @@
-import { LPSettings } from 'components/LPSettings'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Deadline } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/Deadline/Deadline'
 import { Slippage } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/Slippage/Slippage'
+import { LPSettings } from '~/components/LPSettings'
 
 export function LiquidityModalHeader({
   title,

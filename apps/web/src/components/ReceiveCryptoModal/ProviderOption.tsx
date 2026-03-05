@@ -1,17 +1,17 @@
-import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
-import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
-import { useActiveAddresses } from 'features/accounts/store/hooks'
 import { useMemo } from 'react'
-import { useAddFiatOnRampTransaction } from 'state/fiatOnRampTransactions/hooks'
-import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
+import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
 import { v4 as uuid } from 'uuid'
+import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
+import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { useAddFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/hooks'
+import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 
 interface ProviderOptionProps {
   serviceProvider: FORServiceProvider

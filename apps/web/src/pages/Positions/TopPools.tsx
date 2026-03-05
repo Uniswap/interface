@@ -1,20 +1,21 @@
-import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
-import { OrderDirection } from 'appGraphql/data/util'
 import { ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
-import { useAccount } from 'hooks/useAccount'
-import { TopPoolsSection } from 'pages/Positions/TopPoolsSection'
 import { useTranslation } from 'react-i18next'
-import { useTopPools } from 'state/explore/topPools'
 import { Flex, useMedia } from 'ui/src'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
+import { OrderDirection } from '~/appGraphql/data/util'
+import { ExternalArrowLink } from '~/components/Liquidity/ExternalArrowLink'
+import { useAccount } from '~/hooks/useAccount'
+import { ExploreTablesFilterStoreContextProvider } from '~/pages/Explore/exploreTablesFilterStore'
+import { TopPoolsSection } from '~/pages/Positions/TopPoolsSection'
+import { useTopPoolsLegacy } from '~/state/explore/topPools'
 
 const MAX_BOOSTED_POOLS = 3
 
-export function TopPools({ chainId }: { chainId: UniverseChainId | null }) {
+function TopPoolsContent({ chainId }: { chainId: UniverseChainId | null }): JSX.Element | null {
   const account = useAccount()
   const { t } = useTranslation()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
@@ -29,7 +30,7 @@ export function TopPools({ chainId }: { chainId: UniverseChainId | null }) {
     input: { chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG },
   })
 
-  const { topPools, topBoostedPools } = useTopPools({
+  const { topPools, topBoostedPools } = useTopPoolsLegacy({
     topPoolData: { data: exploreStatsData, isLoading: exploreStatsLoading, isError: !!exploreStatsError },
     sortState: { sortDirection: OrderDirection.Desc, sortBy: PoolSortFields.TVL },
   })
@@ -65,5 +66,13 @@ export function TopPools({ chainId }: { chainId: UniverseChainId | null }) {
         </Flex>
       )}
     </Flex>
+  )
+}
+
+export function TopPools(props: { chainId: UniverseChainId | null }): JSX.Element {
+  return (
+    <ExploreTablesFilterStoreContextProvider>
+      <TopPoolsContent {...props} />
+    </ExploreTablesFilterStoreContextProvider>
   )
 }

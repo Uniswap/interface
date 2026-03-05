@@ -16,6 +16,11 @@ import {
   getEncryptionKeyFromBuffer,
 } from 'wallet/src/features/wallet/Keyring/crypto'
 
+// Extend PublicKeyCredentialCreationOptions to include Chrome 128+ hints property
+interface PublicKeyCredentialCreationOptionsWithHints extends PublicKeyCredentialCreationOptions {
+  hints?: string[]
+}
+
 export function useBiometricUnlockSetupMutation(options?: {
   onSuccess?: () => void
   onError?: (error: Error) => void
@@ -136,12 +141,12 @@ async function createCredential({
         residentKey: 'required',
         userVerification: 'required',
       },
-      // @ts-expect-error - `hints` is a new property, only available in Chrome 128+.
-      // This forces the credential to use the built-in passkey instead of prompting the user where to save it.
-      hints: ['client-device'],
       pubKeyCredParams: CREDENTIAL_ALGORITHMS,
       timeout: 15 * ONE_SECOND_MS,
-    },
+      // `hints` is a new property, only available in Chrome 128+.
+      // This forces the credential to use the built-in passkey instead of prompting the user where to save it.
+      hints: ['client-device'],
+    } as PublicKeyCredentialCreationOptionsWithHints,
     signal: abortSignal,
   })
 

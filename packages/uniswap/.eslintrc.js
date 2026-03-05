@@ -7,7 +7,16 @@ module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/native', '@uniswap/eslint-config/webPlatform'],
   plugins: ['rulesdir'],
-  ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts', '.nx'],
+  ignorePatterns: [
+    'node_modules',
+    '.turbo',
+    '.eslintrc.js',
+    'codegen.ts',
+    '.nx',
+    'vitest-setup.ts',
+    'vitest.config.ts',
+    'vitest-package-mocks.ts',
+  ],
   parserOptions: {
     project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,

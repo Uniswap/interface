@@ -6,45 +6,62 @@ To access the Uniswap Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
 or visit [app.uniswap.org](https://app.uniswap.org).
 
-## Running the interface locally
+## Tech Stack
+
+- **Build**: Vite with experimental Rolldown support
+- **Deployment**: Cloudflare Workers via `@cloudflare/vite-plugin`
+- **Edge Functions**: Hono.js for SSR meta tags and OG image generation
+
+## Prerequisites
+
+- **Node.js version** - Use the version specified in `.nvmrc`. Run `nvm use` to switch.
+- **Bun** - Package manager
+- **1Password CLI** - Required for environment variables (run `bun lfg` from monorepo root for full setup)
+
+## Running Locally
 
 ```bash
 bun install
-bun web start
+bun web dev
 ```
+
+The dev server runs on port 3000 by default.
+
+Using a different port may cause CORS errors for certain Uniswap Backend services.
+
+## Development Commands
+
+| Command | Description |
+|---------|-------------|
+| `bun web dev` | Start development server |
+| `bun web build:production` | Production build |
+| `bun web preview` | Preview production build locally |
+| `bun web typecheck` | Run type checking |
+| `bun web test` | Run unit tests |
+| `bun web e2e` | Run E2E Playwright tests |
 
 ## Translations
 
 To get translations to work you'll need to set up 1Password, and then:
 
-```
+```bash
 eval $(op signin)
 ```
 
 Sign into 1Password, then:
 
-```
+```bash
 bun mobile env:local:download
 ```
 
-Which downs a `.env.defaults.local` file at the root. Finally:
+Which downloads a `.env.defaults.local` file at the root. Finally:
 
-```
+```bash
 bun web i18n:download
 ```
 
 Which will download the translations to `./apps/web/src/i18n/locales/translations`.
 
-## Accessing Uniswap V2
+## Further Documentation
 
-The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.
-
-- Swap on Uniswap V2: <https://app.uniswap.org/swap?use=v2>
-- View V2 liquidity: <https://app.uniswap.org/pools/v2>
-- Add V2 liquidity: <https://app.uniswap.org/add/v2>
-- Migrate V2 liquidity to V3: <https://app.uniswap.org/migrate/v2>
-
-## Accessing Uniswap V1
-
-The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
-linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
+See [CLAUDE.md](./CLAUDE.md) for detailed development guidance, architecture patterns, and workflows.

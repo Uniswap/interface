@@ -1,10 +1,6 @@
-import { useCurrency } from 'hooks/Tokens'
-import { SendForm, SendFormProps } from 'pages/Swap/Send/SendForm'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
-import { SendContextProvider } from 'state/send/SendContext'
-import { SwapAndLimitContext } from 'state/swap/types'
 import { Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -18,7 +14,11 @@ import {
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { noop } from 'utilities/src/react/noop'
-import { getChainIdFromChainUrlParam } from 'utils/chainParams'
+import { useCurrency } from '~/hooks/Tokens'
+import { SendForm, SendFormProps } from '~/pages/Swap/Send/SendForm'
+import { SendContextProvider } from '~/state/send/SendContext'
+import { SwapAndLimitContext } from '~/state/swap/types'
+import { getChainIdFromChainUrlParam } from '~/utils/chainParams'
 
 type SendFormModalProps = {
   isModalOpen: boolean
@@ -31,6 +31,7 @@ export function SendFormModal(props: SendFormModalProps) {
   const chainParam = searchParams.get('sendChain') ?? undefined
   const chainId = getChainIdFromChainUrlParam(chainParam)
   const inputCurrencyParam = searchParams.get('sendCurrency') ?? undefined
+  const recipientParam = searchParams.get('sendRecipient') ?? undefined
   const parsedInputCurrency = useCurrency({ address: inputCurrencyParam, chainId })
   const inputCurrency = useMemo(
     () => parsedInputCurrency ?? nativeOnChain(UniverseChainId.Mainnet),
@@ -48,7 +49,7 @@ export function SendFormModal(props: SendFormModalProps) {
           currencyState: { inputCurrency },
         }}
       >
-        <SendContextProvider>
+        <SendContextProvider initialRecipient={recipientParam}>
           <TransactionModal modalName={ModalName.Send} onClose={noop}>
             <Modal
               name={ModalName.Send}

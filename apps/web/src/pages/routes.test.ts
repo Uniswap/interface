@@ -1,9 +1,9 @@
 import fs from 'fs'
-import { findRouteByPath, routes } from 'pages/RouteDefinitions'
 import React from 'react'
 import { parseStringPromise } from 'xml2js'
+import { findRouteByPath, routes } from '~/pages/RouteDefinitions'
 
-vi.mock('pages/Swap', () => ({
+vi.mock('~/pages/Swap', () => ({
   default: () => React.createElement(React.Fragment),
 }))
 

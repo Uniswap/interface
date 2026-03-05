@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { css, deprecatedStyled, keyframes } from 'lib/styled-components'
+import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
 type RiseInProps = {
   delay?: number

@@ -1,21 +1,11 @@
 import {
   GetLPPriceDiscrepancyRequest,
   GetLPPriceDiscrepancyResponse,
-} from '@uniswap/client-trading/dist/trading/v1/api_pb'
-import { getLiquidityEventName } from 'components/Liquidity/analytics'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import {
-  getDisplayableError,
-  handleApprovalTransactionStep,
-  handleOnChainStep,
-  handlePermitTransactionStep,
-  handleSignatureStep,
-} from 'state/sagas/transactions/utils'
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import invariant from 'tiny-invariant'
 import { call, delay, spawn } from 'typed-redux-saga'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { LiquidityServiceClient } from 'uniswap/src/data/apiClients/liquidityService/LiquidityServiceClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -26,6 +16,7 @@ import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/li
 import type {
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
+  IncreasePositionTransactionStepBatched,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
 import type {
   MigratePositionTransactionStep,
@@ -48,6 +39,18 @@ import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/
 import { currencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
+import { getLiquidityEventName } from '~/components/Liquidity/analytics'
+import { getProtocols } from '~/components/Liquidity/utils/protocolVersion'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
+import {
+  getDisplayableError,
+  handleApprovalTransactionStep,
+  handleOnChainStep,
+  handlePermitTransactionStep,
+  handleSignatureStep,
+} from '~/state/sagas/transactions/utils'
 
 type LiquidityParams = {
   selectChain: (chainId: number) => Promise<boolean>
@@ -63,6 +66,7 @@ type LiquidityParams = {
   setSteps: (steps: TransactionStep[]) => void
   onSuccess: () => void
   onFailure: (e?: unknown) => void
+  disableOneClickSwap?: () => void
 }
 
 function* getLiquidityTxRequest(
@@ -178,11 +182,13 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
 
           sendAnalyticsEvent(LiquidityEventName.PriceDiscrepancyChecked, {
             ...analytics,
+            event_name: getLiquidityEventName(onChainStep.type),
             transaction_hash: hash,
             status: priceDiscrepancyResponse.status,
             sqrt_ratio_x96_before: priceDiscrepancyResponse.sqrtRatioX96Before,
             sqrt_ratio_x96_after: priceDiscrepancyResponse.sqrtRatioX96After,
             price_discrepancy: priceDiscrepancyResponse.percentPriceDifference,
+            absolute_price_discrepancy: Math.abs(Number(priceDiscrepancyResponse.percentPriceDifference)),
           })
         } catch (error) {
           // Don't break the main flow if price discrepancy call fails
@@ -197,6 +203,44 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
 }
 
+interface HandlePositionBatchedStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
+  step: IncreasePositionTransactionStepBatched
+  disableOneClickSwap?: () => void
+  action: LiquidityAction
+  analytics?:
+    | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted], 'transaction_hash'>
+    | Omit<UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted], 'transaction_hash'>
+}
+function* handlePositionTransactionBatchedStep(params: HandlePositionBatchedStepParams) {
+  const { action, step, analytics, disableOneClickSwap } = params
+
+  const info = getLiquidityTransactionInfo(action)
+
+  const batchId = yield* handleAtomicSendCalls({
+    ...params,
+    info,
+    step,
+    ignoreInterrupt: true,
+    shouldWaitForConfirmation: false,
+    disableOneClickSwap,
+  })
+
+  if (analytics) {
+    sendAnalyticsEvent(getLiquidityEventName(TransactionStepType.IncreasePositionTransaction), {
+      ...analytics,
+      transaction_hash: batchId,
+    } satisfies
+      | UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted]
+      | UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted])
+  }
+
+  popupRegistry.addPopup({ type: PopupType.Transaction, hash: batchId }, batchId)
+}
+
 function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }) {
   const {
     account,
@@ -206,6 +250,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
     onSuccess,
     onFailure,
     analytics,
+    disableOneClickSwap,
   } = params
 
   let signature: string | undefined
@@ -215,15 +260,15 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
-          yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
+          yield* call(handleApprovalTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
+          signature = yield* call(handleSignatureStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Transaction: {
-          yield* call(handlePermitTransactionStep, { account, step, setCurrentStep })
+          yield* call(handlePermitTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.IncreasePositionTransaction:
@@ -232,7 +277,24 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         case TransactionStepType.MigratePositionTransaction:
         case TransactionStepType.MigratePositionTransactionAsync:
         case TransactionStepType.CollectFeesTransactionStep:
-          yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
+          yield* call(handlePositionTransactionStep, {
+            address: account.address,
+            step,
+            setCurrentStep,
+            action,
+            signature,
+            analytics,
+          })
+          break
+        case TransactionStepType.IncreasePositionTransactionBatched:
+          yield* call(handlePositionTransactionBatchedStep, {
+            address: account.address,
+            step,
+            setCurrentStep,
+            action,
+            analytics,
+            disableOneClickSwap,
+          })
           break
         default: {
           throw new Error('Unexpected step type')
@@ -242,7 +304,13 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
       const displayableError = getDisplayableError({ error: e, step, flow: 'liquidity' })
 
       if (displayableError) {
-        logger.error(displayableError, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' } })
+        logger.error(displayableError, {
+          tags: { file: 'liquiditySaga', function: 'modifyLiquidity' },
+          extra: {
+            canBatchTransactions: params.liquidityTxContext.canBatchTransactions,
+            delegatedAddress: params.liquidityTxContext.delegatedAddress,
+          },
+        })
         onFailure(e)
       } else {
         onFailure()
@@ -348,7 +416,7 @@ function* pollForLPPriceDiscrepancy(params: {
   while (attempt < maxAttempts) {
     try {
       const priceDiscrepancyResponse: GetLPPriceDiscrepancyResponse = yield* call(
-        TradingApiClient.getLPPriceDiscrepancy,
+        LiquidityServiceClient.getLPPriceDiscrepancy,
         new GetLPPriceDiscrepancyRequest({
           txnHash: hash,
           chainId,
@@ -360,8 +428,7 @@ function* pollForLPPriceDiscrepancy(params: {
           fee: analytics.fee_tier,
           hooks: analytics.hook,
           sqrtRatioX96,
-          // @ts-expect-error endpoint excepts a string
-          protocol: analytics.type,
+          protocol: getProtocols(analytics.protocol_version),
         }),
       )
 

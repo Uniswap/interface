@@ -20,6 +20,8 @@ export function WrapTransactionStepRow({
     [StepStatus.Active]: t('common.wrapIn', { symbol }),
     [StepStatus.InProgress]: t('common.wrappingToken', { symbol }),
     [StepStatus.Preview]: t('common.wrap', { symbol }),
+    [StepStatus.Failed]: t('common.wrap', { symbol }),
+    [StepStatus.Replaced]: t('common.wrap', { symbol }),
     [StepStatus.Complete]: t('common.wrap', { symbol }),
   }[status]
 

@@ -9,18 +9,6 @@ jest.mock('src/components/modals/useReactNavigationModal', () => ({
   useReactNavigationModal: jest.fn(),
 }))
 
-jest.mock('@gorhom/bottom-sheet', () => {
-  const reactNative = jest.requireActual('react-native')
-  const { View } = reactNative
-  return {
-    __esModule: true,
-    default: View,
-    BottomSheetModal: View,
-    BottomSheetModalProvider: View,
-    BottomSheetView: View,
-  }
-})
-
 describe('PrivateKeySpeedBumpModal', () => {
   const mockPreventCloseRef = { current: false }
   const mockNavigation = { navigate: jest.fn() }

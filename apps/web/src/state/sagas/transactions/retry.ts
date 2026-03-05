@@ -1,7 +1,7 @@
-import { useSetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 
 type OnPressRetryFn = () => void
 
@@ -11,7 +11,11 @@ function createGetOnPressRetry(ctx: {
 }): (error: Error | undefined) => OnPressRetryFn | undefined {
   return function onPressRetry(error: Error | undefined) {
     if (error instanceof TransactionStepFailedError) {
-      if (error.step.type === TransactionStepType.SwapTransactionBatched) {
+      // Only show batched-specific retry UI if the first step failed
+      // Handles scenarios where plan cannot disable one-click swap beyond first step.
+      const shouldDisableOneClickSwap = !error.stepIndex || error.stepIndex === 0
+
+      if (error.step.type === TransactionStepType.SwapTransactionBatched && shouldDisableOneClickSwap) {
         return ctx.disableOneClickSwap
       }
     }

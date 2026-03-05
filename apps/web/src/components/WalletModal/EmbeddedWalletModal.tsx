@@ -1,9 +1,9 @@
-import { DownloadHeader } from 'components/WalletModal/DownloadHeader'
-import { WalletModalLayout } from 'components/WalletModal/WalletModalLayout'
-import { WalletOptionsGrid } from 'components/WalletModal/WalletOptionsGrid'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
+import { DownloadHeader } from '~/components/WalletModal/DownloadHeader'
+import { WalletModalLayout } from '~/components/WalletModal/WalletModalLayout'
+import { WalletOptionsGrid } from '~/components/WalletModal/WalletOptionsGrid'
 
 export function EmbeddedWalletModal(): JSX.Element {
   const { t } = useTranslation()

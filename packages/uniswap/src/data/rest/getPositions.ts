@@ -1,48 +1,65 @@
 import { PartialMessage } from '@bufbuild/protobuf'
-import { ConnectError } from '@connectrpc/connect'
-import { createQueryOptions, useInfiniteQuery, useQuery } from '@connectrpc/connect-query'
+import { ConnectError, createPromiseClient } from '@connectrpc/connect'
 import {
   InfiniteData,
+  infiniteQueryOptions,
   keepPreviousData,
+  queryOptions,
   UseInfiniteQueryResult,
   UseQueryResult,
+  useInfiniteQuery,
   useQueries,
+  useQuery,
 } from '@tanstack/react-query'
+import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import {
+  GetPositionRequest,
   GetPositionResponse,
   ListPositionsRequest,
   ListPositionsResponse,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { getPosition, listPositions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
 import { deserializeToken } from 'uniswap/src/utils/currency'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+
+const positionsClient = createPromiseClient(DataApiService, uniswapPostTransport)
 
 export function useGetPositionsQuery(
   input?: PartialMessage<ListPositionsRequest>,
   disabled?: boolean,
 ): UseQueryResult<ListPositionsResponse, ConnectError> {
-  return useQuery(listPositions, input, {
-    transport: uniswapPostTransport,
-    enabled: !!input && !disabled,
-    placeholderData: keepPreviousData,
-  })
+  return useQuery(
+    queryOptions({
+      queryKey: [ReactQueryCacheKey.ListPositions, input] as const,
+      queryFn: () => positionsClient.listPositions(input ?? {}),
+      enabled: !!input && !disabled,
+      placeholderData: keepPreviousData,
+    }),
+  )
 }
 
 export function useGetPositionsInfiniteQuery(
-  input: PartialMessage<ListPositionsRequest> & { pageToken: string },
+  input: PartialMessage<ListPositionsRequest>,
   disabled?: boolean,
 ): UseInfiniteQueryResult<InfiniteData<ListPositionsResponse>, ConnectError> {
-  return useInfiniteQuery(listPositions, input, {
-    transport: uniswapPostTransport,
-    enabled: !disabled,
-    pageParamKey: 'pageToken',
-    getNextPageParam: (lastPage) => lastPage.nextPageToken,
-    placeholderData: keepPreviousData,
-  })
+  return useInfiniteQuery(
+    infiniteQueryOptions({
+      queryKey: [ReactQueryCacheKey.ListPositions, 'infinite', input] as const,
+      queryFn: ({ pageParam }: { pageParam?: string }) =>
+        positionsClient.listPositions({
+          ...input,
+          pageToken: pageParam,
+        }),
+      initialPageParam: undefined,
+      getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
+      enabled: !disabled,
+      placeholderData: keepPreviousData,
+    }),
+  )
 }
 
 export function useGetPositionsForPairs(
@@ -67,18 +84,20 @@ export function useGetPositionsForPairs(
           }
           const [token0, token1] = [deserializeToken(pair.token0), deserializeToken(pair.token1)]
           const pairAddress = Pair.getAddress(token0, token1)
-          return createQueryOptions(
-            getPosition,
-            account
-              ? {
-                  chainId: Number(chainId),
-                  protocolVersion: ProtocolVersion.V2,
-                  pairAddress,
-                  owner: account,
-                }
-              : undefined,
-            { transport: uniswapPostTransport },
-          )
+          const requestInput: PartialMessage<GetPositionRequest> | undefined = account
+            ? {
+                chainId: Number(chainId),
+                protocolVersion: ProtocolVersion.V2,
+                pairAddress,
+                owner: account,
+              }
+            : undefined
+
+          return queryOptions({
+            queryKey: [ReactQueryCacheKey.GetPosition, requestInput] as const,
+            queryFn: () => positionsClient.getPosition(requestInput ?? {}),
+            enabled: !!requestInput,
+          })
         })
       })
       .filter(isDefined)

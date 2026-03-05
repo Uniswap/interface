@@ -1,17 +1,17 @@
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PermitSingle, permit2Address } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useAccount } from 'hooks/useAccount'
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useTriggerOnTransactionType } from 'hooks/useTriggerOnTransactionType'
 import ms from 'ms'
 import { useCallback, useMemo, useRef } from 'react'
 import { PERMIT2_ABI } from 'uniswap/src/abis/permit2'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { toReadableError, UserRejectedRequestError } from 'utils/errors'
-import { signTypedData } from 'utils/signing'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { assume0xAddress } from 'utils/wagmi'
 import { useReadContract } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
+import { useEthersSigner } from '~/hooks/useEthersSigner'
+import { useTriggerOnTransactionType } from '~/hooks/useTriggerOnTransactionType'
+import { toReadableError, UserRejectedRequestError } from '~/utils/errors'
+import { signTypedData } from '~/utils/signing'
+import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
+import { assume0xAddress } from '~/utils/wagmi'
 
 const PERMIT_EXPIRATION = ms(`30d`)
 const PERMIT_SIG_EXPIRATION = ms(`30m`)
@@ -32,6 +32,7 @@ export function usePermitAllowance({ token, owner, spender }: { token?: Token; o
   })
   // Permit allowance is updated on chain when a swap is confirmed including a permit signature; we refetch permit allowance when a swap is confirmed
   useTriggerOnTransactionType(TransactionType.Swap, refetchAllowance)
+  useTriggerOnTransactionType(TransactionType.Permit2Approve, refetchAllowance)
 
   return useMemo(() => {
     if (!data) {

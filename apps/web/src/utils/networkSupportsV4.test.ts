@@ -1,5 +1,5 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
+import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 describe('isV4UnsupportedChain', () => {
   it('returns true for Zksync', () => {
@@ -17,6 +17,7 @@ describe('isV4UnsupportedChain', () => {
     UniverseChainId.Optimism,
     UniverseChainId.Polygon,
     UniverseChainId.Soneium,
+    UniverseChainId.XLayer,
     UniverseChainId.Unichain,
     UniverseChainId.Zora,
   ])('returns false for other chains', (chainId) => {

@@ -45,6 +45,10 @@ function useCurrencyInfoQuery(
           copyCommonBase.logoUrl = queryResult.data.token.project.logoUrl
         }
         copyCommonBase.currencyId = _currencyId
+
+        // Local common base object will not have remote project id, so we add it here.
+        copyCommonBase.projectId = queryResult.data?.token?.project?.id
+
         return copyCommonBase
       }
     }

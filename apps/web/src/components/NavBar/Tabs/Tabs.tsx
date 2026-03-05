@@ -1,11 +1,10 @@
-import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdown/index'
-import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router'
 import { Flex, Popover, styled, Text } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { NavDropdown, NavDropdownTabWrapper } from '~/components/NavBar/NavDropdown/index'
+import { TabsItem, TabsSection, useTabsContent } from '~/components/NavBar/Tabs/TabsContent'
 
 const TabText = styled(Text, {
   justifyContent: 'center',
@@ -28,39 +27,31 @@ interface TItemProps {
   label: string
   path: string
   closeMenu: () => void
-  elementName?: ElementName
+  elementName: ElementName
 }
 function Item({ icon, label, path, closeMenu, elementName }: TItemProps) {
-  const content = (
-    <NavLink to={path} style={{ textDecoration: 'none' }} onClick={closeMenu}>
-      <Flex
-        row
-        alignItems="center"
-        p="$padding12"
-        gap="$gap8"
-        alignSelf="stretch"
-        borderRadius="$rounded12"
-        backgroundColor="$surface2"
-        height="$spacing48"
-        hoverStyle={{ backgroundColor: '$surface2Hovered' }}
-      >
-        {icon}
-        <Text variant="buttonLabel2" width="100%" color="$neutral2">
-          {label}
-        </Text>
-      </Flex>
-    </NavLink>
+  return (
+    <Trace logPress element={elementName}>
+      <NavLink to={path} style={{ textDecoration: 'none' }} onClick={closeMenu}>
+        <Flex
+          row
+          alignItems="center"
+          p="$padding12"
+          gap="$gap8"
+          alignSelf="stretch"
+          borderRadius="$rounded12"
+          backgroundColor="$surface2"
+          height="$spacing48"
+          hoverStyle={{ backgroundColor: '$surface2Hovered' }}
+        >
+          {icon}
+          <Text variant="buttonLabel2" width="100%" color="$neutral2">
+            {label}
+          </Text>
+        </Flex>
+      </NavLink>
+    </Trace>
   )
-
-  if (elementName) {
-    return (
-      <Trace logPress element={elementName}>
-        {content}
-      </Trace>
-    )
-  }
-
-  return content
 }
 
 const Tab = ({
@@ -68,13 +59,14 @@ const Tab = ({
   isActive,
   path,
   items,
+  elementName,
 }: {
   label: string
   isActive?: boolean
   path: string
   items?: TabsItem[]
+  elementName: ElementName
 }) => {
-  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<Popover>(null)
   const location = useLocation()
@@ -86,22 +78,14 @@ const Tab = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: location dependency is sufficient for this effect
   useEffect(() => closeMenu(), [location, closeMenu])
 
-  const isPortfolioTab = label === t('common.portfolio')
-  const labelContent = (
-    <NavLink to={path} style={{ textDecoration: 'none' }}>
-      <TabText variant="subheading1" isActive={isActive || isOpen}>
-        {label}
-      </TabText>
-    </NavLink>
-  )
-
-  // TODO: add tracing for other tabs
-  const Label = isPortfolioTab ? (
-    <Trace logPress element={ElementName.NavbarPortfolioTab}>
-      {labelContent}
+  const Label = (
+    <Trace logPress element={elementName}>
+      <NavLink to={path} style={{ textDecoration: 'none' }}>
+        <TabText variant="subheading1" isActive={isActive || isOpen}>
+          {label}
+        </TabText>
+      </NavLink>
     </Trace>
-  ) : (
-    labelContent
   )
 
   if (!items) {
@@ -144,8 +128,15 @@ export function Tabs() {
   const tabsContent: TabsSection[] = useTabsContent()
   return (
     <>
-      {tabsContent.map(({ title, isActive, href, items }, index) => (
-        <Tab key={`${title}_${index}`} label={title} isActive={isActive} path={href} items={items} />
+      {tabsContent.map(({ title, isActive, href, items, elementName }, index) => (
+        <Tab
+          key={`${title}_${index}`}
+          label={title}
+          isActive={isActive}
+          path={href}
+          items={items}
+          elementName={elementName}
+        />
       ))}
     </>
   )

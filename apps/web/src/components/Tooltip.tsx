@@ -1,9 +1,9 @@
-import Popover, { PopoverProps } from 'components/Popover'
-import { deprecatedStyled } from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { Fragment, memo, PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { Flex } from 'ui/src'
 import { noop } from 'utilities/src/react/noop'
+import Popover, { PopoverProps } from '~/components/Popover'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 export enum TooltipSize {
   ExtraSmall = '200px',

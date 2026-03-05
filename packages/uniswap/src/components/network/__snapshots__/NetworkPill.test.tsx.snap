@@ -1,139 +1,76 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NetworkPill renders a NetworkPill with border 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "backgroundColor": "#FFFFFF1a",
-      "borderBottomLeftRadius": 999999,
-      "borderBottomRightRadius": 999999,
-      "borderBottomWidth": 1,
-      "borderColor": "#FFFFFF",
-      "borderLeftWidth": 1,
-      "borderRightWidth": 1,
-      "borderStyle": "solid",
-      "borderTopLeftRadius": 999999,
-      "borderTopRightRadius": 999999,
-      "borderTopWidth": 1,
-      "flexDirection": "row",
-      "gap": 8,
-      "justifyContent": "center",
-      "paddingBottom": 8,
-      "paddingLeft": 4,
-      "paddingRight": 4,
-      "paddingTop": 8,
-    }
-  }
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 22.1,
-        "paddingTop": 1,
-      }
-    }
-    suppressHighlighting={true}
+exports[`NetworkPill > renders a NetworkPill with border 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    Ethereum
-  </Text>
-</View>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa94665589 _pl-t-space-spa94665589 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      style="background-color: rgba(255, 255, 255, 0.102); border-color: #ffffff;"
+    >
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+        data-disable-theme="true"
+        style="color: rgb(255, 255, 255); padding-top: 1px;"
+      >
+        Ethereum
+      </span>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`NetworkPill renders a NetworkPill without image 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "backgroundColor": "#FFFFFF1a",
-      "borderBottomLeftRadius": 999999,
-      "borderBottomRightRadius": 999999,
-      "borderBottomWidth": 1,
-      "borderColor": "transparent",
-      "borderLeftWidth": 1,
-      "borderRightWidth": 1,
-      "borderStyle": "solid",
-      "borderTopLeftRadius": 999999,
-      "borderTopRightRadius": 999999,
-      "borderTopWidth": 1,
-      "flexDirection": "row",
-      "gap": 8,
-      "justifyContent": "center",
-      "paddingBottom": 8,
-      "paddingLeft": 4,
-      "paddingRight": 4,
-      "paddingTop": 8,
-    }
-  }
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "400",
-        "lineHeight": 22.1,
-        "paddingTop": 1,
-      }
-    }
-    suppressHighlighting={true}
+exports[`NetworkPill > renders a NetworkPill without image 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    Ethereum
-  </Text>
-</View>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa94665589 _pl-t-space-spa94665589 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      style="background-color: rgba(255, 255, 255, 0.102); border-color: transparent;"
+    >
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+        data-disable-theme="true"
+        style="color: rgb(255, 255, 255); padding-top: 1px;"
+      >
+        Ethereum
+      </span>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`NetworkPill renders an InlineNetworkPill 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "backgroundColor": "#FFFFFF1a",
-      "borderBottomLeftRadius": 8,
-      "borderBottomRightRadius": 8,
-      "borderBottomWidth": 1,
-      "borderColor": "transparent",
-      "borderLeftWidth": 1,
-      "borderRightWidth": 1,
-      "borderStyle": "solid",
-      "borderTopLeftRadius": 8,
-      "borderTopRightRadius": 8,
-      "borderTopWidth": 1,
-      "flexDirection": "row",
-      "gap": 8,
-      "justifyContent": "center",
-      "paddingBottom": 0,
-      "paddingLeft": 4,
-      "paddingRight": 4,
-      "paddingTop": 0,
-    }
-  }
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.2}
-    style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 15,
-        "fontWeight": "500",
-        "lineHeight": 17.25,
-        "paddingTop": 1,
-      }
-    }
-    suppressHighlighting={true}
+exports[`NetworkPill > renders an InlineNetworkPill 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    Ethereum
-  </Text>
-</View>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa94665589 _pl-t-space-spa94665589 _pt-t-space-non101 _pb-t-space-non101 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      style="background-color: rgba(255, 255, 255, 0.102); border-color: transparent;"
+    >
+      <span
+        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+        data-disable-theme="true"
+        style="color: rgb(255, 255, 255); padding-top: 1px;"
+      >
+        Ethereum
+      </span>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

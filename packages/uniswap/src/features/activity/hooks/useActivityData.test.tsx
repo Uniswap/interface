@@ -6,20 +6,21 @@ import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/act
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
+import type { MockedFunction } from 'vitest'
 
 // Mock dependencies
-jest.mock('./useFormattedTransactionDataForActivity')
-jest.mock('uniswap/src/features/settings/hooks')
+vi.mock('./useFormattedTransactionDataForActivity')
+vi.mock('uniswap/src/features/settings/hooks')
 
-const mockUseFormattedTransactionDataForActivity = useFormattedTransactionDataForActivity as jest.MockedFunction<
+const mockUseFormattedTransactionDataForActivity = useFormattedTransactionDataForActivity as MockedFunction<
   typeof useFormattedTransactionDataForActivity
 >
-const mockUseHideSpamTokensSetting = useHideSpamTokensSetting as jest.MockedFunction<typeof useHideSpamTokensSetting>
+const mockUseHideSpamTokensSetting = useHideSpamTokensSetting as MockedFunction<typeof useHideSpamTokensSetting>
 
 describe('useActivityData', () => {
   const mockOwnerAddresses = ['0x123']
   const mockFiatOnRampParams = undefined
-  const mockKeyExtractor = jest.fn((item: ActivityItem): string => {
+  const mockKeyExtractor = vi.fn((item: ActivityItem): string => {
     if (isLoadingItem(item)) {
       return `loading-${item.id}`
     }
@@ -29,8 +30,8 @@ describe('useActivityData', () => {
     // item is TransactionDetails
     return item.id
   })
-  const mockFetchNextPage = jest.fn()
-  const mockOnRetry = jest.fn().mockResolvedValue(undefined)
+  const mockFetchNextPage = vi.fn()
+  const mockOnRetry = vi.fn().mockResolvedValue(undefined)
 
   const createMockTransaction = (id: string, type: TransactionType = TransactionType.Send): TransactionDetails =>
     ({
@@ -44,9 +45,9 @@ describe('useActivityData', () => {
   const mockTransaction = createMockTransaction('test-tx-1')
 
   const mockSwapCallbacks: SwapSummaryCallbacks = {
-    useLatestSwapTransaction: jest.fn(),
-    useSwapFormTransactionState: jest.fn(),
-    onRetryGenerator: jest.fn(),
+    useLatestSwapTransaction: vi.fn(),
+    useSwapFormTransactionState: vi.fn(),
+    onRetryGenerator: vi.fn(),
   }
 
   const baseProps: UseActivityDataProps = {
@@ -55,7 +56,7 @@ describe('useActivityData', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseHideSpamTokensSetting.mockReturnValue(false)
     mockUseFormattedTransactionDataForActivity.mockReturnValue({
       isLoading: false,
@@ -431,7 +432,7 @@ describe('useActivityData', () => {
     })
 
     it('should handle onPressEmptyState callback', () => {
-      const mockOnPressEmptyState = jest.fn()
+      const mockOnPressEmptyState = vi.fn()
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
         isFetching: false,

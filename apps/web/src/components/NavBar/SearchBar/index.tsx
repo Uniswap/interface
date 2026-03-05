@@ -1,21 +1,22 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { NavIcon } from 'components/NavBar/NavIcon'
-import { SearchModal } from 'components/NavBar/SearchBar/SearchModal'
-import { useIsSearchBarVisible } from 'components/NavBar/SearchBar/useIsSearchBarVisible'
-import { useModalState } from 'hooks/useModalState'
-import styled, { useTheme } from 'lib/styled-components'
-import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import { Search } from 'ui/src/components/icons/Search'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { NavIcon } from '~/components/NavBar/NavIcon'
+import { SearchModal } from '~/components/NavBar/SearchBar/SearchModal'
+import { useIsSearchBarVisible } from '~/components/NavBar/SearchBar/useIsSearchBarVisible'
+import { useModalState } from '~/hooks/useModalState'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const NAV_SEARCH_MIN_WIDTH = '340px'
 
-const KeyShortcut = styled.div`
+const KeyShortcut = deprecatedStyled.div`
   background-color: ${({ theme }) => theme.surface3};
   color: ${({ theme }) => theme.neutral2};
   padding: 0px 8px;
@@ -32,17 +33,14 @@ const KeyShortcut = styled.div`
   backdrop-filter: blur(60px);
 `
 
-const SearchIcon = styled.div`
+const SearchIcon = deprecatedStyled.div`
   width: 20px;
   height: 20px;
 `
 
 export const SearchBar = () => {
-  const poolSearchEnabled = useFeatureFlag(FeatureFlags.PoolSearch)
+  const { t } = useTranslation()
   const isNavSearchInputVisible = useIsSearchBarVisible()
-
-  const theme = useTheme()
-  const { t } = useTranslation() // subscribe to locale changes
 
   const {
     isOpen: isModalOpen,
@@ -69,7 +67,7 @@ export const SearchBar = () => {
 
   const trace = useTrace({ section: SectionName.NavbarSearch })
 
-  const placeholderText = poolSearchEnabled ? t('search.input.placeholder') : t('tokens.selector.search.placeholder')
+  const placeholderText = t('search.input.placeholder.withWallets')
 
   return (
     <Trace section={SectionName.NavbarSearch}>
@@ -91,9 +89,9 @@ export const SearchBar = () => {
               backgroundColor: '$surface1Hovered',
             }}
           >
-            <Flex row gap="$spacing12">
-              <SearchIcon data-cy="nav-search-icon">
-                <Search width="20px" height="20px" color={theme.neutral2} />
+            <Flex shrink row gap="$spacing12">
+              <SearchIcon data-testid={TestID.NavSearchIcon}>
+                <Search size="$icon.20" color="$neutral2" />
               </SearchIcon>
               <Trace
                 logFocus
@@ -101,7 +99,7 @@ export const SearchBar = () => {
                 element={ElementName.NavbarSearchInput}
                 properties={{ ...trace }}
               >
-                <Text fontWeight="$book" color="$neutral2" textAlign="left">
+                <Text fontWeight="$book" color="$neutral2" textAlign="left" {...EllipsisTamaguiStyle}>
                   {placeholderText}
                 </Text>
               </Trace>
@@ -111,8 +109,8 @@ export const SearchBar = () => {
         </TouchableArea>
       ) : (
         <NavIcon onClick={openSearchModal} label={placeholderText}>
-          <SearchIcon data-cy="nav-search-icon">
-            <Search width="20px" height="20px" color={theme.neutral2} />
+          <SearchIcon data-testid={TestID.NavSearchIcon}>
+            <Search size="$icon.20" color="$neutral2" />
           </SearchIcon>
         </NavIcon>
       )}

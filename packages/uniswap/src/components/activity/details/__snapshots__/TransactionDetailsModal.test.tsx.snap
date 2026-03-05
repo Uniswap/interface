@@ -1,1108 +1,385 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TransactionDetails Components renders TransactionDetailsContent without error 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "column",
-    }
-  }
->
-  <View
-    collapsable={false}
-    focusVisibleStyle={{}}
-    forwardedRef={[Function]}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
-      ]
-    }
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onLayout={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    role="button"
-    style={
-      [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
-        {},
-      ]
-    }
+exports[`TransactionDetails Components > renders TransactionDetailsContent without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "column",
-          "gap": 8,
-          "justifyContent": "center",
-          "paddingBottom": 32,
-          "paddingLeft": 32,
-          "paddingRight": 32,
-          "paddingTop": 32,
-        }
-      }
-    >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
-        style={
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 25,
-            "fontWeight": "400",
-            "lineHeight": 30,
-          }
-        }
-        suppressHighlighting={true}
-      />
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "gap": 8,
-            "justifyContent": "center",
-          }
-        }
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            {
-              "color": "rgba(255, 255, 255, 0.65)",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 17,
-              "fontWeight": "400",
-              "lineHeight": 22.1,
-            }
-          }
-          suppressHighlighting={true}
-        />
-      </View>
-    </View>
-  </View>
-</View>
-`;
-
-exports[`TransactionDetails Components renders TransactionDetailsHeader without error 1`] = `
-<View
-  style={
-    {
-      "alignItems": "center",
-      "flexDirection": "row",
-      "justifyContent": "space-between",
-    }
-  }
->
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "flexShrink": 1,
-        "gap": 12,
-        "justifyContent": "center",
-      }
-    }
-  >
-    <View
-      style={
-        {
-          "flexDirection": "column",
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "column",
-            "height": 40,
-            "justifyContent": "center",
-            "width": 40,
-          }
-        }
-      >
-        <View
-          style={
-            {
-              "bottom": -4,
-              "flexDirection": "column",
-              "position": "absolute",
-              "right": -4,
-              "zIndex": 10,
-            }
-          }
-        >
-          <View
-            style={
-              {
-                "borderColor": "#131313",
-                "borderRadius": 5.76,
-                "borderStyle": "solid",
-                "borderWidth": 1.6,
-                "flexDirection": "column",
-                "height": 19.2,
-                "overflow": "hidden",
-                "width": 19.2,
-                "zIndex": 10,
-              }
-            }
-            testID="network-logo"
-          >
-            <Image
-              resizeMode="contain"
-              source="mock-asset-BLAST_LOGO.png"
-              style={
-                {
-                  "height": 16,
-                  "width": 16,
-                }
-              }
-            />
-          </View>
-        </View>
-      </View>
-    </View>
-    <View
-      style={
-        {
-          "flexDirection": "column",
-          "flexShrink": 1,
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "gap": 4,
-            "justifyContent": "flex-start",
-          }
-        }
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 17,
-              "fontWeight": "400",
-              "lineHeight": 22.1,
-            }
-          }
-          suppressHighlighting={true}
-        >
-          Approved
-        </Text>
-      </View>
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": "rgba(255, 255, 255, 0.65)",
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 13,
-            "fontWeight": "400",
-            "lineHeight": 16,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        January 1, 2023 12:00 AM
-      </Text>
-    </View>
-  </View>
-  <View>
-    <View
-      aria-expanded={false}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <div
-        ref={
-          {
-            "current": null,
-          }
-        }
+        class="is_TouchableArea  t_group_true"
+        role="button"
+        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+        tabindex="0"
       >
-        <View
-          collapsable={false}
-          focusVisibleStyle={{}}
-          forwardedRef={[Function]}
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
-          }
-          jestInlineStyle={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderBottomLeftRadius": 999999,
-                "borderBottomRightRadius": 999999,
-                "borderTopLeftRadius": 999999,
-                "borderTopRightRadius": 999999,
-                "flexDirection": "column",
-                "opacity": 1,
-                "paddingBottom": 4,
-                "paddingLeft": 4,
-                "paddingRight": 4,
-                "paddingTop": 4,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
-          }
-          onBlur={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onLayout={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
-          role="button"
-          style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderBottomLeftRadius": 999999,
-                "borderBottomRightRadius": 999999,
-                "borderTopLeftRadius": 999999,
-                "borderTopRightRadius": 999999,
-                "flexDirection": "column",
-                "opacity": 1,
-                "paddingBottom": 4,
-                "paddingLeft": 4,
-                "paddingRight": 4,
-                "paddingTop": 4,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-              {},
-            ]
-          }
+        <div
+          class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-spa1360334018 _pr-t-space-spa1360334018 _pb-t-space-spa1360334018 _pl-t-space-spa1360334018 _color-accent3"
         >
-          <RNSVGSvgView
-            align="xMidYMid"
-            bbHeight={20}
-            bbWidth={20}
-            fill="none"
-            focusable={false}
-            meetOrSlice={0}
-            minX={0}
-            minY={0}
-            strokeWidth={8}
-            style={
-              [
-                {
-                  "backgroundColor": "transparent",
-                  "borderWidth": 0,
-                },
-                {
-                  "color": "rgba(255, 255, 255, 0.65)",
-                  "height": 20,
-                  "width": 20,
-                },
-                {
-                  "flex": 0,
-                  "height": 20,
-                  "width": 20,
-                },
-              ]
-            }
-            vbHeight={4}
-            vbWidth={18}
+          <h3
+            class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            data-disable-theme="true"
+          />
+          <div
+            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593"
           >
-            <RNSVGGroup
-              color="rgba(255, 255, 255, 0.65)"
-              fill={null}
-              propList={
-                [
-                  "fill",
-                  "strokeWidth",
-                ]
-              }
-              strokeWidth={8}
-            >
-              <RNSVGPath
-                d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
-                fill={
-                  {
-                    "payload": 4278190080,
-                    "type": 0,
-                  }
-                }
-                propList={
-                  [
-                    "stroke",
-                    "strokeWidth",
-                    "strokeLinecap",
-                    "strokeLinejoin",
-                  ]
-                }
-                stroke={
-                  {
-                    "type": 2,
-                  }
-                }
-                strokeLinecap={1}
-                strokeLinejoin={1}
-                strokeWidth="2"
-              />
-              <RNSVGPath
-                d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
-                fill={
-                  {
-                    "payload": 4278190080,
-                    "type": 0,
-                  }
-                }
-                propList={
-                  [
-                    "stroke",
-                    "strokeWidth",
-                    "strokeLinecap",
-                    "strokeLinejoin",
-                  ]
-                }
-                stroke={
-                  {
-                    "type": 2,
-                  }
-                }
-                strokeLinecap={1}
-                strokeLinejoin={1}
-                strokeWidth="2"
-              />
-              <RNSVGPath
-                d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
-                fill={
-                  {
-                    "payload": 4278190080,
-                    "type": 0,
-                  }
-                }
-                propList={
-                  [
-                    "stroke",
-                    "strokeWidth",
-                    "strokeLinecap",
-                    "strokeLinejoin",
-                  ]
-                }
-                stroke={
-                  {
-                    "type": 2,
-                  }
-                }
-                strokeLinecap={1}
-                strokeLinejoin={1}
-                strokeWidth="2"
-              />
-            </RNSVGGroup>
-          </RNSVGSvgView>
-        </View>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            />
+          </div>
+        </div>
       </div>
-    </View>
-  </View>
-</View>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`TransactionDetails Components renders TransactionDetailsInfoRows without error with isShowingMore false 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "column",
-      "gap": 8,
-      "paddingLeft": 8,
-      "paddingRight": 8,
-    }
-  }
->
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 8,
-        "justifyContent": "space-between",
-      }
-    }
+exports[`TransactionDetails Components > renders TransactionDetailsHeader without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(255, 255, 255, 0.65)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        }
-      }
-      suppressHighlighting={true}
+    <div
+      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
     >
-      Network cost
-    </Text>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 4,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "borderColor": "#131313",
-            "borderRadius": 4.8,
-            "borderStyle": "solid",
-            "borderWidth": 0,
-            "flexDirection": "column",
-            "height": 16,
-            "overflow": "hidden",
-            "width": 16,
-            "zIndex": 10,
-          }
-        }
-        testID="network-logo"
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080 _flexShrink-1"
       >
-        <Image
-          resizeMode="contain"
-          source="mock-asset-BLAST_LOGO.png"
-          style={
-            {
-              "height": 16,
-              "width": 16,
-            }
-          }
-        />
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 8,
-        "justifyContent": "space-between",
-      }
-    }
-  >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(255, 255, 255, 0.65)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      Transaction
-    </Text>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 4,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <View
-        collapsable={false}
-        focusVisibleStyle={{}}
-        forwardedRef={[Function]}
-        jestAnimatedProps={
-          {
-            "value": {},
-          }
-        }
-        jestAnimatedStyle={
-          {
-            "value": {},
-          }
-        }
-        jestInlineStyle={
-          [
-            {
-              "alignItems": "center",
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "row",
-              "gap": 6,
-              "justifyContent": "center",
-              "opacity": 1,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            },
-          ]
-        }
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onLayout={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        role="button"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "row",
-              "gap": 6,
-              "justifyContent": "center",
-              "opacity": 1,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            },
-            {},
-          ]
-        }
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 15,
-              "fontWeight": "400",
-              "lineHeight": 19.5,
-            }
-          }
-          suppressHighlighting={true}
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
         >
-          0xb568...0600
-        </Text>
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight={16}
-          bbWidth={16}
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
-          style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "rgba(255, 255, 255, 0.38)",
-                "height": 16,
-                "width": 16,
-              },
-              {
-                "flex": 0,
-                "height": 16,
-                "width": 16,
-              },
-            ]
-          }
-          vbHeight={24}
-          vbWidth={24}
-        >
-          <RNSVGGroup
-            color="rgba(255, 255, 255, 0.38)"
-            fill={null}
-            propList={
-              [
-                "fill",
-                "strokeWidth",
-              ]
-            }
-            strokeWidth={8}
+          <div
+            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _height-40px _width-40px"
           >
-            <RNSVGPath
-              d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              propList={
-                [
-                  "fill",
-                ]
-              }
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 8,
-        "justifyContent": "space-between",
-      }
-    }
-  >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(255, 255, 255, 0.65)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      Submitted on
-    </Text>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 4,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 15,
-            "fontWeight": "400",
-            "lineHeight": 19.5,
-          }
-        }
-        suppressHighlighting={true}
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _bottom--4px _position-absolute _right--4px _zIndex-10"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+                data-testid="network-logo"
+                style="width: 19.2px; height: 19.2px; border-radius: 5.76px; border-width: 1.6px; border-color: #131313; border-style: solid;"
+              >
+                <div
+                  class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                  style="width: 16px; height: 16px;"
+                >
+                  <div
+                    class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                    style="background-image: url(mock-asset-BLAST_LOGO.png);"
+                  />
+                  <img
+                    alt=""
+                    class="css-accessibilityImage-9pa8cd"
+                    draggable="false"
+                    src="mock-asset-BLAST_LOGO.png"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexShrink-1"
+        >
+          <div
+            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _gap-t-space-spa94665589"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              transaction.status.approve.success
+            </span>
+          </div>
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+            data-disable-theme="true"
+          >
+            January 1, 2023 12:00 AM
+          </span>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593"
       >
-        January 1, 2023 12:00 AM
-      </Text>
-    </View>
-  </View>
-</View>
+        <div
+          aria-expanded="false"
+          aria-haspopup="dialog"
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+        >
+          <div
+            aria-expanded="false"
+            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+            data-state="closed"
+          >
+            <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589"
+              >
+                <div
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(255, 255, 255, 0.65);"
+                  viewbox="0 0 18 4"
+                >
+                  <div
+                    d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                  <div
+                    d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                  <div
+                    d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`TransactionDetails Components renders TransactionDetailsInfoRows without error with isShowingMore true 1`] = `
-<View
-  style={
-    {
-      "flexDirection": "column",
-      "gap": 8,
-      "paddingLeft": 8,
-      "paddingRight": 8,
-    }
-  }
->
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 8,
-        "justifyContent": "space-between",
-      }
-    }
+exports[`TransactionDetails Components > renders TransactionDetailsInfoRows without error with isShowingMore false 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(255, 255, 255, 0.65)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        }
-      }
-      suppressHighlighting={true}
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665593 _pr-t-space-spa94665593 _pl-t-space-spa94665593"
     >
-      Network cost
-    </Text>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 4,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "borderColor": "#131313",
-            "borderRadius": 4.8,
-            "borderStyle": "solid",
-            "borderWidth": 0,
-            "flexDirection": "column",
-            "height": 16,
-            "overflow": "hidden",
-            "width": 16,
-            "zIndex": 10,
-          }
-        }
-        testID="network-logo"
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-space-betwe3241 _alignItems-center"
       >
-        <Image
-          resizeMode="contain"
-          source="mock-asset-BLAST_LOGO.png"
-          style={
-            {
-              "height": 16,
-              "width": 16,
-            }
-          }
-        />
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 8,
-        "justifyContent": "space-between",
-      }
-    }
-  >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(255, 255, 255, 0.65)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      Transaction
-    </Text>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 4,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <View
-        collapsable={false}
-        focusVisibleStyle={{}}
-        forwardedRef={[Function]}
-        jestAnimatedProps={
-          {
-            "value": {},
-          }
-        }
-        jestAnimatedStyle={
-          {
-            "value": {},
-          }
-        }
-        jestInlineStyle={
-          [
-            {
-              "alignItems": "center",
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "row",
-              "gap": 6,
-              "justifyContent": "center",
-              "opacity": 1,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            },
-          ]
-        }
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onLayout={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        role="button"
-        style={
-          [
-            {
-              "alignItems": "center",
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "flexDirection": "row",
-              "gap": 6,
-              "justifyContent": "center",
-              "opacity": 1,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            },
-            {},
-          ]
-        }
-      >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          style={
-            {
-              "color": "#FFFFFF",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 15,
-              "fontWeight": "400",
-              "lineHeight": 19.5,
-            }
-          }
-          suppressHighlighting={true}
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+          data-disable-theme="true"
         >
-          0xb568...0600
-        </Text>
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight={16}
-          bbWidth={16}
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
-          style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "rgba(255, 255, 255, 0.38)",
-                "height": 16,
-                "width": 16,
-              },
-              {
-                "flex": 0,
-                "height": 16,
-                "width": 16,
-              },
-            ]
-          }
-          vbHeight={24}
-          vbWidth={24}
+          transaction.details.networkFee
+        </span>
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
         >
-          <RNSVGGroup
-            color="rgba(255, 255, 255, 0.38)"
-            fill={null}
-            propList={
-              [
-                "fill",
-                "strokeWidth",
-              ]
-            }
-            strokeWidth={8}
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+            data-testid="network-logo"
+            style="width: 16px; height: 16px; border-radius: 4.8px; border-width: 0px; border-color: #131313; border-style: solid;"
           >
-            <RNSVGPath
-              d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              propList={
-                [
-                  "fill",
-                ]
-              }
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </View>
-    </View>
-  </View>
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 8,
-        "justifyContent": "space-between",
-      }
-    }
-  >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "rgba(255, 255, 255, 0.65)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      Submitted on
-    </Text>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 4,
-          "justifyContent": "center",
-        }
-      }
-    >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": "#FFFFFF",
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 15,
-            "fontWeight": "400",
-            "lineHeight": 19.5,
-          }
-        }
-        suppressHighlighting={true}
+            <div
+              class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+              style="width: 16px; height: 16px;"
+            >
+              <div
+                class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                style="background-image: url(mock-asset-BLAST_LOGO.png);"
+              />
+              <img
+                alt=""
+                class="css-accessibilityImage-9pa8cd"
+                draggable="false"
+                src="mock-asset-BLAST_LOGO.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-space-betwe3241 _alignItems-center"
       >
-        January 1, 2023 12:00 AM
-      </Text>
-    </View>
-  </View>
-</View>
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+          data-disable-theme="true"
+        >
+          transaction.details.transaction
+        </span>
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
+        >
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; flex-direction: row; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: var(--t-space-spacing6); justify-content: center; transform: scale(1);"
+            tabindex="0"
+          >
+            <span
+              class="font_body _color-_grouptrue-hover_accent3Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              0xb568...0600
+            </span>
+            <div
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(255, 255, 255, 0.38);"
+              viewbox="0 0 24 24"
+            >
+              <div
+                d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
+                fill="currentColor"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-space-betwe3241 _alignItems-center"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+          data-disable-theme="true"
+        >
+          transaction.submittedOn
+        </span>
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            data-disable-theme="true"
+          >
+            January 1, 2023 12:00 AM
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TransactionDetails Components > renders TransactionDetailsInfoRows without error with isShowingMore true 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665593 _pr-t-space-spa94665593 _pl-t-space-spa94665593"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-space-betwe3241 _alignItems-center"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+          data-disable-theme="true"
+        >
+          transaction.details.networkFee
+        </span>
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+            data-testid="network-logo"
+            style="width: 16px; height: 16px; border-radius: 4.8px; border-width: 0px; border-color: #131313; border-style: solid;"
+          >
+            <div
+              class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+              style="width: 16px; height: 16px;"
+            >
+              <div
+                class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                style="background-image: url(mock-asset-BLAST_LOGO.png);"
+              />
+              <img
+                alt=""
+                class="css-accessibilityImage-9pa8cd"
+                draggable="false"
+                src="mock-asset-BLAST_LOGO.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-space-betwe3241 _alignItems-center"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+          data-disable-theme="true"
+        >
+          transaction.details.transaction
+        </span>
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
+        >
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; flex-direction: row; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: var(--t-space-spacing6); justify-content: center; transform: scale(1);"
+            tabindex="0"
+          >
+            <span
+              class="font_body _color-_grouptrue-hover_accent3Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              0xb568...0600
+            </span>
+            <div
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(255, 255, 255, 0.38);"
+              viewbox="0 0 24 24"
+            >
+              <div
+                d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
+                fill="currentColor"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-space-betwe3241 _alignItems-center"
+      >
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+          data-disable-theme="true"
+        >
+          transaction.submittedOn
+        </span>
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
+        >
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            data-disable-theme="true"
+          >
+            January 1, 2023 12:00 AM
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

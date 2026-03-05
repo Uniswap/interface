@@ -1,3 +1,5 @@
+import { ConnectError } from '@connectrpc/connect'
+
 // Takes the two potential errors from calls to the trading api and returns:
 //   - false if there is no error
 //   - a string with an error message if one can be parsed
@@ -21,6 +23,42 @@ export function getErrorMessageToDisplay({
   return false
 }
 
+interface LegacyErrorStructure {
+  data?: {
+    detail?: string
+    requestId?: string
+  }
+  name?: string
+}
+
+function isConnectError(error: unknown): error is ConnectError {
+  return error instanceof ConnectError
+}
+
+function isLegacyError(error: unknown): error is LegacyErrorStructure {
+  return typeof error === 'object' && error !== null && ('data' in error || 'name' in error)
+}
+
+function parseLegacyErrorMessage(
+  error: LegacyErrorStructure,
+  options: { defaultTitle?: string; includeRequestId?: boolean },
+): string | undefined {
+  const requestId = error.data?.requestId
+  const title = error.data?.detail || error.name || options.defaultTitle
+
+  return options.includeRequestId && title && requestId ? `${title}, id: ${requestId}` : title
+}
+
+function parseConnectRpcErrorMessage(
+  error: ConnectError,
+  options: { defaultTitle?: string; includeRequestId?: boolean },
+): string | undefined {
+  const requestId = error.metadata.get('x-request-id')
+  const title = error.rawMessage || options.defaultTitle
+
+  return options.includeRequestId && title && requestId ? `${title}, id: ${requestId}` : title
+}
+
 export function parseErrorMessageTitle(
   error: unknown,
   { defaultTitle }: { defaultTitle: string; includeRequestId?: boolean },
@@ -37,9 +75,13 @@ export function parseErrorMessageTitle(
     return defaultTitle
   }
 
-  const errorWithData = error as { data?: { detail?: string; requestId?: string }; name?: string }
-  const requestId = errorWithData.data?.requestId
+  if (isConnectError(error)) {
+    return parseConnectRpcErrorMessage(error, { defaultTitle, includeRequestId })
+  }
 
-  const title = errorWithData.data?.detail || errorWithData.name || defaultTitle
-  return includeRequestId && title ? `${title}, id: ${requestId}` : title
+  if (isLegacyError(error)) {
+    return parseLegacyErrorMessage(error, { defaultTitle, includeRequestId })
+  }
+
+  return defaultTitle
 }

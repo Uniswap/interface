@@ -1,10 +1,10 @@
 import { TransactionRequest } from '@ethersproject/providers'
 import { renderHook } from '@testing-library/react'
+import { GasFeeResult } from '@universe/api'
 import { useTransactionGasEstimation } from 'src/app/features/dappRequests/hooks/useTransactionGasEstimation'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { logger } from 'utilities/src/logger/logger'
 
 // Mock dependencies

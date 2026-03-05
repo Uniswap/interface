@@ -225,8 +225,9 @@ async function processAddChanges() {
     })
   })
 
-  linesAddedByFile.forEach((linesAdded) => {
+  linesAddedByFile.forEach((linesAdded, fileIndex) => {
     const concatenatedAddedLines = linesAdded.reduce((acc, curr) => acc + curr.content, '')
+    const filePath = updatedTsFiles[fileIndex]
 
     // In this section we concatenate all the added lines by file in order to account for multiline changes.
 
@@ -252,8 +253,8 @@ async function processAddChanges() {
       )
     }
 
-    // Check for direct string cache key usage with react query
-    if (concatenatedAddedLines.includes(`queryKey: ['`)) {
+    // Check for direct string cache key usage with react query (skip mission-control app)
+    if (concatenatedAddedLines.includes(`queryKey: ['`) && !filePath?.startsWith('apps/mission-control/')) {
       fail(
         `It appears you're using a direct string cache key with react query. Please use the ReactQueryCacheKey enum instead!`,
       )

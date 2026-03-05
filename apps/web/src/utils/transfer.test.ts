@@ -1,10 +1,10 @@
 import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { renderHook, waitFor } from 'test-utils/render'
-import { Mutable } from 'types/mutable'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useCreateTransferTransaction } from 'utils/transfer'
+import { renderHook, waitFor } from '~/test-utils/render'
+import { Mutable } from '~/types/mutable'
+import { useCreateTransferTransaction } from '~/utils/transfer'
 
 describe('useCreateTransfer', () => {
   const wallet = '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826'

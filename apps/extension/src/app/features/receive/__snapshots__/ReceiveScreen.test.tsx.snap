@@ -19,11 +19,9 @@ exports[`ReceiveScreen renders without error 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _width-10037"
             >
               <div
-                class=" is_TouchableArea  t_group_true"
-                jestanimatedprops="[object Object]"
-                jestinlinestyle="[object Object]"
+                class="is_TouchableArea  t_group_true"
                 role="button"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
                 tabindex="0"
               >
                 <svg
@@ -55,31 +53,36 @@ exports[`ReceiveScreen renders without error 1`] = `
             data-testid="wallet-qr-code"
           >
             <div
-              jestanimatedprops="[object Object]"
-              jestinlinestyle="[object Object]"
-              style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; align-items: center; gap: 12px; justify-content: flex-start; margin-bottom: 8px; padding: 24px 16px 24px 16px;"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; gap: var(--t-space-spacing12); justify-content: flex-start; transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column"
               >
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080"
+                  class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1 _justifyContent-center"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-non101"
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa1360334080 _alignItems-center"
                   >
                     <div
-                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-non101"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080"
                       >
-                        <span
-                          class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-24px _lineHeight-28--7999999991290300390 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _flexShrink-1"
-                          data-disable-theme="true"
-                          data-testid="address-display/name/undefined"
-                        />
+                        <div
+                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _flexGrow-1 _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
+                        >
+                          <span
+                            class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-24px _lineHeight-28--7999999991290300390 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
+                            data-disable-theme="true"
+                            data-testid="address-display/name/undefined"
+                          />
+                        </div>
                       </div>
+                      <div
+                        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center"
+                      />
                     </div>
                   </div>
                 </div>
@@ -5930,13 +5933,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                     class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _alignItems-center _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="account-icon"
                     >
                       <div
-                        jestanimatedprops="[object Object]"
-                        jestinlinestyle="[object Object]"
-                        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                        class="t_unmounted  t_unmounted"
+                        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                       >
                         <svg
                           height="60"
@@ -5955,20 +5957,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                             />
                             <g
                               transform="translate(10, 10) scale(0.8333333333333334)"
-                            >
-                              <path
-                                clip-rule="evenodd"
-                                d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                                fill="#00C3A0"
-                                fill-rule="evenodd"
-                              />
-                              <path
-                                clip-rule="evenodd"
-                                d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                                fill="#00C3A0"
-                                fill-rule="evenodd"
-                              />
-                            </g>
+                            />
                           </g>
                         </svg>
                       </div>
@@ -5977,11 +5966,9 @@ exports[`ReceiveScreen renders without error 1`] = `
                 </div>
               </div>
               <div
-                class=" is_TouchableArea  t_group_true"
-                jestanimatedprops="[object Object]"
-                jestinlinestyle="[object Object]"
+                class="is_TouchableArea  t_group_true"
                 role="button"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 100%; transform: scale(1);"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 100%; transform: scale(1);"
                 tabindex="0"
               >
                 <div
@@ -5993,6 +5980,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     <span
                       class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _width-10037"
                       data-disable-theme="true"
+                      data-testid="address-display"
                     >
                       0x82D56A352367453f74FC0dC7B071b311da373Fa6
                     </span>
@@ -6025,19 +6013,21 @@ exports[`ReceiveScreen renders without error 1`] = `
                 </div>
               </div>
               <div
-                class=" is_TouchableArea  t_group_true"
-                jestanimatedprops="[object Object]"
-                jestinlinestyle="[object Object]"
+                class="is_TouchableArea  t_group_true"
                 role="button"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; gap: 4px; margin-top: 4px; transform: scale(1);"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; gap: var(--t-space-gap4); transform: scale(1);"
                 tabindex="0"
               >
-                <span
-                  class="font_body _color-_grouptrue-hover_accent3Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
-                  data-disable-theme="true"
+                <div
+                  class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _color-accent3"
                 >
-                  Use this address to receive tokens on
-                </span>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Use this address to receive tokens on
+                  </span>
+                </div>
                 <div
                   class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap52 _color-accent3"
                 >
@@ -6089,7 +6079,7 @@ exports[`ReceiveScreen renders without error 1`] = `
               <h2
                 class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
                 data-disable-theme="true"
-                id="Dialog--:r1f:-title"
+                id="Dialog--:r1d:-title"
                 role="heading"
               />
             </span>
@@ -6129,11 +6119,9 @@ exports[`ReceiveScreen renders without error 1`] = `
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _width-10037"
           >
             <div
-              class=" is_TouchableArea  t_group_true"
-              jestanimatedprops="[object Object]"
-              jestinlinestyle="[object Object]"
+              class="is_TouchableArea  t_group_true"
               role="button"
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
               tabindex="0"
             >
               <svg
@@ -6165,31 +6153,36 @@ exports[`ReceiveScreen renders without error 1`] = `
           data-testid="wallet-qr-code"
         >
           <div
-            jestanimatedprops="[object Object]"
-            jestinlinestyle="[object Object]"
-            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; align-items: center; gap: 12px; justify-content: flex-start; margin-bottom: 8px; padding: 24px 16px 24px 16px;"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; gap: var(--t-space-spacing12); justify-content: flex-start; transition: all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080"
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1 _justifyContent-center"
               >
                 <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-non101"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa1360334080 _alignItems-center"
                 >
                   <div
-                    class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _gap-t-space-non101"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080"
                     >
-                      <span
-                        class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-24px _lineHeight-28--7999999991290300390 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _flexShrink-1"
-                        data-disable-theme="true"
-                        data-testid="address-display/name/undefined"
-                      />
+                      <div
+                        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _flexGrow-1 _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
+                      >
+                        <span
+                          class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-24px _lineHeight-28--7999999991290300390 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
+                          data-disable-theme="true"
+                          data-testid="address-display/name/undefined"
+                        />
+                      </div>
                     </div>
+                    <div
+                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center"
+                    />
                   </div>
                 </div>
               </div>
@@ -12040,13 +12033,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _alignItems-center _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="account-icon"
                   >
                     <div
-                      jestanimatedprops="[object Object]"
-                      jestinlinestyle="[object Object]"
-                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                      class="t_unmounted  t_unmounted"
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                     >
                       <svg
                         height="60"
@@ -12065,20 +12057,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                           />
                           <g
                             transform="translate(10, 10) scale(0.8333333333333334)"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                              fill="#00C3A0"
-                              fill-rule="evenodd"
-                            />
-                            <path
-                              clip-rule="evenodd"
-                              d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                              fill="#00C3A0"
-                              fill-rule="evenodd"
-                            />
-                          </g>
+                          />
                         </g>
                       </svg>
                     </div>
@@ -12087,11 +12066,9 @@ exports[`ReceiveScreen renders without error 1`] = `
               </div>
             </div>
             <div
-              class=" is_TouchableArea  t_group_true"
-              jestanimatedprops="[object Object]"
-              jestinlinestyle="[object Object]"
+              class="is_TouchableArea  t_group_true"
               role="button"
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 100%; transform: scale(1);"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 100%; transform: scale(1);"
               tabindex="0"
             >
               <div
@@ -12103,6 +12080,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                   <span
                     class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _width-10037"
                     data-disable-theme="true"
+                    data-testid="address-display"
                   >
                     0x82D56A352367453f74FC0dC7B071b311da373Fa6
                   </span>
@@ -12135,19 +12113,21 @@ exports[`ReceiveScreen renders without error 1`] = `
               </div>
             </div>
             <div
-              class=" is_TouchableArea  t_group_true"
-              jestanimatedprops="[object Object]"
-              jestinlinestyle="[object Object]"
+              class="is_TouchableArea  t_group_true"
               role="button"
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; gap: 4px; margin-top: 4px; transform: scale(1);"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; gap: var(--t-space-gap4); transform: scale(1);"
               tabindex="0"
             >
-              <span
-                class="font_body _color-_grouptrue-hover_accent3Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
-                data-disable-theme="true"
+              <div
+                class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _color-accent3"
               >
-                Use this address to receive tokens on
-              </span>
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                  data-disable-theme="true"
+                >
+                  Use this address to receive tokens on
+                </span>
+              </div>
               <div
                 class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap52 _color-accent3"
               >
@@ -12199,7 +12179,7 @@ exports[`ReceiveScreen renders without error 1`] = `
             <h2
               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
               data-disable-theme="true"
-              id="Dialog--:r1f:-title"
+              id="Dialog--:r1d:-title"
               role="heading"
             />
           </span>

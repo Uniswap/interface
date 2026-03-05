@@ -1,9 +1,10 @@
-import { Networkish } from '@ethersproject/networks'
-import { StaticJsonRpcProvider } from '@ethersproject/providers'
+import { Networkish } from '@ethersproject/providers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 
-export default class ConfiguredJsonRpcProvider extends StaticJsonRpcProvider {
+export default class ConfiguredJsonRpcProvider extends InstrumentedJsonRpcProvider {
   constructor({
     url,
     networkish,
@@ -14,7 +15,7 @@ export default class ConfiguredJsonRpcProvider extends StaticJsonRpcProvider {
     networkish: Networkish & { chainId: UniverseChainId }
     pollingInterval?: number
   }) {
-    super(url, networkish)
+    super({ url, chainIdOrNetwork: networkish, observer: getRpcObserver() })
 
     // NB: Third-party providers (eg MetaMask) will have their own polling intervals,
     // which should be left as-is to allow operations (eg transaction confirmation) to resolve faster.

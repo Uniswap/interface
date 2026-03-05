@@ -4,11 +4,18 @@ import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircle
 type InformationBannerProps = {
   infoText: string
   onPress: () => void
+  testID?: string
 }
 
-export function InformationBanner({ infoText, onPress }: InformationBannerProps): JSX.Element {
+export function InformationBanner({ infoText, onPress, testID }: InformationBannerProps): JSX.Element {
   return (
-    <TouchableArea backgroundColor="$surface2" borderRadius="$rounded16" my="$padding8" onPress={onPress}>
+    <TouchableArea
+      backgroundColor="$surface2"
+      borderRadius="$rounded16"
+      my="$padding8"
+      testID={testID}
+      onPress={onPress}
+    >
       <Flex row alignItems="center" px="$spacing12" py="$spacing12">
         <QuestionInCircleFilled color="$neutral2" size="$icon.20" />
         <Flex pl="$spacing8">

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { formatChartFiatDelta } from 'uniswap/src/features/fiatCurrency/priceChart/priceChartConversion'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'

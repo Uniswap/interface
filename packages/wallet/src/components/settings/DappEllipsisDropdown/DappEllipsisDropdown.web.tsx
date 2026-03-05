@@ -2,12 +2,14 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex } from 'ui/src'
 import { Power } from 'ui/src/components/icons'
+import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
-import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { type DappEllipsisDropdownProps } from 'wallet/src/components/settings/DappEllipsisDropdown/DappEllipsisDropdown'
 import { DappEllipsisDropdownIcon } from 'wallet/src/components/settings/DappEllipsisDropdown/internal/DappEllipsisDropdownIcon'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -25,6 +27,7 @@ export function DappEllipsisDropdown({
 }: DappEllipsisDropdownProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const { value: isMenuOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
 
   const activeAccount = useActiveAccountWithThrow()
 
@@ -36,31 +39,34 @@ export function DappEllipsisDropdown({
     )
   }
 
+  const menuOptions: MenuOptionItem[] = [
+    {
+      label: t('settings.setting.connections.disconnectAll'),
+      onPress: async (): Promise<void> => {
+        await removeAllDappConnections(activeAccount)
+        sendAnalyticsEvent(ExtensionEventName.DappDisconnectAll, {
+          activeConnectedAddress: activeAccount.address,
+        })
+        dispatch(
+          pushNotification({
+            type: AppNotificationType.Success,
+            title: t('common.text.disconnected'),
+          }),
+        )
+      },
+      Icon: PowerCircle,
+      destructive: true,
+    },
+  ]
+
   return (
     <ContextMenu
-      closeOnClick
-      itemId="connections-ellipsis-dropdown"
-      menuOptions={[
-        {
-          label: t('settings.setting.connections.disconnectAll'),
-          onPress: async (): Promise<void> => {
-            await removeAllDappConnections(activeAccount)
-            sendAnalyticsEvent(ExtensionEventName.DappDisconnectAll, {
-              activeConnectedAddress: activeAccount.address,
-            })
-            dispatch(
-              pushNotification({
-                type: AppNotificationType.Success,
-                title: t('common.text.disconnected'),
-              }),
-            )
-          },
-          Icon: PowerCircle,
-          destructive: true,
-        },
-      ]}
-      offset={{ mainAxis: 2 }}
-      onLeftClick={true}
+      menuItems={menuOptions}
+      triggerMode={ContextMenuTriggerMode.Primary}
+      isOpen={isMenuOpen}
+      openMenu={openMenu}
+      closeMenu={closeMenu}
+      offsetY={2}
     >
       <DappEllipsisDropdownIcon />
     </ContextMenu>

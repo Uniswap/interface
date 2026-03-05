@@ -2,12 +2,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPossibleChainMatchFromSearchWord } from 'uniswap/src/utils/search/getPossibleChainMatchFromSearchWord'
 
 // Mock the dependencies before importing the function
-jest.mock('uniswap/src/features/chains/chainInfo', () => ({
-  getChainInfo: jest.fn(),
+vi.mock('uniswap/src/features/chains/chainInfo', () => ({
+  getChainInfo: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/chains/utils', () => ({
-  isTestnetChain: jest.fn(),
+vi.mock('uniswap/src/features/chains/utils', () => ({
+  isTestnetChain: vi.fn(),
 }))
 
 // Import the mocked functions
@@ -19,7 +19,7 @@ const mockIsTestnetChain = isTestnetChain as any
 
 describe('getPossibleChainMatchFromSearchWord', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('when search word is empty or invalid', () => {

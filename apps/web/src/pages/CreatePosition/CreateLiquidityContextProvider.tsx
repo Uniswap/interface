@@ -3,28 +3,27 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useDerivedPositionInfo } from 'components/Liquidity/Create/hooks/useDerivedPositionInfo'
-import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useDerivedPositionInfo } from '~/components/Liquidity/Create/hooks/useDerivedPositionInfo'
+import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
 import {
   type DynamicFeeTierSpeedbumpData,
   PositionFlowStep,
   type PositionState,
   type PriceRangeState,
   RangeAmountInputPriceMode,
-} from 'components/Liquidity/Create/types'
-import type { DepositState } from 'components/Liquidity/types'
-import { getPriceRangeInfo } from 'components/Liquidity/utils/priceRangeInfo'
-import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
-import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
-import { useEvent } from 'utilities/src/react/hooks'
+} from '~/components/Liquidity/Create/types'
+import type { DepositState } from '~/components/Liquidity/types'
+import { getPriceRangeInfo } from '~/components/Liquidity/utils/priceRangeInfo'
+import { PositionField } from '~/types/position'
 
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   priceInverted: false,
   fullRange: false,
-  minPrice: '',
-  maxPrice: '',
+  minTick: undefined,
+  maxTick: undefined,
   initialPrice: '',
   inputMode: RangeAmountInputPriceMode.PRICE,
 }
@@ -50,8 +49,6 @@ interface BaseCreateLiquidityState {
   poolOrPair: V4Pool | V3Pool | Pair | undefined
   price: Price<Currency, Currency> | undefined
   ticks: [Maybe<number>, Maybe<number>]
-  pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
-  ticksAtLimit: [boolean, boolean]
 
   // From CreatePositionContext
   isNativeTokenAOnly: boolean
@@ -146,7 +143,6 @@ export function CreateLiquidityContextProvider({
   initialDepositState?: Partial<DepositState>
   initialFlowStep: PositionFlowStep
 }) {
-  const isD3LiquidityRangeChartEnabled = useFeatureFlag(FeatureFlags.D3LiquidityRangeChart)
   const [positionState, setPositionState] = useState<PositionState>(() => ({
     ...DEFAULT_POSITION_STATE,
     ...initialPositionState,
@@ -165,10 +161,7 @@ export function CreateLiquidityContextProvider({
   const [refetch, setRefetch] = useState<() => void>()
 
   // Initialize price range state
-  const initialPosition = positionState.initialPosition
-  const defaultFullRange = initialPosition?.isOutOfRange ? false : !isD3LiquidityRangeChartEnabled
-  const urlFullRange = initialPriceRangeState?.fullRange
-  const initialFullRange = urlFullRange !== undefined ? urlFullRange : defaultFullRange
+  const initialFullRange = initialPriceRangeState?.fullRange ?? false
   const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(() => ({
     ...DEFAULT_PRICE_RANGE_STATE,
     fullRange: initialFullRange,
@@ -289,14 +282,6 @@ export function CreateLiquidityContextProvider({
       derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
         ? [undefined, undefined]
         : derivedPriceRangeInfo.ticks,
-    ticksAtLimit:
-      derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
-        ? [false, false]
-        : derivedPriceRangeInfo.ticksAtLimit,
-    pricesAtTicks:
-      derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
-        ? [undefined, undefined]
-        : derivedPriceRangeInfo.pricesAtTicks,
     isNativeTokenAOnly,
     positionState,
     step,

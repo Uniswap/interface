@@ -1,11 +1,3 @@
-import {
-  getWalletRequiresSeparatePrompt,
-  useHasAcceptedSolanaConnectionPrompt,
-} from 'components/WalletModal/PendingWalletConnectionModal/state'
-import { WalletIconWithRipple } from 'components/WalletModal/WalletIconWithRipple'
-import { useConnectionStatus } from 'features/accounts/store/hooks'
-import { ExternalWallet } from 'features/accounts/store/types'
-import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, Flex, HeightAnimator, Text } from 'ui/src'
@@ -16,6 +8,14 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useDebounce } from 'utilities/src/time/timing'
+import {
+  getWalletRequiresSeparatePrompt,
+  useHasAcceptedSolanaConnectionPrompt,
+} from '~/components/WalletModal/PendingWalletConnectionModal/state'
+import { WalletIconWithRipple } from '~/components/WalletModal/WalletIconWithRipple'
+import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { ExternalWallet } from '~/features/accounts/store/types'
+import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
 
 /**
  * Debounces resets of the the Solana acceptance flag to prevent the modal from reacting to resets before it has had a chance to close.

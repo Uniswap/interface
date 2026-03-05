@@ -1,5 +1,5 @@
-import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { TFunction } from 'i18next'
+import { PoolData } from '~/appGraphql/data/pools/usePoolData'
 
 export const getPoolDetailPageTitle = (t: TFunction, poolData?: PoolData) => {
   const token0Symbol = poolData?.token0.symbol

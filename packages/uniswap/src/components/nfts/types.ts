@@ -7,6 +7,7 @@ import { GetThemeValueForKey } from 'ui/src'
 export interface SearchInputProps {
   value: string
   onChangeText: (value: string) => void
+  dataTestId?: string
   placeholder?: string
   width?: GetThemeValueForKey<'width'>
 }

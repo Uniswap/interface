@@ -1,14 +1,22 @@
-import { SwapDetails } from 'components/swap/SwapDetails'
-import { SlippageTooltipContent } from 'components/swap/SwapLineItem'
+import { SwapDetails } from '~/components/swap/SwapDetails'
+import { SlippageTooltipContent } from '~/components/swap/SwapLineItem'
 import {
   LIMIT_ORDER_TRADE,
   PREVIEW_EXACT_IN_TRADE,
   TEST_ALLOWED_SLIPPAGE,
   TEST_TRADE_EXACT_INPUT,
-} from 'test-utils/constants'
-import { render, screen, within } from 'test-utils/render'
+} from '~/test-utils/constants'
+import { render, screen, within } from '~/test-utils/render'
 
 describe('SwapDetails.tsx', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'info').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('shows accept changes section when available', () => {
     const mockAcceptChanges = vi.fn()
     render(

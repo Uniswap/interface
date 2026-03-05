@@ -76,6 +76,8 @@ export function parseRestLiquidityTransaction(
       type: TransactionType.CollectFees,
       currency0Id,
       currency0AmountRaw,
+      currency1Id,
+      currency1AmountRaw,
       isSpam: false,
       dappInfo,
     }

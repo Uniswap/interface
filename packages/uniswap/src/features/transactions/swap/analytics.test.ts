@@ -4,24 +4,36 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getRouteAnalyticsData, logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 
-jest.mock('uniswap/src/features/telemetry/send', () => ({
-  sendAnalyticsEvent: jest.fn(),
+vi.mock('uniswap/src/features/telemetry/send', () => ({
+  sendAnalyticsEvent: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker', () => ({
-  ...jest.requireActual('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'),
-  timestampTracker: {
-    hasTimestamp: (): boolean => false,
-    setElapsedTime: (): number => 100,
-    getElapsedTime: (): number => 100,
-  },
-}))
+vi.mock('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker')>()
+  return {
+    ...actual,
+    timestampTracker: {
+      hasTimestamp: (): boolean => false,
+      setElapsedTime: (): number => 100,
+      getElapsedTime: (): number => 100,
+    },
+  }
+})
 
 // Mock the @uniswap/v2-sdk package to provide Pair.getAddress
-jest.mock('@uniswap/v2-sdk', () => {
-  const originalModule = jest.requireActual('@uniswap/v2-sdk')
+vi.mock('@uniswap/v2-sdk', async (importOriginal) => {
+  const originalModule = await importOriginal<typeof import('@uniswap/v2-sdk')>()
   originalModule.Pair.getAddress = (): string => {
     return `0xv2PoolAddress`
+  }
+  return originalModule
+})
+
+vi.mock('@uniswap/v3-sdk', async (importOriginal) => {
+  const originalModule = await importOriginal<typeof import('@uniswap/v3-sdk')>()
+  originalModule.Pool.getAddress = (): string => {
+    return `0xv3PoolAddress`
   }
   return originalModule
 })
@@ -31,35 +43,27 @@ const mockV2Pool = {
   token0: { address: 'token0Address' },
   token1: { address: 'token1Address' },
 }
-const { Pair: V2Pool } = jest.requireActual('@uniswap/v2-sdk')
+const { Pair: V2Pool } = await vi.importActual<typeof import('@uniswap/v2-sdk')>('@uniswap/v2-sdk')
 Object.setPrototypeOf(mockV2Pool, V2Pool.prototype)
-
-jest.mock('@uniswap/v3-sdk', () => {
-  const originalModule = jest.requireActual('@uniswap/v3-sdk')
-  originalModule.Pool.getAddress = (): string => {
-    return `0xv3PoolAddress`
-  }
-  return originalModule
-})
 
 const mockV3Pool = {
   token0: { address: 'token0Address' },
   token1: { address: 'token1Address' },
   fee: 0,
 }
-const { Pool: V3Pool } = jest.requireActual('@uniswap/v3-sdk')
+const { Pool: V3Pool } = await vi.importActual<typeof import('@uniswap/v3-sdk')>('@uniswap/v3-sdk')
 Object.setPrototypeOf(mockV3Pool, V3Pool.prototype)
 //
 const mockV4Pool = { poolId: '0xpool1', v4: true }
-const { Pool: V4Pool } = jest.requireActual('@uniswap/v4-sdk')
+const { Pool: V4Pool } = await vi.importActual<typeof import('@uniswap/v4-sdk')>('@uniswap/v4-sdk')
 Object.setPrototypeOf(mockV4Pool, V4Pool.prototype)
 
-// Helper to cast isClassic as a jest.Mock
-// const mockIsClassic = isClassic as unknown as jest.Mock
+// Helper to cast isClassic as a Mock
+// const mockIsClassic = isClassic as unknown as Mock
 
 describe('analytics', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('logSwapQuoteRequest calls sendAnalyticsEvent with correct parameters', () => {
@@ -70,6 +74,9 @@ describe('analytics', () => {
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapQuoteFetch, {
       chainId: mockChainId,
       isQuickRoute: false,
+      isUSDQuote: false,
+      quoteSource: undefined,
+      pollInterval: undefined,
       time_to_first_quote_request: 100,
       time_to_first_quote_request_since_first_input: 100,
     })
@@ -83,6 +90,9 @@ describe('analytics', () => {
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapQuoteFetch, {
       chainId: mockChainId,
       isQuickRoute: false,
+      isUSDQuote: true,
+      quoteSource: undefined,
+      pollInterval: undefined,
     })
   })
 

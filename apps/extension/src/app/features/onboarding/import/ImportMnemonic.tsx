@@ -2,10 +2,10 @@ import { wordlists } from '@ethersproject/wordlists'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
-  TextInputFocusEventData,
-  TextInputKeyPressEventData,
+  type NativeSyntheticEvent,
+  type TextInputChangeEventData,
+  type TextInputFocusEventData,
+  type TextInputKeyPressEventData,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
@@ -117,7 +117,7 @@ export function ImportMnemonic(): JSX.Element {
         if (!word) {
           return
         }
-        const wordInList = wordlists.en?.getWordIndex(word) !== -1
+        const wordInList = wordlists['en']?.getWordIndex(word) !== -1
         setErrors({ ...errors, [index]: !wordInList })
       },
     [errors],
@@ -252,9 +252,7 @@ export function ImportMnemonic(): JSX.Element {
               <Button
                 mt="$spacing16"
                 mb="$spacing8"
-                icon={
-                  <RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} width={iconSizes.icon20} />
-                }
+                icon={<RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} size="$icon.20" />}
                 iconPosition="after"
                 emphasis="text-only"
                 onPress={(): void => {
@@ -291,7 +289,7 @@ const RecoveryPhraseWord = forwardRef<
   ref,
 ): JSX.Element {
   const debouncedWord = useDebounce(word, 500)
-  const showError = isValidMnemonicWord(debouncedWord)
+  const showError = debouncedWord.length > 0 && !isValidMnemonicWord(debouncedWord)
 
   return (
     <Flex key={index} position="relative" width={130}>

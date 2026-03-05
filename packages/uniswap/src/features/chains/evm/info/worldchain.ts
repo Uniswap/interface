@@ -44,7 +44,7 @@ export const WORLD_CHAIN_INFO = {
   docs: 'https://docs.worldcoin.org/',
   elementName: ElementName.ChainWorldChain,
   explorer: {
-    name: 'World Chain Mainnet Explorer',
+    name: 'WorldScan',
     url: 'https://worldscan.org/',
   },
   interfaceName: 'worldchain',
@@ -58,6 +58,7 @@ export const WORLD_CHAIN_INFO = {
     logo: ETH_LOGO,
   },
   networkLayer: NetworkLayer.L2,
+  blockTimeMs: 2000,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: {

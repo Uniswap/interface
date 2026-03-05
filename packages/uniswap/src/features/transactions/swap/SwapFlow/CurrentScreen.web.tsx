@@ -9,6 +9,7 @@ import {
 import { UnichainInstantBalanceModal } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/UnichainInstantBalanceModal'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
 import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
+import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { isWebApp } from 'utilities/src/platform'
@@ -22,10 +23,12 @@ export function CurrentScreen({
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
 }): JSX.Element {
-  const { screen, setScreen } = useTransactionModalContext()
+  const { screen } = useTransactionModalContext()
 
   const chainId = useSwapDependenciesStore((s) => s.derivedSwapInfo.chainId)
   const isFlashblocksEnabled = useIsUnichainFlashblocksEnabled(chainId)
+
+  const { onPrev } = useSwapOnPrevious()
 
   return (
     <>
@@ -44,7 +47,7 @@ export function CurrentScreen({
         name={ModalName.SwapReview}
         padding="$spacing12"
         gap={0}
-        onClose={() => setScreen(TransactionScreen.Form)}
+        onClose={onPrev}
       >
         <Trace logImpression section={SectionName.SwapReview}>
           <SwapReviewScreen hideContent={false} onSubmitSwap={onSubmitSwap} />

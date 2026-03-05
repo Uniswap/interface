@@ -74,19 +74,18 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
   const isLoadingAddresses = addressesArray.length === 0
 
-  const refetch = useCallback(async () => {
+  const refetch = useCallback(() => {
     setRefetchCount((count) => count + 1)
-    return refetch()
   }, [])
 
-  const { ensMap, loading: ensLoading } = useAddressesEnsNames(addressesArray)
+  const { ensMap } = useAddressesEnsNames(addressesArray)
 
   const { gqlChains } = useEnabledChains()
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: -refetchCount
-  const fetchBalanceAndUnitags = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName> | undefined> => {
+  const fetchBalanceAndUnitags = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName>> => {
     if (addressesArray.length === 0) {
-      return undefined
+      return {} as AddressTo<AddressWithBalanceAndName>
     }
 
     const valueModifiers = addressesArray.map((addr) => ({
@@ -142,6 +141,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
     queryWithoutCache({
       queryKey: [ReactQueryCacheKey.BalanceAndUnitags, addressesArray],
       queryFn: fetchBalanceAndUnitags,
+      enabled: !isLoadingAddresses,
     }),
   )
 
@@ -163,21 +163,11 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
   return useMemo(
     () => ({
       addressInfoMap,
-      // This function is loading if we don't have addresses or are waiting on data. The first two are data, the
-      // last two cases occur when we are waiting for addresses
-      isLoading: balanceAndUnitagsLoading || ensLoading || isLoadingAddresses || addressInfoMap === undefined,
-      error: fetchingError && !balanceAndUnitags?.length,
+      isLoading: balanceAndUnitagsLoading || isLoadingAddresses,
+      showError: !!fetchingError && Object.keys(balanceAndUnitags ?? {}).length === 0,
       refetch,
     }),
-    [
-      addressInfoMap,
-      balanceAndUnitags,
-      balanceAndUnitagsLoading,
-      ensLoading,
-      fetchingError,
-      isLoadingAddresses,
-      refetch,
-    ],
+    [addressInfoMap, balanceAndUnitags, balanceAndUnitagsLoading, fetchingError, isLoadingAddresses, refetch],
   )
 }
 

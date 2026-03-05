@@ -1,13 +1,11 @@
 import type { DappInfo } from 'src/app/features/dapp/store'
 import type { DappRequest, ErrorResponse } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import type { DappRequestMessageSchema } from 'src/background/messagePassing/types/requests'
 import type { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import type { z } from 'zod'
 
-export interface SenderTabInfo {
-  id: number
-  url: string
-  favIconUrl?: string
-}
+export type SenderTabInfo = z.infer<typeof DappRequestMessageSchema>['senderTabInfo']
 
 export enum DappRequestStatus {
   Pending = 'pending',

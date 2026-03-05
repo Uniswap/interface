@@ -1,22 +1,26 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
-import Row from 'components/deprecated/Row'
-import { LoadingRow } from 'components/Loader/styled'
-import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
-import { GasBreakdownTooltip } from 'components/swap/GasBreakdownTooltip'
-import GasEstimateTooltip from 'components/swap/GasEstimateTooltip'
-import { RoutingTooltip } from 'components/swap/SwapRoute'
-import TradePrice from 'components/swap/TradePrice'
-import { TooltipSize } from 'components/Tooltip'
-import { useUSDPrice } from 'hooks/useUSDPrice'
 import React, { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
-import { InterfaceTrade, SubmittableTrade } from 'state/routing/types'
-import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
-import { ExternalLink } from 'theme/components/Links'
 import { Flex } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import {
+  FORMAT_DATE_TIME_MEDIUM,
+  useFormattedDateTime,
+  useLocalizedDayjs,
+} from 'uniswap/src/features/language/localizedDayjs'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
+import Row from '~/components/deprecated/Row'
+import { LoadingRow } from '~/components/Loader/styled'
+import { DetailLineItem, LineItemData } from '~/components/swap/DetailLineItem'
+import { GasBreakdownTooltip } from '~/components/swap/GasBreakdownTooltip'
+import GasEstimateTooltip from '~/components/swap/GasEstimateTooltip'
+import { RoutingTooltip } from '~/components/swap/SwapRoute'
+import TradePrice from '~/components/swap/TradePrice'
+import { TooltipSize } from '~/components/Tooltip'
+import { InterfaceTrade, SubmittableTrade } from '~/state/routing/types'
+import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/state/routing/utils'
+import { ExternalLink } from '~/theme/components/Links'
 
 export enum SwapLineItemType {
   EXCHANGE_RATE = 0,
@@ -76,20 +80,23 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const feeCurrencyAmount = CurrencyAmount.fromRawAmount(outputAmount.currency, swapFee?.amount ?? 0)
-  const { data: outputFeeFiatValue } = useUSDPrice(feeCurrencyAmount, feeCurrencyAmount.currency)
+  const outputFeeFiatValue = useUSDCValue(feeCurrencyAmount)
 
   // Fallback to displaying token amount if fiat value is not available
-  if (outputFeeFiatValue === undefined) {
+  if (!outputFeeFiatValue) {
     return <CurrencyAmountRow amount={feeCurrencyAmount} />
   }
 
-  return <>{convertFiatAmountFormatted(outputFeeFiatValue, NumberType.FiatGasPrice)}</>
+  return <>{convertFiatAmountFormatted(outputFeeFiatValue.toExact(), NumberType.FiatGasPrice)}</>
 }
 
 // eslint-disable-next-line consistent-return
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, type } = props
   const { formatPercent } = useLocalizationContext()
+  const localizedDayjs = useLocalizedDayjs()
+  const deadline = isLimitTrade(trade) ? trade.deadline : 0
+  const formattedDeadline = useFormattedDateTime(localizedDayjs(deadline), FORMAT_DATE_TIME_MEDIUM)
 
   const isUniswapX = isUniswapXTrade(trade)
   const isPreview = isPreviewTrade(trade)
@@ -129,12 +136,12 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       }
     }
     case SwapLineItemType.EXPIRY:
-      if (!isLimitTrade(trade)) {
+      if (!isLimitTrade(trade) || !formattedDeadline) {
         return undefined
       }
       return {
         Label: () => <Trans i18nKey="common.expiry" />,
-        Value: () => <Row>{formatTimestamp({ timestamp: trade.deadline, includeYear: true })}</Row>,
+        Value: () => <Row>{formattedDeadline}</Row>,
       }
   }
 }

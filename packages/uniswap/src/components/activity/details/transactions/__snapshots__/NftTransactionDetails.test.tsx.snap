@@ -1,204 +1,53 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NftTransactionDetails Component renders NftTransactionDetails without error 1`] = `
-<View
-  style={
-    {
-      "borderBottomLeftRadius": 20,
-      "borderBottomRightRadius": 20,
-      "borderTopLeftRadius": 20,
-      "borderTopRightRadius": 20,
-      "flexDirection": "column",
-      "overflow": "hidden",
-    }
-  }
->
-  <View
-    collapsable={false}
-    focusVisibleStyle={{}}
-    forwardedRef={[Function]}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
-      ]
-    }
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onLayout={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    role="button"
-    style={
-      [
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        },
-        {},
-      ]
-    }
-  />
-  <View
-    style={
-      {
-        "borderBottomColor": "rgba(255,255,255,0.12)",
-        "borderBottomLeftRadius": 20,
-        "borderBottomRightRadius": 20,
-        "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(255,255,255,0.12)",
-        "borderLeftWidth": 1,
-        "borderRightColor": "rgba(255,255,255,0.12)",
-        "borderRightWidth": 1,
-        "borderStyle": "solid",
-        "borderTopColor": "rgba(255,255,255,0.12)",
-        "borderTopWidth": 0,
-        "flexDirection": "column",
-        "paddingBottom": 12,
-        "paddingLeft": 12,
-        "paddingRight": 12,
-        "paddingTop": 12,
-      }
-    }
+exports[`NftTransactionDetails Component > renders NftTransactionDetails without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.4}
-      style={
-        {
-          "color": "#FFFFFF",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 17,
-          "fontWeight": "400",
-          "lineHeight": 20,
-        }
-      }
-      suppressHighlighting={true}
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _overflowX-hidden _overflowY-hidden"
     >
-      voluptates repudiandae aliquid
-    </Text>
-    <View
-      aria-disabled={true}
-      collapsable={false}
-      focusVisibleStyle={{}}
-      forwardedRef={[Function]}
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "flexDirection": "column",
-            "opacity": 0.6,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          },
-        ]
-      }
-      onLayout={[Function]}
-      pointerEvents="box-none"
-      role="button"
-      style={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "flexDirection": "column",
-            "opacity": 0.6,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          },
-          {},
-        ]
-      }
-      tabIndex={-1}
-      userSelect="none"
-    >
-      <View
-        style={
-          {
-            "flexDirection": "row",
-            "paddingRight": 12,
-          }
-        }
+      <div
+        aria-disabled="true"
+        class="is_TouchableArea  t_group_true"
+        role="button"
+        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 0.6; cursor: default; user-select: none; pointer-events: none; transform: scale(1);"
+        tabindex="-1"
+      />
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderBottomLeftRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-0px _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
       >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
-          numberOfLines={1}
-          style={
-            {
-              "color": "rgba(255, 255, 255, 0.65)",
-              "fontFamily": "Basel Grotesk",
-              "fontSize": 15,
-              "fontWeight": "400",
-              "lineHeight": 19.5,
-            }
-          }
-          suppressHighlighting={true}
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+          data-disable-theme="true"
         >
-          inventore qui fugiat
-        </Text>
-      </View>
-    </View>
-  </View>
-</View>
+          voluptates repudiandae aliquid
+        </span>
+        <div
+          aria-disabled="true"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 0.6; cursor: default; user-select: none; pointer-events: none; transform: scale(1);"
+          tabindex="-1"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pr-t-space-spa1360334080 _color-neutral2"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              inventore qui fugiat
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

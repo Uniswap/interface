@@ -5,7 +5,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ApproveNotification } from 'wallet/src/features/notifications/components/ApproveNotification'
-import { BridgeNotification } from 'wallet/src/features/notifications/components/BridgeNotification'
+import { CrossChainNotification } from 'wallet/src/features/notifications/components/BridgeNotification'
 import { ChooseCountryNotification } from 'wallet/src/features/notifications/components/ChooseCountryNotification'
 import { CopyFailedNotification } from 'wallet/src/features/notifications/components/CopyFailedNotification'
 import { DefaultNotification } from 'wallet/src/features/notifications/components/DefaultNotification'
@@ -57,7 +57,8 @@ export function WalletNotificationToastRouter({ notification }: { notification: 
         case TransactionType.Approve:
           return <ApproveNotification notification={notification} />
         case TransactionType.Bridge:
-          return <BridgeNotification notification={notification} />
+        case TransactionType.Plan:
+          return <CrossChainNotification notification={notification} />
         case TransactionType.Swap:
           return <SwapNotification notification={notification} />
         case TransactionType.Wrap:

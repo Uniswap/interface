@@ -4,10 +4,12 @@ exports[`AnimatedText renders without error 1`] = `
 <TextInput
   allowFontScaling={true}
   collapsable={false}
+  defaultValue="Rendered"
   editable={false}
   jestAnimatedProps={
     {
       "value": {
+        "defaultValue": "Rendered",
         "text": "Rendered",
       },
     }
@@ -48,6 +50,5 @@ exports[`AnimatedText renders without error 1`] = `
   }
   text="Rendered"
   underlineColorAndroid="transparent"
-  value="Rendered"
 />
 `;

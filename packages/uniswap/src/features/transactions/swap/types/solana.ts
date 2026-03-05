@@ -94,7 +94,7 @@ function getQuoteCurrencyAmounts(params: {
     minAmountOut = minAmountOut.subtract(feeAmount)
   }
 
-  const swapFee = quote.feeBps ? { percent: feePercent, amount: feeAmountRaw, feeField } : undefined
+  const swapFee = quote['feeBps'] ? { percent: feePercent, amount: feeAmountRaw, feeField } : undefined
 
   return { inputAmount, outputAmount, minAmountOut, maxAmountIn, swapFee }
 }

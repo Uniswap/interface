@@ -1,21 +1,21 @@
 import { Currency } from '@uniswap/sdk-core'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import useSelectChain from 'hooks/useSelectChain'
 import { useCallback, useEffect } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex } from 'ui/src'
 import { TokenSelectorContent, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { showSwitchNetworkNotification } from 'utils/showSwitchNetworkNotification'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import useSelectChain from '~/hooks/useSelectChain'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
+import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 interface CurrencySearchProps {
   currencyField: CurrencyField
@@ -34,7 +34,8 @@ export function CurrencySearch({
   chainIds,
   variation,
 }: CurrencySearchProps) {
-  const wallet = useWallet()
+  const addresses = useActiveAddresses()
+
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
     useMultichainContext()
   const { currentTab } = useSwapAndLimitContext()
@@ -73,8 +74,7 @@ export function CurrencySearch({
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
           renderedInModal={false}
-          evmAddress={wallet.evmAccount?.address}
-          svmAddress={wallet.svmAccount?.address}
+          addresses={addresses}
           isLimits={currentTab === SwapTab.Limit}
           chainId={!isMultichainContext || isUserSelectedToken ? chainId : undefined}
           chainIds={chainIds ?? chains}

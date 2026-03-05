@@ -1,8 +1,8 @@
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { renderWithProviders } from 'uniswap/src/test/render'
 
-jest.mock('uniswap/src/utils/linking', () => ({
-  openUri: jest.fn(),
+vi.mock('uniswap/src/utils/linking', () => ({
+  openUri: vi.fn(),
 }))
 
 describe(LearnMoreLink, () => {

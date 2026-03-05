@@ -1,11 +1,12 @@
 import { ReactNode, useEffect } from 'react'
-import store from 'state'
-import { useAppDispatch } from 'state/hooks'
 import { DEFAULT_LOCALE, Locale, mapLocaleToLanguage } from 'uniswap/src/features/language/constants'
-import { getLocale, navigatorLocale, parseLocale, useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { getLocale, navigatorLocale, parseLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { changeLanguage } from 'uniswap/src/i18n'
 import { isTestEnv } from 'utilities/src/environment/env'
+import store from '~/state'
+import { useAppDispatch } from '~/state/hooks'
 
 function getStoreLocale(): Locale | undefined {
   const storeLanguage = store.getState().userSettings.currentLanguage

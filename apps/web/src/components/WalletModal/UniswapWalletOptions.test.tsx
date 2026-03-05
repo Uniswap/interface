@@ -1,13 +1,13 @@
 import { useFeatureFlag } from '@universe/gating'
-import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
-import { useWalletWithId } from 'features/accounts/store/hooks'
-import { ExternalWallet } from 'features/accounts/store/types'
-import { mocked } from 'test-utils/mocked'
-import { render, screen } from 'test-utils/render'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { UniswapWalletOptions } from '~/components/WalletModal/UniswapWalletOptions'
+import { useWalletWithId } from '~/features/accounts/store/hooks'
+import { ExternalWallet } from '~/features/accounts/store/types'
+import { mocked } from '~/test-utils/mocked'
+import { render, screen } from '~/test-utils/render'
 
-vi.mock('features/accounts/store/hooks', async () => ({
-  ...(await vi.importActual('features/accounts/store/hooks')),
+vi.mock('~/features/accounts/store/hooks', async () => ({
+  ...(await vi.importActual('~/features/accounts/store/hooks')),
   useWalletWithId: vi.fn(),
 }))
 

@@ -1,10 +1,6 @@
+import 'utilities/src/logger/mocks'
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import {
-  OffchainOrderLineItem,
-  OffchainOrderLineItemType,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
-import { render, screen } from 'test-utils/render'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -13,6 +9,11 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import {
+  OffchainOrderLineItem,
+  OffchainOrderLineItemType,
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
+import { render, screen } from '~/test-utils/render'
 
 describe('OffchainOrderLineItem', () => {
   it('should render type EXCHANGE_RATE', () => {

@@ -1,14 +1,14 @@
-import { UserIcon } from 'components/Icons/UserIcon'
-import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { RecipientData } from 'state/send/hooks'
-import { useSendContext } from 'state/send/SendContext'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { UserIcon } from '~/components/Icons/UserIcon'
+import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
+import type { RecipientData } from '~/state/send/hooks'
+import { useSendContext } from '~/state/send/SendContext'
 
 const RecipientDisplay = ({ recipientData }: { recipientData?: RecipientData }) => {
   const ensOrUnitag = recipientData?.unitag ?? recipientData?.ensName
@@ -24,7 +24,11 @@ const RecipientDisplay = ({ recipientData }: { recipientData?: RecipientData }) 
             marginRight="$spacing2"
           />
           <Text variant="body2">{ensOrUnitag}</Text>
-          {recipientData?.unitag && <Unitag size={18} />}
+          {recipientData?.unitag && (
+            <Flex pt="$spacing2">
+              <Unitag size={18} />
+            </Flex>
+          )}
         </Flex>
         <Text color="$neutral2" variant="body4">
           {recipientData?.address}

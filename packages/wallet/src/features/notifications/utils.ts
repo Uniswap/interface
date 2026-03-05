@@ -130,8 +130,8 @@ export const formSwapNotificationTitle = ({
       })
     case TransactionStatus.Expired:
       return i18n.t('notification.transaction.swap.expired', {
-        inputCurrencySymbol,
-        outputCurrencySymbol,
+        inputCurrencyAmountWithSymbol,
+        outputCurrencyAmountWithSymbol,
       })
     default:
       return i18n.t('notification.transaction.swap.fail', {

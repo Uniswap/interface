@@ -1,27 +1,7 @@
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
-import {
-  LimitCustomMarketPriceButton,
-  LimitPresetPriceButton,
-} from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
-import { LimitPriceInputLabel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputLabel'
-import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
-import Row from 'components/deprecated/Row'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { StyledNumericalInput } from 'components/NumericalInput'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import { deprecatedStyled } from 'lib/styled-components'
 import { useCallback, useMemo, useState } from 'react'
-import { useLimitContext } from 'state/limit/LimitContext'
-import { CurrencyState } from 'state/swap/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { ThemedText } from 'theme/components'
-import { ClickableStyle } from 'theme/components/styles'
 import { TouchableArea } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -30,6 +10,27 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 // biome-ignore lint/style/noRestrictedImports: We need to import this directly so we can format with `en-US` locale
 import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
+import { isSafeNumber } from 'utilities/src/primitives/integer'
+import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import {
+  LimitCustomMarketPriceButton,
+  LimitPresetPriceButton,
+} from '~/components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
+import { LimitPriceInputLabel } from '~/components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputLabel'
+import { useCurrentPriceAdjustment } from '~/components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
+import { InputPanel } from '~/components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { formatCurrencySymbol } from '~/components/CurrencyInputPanel/utils'
+import Row from '~/components/deprecated/Row'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { StyledNumericalInput } from '~/components/NumericalInput'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { useLimitContext } from '~/state/limit/LimitContext'
+import { CurrencyState } from '~/state/swap/types'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
+import { ThemedText } from '~/theme/components'
+import { ClickableStyle } from '~/theme/components/styles'
 
 const Container = deprecatedStyled(InputPanel)`
   gap: 4px;
@@ -78,6 +79,11 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
 
   const changeLimitPrice = useCallback(
     (limitPrice: string) => {
+      // Omit parsing errors by checking if amount exceeds Number range limit
+      if (!isSafeNumber(limitPrice)) {
+        return
+      }
+
       setLimitState((prevState) => ({ ...prevState, limitPrice, limitPriceEdited: true }))
     },
     [setLimitState],

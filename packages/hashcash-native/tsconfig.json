@@ -1,0 +1,10 @@
+{
+  "extends": "../../config/tsconfig/app.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "jsx": "react",
+    "verbatimModuleSyntax": true
+  }
+}

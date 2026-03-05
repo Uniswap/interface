@@ -1,22 +1,24 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
-import { atom, useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
-import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Flex, Text, useMedia } from 'ui/src'
+import { Check } from 'ui/src/components/icons/Check'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
+import { getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
+import {
+  useExploreTablesFilterStore,
+  useExploreTablesFilterStoreActions,
+} from '~/pages/Explore/exploreTablesFilterStore'
 
-export const exploreProtocolVersionFilterAtom = atom(ProtocolVersion.UNSPECIFIED)
 const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
 
-function ProtocolFilter() {
+export function ProtocolFilter() {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const [open, setOpen] = useState(false)
-  const [selectedProtocol, setSelectedProtocol] = useAtom(exploreProtocolVersionFilterAtom)
+  const selectedProtocol = useExploreTablesFilterStore((s) => s.selectedProtocol)
+  const { setSelectedProtocol } = useExploreTablesFilterStoreActions()
   const media = useMedia()
 
   const onVersionChange = useCallback(
@@ -31,10 +33,10 @@ function ProtocolFilter() {
     return PROTOCOL_VERSIONS.map((option) => (
       <InternalMenuItem key={`ExplorePools-version-${option}`} onPress={() => onVersionChange(option)}>
         {option === ProtocolVersion.UNSPECIFIED ? t('common.all') : getProtocolVersionLabel(option)}
-        {selectedProtocol === option && <Check size={16} color={colors.accent1.val} />}
+        {selectedProtocol === option && <Check size="$icon.16" color="$accent1" />}
       </InternalMenuItem>
     ))
-  }, [selectedProtocol, onVersionChange, colors, t])
+  }, [selectedProtocol, onVersionChange, t])
 
   return (
     <Flex>
@@ -60,5 +62,3 @@ function ProtocolFilter() {
     </Flex>
   )
 }
-
-export default ProtocolFilter

@@ -1,10 +1,12 @@
 {
+  "tags": ["scope:uniswap", "type:lib"],
   "targets": {
     "prepare": {
-      "command": "bun contracts",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
+      "executor": "nx:noop",
+      "dependsOn": ["contracts"],
+      "cache": true,
+      "inputs": [],
+      "outputs": []
     },
     "build": {
       "command": "tsc -b",
@@ -39,14 +41,12 @@
       "cache": true,
       "dependsOn": ["contracts:compile:abi", "contracts:compile:v3"]
     },
-    "check:deps:usage": {
-      "command": "depcheck",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
+    "check:deps:usage": {},
     "typecheck": {
-      "dependsOn": ["prepare", "^typecheck", "contracts"]
+      "dependsOn": ["prepare", "^typecheck"]
+    },
+    "typecheck:tsgo": {
+      "dependsOn": ["prepare"]
     },
     "lint:biome": {},
     "lint:biome:fix": {},
@@ -55,13 +55,19 @@
     "lint": {},
     "lint:fix": {},
     "test": {
-      "command": "jest --passWithNoTests",
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:coverage": {
+      "command": "vitest run --coverage",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "snapshots": {
-      "command": "jest -u",
+      "command": "vitest run -u",
       "options": {
         "cwd": "{projectRoot}"
       }

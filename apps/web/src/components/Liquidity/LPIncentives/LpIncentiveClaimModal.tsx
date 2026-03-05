@@ -1,29 +1,28 @@
+import { useQuery } from '@tanstack/react-query'
 import { ClaimLPRewardsRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import { Distributor } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { Token } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useFormattedTokenRewards } from 'components/Liquidity/LPIncentives/hooks/useFormattedTokenRewards'
-import { useLpIncentiveClaimButtonConfig } from 'components/Liquidity/LPIncentives/hooks/useLpIncentiveClaimButtonConfig'
-import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
-import { useAccount } from 'hooks/useAccount'
-import { useLpIncentivesClaimData } from 'hooks/useLpIncentivesClaimData'
-import useSelectChain from 'hooks/useSelectChain'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { lpIncentivesClaimSaga } from 'state/sagas/lp_incentives/lpIncentivesSaga'
 import { Flex, Image, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
 import { ModalName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { useFormattedTokenRewards } from '~/components/Liquidity/LPIncentives/hooks/useFormattedTokenRewards'
+import { useLpIncentiveClaimButtonConfig } from '~/components/Liquidity/LPIncentives/hooks/useLpIncentiveClaimButtonConfig'
+import { LP_INCENTIVES_REWARD_TOKEN } from '~/components/LpIncentives/constants'
+import { useAccount } from '~/hooks/useAccount'
+import useSelectChain from '~/hooks/useSelectChain'
+import { lpIncentivesClaimSaga } from '~/state/sagas/lp_incentives/lpIncentivesSaga'
+import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 interface LpIncentiveClaimModalProps {
   isOpen: boolean
@@ -44,7 +43,6 @@ export function LpIncentiveClaimModal({
   isPendingTransaction = false,
   iconUrl,
 }: LpIncentiveClaimModalProps) {
-  const isClaimRewardsLiquidityApiEnabled = useFeatureFlag(FeatureFlags.ClaimRewardsLiquidityApi)
   const [error, setError] = useState<string | null>(null)
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
     { step: TransactionStep; accepted: boolean } | undefined
@@ -60,24 +58,18 @@ export function LpIncentiveClaimModal({
     data,
     error: calldataError,
     isLoading: isLoadingClaimData,
-  } = useLpIncentivesClaimData({
-    isClaimRewardsLiquidityApiEnabled,
-    params: isClaimRewardsLiquidityApiEnabled
-      ? new ClaimLPRewardsRequest({
-          walletAddress: account.address,
-          chainId: token.chainId,
-          tokens: [token.address],
-          distributor: Distributor.MERKLE,
-          simulateTransaction: true,
-        })
-      : {
-          walletAddress: account.address,
-          chainId: token.chainId,
-          tokens: [token.address],
-          distributor: TradingApi.Distributor.MERKL,
-          simulateTransaction: true,
-        },
-  })
+  } = useQuery(
+    liquidityQueries.claimRewards({
+      params: new ClaimLPRewardsRequest({
+        walletAddress: account.address,
+        chainId: token.chainId,
+        tokens: [token.address],
+        distributor: Distributor.MERKLE,
+        simulateTransaction: true,
+      }),
+      enabled: !!account.address,
+    }),
+  )
 
   useEffect(() => {
     if (calldataError) {
@@ -100,10 +92,10 @@ export function LpIncentiveClaimModal({
     dispatch(
       lpIncentivesClaimSaga.actions.trigger({
         address: account.address,
-        chainId: token.chainId,
         claimData: data.claim,
         tokenAddress: token.address,
         selectChain,
+        walletChainId: account.chainId,
         onSuccess,
         onFailure: (error) => {
           setCurrentTransactionStep(undefined)

@@ -1,17 +1,19 @@
 import { GraphQLApi } from '@universe/api'
 import { createMigrate } from 'redux-persist'
-import { migration1 } from 'state/migrations/1'
-import { migration2 } from 'state/migrations/2'
-import { migration3 } from 'state/migrations/3'
-import { migration4 } from 'state/migrations/4'
-import { migration5 } from 'state/migrations/5'
-import { migration6 } from 'state/migrations/6'
-import { migration7 } from 'state/migrations/7'
-import { migration8 } from 'state/migrations/8'
-import { migration9 } from 'state/migrations/9'
-import { migration10 } from 'state/migrations/10'
-import { migration11 } from 'state/migrations/11'
-import { migration12, NewTransactionState, OldTransactionState, PersistAppStateV12 } from 'state/migrations/12'
+import { createThrowingProxy } from 'utilities/src/test/utils'
+import { vi } from 'vitest'
+import { migration1 } from '~/state/migrations/1'
+import { migration2 } from '~/state/migrations/2'
+import { migration3 } from '~/state/migrations/3'
+import { migration4 } from '~/state/migrations/4'
+import { migration5 } from '~/state/migrations/5'
+import { migration6 } from '~/state/migrations/6'
+import { migration7 } from '~/state/migrations/7'
+import { migration8 } from '~/state/migrations/8'
+import { migration9 } from '~/state/migrations/9'
+import { migration10 } from '~/state/migrations/10'
+import { migration11 } from '~/state/migrations/11'
+import { migration12, NewTransactionState, OldTransactionState, PersistAppStateV12 } from '~/state/migrations/12'
 
 const oldTransactionState: OldTransactionState = {
   1: {
@@ -127,5 +129,27 @@ describe('migration to v12', () => {
     )
     const result: any = await migrator(previousState, 12)
     expect(result.transactions).toMatchObject(newTransactionState)
+  })
+
+  it('should handle errors gracefully and clear transactions', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    // Need a non-empty target so the for...in loop enters and then throws when accessing properties
+    const throwingTransactions = createThrowingProxy(
+      { 1: { '0x0': {} } },
+      { throwingMethods: ['*'], errorMessage: 'Migration failed' },
+    )
+    const corruptedState: PersistAppStateV12 = {
+      transactions: throwingTransactions as unknown as OldTransactionState,
+      _persist: {
+        version: 11,
+        rehydrated: true,
+      },
+    }
+
+    const result = migration12(corruptedState)
+
+    expect(result?.transactions).toEqual({})
+    expect(result?._persist.version).toEqual(12)
   })
 })

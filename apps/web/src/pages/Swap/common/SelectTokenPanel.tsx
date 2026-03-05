@@ -1,12 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { iconSizes } from 'ui/src/theme'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export const SelectTokenPanel = ({
   currency,

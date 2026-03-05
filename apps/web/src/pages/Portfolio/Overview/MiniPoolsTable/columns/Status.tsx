@@ -1,9 +1,9 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { PositionInfo } from 'components/Liquidity/types'
 import { TFunction } from 'i18next'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, Text } from 'ui/src'
+import { PositionInfo } from '~/components/Liquidity/types'
 
 const getStatusText = (status: PositionStatus, t: TFunction) => {
   switch (status) {

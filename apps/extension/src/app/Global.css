@@ -6,6 +6,17 @@ html {
   font-variant-ligatures: no-contextual;
 }
 
+/* Theme-aware background colors using Tamagui theme classes */
+.t_light body,
+.t_light html {
+  background-color: #fff;
+}
+
+.t_dark body,
+.t_dark html {
+  background-color: #131313;
+}
+
 #root {
   height: 100vh;
   display: flex;

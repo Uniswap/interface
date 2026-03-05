@@ -23,8 +23,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
@@ -152,12 +152,12 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
     <Flex gap="$spacing8">
       <Flex row justifyContent="space-between" alignItems="flex-start">
         <TouchableArea pressStyle={{ scale: 0.95 }} onPress={onPressAccount}>
-          <Flex group row alignItems="center" gap="$spacing4">
+          <Flex row alignItems="center" gap="$spacing4">
             <Flex $group-hover={{ opacity: 0.6 }}>
               <AccountIcon address={address} size={iconSizes.icon48} />
             </Flex>
             <Flex $group-hover={{ opacity: 1 }} opacity={0}>
-              <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+              <RotatableChevron color="$neutral3" direction="down" size="$icon.20" />
             </Flex>
           </Flex>
         </TouchableArea>

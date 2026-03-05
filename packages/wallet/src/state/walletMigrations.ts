@@ -1,3 +1,5 @@
+/* eslint-disable max-depth */
+/* eslint-disable max-lines */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* biome-ignore-all lint/suspicious/noExplicitAny: Migration types require dynamic typing */
 
@@ -6,12 +8,19 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { BasicTokenInfo, SerializedTokenMap, TokenDismissInfo } from 'uniswap/src/features/tokens/warnings/slice/types'
+import {
+  type BasicTokenInfo,
+  type SerializedTokenMap,
+  type TokenDismissInfo,
+} from 'uniswap/src/features/tokens/warnings/slice/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { CurrencyId } from 'uniswap/src/types/currency'
+import { createSafeMigrationFactory } from 'uniswap/src/state/createSafeMigration'
+import { type CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { type Account } from 'wallet/src/features/wallet/accounts/types'
+
+const createSafeMigration = createSafeMigrationFactory('walletMigrations')
 
 // Mobile: 63
 // Extension: 0
@@ -32,40 +41,44 @@ export function removeUniconV2BehaviorState(state: any): any {
 
 // Mobile: 65
 // Extension: 2
-export function addRoutingFieldToTransactions(state: any): any {
-  const oldTransactionState = state?.transactions
-  const newTransactionState: any = {}
+export const addRoutingFieldToTransactions = createSafeMigration({
+  name: 'addRoutingFieldToTransactions',
+  migrate: (state: any) => {
+    const oldTransactionState = state?.transactions
+    const newTransactionState: any = {}
 
-  const addresses = Object.keys(oldTransactionState ?? {})
-  for (const address of addresses) {
-    const chainIds = Object.keys(oldTransactionState[address] ?? {})
-    for (const chainId of chainIds) {
-      const transactions = oldTransactionState[address][chainId]
-      const txIds = Object.keys(transactions ?? {})
+    const addresses = Object.keys(oldTransactionState ?? {})
+    for (const address of addresses) {
+      const chainIds = Object.keys(oldTransactionState[address] ?? {})
+      for (const chainId of chainIds) {
+        const transactions = oldTransactionState[address][chainId]
+        const txIds = Object.keys(transactions ?? {})
 
-      for (const txId of txIds) {
-        const txDetails = transactions[txId]
+        for (const txId of txIds) {
+          const txDetails = transactions[txId]
 
-        if (!txDetails) {
-          // we iterate over every chain, need to no-op on some combinations
-          continue
+          if (!txDetails) {
+            // we iterate over every chain, need to no-op on some combinations
+            continue
+          }
+
+          txDetails.options ??= { request: {} }
+
+          newTransactionState[address] ??= {}
+          newTransactionState[address][chainId] ??= {}
+          // 'CLASSIC' comes from trading API Routing.Classic enum. It is hardcoded here as a string for safety incase the enum changes.
+          newTransactionState[address][chainId][txId] = { routing: 'CLASSIC', ...txDetails }
         }
-
-        txDetails.options ??= { request: {} }
-
-        newTransactionState[address] ??= {}
-        newTransactionState[address][chainId] ??= {}
-        // 'CLASSIC' comes from trading API Routing.Classic enum. It is hardcoded here as a string for safety incase the enum changes.
-        newTransactionState[address][chainId][txId] = { routing: 'CLASSIC', ...txDetails }
       }
     }
-  }
-  return { ...state, transactions: newTransactionState }
-}
+    return { ...state, transactions: newTransactionState }
+  },
+  onError: (state: any) => ({ ...state, transactions: {} }),
+})
 
 // Mobile: 66
 // Extension: 3
-// Activates redux pending accounts as a result of migration to OnbardingContext.tsx. Migration rulses:
+// Activates redux pending accounts as a result of migration to OnbardingContext.tsx. Migration rules:
 // 1. if there's a view only pending account, always activate it
 // 2. if there's a signer pending account and it
 //     a. has the same mnemonic id as the active account, always activate it unless:
@@ -169,29 +182,41 @@ export const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
 // Mobile: 70
 // Extension: 7
-export function deleteDefaultFavoritesFromFavoritesState(state: any): any {
-  const newState = { ...state }
+export const deleteDefaultFavoritesFromFavoritesState = createSafeMigration({
+  name: 'deleteDefaultFavoritesFromFavoritesState',
+  migrate: (state: any) => {
+    if (!state?.favorites?.watchedAddresses || !Array.isArray(state.favorites.watchedAddresses)) {
+      return state
+    }
 
-  const filteredWatchedAddresses = newState.favorites?.watchedAddresses?.filter(
-    (address: string) =>
-      !areAddressesEqual({
-        addressInput1: { address, platform: Platform.EVM },
-        addressInput2: { address: VITALIK_ETH_ADDRESS, platform: Platform.EVM },
-      }) &&
-      !areAddressesEqual({
-        addressInput1: { address, platform: Platform.EVM },
-        addressInput2: { address: HAYDEN_ETH_ADDRESS, platform: Platform.EVM },
-      }),
-  )
+    const filteredWatchedAddresses = state.favorites.watchedAddresses.filter(
+      (address: string) =>
+        !areAddressesEqual({
+          addressInput1: { address, platform: Platform.EVM },
+          addressInput2: { address: VITALIK_ETH_ADDRESS, platform: Platform.EVM },
+        }) &&
+        !areAddressesEqual({
+          addressInput1: { address, platform: Platform.EVM },
+          addressInput2: { address: HAYDEN_ETH_ADDRESS, platform: Platform.EVM },
+        }),
+    )
 
-  return {
-    ...newState,
+    return {
+      ...state,
+      favorites: {
+        ...state.favorites,
+        watchedAddresses: filteredWatchedAddresses,
+      },
+    }
+  },
+  onError: (state: any) => ({
+    ...state,
     favorites: {
-      ...newState.favorites,
-      watchedAddresses: filteredWatchedAddresses,
+      ...state.favorites,
+      watchedAddresses: [],
     },
-  }
-}
+  }),
+})
 
 // Mobile: 71
 // Extension: 8
@@ -257,38 +282,45 @@ export function addCreatedOnboardingRedesignAccountBehaviorHistory(state: any): 
   return newState
 }
 
-export function moveDismissedTokenWarnings(state: any): any {
-  // Don't migrate if the state doesn't exist
-  if (typeof state.tokens?.dismissedWarningTokens !== 'object') {
-    return state
-  }
-
-  // Translate old warning
-  const newWarnings: SerializedTokenMap<TokenDismissInfo> = {}
-  Object.keys(state.tokens.dismissedWarningTokens).forEach((currencyId: CurrencyId) => {
-    const chainId = currencyIdToChain(currencyId)
-    const address = currencyIdToAddress(currencyId)
-    if (chainId) {
-      const serializedToken: BasicTokenInfo = {
-        chainId,
-        address,
-      }
-      newWarnings[chainId] = newWarnings[chainId] || {}
-      // biome-ignore lint/style/noNonNullAssertion: Safe assertion in migration context - we just created this key
-      newWarnings[chainId]![address] = serializedToken
+export const moveDismissedTokenWarnings = createSafeMigration({
+  name: 'moveDismissedTokenWarnings',
+  migrate: (state: any) => {
+    // Don't migrate if the state doesn't exist
+    if (typeof state?.tokens?.dismissedWarningTokens !== 'object') {
+      return state
     }
-  })
 
-  // Replace old warnings with new warnings
-  const newState = {
+    // Translate old warning
+    const newWarnings: SerializedTokenMap<TokenDismissInfo> = {}
+    Object.keys(state.tokens.dismissedWarningTokens).forEach((currencyId: CurrencyId) => {
+      const chainId = currencyIdToChain(currencyId)
+      const address = currencyIdToAddress(currencyId)
+      if (chainId) {
+        const serializedToken: BasicTokenInfo = {
+          chainId,
+          address,
+        }
+        newWarnings[chainId] = newWarnings[chainId] || {}
+        // biome-ignore lint/style/noNonNullAssertion: Safe assertion in migration context - we just created this key
+        newWarnings[chainId]![address] = serializedToken
+      }
+    })
+
+    // Replace old warnings with new warnings
+    return {
+      ...state,
+      tokens: {
+        dismissedTokenWarnings: newWarnings,
+      },
+    }
+  },
+  onError: (state: any) => ({
     ...state,
     tokens: {
-      dismissedTokenWarnings: newWarnings,
+      dismissedTokenWarnings: {},
     },
-  }
-
-  return newState
-}
+  }),
+})
 
 export function moveLanguageSetting(state: any): any {
   const newState = {
@@ -341,12 +373,12 @@ export function removeCreatedOnboardingRedesignAccountBehaviorHistory(state: any
   const newState = {
     ...state,
     behaviorHistory: {
-      ...state.behaviorHistory,
+      ...state?.behaviorHistory,
       createdOnboardingRedesignAccount: undefined,
     },
   }
 
-  delete newState.behaviorHistory.createdOnboardingRedesignAccount
+  delete newState.behaviorHistory?.createdOnboardingRedesignAccount
   return newState
 }
 
@@ -364,19 +396,19 @@ export function moveTokenAndNFTVisibility(state: any): any {
   const newState = {
     ...state,
     visibility: {
-      ...state.visibility,
+      ...state?.visibility,
       positions: {},
-      tokens: state.favorites.tokensVisibility,
-      nfts: state.favorites.nftsVisibility,
+      tokens: state?.favorites?.tokensVisibility ?? {},
+      nfts: state?.favorites?.nftsVisibility ?? {},
     },
     favorites: {
-      ...state.favorites,
+      ...state?.favorites,
       tokensVisibility: undefined,
       nftsVisibility: undefined,
     },
   }
-  delete newState.favorites.tokensVisibility
-  delete newState.favorites.nftsVisibility
+  delete newState.favorites?.tokensVisibility
+  delete newState.favorites?.nftsVisibility
   return newState
 }
 
@@ -396,81 +428,84 @@ export function moveHapticsToUserSettings(state: any): any {
   const newState = {
     ...state,
     appearanceSettings: {
-      ...state.appearanceSettings,
+      ...state?.appearanceSettings,
       hapticsEnabled: undefined,
     },
     userSettings: {
-      ...state.userSettings,
-      hapticsEnabled: state.appearanceSettings.hapticsEnabled ?? true,
+      ...state?.userSettings,
+      hapticsEnabled: state?.appearanceSettings?.hapticsEnabled ?? true,
     },
   }
-  delete newState.appearanceSettings.hapticsEnabled
+  delete newState.appearanceSettings?.hapticsEnabled
   return newState
 }
 
 // Mobile: 90
 // Extension: 26
-export function migrateLiquidityTransactionInfo(state: any): any {
-  const oldTransactionState = state?.transactions
-  const newTransactionState: any = {}
+export const migrateLiquidityTransactionInfo = createSafeMigration({
+  name: 'migrateLiquidityTransactionInfo',
+  migrate: (state: any) => {
+    const oldTransactionState = state?.transactions
+    const newTransactionState: any = {}
 
-  const addresses = Object.keys(oldTransactionState ?? {})
-  for (const address of addresses) {
-    const chainIds = Object.keys(oldTransactionState[address] ?? {})
-    for (const chainId of chainIds) {
-      const transactions = oldTransactionState[address][chainId]
-      const txIds = Object.keys(transactions ?? {})
+    const addresses = Object.keys(oldTransactionState ?? {})
+    for (const address of addresses) {
+      const chainIds = Object.keys(oldTransactionState[address] ?? {})
+      for (const chainId of chainIds) {
+        const transactions = oldTransactionState[address][chainId]
+        const txIds = Object.keys(transactions ?? {})
 
-      for (const txId of txIds) {
-        const txDetails = transactions[txId]
+        for (const txId of txIds) {
+          const txDetails = transactions[txId]
 
-        newTransactionState[address] ??= {}
-        newTransactionState[address][chainId] ??= {}
+          newTransactionState[address] ??= {}
+          newTransactionState[address][chainId] ??= {}
 
-        const isLiquidityTransactionBeingRenamed = [
-          TransactionType.LiquidityIncrease,
-          TransactionType.LiquidityDecrease,
-          TransactionType.CollectFees,
-          TransactionType.CreatePool,
-          TransactionType.CreatePair,
-        ].includes(txDetails?.typeInfo?.type)
-        // ignore if it's not a liquidity transaction
-        if (!isLiquidityTransactionBeingRenamed) {
-          newTransactionState[address][chainId][txId] = txDetails
-        } else {
-          // eslint-disable-next-line max-depth
-          try {
-            const { typeInfo, ...txRest } = txDetails
-            const {
-              inputCurrencyId,
-              inputCurrencyAmountRaw,
-              outputCurrencyId,
-              outputCurrencyAmountRaw,
-              ...typeInfoRest
-            } = typeInfo
-            newTransactionState[address][chainId][txId] = {
-              ...txRest,
-              typeInfo: {
-                currency0Id: inputCurrencyId,
-                currency0AmountRaw: inputCurrencyAmountRaw,
-                currency1Id: outputCurrencyId,
-                currency1AmountRaw: outputCurrencyAmountRaw,
-                ...typeInfoRest,
-              },
+          const isLiquidityTransactionBeingRenamed = [
+            TransactionType.LiquidityIncrease,
+            TransactionType.LiquidityDecrease,
+            TransactionType.CollectFees,
+            TransactionType.CreatePool,
+            TransactionType.CreatePair,
+          ].includes(txDetails?.typeInfo?.type)
+          // ignore if it's not a liquidity transaction
+          if (!isLiquidityTransactionBeingRenamed) {
+            newTransactionState[address][chainId][txId] = txDetails
+          } else {
+            try {
+              const { typeInfo, ...txRest } = txDetails
+              const {
+                inputCurrencyId,
+                inputCurrencyAmountRaw,
+                outputCurrencyId,
+                outputCurrencyAmountRaw,
+                ...typeInfoRest
+              } = typeInfo
+              newTransactionState[address][chainId][txId] = {
+                ...txRest,
+                typeInfo: {
+                  currency0Id: inputCurrencyId,
+                  currency0AmountRaw: inputCurrencyAmountRaw,
+                  currency1Id: outputCurrencyId,
+                  currency1AmountRaw: outputCurrencyAmountRaw,
+                  ...typeInfoRest,
+                },
+              }
+            } catch {
+              // if any error occurs, ignore but remove the transaction
             }
-          } catch (_e) {
-            // if any error occurs, ignore but remove the transaction
           }
         }
       }
     }
-  }
-  return { ...state, transactions: newTransactionState }
-}
+    return { ...state, transactions: newTransactionState }
+  },
+  onError: (state: any) => ({ ...state, transactions: {} }),
+})
 
 // Mobile: 91
 export function removePriceAlertsEnabledFromPushNotifications(state: any): any {
   const newState = { ...state }
-  delete newState.pushNotifications.priceAlertsEnabled
+  delete newState.pushNotifications?.priceAlertsEnabled
   return newState
 }

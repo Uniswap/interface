@@ -55,13 +55,22 @@ vi.mock('react-native-safe-area-context', () => ({
   SafeAreaProvider: React.forwardRef((props: any, ref) => React.createElement('div', { ...props, ref })),
 }))
 
+// Mock UniconSVGs - this is required because the Unicon component uses require() in test environment
+// and Node's require() can't resolve TypeScript files
+vi.mock('ui/src/components/Unicon/UniconSVGs', () => ({
+  Icons: {
+    icon1: ['M0 0 L10 10'],
+    icon2: ['M5 5 L15 15'],
+  },
+}))
+
 // Mock ui/src/assets
-vi.mock('ui/src/assets', () => {
-  const assets = vi.importActual('ui/src/assets')
+vi.mock('ui/src/assets', async (importOriginal) => {
+  const assets = (await importOriginal()) as Record<string, unknown>
   const mockedAssets: Record<string, string> = {}
 
   if (assets && assets !== null && assets !== undefined) {
-    Object.keys(assets as unknown as Record<string, unknown>).forEach((key) => {
+    Object.keys(assets).forEach((key) => {
       mockedAssets[key] = `mock-asset-${key}.png`
     })
   }
@@ -75,7 +84,14 @@ vi.mock('react-native-webview', () => ({
 }))
 
 // Mock useDeviceInsets to use web version
-vi.mock('ui/src/hooks/useDeviceInsets', () => vi.importActual('ui/src/hooks/useDeviceInsets.web.ts'))
+vi.mock('ui/src/hooks/useDeviceInsets', () => ({
+  useDeviceInsets: () => ({
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  }),
+}))
 
 // Mock moti (used by tamagui animations)
 vi.mock('moti', () => ({
@@ -103,8 +119,26 @@ vi.mock('react-native-reanimated', () => {
 
   const styleCache = new Map()
 
+  // Mock createAnimatedComponent to return a simple component wrapper
+  const createAnimatedComponent = (Component: any) => {
+    const AnimatedComponent = React.forwardRef((props: any, ref: any) =>
+      React.createElement(Component, { ...props, ref }),
+    )
+    AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`
+    return AnimatedComponent
+  }
+
+  const AnimatedDefault = Object.assign(MockAnimatedView, {
+    createAnimatedComponent,
+    View: MockAnimatedView,
+    Text: React.forwardRef((props: any, ref) => React.createElement('span', { ...props, ref })),
+    ScrollView: React.forwardRef((props: any, ref) => React.createElement('div', { ...props, ref })),
+    Image: React.forwardRef((props: any, ref) => React.createElement('img', { ...props, ref })),
+  })
+
   return {
-    default: MockAnimatedView,
+    default: AnimatedDefault,
+    createAnimatedComponent,
     useSharedValue: vi.fn((initial) => ({ value: initial })),
     useAnimatedStyle: vi.fn((callback) => {
       const key = callback?.toString() || 'default'

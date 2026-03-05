@@ -64,7 +64,11 @@ export function SettingsCloudBackupPasswordCreateScreen({
         </Flex>
         <CloudBackupPassword.PasswordInput />
         {showCloudBackupInfoModal && (
-          <Modal backgroundColor={colors.surface2.val} name={ModalName.CloudBackupInfo}>
+          <Modal
+            backgroundColor={colors.surface2.val}
+            name={ModalName.CloudBackupInfo}
+            onClose={() => setShowCloudBackupInfoModal(false)}
+          >
             <Flex px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
                 <Flex backgroundColor="$DEP_accentSoft" borderRadius="$rounded12" p="$spacing12">

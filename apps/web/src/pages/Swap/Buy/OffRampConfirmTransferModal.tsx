@@ -1,20 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import { useAccount } from 'hooks/useAccount'
-import { useSendCallback } from 'hooks/useSendCallback'
-import { GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
-import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
-import { updateFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
-import { FiatOnRampTransactionStatus } from 'state/fiatOnRampTransactions/types'
-import { statusToTransactionInfoStatus } from 'state/fiatOnRampTransactions/utils'
-import { useAppDispatch } from 'state/hooks'
 import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
@@ -25,13 +14,14 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useFiatOnRampAggregatorOffRampTransferDetailsQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { useFiatOnRampAggregatorOffRampTransferDetailsQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import {
   FORTransaction,
   OffRampTransferDetailsRequest,
   OffRampTransferDetailsResponse,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { GasSpeed } from 'uniswap/src/features/gas/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatOffRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -39,12 +29,23 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { useCreateTransferTransaction } from 'utils/transfer'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { useAccount } from '~/hooks/useAccount'
+import { useSendCallback } from '~/hooks/useSendCallback'
+import { useTransactionGasFee } from '~/hooks/useTransactionGasFee'
+import { useFiatOnRampTransactions } from '~/state/fiatOnRampTransactions/hooks'
+import { updateFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/reducer'
+import { FiatOnRampTransactionStatus } from '~/state/fiatOnRampTransactions/types'
+import { statusToTransactionInfoStatus } from '~/state/fiatOnRampTransactions/utils'
+import { useAppDispatch } from '~/state/hooks'
+import { useCreateTransferTransaction } from '~/utils/transfer'
 
 const ProviderDetails = ({ details }: { details: OffRampTransferDetailsResponse }) => {
   const { logos } = details
   const isDarkMode = useIsDarkMode()
-  const logo = isDarkMode ? logos.darkLogo : logos.lightLogo
+  const logo = isDarkMode ? logos?.darkLogo : logos?.lightLogo
 
   return (
     <Flex row justifyContent="space-between">

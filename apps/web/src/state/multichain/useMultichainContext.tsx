@@ -1,6 +1,6 @@
-import { useAccount } from 'hooks/useAccount'
 import { useContext } from 'react'
-import { MultichainContext } from 'state/multichain/types'
+import { useAccount } from '~/hooks/useAccount'
+import { MultichainContext } from '~/state/multichain/types'
 
 export function useMultichainContext() {
   const account = useAccount()

@@ -11,15 +11,9 @@ import {
   useIsDarkMode,
   useMedia,
 } from 'ui/src'
-import type { GeneratedIcon } from 'ui/src/components/factories/createIcon'
-import { Chart } from 'ui/src/components/icons/Chart'
-import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
-import { EthMini } from 'ui/src/components/icons/EthMini'
-import { Gas } from 'ui/src/components/icons/Gas'
-import { Lightning } from 'ui/src/components/icons/Lightning'
-import { Wallet } from 'ui/src/components/icons/Wallet'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { parseCustomIconLink } from 'uniswap/src/components/notifications/iconUtils'
 import { ElementName, type ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobileApp, isWebApp } from 'utilities/src/platform'
@@ -79,6 +73,8 @@ export interface ModalFeatureItem {
   icon?: ReactNode
   text: string
   iconUrl?: string
+  /** Optional dark mode variant for iconUrl. Falls back to iconUrl if not provided. */
+  darkModeIconUrl?: string
 }
 
 export interface ModalTemplateButton {
@@ -89,43 +85,18 @@ export interface ModalTemplateButton {
   elementName?: ElementName
 }
 
-const CUSTOM_ICON_MAP: Record<string, GeneratedIcon> = {
-  lightning: Lightning,
-  wallet: Wallet,
-  chart: Chart,
-  gas: Gas,
-  'coin-convert': CoinConvert,
-  ethereum: EthMini,
-}
-
 /**
- * Helper function to check if iconUrl is a custom icon string (format: "custom:<iconName>-<colorToken>")
- * and return the corresponding React component instead of using a background image.
+ * Helper function to render a custom icon from a notification icon link.
+ * Supports format: "custom:<iconName>-$<colorToken>" (e.g., "custom:lightning-$accent1")
  *
  * TODO: remove client hard-coding when notification images are uploaded to backend and they start sending valid image URLs.
- *
- * @example
- * getCustomIconComponent("custom:lightning-$accent1") // Returns <Lightning size={20} color="$accent1" />
- * getCustomIconComponent("custom:wallet-$neutral2") // Returns <Wallet size={20} color="$neutral2" />
  */
-function getCustomIconComponent(iconUrl?: string): ReactNode {
-  if (!iconUrl || typeof iconUrl !== 'string' || !iconUrl.startsWith('custom:')) {
+function renderCustomIcon(iconUrl?: string): ReactNode {
+  const { IconComponent, colorToken } = parseCustomIconLink(iconUrl)
+  if (!IconComponent || !colorToken) {
     return null
   }
-
-  // Parse the format: custom:<iconName>-<colorToken>
-  const customPart = iconUrl.slice(7) // Remove "custom:" prefix
-  const lastDashIndex = customPart.lastIndexOf('-')
-
-  if (lastDashIndex === -1) {
-    return null
-  }
-
-  const iconName = customPart.slice(0, lastDashIndex)
-  const colorToken = customPart.slice(lastDashIndex + 1)
-
-  const IconComponent = CUSTOM_ICON_MAP[iconName]
-  return IconComponent ? <IconComponent size={20} color={colorToken} /> : null
+  return <IconComponent size={20} color={colorToken} />
 }
 
 interface ModalTemplateProps {
@@ -133,8 +104,12 @@ interface ModalTemplateProps {
   name: ModalNameType | string
   onClose: () => void
   backgroundImageUrl?: string
+  /** Optional dark mode variant for backgroundImageUrl. Falls back to backgroundImageUrl if not provided. */
+  darkModeBackgroundImageUrl?: string
   onBackgroundPress?: () => void
   iconUrl?: string
+  /** Optional dark mode variant for iconUrl. Falls back to iconUrl if not provided. */
+  darkModeIconUrl?: string
   title: string
   subtitle?: string
   features?: ModalFeatureItem[]
@@ -166,8 +141,10 @@ export function ModalTemplate({
   name,
   onClose,
   backgroundImageUrl,
+  darkModeBackgroundImageUrl,
   onBackgroundPress,
   iconUrl,
+  darkModeIconUrl,
   title,
   subtitle,
   features = [],
@@ -180,6 +157,9 @@ export function ModalTemplate({
   const hideCloseButton = (isWebApp && sm) || isMobileApp
   const isDarkMode = useIsDarkMode()
   const gradientStartColor = isDarkMode ? 'transparent' : 'rgba(255, 255, 255, 0)'
+  const effectiveBackgroundUrl =
+    isDarkMode && darkModeBackgroundImageUrl ? darkModeBackgroundImageUrl : backgroundImageUrl
+  const effectiveIconUrl = isDarkMode && darkModeIconUrl ? darkModeIconUrl : iconUrl
 
   return (
     <Modal
@@ -193,11 +173,11 @@ export function ModalTemplate({
       onClose={onClose}
     >
       <Flex p="$spacing24" gap="$spacing24">
-        {backgroundImageUrl &&
+        {effectiveBackgroundUrl &&
           (isMobileApp ? (
             <>
               <GradientImage
-                source={{ uri: backgroundImageUrl }}
+                source={{ uri: effectiveBackgroundUrl }}
                 cursor={onBackgroundPress ? 'pointer' : undefined}
                 onPress={onBackgroundPress}
               />
@@ -217,7 +197,7 @@ export function ModalTemplate({
             </>
           ) : (
             <GradientContainer
-              backgroundImage={`url(${backgroundImageUrl})`}
+              backgroundImage={`url(${effectiveBackgroundUrl})`}
               cursor={onBackgroundPress ? 'pointer' : undefined}
               onPress={onBackgroundPress}
             />
@@ -227,11 +207,11 @@ export function ModalTemplate({
           <>
             {/* Header */}
             <Flex alignItems="flex-start" gap="$spacing16" pt="$spacing16">
-              {iconUrl &&
+              {effectiveIconUrl &&
                 (isMobileApp ? (
-                  <IconImage source={{ uri: iconUrl }} />
+                  <IconImage source={{ uri: effectiveIconUrl }} />
                 ) : (
-                  <IconContainer backgroundImage={`url(${iconUrl})`} />
+                  <IconContainer backgroundImage={`url(${effectiveIconUrl})`} />
                 ))}
               <Flex gap="$spacing4">
                 <Text variant="subheading1" color="$neutral1">
@@ -249,17 +229,19 @@ export function ModalTemplate({
             {features.length > 0 && (
               <Flex gap="$spacing8" mx="$spacing8">
                 {features.map((feature, index) => {
-                  const customIcon = getCustomIconComponent(feature.iconUrl)
+                  const effectiveFeatureIconUrl =
+                    isDarkMode && feature.darkModeIconUrl ? feature.darkModeIconUrl : feature.iconUrl
+                  const customIcon = renderCustomIcon(effectiveFeatureIconUrl)
                   return (
                     <FeatureRow key={index}>
-                      {(feature.icon || feature.iconUrl) && (
+                      {(feature.icon || effectiveFeatureIconUrl) && (
                         <FeatureIcon>
                           {customIcon ||
-                            (feature.iconUrl ? (
+                            (effectiveFeatureIconUrl ? (
                               <Flex
                                 width={20}
                                 height={20}
-                                backgroundImage={`url(${feature.iconUrl})`}
+                                backgroundImage={`url(${effectiveFeatureIconUrl})`}
                                 backgroundSize="cover"
                                 backgroundPosition="center"
                               />

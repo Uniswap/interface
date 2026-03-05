@@ -45,8 +45,8 @@ async function initInternal(): Promise<void> {
   state = (await chrome.storage.local.get([STATE_STORAGE_KEY]))?.[STATE_STORAGE_KEY] || initialDappState
 
   chrome.storage.local.onChanged.addListener((changes) => {
-    if (changes.dappState) {
-      state = changes.dappState.newValue
+    if (changes['dappState']) {
+      state = changes['dappState'].newValue
       dappStoreEventEmitter.emit(DappStoreEvent.DappStateUpdated, state)
     }
   })

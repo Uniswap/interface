@@ -3,7 +3,7 @@ import { formatPriceImpact } from 'uniswap/src/features/transactions/swap/utils/
 
 describe('formatPriceImpact', () => {
   // Accepts Maybe<string | number> and returns string
-  const mockFormatPercent = jest.fn((value: Maybe<string | number>): string => {
+  const mockFormatPercent = vi.fn((value: Maybe<string | number>): string => {
     if (value === undefined || value === null) {
       return '-mocked%'
     }
@@ -17,7 +17,7 @@ describe('formatPriceImpact', () => {
   }
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should format a positive price impact (negative effect for user)', () => {

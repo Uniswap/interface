@@ -1,10 +1,10 @@
-import { MouseoverTooltip } from 'components/Tooltip'
 import { useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, GeneratedIcon, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { MouseoverTooltip } from '~/components/Tooltip'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export function AdvancedButton({
   title,

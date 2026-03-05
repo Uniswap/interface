@@ -8,6 +8,6 @@ export const HexadecimalNumberSchema = z.union([z.number(), z.string()]).transfo
   if (!isNaN(possibleNumber)) {
     return possibleNumber
   }
-  ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Not a hexadecimal number' })
+  ctx.addIssue({ code: 'custom', message: 'Not a hexadecimal number' })
   return z.NEVER
 })

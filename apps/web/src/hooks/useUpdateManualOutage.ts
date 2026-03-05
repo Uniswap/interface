@@ -1,11 +1,10 @@
 import { ApolloError } from '@apollo/client'
 import { GraphQLApi } from '@universe/api'
-import { RESET, useAtomCallback } from 'jotai/utils'
-import { useCallback, useEffect } from 'react'
-import { manualChainOutageAtom } from 'state/outage/atoms'
+import { useEffect } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
-import { isOutageError } from 'utils/errors/isOutageError'
+import { useManualChainOutageStore } from '~/state/outage/store'
+import { isOutageError } from '~/utils/errors/isOutageError'
 
 /**
  * Hook to automatically detect data outages based on GraphQL errors.
@@ -33,31 +32,6 @@ export function useUpdateManualOutage({
 }) {
   const isOffline = useIsOffline()
 
-  const handleOutageUpdate = useAtomCallback(
-    useCallback(
-      (
-        _get,
-        set,
-        {
-          chainId,
-          hasAnyOutageError,
-          hasOutageErrorV2,
-        }: { chainId: UniverseChainId; hasAnyOutageError: boolean; hasOutageErrorV2: boolean },
-        // eslint-disable-next-line max-params -- useAtomCallback requires (get, set, arg) signature
-      ) => {
-        if (hasAnyOutageError) {
-          set(
-            manualChainOutageAtom,
-            hasOutageErrorV2 ? { chainId, version: GraphQLApi.ProtocolVersion.V2 } : { chainId },
-          )
-        } else {
-          set(manualChainOutageAtom, RESET)
-        }
-      },
-      [],
-    ),
-  )
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: trigger is intentionally included to force re-execution when its value changes
   useEffect(() => {
     if (!chainId || isOffline) {
@@ -68,6 +42,11 @@ export function useUpdateManualOutage({
     const hasOutageErrorV2 = Boolean(errorV2 && isOutageError(errorV2))
     const hasAnyOutageError = hasOutageErrorV3 || hasOutageErrorV2
 
-    handleOutageUpdate({ chainId, hasAnyOutageError, hasOutageErrorV2 })
-  }, [chainId, errorV3, errorV2, isOffline, trigger, handleOutageUpdate])
+    const { set, reset } = useManualChainOutageStore.getState()
+    if (hasAnyOutageError) {
+      set(hasOutageErrorV2 ? { chainId, version: GraphQLApi.ProtocolVersion.V2 } : { chainId })
+    } else {
+      reset()
+    }
+  }, [chainId, errorV3, errorV2, isOffline, trigger])
 }

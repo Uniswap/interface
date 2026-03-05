@@ -1,12 +1,9 @@
-import store from 'state'
-import { ConfirmedTransactionDetails, PendingTransactionDetails } from 'state/transactions/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectTransaction } from 'uniswap/src/features/transactions/selectors'
-import type {
-  InterfaceTransactionDetails,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { InterfaceTransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import store from '~/state'
+import { ConfirmedTransactionDetails, PendingTransactionDetails } from '~/state/transactions/types'
 
 export function isPendingTx(
   tx: InterfaceTransactionDetails,
@@ -20,18 +17,6 @@ export function isPendingTx(
 export function isConfirmedTx(tx: InterfaceTransactionDetails): tx is ConfirmedTransactionDetails {
   return (
     (tx.status === TransactionStatus.Success || tx.status === TransactionStatus.Failed) && !!tx.receipt?.confirmedTime
-  )
-}
-
-/**
- * Checks if a UniswapX order is in a pending-like state.
- * This includes orders that are actively pending, being cancelled, or have insufficient funds.
- */
-export function isUniswapXOrderPending(order: UniswapXOrderDetails): boolean {
-  return (
-    order.status === TransactionStatus.Pending ||
-    order.status === TransactionStatus.Cancelling ||
-    order.status === TransactionStatus.InsufficientFunds
   )
 }
 

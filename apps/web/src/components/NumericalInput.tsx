@@ -1,9 +1,9 @@
-import { loadingOpacityMixin } from 'components/Loader/styled'
-import { deprecatedStyled } from 'lib/styled-components'
 import React, { forwardRef } from 'react'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { escapeRegExp } from 'utils/escapeRegExp'
+import { loadingOpacityMixin } from '~/components/Loader/styled'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { escapeRegExp } from '~/utils/escapeRegExp'
 
 export const StyledInput = deprecatedStyled.input<{
   error?: boolean

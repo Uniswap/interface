@@ -13,6 +13,7 @@ import {
   useSwapParams,
   useSwapTxAndGasInfoService,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/hooks'
+import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/stores/activePlan/activePlanStore'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
@@ -84,20 +85,34 @@ export function useCreateSwapReviewCallbacks(ctx: {
     // show the confirmed state for bridges
     derivedSwapInfo.trade.trade?.routing === TradingApi.Routing.BRIDGE
 
-  const onFailure = useCallback(
-    (error?: Error, onPressRetry?: () => void) => {
+  const onFailure = useEvent((error?: Error, onPressRetry?: () => void) => {
+    if (!activePlanStore.getState().activePlan) {
       resetCurrentStep()
+    }
 
-      // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
-      const newTxId = createTransactionId()
-      updateSwapForm({ isSubmitting: false, isConfirmed: false, txId: newTxId, showPendingUI: false })
+    // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
+    const newTxId = createTransactionId()
+    updateSwapForm({ isSubmitting: false, isConfirmed: false, txId: newTxId, showPendingUI: false })
 
-      setSubmissionError(error)
-      setRetrySwap(() => onPressRetry)
-    },
-    [updateSwapForm, setSubmissionError, resetCurrentStep, setRetrySwap],
-  )
+    setSubmissionError(error)
+    setRetrySwap(onPressRetry)
+  })
 
+  const onClearForm = useCallback(() => {
+    updateSwapForm({
+      isConfirmed: true,
+      isSubmitting: false,
+      showPendingUI: false,
+      exactAmountFiat: undefined,
+      exactAmountToken: '',
+      instantReceiptFetchTime: undefined,
+      instantOutputAmountRaw: undefined,
+      txHash: undefined,
+      txHashReceivedTime: undefined,
+    })
+  }, [updateSwapForm])
+
+  // TODO: SWAP-1774 handle backgrounded plans
   const onSuccess = useCallback(() => {
     // For Unichain networks, trigger confirmation and branch to stall+fetch logic (ie handle in component)
     if (isFlashblocksEnabled && shouldShowConfirmedState) {
@@ -185,6 +200,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
     const executeSwapService = getExecuteSwapService({
       onSuccess,
       onFailure,
+      onClearForm,
       onPending,
       setCurrentStep,
       setSteps,

@@ -3,12 +3,14 @@ import { logger } from 'utilities/src/logger/logger'
 
 interface EmbeddedWalletState {
   walletAddress: string | null
+  walletId: string | null
   chainId: number | null
   isConnected: boolean
 }
 
 const initialState: EmbeddedWalletState = {
   walletAddress: null,
+  walletId: null,
   chainId: null,
   isConnected: false,
 }
@@ -46,9 +48,11 @@ try {
  * embedded wallet state. All changes made through this hook are automatically persisted to localStorage.
  * @returns {object} An object containing the current state and setter functions
  * @property {string | null} walletAddress - The current wallet address, or null if not set
+ * @property {string | null} walletId - The Privy wallet ID, or null if not set
  * @property {number | null} chainId - The current chain ID, or null if not set
  * @property {boolean} isConnected - Whether the wallet is currently connected
  * @property {(address: string | null) => void} setWalletAddress - Function to update the wallet address
+ * @property {(walletId: string | null) => void} setWalletId - Function to update the wallet ID
  * @property {(chainId: number | null) => void} setChainId - Function to update the chain ID
  * @property {(isConnected: boolean) => void} setIsConnected - Function to update the connection status
  */
@@ -58,6 +62,7 @@ export function useEmbeddedWalletState() {
   return {
     ...currentState,
     setWalletAddress: (address: string | null) => setState({ walletAddress: address }),
+    setWalletId: (walletId: string | null) => setState({ walletId }),
     setChainId: (chainId: number | null) => setState({ chainId }),
     setIsConnected: (isConnected: boolean) => setState({ isConnected }),
   }
@@ -68,6 +73,7 @@ export function useEmbeddedWalletState() {
  * as it provides reactive updates and setter functions.
  * @returns {EmbeddedWalletState} The current embedded wallet state
  * @property {string | null} walletAddress - The current wallet address, or null if not set
+ * @property {string | null} walletId - The Privy wallet ID, or null if not set
  * @property {number | null} chainId - The current chain ID, or null if not set
  * @property {boolean} isConnected - Whether the wallet is currently connected
  */

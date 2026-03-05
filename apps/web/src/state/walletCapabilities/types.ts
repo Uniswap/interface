@@ -1,4 +1,4 @@
-import type { GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
+import type { GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 
 export interface WalletCapabilitiesState {
   getCapabilitiesStatus: GetCapabilitiesStatus

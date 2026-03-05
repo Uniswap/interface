@@ -3,17 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { useTokenSectionsForEmptySearch } from 'uniswap/src/components/TokenSelector/hooks/useTokenSectionsForEmptySearch'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function _TokenSelectorEmptySearchList({
-  evmAddress,
-  svmAddress,
+  addresses,
   chainFilter,
   onSelectCurrency,
   renderedInModal,
 }: {
-  evmAddress?: string
-  svmAddress?: string
+  addresses: AddressGroup
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
   renderedInModal: boolean
@@ -26,8 +25,7 @@ function _TokenSelectorEmptySearchList({
     error,
     refetch,
   } = useTokenSectionsForEmptySearch({
-    evmAddress,
-    svmAddress,
+    addresses,
     chainFilter,
   })
 

@@ -1,4 +1,4 @@
-import { deprecatedStyled } from 'lib/styled-components'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 export const Divider = deprecatedStyled.div`
   width: 100%;

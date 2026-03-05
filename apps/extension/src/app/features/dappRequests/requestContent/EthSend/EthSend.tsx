@@ -1,4 +1,4 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import type { GasFeeResult } from '@universe/api'
 import { useCallback } from 'react'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
@@ -19,7 +19,6 @@ import {
   isWrapRequest,
   SendTransactionRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
@@ -32,7 +31,6 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
   const { dappRequest } = request
   const { dappUrl, currentAccount, onConfirm, onCancel } = useDappRequestQueueContext()
   const chainId = useDappLastChainId(dappUrl)
-  const blockaidTransactionScanning = useFeatureFlag(FeatureFlags.BlockaidTransactionScanning)
 
   const {
     gasFeeResult: transactionGasFeeResult,
@@ -59,55 +57,12 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
     await onCancel(requestWithGasValues)
   }, [onCancel, requestWithGasValues])
 
-  // If Blockaid transaction scanning is enabled, try to use it for ALL transaction types
+  // Use Blockaid transaction scanning for ALL transaction types
   // If the API fails, the ErrorBoundary will catch it and fallback to specialized UIs
-  if (blockaidTransactionScanning) {
-    return (
-      <ErrorBoundary
-        fallback={
-          <SpecializedTransactionFallback
-            dappRequest={dappRequest}
-            transactionGasFeeResult={transactionGasFeeResult}
-            onCancel={onCancelRequest}
-            onConfirm={onConfirmRequest}
-          />
-        }
-        onError={(error) => {
-          if (error) {
-            logger.error(error, {
-              tags: { file: 'EthSend', function: 'ErrorBoundary-Blockaid' },
-              extra: {
-                dappRequest,
-                useSimulationResultUI: true,
-              },
-            })
-          }
-        }}
-      >
-        <ParsedTransactionRequestContent
-          dappRequest={dappRequest}
-          transactionGasFeeResult={transactionGasFeeResult}
-          onCancel={onCancelRequest}
-          onConfirm={onConfirmRequest}
-        />
-      </ErrorBoundary>
-    )
-  }
-
-  // If feature flag is disabled, use specialized UIs
-  const content = (
-    <SpecializedTransactionFallback
-      dappRequest={dappRequest}
-      transactionGasFeeResult={transactionGasFeeResult}
-      onCancel={onCancelRequest}
-      onConfirm={onConfirmRequest}
-    />
-  )
-
   return (
     <ErrorBoundary
       fallback={
-        <FallbackEthSendRequestContent
+        <SpecializedTransactionFallback
           dappRequest={dappRequest}
           transactionGasFeeResult={transactionGasFeeResult}
           onCancel={onCancelRequest}
@@ -117,16 +72,21 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
       onError={(error) => {
         if (error) {
           logger.error(error, {
-            tags: { file: 'EthSend', function: 'ErrorBoundary-Specialized' },
+            tags: { file: 'EthSend', function: 'ErrorBoundary-Blockaid' },
             extra: {
               dappRequest,
-              useSimulationResultUI: false,
+              useSimulationResultUI: true,
             },
           })
         }
       }}
     >
-      {content}
+      <ParsedTransactionRequestContent
+        dappRequest={dappRequest}
+        transactionGasFeeResult={transactionGasFeeResult}
+        onCancel={onCancelRequest}
+        onConfirm={onConfirmRequest}
+      />
     </ErrorBoundary>
   )
 }

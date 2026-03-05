@@ -1,13 +1,14 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { useEffect, useMemo, useRef } from 'react'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useFetchReceipt } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/receiptFetching/useFetchReceipt'
 import { useCurrentFlashblocksTransaction } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/useCurrentFlashblocksTransaction'
 import { shouldShowFlashblocksUI } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
@@ -26,7 +27,7 @@ export function useInstantReceiptOutput(): void {
     instantReceiptFetchTime: s.instantReceiptFetchTime,
   }))
 
-  const accountAddress = useWallet().evmAccount?.address
+  const evmAddress = useActiveAddress(Platform.EVM)
   const transaction = useCurrentFlashblocksTransaction()
   const txHash = transaction?.hash
 
@@ -52,7 +53,7 @@ export function useInstantReceiptOutput(): void {
       !outputCurrencyInfo ||
       !txHash ||
       !provider ||
-      !accountAddress ||
+      !evmAddress ||
       activeFetcherIdAndStartTime.current ||
       !isFlashblocksModalRoute ||
       // don't attempt to fetch if already fetched
@@ -75,7 +76,7 @@ export function useInstantReceiptOutput(): void {
     txHash,
     provider,
     outputCurrencyInfo,
-    accountAddress,
+    evmAddress,
     isFlashblocksModalRoute,
     fetchReceipt,
   ])

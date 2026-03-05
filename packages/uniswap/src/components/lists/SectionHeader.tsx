@@ -19,6 +19,7 @@ export type SectionHeaderProps = {
   rightElement?: JSX.Element
   endElement?: JSX.Element
   name?: string
+  sectionHeader?: JSX.Element
 }
 
 export const SectionHeader = memo(function _SectionHeader({
@@ -26,12 +27,17 @@ export const SectionHeader = memo(function _SectionHeader({
   rightElement,
   endElement,
   name,
+  sectionHeader,
 }: SectionHeaderProps): JSX.Element | null {
   const title = useSectionTitle(sectionKey)
   const icon = getSectionIcon(sectionKey)
 
   if (sectionKey === OnchainItemSectionName.SuggestedTokens) {
     return null
+  }
+
+  if (sectionHeader) {
+    return sectionHeader
   }
 
   return (

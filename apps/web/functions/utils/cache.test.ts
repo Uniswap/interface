@@ -1,7 +1,7 @@
 import CacheMock from 'browser-cache-mock'
 
 import Cache, { Data } from 'functions/utils/cache'
-import { mocked } from 'src/test-utils/mocked'
+import { mocked } from '~/test-utils/mocked'
 
 const cacheMock = new CacheMock()
 

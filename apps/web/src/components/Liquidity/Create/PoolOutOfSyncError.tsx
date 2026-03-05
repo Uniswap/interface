@@ -1,9 +1,9 @@
-import { ErrorCallout } from 'components/ErrorCallout'
-import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
-import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { useTranslation } from 'react-i18next'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ErrorCallout } from '~/components/ErrorCallout'
+import { useIsPoolOutOfSync } from '~/hooks/useIsPoolOutOfSync'
+import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 export function PoolOutOfSyncError() {
   const { t } = useTranslation()

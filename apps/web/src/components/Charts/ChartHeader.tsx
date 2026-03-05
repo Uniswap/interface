@@ -1,13 +1,14 @@
-import { getProtocolColor, getProtocolName } from 'appGraphql/data/util'
 import { GraphQLApi } from '@universe/api'
-import { useHeaderDateFormatter } from 'components/Charts/hooks/useHeaderDateFormatter'
-import { PROTOCOL_LEGEND_ELEMENT_ID } from 'components/Charts/types'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
-import { EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, styled, Text, useSporeColors } from 'ui/src'
+import { Flex, LinearGradient, styled, Text, useSporeColors } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
+import { getProtocolColor, getProtocolName } from '~/appGraphql/data/util'
+import { useHeaderDateFormatter } from '~/components/Charts/hooks/useHeaderDateFormatter'
+import { PROTOCOL_LEGEND_ELEMENT_ID } from '~/components/Charts/types'
+import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 type ChartHeaderProtocolInfo = { protocol: GraphQLApi.PriceSource; value?: number }
 
@@ -99,6 +100,23 @@ function HeaderTimeDisplay({ time, timePlaceholder }: HeaderTimeDisplayProps) {
   )
 }
 
+function ChartBackgroundGradient() {
+  const colors = useSporeColors()
+
+  return (
+    <LinearGradient
+      position="absolute"
+      colors={[colors.surface1.val, colors.surface1.val, 'transparent']}
+      locations={[0, 0.7, 1]}
+      start={{ x: 0, y: 1 }}
+      end={{ x: 1, y: 0 }}
+      width="100%"
+      height="100%"
+      zIndex={zIndexes.negative}
+    />
+  )
+}
+
 interface ChartHeaderProps extends HeaderValueDisplayProps, HeaderTimeDisplayProps {
   protocolData?: ChartHeaderProtocolInfo[]
   additionalFields?: ReactNode
@@ -113,30 +131,13 @@ export function ChartHeader({
   additionalFields,
 }: ChartHeaderProps) {
   const isHovered = !!time
-  const colors = useSporeColors()
+
   return (
-    <Flex
-      row
-      position="absolute"
-      width="100%"
-      gap="$gap8"
-      alignItems="flex-start"
-      animation="fast"
-      zIndex="$mask"
-      id="chart-header"
-    >
-      <Flex
-        position="absolute"
-        gap="$gap4"
-        pb={14}
-        pointerEvents="none"
-        style={{
-          background: `linear-gradient(to right, ${colors.surface1.val} 0%, ${colors.surface1.val} 70%, transparent 100%),
-                      linear-gradient(to bottom, ${colors.surface1.val} 0%, ${colors.surface1.val} 70%, transparent 100%)`,
-        }}
-      >
+    <Flex row position="absolute" width="100%" gap="$gap8" alignItems="flex-start" zIndex="$mask" id="chart-header">
+      <Flex position="absolute" gap="$gap4" pb="$padding8" pr="$padding8" pointerEvents="none">
+        <ChartBackgroundGradient />
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
-        <Flex row gap="$gap8" {...EllipsisTamaguiStyle}>
+        <Flex row gap="$gap8" $sm={{ flexDirection: 'column' }} {...EllipsisTamaguiStyle}>
           {additionalFields}
           <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />
         </Flex>

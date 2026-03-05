@@ -1,9 +1,10 @@
-import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import { TokensContextMenuWrapper } from 'pages/Portfolio/Tokens/Table/TokensContextMenuWrapper'
 import { memo } from 'react'
 import { Flex, useIsTouchDevice } from 'ui/src'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
+import { TokensContextMenuWrapper } from '~/pages/Portfolio/Tokens/Table/TokensContextMenuWrapper'
 
 const ICON_BUTTON_SIZE = 28
 
@@ -18,6 +19,7 @@ export const ContextMenuButton = memo(function ContextMenuButton({ tokenData }: 
     <TokensContextMenuWrapper tokenData={tokenData} triggerMode={ContextMenuTriggerMode.Primary}>
       <Flex
         aria-label="View transaction details"
+        testID={TestID.TokenTableRowContextMenuButton}
         opacity={isTouchDevice ? 1 : 0}
         transition="opacity 0.2s ease"
         centered

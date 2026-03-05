@@ -1,26 +1,17 @@
 import defaultTokenList from '@uniswap/default-token-list'
-import fetchTokenList from 'lib/hooks/useTokenList/fetchTokenList'
-import contenthashToUri from 'lib/utils/contenthashToUri'
-import { mocked } from 'test-utils/mocked'
-import { logger } from 'utilities/src/logger/logger'
+import { mockLogger } from 'utilities/src/logger/mocks'
 import createFetchMock from 'vitest-fetch-mock'
+import fetchTokenList from '~/lib/hooks/useTokenList/fetchTokenList'
+import contenthashToUri from '~/lib/utils/contenthashToUri'
+import { mocked } from '~/test-utils/mocked'
 
-vi.mock('lib/utils/contenthashToUri', () => ({
+vi.mock('~/lib/utils/contenthashToUri', () => ({
   default: vi.fn(),
-}))
-
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  },
 }))
 
 const fetchMocker = createFetchMock(vi)
 const mockContenthashToUri = mocked(contenthashToUri)
-const mockLoggerDebug = mocked(logger.debug)
+const mockLoggerDebug = mocked(mockLogger.debug)
 
 // eslint-disable-next-line jest/no-disabled-tests
 describe.skip('fetchTokenList', () => {

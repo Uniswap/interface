@@ -87,13 +87,14 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
         {...shadowProps}
       >
         <Flex row gap="$spacing4" justifyContent="space-between" p="$spacing12">
-          <Flex row shrink alignItems="center" gap="$spacing8">
+          <Flex row shrink alignItems="center" gap="$spacing8" {...(isEditing && { paddingRight: '$spacing24' })}>
             {icon}
             <DisplayNameText
               displayName={displayName}
               textProps={{
                 adjustsFontSizeToFit: displayName?.type === DisplayNameType.Address,
                 variant: 'body1',
+                numberOfLines: 1,
               }}
             />
           </Flex>

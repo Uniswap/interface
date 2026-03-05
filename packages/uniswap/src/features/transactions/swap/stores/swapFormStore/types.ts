@@ -48,6 +48,16 @@ type SwapFormRefs = {
 
 type DerivedSwapFormState = {
   derivedSwapInfo: DerivedSwapInfo
+  /**
+   * The live derivedSwapInfo that continues updating during submission.
+   *
+   * WARNING: Most consumers should use `derivedSwapInfo` instead, which is
+   * frozen during submission to prevent the UI from shifting under the user.
+   * Only use this if you specifically need to observe trade changes while a
+   * swap is in flight (e.g. useAcceptedTrade detecting price movement to
+   * trigger interruptTransactionFlow on web).
+   */
+  dangerouslyGetLatestDerivedSwapInfo: DerivedSwapInfo
 }
 
 export type SwapFormStateForConsumers = SwapFormState & SwapFormMethods & SwapFormRefs & DerivedSwapFormState

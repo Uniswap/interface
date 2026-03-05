@@ -1,8 +1,12 @@
-import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from 'components/Charts/LiquidityChart/types'
-import { roundRect } from 'components/Charts/utils'
-import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from 'components/Charts/VolumeChart/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import { ICustomSeriesPaneRenderer, PaneRendererCustomData, PriceToCoordinateConverter, Time } from 'lightweight-charts'
+import {
+  LiquidityBarData,
+  LiquidityBarProps,
+  LiquidityBarSeriesOptions,
+} from '~/components/Charts/LiquidityChart/types'
+import { roundRect } from '~/components/Charts/utils'
+import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from '~/components/Charts/VolumeChart/utils'
 
 interface LiquidityBarItem {
   x: number

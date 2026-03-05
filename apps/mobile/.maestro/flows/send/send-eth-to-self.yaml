@@ -1,0 +1,248 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+tags:
+  - send
+  - language-agnostic
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+---
+# Initialize tracking at the very beginning
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start flow tracking (includes setup time)
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: "send-to-self"
+
+# Step 1: Initialize app and recover wallet
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+
+# Step 2: Copy our wallet address from the Receive QR modal
+- runFlow: ../../shared-flows/copy-wallet-address.yaml
+
+# Step 3: Tap on Send button to open the send flow
+- assertVisible:
+    id: ${output.testIds.Send}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "Send"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.Send}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "Send"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 4: Tap on the search input and paste the wallet address
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ExploreSearchInput"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ExploreSearchInput"
+      PHASE: "end"
+- pasteText
+- waitForAnimationToEnd
+
+# Hide keyboard to see search results
+- hideKeyboard
+- waitForAnimationToEnd
+
+# Step 5: Tap on the wallet search result to select it as recipient
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "SelectRecipientRow"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.SelectRecipientRow}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "SelectRecipientRow"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 6: Acknowledge the "This is your current wallet" warning
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "Confirm"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.Confirm}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "Confirm"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 7: Open token selector and select Base ETH
+# Tap on the token selector button to open the token selector modal
+- assertVisible:
+    id: ${output.testIds.ChooseInputToken}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ChooseInputToken"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.ChooseInputToken}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ChooseInputToken"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 8: Search for Base ETH in token selector
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ExploreSearchInput"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ExploreSearchInput"
+      PHASE: "end"
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "inputText"
+      TARGET: "Base ETH"
+      PHASE: "start"
+- inputText: "Base ETH"
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "inputText"
+      TARGET: "Base ETH"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 9: Select Base ETH from search results
+- assertVisible:
+    id: "token-option-8453-ETH"
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "token-option-8453-ETH"
+      PHASE: "start"
+- tapOn:
+    id: "token-option-8453-ETH"
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "token-option-8453-ETH"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 10: Enter amount (0.00001 ETH) using decimal pad
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "inputAmount"
+      TARGET: "0.00001"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadDecimal}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber1}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "inputAmount"
+      TARGET: "0.00001"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 11: Tap Review Transfer button to proceed
+- assertVisible:
+    id: ${output.testIds.ReviewTransfer}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ReviewTransfer"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.ReviewTransfer}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ReviewTransfer"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 12: Wait for review modal and confirm send (testID is 'send' from ElementName.Send)
+- assertVisible:
+    id: ${output.testIds.Send}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ConfirmSend"
+      PHASE: "start"
+- tapOn:
+    id: ${output.testIds.Send}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: "tapOn"
+      TARGET: "ConfirmSend"
+      PHASE: "end"
+- waitForAnimationToEnd
+
+# Step 13: Wait for transaction to be submitted and return to activity screen
+# After submitting, the app navigates to the Activity tab showing the pending transaction
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.HomeTab}
+    timeout: 30000
+- waitForAnimationToEnd
+
+# End flow tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js

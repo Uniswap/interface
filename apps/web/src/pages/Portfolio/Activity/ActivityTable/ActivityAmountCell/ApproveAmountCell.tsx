@@ -1,12 +1,12 @@
-import { CompactLayout } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/CompactLayout'
-import { DualTokenLayout } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/DualTokenLayout'
-import { createTokenLogo } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/utils'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatApprovalAmount } from 'uniswap/src/components/activity/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { CompactLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/CompactLayout'
+import { DualTokenLayout } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/DualTokenLayout'
+import { createTokenLogo } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/utils'
 
 // Memoized component for approval transaction amounts
 interface ApproveAmountCellProps {

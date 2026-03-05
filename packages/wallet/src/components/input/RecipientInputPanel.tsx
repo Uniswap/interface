@@ -27,14 +27,7 @@ export function RecipientInputPanel({
   return (
     <TouchableArea px="$spacing32" py="$spacing16" testID={TestID.SelectRecipient} onPress={onPressRecipient}>
       <Flex centered gap="$spacing4" py="$spacing12">
-        <AddressDisplay
-          hideAddressInSubtitle
-          centered
-          address={recipientAddress}
-          displayNameTextAlign="center"
-          variant="heading3"
-          flexGrow={false}
-        />
+        <AddressDisplay hideAddressInSubtitle centered address={recipientAddress} variant="heading3" />
         {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
       </Flex>
     </TouchableArea>

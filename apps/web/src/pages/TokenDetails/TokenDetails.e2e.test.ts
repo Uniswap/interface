@@ -1,6 +1,7 @@
-import { expect, getTest } from 'playwright/fixtures'
-import { Mocks } from 'playwright/mocks/mocks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { expect, getTest } from '~/playwright/fixtures'
+import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
+import { Mocks } from '~/playwright/mocks/mocks'
 
 const test = getTest()
 
@@ -35,6 +36,8 @@ test.describe(
         ],
       })
       await page.goto('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
+      // Wait for the GraphQL response to complete before checking UI elements
+      await graphql.waitForResponse('TokenWeb')
       await expect(page.getByText('test token')).toBeVisible()
       await expect(page.getByText('Missing chart data')).toBeVisible()
       await expect(page.getByText('No stats available')).toBeVisible()
@@ -56,14 +59,21 @@ test.describe(
         address: '0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531',
       })
       await page.goto('/explore/tokens/ethereum_sepolia/0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531')
+      // Wait for the GraphQL response to complete before checking UI elements
+      await graphql.waitForResponse('TokenWeb')
       await expect(page.getByText('Yay').first()).toBeVisible()
     })
 
     test('connected wallet on testnet mode should load mainnet token details', async ({ page }) => {
       await page.goto('/explore/tokens/ethereum/NATIVE')
       await page.getByTestId(TestID.Web3StatusConnected).click()
-      await page.getByTestId(TestID.WalletSettings).click()
-      await page.getByTestId(TestID.TestnetsToggle).click()
+      await getVisibleDropdownElementByTestId(page, TestID.WalletSettings).click()
+      await getVisibleDropdownElementByTestId(page, TestID.AdvancedSettingsButton).click()
+      await getVisibleDropdownElementByTestId(page, TestID.TestnetsToggle).click()
+      // Close the testnet mode info modal that appears
+      const modalButton = page.getByRole('button', { name: 'Close' })
+      await expect(modalButton).toBeVisible()
+      await modalButton.click()
       await expect(page.getByText('Ethereum').first()).toBeVisible()
     })
 

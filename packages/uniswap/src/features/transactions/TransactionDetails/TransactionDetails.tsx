@@ -1,4 +1,5 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import type { GasFeeResult } from '@universe/api'
 import { TradingApi } from '@universe/api'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { useState } from 'react'
@@ -7,7 +8,6 @@ import { AnimatePresence, Flex } from 'ui/src'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
@@ -144,7 +144,7 @@ export function TransactionDetails({
               </Flex>
             </AnimatePresence>
           ) : null}
-          {RateInfo}
+          {showChildren ? RateInfo : null}
           {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
           <EstimatedSwapTime showIfLongerThanCutoff={true} timeMs={estimatedSwapTime} />
           {isSwap && outputCurrency && (

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createSlice } from '@reduxjs/toolkit'
-import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 
 export type FiatOnRampTransactionDetails = {
   account: string
@@ -47,9 +47,10 @@ const fiatOnRampTransactionsSlice = createSlice({
         delete fiatOnRampTransactions[payload.account][payload.externalSessionId]
       }
     },
+    resetFiatOnRamp: () => initialState,
   },
 })
 
-export const { addFiatOnRampTransaction, updateFiatOnRampTransaction, removeFiatOnRampTransaction } =
+export const { addFiatOnRampTransaction, updateFiatOnRampTransaction, removeFiatOnRampTransaction, resetFiatOnRamp } =
   fiatOnRampTransactionsSlice.actions
 export default fiatOnRampTransactionsSlice.reducer

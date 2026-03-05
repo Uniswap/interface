@@ -1,15 +1,14 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { LiveIcon, StatCard } from 'pages/Landing/components/StatCard'
-import { useInView } from 'pages/Landing/sections/useInView'
 import { parseToRgb } from 'polished'
 import { useTranslation } from 'react-i18next'
-import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
-import { ExternalLink } from 'theme/components/Links'
 import { Flex, styled, Text, useSporeColors } from 'ui/src'
-import { RightArrow } from 'ui/src/components/icons/RightArrow'
-
+import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { LiveIcon, StatCard } from '~/pages/Landing/components/StatCard'
+import { useInView } from '~/pages/Landing/sections/useInView'
+import { use24hProtocolVolume, useDailyTVLWithChange } from '~/state/explore/protocolStats'
+import { ExternalLink } from '~/theme/components/Links'
 
 const Container = styled(Flex, {
   width: '100%',
@@ -73,7 +72,7 @@ function GetStarted() {
           <Text variant="buttonLabel1">
             {isUnificationCopyEnabled ? t('landing.getStarted') : t('landing.getStarted.old')}
           </Text>
-          <RightArrow size="$icon.24" color="$neutral1" />
+          <ArrowRight size="$icon.16" color="$neutral1" />
         </Flex>
       </ExternalLink>
     </LearnMoreButton>

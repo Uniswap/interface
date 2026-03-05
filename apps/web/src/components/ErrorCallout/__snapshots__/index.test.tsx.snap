@@ -96,7 +96,7 @@ exports[`ErrorCallout > should render defaults 1`] = `
         <div
           class="is_TouchableArea  t_group_true"
           role="button"
-          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; margin-top: 2px; transform: [object Object]; transition: 100ms;"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transform: scale(1); transition: 100ms;"
           tabindex="0"
         >
           <div

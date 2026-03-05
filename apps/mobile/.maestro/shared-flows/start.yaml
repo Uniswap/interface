@@ -8,30 +8,52 @@ appId: com.uniswap.mobile.dev
 - runScript:
     file: ../scripts/performance/dist/actions/start-sub-flow.js
     env:
-      SUB_FLOW_NAME: 'shared-start'
+      SUB_FLOW_NAME: "shared-start"
 
 # Track app launch
 - runScript:
     file: ../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'launchApp'
-      TARGET: 'app'
-      PHASE: 'start'
+      ACTION: "launchApp"
+      TARGET: "app"
+      PHASE: "start"
 - launchApp:
     permissions:
       contacts: unset
       notifications: unset
     clearState: true
     clearKeychain: true # optional: clear *entire* iOS keychain
+# Handle Expo Dev Client screens (only present in development builds, not CI/prod builds)
+- runFlow:
+    when:
+      true: ${CI != 'true'}
+    commands:
+      # Launch dev client with disableOnboarding to skip onboarding popup (only works for iOS)
+      - openLink: "uniswap://expo-development-client/?url=http://localhost:8081&disableOnboarding=1"
+      # Wait for app to fully load after deep link
+      - waitForAnimationToEnd
+      # On Android, disableOnboarding doesn't work - tap the Metro server URL to continue
+      - tapOn:
+          text: ".*:8081"
+          optional: true
+      - waitForAnimationToEnd
+      # Dismiss the expo dev menu
+      - tapOn:
+          text: "continue"
+      - tapOn:
+          point: "10%,10%"
+          retryTapIfNoChange: false
+          optional: true
+      - waitForAnimationToEnd
 - runScript:
     file: ../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'launchApp'
-      TARGET: 'app'
-      PHASE: 'end'
+      ACTION: "launchApp"
+      TARGET: "app"
+      PHASE: "end"
 
 # End tracking shared flow
 - runScript:
     file: ../scripts/performance/dist/actions/end-sub-flow.js
     env:
-      SUB_FLOW_NAME: 'shared-start'
+      SUB_FLOW_NAME: "shared-start"

@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import * as matchers from 'jest-extended'
-import AppJsonRpcProvider from 'rpc/AppJsonRpcProvider'
 import type { Mocked } from 'vitest'
+import AppJsonRpcProvider from '~/rpc/AppJsonRpcProvider'
 
 expect.extend(matchers)
 

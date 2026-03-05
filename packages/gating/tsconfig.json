@@ -3,12 +3,15 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "src/global.d.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"],
   "compilerOptions": {
-    "noEmit": false,
     "emitDeclarationOnly": true,
+    "noEmit": false,
     "types": ["node"],
     "paths": {}
   },
   "references": [
+    {
+      "path": "../config"
+    },
     {
       "path": "../utilities"
     },

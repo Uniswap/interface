@@ -22,7 +22,6 @@ import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
-import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import {
   useFiatOnRampQuotes,
@@ -31,6 +30,7 @@ import {
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
 } from 'uniswap/src/features/fiatOnRamp/hooks'
+import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import { TokenSelectorBalanceDisplay } from 'uniswap/src/features/fiatOnRamp/TokenSelectorBalanceDisplay'
 import {
   FiatOnRampCurrency,
@@ -41,7 +41,7 @@ import {
 } from 'uniswap/src/features/fiatOnRamp/types'
 import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import {
-  getServiceProviderLogo,
+  getOptionalServiceProviderLogo,
   isSupportedFORCurrency,
   organizeQuotesIntoSections,
 } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -75,15 +75,17 @@ const MAX_INPUT_LENGTH = MAX_TOKEN_DECIMALS + 2
 
 function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isDarkMode: boolean): void {
   FastImage.preload(
-    serviceProviders.map((sp) => ({ uri: getServiceProviderLogo(sp.logos, isDarkMode) })).filter((sp) => !!sp.uri),
+    serviceProviders
+      .map((sp) => ({ uri: getOptionalServiceProviderLogo(sp.logos, isDarkMode) }))
+      .filter((sp) => !!sp.uri),
   )
 }
 
 const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['usd', 'eur', 'gbp', 'aud', 'cad', 'sgd']
 const US_STATES_WITH_RESTRICTIONS = 'US-NY'
 
-// TokenSelectorBalanceDisplay height: 85 + FiatOnRampCtaButton height: 30 + padding: 10
-const DECIMAL_PAD_EXTRA_ELEMENTS_HEIGHT = 125
+// TokenSelectorBalanceDisplay height: 85 + FiatOnRampCtaButton height: 30 + padding: 10 + spacing: 8
+const DECIMAL_PAD_EXTRA_ELEMENTS_HEIGHT = 133
 
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const [showUnsupportedTokenModal, setShowUnsupportedTokenModal] = useState(false)
@@ -158,7 +160,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     useMeldFiatCurrencySupportInfo({
       countryCode,
       skip: false,
-      rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
+      rampDirection: isOffRamp ? RampDirection.OFF_RAMP : RampDirection.ON_RAMP,
     })
 
   const debouncedFiatAmount = useDebounce(fiatAmount, DEFAULT_DELAY * 2)
@@ -214,7 +216,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     quoteCurrencyCode: quoteCurrency.meldCurrencyCode,
     countryCode,
     countryState,
-    rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
+    rampDirection: isOffRamp ? RampDirection.OFF_RAMP : RampDirection.ON_RAMP,
     balanceError: exceedsBalanceError,
   })
 
@@ -232,7 +234,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     exceedsBalanceError,
   })
 
-  const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery()
+  const { data: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery()
 
   useEffect(() => {
     if (ipCountryData) {
@@ -245,7 +247,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   useEffect(() => {
     if (quotes) {
       preloadServiceProviderLogos(
-        quotes.map((q) => q.serviceProviderDetails),
+        quotes.map((q) => q.serviceProviderDetails).filter((sp): sp is FORServiceProvider => sp !== undefined),
         isDarkMode,
       )
     }
@@ -259,7 +261,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     // If specific providers are provided, only show quotes from the specified providers
     if (providers.length > 0) {
       const providerFilteredQuotes = quotes.filter((quote) =>
-        providers.includes(quote.serviceProviderDetails.serviceProvider.toUpperCase()),
+        providers.includes(quote.serviceProviderDetails?.serviceProvider.toUpperCase() ?? ''),
       )
       return providerFilteredQuotes.length > 0 ? providerFilteredQuotes : quotes
     }
@@ -331,10 +333,12 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     valueRef.current = truncatedValue
     setValue(truncatedValue)
 
+    const parsedValue = truncatedValue ? parseFloat(truncatedValue) : undefined
+
     if (currentIsTokenInputMode) {
-      setTokenAmount(truncatedValue ? parseFloat(truncatedValue) : 0)
+      setTokenAmount(parsedValue)
     } else {
-      setFiatAmount(truncatedValue ? parseFloat(truncatedValue) : 0)
+      setFiatAmount(parsedValue)
     }
 
     // if user did not use Decimal Pad to enter value
@@ -388,7 +392,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   } = useFiatOnRampSupportedTokens({
     sourceCurrencyCode: meldSupportedFiatCurrency.code,
     countryCode,
-    rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
+    rampDirection: isOffRamp ? RampDirection.OFF_RAMP : RampDirection.ON_RAMP,
   })
 
   useEffect(() => {
@@ -483,8 +487,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
   const resetAmount = useCallback(() => {
     setValue('')
-    setFiatAmount(0)
-    setTokenAmount(0)
+    setFiatAmount(undefined)
+    setTokenAmount(undefined)
     valueRef.current = ''
     resetSelection({ start: 0 })
     setSelectedQuote(undefined)
@@ -591,7 +595,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                   }}
                 />
               )}
-              <Flex grow justifyContent="flex-end">
+              <Flex grow justifyContent="flex-end" py="$spacing8">
                 <DecimalPadInput
                   ref={decimalPadRef}
                   maxDecimals={isTokenInputMode ? tokenMaxDecimals : MAX_FIAT_INPUT_DECIMALS}
@@ -645,6 +649,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       {showUnsupportedTokenModal && (
         <UnsupportedTokenModal
           isVisible
+          rampDirection={isOffRamp ? RampDirection.OFF_RAMP : RampDirection.ON_RAMP}
           onAccept={onAcceptUnsupportedTokenSwap}
           onBack={(): void => {
             setShowUnsupportedTokenModal(false)

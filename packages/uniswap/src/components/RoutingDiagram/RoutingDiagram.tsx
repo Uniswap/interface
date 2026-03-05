@@ -9,9 +9,12 @@ import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import type { RoutingDiagramEntry, RoutingHop } from 'uniswap/src/utils/routingDiagram/types'
+
+const HOP_BASE_CHARACTER_COST = 10
+const FIRST_ROUTE_ROW_CHARACTER_BUDGET = 36
+const ADDITIONAL_ROUTE_ROW_CHARACTER_BUDGET = 48
 
 const PoolBadge = styled(Flex, {
   row: true,
@@ -70,7 +73,6 @@ function useHopBadgeContent({ hop, tokenPair }: { hop: RoutingHop; tokenPair: st
 }
 
 function HopBadge({ hop }: { hop: RoutingHop }): JSX.Element {
-  const priceUXEnabled = usePriceUXEnabled()
   const inputCurrencyInfo = useCurrencyInfo(hop.inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(hop.outputCurrencyId)
 
@@ -91,7 +93,7 @@ function HopBadge({ hop }: { hop: RoutingHop }): JSX.Element {
               chainId={chainId}
               inputCurrencyInfo={inputCurrencyInfo}
               outputCurrencyInfo={outputCurrencyInfo}
-              size={priceUXEnabled ? 12 : 20}
+              size={16}
             />
           </Flex>
           <BadgeText>{badgeText}</BadgeText>
@@ -140,49 +142,88 @@ function RouteRow({
   currencyInCurrencyInfo: Maybe<CurrencyInfo>
   currencyOutCurrencyInfo: Maybe<CurrencyInfo>
 }): JSX.Element {
-  const priceUXEnabled = usePriceUXEnabled()
   const { path } = entry
+  const pathRows = useMemo(() => splitPathIntoRows(path), [path])
 
-  // If we only have 2 or fewer pools, show everything in one row
-  if (path.length <= 2) {
+  if (pathRows.length === 1) {
     return (
       <Flex row alignItems="center" gap="$spacing4">
-        <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
+        <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={16} />
         <Route entry={entry} />
-        <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
+        <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={16} />
       </Flex>
     )
   }
 
-  // For more than 2 pools, use a two-line layout
   return (
     <Flex width="100%" gap="$spacing4">
-      {/* First line: currencyIn icon, first 2 pools */}
-      <Flex row alignItems="center" width="100%" gap="$spacing4">
-        <Flex ml="$spacing4">
-          <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
-        </Flex>
-        <Flex flex={1}>
-          <Route entry={{ ...entry, path: path.slice(0, 2) }} />
-        </Flex>
-      </Flex>
+      {pathRows.map((rowPath, rowIndex) => {
+        const isFirstRow = rowIndex === 0
+        const isLastRow = rowIndex === pathRows.length - 1
 
-      {/* Second line: remaining pools, currencyOut icon */}
-      <Flex row alignItems="center" width="100%" gap="$spacing4">
-        <Flex ml="$spacing4" flex={1}>
-          <Route entry={{ ...entry, path: path.slice(2) }} showBadge={false} />
-        </Flex>
-        <Flex mr="$spacing4">
-          <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
-        </Flex>
-      </Flex>
+        return (
+          <Flex key={rowIndex} row alignItems="center" width="100%" gap="$spacing4">
+            <Flex ml="$spacing4" width={16}>
+              {isFirstRow && <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={16} />}
+            </Flex>
+
+            <Flex flex={1}>
+              <Route entry={{ ...entry, path: rowPath }} showBadge={isFirstRow} />
+            </Flex>
+
+            <Flex mr="$spacing4" width={16}>
+              {isLastRow && <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={16} />}
+            </Flex>
+          </Flex>
+        )
+      })}
     </Flex>
   )
 }
 
+function getHopCharacterCost(hop: RoutingHop): number {
+  if (hop.type === 'genericHop') {
+    return hop.name.length + HOP_BASE_CHARACTER_COST
+  }
+
+  const feeText = hop.isDynamic ? 'dynamic' : `${hop.fee / BIPS_BASE}%`
+  return feeText.length + HOP_BASE_CHARACTER_COST
+}
+
+function splitPathIntoRows(path: RoutingHop[]): RoutingHop[][] {
+  const rows: RoutingHop[][] = []
+  let currentRowCharacterCost = 0
+
+  for (const hop of path) {
+    const hopCharacterCost = getHopCharacterCost(hop)
+    const currentRow = rows.at(-1)
+
+    if (!currentRow) {
+      rows.push([hop])
+      currentRowCharacterCost = hopCharacterCost
+      continue
+    }
+
+    // The first row includes the route badge (protocol + percent), so it has less space for hop badges.
+    const currentRowCharacterBudget =
+      rows.length === 1 ? FIRST_ROUTE_ROW_CHARACTER_BUDGET : ADDITIONAL_ROUTE_ROW_CHARACTER_BUDGET
+
+    if (currentRowCharacterCost + hopCharacterCost > currentRowCharacterBudget) {
+      rows.push([hop])
+      currentRowCharacterCost = hopCharacterCost
+      continue
+    }
+
+    currentRow.push(hop)
+    currentRowCharacterCost += hopCharacterCost
+  }
+
+  return rows
+}
+
 function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBadge?: boolean }): JSX.Element {
   return (
-    <Flex row justifyContent="space-evenly" flex={1} position="relative" width="auto" py="$spacing4">
+    <Flex row justifyContent="space-evenly" flex={1} position="relative" width="auto">
       <Flex
         alignItems="center"
         position="absolute"
@@ -193,12 +234,12 @@ function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBa
         zIndex={1}
         opacity={0.5}
       >
-        <DotLine minWidth="100%" minHeight={35} />
+        <DotLine minWidth="100%" minHeight={26} />
       </Flex>
 
       {showBadge && (
         <OpaqueBadge>
-          <BadgeText>{entry.protocolLabel}</BadgeText>
+          <ProtocolBadge protocolLabel={entry.protocolLabel} />
           <BadgeText style={{ minWidth: 'auto' }}>{entry.percent.toSignificant(2)}%</BadgeText>
         </OpaqueBadge>
       )}
@@ -208,6 +249,16 @@ function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBa
           <HopBadge key={index} hop={hop} />
         ))}
       </Flex>
+    </Flex>
+  )
+}
+
+function ProtocolBadge({ protocolLabel }: { protocolLabel: string }): JSX.Element {
+  return (
+    <Flex backgroundColor="$surface3" px="$spacing4" borderRadius="$rounded6">
+      <Text fontSize={8} color="$neutral2" lineHeight={12}>
+        {protocolLabel}
+      </Text>
     </Flex>
   )
 }

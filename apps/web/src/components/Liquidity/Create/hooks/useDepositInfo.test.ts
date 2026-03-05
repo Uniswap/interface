@@ -4,19 +4,19 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useDynamicConfigValue } from '@universe/gating'
-import { useDepositInfo } from 'components/Liquidity/Create/hooks/useDepositInfo'
-import { useNativeTokenPercentageBufferExperiment } from 'components/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment'
 import JSBI from 'jsbi'
-import { ETH_MAINNET } from 'test-utils/constants'
-import { renderHook } from 'test-utils/render'
-import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useDepositInfo } from '~/components/Liquidity/Create/hooks/useDepositInfo'
+import { useNativeTokenPercentageBufferExperiment } from '~/components/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment'
+import { ETH_MAINNET } from '~/test-utils/constants'
+import { renderHook } from '~/test-utils/render'
+import { PositionField } from '~/types/position'
 
-vi.mock('components/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment', async (importOriginal) => ({
+vi.mock('~/components/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment', async (importOriginal) => ({
   ...(await importOriginal()),
   useNativeTokenPercentageBufferExperiment: vi.fn(),
 }))
@@ -36,7 +36,7 @@ vi.mock('uniswap/src/features/gas/hooks/useMaxAmountSpend', async (importOrigina
   useMaxAmountSpend: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', async (importOriginal) => ({
+vi.mock('uniswap/src/features/transactions/hooks/useUSDCPriceWrapper', async (importOriginal) => ({
   ...(await importOriginal()),
   useUSDCValue: vi.fn(),
 }))

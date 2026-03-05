@@ -1,32 +1,34 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { GasStrategy } from '@universe/api'
-import { GasStrategyType, useStatsigClientStatus } from '@universe/gating'
-import { BigNumber, providers } from 'ethers/lib/ethers'
+import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
+import { type FormattedUniswapXGasFeeInfo, type GasFeeResult, type GasStrategy } from '@universe/api'
+import { type GasStrategyType, useStatsigClientStatus } from '@universe/gating'
+import { BigNumber, type providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { PollingInterval } from 'uniswap/src/constants/misc'
+import {
+  type Warning,
+  WarningAction,
+  WarningLabel,
+  WarningSeverity,
+} from 'uniswap/src/components/modals/WarningModal/types'
+import { type PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getActiveGasStrategy, hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
-import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { type DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
+import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { type UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isWebPlatform } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-export { getActiveGasStrategy }
 
 export const SMART_WALLET_DELEGATION_GAS_FEE = 21500
 
@@ -145,6 +147,8 @@ export function useFormattedUniswapXGasFeeInfo(
       return undefined
     }
     const { approvalCost, inputTokenSymbol } = uniswapXGasBreakdown
+    const approvalCostAmount = Number(approvalCost)
+    const hasApprovalCost = Number.isFinite(approvalCostAmount) && approvalCostAmount > 0
     // If this swap was done via classic routing, the total gas fee would have been approval gas fee + classic swap gas fee.
     const preSavingsGasCostUsd =
       Number(approvalCostUsd ?? 0) + Number(uniswapXGasBreakdown.classicGasUseEstimateUSD ?? 0)
@@ -154,7 +158,7 @@ export function useFormattedUniswapXGasFeeInfo(
     const swapFeeFormatted = convertFiatAmountFormatted(0, NumberType.FiatGasPrice)
 
     return {
-      approvalFeeFormatted: approvalCost
+      approvalFeeFormatted: hasApprovalCost
         ? convertFiatAmountFormatted(approvalCostUsd, NumberType.FiatGasPrice)
         : undefined,
       preSavingsGasFeeFormatted,

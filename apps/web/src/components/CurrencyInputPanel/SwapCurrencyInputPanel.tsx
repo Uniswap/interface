@@ -1,36 +1,36 @@
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import type { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import type { Pair } from '@uniswap/v2-sdk'
-import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
-import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
-import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
-import { AutoColumn } from 'components/deprecated/Column'
-import { RowBetween, RowFixed } from 'components/deprecated/Row'
-import { LoadingOpacityContainer } from 'components/Loader/styled'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { StyledNumericalInput } from 'components/NumericalInput'
-import { SwitchNetworkAction } from 'components/Popups/types'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { useAccount } from 'hooks/useAccount'
-import { deprecatedStyled } from 'lib/styled-components'
 import ms from 'ms'
 import type { ReactNode } from 'react'
 import { forwardRef, useCallback, useEffect, useState } from 'react'
-import { Lock } from 'react-feather'
-import { Trans, useTranslation } from 'react-i18next'
-import { useCurrencyBalance } from 'state/connection/hooks'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { ThemedText } from 'theme/components'
-import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, Flex, Text, useSporeColors } from 'ui/src'
+import { Lock } from 'ui/src/components/icons/Lock'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { ReactComponent as DropDown } from '~/assets/images/dropdown.svg'
+import { FiatValue } from '~/components/CurrencyInputPanel/FiatValue'
+import { formatCurrencySymbol } from '~/components/CurrencyInputPanel/utils'
+import { AutoColumn } from '~/components/deprecated/Column'
+import { RowBetween, RowFixed } from '~/components/deprecated/Row'
+import { LoadingOpacityContainer } from '~/components/Loader/styled'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { StyledNumericalInput } from '~/components/NumericalInput'
+import { SwitchNetworkAction } from '~/components/Popups/types'
+import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { MouseoverTooltip } from '~/components/Tooltip'
+import { useAccount } from '~/hooks/useAccount'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { useCurrencyBalance } from '~/state/connection/hooks'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { ThemedText } from '~/theme/components'
+import { flexColumnNoWrap, flexRowNoWrap } from '~/theme/styles'
 
 export const InputPanel = deprecatedStyled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
@@ -286,9 +286,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         {locked && (
           <FixedContainer>
             <AutoColumn gap="sm" justify="center">
-              <Lock />
+              <Lock color="$neutral2" size="$icon.24" />
               <Text variant="body2" textAlign="center" px="$spacing12">
-                <Trans i18nKey="swap.marketPrice.outsideRange.label" />
+                {t('swap.marketPrice.outsideRange.label')}
               </Text>
             </AutoColumn>
           </FixedContainer>
@@ -367,11 +367,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                               className="token-symbol-container"
                               active={Boolean(currency && currency.symbol)}
                             >
-                              {currency ? (
-                                formatCurrencySymbol(currency)
-                              ) : (
-                                <Trans i18nKey="tokens.selector.button.choose" />
-                              )}
+                              {currency ? formatCurrencySymbol(currency) : t('tokens.selector.button.choose')}
                             </StyledTokenName>
                           )}
                         </Flex>
@@ -400,21 +396,16 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                       fontSize={14}
                       style={{ display: 'inline' }}
                     >
-                      {!hideBalance && currency && selectedCurrencyBalance ? (
-                        renderBalance ? (
-                          renderBalance(selectedCurrencyBalance)
-                        ) : (
-                          <Trans
-                            i18nKey="swap.balance.amount"
-                            values={{
+                      {!hideBalance && currency && selectedCurrencyBalance
+                        ? renderBalance
+                          ? renderBalance(selectedCurrencyBalance)
+                          : t('swap.balance.amount', {
                               amount: formatCurrencyAmount({
                                 value: selectedCurrencyBalance,
                                 type: NumberType.TokenNonTx,
                               }),
-                            }}
-                          />
-                        )
-                      ) : null}
+                            })
+                        : null}
                     </ThemedText.DeprecatedBody>
                     {showMaxButton && selectedCurrencyBalance ? (
                       <Trace logPress element={ElementName.MaxTokenAmountButton}>

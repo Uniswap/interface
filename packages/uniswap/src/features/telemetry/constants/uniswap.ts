@@ -1,8 +1,13 @@
 export enum UniswapEventName {
+  AuctionFilterSelected = 'Auction Filter Selected',
   BalancesReport = 'Balances Report',
   BalancesReportPerChain = 'Balances Report Per Chain',
   BlockaidFeesMismatch = 'Blockaid Fees Mismatch',
+  ContextMenuClosed = 'Context Menu Closed',
+  ContextMenuItemClicked = 'Context Menu Item Clicked',
+  ContextMenuOpened = 'Context Menu Opened',
   ConversionEventSubmitted = 'Conversion Event Submitted',
+  DataReportSubmitted = 'Data Report Submitted',
   DelegationDetected = 'Delegation Detected',
   ExperimentQualifyingEvent = 'Experiment Qualifying Event',
   LowNetworkTokenInfoModalOpened = 'Low Network Token Info Modal Opened',
@@ -11,7 +16,9 @@ export enum UniswapEventName {
   LpIncentiveCollectRewardsRetry = 'LP Incentive Collect Rewards Retry',
   LpIncentiveCollectRewardsSuccess = 'LP Incentive Collect Rewards Success',
   LpIncentiveLearnMoreCtaClicked = 'LP Incentive Learn More CTA Clicked',
+  NetworkFilterSelected = 'Network Filter Selected',
   SmartWalletMismatchDetected = 'Smart Wallet Mismatch Detected',
+  SpamReportSubmitted = 'Spam Report Submitted',
   TokenSelected = 'Token Selected',
   TooltipOpened = 'Tooltip Opened',
   // alphabetize additional values.

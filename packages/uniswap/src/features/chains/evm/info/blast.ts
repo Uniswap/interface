@@ -42,7 +42,7 @@ export const BLAST_CHAIN_INFO = {
   docs: 'https://docs.blast.io',
   elementName: ElementName.ChainBlast,
   explorer: {
-    name: 'BlastScan',
+    name: 'Blastscan',
     url: 'https://blastscan.io/',
     apiURL: 'https://api.blastscan.io',
   },
@@ -51,6 +51,7 @@ export const BLAST_CHAIN_INFO = {
   label: 'Blast',
   logo: BLAST_LOGO,
   networkLayer: NetworkLayer.L2,
+  blockTimeMs: 2000,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   tokens,
   statusPage: undefined,

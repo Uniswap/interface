@@ -1,49 +1,55 @@
 /* eslint-disable max-lines */
-import { ApolloError } from '@apollo/client'
-import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
-import { SerializedError } from '@reduxjs/toolkit'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { SharedEventName } from '@uniswap/analytics-events'
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { OnChainStatus } from '@uniswap/client-trading/dist/trading/v1/api_pb'
-import { Currency, TradeType } from '@uniswap/sdk-core'
-import { TradingApi, UnitagClaimContext } from '@universe/api'
-import { Experiments } from '@universe/gating'
-import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { type ApolloError } from '@apollo/client'
+import { type PartialMessage } from '@bufbuild/protobuf'
+import { type TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
+import { type SerializedError } from '@reduxjs/toolkit'
+import { type FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
+import { type SharedEventName } from '@uniswap/analytics-events'
+import { type ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import {
-  ExtensionEventName,
-  FiatOffRampEventName,
-  FiatOnRampEventName,
-  InterfaceEventName,
-  InterfacePageName,
-  LiquidityEventName,
-  MobileAppsFlyerEvents,
-  MobileEventName,
-  SwapBlockedCategory,
-  SwapEventName,
-  UniswapEventName,
-  UnitagEventName,
-  WalletEventName,
+  type CreateLPPositionRequest,
+  type IncreaseLPPositionRequest,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
+import { type Currency, type TradeType } from '@uniswap/sdk-core'
+import { type TradingApi, type UnitagClaimContext } from '@universe/api'
+import { type Experiments } from '@universe/gating'
+import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import { type OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { type EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { type FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { type Platform } from 'uniswap/src/features/platforms/types/Platform'
+import {
+  type AuctionEventName,
+  type ExtensionEventName,
+  type FiatOffRampEventName,
+  type FiatOnRampEventName,
+  type InterfaceEventName,
+  type InterfacePageName,
+  type LiquidityEventName,
+  type MobileAppsFlyerEvents,
+  type MobileEventName,
+  type SessionsEventName,
+  type SwapBlockedCategory,
+  type SwapEventName,
+  type UniswapEventName,
+  type UnitagEventName,
+  type WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
-import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { CurrencyField } from 'uniswap/src/types/currency'
-import { LimitsExpiry } from 'uniswap/src/types/limits'
-import { ImportType } from 'uniswap/src/types/onboarding'
-import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
-import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
-import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
-import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
-import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import { type TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { type TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { type WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { type CurrencyField } from 'uniswap/src/types/currency'
+import { type LimitsExpiry } from 'uniswap/src/types/limits'
+import { type ImportType } from 'uniswap/src/types/onboarding'
+import { type RenderPassReport } from 'uniswap/src/types/RenderPassReport'
+import { type ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
+import { type SwapTab } from 'uniswap/src/types/screens/interface'
+import { type OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { type ShareableEntity } from 'uniswap/src/types/sharing'
+import { type UwULinkMethod, type WCEventType, type WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { type WidgetEvent, type WidgetType } from 'uniswap/src/types/widgets'
+import { type ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export enum ExtensionUninstallFeedbackOptions {
   SwitchingWallet = 'switching-wallet',
@@ -230,6 +236,15 @@ type BaseSwapTransactionResultProperties = {
   is_smart_wallet_transaction?: SwapTradeBaseProperties['is_smart_wallet_transaction']
   is_final_step?: boolean
   swap_start_timestamp?: number
+
+  // Chained action analytics properties
+  plan_id?: string
+  step_index?: number
+  /** Total number of steps in the plan, including error steps that were later retried and a new step was added to the plan */
+  total_steps?: number
+  /** Total number of non-error steps in the plan, excluding error/retry steps*/
+  total_non_error_steps?: number
+  step_type?: string
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -372,7 +387,7 @@ export enum DappRequestAction {
   Reject = 'Reject',
 }
 
-export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName
+export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName
 
 export enum OnboardingCardLoggingName {
   FundWallet = 'fund_wallet',
@@ -380,16 +395,14 @@ export enum OnboardingCardLoggingName {
   ClaimUnitag = 'claim_unitag',
   EnablePushNotifications = 'enable_push_notifications',
   BridgedAsset = 'bridged_asset',
-  MonadAnnouncement = 'monad_announcement',
+
   NoAppFeesAnnouncement = 'no_app_fees_announcement',
+
+  Unknown = 'unknown',
 }
 
 export enum DappRequestCardLoggingName {
   BridgingBanner = 'dapp_request_bridging_banner',
-}
-
-export enum ConnectionCardLoggingName {
-  ConnectionBanner = 'connections_removed_banner',
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
@@ -476,6 +489,7 @@ type OnboardingCardEventProperties = ITraceContext & {
 export type LiquidityAnalyticsProperties = ITraceContext & {
   label: string
   type: string
+  protocol_version: ProtocolVersion
   fee_tier: number
   tick_spacing: number | undefined
   tick_lower: number | undefined
@@ -491,6 +505,83 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   // for debugging Linear ticket DS-172:
   currencyInfo0Decimals: number
   currencyInfo1Decimals: number
+}
+
+export type AuctionWithdrawAnalyticsProperties = ITraceContext & {
+  transaction_hash: string
+  chain_id: number
+  auction_contract_address: string
+
+  // Auction tokens claimed (what user receives)
+  auction_token_address?: string
+  auction_token_symbol?: string
+  auction_token_amount_raw?: string
+  auction_token_amount_usd?: number
+
+  // Bid tokens refunded (original bid returned)
+  bid_token_address?: string
+  bid_token_symbol?: string
+  bid_token_amount_raw?: string
+  bid_token_amount_usd?: number
+
+  // Original bid budget (full initial budget amount)
+  budget_token_amount_raw?: string
+  budget_token_amount_usd?: number
+
+  // Max FDV from original bid
+  max_fdv_usd?: number
+
+  // Expected output
+  expected_receive_amount?: number
+
+  // Auction status
+  is_graduated: boolean
+  is_auction_completed: boolean
+}
+
+export type AuctionBidAnalyticsProperties = ITraceContext & {
+  transaction_hash: string
+  chain_id: number
+  auction_contract_address: string
+
+  // Bid parameters
+  bid_token_address: string
+  bid_token_amount_raw: string
+  bid_token_amount_usd?: number
+  max_price_q96: string
+  max_fdv_usd?: number
+  price_per_token?: number
+
+  // Expected output
+  min_expected_receive_amount?: number
+  max_receivable_amount?: number
+
+  // Token info
+  token_symbol?: string
+  token_name?: string
+}
+
+export type AuctionBidInputtedAnalyticsProperties = ITraceContext & {
+  chain_id: number
+  auction_contract_address: string
+  bid_token_address: string
+
+  // Budget (max amount user will spend)
+  bid_token_amount_raw: string
+  bid_token_amount_usd?: number
+
+  // Max Valuation (FDV limit)
+  max_price_q96: string
+  max_fdv_usd?: number
+  price_per_token?: number
+
+  // Expected Output (what user expects to receive)
+  expected_receive_amount?: number
+  min_expected_receive_amount?: number
+  max_receivable_amount?: number
+
+  // Token info
+  token_symbol?: string
 }
 
 export type NotificationToggleLoggingType = 'settings_general_updates_enabled' | 'wallet_activity'
@@ -631,10 +722,15 @@ export type UniverseEventProperties = {
     value: LimitsExpiry
   }
   [InterfaceEventName.SwapConfirmedOnClient]: {
+    /** @deprecated Use `success` instead. This property name is misleading as the event fires for all transaction types. */
     swap_success: boolean
+    /** Whether the transaction succeeded on-chain */
+    success: boolean
     time: number
     chainId?: number
     txHash: string
+    transactionType?: TransactionType
+    routing?: SwapRouting
   }
   [InterfaceEventName.SwapTabClicked]: {
     tab: SwapTab
@@ -661,10 +757,10 @@ export type UniverseEventProperties = {
   [InterfaceEventName.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
   [InterfaceEventName.CreatePositionFailed]: {
     message: string
-  } & TradingApi.CreateLPPositionRequest
+  } & PartialMessage<CreateLPPositionRequest>
   [InterfaceEventName.IncreaseLiquidityFailed]: {
     message: string
-  } & TradingApi.IncreaseLPPositionRequest
+  } & PartialMessage<IncreaseLPPositionRequest>
   [InterfaceEventName.DecreaseLiquidityFailed]: {
     message: string
   }
@@ -676,7 +772,7 @@ export type UniverseEventProperties = {
   }
   [InterfaceEventName.OnChainAddLiquidityFailed]: {
     message: string
-  } & (TradingApi.CreateLPPositionRequest | TradingApi.IncreaseLPPositionRequest)
+  } & (PartialMessage<CreateLPPositionRequest> | PartialMessage<IncreaseLPPositionRequest>)
   [InterfaceEventName.EmbeddedWalletCreated]: undefined
   [InterfaceEventName.ExtensionUninstallFeedback]: {
     reason: ExtensionUninstallFeedbackOptions
@@ -699,6 +795,13 @@ export type UniverseEventProperties = {
         page: InterfacePageName.ExplorePage
       }
   [InterfaceEventName.ExploreSearchSelected]: undefined
+  [InterfaceEventName.ExploreQueryLatency]: {
+    query_type: 'tokens' | 'pools'
+    is_backend_sorting_enabled: boolean
+    latency_ms: number
+    chain_id?: number
+    result_count?: number
+  }
   [InterfaceEventName.LanguageSelected]: {
     previous_language: string
     new_language: string
@@ -752,12 +855,15 @@ export type UniverseEventProperties = {
   } & LiquidityAnalyticsProperties
   [LiquidityEventName.PriceDiscrepancyChecked]: {
     event_name: LiquidityEventName
-    status: OnChainStatus
+    status: number
     price_discrepancy: string
     absolute_price_discrepancy: number
     sqrt_ratio_x96_before: string
     sqrt_ratio_x96_after: string
   } & LiquidityAnalyticsProperties
+  [AuctionEventName.AuctionWithdrawSubmitted]: AuctionWithdrawAnalyticsProperties
+  [AuctionEventName.AuctionBidSubmitted]: AuctionBidAnalyticsProperties
+  [AuctionEventName.AuctionBidInputted]: AuctionBidInputtedAnalyticsProperties
   [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
     showNotificationScreen: boolean
     showBiometricsScreen: boolean
@@ -840,11 +946,6 @@ export type UniverseEventProperties = {
     widget_type: WidgetType
     url: string
   }
-  [SharedEventName.PAGE_VIEWED]: ITraceContext
-  [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
-    enabled: boolean
-  }
-  [SharedEventName.HEARTBEAT]: undefined
   [SharedEventName.APP_LOADED]:
     | undefined
     | {
@@ -852,7 +953,7 @@ export type UniverseEventProperties = {
         cache: string
       }
   [SharedEventName.ELEMENT_CLICKED]: ITraceContext & {
-    // Covering ElementName.MiniPortfolioNftItem
+    // Covering ElementName.PortfolioNftItem
     collection_name?: string
     collection_address?: string
     token_id?: string
@@ -868,6 +969,36 @@ export type UniverseEventProperties = {
     address: string
   }
   [SharedEventName.NAVBAR_CLICKED]: undefined
+  // Sessions events
+  [SessionsEventName.SessionInitStarted]: undefined
+  [SessionsEventName.SessionInitCompleted]: {
+    need_challenge: boolean
+    duration_ms: number
+  }
+  [SessionsEventName.ChallengeReceived]: {
+    challenge_type: string
+    challenge_id: string
+  }
+  [SessionsEventName.VerifyCompleted]: {
+    success: boolean
+    attempt_number: number
+    total_duration_ms: number
+  }
+  [SessionsEventName.TurnstileSolveCompleted]: {
+    duration_ms: number
+    success: boolean
+    error_type?: string
+    error_message?: string
+  }
+  [SessionsEventName.HashcashSolveCompleted]: {
+    duration_ms: number
+    success: boolean
+    error_type?: string
+    error_message?: string
+    difficulty: number
+    iteration_count?: number
+    used_worker: boolean
+  }
   [SwapEventName.SwapPresetTokenAmountSelected]: {
     percentage: number
   }
@@ -931,6 +1062,9 @@ export type UniverseEventProperties = {
   [SwapEventName.SwapQuoteFetch]: {
     chainId: number
     isQuickRoute: boolean
+    isUSDQuote?: boolean
+    quoteSource?: string
+    pollInterval?: number
     time_to_first_quote_request?: number
     time_to_first_quote_request_since_first_input?: number
   }
@@ -1033,6 +1167,9 @@ export type UniverseEventProperties = {
   [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
   [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
+  [UniswapEventName.AuctionFilterSelected]: {
+    filter: 'all' | 'verified' | 'unverified' | 'active' | 'complete'
+  }
   [UniswapEventName.NetworkFilterSelected]: ITraceContext & {
     chain: UniverseChainId | 'All'
   }

@@ -1,5 +1,5 @@
 import { utils, wordlists } from 'ethers'
-import { AppTFunction } from 'ui/src/i18n/types'
+import { type AppTFunction } from 'ui/src/i18n/types'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'wallet/src/constants/accounts'
 
@@ -47,7 +47,7 @@ export function validateSetOfWords(mnemonic?: string): {
   const split = formatted.split(' ')
   const isValidLength = split.length >= MNEMONIC_LENGTH_MIN && split.length <= MNEMONIC_LENGTH_MAX
 
-  const invalidWords = split.filter((item) => isValidMnemonicWord(item))
+  const invalidWords = split.filter((item) => !isValidMnemonicWord(item))
   if (invalidWords.length) {
     return {
       error: MnemonicValidationError.InvalidWord,
@@ -90,7 +90,7 @@ export function validateMnemonic(mnemonic?: string): {
 
 // Validate individual mnemonic word
 export function isValidMnemonicWord(word: string): boolean {
-  return word.length > 0 && wordlists.en?.getWordIndex(word) === -1
+  return word.length > 0 && wordlists['en']?.getWordIndex(word) !== -1
 }
 
 // Check if phrase has trailing whitespace, indicating the user is done typing the previous word.

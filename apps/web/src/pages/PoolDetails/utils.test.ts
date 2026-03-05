@@ -1,7 +1,7 @@
-import { PoolData } from 'appGraphql/data/pools/usePoolData'
-import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
-import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import i18n from 'uniswap/src/i18n'
+import { PoolData } from '~/appGraphql/data/pools/usePoolData'
+import { getPoolDetailPageTitle } from '~/pages/PoolDetails/utils'
+import { validPoolDataResponse } from '~/test-utils/pools/fixtures'
 
 describe('getPoolDetailPageTitle', () => {
   it('should return the base title when poolData is undefined', () => {

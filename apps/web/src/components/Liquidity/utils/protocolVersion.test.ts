@@ -1,12 +1,7 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { TradingApi } from '@universe/api'
-import {
-  getProtocolItems,
-  getProtocolStatusLabel,
-  getProtocolVersionLabel,
-} from 'components/Liquidity/utils/protocolVersion'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { describe, expect, it } from 'vitest'
+import { getProtocolStatusLabel, getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
 
 describe('getProtocolVersionLabel', () => {
   it('returns correct label for V2', () => {
@@ -20,24 +15,6 @@ describe('getProtocolVersionLabel', () => {
   })
   it('returns undefined for unknown version', () => {
     expect(getProtocolVersionLabel(999 as ProtocolVersion)).toBeUndefined()
-  })
-})
-
-describe('getProtocolItems', () => {
-  it('returns correct ProtocolItems for V2', () => {
-    expect(getProtocolItems(ProtocolVersion.V2)).toBe(TradingApi.ProtocolItems.V2)
-  })
-  it('returns correct ProtocolItems for V3', () => {
-    expect(getProtocolItems(ProtocolVersion.V3)).toBe(TradingApi.ProtocolItems.V3)
-  })
-  it('returns correct ProtocolItems for V4', () => {
-    expect(getProtocolItems(ProtocolVersion.V4)).toBe(TradingApi.ProtocolItems.V4)
-  })
-  it('returns undefined for undefined version', () => {
-    expect(getProtocolItems(undefined)).toBeUndefined()
-  })
-  it('returns undefined for unknown version', () => {
-    expect(getProtocolItems(999 as ProtocolVersion)).toBeUndefined()
   })
 })
 

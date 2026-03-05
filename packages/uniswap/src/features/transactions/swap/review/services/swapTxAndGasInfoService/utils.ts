@@ -5,6 +5,7 @@ import type {
   ClassicQuoteResponse,
   DiscriminatedQuoteResponse,
   GasEstimate,
+  GasFeeResult,
   GasStrategy,
   UnwrapQuoteResponse,
   WrapQuoteResponse,
@@ -15,7 +16,6 @@ import { useMemo } from 'react'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { convertGasFeeToDisplayValue, useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
-import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'

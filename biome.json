@@ -1,4 +1,16 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-  "extends": ["@uniswap/biome-config"]
+  "extends": ["@uniswap/biome-config"],
+  "overrides": [
+    {
+      "includes": ["apps/web/scripts/build-vercel.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -2,7 +2,7 @@ import { EthersTransactionRequestSchema } from 'src/app/features/dappRequests/ty
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
 import { GetCallsStatusParamsSchema, SendCallsParamsSchema } from 'wallet/src/features/dappRequests/types'
-import { ZodIssueCode, z } from 'zod'
+import { z } from 'zod'
 
 /**
  * Schemas + types for requests that come via `window.ethereum.request`
@@ -77,7 +77,8 @@ export const PersonalSignRequestSchema = EthereumRequestWithIdSchema.extend({
       {
         message: 'Params array must contain at least two elements',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -107,7 +108,8 @@ export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.exten
       {
         message: 'Params array must contain at least two elements',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -122,7 +124,8 @@ export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.exten
       {
         message: 'Typed data must contain a chainId',
         path: ['params', '1'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -150,7 +153,8 @@ export const WalletSwitchEthereumChainRequestSchema = EthereumRequestWithIdSchem
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -161,7 +165,8 @@ export const WalletSwitchEthereumChainRequestSchema = EthereumRequestWithIdSchem
       {
         message: 'Chain id should be specified as a hexadecimal string within object',
         path: ['params', '0'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -178,7 +183,7 @@ export const WalletSwitchEthereumChainRequestSchema = EthereumRequestWithIdSchem
 export type WalletSwitchEthereumChainRequest = z.infer<typeof WalletSwitchEthereumChainRequestSchema>
 
 // eslint-disable-next-line no-restricted-syntax
-export const PermissionRequestSchema = z.record(z.record(z.any()))
+export const PermissionRequestSchema = z.record(z.string(), z.record(z.string(), z.any()))
 
 const CaveatSchema = z.object({
   type: z.string(),
@@ -203,7 +208,8 @@ export const WalletRequestPermissionsRequestSchema = EthereumRequestWithIdSchema
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -230,7 +236,8 @@ export const WalletRevokePermissionsRequestSchema = EthereumRequestWithIdSchema.
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -263,7 +270,8 @@ export const WalletGetCapabilitiesRequestSchema = EthereumRequestWithIdSchema.ex
       {
         message: 'Params array must contain at least one element (address)',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -305,7 +313,8 @@ export const WalletSendCallsRequestSchema = EthereumRequestWithIdSchema.extend({
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -348,7 +357,8 @@ export const WalletGetCallsStatusRequestSchema = EthereumRequestWithIdSchema.ext
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }

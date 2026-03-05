@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { NotifSettingType } from 'src/features/notifications/constants'
 
 // eslint-disable-next-line import/no-unused-modules
@@ -27,9 +27,10 @@ const slice = createSlice({
       // Primary used to trigger side effects in saga
       state.generalUpdatesEnabled = true
     },
+    resetPushNotifications: () => initialPushNotificationsState,
   },
 })
 
-export const { initNotifsForNewUser, updateNotifSettings } = slice.actions
+export const { initNotifsForNewUser, updateNotifSettings, resetPushNotifications } = slice.actions
 
 export const pushNotificationsReducer = slice.reducer

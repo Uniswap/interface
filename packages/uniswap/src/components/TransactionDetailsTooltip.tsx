@@ -41,7 +41,7 @@ const Header = ({
   logo?: ReactNode
 }): JSX.Element => {
   return (
-    <Flex row alignItems="center" gap="$spacing4">
+    <Flex row alignItems="center" gap="$spacing6">
       {logo}
       {Icon && <Icon size="$icon.16" color={iconColor} />}
       {title.uniswapX ? (
@@ -111,6 +111,7 @@ const LineItemValue = ({
 const Description = ({
   text,
   learnMoreUrl,
+  learnMorePinkColor = true,
 }: {
   text: string
   learnMoreUrl?: string
@@ -125,7 +126,7 @@ const Description = ({
       </Text>
       {learnMoreUrl && (
         <Anchor href={learnMoreUrl} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
-          <Text variant="buttonLabel4" color={learnMoreUrl ? '$accent1' : '$neutral1'}>
+          <Text variant="buttonLabel4" color={learnMorePinkColor ? '$accent1' : '$neutral1'}>
             {t('common.button.learn')}
           </Text>
         </Anchor>

@@ -4,8 +4,8 @@ import { getRequest } from 'functions/utils/getRequest'
 import getToken from 'functions/utils/getToken'
 import { Context, Next } from 'hono'
 import { encode } from 'html-entities'
-import { MetaTagInjectorInput } from 'shared-cloud/metatags'
-import { paths } from 'src/pages/paths'
+import { paths } from '~/pages/paths'
+import { MetaTagInjectorInput } from '~/shared-cloud/metatags'
 
 function doesMatchPath(path: string): boolean {
   const regexPaths = paths.map((p) => '^' + p.replace(/:[^/]+/g, '[^/]+').replace(/\*/g, '.*') + '$')

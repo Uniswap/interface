@@ -98,6 +98,7 @@ export const createSwapFormStore = ({
           prefilledCurrencies: undefined,
           isPrefilled: undefined,
           derivedSwapInfo,
+          dangerouslyGetLatestDerivedSwapInfo: derivedSwapInfo,
           amountUpdatedTimeRef,
           exactAmountFiatRef,
           exactAmountTokenRef,

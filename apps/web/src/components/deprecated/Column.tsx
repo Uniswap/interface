@@ -1,5 +1,5 @@
-import { deprecatedStyled } from 'lib/styled-components'
-import { Gap } from 'theme'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { Gap } from '~/theme'
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
 const Column = deprecatedStyled.div<{

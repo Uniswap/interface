@@ -65,7 +65,7 @@ export function TokenSelectorBalanceDisplay({
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
         </Flex>
-        <RotatableChevron color="$neutral3" direction={chevronDirection} height={iconSizes.icon24} />
+        <RotatableChevron color="$neutral3" direction={chevronDirection} size="$icon.24" />
       </Flex>
     </TouchableArea>
   )

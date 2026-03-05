@@ -102,7 +102,7 @@ export function remoteOrderStatusToLocalTxStatus(orderStatus: GraphQLApi.SwapOrd
  * Checks if a transaction is a limit order.
  * Limit orders are UniswapX orders with DUTCH_LIMIT routing.
  */
-export function isLimitOrder(tx: TransactionDetails): boolean {
+export function isLimitOrder(tx: TransactionDetails): tx is UniswapXOrderDetails {
   return isUniswapX(tx) && tx.routing === TradingApi.Routing.DUTCH_LIMIT
 }
 
@@ -120,4 +120,16 @@ export function hasEncodedOrder(order: UniswapXOrderDetails): order is UniswapXO
  */
 export function isLimitCancellable(order: UniswapXOrderDetails): boolean {
   return order.status === TransactionStatus.Pending || order.status === TransactionStatus.InsufficientFunds
+}
+
+/**
+ * Checks if a UniswapX order is in a pending-like state.
+ * This includes orders that are actively pending, being cancelled, or have insufficient funds.
+ */
+export function isUniswapXOrderPending(order: UniswapXOrderDetails): boolean {
+  return (
+    order.status === TransactionStatus.Pending ||
+    order.status === TransactionStatus.Cancelling ||
+    order.status === TransactionStatus.InsufficientFunds
+  )
 }

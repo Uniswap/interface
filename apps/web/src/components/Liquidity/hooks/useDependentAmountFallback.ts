@@ -1,28 +1,58 @@
+import { useQuery } from '@tanstack/react-query'
+import {
+  CreateLPPositionRequest,
+  IncreaseLPPositionRequest,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
+import {
+  V2CreateLPPosition,
+  V3CreateLPPosition,
+  V4CreateLPPosition,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
-import { DepositInfo } from 'components/Liquidity/types'
 import { useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
-import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { DepositInfo } from '~/components/Liquidity/types'
+import { PositionField } from '~/types/position'
 
 export function useIncreasePositionDependentAmountFallback(
-  queryParams: TradingApi.IncreaseLPPositionRequest | undefined,
+  queryParams: IncreaseLPPositionRequest | undefined,
   isQueryEnabled: boolean,
 ) {
   const [hasErrorResponse, setHasErrorResponse] = useState(false)
 
-  const { data, error } = useIncreaseLpPositionCalldataQuery({
-    params: {
-      ...queryParams,
-      simulateTransaction: false,
-    },
-    refetchInterval: hasErrorResponse ? false : 5 * ONE_SECOND_MS,
-    retry: false,
-    enabled: isQueryEnabled && queryParams?.simulateTransaction,
-  })
+  const liquidityIncreaseParams = useMemo(() => {
+    if (!queryParams) {
+      return undefined
+    }
+
+    const { increaseLpPosition } = queryParams
+    const updatedIncreaseLpPosition =
+      increaseLpPosition.case === 'v4IncreaseLpPosition'
+        ? { case: 'v4IncreaseLpPosition' as const, value: { ...increaseLpPosition.value, simulateTransaction: false } }
+        : increaseLpPosition.case === 'v3IncreaseLpPosition'
+          ? {
+              case: 'v3IncreaseLpPosition' as const,
+              value: { ...increaseLpPosition.value, simulateTransaction: false },
+            }
+          : increaseLpPosition.case === 'v2IncreaseLpPosition'
+            ? {
+                case: 'v2IncreaseLpPosition' as const,
+                value: { ...increaseLpPosition.value, simulateTransaction: false },
+              }
+            : increaseLpPosition
+    return new IncreaseLPPositionRequest({ increaseLpPosition: updatedIncreaseLpPosition })
+  }, [queryParams])
+
+  const { data, error } = useQuery(
+    liquidityQueries.increasePosition({
+      params: liquidityIncreaseParams,
+      refetchInterval: hasErrorResponse ? false : 5 * ONE_SECOND_MS,
+      retry: false,
+      enabled: isQueryEnabled && queryParams?.increaseLpPosition.value?.simulateTransaction,
+    }),
+  )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +queryParams
   useEffect(() => {
@@ -33,20 +63,64 @@ export function useIncreasePositionDependentAmountFallback(
 }
 
 export function useCreatePositionDependentAmountFallback(
-  queryParams: TradingApi.CreateLPPositionRequest | undefined,
+  queryParams: CreateLPPositionRequest | undefined,
   isQueryEnabled: boolean,
 ) {
   const [hasErrorResponse, setHasErrorResponse] = useState(false)
 
-  const { data, error } = useCreateLpPositionCalldataQuery({
-    params: {
-      ...queryParams,
-      simulateTransaction: false,
-    },
-    refetchInterval: hasErrorResponse ? false : 5 * ONE_SECOND_MS,
-    retry: false,
-    enabled: isQueryEnabled && queryParams?.simulateTransaction,
-  })
+  const liquidityCreateParams = useMemo(() => {
+    if (!queryParams) {
+      return undefined
+    }
+    const { createLpPosition } = queryParams
+
+    if (createLpPosition.case === 'v4CreateLpPosition') {
+      return new CreateLPPositionRequest({
+        createLpPosition: {
+          case: 'v4CreateLpPosition',
+          value: new V4CreateLPPosition({
+            ...createLpPosition.value,
+            simulateTransaction: false,
+          }),
+        },
+      })
+    }
+
+    if (createLpPosition.case === 'v3CreateLpPosition') {
+      return new CreateLPPositionRequest({
+        createLpPosition: {
+          case: 'v3CreateLpPosition',
+          value: new V3CreateLPPosition({
+            ...createLpPosition.value,
+            simulateTransaction: false,
+          }),
+        },
+      })
+    }
+
+    if (createLpPosition.case === 'v2CreateLpPosition') {
+      return new CreateLPPositionRequest({
+        createLpPosition: {
+          case: 'v2CreateLpPosition',
+          value: new V2CreateLPPosition({
+            ...createLpPosition.value,
+            simulateTransaction: false,
+          }),
+        },
+      })
+    }
+
+    return new CreateLPPositionRequest({ createLpPosition })
+  }, [queryParams])
+
+  const { data, error } = useQuery(
+    liquidityQueries.createPosition({
+      params: liquidityCreateParams,
+      refetchInterval: hasErrorResponse ? false : 5 * ONE_SECOND_MS,
+      retry: false,
+      enabled: isQueryEnabled && Boolean(queryParams?.createLpPosition.value?.simulateTransaction),
+    }),
+  )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +queryParams
   useEffect(() => {

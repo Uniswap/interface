@@ -3,6 +3,7 @@ require('@uniswap/eslint-config/load')
 
 module.exports = {
   root: true,
+  ignorePatterns: ['scripts/build-vercel.ts'],
   extends: ['@uniswap/eslint-config/interface', 'plugin:storybook/recommended'],
   parserOptions: {
     project: 'tsconfig.eslint.json',
@@ -23,6 +24,9 @@ module.exports = {
   overrides: [
     {
       // Portfolio pages must not use useAccount directly. Use usePortfolioAddress (or a domain-specific hook) instead.
+      // NOTE: This override also includes the Tamagui Tooltip restriction from the **/*.ts, **/*.tsx override below,
+      // because ESLint doesn't merge no-restricted-imports rules from multiple matching overrides - the later one
+      // takes precedence. Without duplicating the Tooltip restriction here, it would silently disable the useAccount restriction.
       files: ['src/pages/Portfolio/*.{ts,tsx}', 'src/pages/Portfolio/**/*.{ts,tsx}'],
       rules: {
         'no-restricted-imports': [
@@ -33,6 +37,12 @@ module.exports = {
                 name: 'hooks/useAccount',
                 message:
                   "Do not import 'useAccount' in portfolio pages. Use 'pages/Portfolio/hooks/usePortfolioAddress' (or a domain-specific hook) instead.",
+              },
+              {
+                name: 'tamagui',
+                importNames: ['Tooltip'],
+                message:
+                  "Do not import 'Tooltip' directly from 'tamagui'. Use the Tooltip component from 'ui/src/components/tooltip' instead.",
               },
             ],
           },
@@ -98,6 +108,24 @@ module.exports = {
               {
                 target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
                 from: 'src/test-utils',
+              },
+            ],
+          },
+        ],
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: 'tamagui',
+                importNames: ['Tooltip'],
+                message:
+                  "Do not import 'Tooltip' directly from 'tamagui'. Use the Tooltip component from 'ui/src/components/tooltip' instead.",
+              },
+              {
+                name: 'react-native-reanimated',
+                message:
+                  "Do not import 'react-native-reanimated' in web code. Use CSS animations, Tamagui's animation system, or create a platform-specific file (.native.ts/.web.ts).",
               },
             ],
           },

@@ -1,7 +1,7 @@
 import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { useContext, useMemo } from 'react'
-import { ExploreContext } from 'state/explore'
 import { logger } from 'utilities/src/logger/logger'
+import { ExploreContext } from '~/state/explore'
 
 /**
  * Extracts the latest and previous values for a protocol from timestamped data.

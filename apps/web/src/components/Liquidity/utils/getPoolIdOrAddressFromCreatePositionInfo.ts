@@ -1,9 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { Pool as V3Pool } from '@uniswap/v3-sdk'
+import { computePoolAddress, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { PoolCache } from 'hooks/usePools'
 
 export function getPoolIdOrAddressFromCreatePositionInfo({
   protocolVersion,
@@ -28,7 +27,7 @@ export function getPoolIdOrAddressFromCreatePositionInfo({
     case ProtocolVersion.V3: {
       if ('fee' in poolOrPair && 'chainId' in poolOrPair) {
         return poolOrPair.chainId && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1
-          ? PoolCache.getPoolAddress({
+          ? computePoolAddress({
               factoryAddress: V3_CORE_FACTORY_ADDRESSES[poolOrPair.chainId],
               tokenA: sdkCurrencies.TOKEN0.wrapped,
               tokenB: sdkCurrencies.TOKEN1.wrapped,

@@ -1,5 +1,5 @@
-import { createAdaptiveRefetchContext } from 'appGraphql/data/apollo/AdaptiveRefetch'
 import { GraphQLApi } from '@universe/api'
+import { createAdaptiveRefetchContext } from '~/appGraphql/data/apollo/AdaptiveRefetch'
 
 const {
   Provider: AdaptiveTokenBalancesProvider,

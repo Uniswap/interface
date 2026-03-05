@@ -7,7 +7,7 @@ describe('delegation service', () => {
 
   describe('checking delegation status', () => {
     it('knows when a wallet is delegated', async () => {
-      const onDelegationDetected = jest.fn()
+      const onDelegationDetected = vi.fn()
       const service = createDelegationService({
         delegationRepository: {
           getWalletDelegations: async () => ({
@@ -109,11 +109,11 @@ describe('delegation service', () => {
 
   describe('error handling', () => {
     it('returns empty results when repository fails', async () => {
-      const logger = { debug: jest.fn(), error: jest.fn() } as unknown as Logger
+      const logger = { debug: vi.fn(), error: vi.fn() } as unknown as Logger
       const service = createDelegationService({
         logger,
         delegationRepository: {
-          getWalletDelegations: jest.fn().mockRejectedValue(new Error('Network error')),
+          getWalletDelegations: vi.fn().mockRejectedValue(new Error('Network error')),
         },
       })
 
@@ -154,9 +154,9 @@ describe('delegation service', () => {
 
     it('returns non-delegated on errors', async () => {
       const service = createDelegationService({
-        logger: { debug: jest.fn(), error: jest.fn() } as unknown as Logger,
+        logger: { debug: vi.fn(), error: vi.fn() } as unknown as Logger,
         delegationRepository: {
-          getWalletDelegations: jest.fn().mockRejectedValue(new Error('Failed')),
+          getWalletDelegations: vi.fn().mockRejectedValue(new Error('Failed')),
         },
       })
 

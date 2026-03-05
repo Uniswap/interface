@@ -5,6 +5,7 @@ import {
   ChallengeType,
   createChallengeSolverService,
   createDeviceIdService,
+  createNoopPerformanceTracker,
   createSessionInitializationService,
   createSessionRepository,
   createSessionService,
@@ -35,7 +36,6 @@ describe('ApiInit Integration', () => {
     initSession: ReturnType<typeof vi.fn>
     challenge: ReturnType<typeof vi.fn>
     verify: ReturnType<typeof vi.fn>
-    upgradeSession: ReturnType<typeof vi.fn>
   }
   let sessionStorage: SessionStorage
   let deviceIdService: DeviceIdService
@@ -61,11 +61,9 @@ describe('ApiInit Integration', () => {
         challengeId: 'challenge-456',
         challengeType: ChallengeType.TURNSTILE,
         extra: { sitekey: 'mock-sitekey' },
+        challengeData: { case: undefined },
       }),
       verify: vi.fn().mockResolvedValue({
-        retry: false,
-      }),
-      upgradeSession: vi.fn().mockResolvedValue({
         retry: false,
       }),
     }
@@ -121,6 +119,7 @@ describe('ApiInit Integration', () => {
     initService = createSessionInitializationService({
       getSessionService: () => sessionService,
       challengeSolverService,
+      performanceTracker: createNoopPerformanceTracker(),
       getIsSessionUpgradeAutoEnabled: () => true,
     })
 
@@ -190,13 +189,15 @@ describe('ApiInit Integration', () => {
     expect(storedSession?.sessionId).toBe('challenge-session')
   })
 
-  it('uses existing session without re-initialization', async () => {
+  it('always calls initSession - backend handles session reuse', async () => {
     // Setup: Pre-populate storage with existing session
     await sessionStorage.set({ sessionId: 'existing-session' })
 
-    // Mock the service to simulate finding existing session
-    sessionService.getSessionState = vi.fn().mockResolvedValue({
+    // Mock backend to return the same session ID (simulating session reuse)
+    mockApiClient.initSession.mockResolvedValue({
       sessionId: 'existing-session',
+      needChallenge: false,
+      extra: {},
     })
 
     // Act
@@ -206,13 +207,17 @@ describe('ApiInit Integration', () => {
       </QueryClientProvider>,
     )
 
-    // Wait for initialization check
+    // Wait for initialization
     await waitFor(() => {
-      expect(sessionService.getSessionState).toHaveBeenCalled()
+      expect(mockApiClient.initSession).toHaveBeenCalled()
     })
 
-    // Assert: API init was NOT called since session exists
-    expect(mockApiClient.initSession).not.toHaveBeenCalled()
+    // Assert: initSession IS called (backend decides to reuse based on X-Session-ID header)
+    expect(mockApiClient.initSession).toHaveBeenCalledTimes(1)
+
+    // Session in storage should match what backend returned
+    const storedSession = await sessionStorage.get()
+    expect(storedSession?.sessionId).toBe('existing-session')
   })
 
   it('retries initialization on transient failures', async () => {
@@ -314,7 +319,7 @@ describe('ApiInit Integration', () => {
     // Assert: No session initialization should occur
     expect(mockApiClient.initSession).not.toHaveBeenCalled()
     expect(mockApiClient.challenge).not.toHaveBeenCalled()
-    expect(mockApiClient.upgradeSession).not.toHaveBeenCalled()
+    expect(mockApiClient.verify).not.toHaveBeenCalled()
   })
 
   it('should wait for feature flag to be enabled before initializing session', async () => {

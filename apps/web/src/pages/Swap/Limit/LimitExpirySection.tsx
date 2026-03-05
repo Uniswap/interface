@@ -1,13 +1,13 @@
-import Row from 'components/deprecated/Row'
 import { TFunction } from 'i18next'
-import { deprecatedStyled } from 'lib/styled-components'
 import { Trans, useTranslation } from 'react-i18next'
-import { useLimitContext } from 'state/limit/LimitContext'
-import { ThemedText } from 'theme/components'
-import { ClickableStyle } from 'theme/components/styles'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
+import Row from '~/components/deprecated/Row'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { useLimitContext } from '~/state/limit/LimitContext'
+import { ThemedText } from '~/theme/components'
+import { ClickableStyle } from '~/theme/components/styles'
 
 const ExpirySection = deprecatedStyled(Row)`
   width: 100%;

@@ -1,4 +1,4 @@
-import { createListenerMiddleware, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createListenerMiddleware, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import {
   getHandleOnSetActiveChainId,
   getHandleOnUpdateDelegatedState,
@@ -24,10 +24,11 @@ export const delegationSlice = createSlice({
     setActiveChainId(state, { payload }: PayloadAction<{ chainId?: number }>) {
       state.activeChainId = payload.chainId
     },
+    resetDelegation: () => initialState,
   },
 })
 
-export const { updateDelegatedState, setActiveChainId } = delegationSlice.actions
+export const { updateDelegatedState, setActiveChainId, resetDelegation } = delegationSlice.actions
 export const delegationReducer = delegationSlice.reducer
 
 // Create a listener middleware for delegation events

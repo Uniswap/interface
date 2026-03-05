@@ -3,6 +3,7 @@ import { createHashcashMockSolver } from '@universe/sessions/src/challenge-solve
 import { createNoneMockSolver } from '@universe/sessions/src/challenge-solvers/createNoneMockSolver'
 import { createTurnstileMockSolver } from '@universe/sessions/src/challenge-solvers/createTurnstileMockSolver'
 import type { ChallengeSolver, ChallengeSolverService } from '@universe/sessions/src/challenge-solvers/types'
+import type { Logger } from 'utilities/src/logger/logger'
 
 interface CreateChallengeSolverServiceContext {
   /**
@@ -10,6 +11,10 @@ interface CreateChallengeSolverServiceContext {
    * Allows injection of real implementations or custom mocks
    */
   solvers?: Map<ChallengeType, ChallengeSolver>
+  /**
+   * Optional logger to use for debugging
+   */
+  getLogger?: () => Logger
 }
 
 function createChallengeSolverService(ctx: CreateChallengeSolverServiceContext = {}): ChallengeSolverService {
@@ -26,7 +31,19 @@ function createChallengeSolverService(ctx: CreateChallengeSolverServiceContext =
       }
     }
 
-    return solvers.get(type) ?? null
+    const value = solvers.get(type) ?? null
+
+    if (ctx.getLogger) {
+      ctx
+        .getLogger()
+        .debug(
+          'createChallengeSolverService',
+          'getSolver',
+          `Solver for challenge type ${type} is ${value ? 'available' : 'not available'}`,
+        )
+    }
+
+    return value
   }
 
   return { getSolver }

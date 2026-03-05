@@ -82,11 +82,12 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
   size="16"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-16px _height-16px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     data-testid="account-icon"
   >
     <div
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+      class="t_unmounted  t_unmounted"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
     >
       <span
         data-testid="unicon"
@@ -98,17 +99,15 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
   <div
     class="c1"
     data-testid="MiniIcon"
-    side="right"
   >
     <img
       alt="MetaMask icon"
       class="c2"
-      src="/src/assets/wallets/metamask-icon.svg"
+      src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_28292_12829)'%3e%3crect%20width='40'%20height='40'%20fill='%23FDF2EC'/%3e%3cg%20filter='url(%23filter0_dd_28292_12829)'%3e%3cpath%20d='M32.1442%2031.5512L26.3485%2029.8255L21.978%2032.4383L18.9285%2032.4369L14.5552%2029.8255L8.76223%2031.5512L7%2025.6025L8.76223%2019.0002L7%2013.4183L8.76223%206.5L17.8143%2011.9082H23.092L32.1442%206.5L33.9064%2013.4183L32.1442%2019.0002L33.9064%2025.6025L32.1442%2031.5512Z'%20fill='%23FF5C16'/%3e%3cpath%20d='M8.76337%206.50002L17.8156%2011.912L17.4557%2015.6262L8.76337%206.50002ZM14.5566%2025.605L18.5395%2028.6391L14.5566%2029.8255V25.605ZM18.2212%2020.5889L17.4557%2015.6287L12.5557%2019.0018L12.5531%2019.0004V19.0029L12.5683%2022.4749L14.5552%2020.5891L18.2212%2020.5889ZM32.1442%206.50002L23.092%2011.912L23.4508%2015.6262L32.1442%206.50002ZM26.3512%2025.605L22.3681%2028.6391L26.3512%2029.8255V25.605ZM28.3532%2019.0027V19.0003L28.3521%2019.0016L23.4521%2015.6287L22.6866%2020.5889H26.351L28.3393%2022.4745L28.3532%2019.0027Z'%20fill='%23FF5C16'/%3e%3cpath%20d='M14.5552%2029.8255L8.76223%2031.5513L7%2025.605H14.5552V29.8255ZM18.2198%2020.5875L19.3265%2027.7585L17.7928%2023.7713L12.5658%2022.4745L14.5539%2020.5877H18.2198V20.5875ZM26.351%2029.8255L32.1442%2031.5513L33.9064%2025.605H26.351V29.8255ZM22.6866%2020.5875L21.58%2027.7585L23.1135%2023.7713L28.3406%2022.4745L26.3512%2020.5877H22.6866V20.5875Z'%20fill='%23E34807'/%3e%3cpath%20d='M7%2025.6025L8.76223%2019.0003H12.5517L12.5656%2022.4734L17.793%2023.7701L19.3265%2027.7572L18.5381%2028.6353L14.5552%2025.6012H7V25.6025ZM33.9064%2025.6025L32.1442%2019.0003H28.3545L28.3406%2022.4734L23.1137%2023.7701L21.58%2027.7572L22.3681%2028.6353L26.3512%2025.6012H33.9064V25.6025ZM23.092%2011.9082H17.8143L17.4558%2015.6224L19.3266%2027.7534H21.58L23.4519%2015.6224L23.092%2011.9082Z'%20fill='%23FF8D5D'/%3e%3cpath%20d='M8.76223%206.5L7%2013.4183L8.76223%2019.0002H12.5517L17.4543%2015.6262L8.76223%206.5ZM17.1246%2022.0279H15.4078L14.4731%2022.9441L17.7941%2023.7675L17.1246%2022.0267V22.0279ZM32.1442%206.5L33.9064%2013.4183L32.1442%2019.0002H28.3545L23.4521%2015.6262L32.1442%206.5ZM23.7843%2022.0279H25.5036L26.4383%2022.9453L23.1135%2023.7701L23.7843%2022.0265V22.0279ZM21.9766%2030.0718L22.3683%2028.6377L21.58%2027.7596H19.3249L18.5368%2028.6377L18.9283%2030.0718'%20fill='%23661800'/%3e%3cpath%20d='M21.9766%2030.0716V32.4394H18.9285V30.0716H21.9766Z'%20fill='%23C0C4CD'/%3e%3cpath%20d='M14.5566%2029.8231L18.931%2032.4383V30.0704L18.5393%2028.6366L14.5566%2029.8231ZM26.3512%2029.8231L21.9766%2032.4383V30.0704L22.3683%2028.6366L26.3512%2029.8231Z'%20fill='%23E7EBF6'/%3e%3c/g%3e%3c/g%3e%3cdefs%3e%3cfilter%20id='filter0_dd_28292_12829'%20x='1'%20y='4.5'%20width='39'%20height='38.0493'%20filterUnits='userSpaceOnUse'%20color-interpolation-filters='sRGB'%3e%3cfeFlood%20flood-opacity='0'%20result='BackgroundImageFix'/%3e%3cfeColorMatrix%20in='SourceAlpha'%20type='matrix'%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%20127%200'%20result='hardAlpha'/%3e%3cfeOffset%20dy='2'/%3e%3cfeGaussianBlur%20stdDeviation='1'/%3e%3cfeComposite%20in2='hardAlpha'%20operator='out'/%3e%3cfeColorMatrix%20type='matrix'%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.06%200'/%3e%3cfeBlend%20mode='normal'%20in2='BackgroundImageFix'%20result='effect1_dropShadow_28292_12829'/%3e%3cfeColorMatrix%20in='SourceAlpha'%20type='matrix'%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%20127%200'%20result='hardAlpha'/%3e%3cfeMorphology%20radius='2'%20operator='dilate'%20in='SourceAlpha'%20result='effect2_dropShadow_28292_12829'/%3e%3cfeOffset%20dy='4'/%3e%3cfeGaussianBlur%20stdDeviation='2'/%3e%3cfeComposite%20in2='hardAlpha'%20operator='out'/%3e%3cfeColorMatrix%20type='matrix'%20values='0%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200%200.04%200'/%3e%3cfeBlend%20mode='multiply'%20in2='effect1_dropShadow_28292_12829'%20result='effect2_dropShadow_28292_12829'/%3e%3cfeBlend%20mode='normal'%20in='SourceGraphic'%20in2='effect2_dropShadow_28292_12829'%20result='shape'/%3e%3c/filter%3e%3cclipPath%20id='clip0_28292_12829'%3e%3crect%20width='40'%20height='40'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e"
     />
   </div>
   <div
     class="c3"
-    side="left"
   >
     <img
       class="c2"
@@ -179,7 +178,6 @@ exports[`StatusIcon > with no account > renders children in correct order 1`] = 
 >
   <div
     class="c1"
-    side="left"
   >
     <img
       class="c2"

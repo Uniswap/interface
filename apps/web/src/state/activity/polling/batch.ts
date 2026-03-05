@@ -1,15 +1,15 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { useAccount } from 'hooks/useAccount'
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useEffect, useMemo } from 'react'
-import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/types'
-import { usePendingTransactions } from 'state/transactions/hooks'
-import { PendingTransactionDetails } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'
+import { useAccount } from '~/hooks/useAccount'
+import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
+import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
+import { usePendingTransactions } from '~/state/transactions/hooks'
+import { PendingTransactionDetails } from '~/state/transactions/types'
 
 type PendingBatchDetails = Required<Pick<PendingTransactionDetails, 'batchInfo'>> & PendingTransactionDetails
 

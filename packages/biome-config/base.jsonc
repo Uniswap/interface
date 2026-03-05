@@ -71,6 +71,7 @@
       "metro.config.js",
       "types/**",
       "**/lcov-report/**",
+      "**/coverage/**",
       "apps/extension/.storybook/storybook.requires.ts",
       "apps/extension/.maestro/**",
       "apps/extension/dev/**",
@@ -122,6 +123,7 @@
       "!**/metro.config.js",
       "!**/types",
       "!**/lcov-report",
+      "!**/coverage",
       "!apps/mobile/ios/**",
       "!apps/mobile/android/**",
       "!apps/mobile/.storybook/storybook.requires.ts",
@@ -151,7 +153,7 @@
         "noUselessTypeConstraint": "error",
         "noUselessUndefinedInitialization": "warn",
         "noVoid": "warn",
-        "useLiteralKeys": "warn"
+        "useLiteralKeys": "off" // Disable to allow TypeScript's noPropertyAccessFromIndexSignature
       },
       "correctness": {
         "noChildrenProp": "error",
@@ -452,6 +454,13 @@
     // Auto-generate overrides for @universe/* packages
     // This marker is replaced by the generator script with actual override configurations
     "__AUTO_GENERATE_UNIVERSE_OVERRIDES__",
+    // packages/prices
+    {
+      "includes": ["packages/prices/src/index.ts"],
+      "linter": {
+        "rules": {}
+      }
+    },
     // GLOBAL: Test files
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx", "**/test/**", "**/tests/**", "**/*.spec.ts", "**/*.spec.tsx"],
@@ -662,6 +671,17 @@
       "includes": ["packages/api/src/clients/trading/api.json"],
       "formatter": {
         "enabled": false
+      }
+    },
+    // packages/docker-image-builder
+    {
+      "includes": ["packages/docker-image-builder/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
       }
     },
     // apps/extension

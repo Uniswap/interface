@@ -1,0 +1,193 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StorageSettingsContent > renders correctly 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1 _justifyContent-space-betwe3241 _gap-t-space-spa1360334080"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334080"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334080"
+        >
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _color-accent3"
+            >
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080 _flexGrow-1"
+              >
+                <div
+                  class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center"
+                >
+                  <div
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgba(255, 255, 255, 0.65);"
+                    viewbox="0 0 16 16"
+                  >
+                    <div
+                      d="M8.66643 5.33325V7.72388L9.80445 8.8619C10.0651 9.12256 10.0651 9.54394 9.80445 9.80461C9.67445 9.93461 9.50376 9.99992 9.3331 9.99992C9.16243 9.99992 8.99174 9.93461 8.86174 9.80461L7.52841 8.47127C7.40307 8.34594 7.3331 8.17659 7.3331 7.99992V5.33325C7.3331 4.96525 7.6311 4.66659 7.99976 4.66659C8.36843 4.66659 8.66643 4.96525 8.66643 5.33325ZM8.01701 1.33325C6.23701 1.33325 4.56576 2.05187 3.33309 3.28654V1.99992C3.33309 1.63192 3.03509 1.33325 2.66643 1.33325C2.29776 1.33325 1.99976 1.63192 1.99976 1.99992L1.99976 4.66659C1.99976 5.03459 2.29776 5.33325 2.66643 5.33325L5.3331 5.33325C5.70176 5.33325 5.99976 5.03459 5.99976 4.66659C5.99976 4.29859 5.70176 3.99992 5.3331 3.99992H4.50709C5.46575 3.15125 6.70635 2.66659 8.01701 2.66659C10.9477 2.66659 13.3331 5.05925 13.3331 7.99992C13.3331 10.9406 10.9483 13.3333 8.01701 13.3333C5.98035 13.3333 4.15974 12.1993 3.26441 10.3733C3.10308 10.0426 2.70382 9.90529 2.37248 10.068C2.04182 10.23 1.9058 10.6292 2.0678 10.9599C3.18846 13.2465 5.46835 14.6666 8.01701 14.6666C11.683 14.6666 14.6664 11.6759 14.6664 7.99992C14.6664 4.32392 11.683 1.33325 8.01701 1.33325Z"
+                      fill="currentColor"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665589"
+                >
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Clear account history
+                  </span>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Clear your account history
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _color-accent3"
+            >
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080 _flexGrow-1"
+              >
+                <div
+                  class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center"
+                >
+                  <div
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgba(255, 255, 255, 0.65);"
+                    viewbox="0 0 24 24"
+                  >
+                    <div
+                      d="M8.00903 6.5C8.00903 4.294 9.80303 2.5 12.009 2.5C14.215 2.5 16.009 4.294 16.009 6.5C16.009 8.706 14.215 10.5 12.009 10.5C9.80303 10.5 8.00903 8.706 8.00903 6.5ZM14 12.5H10C5.94 12.5 4.5 15.473 4.5 18.019C4.5 20.296 5.71105 21.5 8.00305 21.5H15.9969C18.2889 21.5 19.5 20.296 19.5 18.019C19.5 15.473 18.06 12.5 14 12.5Z"
+                      fill="currentColor"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665589"
+                >
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Clear preferences
+                  </span>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Clear your preferences
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            role="button"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _color-accent3"
+            >
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080 _flexGrow-1"
+              >
+                <div
+                  class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center"
+                >
+                  <div
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgba(255, 255, 255, 0.65);"
+                    viewbox="0 0 25 24"
+                  >
+                    <div
+                      d="M20.9341 17.59L14.3441 20.65C13.3341 21.12 12.1541 21.12 11.1441 20.65L4.55414 17.59C3.47414 17.09 3.47414 15.55 4.55414 15.05L4.69416 14.99L10.5141 17.68C11.2141 18.01 11.9641 18.18 12.7441 18.18C13.5241 18.18 14.2742 18.01 14.9742 17.68L20.7941 14.99L20.9341 15.05C22.0141 15.55 22.0141 17.09 20.9341 17.59ZM20.9341 10.72L20.8041 10.66L16.1441 12.83L14.9742 13.37C14.2742 13.69 13.5241 13.86 12.7441 13.86C11.9641 13.86 11.2141 13.69 10.5141 13.37L9.34415 12.83L4.68415 10.66L4.55414 10.72C3.47414 11.23 3.47414 12.77 4.55414 13.27L6.47415 14.16L11.1441 16.32C11.6541 16.56 12.1941 16.68 12.7441 16.68C13.2941 16.68 13.8341 16.56 14.3441 16.32L19.0141 14.16L20.9341 13.27C22.0141 12.77 22.0141 11.23 20.9341 10.72ZM20.9341 6.41L14.3441 3.35001C13.8341 3.12001 13.2941 3 12.7441 3C12.1941 3 11.6541 3.12001 11.1441 3.35001L4.55414 6.41C3.47414 6.91 3.47414 8.45001 4.55414 8.95001L4.68415 9.01001L5.57413 9.42001L6.46414 9.84L11.1441 12.01C11.6541 12.24 12.1941 12.36 12.7441 12.36C13.2941 12.36 13.8341 12.24 14.3441 12.01L19.0241 9.84L19.9142 9.42001L20.8041 9.01001L20.9341 8.95001C22.0141 8.45001 22.0141 6.91 20.9341 6.41Z"
+                      fill="currentColor"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665589"
+                >
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Clear cache
+                  </span>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Clear cached data
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _pb-t-space-spa94665589"
+      >
+        <button
+          class="is_Button  t_group_item"
+          dd-action-name="Clear all data"
+          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); gap: var(--t-space-spacing12); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+        >
+          <div
+            fill="none"
+            stroke-width="8"
+            style="width: 20.7px; height: 20.7px;"
+            viewbox="0 0 24 24"
+          >
+            <div
+              d="M8.214 5.75H8.52001L8.65924 5.47751C8.77151 5.25781 8.85397 5.01821 8.93013 4.79074L8.93041 4.78989L9.13235 4.18311C9.26824 3.77544 9.65004 3.5 10.081 3.5H13.919C14.35 3.5 14.7318 3.77544 14.8677 4.18311L15.0696 4.78989L15.0699 4.79074C15.146 5.01821 15.2285 5.25781 15.3408 5.47751L15.48 5.75H15.786H20C20.1379 5.75 20.25 5.86214 20.25 6C20.25 6.13786 20.1379 6.25 20 6.25H4C3.86214 6.25 3.75 6.13786 3.75 6C3.75 5.86214 3.86214 5.75 4 5.75H8.214ZM5.65398 8.25H18.346L17.6912 18.1653C17.6912 18.1655 17.6912 18.1658 17.6912 18.166C17.641 18.8842 17.4313 19.4571 17.0592 19.8476C16.696 20.2289 16.1172 20.5 15.19 20.5H8.81C7.88279 20.5 7.30399 20.2289 6.94075 19.8476C6.56874 19.4571 6.35899 18.8843 6.30885 18.1662C6.30883 18.1659 6.30881 18.1656 6.30879 18.1653L5.65398 8.25ZM11.25 11C11.25 10.3139 10.6861 9.75 10 9.75C9.31386 9.75 8.75 10.3139 8.75 11V16C8.75 16.6861 9.31386 17.25 10 17.25C10.6861 17.25 11.25 16.6861 11.25 16V11ZM15.25 11C15.25 10.3139 14.6861 9.75 14 9.75C13.3139 9.75 12.75 10.3139 12.75 11V16C12.75 16.6861 13.3139 17.25 14 17.25C14.6861 17.25 15.25 16.6861 15.25 16V11Z"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+          </div>
+          <span
+            class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+            line-height-disabled="false"
+          >
+            Clear all data
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

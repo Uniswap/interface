@@ -1,8 +1,8 @@
-import { useModalState } from 'hooks/useModalState'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, ModalCloseIcon, Spacer, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useModalState } from '~/hooks/useModalState'
 
 export function UkDisclaimerModal() {
   const { t } = useTranslation()

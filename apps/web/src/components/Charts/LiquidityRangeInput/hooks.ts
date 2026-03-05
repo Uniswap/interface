@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { calculateAnchoredLiquidityByTick } from 'components/Charts/LiquidityChart/utils/calculateAnchoredLiquidityByTick'
-import { calculateTokensLocked } from 'components/Charts/LiquidityChart/utils/calculateTokensLocked'
-import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
-import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { PositionField } from 'types/position'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { TickProcessed } from 'utils/computeSurroundingTicks'
+import { calculateTokensLocked } from '~/components/Charts/LiquidityChart/utils/calculateTokensLocked'
+import { ChartEntry } from '~/components/Charts/LiquidityRangeInput/types'
+import { usePoolActiveLiquidity } from '~/hooks/usePoolTickData'
+import { PositionField } from '~/types/position'
+import { TickProcessed } from '~/utils/computeSurroundingTicks'
 
 /**
  * Currency A and B should be sorted to get accurate data, but you can pass invertPrices = true
@@ -37,7 +36,7 @@ export function useDensityChartData({
   hooks?: string
   skip?: boolean
 }) {
-  const { isLoading, error, data, activeTick, liquidity } = usePoolActiveLiquidity({
+  const { isLoading, error, data, activeTick, liquidity, sqrtPriceX96 } = usePoolActiveLiquidity({
     sdkCurrencies,
     version,
     poolId,
@@ -53,14 +52,11 @@ export function useDensityChartData({
       return null
     }
 
-    if (!data || !activeTick || !liquidity) {
+    if (!data || activeTick === undefined || !liquidity) {
       return null
     }
 
     const newData: ChartEntry[] = []
-
-    // Calculate anchored active liquidity per tick using three-step anchoring process
-    const activeLiquidityByTick = calculateAnchoredLiquidityByTick({ ticksProcessed: data, activeTick, liquidity })
 
     for (let i = 0; i < data.length; i++) {
       const t: TickProcessed = data[i]
@@ -72,12 +68,14 @@ export function useDensityChartData({
         token1: sdkCurrencies.TOKEN1,
         tickSpacing,
         currentTick: activeTick,
-        amount: activeLiquidityByTick.get(t.tick) ?? JSBI.BigInt(0),
+        nextTick: data[i + 1]?.tick,
+        amount: JSBI.BigInt(t.liquidityActive.toString()),
         tick: t,
+        sqrtPriceX96,
       })
 
       const chartEntry = {
-        activeLiquidity: parseFloat(t.liquidityActive.toString()),
+        liquidityActive: parseFloat(t.liquidityActive.toString()),
         liquidityNet: parseFloat(t.liquidityNet.toString()),
         price0: parseFloat(price0),
         tick: t.tick,
@@ -85,9 +83,7 @@ export function useDensityChartData({
         amount1Locked: priceInverted ? amount1Locked : amount0Locked,
       }
 
-      if (chartEntry.activeLiquidity > 0) {
-        newData.push(chartEntry)
-      }
+      newData.push(chartEntry)
     }
 
     return newData

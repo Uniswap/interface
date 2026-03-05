@@ -1,4 +1,4 @@
-import { NATIVE_CHAIN_ID } from 'src/constants/tokens'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 
 const tokens = [
   {

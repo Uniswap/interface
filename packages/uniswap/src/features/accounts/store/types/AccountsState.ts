@@ -25,6 +25,9 @@ export interface AccountsData {
   wallets: { [id: string]: Wallet }
 }
 
+/** A grouping of addresses across multiple platforms. */
+export type AddressGroup = { [P in Platform as `${P}Address`]?: PlatformSpecificAddress<P> }
+
 /** Union type representing any connector across all platforms. Handles all current possible platform combinations. */
 type AnyConnector = { [P in Platform]: Connector<P> }[Platform] | Connector
 
@@ -37,7 +40,7 @@ export interface AccountsGetters {
   getActiveAddress: <P extends Platform>(platform: FlexiblePlatformInput<P>) => PlatformSpecificAddress<P> | undefined
 
   /** Returns all addresses for the currently active account across all platforms. */
-  getActiveAddresses: () => { [P in Platform as `${P}Address`]?: PlatformSpecificAddress<P> }
+  getActiveAddresses: () => AddressGroup
 
   /** Returns the currently active account for the specified platform. */
   getActiveAccount: <P extends Platform>(platform: FlexiblePlatformInput<P>) => Account<P> | undefined

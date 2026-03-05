@@ -1,11 +1,10 @@
 import { GraphQLApi } from '@universe/api'
-import { PriceChartData } from 'components/Charts/PriceChart'
-import { ChartType } from 'components/Charts/utils'
-import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { hashKey } from 'utilities/src/reactQuery/hashKey'
-import { removeOutliers } from 'utils/prices'
+import { PriceChartData } from '~/components/Charts/PriceChart'
+import { ChartQueryResult, ChartType, DataQuality } from '~/components/Charts/utils'
+import { removeOutliers } from '~/utils/prices'
 
 export type PDPChartQueryVars = {
   addressOrId?: string

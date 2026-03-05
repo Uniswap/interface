@@ -3,7 +3,6 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
-    "baseUrl": "src",
     "composite": true,
     "declarationMap": false,
     "downlevelIteration": true,
@@ -30,6 +29,7 @@
     "types": ["chrome", "vitest/globals"],
     "useUnknownInCatchVariables": false,
     "paths": {
+      "~/*": ["./src/*"],
       "ui/src/*": ["../../packages/ui/src/*"],
       "utilities/src/*": ["../../packages/utilities/src/*"],
       "uniswap/src/*": ["../../packages/uniswap/src/*"]
@@ -44,30 +44,34 @@
     "scripts/*",
     "vite/*"
   ],
+  "exclude": ["scripts/build-vercel.ts"],
   "references": [
     {
       "path": "../../packages/utilities"
     },
     {
-      "path": "../../packages/uniswap"
+      "path": "../../packages/websocket"
     },
     {
-      "path": "../../packages/ui"
+      "path": "../../packages/prices"
     },
     {
       "path": "../../packages/sessions"
     },
     {
+      "path": "../../packages/notifications"
+    },
+    {
       "path": "../../packages/gating"
     },
     {
-      "path": "../../packages/notifications"
+      "path": "../../packages/ui"
     },
     {
       "path": "../../packages/api"
     },
     {
-      "path": "../../packages/gating"
+      "path": "../../packages/uniswap"
     }
   ]
 }

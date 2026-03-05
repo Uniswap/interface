@@ -103,7 +103,7 @@
         <data
           android:scheme="https"
           android:host="app.uniswap.org"
-          android:pathPrefix="/explore/" />
+          android:pathPrefix="/explore/tokens" />
 
         <data
           android:scheme="https"

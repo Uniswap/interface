@@ -8,19 +8,18 @@ import {
   useCurrencyInfosToTokenOptions,
 } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export function useCommonTokensOptionsWithFallback({
-  evmAddress,
-  svmAddress,
+  addresses,
   chainFilter,
 }: {
-  evmAddress: Address | undefined
-  svmAddress: Address | undefined
+  addresses: AddressGroup
   chainFilter: UniverseChainId | null
 }): GqlResult<TokenOption[] | undefined> {
-  const { data, error, refetch, loading } = useCommonTokensOptions({ evmAddress, svmAddress, chainFilter })
+  const { data, error, refetch, loading } = useCommonTokensOptions({ addresses, chainFilter })
   const commonBases = chainFilter ? currencyInfosToTokenOptions(COMMON_BASES[chainFilter]) : undefined
   const commonBasesCurrencyIds = useMemo(
     () => commonBases?.map((token) => currencyId(token.currencyInfo.currency)).filter(Boolean) ?? [],

@@ -1,14 +1,14 @@
 import { WETH9 } from '@uniswap/sdk-core'
-import { expect, getTest } from 'playwright/fixtures'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
-import { Mocks } from 'playwright/mocks/mocks'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { assume0xAddress } from 'utils/wagmi'
 import { parseEther } from 'viem'
+import { expect, getTest } from '~/playwright/fixtures'
+import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
+import { Mocks } from '~/playwright/mocks/mocks'
+import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 

@@ -1,11 +1,11 @@
 import { useWeb3React } from '@web3-react/core'
-import { useAccount } from 'hooks/useAccount'
-import useDebounce from 'hooks/useDebounce'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useState } from 'react'
-import { updateChainId } from 'state/application/reducer'
-import { useAppDispatch } from 'state/hooks'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { useAccount } from '~/hooks/useAccount'
+import useDebounce from '~/hooks/useDebounce'
+import { updateChainId } from '~/state/application/reducer'
+import { useAppDispatch } from '~/state/hooks'
 
 export default function Updater(): null {
   const account = useAccount()

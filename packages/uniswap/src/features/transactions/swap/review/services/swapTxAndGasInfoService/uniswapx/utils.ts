@@ -41,7 +41,7 @@ function createUniswapXGasBreakdown({
     classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
     approvalCost: approvalGasFeeResult.displayValue,
     wrapCost: swapTxInfo.gasFeeResult.displayValue,
-    inputTokenSymbol: trade.inputAmount.currency.wrapped.symbol,
+    inputTokenSymbol: trade.inputAmount.currency.symbol,
   }
 
   return { gasFeeBreakdown }

@@ -4,6 +4,8 @@ import { toIncludeSameMembers } from 'jest-extended'
 import {
   testMigratePendingDappRequestsToRecord,
   testMigrateUnknownBackupAccountsToMaybeManualBackup,
+  testRemoveDappInfoToChromeLocalStorage,
+  testSetLanguageToNavigatorLanguage,
 } from 'src/store/extensionMigrationsTests'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
 import {
@@ -38,8 +40,10 @@ import {
   v26Schema,
   v27Schema,
   v29Schema,
+  v30Schema,
 } from 'src/store/schema'
 import { USDC } from 'uniswap/src/constants/tokens'
+import { initialAppearanceSettingsState } from 'uniswap/src/features/appearance/slice'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
@@ -58,7 +62,6 @@ import {
   testRemoveTHBFromCurrency,
 } from 'uniswap/src/state/uniswapMigrationTests'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
-import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
@@ -244,9 +247,7 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v3 to v4', async () => {
-    const v3Stub = { ...v3Schema }
-    const v4 = await migrations[4](v3Stub)
-    expect(v4.dapp).toBe(undefined)
+    testRemoveDappInfoToChromeLocalStorage(migrations[4], v3Schema)
   })
 
   it('migrates from v4 to v5', async () => {
@@ -374,5 +375,9 @@ describe('Redux state migrations', () => {
         },
       },
     })
+  })
+
+  it('migrates from v30 to v31', () => {
+    testSetLanguageToNavigatorLanguage(migrations[31], v30Schema)
   })
 })

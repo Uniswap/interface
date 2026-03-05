@@ -1,9 +1,14 @@
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import toucanIntroBackground from 'ui/src/assets/backgrounds/toucan-intro.png'
 import { Rocket } from 'ui/src/components/icons/Rocket'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ExternalLink } from '~/theme/components/Links'
+
+const LEARN_MORE_URL = uniswapUrls.helpArticleUrls.toucanIntro
 
 interface ToucanIntroModalProps {
   isOpen: boolean
@@ -11,6 +16,7 @@ interface ToucanIntroModalProps {
 }
 
 export function ToucanIntroModal({ isOpen, onClose }: ToucanIntroModalProps) {
+  const { t } = useTranslation()
   const colors = useSporeColors()
 
   return (
@@ -42,43 +48,50 @@ export function ToucanIntroModal({ isOpen, onClose }: ToucanIntroModalProps) {
           <X size="$icon.24" color="$neutral1" />
         </TouchableArea>
 
-        <Flex p="$spacing24" pt="$spacing40" gap="$spacing24" zIndex={1}>
+        <Flex p="$spacing24" pt="$spacing40" gap="$spacing16" zIndex={1}>
           <Flex gap="$spacing16" alignItems="flex-start">
-            <Flex backgroundColor="$accent2" borderRadius="$rounded8" p="$spacing12">
+            <Flex backgroundColor="$accent2" borderRadius="$rounded8" p="$spacing6" width={40} height={40}>
               <Rocket size="$icon.28" color="$accent1" />
             </Flex>
 
             <Flex gap="$spacing4" flex={1}>
               <Text variant="subheading1" color="$neutral1">
-                This is a New!
+                {t('toucan.helpModal.title')}
               </Text>
               <Text variant="body3" color="$neutral2">
-                blah blah blah add the actual text after launch
+                {t('toucan.helpModal.description')}
               </Text>
             </Flex>
           </Flex>
 
           <Flex gap="$spacing8" px="$spacing8">
             <Text variant="subheading2" color="$neutral1">
-              1. blah blah blah
+              1. {t('toucan.helpModal.step1')}
             </Text>
             <Text variant="subheading2" color="$neutral1">
-              2. blah blah blah blah
+              2. {t('toucan.helpModal.step2')}
             </Text>
             <Text variant="subheading2" color="$neutral1">
-              3. blah blah blah blah
+              3. {t('toucan.helpModal.step3')}
             </Text>
           </Flex>
 
           <Flex gap="$spacing16" alignItems="center">
-            <Text variant="buttonLabel3" color="$neutral2" textAlign="center">
-              Learn how this works
-            </Text>
+            <ExternalLink href={LEARN_MORE_URL} style={{ textDecoration: 'none' }}>
+              <Text variant="buttonLabel3" color="$neutral2" textAlign="center">
+                {t('toucan.helpModal.learnMore')}
+              </Text>
+            </ExternalLink>
 
             <Button fill={false} variant="default" emphasis="primary" size="medium" onPress={onClose} width="100%">
-              Start using this feature
+              {t('toucan.helpModal.continue')}
             </Button>
           </Flex>
+
+          <Text variant="body4" color="$neutral3" fontSize={10} lineHeight={12}>
+            {t('toucan.helpModal.disclaimer.collapsed')} {t('toucan.helpModal.disclaimer.expanded1')}{' '}
+            {t('toucan.helpModal.disclaimer.expanded2')}
+          </Text>
         </Flex>
       </Flex>
     </Modal>

@@ -12,10 +12,16 @@ import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/ana
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { Mock } from 'vitest'
 
-jest.mock('uniswap/src/features/telemetry/send')
-jest.mock('utilities/src/platform', () => ({
-  isMobileApp: false,
+// Use vi.hoisted to create a mutable mock value that can be changed between tests
+const mockPlatformState = vi.hoisted(() => ({ isMobileApp: false }))
+
+vi.mock('uniswap/src/features/telemetry/send')
+vi.mock('utilities/src/platform', () => ({
+  get isMobileApp(): boolean {
+    return mockPlatformState.isMobileApp
+  },
 }))
 
 const MOCK_TOKEN1: TokenOption = {
@@ -60,15 +66,15 @@ const MOCK_NFT: NFTCollectionOption = {
 }
 
 describe('sendSearchOptionItemClickedAnalytics', () => {
-  const mockSendAnalyticsEvent = sendAnalyticsEvent as jest.Mock
-  const platformModule = require('utilities/src/platform')
+  const mockSendAnalyticsEvent = sendAnalyticsEvent as Mock
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
+    mockPlatformState.isMobileApp = false
   })
 
   it('sends token analytics event on mobile', () => {
-    platformModule.isMobileApp = true
+    mockPlatformState.isMobileApp = true
 
     const mockSection: OnchainItemSection<TokenOption> = {
       sectionKey: OnchainItemSectionName.TrendingTokens,
@@ -105,7 +111,7 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
   })
 
   it('sends token analytics event on web', () => {
-    platformModule.isMobileApp = false
+    mockPlatformState.isMobileApp = false
 
     const mockSection: OnchainItemSection<TokenOption> = {
       sectionKey: OnchainItemSectionName.Tokens,
@@ -144,7 +150,7 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
   })
 
   it('sends wallet address analytics event', () => {
-    platformModule.isMobileApp = true
+    mockPlatformState.isMobileApp = true
     const mockWallet: UnitagOption = {
       type: OnchainItemListOptionType.Unitag,
       address: '0x456',
@@ -185,7 +191,7 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
   })
 
   it('sends nft analytics event', () => {
-    platformModule.isMobileApp = true
+    mockPlatformState.isMobileApp = true
     const mockSection: OnchainItemSection<NFTCollectionOption> = {
       sectionKey: OnchainItemSectionName.NFTCollections,
       data: [MOCK_NFT],

@@ -10,7 +10,7 @@ import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
-import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
+import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen/TokenDetailsScreen'
 import { useSporeColors } from 'ui/src'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 

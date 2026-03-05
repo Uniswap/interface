@@ -1,0 +1,15 @@
+{
+  "data": {
+    "nftBalances": {
+      "edges": [],
+      "pageInfo": {
+        "endCursor": "",
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": "",
+        "__typename": "PageInfo"
+      },
+      "__typename": "NftBalanceConnection"
+    }
+  }
+}

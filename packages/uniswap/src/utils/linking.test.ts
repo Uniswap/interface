@@ -49,4 +49,13 @@ describe(getExplorerLink, () => {
       'https://basescan.org/',
     )
   })
+
+  it('returns empty string for unsupported chain IDs', () => {
+    // Test with an unsupported chain ID (e.g., a random chain ID that might come from a dapp)
+    const unsupportedChainId = 999999 as UniverseChainId
+    expect(getExplorerLink({ chainId: unsupportedChainId, data: 'hash', type: ExplorerDataType.TRANSACTION })).toEqual(
+      '',
+    )
+    expect(getExplorerLink({ chainId: unsupportedChainId, type: ExplorerDataType.ADDRESS })).toEqual('')
+  })
 })

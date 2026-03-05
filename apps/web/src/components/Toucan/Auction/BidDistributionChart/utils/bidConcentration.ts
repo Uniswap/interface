@@ -5,6 +5,8 @@
 export interface BidConcentrationResult {
   startTick: number // Starting tick value
   endTick: number // Ending tick value
+  startTickQ96: string // Starting tick Q96 value (exact)
+  endTickQ96: string // Ending tick Q96 value (exact)
   startIndex: number // Starting bar index in original bars array
   endIndex: number // Ending bar index in original bars array (inclusive)
   percentage: number // Percentage of total volume (0-1)
@@ -12,6 +14,7 @@ export interface BidConcentrationResult {
 
 interface BarWithVolume {
   tick: number
+  tickQ96: string
   amount: number
   index: number
 }
@@ -32,14 +35,14 @@ interface BidConcentrationOptions {
  * @param options.bars - Array of bars with tick, amount, and index
  * @param options.clearingPrice - Clearing price (only bars >= this price are considered)
  * @param options.targetPercentage - Target percentage of total volume (default 0.8 for 80%)
- * @param options.minClusterSize - Minimum number of bars required to show concentration (default 3)
+ * @param options.minClusterSize - Minimum number of bars required to show concentration (default 2)
  * @returns Concentration band info or null if no suitable cluster found
  */
 export function calculateBidConcentration({
   bars,
   clearingPrice,
   targetPercentage = 0.8,
-  minClusterSize = 3,
+  minClusterSize = 2,
 }: BidConcentrationOptions): BidConcentrationResult | null {
   // Filter out bars with zero amount AND bars below clearing price
   // IMPORTANT: Keep original indices intact for renderer to use
@@ -87,6 +90,8 @@ export function calculateBidConcentration({
           bestCluster = {
             startTick: eligibleBars[start].tick,
             endTick: eligibleBars[end].tick,
+            startTickQ96: eligibleBars[start].tickQ96,
+            endTickQ96: eligibleBars[end].tickQ96,
             // Use original bar.index from the full bars array, not the filtered array index
             startIndex: eligibleBars[start].index,
             endIndex: eligibleBars[end].index,

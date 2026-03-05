@@ -1,11 +1,11 @@
 import { useWallet as useSolanaWalletContext } from '@solana/wallet-adapter-react'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { getExternalEVMWalletService } from 'features/wallet/services/ExternalEVMWalletService'
-import { useExternalSVMWalletService } from 'features/wallet/services/ExternalSVMWalletService'
-import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useMemo } from 'react'
 import { WalletProvider } from 'uniswap/src/features/wallet/contexts/WalletProvider'
 import { createWalletService } from 'uniswap/src/features/wallet/services/createWalletService'
+import { getExternalEVMWalletService } from '~/features/wallet/services/ExternalEVMWalletService'
+import { useExternalSVMWalletService } from '~/features/wallet/services/ExternalSVMWalletService'
+import { useAccount } from '~/hooks/useAccount'
 
 export function ExternalWalletProvider({ children }: PropsWithChildren): JSX.Element {
   const evmAccountAddress = useAccount().address

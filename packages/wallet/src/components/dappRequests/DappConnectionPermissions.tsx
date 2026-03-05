@@ -10,7 +10,7 @@ import {
   OctagonExclamation,
   RotatableChevron,
 } from 'ui/src/components/icons'
-import { defaultHitslop, iconSizes } from 'ui/src/theme'
+import { defaultHitslop } from 'ui/src/theme'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { DappScanInfoModal } from 'wallet/src/components/dappRequests/DappScanInfoModal'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
@@ -65,12 +65,7 @@ export function DappConnectionPermissions({
                 {t('dapp.request.permissions.title')}
               </Text>
             </Flex>
-            <RotatableChevron
-              color="$neutral2"
-              direction={isExpanded ? 'up' : 'down'}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            <RotatableChevron color="$neutral2" direction={isExpanded ? 'up' : 'down'} size="$icon.16" />
           </Flex>
         </TouchableArea>
 

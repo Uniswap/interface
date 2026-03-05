@@ -10,8 +10,8 @@ import { AcrossLogo } from 'ui/src/components/logos/AcrossLogo'
 import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { AcrossRoutingInfoTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/AcrossRoutingTooltip'
@@ -38,7 +38,6 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import type { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
@@ -321,9 +320,8 @@ export function YouReceiveDetails({
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
   const priceDifference = usePriceDifference(derivedSwapInfo)
 
-  const wallet = useWallet()
-  const account = isSVMChain(derivedSwapInfo.chainId) ? wallet.svmAccount?.address : wallet.evmAccount?.address
-  const { isBlocked } = useIsBlocked(account)
+  const address = useActiveAddress(derivedSwapInfo.chainId)
+  const { isBlocked } = useIsBlocked(address)
 
   const { formScreenWarning } = useParsedSwapWarnings()
   const inlineWarning =

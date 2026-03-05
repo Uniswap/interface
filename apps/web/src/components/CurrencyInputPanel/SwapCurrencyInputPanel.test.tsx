@@ -1,29 +1,30 @@
 // Mock dependencies
-vi.mock('state/connection/hooks', () => ({
+vi.mock('~/state/connection/hooks', () => ({
   useCurrencyBalance: vi.fn(),
 }))
 
-vi.mock('hooks/useAccount', () => ({
-  useAccount: vi.fn(),
-}))
-
-vi.mock('state/multichain/useMultichainContext', () => ({
+vi.mock('~/state/multichain/useMultichainContext', () => ({
   useMultichainContext: vi.fn(),
 }))
 
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddresses: vi.fn(),
+}))
+
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { useAccount } from 'hooks/useAccount'
-import { useCurrencyBalance } from 'state/connection/hooks'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { renderWithUniswapContext as render } from 'test-utils/render'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import SwapCurrencyInputPanel from '~/components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { useAccount } from '~/hooks/useAccount'
+import { useCurrencyBalance } from '~/state/connection/hooks'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { renderWithUniswapContext as render } from '~/test-utils/render'
 
 const mockUseCurrencyBalance = useCurrencyBalance as ReturnType<typeof vi.fn>
-const mockUseAccount = useAccount as ReturnType<typeof vi.fn>
 const mockUseMultichainContext = useMultichainContext as ReturnType<typeof vi.fn>
+const mockUseActiveAddresses = useActiveAddresses as ReturnType<typeof vi.fn>
 
 describe('SwapCurrencyInputPanel balance formatting', () => {
   const mockOnUserInput = vi.fn()
@@ -32,15 +33,14 @@ describe('SwapCurrencyInputPanel balance formatting', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mockUseAccount.mockReturnValue({
-      address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-      chainId: UniverseChainId.Mainnet,
-      isConnected: true,
-    })
-
     mockUseMultichainContext.mockReturnValue({
       chainId: UniverseChainId.Mainnet,
       isUserSelectedToken: false,
+    })
+
+    mockUseActiveAddresses.mockReturnValue({
+      evmAddress: undefined,
+      svmAddress: undefined,
     })
   })
 

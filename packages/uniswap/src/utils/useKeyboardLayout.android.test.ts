@@ -28,11 +28,11 @@ const hideKeyboard = async (): Promise<void> => {
 }
 
 // Use native useKeyboardLayout implementation
-jest.mock('uniswap/src/utils/useKeyboardLayout', () => {
-  return jest.requireActual('uniswap/src/utils/useKeyboardLayout.native.ts')
+vi.mock('uniswap/src/utils/useKeyboardLayout', async (importOriginal) => {
+  return await vi.importActual('uniswap/src/utils/useKeyboardLayout.native.ts')
 })
 
-jest.mock('react-native/Libraries/Utilities/Platform', () => ({
+vi.mock('react-native/Libraries/Utilities/Platform', () => ({
   OS: 'android',
 }))
 

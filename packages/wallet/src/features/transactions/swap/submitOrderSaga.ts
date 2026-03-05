@@ -21,6 +21,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
+import { DatadogLogMetrics, logAsMetric } from 'utilities/src/logger/datadog/datadogLogMetrics'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -111,6 +112,20 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     // In the rare event that submission fails, we update the order status to prompt the user.
     // If the app is closed before this catch block is reached, orderWatcherSaga will handle the failure upon reopening.
     yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.SubmissionFailed }))
+
+    logAsMetric({
+      fileName: 'submitOrderSaga',
+      functionName: 'submitOrder',
+      metric: DatadogLogMetrics.UniswapXSwapFailed,
+      data: {
+        orderHash,
+        tokenInChainId: chainId,
+        tokenInSymbol: analytics.token_in_symbol,
+        tokenInAddress: analytics.token_in_address,
+        tokenOutSymbol: analytics.token_out_symbol,
+        tokenOutAddress: analytics.token_out_address,
+      },
+    })
     yield* call(onFailure)
     return
   }
@@ -120,6 +135,20 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     ...analytics,
     ...getRouteAnalyticsData({ routing }),
   }
+  logAsMetric({
+    fileName: 'submitOrderSaga',
+    functionName: 'submitOrder',
+    metric: DatadogLogMetrics.UniswapXSwapSubmitted,
+    data: {
+      orderHash,
+      tokenInChainId: chainId,
+      tokenInSymbol: properties.token_in_symbol,
+      tokenInAddress: properties.token_in_address,
+      tokenOutSymbol: properties.token_out_symbol,
+      tokenOutAddress: properties.token_out_address,
+    },
+  })
+
   yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, properties)
 
   yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))

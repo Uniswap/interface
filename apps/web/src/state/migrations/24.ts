@@ -1,5 +1,5 @@
 import { PersistState } from 'redux-persist'
-import { GetCapabilitiesStatus, WalletCapabilitiesState } from 'state/walletCapabilities/types'
+import { GetCapabilitiesStatus, WalletCapabilitiesState } from '~/state/walletCapabilities/types'
 
 type PersistAppStateV24 = {
   _persist: PersistState

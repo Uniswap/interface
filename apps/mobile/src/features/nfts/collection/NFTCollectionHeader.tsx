@@ -1,17 +1,17 @@
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ImageStyle } from 'react-native-fast-image'
+import { ViewStyle } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Loader } from 'src/components/loading/loaders'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { NFTCollectionData } from 'src/features/nfts/collection/types'
-import { Flex, FlexProps, Text, useExtractedColors, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Text, UniversalImage, useExtractedColors, useSporeColors } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { Ethereum } from 'ui/src/components/logos/Ethereum'
-import { iconSizes, spacing } from 'ui/src/theme'
-import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
+import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
+import { spacing } from 'ui/src/theme'
+import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { NumberType } from 'utilities/src/format/types'
@@ -35,7 +35,7 @@ export function NFTCollectionHeader({
   const { top: deviceTopPadding } = useAppInsets()
   const adjustedBannerHeight = deviceTopPadding + NFT_BANNER_HEIGHT
 
-  const bannerImageStyle: ImageStyle = {
+  const bannerImageStyle: ViewStyle = {
     height: adjustedBannerHeight,
     position: 'absolute',
     top: 0,
@@ -49,7 +49,7 @@ export function NFTCollectionHeader({
     overflow: 'hidden',
   }
 
-  const profileImageWrapperStyle: ImageStyle = {
+  const profileImageWrapperStyle: ViewStyle = {
     position: 'absolute',
     left: 0,
     top: adjustedBannerHeight - PROFILE_IMAGE_WRAPPER_SIZE / 2,
@@ -67,13 +67,14 @@ export function NFTCollectionHeader({
       <Flex mb="$spacing16" pb="$spacing4">
         {/* Banner image*/}
         {loading || !!bannerImageUrl ? (
-          <ImageUri
-            imageStyle={bannerImageStyle}
-            loadingContainerStyle={bannerLoadingStyle}
-            maxHeight={adjustedBannerHeight}
-            resizeMode="cover"
-            uri={data?.bannerImage?.url}
-          />
+          <Flex style={bannerImageStyle}>
+            <UniversalImage
+              allowUndefinedSize
+              uri={data?.bannerImage?.url}
+              size={{ height: adjustedBannerHeight, resizeMode: UniversalImageResizeMode.Cover }}
+              style={{ loadingContainer: bannerLoadingStyle }}
+            />
+          </Flex>
         ) : (
           // No uri found on collection
           <Flex style={[bannerImageStyle, { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val }]} />
@@ -88,7 +89,7 @@ export function NFTCollectionHeader({
           mx="$spacing24"
         >
           <Flex backgroundColor="$scrim" borderRadius="$roundedFull" p="$spacing4">
-            <BackButton color="$white" mr="$spacing1" size={iconSizes.icon24} />
+            <BackButton color="$white" mr="$spacing1" size="$icon.24" />
           </Flex>
           <NFTCollectionContextMenu data={data} iconColor="$white" showButtonOutline={true} />
         </Flex>

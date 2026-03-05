@@ -4,10 +4,10 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { RequestDetailsContent } from 'src/components/Requests/RequestModal/RequestDetails'
 import { useUwuLinkContractAllowlist } from 'src/components/Requests/Uwulink/utils'
-import { SignRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, useIsDarkMode } from 'ui/src'
+import { type SignRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex, UniversalImage, useIsDarkMode } from 'ui/src'
+import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { spacing } from 'ui/src/theme'
-import { RemoteImage } from 'uniswap/src/components/nfts/images/RemoteImage'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 type Props = {
@@ -61,7 +61,9 @@ function KidSuperCheckinModalContent({ request }: { request: SignRequest }): JSX
   return (
     <Flex centered gap="$spacing12" justifyContent="space-between" pb="$spacing12">
       <Flex centered gap="$spacing20">
-        {logo && <RemoteImage height={50} uri={logo} width={200} />}
+        {logo && (
+          <UniversalImage uri={logo} size={{ height: 50, width: 200, resizeMode: UniversalImageResizeMode.Contain }} />
+        )}
         <Flex
           centered
           borderColor="$surface3"

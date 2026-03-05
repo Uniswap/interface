@@ -6,7 +6,12 @@ import { AccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAd
 import { makeSelectTokenBalanceOverridesForWalletAddress } from 'uniswap/src/features/portfolio/slice/selectors'
 import { removeTokenFromBalanceOverride } from 'uniswap/src/features/portfolio/slice/slice'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import {
+  buildCurrencyId,
+  currencyIdToAddress,
+  currencyIdToChain,
+  isNativeCurrencyAddress,
+} from 'uniswap/src/utils/currencyId'
 import { createLogger } from 'utilities/src/logger/logger'
 
 const FILE_NAME = 'portfolioBalanceOverrides.ts'
@@ -154,6 +159,9 @@ export function cleanupCaughtUpOverrides({
     }
   })
 
+  // Track which overrides we've checked in the merged data
+  const processedOverrideIds = new Set<CurrencyId>()
+
   // Check each merged balance that has an override to see if backend has caught up
   mergedData.portfolio.balances.forEach((balance) => {
     if (!balance.token?.chainId || !balance.token.address || !balance.amount?.amount) {
@@ -168,6 +176,8 @@ export function cleanupCaughtUpOverrides({
     if (!overrideCurrencyIds.has(currencyId)) {
       return
     }
+
+    processedOverrideIds.add(currencyId)
 
     const onchainQuantity = balance.amount.amount
     const backendQuantity = originalBalancesMap.get(currencyId)
@@ -188,6 +198,44 @@ export function cleanupCaughtUpOverrides({
     } else {
       log.debug(`Backend has not caught up for ${currencyId}, keeping override`, {
         onchainQuantity,
+        backendQuantity,
+      })
+    }
+  })
+
+  // Handle overrides for tokens that were removed from merged data (zero balance).
+  // These tokens won't appear in mergedData.portfolio.balances because mergeOnChainBalances
+  // filters them out, but we still need to check if the backend has caught up.
+  overrideCurrencyIds.forEach((overrideCurrencyId) => {
+    if (processedOverrideIds.has(overrideCurrencyId)) {
+      return
+    }
+
+    const backendQuantity = originalBalancesMap.get(overrideCurrencyId)
+
+    // If backend also has zero balance or no longer returns this token, it has caught up
+    if (
+      backendQuantity === undefined ||
+      areBalancesApproximatelyEqual({ onchainQuantity: 0, cachedQuantity: backendQuantity })
+    ) {
+      const chainId = currencyIdToChain(overrideCurrencyId)
+      const tokenAddress = currencyIdToAddress(overrideCurrencyId)
+
+      if (chainId && tokenAddress) {
+        log.debug(`Backend has caught up for removed token ${overrideCurrencyId}, removing override`, {
+          backendQuantity,
+        })
+
+        reduxStore.dispatch(
+          removeTokenFromBalanceOverride({
+            ownerAddress,
+            chainId,
+            tokenAddress,
+          }),
+        )
+      }
+    } else {
+      log.debug(`Backend has not caught up for removed token ${overrideCurrencyId}, keeping override`, {
         backendQuantity,
       })
     }

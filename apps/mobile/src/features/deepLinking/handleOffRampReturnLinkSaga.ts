@@ -56,8 +56,7 @@ function* _handleOffRampReturnLink(url: URL) {
   if (
     !offRampTransferDetails.tokenAddress ||
     !offRampTransferDetails.baseCurrencyCode ||
-    !offRampTransferDetails.depositWalletAddress ||
-    !!offRampTransferDetails.errorCode
+    !offRampTransferDetails.depositWalletAddress
   ) {
     throw new Error('Missing offRampTransferDetails in fiat offramp deep link')
   }
@@ -83,7 +82,7 @@ function* _handleOffRampReturnLink(url: URL) {
 
   const fiatOffRampMetaData: FiatOffRampMetaData = {
     name: provider,
-    logoUrl: logos.lightLogo,
+    logoUrl: logos?.lightLogo ?? '',
     onSubmitCallback: (amountUSD?: number) => {
       sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampFundsSent, { ...analyticsProperties, amountUSD })
     },

@@ -1,5 +1,6 @@
 import { toPlainMessage } from '@bufbuild/protobuf'
 import { queryOptions } from '@tanstack/react-query'
+import { PlatformType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import type { InAppNotification, NotificationsApiClient } from '@universe/api'
 import { getLogger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -10,6 +11,7 @@ const DEFAULT_POLL_INTERVAL_MS = 2 * ONE_MINUTE_MS
 
 interface GetNotificationQueryOptionsContext {
   apiClient: NotificationsApiClient
+  getPlatformType: () => PlatformType
   pollIntervalMs?: number
   getIsSessionInitialized?: () => boolean
 }
@@ -37,17 +39,20 @@ interface GetNotificationQueryOptionsContext {
 export function getNotificationQueryOptions(
   ctx: GetNotificationQueryOptionsContext,
 ): QueryOptionsResult<InAppNotification[], Error, InAppNotification[], [ReactQueryCacheKey.Notifications]> {
-  const { apiClient, pollIntervalMs = DEFAULT_POLL_INTERVAL_MS, getIsSessionInitialized } = ctx
+  const { apiClient, getPlatformType, pollIntervalMs = DEFAULT_POLL_INTERVAL_MS, getIsSessionInitialized } = ctx
 
   return queryOptions({
     queryKey: [ReactQueryCacheKey.Notifications],
     queryFn: async (): Promise<InAppNotification[]> => {
-      if (getIsSessionInitialized && !getIsSessionInitialized()) {
+      const isSessionInitialized = getIsSessionInitialized?.() ?? true
+
+      if (getIsSessionInitialized && !isSessionInitialized) {
         return []
       }
 
       try {
-        const response = await apiClient.getNotifications()
+        const platformType = getPlatformType()
+        const response = await apiClient.getNotifications({ platform_type: platformType })
         // Convert protobuf Messages to plain objects for React Query caching
         // toPlainMessage strips the Message prototype chain and preserves numeric enum values
         // It's schema-aware and automatically handles nested messages, making it resilient to schema changes
@@ -63,11 +68,17 @@ export function getNotificationQueryOptions(
       }
     },
     refetchInterval: getIsSessionInitialized
-      ? (): number => (getIsSessionInitialized() ? pollIntervalMs : 5000)
+      ? (): number => {
+          const isInit = getIsSessionInitialized()
+          // Poll faster (2s) when waiting for session, normal interval once initialized
+          return isInit ? pollIntervalMs : 2000
+        }
       : (): number => pollIntervalMs,
     refetchIntervalInBackground: true,
     refetchOnWindowFocus: false,
-    staleTime: pollIntervalMs - 1000,
+    // Use short staleTime when session check is enabled - allows faster refetches when session becomes ready
+    // Without this, empty results from pre-session fetches would be cached too long
+    staleTime: getIsSessionInitialized ? 1000 : pollIntervalMs - 1000,
     retry: 2,
     retryDelay: (attemptIndex: number): number => Math.min(1000 * 2 ** attemptIndex, 30000),
   })

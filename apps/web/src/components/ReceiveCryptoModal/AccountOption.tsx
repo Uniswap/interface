@@ -1,9 +1,5 @@
-import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
-import StatusIcon from 'components/StatusIcon'
-import { deprecatedStyled } from 'lib/styled-components'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -11,6 +7,10 @@ import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { AddressDisplay } from '~/components/AccountDetails/AddressDisplay'
+import StatusIcon from '~/components/StatusIcon'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
 
 const Container = deprecatedStyled.div`
   display: flex;

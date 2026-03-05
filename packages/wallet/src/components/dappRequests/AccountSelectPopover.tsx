@@ -86,9 +86,11 @@ export function AccountSelectPopover({
                 px="$spacing8"
                 py="$spacing4"
                 pressStyle={{ backgroundColor: '$surface2' }}
+                maxWidth="100%"
                 onPress={() => handleAccountSelect(address)}
               >
                 <AddressDisplay
+                  grow
                   showAccountIcon
                   flexGrow={false}
                   address={address}

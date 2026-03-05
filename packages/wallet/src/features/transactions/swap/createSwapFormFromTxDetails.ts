@@ -27,7 +27,7 @@ export function createSwapFormFromTxDetails({
     const { typeInfo } = transactionDetails
     const isBridging = isBridgeTypeInfo(typeInfo)
 
-    if (typeInfo.type !== TransactionType.Swap && !isBridging) {
+    if (typeInfo.type !== TransactionType.Swap && !isBridging && typeInfo.type !== TransactionType.Plan) {
       throw new Error(
         `Tx with id ${transactionDetails.id}, hash ${transactionDetails.hash} does not correspond to a swap tx. It is of type ${typeInfo.type}`,
       )

@@ -1,16 +1,6 @@
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { parse } from 'qs'
 import { ReactNode } from 'react'
-import {
-  queryParametersToCurrencyState,
-  serializeSwapAddressesToURLParameters,
-  serializeSwapStateToURLParameters,
-  useInitialCurrencyState,
-} from 'state/swap/hooks'
-import { ETH_MAINNET, ETH_SEPOLIA } from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
-import { renderHook, waitFor } from 'test-utils/render'
 import { DAI, nativeOnChain, UNI, USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
@@ -19,6 +9,16 @@ import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/cha
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import {
+  queryParametersToCurrencyState,
+  serializeSwapAddressesToURLParameters,
+  serializeSwapStateToURLParameters,
+  useInitialCurrencyState,
+} from '~/state/swap/hooks'
+import { ETH_MAINNET, ETH_SEPOLIA } from '~/test-utils/constants'
+import { mocked } from '~/test-utils/mocked'
+import { renderHook, waitFor } from '~/test-utils/render'
 
 vi.mock('@universe/gating', async (importOriginal) => {
   return {
@@ -323,6 +323,7 @@ describe('hooks', () => {
         navigateToSendFlow: () => {},
         navigateToReceive: () => {},
         handleShareToken: () => {},
+        navigateToAdvancedSettings: () => {},
         onSwapChainsChanged: () => {},
         signer: undefined,
         useProviderHook: (_chainId: number) => undefined,
@@ -433,7 +434,7 @@ describe('hooks', () => {
     })
 
     describe('Connected wallet with balance', () => {
-      vi.mock('appGraphql/data/apollo/TokenBalancesProvider', () => ({
+      vi.mock('~/appGraphql/data/apollo/TokenBalancesProvider', () => ({
         TokenBalancesProvider: ({ children }: { children: ReactNode }) => children,
         useTokenBalancesQuery: () => ({
           data: {

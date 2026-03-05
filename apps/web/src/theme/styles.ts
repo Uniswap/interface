@@ -1,4 +1,4 @@
-import { css, keyframes } from 'lib/styled-components'
+import { css, keyframes } from '~/lib/deprecated-styled'
 
 export const flexColumnNoWrap = css`
   display: flex;

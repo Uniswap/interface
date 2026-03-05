@@ -7,6 +7,7 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { TradingApi } from '@universe/api'
 import { useEffect } from 'react'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
@@ -25,7 +26,6 @@ import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactio
 import { getProtocolVersionFromTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -120,6 +120,54 @@ function getAnalyticsSimulationFailures(trade: Trade): TradingApi.TransactionFai
     return trade.quote.quote.txFailureReasons
   }
   return undefined
+}
+
+const STEP_TYPE_TO_IS_TRADE_STEP: Record<TradingApi.PlanStepType, boolean> = {
+  [TradingApi.PlanStepType.APPROVAL_TXN]: false,
+  [TradingApi.PlanStepType.APPROVAL_PERMIT]: false,
+  [TradingApi.PlanStepType.RESET_APPROVAL_TXN]: false,
+  [TradingApi.PlanStepType.CLASSIC]: true,
+  [TradingApi.PlanStepType.DUTCH_LIMIT]: true,
+  [TradingApi.PlanStepType.DUTCH_V2]: true,
+  [TradingApi.PlanStepType.DUTCH_V3]: true,
+  [TradingApi.PlanStepType.LIMIT_ORDER]: true,
+  [TradingApi.PlanStepType.WRAP]: true,
+  [TradingApi.PlanStepType.UNWRAP]: true,
+  [TradingApi.PlanStepType.BRIDGE]: true,
+  [TradingApi.PlanStepType.PRIORITY]: true,
+  [TradingApi.PlanStepType.QUICKROUTE]: false,
+  [TradingApi.PlanStepType.CHAINED]: true,
+}
+
+/**
+ * Returns `true` for steps that are an actual trade/swap and ignores non trade steps like approval steps.
+ * Defaults to `true` for unknown new step types, since new types are more likely to be trade types (e.g. DUTCH_V4).
+ */
+function isTradeStep(stepType: TradingApi.PlanStepType): boolean {
+  // We ignore this rule here in case the backend adds a new step before we update the types in this repo.
+  // If a a new step is added, the typecheck will fail for `STEP_TYPE_TO_IS_TRADE_STEP` anyway.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  return STEP_TYPE_TO_IS_TRADE_STEP[stepType] ?? true
+}
+
+/**
+ * Returns true for chained actions that swap across different chains, excluding single bridge steps.
+ */
+function isNonBridgeCrossChainSwap(trade: Trade): boolean {
+  if (!isChained(trade)) {
+    return false
+  }
+
+  const { inputAmount, outputAmount } = trade
+  if (inputAmount.currency.chainId === outputAmount.currency.chainId) {
+    return false
+  }
+
+  const steps = trade.quote.quote.steps
+  const tradeSteps = steps?.filter((step) => isTradeStep(step.stepType))
+  const isSingleBridge = tradeSteps?.length === 1 && tradeSteps[0]?.stepType === TradingApi.PlanStepType.BRIDGE
+
+  return !isSingleBridge
 }
 
 /**
@@ -260,15 +308,9 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 
   const quoteId = trade?.quote.requestId
 
-  const wallet = useWallet()
-  const evmAddress = wallet.evmAccount?.address
-  const svmAddress = wallet.svmAccount?.address
+  const activeAddresses = useActiveAddresses()
 
-  const { data: portfolioData } = usePortfolioTotalValue({
-    evmAddress,
-    svmAddress,
-    fetchPolicy: 'cache-first',
-  })
+  const { data: portfolioData } = usePortfolioTotalValue({ ...activeAddresses, fetchPolicy: 'cache-first' })
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to re-run this when we get a new `quoteId`
   useEffect(() => {
@@ -399,6 +441,7 @@ export function getBaseTradeAnalyticsProperties({
     is_smart_wallet_transaction: isSmartWalletTransaction,
     swap_start_timestamp: swapStartTimestamp,
     is_final_step: isFinalStep,
+    is_cross_chain_swap: isNonBridgeCrossChainSwap(trade),
   } as const
 }
 
@@ -466,10 +509,14 @@ export function logSwapQuoteFetch({
   chainId,
   isUSDQuote = false,
   isQuickRoute = false,
+  quoteSource,
+  pollInterval,
 }: {
   chainId: number
   isUSDQuote?: boolean
   isQuickRoute?: boolean
+  quoteSource?: 'routing_api' | 'trading_api'
+  pollInterval?: number
 }): void {
   let performanceMetrics = {}
   if (!isUSDQuote) {
@@ -484,12 +531,22 @@ export function logSwapQuoteFetch({
 
     performanceMetrics = { time_to_first_quote_request, time_to_first_quote_request_since_first_input }
   }
-  sendAnalyticsEvent(SwapEventName.SwapQuoteFetch, { chainId, isQuickRoute, ...performanceMetrics })
+  sendAnalyticsEvent(SwapEventName.SwapQuoteFetch, {
+    chainId,
+    isQuickRoute,
+    isUSDQuote,
+    quoteSource,
+    pollInterval,
+    ...performanceMetrics,
+  })
   logger.info('analytics', 'logSwapQuoteFetch', SwapEventName.SwapQuoteFetch, {
     chainId,
     // we explicitly log it here to show on Datadog dashboard
     chainLabel: getChainLabel(chainId),
     isQuickRoute,
+    isUSDQuote,
+    quoteSource,
+    pollInterval,
     ...performanceMetrics,
   })
 }

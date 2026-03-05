@@ -2,6 +2,7 @@ import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_
 import { TradingApi } from '@universe/api'
 import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import { parseRestSwapTransaction } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
+import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
   TransactionDetails,
   TransactionOriginType,
@@ -71,6 +72,7 @@ export function buildExecuteTransactionDetails(params: {
           tokenSymbol: fee.symbol,
           tokenAddress: fee.address,
           chainId,
+          valueType: ValueType.Exact,
         }
       : undefined
 

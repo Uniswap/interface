@@ -41,8 +41,8 @@
             "comment": "Wallet address"
           },
           {
-            "/": "/explore/*",
-            "comment": "Explore"
+            "/": "/explore/tokens/*",
+            "comment": "Explore Tokens"
           },
           {
             "/": "/swap/*",

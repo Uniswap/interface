@@ -1,13 +1,24 @@
+import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { TradingApi } from '@universe/api'
-import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
-import { getProtocolItems } from 'components/Liquidity/utils/protocolVersion'
+import {
+  CheckApprovalLPRequest,
+  DecreaseLPPositionRequest,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
+import {
+  Protocols,
+  V2CheckApprovalLPRequest,
+  V2Pool,
+  V2Position,
+  V3Pool,
+  V3Position,
+  V4Pool,
+  V4Position,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { Currency } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { useRemoveLiquidityModalContext } from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
-import type { RemoveLiquidityTxInfo } from 'pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { useEffect, useMemo, useState } from 'react'
-import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
-import { useDecreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useDecreaseLpPositionCalldataQuery'
+import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
+import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
@@ -17,9 +28,187 @@ import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/fe
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { getTokenOrZeroAddress } from '~/components/Liquidity/utils/currency'
+import { getProtocols } from '~/components/Liquidity/utils/protocolVersion'
+import { useRemoveLiquidityModalContext } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import type { RemoveLiquidityTxInfo } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
+
+function buildCheckApprovalLPRequest({
+  positionInfo,
+  walletAddress,
+  percent,
+}: {
+  positionInfo: PositionInfo
+  walletAddress: string
+  percent: string
+}): CheckApprovalLPRequest | undefined {
+  const protocol = getProtocols(positionInfo.version)
+
+  if (protocol === undefined) {
+    return undefined
+  }
+
+  // Only v2 requires approvals
+  switch (protocol) {
+    case Protocols.V2:
+      return new CheckApprovalLPRequest({
+        checkApprovalLPRequest: {
+          case: 'v2CheckApprovalLpRequest',
+          value: new V2CheckApprovalLPRequest({
+            protocol,
+            walletAddress,
+            chainId: positionInfo.liquidityToken?.chainId,
+            positionToken: positionInfo.liquidityToken?.address,
+            positionAmount: positionInfo.liquidityAmount
+              ?.multiply(JSBI.BigInt(percent))
+              .divide(JSBI.BigInt(100))
+              .quotient.toString(),
+          }),
+        },
+      })
+
+    default:
+      return undefined
+  }
+}
+
+function getProtocolCase(version: ProtocolVersion) {
+  switch (version) {
+    case ProtocolVersion.V2:
+      return 'v2DecreaseLpPosition'
+    case ProtocolVersion.V3:
+      return 'v3DecreaseLpPosition'
+    case ProtocolVersion.V4:
+      return 'v4DecreaseLpPosition'
+    default:
+      return undefined
+  }
+}
+function getDecreaseLPPositionQueryParams({
+  positionInfo,
+  address,
+  percent,
+  currency0,
+  currency1,
+  customDeadline,
+  unwrapNativeCurrency,
+  approvalsNeeded,
+  customSlippageTolerance,
+}: {
+  positionInfo: PositionInfo
+  address: string
+  percent: string
+  currency0: Currency
+  currency1: Currency
+  customDeadline?: number
+  unwrapNativeCurrency: boolean
+  approvalsNeeded: boolean
+  customSlippageTolerance?: number
+}): DecreaseLPPositionRequest | undefined {
+  const protocolCase = getProtocolCase(positionInfo.version)
+  if (!protocolCase) {
+    return undefined
+  }
+
+  const deadline = getTradeSettingsDeadline(customDeadline)
+
+  if (protocolCase === 'v2DecreaseLpPosition') {
+    return new DecreaseLPPositionRequest({
+      decreaseLpPosition: {
+        case: protocolCase,
+        value: {
+          protocol: getProtocols(positionInfo.version),
+          position: new V2Position({
+            pool: new V2Pool({
+              token0: getTokenOrZeroAddress(currency0),
+              token1: getTokenOrZeroAddress(currency1),
+            }),
+          }),
+          walletAddress: address,
+          chainId: currency0.chainId,
+          positionLiquidity: positionInfo.liquidityAmount?.quotient.toString(),
+          liquidityPercentageToDecrease: percent,
+          liquidity0: positionInfo.currency0Amount.quotient.toString(),
+          liquidity1: positionInfo.currency1Amount.quotient.toString(),
+          collectAsWETH: !unwrapNativeCurrency,
+          simulateTransaction: !approvalsNeeded,
+          slippageTolerance: customSlippageTolerance,
+          deadline,
+        },
+      },
+    })
+  }
+
+  if (!positionInfo.tokenId) {
+    return undefined
+  }
+
+  if (protocolCase === 'v3DecreaseLpPosition') {
+    return new DecreaseLPPositionRequest({
+      decreaseLpPosition: {
+        case: protocolCase,
+        value: {
+          protocol: getProtocols(positionInfo.version),
+          tokenId: Number(positionInfo.tokenId),
+          position: new V3Position({
+            pool: new V3Pool({
+              token0: getTokenOrZeroAddress(currency0),
+              token1: getTokenOrZeroAddress(currency1),
+              fee: positionInfo.feeTier?.feeAmount,
+              tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
+            }),
+            tickLower: positionInfo.tickLower,
+            tickUpper: positionInfo.tickUpper,
+          }),
+          walletAddress: address,
+          chainId: currency0.chainId,
+          positionLiquidity: positionInfo.liquidity,
+          liquidityPercentageToDecrease: percent,
+          expectedTokenOwed0RawAmount: positionInfo.token0UncollectedFees,
+          expectedTokenOwed1RawAmount: positionInfo.token1UncollectedFees,
+          collectAsWETH: !unwrapNativeCurrency,
+          simulateTransaction: !approvalsNeeded,
+          slippageTolerance: customSlippageTolerance,
+          deadline,
+        },
+      },
+    })
+  }
+
+  return new DecreaseLPPositionRequest({
+    decreaseLpPosition: {
+      case: protocolCase,
+      value: {
+        protocol: getProtocols(positionInfo.version),
+        tokenId: Number(positionInfo.tokenId),
+        position: new V4Position({
+          pool: new V4Pool({
+            token0: getTokenOrZeroAddress(currency0),
+            token1: getTokenOrZeroAddress(currency1),
+            fee: positionInfo.feeTier?.feeAmount,
+            tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
+            hooks: positionInfo.v4hook,
+          }),
+          tickLower: positionInfo.tickLower,
+          tickUpper: positionInfo.tickUpper,
+        }),
+        walletAddress: address,
+        chainId: currency0.chainId,
+        liquidityPercentageToDecrease: percent,
+        positionLiquidity: positionInfo.liquidity,
+
+        simulateTransaction: !approvalsNeeded,
+        slippageTolerance: customSlippageTolerance,
+        deadline,
+      },
+    },
+  })
+}
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
-  const { positionInfo, percent, percentInvalid, currencies, currentTransactionStep } = useRemoveLiquidityModalContext()
+  const { positionInfo, percent, percentInvalid, currencies, currentTransactionStep, unwrapNativeCurrency } =
+    useRemoveLiquidityModalContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
     customSlippageTolerance: s.customSlippageTolerance,
@@ -30,31 +219,30 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   const currency0 = currencies?.TOKEN0
   const currency1 = currencies?.TOKEN1
 
-  const v2LpTokenApprovalQueryParams: TradingApi.CheckApprovalLPRequest | undefined = useMemo(() => {
-    if (!positionInfo || !positionInfo.liquidityToken || percentInvalid || !positionInfo.liquidityAmount) {
+  const approvalQueryParams = useMemo(() => {
+    if (!positionInfo || !account || percentInvalid) {
       return undefined
     }
-    return {
-      protocol: TradingApi.ProtocolItems.V2,
+
+    return buildCheckApprovalLPRequest({
+      positionInfo,
       walletAddress: account,
-      chainId: positionInfo.liquidityToken.chainId,
-      positionToken: positionInfo.liquidityToken.address,
-      positionAmount: positionInfo.liquidityAmount
-        .multiply(JSBI.BigInt(percent))
-        .divide(JSBI.BigInt(100))
-        .quotient.toString(),
-    }
-  }, [positionInfo, percent, account, percentInvalid])
+      percent,
+    })
+  }, [positionInfo, account, percent, percentInvalid])
+
   const {
     data: v2LpTokenApproval,
     isLoading: v2ApprovalLoading,
     error: approvalError,
     refetch: approvalRefetch,
-  } = useCheckLpApprovalQuery({
-    params: v2LpTokenApprovalQueryParams,
-    staleTime: 5 * ONE_SECOND_MS,
-    enabled: Boolean(v2LpTokenApprovalQueryParams),
-  })
+  } = useQuery(
+    liquidityQueries.checkApproval({
+      params: approvalQueryParams,
+      staleTime: 5 * ONE_SECOND_MS,
+      enabled: Boolean(approvalQueryParams),
+    }),
+  )
 
   if (approvalError) {
     logger.info(
@@ -63,7 +251,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       parseErrorMessageTitle(approvalError, { defaultTitle: 'unkown CheckLpApprovalQuery' }),
       {
         error: JSON.stringify(approvalError),
-        v2LpTokenApprovalQueryParams: JSON.stringify(v2LpTokenApprovalQueryParams),
+        v2LpTokenApprovalQueryParams: JSON.stringify(approvalQueryParams),
       },
     )
   }
@@ -76,76 +264,54 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const approvalsNeeded = Boolean(v2LpTokenApproval)
 
-  const { token0UncollectedFees, token1UncollectedFees } = positionInfo ?? {}
-
-  const decreaseCalldataQueryParams = useMemo((): TradingApi.DecreaseLPPositionRequest | undefined => {
-    const apiProtocolItems = getProtocolItems(positionInfo?.version)
-    if (!positionInfo || !apiProtocolItems || !account || percentInvalid || !currency0 || !currency1) {
+  const decreaseCalldataQueryParams = useMemo((): DecreaseLPPositionRequest | undefined => {
+    if (!positionInfo || !account || percentInvalid || !currency0 || !currency1) {
       return undefined
     }
 
-    return {
-      simulateTransaction: !approvalsNeeded,
-      protocol: apiProtocolItems,
-      tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
-      chainId: positionInfo.currency0Amount.currency.chainId,
-      walletAddress: account,
-      liquidityPercentageToDecrease: Number(percent),
-      liquidity0:
-        positionInfo.version === ProtocolVersion.V2 ? positionInfo.currency0Amount.quotient.toString() : undefined,
-      liquidity1:
-        positionInfo.version === ProtocolVersion.V2 ? positionInfo.currency1Amount.quotient.toString() : undefined,
-      positionLiquidity:
-        positionInfo.version === ProtocolVersion.V2
-          ? positionInfo.liquidityAmount?.quotient.toString()
-          : positionInfo.liquidity,
-      expectedTokenOwed0RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token0UncollectedFees : undefined,
-      expectedTokenOwed1RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token1UncollectedFees : undefined,
-      position: {
-        tickLower: positionInfo.tickLower !== undefined ? positionInfo.tickLower : undefined,
-        tickUpper: positionInfo.tickUpper !== undefined ? positionInfo.tickUpper : undefined,
-        pool: {
-          token0: getTokenOrZeroAddress(currency0),
-          token1: getTokenOrZeroAddress(currency1),
-          fee: positionInfo.feeTier?.feeAmount,
-          tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
-          hooks: positionInfo.v4hook,
-        },
-      },
-      slippageTolerance: customSlippageTolerance,
-    }
+    return getDecreaseLPPositionQueryParams({
+      positionInfo,
+      address: account,
+      percent,
+      currency0,
+      currency1,
+      customDeadline,
+      unwrapNativeCurrency,
+      approvalsNeeded,
+      customSlippageTolerance,
+    })
   }, [
     positionInfo,
     account,
+    percent,
+    customDeadline,
+    unwrapNativeCurrency,
+    approvalsNeeded,
+    customSlippageTolerance,
     percentInvalid,
     currency0,
     currency1,
-    approvalsNeeded,
-    percent,
-    token0UncollectedFees,
-    token1UncollectedFees,
-    customSlippageTolerance,
   ])
 
   const isUserCommittedToDecrease =
     currentTransactionStep?.step.type === TransactionStepType.DecreasePositionTransaction
+  const isQueryEnabled =
+    !isUserCommittedToDecrease &&
+    ((!percentInvalid && !approvalQueryParams) || (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval)))
 
   const {
     data: decreaseCalldata,
     isLoading: decreaseCalldataLoading,
     error: calldataError,
     refetch: calldataRefetch,
-  } = useDecreaseLpPositionCalldataQuery({
-    params: decreaseCalldataQueryParams,
-    deadlineInMinutes: customDeadline,
-    refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
-    retry: false,
-    enabled:
-      !isUserCommittedToDecrease &&
-      !!decreaseCalldataQueryParams &&
-      ((!percentInvalid && !v2LpTokenApprovalQueryParams) ||
-        (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval))),
-  })
+  } = useQuery(
+    liquidityQueries.decreasePosition({
+      params: decreaseCalldataQueryParams,
+      refetchInterval: transactionError ? false : 5 * ONE_SECOND_MS,
+      retry: false,
+      enabled: isQueryEnabled && Boolean(decreaseCalldataQueryParams),
+    }),
+  )
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +decreaseCalldataQueryParams
   useEffect(() => {

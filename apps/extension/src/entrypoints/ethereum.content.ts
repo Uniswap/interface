@@ -159,6 +159,7 @@ export default defineContentScript({
   runAt: 'document_start',
   // TODO(INFRA-1010): not supported by firefox
   world: 'MAIN',
+  allFrames: true,
   main() {
     makeEthereum()
   },

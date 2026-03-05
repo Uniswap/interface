@@ -1,0 +1,1 @@
+export const MAX_WIDTH_MEDIA_BREAKPOINT = '1200px'

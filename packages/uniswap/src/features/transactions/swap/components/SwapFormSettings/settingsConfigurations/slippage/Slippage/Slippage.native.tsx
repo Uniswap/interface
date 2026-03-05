@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SlippageWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/SlippageWarning'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
@@ -7,6 +8,12 @@ import { SlippageScreenNative } from 'uniswap/src/features/transactions/swap/com
 export const Slippage: TransactionSettingConfig = {
   renderTitle: (t) => t('swap.slippage.settings.title'),
   applicablePlatforms: [Platform.EVM, Platform.SVM],
+  inapplicableTradeRouting: [
+    TradingApi.Routing.WRAP,
+    TradingApi.Routing.UNWRAP,
+    TradingApi.Routing.BRIDGE,
+    TradingApi.Routing.LIMIT_ORDER,
+  ],
   Control() {
     return <SlippageControl saveOnBlur={false} />
   },

@@ -1,12 +1,12 @@
 import { Token } from '@uniswap/sdk-core'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useCurrencyInfo } from 'hooks/Tokens'
-import { TEST_TOKEN_1 } from 'test-utils/constants'
-import { renderHook } from 'test-utils/render'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useCurrencyInfo } from '~/hooks/Tokens'
+import { TEST_TOKEN_1 } from '~/test-utils/constants'
+import { renderHook } from '~/test-utils/render'
 
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: vi.fn(),

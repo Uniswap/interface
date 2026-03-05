@@ -16,7 +16,7 @@ import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/t
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { getPoolDetailsURL, getTokenUrl } from 'uniswap/src/utils/linking'
+import { getPoolDetailsURL, getPortfolioUrl, getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
 import { noop } from 'utilities/src/react/noop'
@@ -24,6 +24,7 @@ import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboar
 import {
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
+  NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
@@ -81,10 +82,11 @@ function SharedExtensionNavigationProvider({
     // no-op until we have proper NFT collection
   }, [])
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
-  const navigateToExternalProfile = useCallback(() => {
-    // no-op until we have an external profile screen on extension
+  const navigateToExternalProfile = useCallback(({ address }: NavigateToExternalProfileArgs) => {
+    focusOrCreateUniswapInterfaceTab({ url: getPortfolioUrl(address) })
   }, [])
   const navigateToPoolDetails = useNavigateToPoolDetails()
+  const navigateToAdvancedSettings = useNavigateToAdvancedSettings()
 
   return (
     <WalletNavigationProvider
@@ -101,6 +103,7 @@ function SharedExtensionNavigationProvider({
       navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToTokenDetails={navigateToTokenDetails}
+      navigateToAdvancedSettings={navigateToAdvancedSettings}
     >
       {children}
     </WalletNavigationProvider>
@@ -221,5 +224,11 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
 function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
   return useCallback(({ prefilledCurrency }: NavigateToFiatOnRampArgs): void => {
     navigateToInterfaceFiatOnRamp(prefilledCurrency?.currencyInfo?.currency.chainId)
+  }, [])
+}
+
+function useNavigateToAdvancedSettings(): () => void {
+  return useCallback((): void => {
+    navigate(`/${AppRoutes.Settings}`, { state: { openAdvancedSettings: true } })
   }, [])
 }

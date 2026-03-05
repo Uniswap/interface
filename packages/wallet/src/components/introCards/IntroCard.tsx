@@ -21,7 +21,6 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   CardLoggingName,
-  ConnectionCardLoggingName,
   DappRequestCardLoggingName,
   OnboardingCardLoggingName,
 } from 'uniswap/src/features/telemetry/types'
@@ -56,7 +55,8 @@ export type ImageGraphic = {
 
 type GradientGraphic = {
   type: IntroCardGraphicType.Gradient
-  icon: ImageSourcePropType
+  icon?: ImageSourcePropType
+  FallbackIcon?: GeneratedIcon
   gradientImage: ImageSourcePropType
 }
 
@@ -71,6 +71,7 @@ function isGradientGraphic(graphic: IntroCardGraphic): graphic is GradientGraphi
 }
 
 export type IntroCardProps = {
+  id?: string
   graphic: IntroCardGraphic
   title: string
   description: string
@@ -84,13 +85,13 @@ export type IntroCardProps = {
 }
 
 export function isOnboardingCardLoggingName(
-  name: OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName,
+  name: OnboardingCardLoggingName | DappRequestCardLoggingName,
 ): name is OnboardingCardLoggingName {
   return Object.values(OnboardingCardLoggingName).includes(name as OnboardingCardLoggingName)
 }
 
 export function isDappRequestCardLoggingName(
-  name: OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName,
+  name: OnboardingCardLoggingName | DappRequestCardLoggingName,
 ): name is DappRequestCardLoggingName {
   return Object.values(DappRequestCardLoggingName).includes(name as DappRequestCardLoggingName)
 }
@@ -145,6 +146,7 @@ export function IntroCard({
 
   const GraphicElement = useMemo(() => {
     if (isGradient) {
+      const hasIconImage = graphic.icon != null
       return (
         <Flex
           backgroundColor="$surface1"
@@ -156,7 +158,11 @@ export function IntroCard({
           overflow="hidden"
           flexShrink={0}
         >
-          <TamaguiImage source={graphic.icon} style={{ width: 32, height: 32 }} resizeMode="contain" />
+          {hasIconImage ? (
+            <TamaguiImage source={graphic.icon} style={{ width: 32, height: 32 }} resizeMode="contain" />
+          ) : graphic.FallbackIcon ? (
+            <graphic.FallbackIcon color={iconColor} size="$icon.20" />
+          ) : null}
         </Flex>
       )
     } else if (isIcon) {
@@ -192,7 +198,7 @@ export function IntroCard({
       case CardType.Dismissible:
         return (
           <ClickableWithinGesture onPress={closeHandler}>
-            <Flex p="$spacing4">
+            <Flex p="$spacing8">
               <X color="$neutral3" size="$icon.16" />
             </Flex>
           </ClickableWithinGesture>
@@ -262,18 +268,19 @@ export function IntroCard({
 
   const gradientCloseButton = useMemo(
     () => (
-      <Flex position="absolute" right={10} top={10}>
+      <Flex position="absolute" right={0} top={0}>
         <ClickableWithinGesture onPress={closeHandler}>
-          <Flex
-            backgroundColor="$surface3"
-            borderRadius="$roundedFull"
-            height={20}
-            width={20}
-            alignItems="center"
-            justifyContent="center"
-            p="$spacing2"
-          >
-            <X color="$neutral1" size="$icon.12" />
+          <Flex p="$spacing12" alignItems="center" justifyContent="center">
+            <Flex
+              backgroundColor="$surface3"
+              borderRadius="$roundedFull"
+              height={20}
+              width={20}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <X color="$neutral1" size="$icon.12" />
+            </Flex>
           </Flex>
         </ClickableWithinGesture>
       </Flex>
@@ -287,7 +294,7 @@ export function IntroCard({
         {...containerBaseProps}
         backgroundColor={backgroundColor}
         borderRadius={isGradient ? '$rounded16' : '$rounded20'}
-        overflow={isGradient ? 'hidden' : undefined}
+        overflow="hidden"
         position={isGradient ? 'relative' : undefined}
         flex={isGradient ? undefined : 1}
         onMouseEnter={isGradient ? (): void => setIsHovered(true) : undefined}

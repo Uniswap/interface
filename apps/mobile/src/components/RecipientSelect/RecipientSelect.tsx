@@ -1,14 +1,14 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
-import { Flex, Loader, Text, TouchableArea } from 'ui/src'
-import { Scan } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { Flex, flexStyles, Loader, Text, TouchableArea } from 'ui/src'
+import { Scan, UserSearch } from 'ui/src/components/icons'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { isIOS } from 'utilities/src/platform'
 import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
@@ -80,37 +80,68 @@ function _RecipientSelect({
 
   return (
     <>
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} flex={1} gap="$spacing16" mt="$spacing12">
-        {!renderedInModal && (
-          <Flex row>
-            <Text testID={TestID.SendModalHeaderLabel} variant="subheading1">
-              {t('send.recipient.header')}
-            </Text>
-          </Flex>
-        )}
-        <SearchBar
-          ref={inputRef}
-          backgroundColor="$surface2"
-          endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
-          hideBackButton={hideBackButton}
-          placeholder={t('send.recipient.input.placeholder')}
-          value={pattern}
-          onBack={recipient ? onHideRecipientSelector : undefined}
-          onChangeText={setPattern}
-        />
-        {loading ? (
-          <Loader.SearchResult />
-        ) : !sections.length ? (
-          <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
-            <Text variant="buttonLabel2">{t('send.recipient.results.empty')}</Text>
-            <Text color="$neutral3" textAlign="center" variant="body1">
-              {t('send.recipient.results.error')}
-            </Text>
-          </Flex>
-        ) : (
-          <RecipientList renderedInModal={renderedInModal} sections={sections} onPress={onSelect} />
-        )}
-      </AnimatedFlex>
+      <KeyboardAvoidingView behavior={isIOS ? 'padding' : 'height'} style={flexStyles.fill}>
+        <Flex
+          animation="quick"
+          enterStyle={{ opacity: 0 }}
+          exitStyle={{ opacity: 0 }}
+          flex={1}
+          gap="$spacing16"
+          pt="$spacing12"
+          pb="$spacing60"
+        >
+          {!renderedInModal && (
+            <Flex row>
+              <Text testID={TestID.SendModalHeaderLabel} variant="subheading1">
+                {t('send.recipient.header')}
+              </Text>
+            </Flex>
+          )}
+          <SearchBar
+            ref={inputRef}
+            backgroundColor="$surface2"
+            endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
+            hideBackButton={hideBackButton}
+            placeholder={t('send.recipient.input.placeholder')}
+            value={pattern}
+            onBack={recipient ? onHideRecipientSelector : undefined}
+            onChangeText={setPattern}
+          />
+          {loading ? (
+            <Loader.SearchResult />
+          ) : !pattern && sections.length === 0 ? (
+            <Flex centered flex={1} gap="$spacing16">
+              <Flex alignItems="center" gap="$spacing8">
+                <UserSearch color="$neutral3" size="$icon.32" />
+                <Text alignSelf="stretch" color="$neutral3" textAlign="center" variant="body3">
+                  {t('send.recipientSelect.search.empty')}
+                </Text>
+              </Flex>
+              <TouchableArea
+                centered
+                backgroundColor="$surface3"
+                borderRadius="$rounded12"
+                px="$spacing12"
+                py="$spacing8"
+                onPress={onPressQRScanner}
+              >
+                <Text color="$neutral1" textAlign="center" variant="buttonLabel4">
+                  {t('qrScanner.recipient.action.scan')}
+                </Text>
+              </TouchableArea>
+            </Flex>
+          ) : !sections.length ? (
+            <Flex centered flex={1} gap="$spacing12">
+              <Text variant="buttonLabel2">{t('send.recipient.results.empty')}</Text>
+              <Text color="$neutral3" textAlign="center" variant="body1">
+                {t('send.recipient.results.error')}
+              </Text>
+            </Flex>
+          ) : (
+            <RecipientList renderedInModal={renderedInModal} sections={sections} onPress={onSelect} />
+          )}
+        </Flex>
+      </KeyboardAvoidingView>
       {showQRScanner && <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelect} />}
       <RecipientSelectSpeedBumps
         chainId={chainId}

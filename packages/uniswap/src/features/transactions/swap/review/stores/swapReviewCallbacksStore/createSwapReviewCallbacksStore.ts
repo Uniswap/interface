@@ -9,7 +9,6 @@ export type SwapReviewCallbacksStoreState = {
   onCancelWarning: () => void
   onShowWarning: () => void
   onCloseWarning: () => void
-  onAcceptTrade: () => void
 }
 
 export const createSwapReviewCallbacksStore = (

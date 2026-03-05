@@ -17,27 +17,32 @@ export function createFetcher<TRequest, TResponse>(ctx: {
   method: Extract<keyof FetchClient, 'get' | 'post' | 'put' | 'delete' | 'patch'>
   url: string
   transformRequest?: (request: TransformRequestInput<TRequest>) => Promise<TransformRequestResult>
+  transformResponse?: (response: TResponse) => TResponse | Promise<TResponse>
   on404?: (params: TRequest) => void
 }): (params: TRequest, customHeaders?: HeadersInit) => Promise<TResponse> {
-  const { client, url, method, transformRequest, on404 } = ctx
+  const { client, url, method, transformRequest, transformResponse, on404 } = ctx
   return async (params: TRequest, customHeaders?: HeadersInit): Promise<TResponse> => {
     const transformedRequest = transformRequest ? await transformRequest({ url, headers: customHeaders, params }) : {}
     const transformedUrl = transformedRequest.url ?? url
     const transformedHeaders = transformedRequest.headers ?? {}
     const transformedParams = transformedRequest.params ?? params
 
+    let response: TResponse
     if (method === 'get') {
-      return client.get<TResponse>(transformedUrl, {
+      response = await client.get<TResponse>(transformedUrl, {
         headers: { ...customHeaders, ...transformedHeaders },
         params: transformedParams as CustomOptions['params'],
         on404: () => on404?.(params),
       })
+    } else {
+      response = await client[method]<TResponse>(transformedUrl, {
+        headers: { ...customHeaders, ...transformedHeaders },
+        body: JSON.stringify(transformedParams),
+        on404: () => on404?.(params),
+      })
     }
-    return client[method]<TResponse>(transformedUrl, {
-      headers: { ...customHeaders, ...transformedHeaders },
-      body: JSON.stringify(transformedParams),
-      on404: () => on404?.(params),
-    })
+
+    return transformResponse ? transformResponse(response) : response
   }
 }
 

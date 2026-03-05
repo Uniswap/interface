@@ -1,28 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { parseRestProtocolVersion } from '@universe/api'
-import { Dropdown } from 'components/Dropdowns/Dropdown'
-import { DynamicFeeTierSpeedbump } from 'components/Liquidity/Create/DynamicFeeTierSpeedbump'
-import { FormStepsWrapper, FormWrapper } from 'components/Liquidity/Create/FormWrapper'
-import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
-import ResetCreatePositionFormModal from 'components/Liquidity/Create/ResetCreatePositionsFormModal'
-import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
-import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
-import { LPSettings } from 'components/LPSettings'
-import {
-  CreateLiquidityContextProvider,
-  DEFAULT_PRICE_RANGE_STATE,
-  useCreateLiquidityContext,
-} from 'pages/CreatePosition/CreateLiquidityContextProvider'
-import { CreatePositionTxContextProvider } from 'pages/CreatePosition/CreatePositionTxContext'
 import type { Dispatch, SetStateAction } from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
-import { MultichainContextProvider } from 'state/multichain/MultichainContext'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -33,6 +15,24 @@ import { Slippage } from 'uniswap/src/features/transactions/components/settings/
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { Dropdown } from '~/components/Dropdowns/Dropdown'
+import { DynamicFeeTierSpeedbump } from '~/components/Liquidity/Create/DynamicFeeTierSpeedbump'
+import { FormStepsWrapper, FormWrapper } from '~/components/Liquidity/Create/FormWrapper'
+import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { useLPSlippageValue } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
+import ResetCreatePositionFormModal from '~/components/Liquidity/Create/ResetCreatePositionsFormModal'
+import { DEFAULT_POSITION_STATE, PositionFlowStep } from '~/components/Liquidity/Create/types'
+import { FeeTierSearchModal } from '~/components/Liquidity/FeeTierSearchModal'
+import { getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
+import { LPSettings } from '~/components/LPSettings'
+import {
+  CreateLiquidityContextProvider,
+  DEFAULT_PRICE_RANGE_STATE,
+  useCreateLiquidityContext,
+} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePositionTxContext'
+import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
 function CreatePositionInner({
   currencyInputs,
@@ -119,7 +119,7 @@ const Toolbar = () => {
   const { reset: resetMultichainState } = useMultichainContext()
 
   const { isTestnetModeEnabled } = useEnabledChains()
-  const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled) ?? false
+  const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
 
   const handleReset = useCallback(() => {
     resetCreatePositionState()
@@ -129,7 +129,9 @@ const Toolbar = () => {
   }, [resetDepositState, resetCreatePositionState, resetMultichainState, resetPriceRangeState])
 
   useEffect(() => {
-    if (isTestnetModeEnabled !== prevIsTestnetModeEnabled) {
+    // Only reset when testnet mode changes after initial mount
+    // Don't reset on initial mount to preserve URL parameters
+    if (prevIsTestnetModeEnabled !== undefined && isTestnetModeEnabled !== prevIsTestnetModeEnabled) {
       handleReset()
     }
   }, [handleReset, isTestnetModeEnabled, prevIsTestnetModeEnabled])

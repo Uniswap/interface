@@ -154,11 +154,16 @@
               },
               "suspiciousFlag": null,
               "tokenId": "20",
+              "nftContract": {
+                "id": "TmZ0Q29udHJhY3Q6RVRIRVJFVU1fMHgzQzkwNTAyZjBDQjBhZDBBNDhjNTEzNTdFNjVGZjE1MjQ3QTFEODhF",
+                "address": "0x3C90502f0CB0ad0A48c51357E65Ff15247A1D88E"
+              },
               "thumbnail": {
                 "id": "SW1hZ2U6aHR0cHM6Ly9jLm5lZXZhY2RuLm5ldC9pbWFnZS91cGxvYWQvY19saW1pdCxwZ18xLGhfNjAwLHdfNjAwL2Zfd2VicC94eXovSUxXV1pTQjQ2b3Nrc2oxdXB2aXNzZVZQcEFLQm5MTE55MmpBTWJKZDltRS53ZWJw",
                 "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_600,w_600/f_webp/xyz/ILWWZSB46osksj1upvisseVPpAKBnLLNy2jAMbJd9mE.webp",
                 "__typename": "Image"
               },
+              "isSpam": false,
               "listings": {
                 "edges": [],
                 "__typename": "NftOrderConnection"
@@ -239,11 +244,16 @@
               },
               "suspiciousFlag": null,
               "tokenId": "49573910948929644057320032930374483793648558152449286445567646333571629580294",
+              "nftContract": {
+                "id": "TmZ0Q29udHJhY3Q6RVRIRVJFVU1fMHg0OTVmOTQ3Mjc2NzQ5Y2U2NDZmNjhhYzhjMjQ4NDIwMDQ1Y2I3YjVl",
+                "address": "0x495f947276749ce646f68ac8c248420045cb7b5e"
+              },
               "thumbnail": {
                 "id": "SW1hZ2U6aHR0cHM6Ly9jLm5lZXZhY2RuLm5ldC9pbWFnZS91cGxvYWQvY19saW1pdCxwZ18xLGhfMjAwLHdfMjAwL2Zfd2VicC94eXovSnozbFpTc184cDAtdzBvYllQU0c1S3YzZlVNVWRSLXJPbWpSMENKY2Fucy53ZWJw",
                 "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_200,w_200/f_webp/xyz/Jz3lZSs_8p0-w0obYPSG5Kv3fUMUdR-rOmjR0CJcans.webp",
                 "__typename": "Image"
               },
+              "isSpam": false,
               "listings": {
                 "edges": [],
                 "__typename": "NftOrderConnection"
@@ -324,11 +334,16 @@
               },
               "suspiciousFlag": null,
               "tokenId": "49573910948929644057320032930374483793648558152449286445567646332472117952516",
+              "nftContract": {
+                "id": "TmZ0Q29udHJhY3Q6RVRIRVJFVU1fMHg0OTVmOTQ3Mjc2NzQ5Y2U2NDZmNjhhYzhjMjQ4NDIwMDQ1Y2I3YjVl",
+                "address": "0x495f947276749ce646f68ac8c248420045cb7b5e"
+              },
               "thumbnail": {
                 "id": "SW1hZ2U6aHR0cHM6Ly9jLm5lZXZhY2RuLm5ldC9pbWFnZS91cGxvYWQvY19saW1pdCxwZ18xLGhfMjAwLHdfMjAwL2Zfd2VicC94eXovcy1rbnY0dHFOV21TZmd0dTlKQ0FUVllMT1M0d1hpNExxbW5KbktEdENwSS53ZWJw",
                 "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_200,w_200/f_webp/xyz/s-knv4tqNWmSfgtu9JCATVYLOS4wXi4LqmnJnKDtCpI.webp",
                 "__typename": "Image"
               },
+              "isSpam": false,
               "listings": {
                 "edges": [],
                 "__typename": "NftOrderConnection"
@@ -409,11 +424,16 @@
               },
               "suspiciousFlag": null,
               "tokenId": "49573910948929644057320032930374483793648558152449286445567646331372606324740",
+              "nftContract": {
+                "id": "TmZ0Q29udHJhY3Q6RVRIRVJFVU1fMHg0OTVmOTQ3Mjc2NzQ5Y2U2NDZmNjhhYzhjMjQ4NDIwMDQ1Y2I3YjVl",
+                "address": "0x495f947276749ce646f68ac8c248420045cb7b5e"
+              },
               "thumbnail": {
                 "id": "SW1hZ2U6aHR0cHM6Ly9jLm5lZXZhY2RuLm5ldC9pbWFnZS91cGxvYWQvY19saW1pdCxwZ18xLGhfMjAwLHdfMjAwL2Zfd2VicC94eXovcy1rbnY0dHFOV21TZmd0dTlKQ0FUVllMT1M0d1hpNExxbW5KbktEdENwSS53ZWJw",
                 "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_200,w_200/f_webp/xyz/s-knv4tqNWmSfgtu9JCATVYLOS4wXi4LqmnJnKDtCpI.webp",
                 "__typename": "Image"
               },
+              "isSpam": false,
               "listings": {
                 "edges": [],
                 "__typename": "NftOrderConnection"

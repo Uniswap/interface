@@ -26,7 +26,14 @@ export interface UniswapBehaviorHistoryState {
     [walletAddress: string]: number
   }
   hasShownSmartWalletNudge?: boolean
+  /** Global flag for when user sees modal without wallet connected */
   hasSeenToucanIntroModal?: boolean
+  /** Per-wallet tracking for Toucan intro modal */
+  toucanIntroModalSeenByWallet?: {
+    [walletAddress: string]: boolean
+  }
+  hasDismissedUniswapWrapped2025Banner?: boolean
+  hasDismissedCrosschainSwapsPromoBanner?: boolean
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -47,6 +54,8 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasShownMismatchToast: false,
   hasShownSmartWalletNudge: false,
   hasSeenToucanIntroModal: false,
+  hasDismissedUniswapWrapped2025Banner: false,
+  hasDismissedCrosschainSwapsPromoBanner: false,
 }
 
 const slice = createSlice({
@@ -110,8 +119,18 @@ const slice = createSlice({
     setHasSeenToucanIntroModal: (state, action: PayloadAction<boolean>) => {
       state.hasSeenToucanIntroModal = action.payload
     },
+    setToucanIntroModalSeenByWallet: (state, action: PayloadAction<{ walletAddress: string }>) => {
+      state.toucanIntroModalSeenByWallet ??= {}
+      state.toucanIntroModalSeenByWallet[action.payload.walletAddress.toLowerCase()] = true
+    },
     setHasDismissedBridgedAssetsBannerV2: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedBridgedAssetsBannerV2 = action.payload
+    },
+    setHasDismissedUniswapWrapped2025Banner: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedUniswapWrapped2025Banner = action.payload
+    },
+    setHasDismissedCrosschainSwapsPromoBanner: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedCrosschainSwapsPromoBanner = action.payload
     },
   },
 })
@@ -133,7 +152,10 @@ export const {
   setEmbeddedWalletGraduateCardDismissed,
   setHasShownSmartWalletNudge,
   setHasSeenToucanIntroModal,
+  setToucanIntroModalSeenByWallet,
   setHasDismissedBridgedAssetsBannerV2,
+  setHasDismissedUniswapWrapped2025Banner,
+  setHasDismissedCrosschainSwapsPromoBanner,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

@@ -1,11 +1,12 @@
-import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
-import { useSwapsThisWeek } from 'pages/Portfolio/Overview/hooks/useSwapsThisWeek'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
+import { ValueWithFadedDecimals } from '~/pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
+import { useSwapsThisWeek } from '~/pages/Portfolio/Overview/hooks/useSwapsThisWeek'
 
 const BORDER_COLOR = '$surface3'
 const BORDER_WIDTH = 1
@@ -43,7 +44,13 @@ export const OverviewStatsTiles = memo(function OverviewStatsTiles({ activityDat
       width="100%"
     >
       <StatsGroup1 singleRow={isSingleRow}>
-        <Flex borderRightWidth={BORDER_WIDTH} borderColor={BORDER_COLOR} padding="$spacing16" width="50%">
+        <Flex
+          borderRightWidth={BORDER_WIDTH}
+          borderColor={BORDER_COLOR}
+          padding="$spacing16"
+          width="50%"
+          data-testid={TestID.PortfolioOverviewStatsSwapsThisWeek}
+        >
           <Text variant="body3" color="$neutral2">
             {t('portfolio.overview.stats.swapsThisWeek')}
           </Text>
@@ -51,7 +58,7 @@ export const OverviewStatsTiles = memo(function OverviewStatsTiles({ activityDat
             {swapCount}
           </Text>
         </Flex>
-        <Flex padding="$spacing16" width="50%">
+        <Flex padding="$spacing16" width="50%" data-testid={TestID.PortfolioOverviewStatsSwappedThisWeek}>
           <Text variant="body3" color="$neutral2">
             {t('portfolio.overview.stats.swappedThisWeek')}
           </Text>

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 import { createExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
@@ -8,7 +8,6 @@ import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/typ
 import type { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { SwapHandlers } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface UseSwapServiceParams {
@@ -19,8 +18,7 @@ interface UseSwapServiceParams {
 export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetExecuteSwapService {
   const { swapHandlers, derivedSwapInfo } = ctx
 
-  const wallet = useWallet()
-  const account = isSVMChain(derivedSwapInfo.chainId) ? wallet.svmAccount : wallet.evmAccount
+  const address = useActiveAddress(derivedSwapInfo.chainId)
   const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
   const { isFiatMode, presetPercentage, preselectAsset } = useSwapFormStore((s) => ({
     isFiatMode: s.isFiatMode,
@@ -31,7 +29,7 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
   // deps for our service
   // useEvent is used to create a stable fn references, but each time
   // these fns are called, they will return the latest values
-  const getAccount = useEvent(() => account)
+  const getAddress = useEvent(() => address)
   const getIsFiatMode = useEvent(() => isFiatMode)
   const getDerivedSwapInfo = useEvent(() => derivedSwapInfo)
   const getTxSettings = useEvent(() => ({ customSlippageTolerance }))
@@ -47,7 +45,7 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
       } & SwapExecutionCallbacks,
     ) => {
       return createExecuteSwapService({
-        getAccount,
+        getAddress,
         getSwapTxContext: input.getSwapTxContext,
         getDerivedSwapInfo,
         getTxSettings,
@@ -56,12 +54,13 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
         onSuccess: input.onSuccess,
         onFailure: input.onFailure,
         onPending: input.onPending,
+        onClearForm: input.onClearForm,
         setCurrentStep: input.setCurrentStep,
         setSteps: input.setSteps,
         onPrepareSwap: swapHandlers.prepareAndSign,
         onExecuteSwap: swapHandlers.execute,
       })
     },
-    [swapHandlers, getAccount, getDerivedSwapInfo, getPresetInfo, getIsFiatMode, getTxSettings],
+    [swapHandlers, getAddress, getDerivedSwapInfo, getPresetInfo, getIsFiatMode, getTxSettings],
   )
 }

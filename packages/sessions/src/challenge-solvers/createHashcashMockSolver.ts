@@ -14,7 +14,7 @@ import { sleep } from 'utilities/src/time/timing'
 function createHashcashMockSolver(): ChallengeSolver {
   async function solve(challengeData: ChallengeData): Promise<string> {
     // Extract difficulty from extra data
-    const difficulty = challengeData.extra?.bits || '20'
+    const difficulty = challengeData.extra?.['bits'] || '20'
 
     // Simulate proof-of-work computation time
     // Real implementation would iterate through nonces

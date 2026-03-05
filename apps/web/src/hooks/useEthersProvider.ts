@@ -1,8 +1,8 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import type { Chain, Client, Transport } from 'viem'
 import { useClient, useConnectorClient } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
 
 const providers = new WeakMap<Client, Web3Provider>()
 

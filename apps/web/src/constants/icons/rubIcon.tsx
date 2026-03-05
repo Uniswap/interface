@@ -1,4 +1,4 @@
-import { SVGProps } from 'constants/icons/types'
+import { SVGProps } from '~/constants/icons/types'
 
 const RUB_ICON = (props: SVGProps) => (
   <svg width="49" height="49" viewBox="0 0 49 49" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

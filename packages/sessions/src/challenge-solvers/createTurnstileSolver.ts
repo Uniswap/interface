@@ -1,4 +1,29 @@
-import type { ChallengeData, ChallengeSolver } from '@universe/sessions/src/challenge-solvers/types'
+import {
+  TurnstileApiNotAvailableError,
+  TurnstileError,
+  TurnstileScriptLoadError,
+  TurnstileTimeoutError,
+  TurnstileTokenExpiredError,
+} from '@universe/sessions/src/challenge-solvers/turnstileErrors'
+import { ensureTurnstileScript } from '@universe/sessions/src/challenge-solvers/turnstileScriptLoader'
+import type {
+  ChallengeData,
+  ChallengeSolver,
+  TurnstileScriptOptions,
+} from '@universe/sessions/src/challenge-solvers/types'
+import type { PerformanceTracker } from '@universe/sessions/src/performance/types'
+import type { Logger } from 'utilities/src/logger/logger'
+
+/**
+ * Analytics data for Turnstile solve attempts.
+ * Reported via onSolveCompleted callback.
+ */
+interface TurnstileSolveAnalytics {
+  durationMs: number
+  success: boolean
+  errorType?: 'timeout' | 'script_load' | 'network' | 'validation' | 'unknown'
+  errorMessage?: string
+}
 
 // Declare Turnstile types inline to avoid import issues
 interface TurnstileWidget {
@@ -26,37 +51,141 @@ declare global {
   }
 }
 
+interface CreateTurnstileSolverContext {
+  /**
+   * Required: Performance tracker for timing measurements.
+   * Must be injected - no implicit dependency on globalThis.performance.
+   */
+  performanceTracker: PerformanceTracker
+  /**
+   * Optional logger for debugging
+   */
+  getLogger?: () => Logger
+  /**
+   * Optional script injection options for CSP compliance
+   */
+  scriptOptions?: TurnstileScriptOptions
+  /**
+   * Widget rendering timeout in milliseconds
+   * @default 30000
+   */
+  timeoutMs?: number
+  /**
+   * Callback for analytics when solve completes (success or failure)
+   */
+  onSolveCompleted?: (data: TurnstileSolveAnalytics) => void
+}
+
+/**
+ * Classifies error into analytics error type
+ */
+function classifyError(error: unknown): TurnstileSolveAnalytics['errorType'] {
+  if (error instanceof TurnstileTimeoutError || error instanceof TurnstileTokenExpiredError) {
+    return 'timeout'
+  }
+  if (error instanceof TurnstileScriptLoadError || error instanceof TurnstileApiNotAvailableError) {
+    return 'script_load'
+  }
+  if (error instanceof TurnstileError) {
+    return 'network'
+  }
+  if (error instanceof Error && error.message.includes('parse')) {
+    return 'validation'
+  }
+  if (error instanceof Error && error.message.includes('Missing')) {
+    return 'validation'
+  }
+  return 'unknown'
+}
+
 /**
  * Creates a Turnstile challenge solver.
  *
  * This integrates with Cloudflare Turnstile using explicit rendering:
- * - Dynamically loads Turnstile script if not present
+ * - Dynamically loads Turnstile script if not present (with state management)
  * - Creates a temporary DOM container
  * - Renders widget with sitekey and action from challengeData.extra
  * - Returns the verification token from Turnstile API
+ *
+ * Features:
+ * - Separation of concerns: Script loading separated from widget rendering
+ * - Dependency injection: Logger and script options injected via context
+ * - Contract-based design: Implements ChallengeSolver interface
+ * - Factory pattern: Returns solver instance, not component
  */
-function createTurnstileSolver(): ChallengeSolver {
+function createTurnstileSolver(ctx: CreateTurnstileSolverContext): ChallengeSolver {
   async function solve(challengeData: ChallengeData): Promise<string> {
-    // Parse challenge data from server
-    const challengeDataStr = challengeData.extra?.challengeData
-    if (!challengeDataStr) {
-      throw new Error('Missing challengeData in challenge extra')
+    const startTime = ctx.performanceTracker.now()
+
+    ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'Solving Turnstile challenge', { challengeData })
+
+    // Extract challenge data — prefer typed challengeData over legacy extra field
+    let siteKey: string
+    let action: string | undefined
+
+    if (challengeData.challengeData?.case === 'turnstile') {
+      siteKey = challengeData.challengeData.value.siteKey
+      action = challengeData.challengeData.value.action
+    } else {
+      // Fallback to legacy extra field
+      const challengeDataStr = challengeData.extra?.['challengeData']
+      if (!challengeDataStr) {
+        const error = new Error('Missing challengeData in challenge extra')
+        ctx.onSolveCompleted?.({
+          durationMs: ctx.performanceTracker.now() - startTime,
+          success: false,
+          errorType: 'validation',
+          errorMessage: error.message,
+        })
+        throw error
+      }
+
+      let parsedData: { siteKey: string; action: string }
+      try {
+        parsedData = JSON.parse(challengeDataStr)
+      } catch (error) {
+        const parseError = new Error('Failed to parse challengeData', { cause: error })
+        ctx.onSolveCompleted?.({
+          durationMs: ctx.performanceTracker.now() - startTime,
+          success: false,
+          errorType: 'validation',
+          errorMessage: parseError.message,
+        })
+        throw parseError
+      }
+
+      siteKey = parsedData.siteKey
+      action = parsedData.action
     }
 
-    let parsedData: { siteKey: string; action: string }
-    try {
-      parsedData = JSON.parse(challengeDataStr)
-    } catch (error) {
-      throw new Error('Failed to parse challengeData', { cause: error })
-    }
-
-    const { siteKey, action } = parsedData
     if (!siteKey) {
-      throw new Error('Missing siteKey in challengeData')
+      const error = new Error('Missing siteKey in challengeData')
+      ctx.onSolveCompleted?.({
+        durationMs: ctx.performanceTracker.now() - startTime,
+        success: false,
+        errorType: 'validation',
+        errorMessage: error.message,
+      })
+      throw error
     }
 
-    // Ensure Turnstile script is loaded
-    await loadTurnstileScript()
+    ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'Parsed challengeData', { siteKey, action })
+
+    await ensureTurnstileScript(ctx.scriptOptions)
+
+    ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'Turnstile script loaded')
+
+    // Verify Turnstile API is available
+    if (!window.turnstile) {
+      const error = new TurnstileApiNotAvailableError()
+      ctx.onSolveCompleted?.({
+        durationMs: ctx.performanceTracker.now() - startTime,
+        success: false,
+        errorType: 'script_load',
+        errorMessage: error.message,
+      })
+      throw error
+    }
 
     // Create temporary container for the widget
     const containerId = `turnstile-${challengeData.challengeId}`
@@ -65,48 +194,152 @@ function createTurnstileSolver(): ChallengeSolver {
     container.style.position = 'fixed'
     container.style.top = '-9999px' // Hide off-screen
     container.style.left = '-9999px'
+    container.setAttribute('aria-hidden', 'true') // Accessibility
     document.body.appendChild(container)
+
+    const timeoutMs = ctx.timeoutMs ?? 30000
+    const cleanupState = {
+      timeoutId: null as ReturnType<typeof setTimeout> | null,
+      widgetId: null as string | null,
+    }
 
     try {
       // Wait for Turnstile to be ready and render widget
       const token = await new Promise<string>((resolve, reject) => {
-        if (!window.turnstile) {
-          reject(new Error('Turnstile API not available'))
-          return
-        }
+        // Set up timeout with proper cleanup
+        cleanupState.timeoutId = setTimeout(() => {
+          if (cleanupState.widgetId && window.turnstile) {
+            try {
+              window.turnstile.remove(cleanupState.widgetId)
+            } catch {
+              // Ignore cleanup errors
+            }
+          }
+          reject(new TurnstileTimeoutError(timeoutMs))
+        }, timeoutMs)
 
-        window.turnstile.ready(() => {
+        // Helper function to render the widget
+        const renderWidget = (): void => {
           if (!window.turnstile) {
-            reject(new Error('Turnstile API not available after ready'))
+            reject(new TurnstileApiNotAvailableError())
             return
           }
 
-          window.turnstile.render(container, {
-            sitekey: siteKey,
-            action,
-            theme: 'light',
-            size: 'normal',
-            callback: (tokenValue: string) => {
-              resolve(tokenValue)
-            },
-            'error-callback': (error: string) => {
-              reject(new Error(`Turnstile error: ${error}`))
-            },
-            'expired-callback': () => {
-              reject(new Error('Turnstile token expired'))
-            },
-          })
+          try {
+            cleanupState.widgetId = window.turnstile.render(container, {
+              sitekey: siteKey,
+              action,
+              theme: 'light',
+              size: 'normal',
+              callback: (tokenValue: string) => {
+                if (cleanupState.timeoutId) {
+                  clearTimeout(cleanupState.timeoutId)
+                  cleanupState.timeoutId = null
+                }
+                ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'Turnstile token resolved', {
+                  tokenValue,
+                })
+                resolve(tokenValue)
+              },
+              'error-callback': (error: string) => {
+                if (cleanupState.timeoutId) {
+                  clearTimeout(cleanupState.timeoutId)
+                  cleanupState.timeoutId = null
+                }
+                ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'Turnstile error', { error })
+                reject(new TurnstileError(error))
+              },
+              'expired-callback': () => {
+                if (cleanupState.timeoutId) {
+                  clearTimeout(cleanupState.timeoutId)
+                  cleanupState.timeoutId = null
+                }
+                ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'Turnstile token expired')
+                reject(new TurnstileTokenExpiredError())
+              },
+            })
 
-          // Set timeout to prevent hanging
-          setTimeout(() => {
-            reject(new Error('Turnstile challenge timeout'))
-          }, 30000) // 30 second timeout
-        })
+            ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'Turnstile widget rendered', {
+              widgetId: cleanupState.widgetId,
+            })
+          } catch (error) {
+            if (cleanupState.timeoutId) {
+              clearTimeout(cleanupState.timeoutId)
+              cleanupState.timeoutId = null
+            }
+            ctx.getLogger?.().error(error, {
+              tags: {
+                file: 'createTurnstileSolver.ts',
+                function: 'solve',
+              },
+            })
+            reject(
+              new TurnstileError(`Failed to render widget: ${error instanceof Error ? error.message : String(error)}`),
+            )
+          }
+        }
+
+        if (!window.turnstile) {
+          reject(new TurnstileApiNotAvailableError())
+          return
+        }
+
+        try {
+          window.turnstile.ready(() => {
+            renderWidget()
+          })
+        } catch (error) {
+          // Fallback: render directly if ready() throws
+          ctx.getLogger?.().debug('createTurnstileSolver', 'solve', 'turnstile.ready() failed, rendering directly', {
+            error: error instanceof Error ? error.message : String(error),
+          })
+          renderWidget()
+        }
+      })
+
+      // Report success
+      ctx.onSolveCompleted?.({
+        durationMs: ctx.performanceTracker.now() - startTime,
+        success: true,
       })
 
       return token
+    } catch (error) {
+      // Report failure
+      ctx.onSolveCompleted?.({
+        durationMs: ctx.performanceTracker.now() - startTime,
+        success: false,
+        errorType: classifyError(error),
+        errorMessage: error instanceof Error ? error.message : String(error),
+      })
+
+      ctx.getLogger?.().error(error, {
+        tags: {
+          file: 'createTurnstileSolver.ts',
+          function: 'solve',
+        },
+      })
+      throw error
     } finally {
-      // Clean up: remove the container
+      // Clean up timeout
+      if (cleanupState.timeoutId) {
+        clearTimeout(cleanupState.timeoutId)
+      }
+
+      // Clean up widget if it was created
+      // widgetId only exists if turnstile was successfully loaded and rendered
+      if (cleanupState.widgetId) {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          if (window.turnstile) {
+            window.turnstile.remove(cleanupState.widgetId)
+          }
+        } catch {
+          // Ignore cleanup errors
+        }
+      }
+
+      // Clean up container
       if (container.parentNode) {
         container.parentNode.removeChild(container)
       }
@@ -116,62 +349,5 @@ function createTurnstileSolver(): ChallengeSolver {
   return { solve }
 }
 
-/**
- * Dynamically loads the Turnstile script if not already present
- */
-function loadTurnstileScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // Check if Turnstile is already loaded
-    if (window.turnstile) {
-      resolve()
-      return
-    }
-
-    // Check if script is already in DOM
-    const existingScript = document.querySelector('script[src*="challenges.cloudflare.com/turnstile"]')
-    if (existingScript) {
-      // Script exists, wait for it to load
-      const checkLoaded = setInterval(() => {
-        if (window.turnstile) {
-          clearInterval(checkLoaded)
-          resolve()
-        }
-      }, 100)
-
-      // Timeout after 10 seconds
-      setTimeout(() => {
-        clearInterval(checkLoaded)
-        reject(new Error('Turnstile script load timeout'))
-      }, 10000)
-      return
-    }
-
-    // Create and inject the script
-    const script = document.createElement('script')
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
-    script.async = true
-    script.defer = true
-
-    script.onload = (): void => {
-      // Wait for turnstile to actually be available on window
-      const checkInterval = setInterval(() => {
-        if (window.turnstile) {
-          clearInterval(checkInterval)
-          resolve()
-        }
-      }, 100)
-
-      // Timeout after 5 seconds
-      setTimeout(() => {
-        clearInterval(checkInterval)
-        reject(new Error('Turnstile did not initialize after script load'))
-      }, 5000)
-    }
-
-    script.onerror = (): void => reject(new Error('Failed to load Turnstile script'))
-
-    document.head.appendChild(script)
-  })
-}
-
 export { createTurnstileSolver }
+export type { CreateTurnstileSolverContext, TurnstileSolveAnalytics }

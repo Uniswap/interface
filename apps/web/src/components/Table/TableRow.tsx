@@ -1,34 +1,38 @@
 import { Cell, flexRender, Row, RowData } from '@tanstack/react-table'
-import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from 'components/Table/constants'
-import { CellContainer, DataRow, TableRowLink } from 'components/Table/styled'
-import { useTableSize } from 'components/Table/TableSizeProvider'
-import { getCommonPinningStyles } from 'components/Table/utils'
 import { memo, useMemo } from 'react'
 import { LinkProps } from 'react-router'
 import { Flex } from 'ui/src'
-import { UseSporeColorsReturn, useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { breakpoints } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from '~/components/Table/constants'
+import { CellContainer, DataRow, TableRowLink } from '~/components/Table/styled'
+import { useTableSize } from '~/components/Table/TableSizeProvider'
+import { getCommonPinningStyles } from '~/components/Table/utils'
 
 interface TableCellProps<T extends RowData> {
   cell: Cell<T, unknown>
-  colors: UseSporeColorsReturn
   v2?: boolean
 }
 
-function TableCellComponent<T extends RowData>({ cell, colors, v2 = true }: TableCellProps<T>): JSX.Element {
+function TableCellComponent<T extends RowData>({ cell, v2 = true }: TableCellProps<T>): JSX.Element {
   const isPinned = cell.column.getIsPinned()
   const isFirstPinnedColumn = isPinned && cell.column.getIsFirstColumn('left')
-  const pinnedStyles = getCommonPinningStyles({ column: cell.column, colors, v2, isHeader: false })
+  const colors = useSporeColors()
+  const { background, ...positionStyles } = getCommonPinningStyles({ column: cell.column, colors, v2, isHeader: false })
 
   return (
     <CellContainer
-      style={pinnedStyles}
+      style={positionStyles}
+      backgroundColor={background}
       borderTopLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
       borderBottomLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
       overflow="hidden"
+      $group-hover={{
+        backgroundColor: isPinned && v2 ? '$surface1Hovered' : 'unset',
+      }}
     >
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </CellContainer>
@@ -63,7 +67,6 @@ function TableRowComponent<T extends RowData>({
   }
   const linkState = rowOriginal.linkState
   const rowTestId = rowOriginal.testId
-  const colors = useSporeColors()
   const { width: tableWidth } = useTableSize()
   const rowHeight = useMemo(
     () =>
@@ -72,9 +75,10 @@ function TableRowComponent<T extends RowData>({
         : (propRowHeight ?? ROW_HEIGHT_DESKTOP),
     [tableWidth, propCompactRowHeight, propRowHeight],
   )
+
   const cells = row
     .getVisibleCells()
-    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} colors={colors} v2={v2} />)
+    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} v2={v2} />)
 
   const rowContent = (
     <Trace

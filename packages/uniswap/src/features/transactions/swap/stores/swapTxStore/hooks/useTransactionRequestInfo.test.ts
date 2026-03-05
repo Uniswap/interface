@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react'
+import type { GasFeeResult } from '@universe/api'
 import type { providers } from 'ethers/lib/ethers'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
-import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { initialTransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/createTransactionSettingsStore'
 import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
@@ -14,35 +14,37 @@ import { useTransactionRequestInfo } from 'uniswap/src/features/transactions/swa
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { createMockDerivedSwapInfo, createMockTokenApprovalInfo } from 'uniswap/src/test/fixtures/transactions/swap'
+import type { Mock } from 'vitest'
 
-jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery')
-jest.mock('uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/usePermit2Signature')
-jest.mock('uniswap/src/features/gas/hooks')
-jest.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled')
-jest.mock(
+vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery')
+vi.mock('uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/usePermit2Signature')
+vi.mock('uniswap/src/features/gas/hooks')
+vi.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled')
+vi.mock(
   'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore',
   () => ({
-    useAllTransactionSettings: jest.fn(),
+    useAllTransactionSettings: vi.fn(),
   }),
 )
-jest.mock('@universe/gating', () => {
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
   return {
-    ...jest.requireActual('@universe/gating'),
-    useDynamicConfigValue: jest
+    ...actual,
+    useDynamicConfigValue: vi
       .fn()
       .mockImplementation(({ defaultValue }: { config: unknown; key: unknown; defaultValue: unknown }) => {
         return defaultValue
       }),
   }
 })
-jest.mock('uniswap/src/features/address/useIsSmartContractAddress')
+vi.mock('uniswap/src/features/address/useIsSmartContractAddress')
 
-const mockUseTradingApiSwapQuery = useTradingApiSwapQuery as jest.Mock
-const mockUsePermit2SignatureWithData = usePermit2SignatureWithData as jest.Mock
-const mockUseTransactionGasFee = useTransactionGasFee as jest.Mock
-const mockUseV4SwapEnabled = useV4SwapEnabled as jest.Mock
-const mockUseIsSmartContractAddress = useIsSmartContractAddress as jest.Mock
-const mockUseAllTransactionSettings = useAllTransactionSettings as jest.Mock
+const mockUseTradingApiSwapQuery = useTradingApiSwapQuery as Mock
+const mockUsePermit2SignatureWithData = usePermit2SignatureWithData as Mock
+const mockUseTransactionGasFee = useTransactionGasFee as Mock
+const mockUseV4SwapEnabled = useV4SwapEnabled as Mock
+const mockUseIsSmartContractAddress = useIsSmartContractAddress as Mock
+const mockUseAllTransactionSettings = useAllTransactionSettings as Mock
 
 describe('useTransactionRequestInfo', () => {
   const mockWrapGasFee: GasFeeResult = {
@@ -96,7 +98,7 @@ describe('useTransactionRequestInfo', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockUseIsSmartContractAddress.mockReturnValue({ loading: false, isSmartContractAddress: false })
     mockUseAllTransactionSettings.mockReturnValue({
       ...initialTransactionSettingsState,

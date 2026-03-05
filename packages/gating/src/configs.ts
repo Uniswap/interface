@@ -90,6 +90,7 @@ export enum DynamicConfigs {
   LPConfig = 'lp_config',
   AllowedV4WethHookAddresses = 'allowed_v4_weth_hook_addresses',
   OutageBannerChainId = 'outage_banner_chain_id',
+  VerifiedAuctions = 'verified_auctions',
 }
 
 // Config values go here for easy access
@@ -234,6 +235,10 @@ export enum AllowedV4WethHookAddressesConfigKey {
   HookAddresses = 'hookAddresses',
 }
 
+export enum VerifiedAuctionsConfigKey {
+  VerifiedAuctionIds = 'verifiedAuctionIds',
+}
+
 export enum OutageBannerChainIdConfigKey {
   ChainId = 'chainId',
 }
@@ -261,6 +266,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
+  [DynamicConfigs.VerifiedAuctions]: VerifiedAuctionsConfigKey
   [DynamicConfigs.BlockedAsyncSubmissionChainIds]: BlockedAsyncSubmissionChainIdsConfigKey
   [DynamicConfigs.OutageBannerChainId]: OutageBannerChainIdConfigKey
 }

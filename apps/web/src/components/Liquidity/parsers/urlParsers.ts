@@ -1,28 +1,28 @@
+import { createParser, parseAsJson } from 'nuqs'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { z } from 'zod'
 import {
   FeeData,
   PositionFlowStep,
   PriceRangeState,
   RangeAmountInputPriceMode,
-} from 'components/Liquidity/Create/types'
-import { DepositState } from 'components/Liquidity/types'
-import { checkIsNative } from 'hooks/Tokens'
-import { createParser, parseAsJson } from 'nuqs'
-import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
-import { PositionField } from 'types/position'
-import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { getChainIdFromChainUrlParam, getChainUrlParam } from 'utils/chainParams'
-import { assume0xAddress } from 'utils/wagmi'
-import { z } from 'zod'
+} from '~/components/Liquidity/Create/types'
+import { DepositState } from '~/components/Liquidity/types'
+import { checkIsNative } from '~/hooks/Tokens'
+import { parseCurrencyFromURLParameter } from '~/state/swap/hooks'
+import { PositionField } from '~/types/position'
+import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/utils/chainParams'
+import { assume0xAddress } from '~/utils/wagmi'
 
 const priceRangeStateSchema: z.ZodSchema<Partial<PriceRangeState>> = z
   .object({
     priceInverted: z.boolean(),
     fullRange: z.boolean(),
-    minPrice: z.string(),
-    maxPrice: z.string(),
+    minTick: z.number().int(),
+    maxTick: z.number().int(),
     initialPrice: z.string(),
     isInitialPriceDirty: z.boolean(),
     inputMode: z.nativeEnum(RangeAmountInputPriceMode),

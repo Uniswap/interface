@@ -1,9 +1,9 @@
-import { AuctionStoreContext } from 'components/Toucan/Auction/store/AuctionStoreContext'
-import { AuctionStore } from 'components/Toucan/Auction/store/createAuctionStore'
-import { AuctionStoreState } from 'components/Toucan/Auction/store/types'
 import { useContext } from 'react'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
+import { AuctionStoreContext } from '~/components/Toucan/Auction/store/AuctionStoreContext'
+import { AuctionStore } from '~/components/Toucan/Auction/store/createAuctionStore'
+import { AuctionStoreState } from '~/components/Toucan/Auction/store/types'
 
 function useAuctionStoreBase(): AuctionStore {
   const context = useContext(AuctionStoreContext)

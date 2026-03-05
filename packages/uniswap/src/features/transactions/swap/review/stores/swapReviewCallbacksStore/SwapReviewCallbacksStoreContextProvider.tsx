@@ -20,7 +20,6 @@ interface SwapReviewCallbacksContextProviderProps {
   authTrigger?: AuthTrigger
   onSubmitSwap?: () => Promise<void> | void
   onClose: () => void
-  onAcceptTrade: () => void
   getExecuteSwapService: GetExecuteSwapService
 }
 
@@ -30,7 +29,6 @@ export const SwapReviewCallbacksContextProvider = ({
   authTrigger,
   onSubmitSwap,
   onClose,
-  onAcceptTrade,
   getExecuteSwapService,
 }: SwapReviewCallbacksContextProviderProps): JSX.Element => {
   const { setShowWarningModal, setWarningAcknowledged, setShouldSubmitTx } = useSwapReviewWarningStateActions()
@@ -74,9 +72,8 @@ export const SwapReviewCallbacksContextProvider = ({
       onCancelWarning,
       onShowWarning,
       onCloseWarning,
-      onAcceptTrade,
     }),
-    [onSwapButtonClick, onConfirmWarning, onCancelWarning, onShowWarning, onCloseWarning, onAcceptTrade],
+    [onSwapButtonClick, onConfirmWarning, onCancelWarning, onShowWarning, onCloseWarning],
   )
 
   const [store] = useState(() => createSwapReviewCallbacksStore(derivedState))

@@ -1,12 +1,12 @@
-import { MultichainContextProvider } from 'state/multichain/MultichainContext'
-import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { render } from 'test-utils/render'
 import { Flex } from 'ui/src'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
+import { SwapAndLimitContextProvider } from '~/state/swap/SwapContext'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
+import { render } from '~/test-utils/render'
 
-vi.mock('hooks/useContract', async () => {
-  const actual = await vi.importActual('hooks/useContract')
+vi.mock('~/hooks/useContract', async () => {
+  const actual = await vi.importActual('~/hooks/useContract')
   return {
     ...actual,
     useContract: vi.fn(),

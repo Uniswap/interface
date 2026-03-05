@@ -1,10 +1,10 @@
-import { HelpContent } from 'components/HelpModal/HelpContent'
 import { useState } from 'react'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Popover, TouchableArea, useMedia } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { zIndexes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { HelpContent } from '~/components/HelpModal/HelpContent'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -49,7 +49,7 @@ export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
           exitStyle={{ scale: 0.95, opacity: 0 }}
           animation="quick"
           ml="$spacing12"
-          background="transparent"
+          backgroundColor="$transparent"
           $xl={{ ml: 0, mt: '$spacing20' }}
           $sm={{ ml: '$spacing12' }}
         >

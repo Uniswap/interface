@@ -18,6 +18,7 @@
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
+    "https://challenges.cloudflare.com",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
     "https://id.porto.sh",
@@ -90,6 +91,8 @@
     "https://rpc.scroll.io/",
     "https://rpc.sepolia.org/",
     "https://rpc.soneium.org",
+    "https://sepolia.gateway.tenderly.co",
+    "https://ethereum-sepolia-rpc.publicnode.com",
     "https://rpc.zora.energy/",
     "https://sockjs-us3.pusher.com/",
     "https://sparrow.cloudflare.com/",

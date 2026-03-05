@@ -1,5 +1,7 @@
 import { ContentStyle } from '@shopify/flash-list'
-import { memo, useEffect, useState } from 'react'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Currency } from '@uniswap/sdk-core'
+import { memo, useState } from 'react'
 import { Flex, styled, TouchableArea } from 'ui/src'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { iconSizes } from 'ui/src/theme'
@@ -24,11 +26,10 @@ import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { isHoverable, isWebPlatform } from 'utilities/src/platform'
-import { usePrevious } from 'utilities/src/react/hooks'
-import { noop } from 'utilities/src/react/noop'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const OptionItemMoreButton = styled(TouchableArea, {
@@ -37,6 +38,70 @@ const OptionItemMoreButton = styled(TouchableArea, {
   hoverStyle: {
     borderColor: '$surface3Hovered',
   },
+})
+
+// Context menu button components that manage their own state
+const TokenRowContextMenuButton = memo(function TokenRowContextMenuButton({
+  currency,
+}: {
+  currency: Currency
+}): JSX.Element {
+  const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
+
+  return (
+    <OptionItemMoreButton>
+      <TokenOptionItemContextMenu
+        actions={[
+          TokenContextMenuAction.CopyAddress,
+          ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
+          TokenContextMenuAction.Swap,
+          TokenContextMenuAction.Send,
+          TokenContextMenuAction.Receive,
+          TokenContextMenuAction.Share,
+        ]}
+        triggerMode={ContextMenuTriggerMode.Primary}
+        currency={currency}
+        isOpen={isOpen}
+        openMenu={openMenu}
+        closeMenu={closeMenu}
+      >
+        <Flex p="$spacing6">
+          <MoreHorizontal size={iconSizes.icon16} color="$neutral2" />
+        </Flex>
+      </TokenOptionItemContextMenu>
+    </OptionItemMoreButton>
+  )
+})
+
+const PoolRowContextMenuButton = memo(function PoolRowContextMenuButton({
+  poolId,
+  chainId,
+  protocolVersion,
+}: {
+  poolId: string
+  chainId: UniverseChainId
+  protocolVersion: ProtocolVersion
+}): JSX.Element {
+  const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
+
+  return (
+    <OptionItemMoreButton>
+      <PoolOptionItemContextMenu
+        actions={[PoolContextMenuAction.CopyAddress, PoolContextMenuAction.Share]}
+        isOpen={isOpen}
+        openMenu={openMenu}
+        closeMenu={closeMenu}
+        poolId={poolId}
+        chainId={chainId}
+        protocolVersion={protocolVersion}
+        triggerMode={ContextMenuTriggerMode.Primary}
+      >
+        <Flex p="$spacing6">
+          <MoreHorizontal size={iconSizes.icon16} color="$neutral2" />
+        </Flex>
+      </PoolOptionItemContextMenu>
+    </OptionItemMoreButton>
+  )
 })
 
 export interface SearchModalListProps {
@@ -68,17 +133,7 @@ export const SearchModalList = memo(function _SearchModalList({
     useUniswapContext()
   const { registerSearchItem } = useAddToSearchHistory()
 
-  const { value: isContextMenuOpen, setFalse: closeContextMenu, toggle: toggleContextMenu } = useBooleanState(false)
-
-  const [focusedRowIndex, setFocusedRowIndex] = useState<number | undefined>(1) // set to 1st item hovered on first open
-
-  // to handle closing the left-click '...' context menu when the focused row changes
-  const previousFocusedRowIndex = usePrevious(focusedRowIndex)
-  useEffect(() => {
-    if (isWebPlatform && previousFocusedRowIndex !== focusedRowIndex) {
-      closeContextMenu()
-    }
-  }, [previousFocusedRowIndex, focusedRowIndex, closeContextMenu])
+  const [focusedRowIndex, setFocusedRowIndex] = useState<number | undefined>()
 
   // eslint-disable-next-line consistent-return
   const renderItem = ({ item, section, rowIndex, index }: ItemRowInfo<SearchModalOption>): JSX.Element => {
@@ -100,28 +155,11 @@ export const SearchModalList = memo(function _SearchModalList({
             }}
             rightElement={
               isHoverable && rowIndex === focusedRowIndex ? (
-                <OptionItemMoreButton
-                  onPress={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    toggleContextMenu()
-                  }}
-                >
-                  <PoolOptionItemContextMenu
-                    actions={[PoolContextMenuAction.CopyAddress, PoolContextMenuAction.Share]}
-                    isOpen={previousFocusedRowIndex === focusedRowIndex && isContextMenuOpen}
-                    openMenu={noop}
-                    closeMenu={noop}
-                    poolId={item.poolId}
-                    chainId={item.chainId}
-                    protocolVersion={item.protocolVersion}
-                    triggerMode={ContextMenuTriggerMode.Primary}
-                  >
-                    <Flex p="$spacing6">
-                      <MoreHorizontal size={iconSizes.icon16} color="$neutral2" />
-                    </Flex>
-                  </PoolOptionItemContextMenu>
-                </OptionItemMoreButton>
+                <PoolRowContextMenuButton
+                  poolId={item.poolId}
+                  chainId={item.chainId}
+                  protocolVersion={item.protocolVersion}
+                />
               ) : undefined
             }
             onPress={() => {
@@ -154,33 +192,7 @@ export const SearchModalList = memo(function _SearchModalList({
             }}
             rightElement={
               isHoverable && rowIndex === focusedRowIndex ? (
-                <OptionItemMoreButton
-                  onPress={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    toggleContextMenu()
-                  }}
-                >
-                  <TokenOptionItemContextMenu
-                    actions={[
-                      TokenContextMenuAction.CopyAddress,
-                      ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
-                      TokenContextMenuAction.Swap,
-                      TokenContextMenuAction.Send,
-                      TokenContextMenuAction.Receive,
-                      TokenContextMenuAction.Share,
-                    ]}
-                    triggerMode={ContextMenuTriggerMode.Primary}
-                    currency={item.currencyInfo.currency}
-                    isOpen={previousFocusedRowIndex === focusedRowIndex && isContextMenuOpen}
-                    openMenu={noop}
-                    closeMenu={noop}
-                  >
-                    <Flex p="$spacing6">
-                      <MoreHorizontal size={iconSizes.icon16} color="$neutral2" />
-                    </Flex>
-                  </TokenOptionItemContextMenu>
-                </OptionItemMoreButton>
+                <TokenRowContextMenuButton currency={item.currencyInfo.currency} />
               ) : undefined
             }
             onPress={() => {

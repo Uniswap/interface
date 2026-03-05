@@ -1,82 +1,25 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ActionSheetDropdown should render 1`] = `
-<View
-  collapsable={false}
-  focusVisibleStyle={{}}
-  forwardedRef={[Function]}
-  jestAnimatedProps={
-    {
-      "value": {},
-    }
-  }
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
-  jestInlineStyle={
-    [
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-    ]
-  }
-  onBlur={[Function]}
-  onClick={[Function]}
-  onFocus={[Function]}
-  onLayout={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
-  role="button"
-  style={
-    [
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-      {},
-    ]
-  }
->
-  <View
-    collapsable={false}
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 8,
-        "justifyContent": "center",
-        "paddingBottom": 8,
-        "paddingTop": 8,
-      }
-    }
-    testID="dropdown-toggle"
-  />
-</View>
+exports[`ActionSheetDropdown > should render 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+      tabindex="0"
+    >
+      <div
+        class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _color-accent3"
+        data-testid="dropdown-toggle"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

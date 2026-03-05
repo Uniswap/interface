@@ -1,5 +1,3 @@
-import { migration59 } from 'state/migrations/59'
-
 const previousState = {
   _persist: {
     version: 58,

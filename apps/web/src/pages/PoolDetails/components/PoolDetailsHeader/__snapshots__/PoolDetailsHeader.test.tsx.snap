@@ -1,0 +1,739 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PoolDetailsHeader > loading skeleton is shown 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _width-10037"
+      data-testid="pdp-header-loading-skeleton"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-center _gap-t-space-gap1569"
+      >
+        <style>
+          
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+        </style>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-56px _height-56px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
+          />
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-200px _height-28--7999999991290300390 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
+            />
+          </div>
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-100px _height-12px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center _justifyContent-center"
+      >
+        <style>
+          
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+        </style>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-42px _height-34px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
+          />
+        </div>
+        <style>
+          
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+        </style>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-42px _height-34px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
+          />
+        </div>
+        <style>
+          
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+        </style>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-42px _height-34px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _backgroundColor-surface3"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      aria-label="breadcrumb-nav"
+      class="_pr-_lg_t-space-pad1331704900 _pl-_lg_t-space-pad1331704900 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap52 _width-10037 _pr-t-space-spa1360333989 _pl-t-space-spa1360333989 _pt-t-space-spa1360333981 _mb-t-space-spa94665593"
+    >
+      <a
+        data-discover="true"
+        href="/explore/pools"
+        style="text-decoration: none;"
+      >
+        <span
+          class="font_body "
+          data-disable-theme="true"
+          style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; line-height: var(--f-lineHeight-medium); font-weight: var(--f-weight-book); display: flex; align-items: center; text-decoration: none; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+        >
+          Pools 
+          <div
+            style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgb(155, 155, 155);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </div>
+        </span>
+      </a>
+      <div
+        aria-current="page"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-6px"
+        data-testid="current-breadcrumb"
+      >
+        <h1
+          class="font_body _display-inline _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-inherit _lineHeight-inherit _fontWeight-inherit _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px"
+          data-disable-theme="true"
+        >
+          USDC / WETH
+        </h1>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsHeader > renders header text correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  display: inline-block;
+  height: inherit;
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+    >
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-center _gap-t-space-gap1569"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-56px _width-56px _transition-all0--2sease1024"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-56px _width-56px"
+            style="transform: scale(1); transform-origin: 0 0; transition: all 0.2s ease;"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-56px _width-56px"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-27px"
+                data-testid="input-currency-logo-container"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-56px _justifyContent-center _pointerEvents-auto _width-56px _position-relative"
+                  data-testid="token-logo"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-28px _borderTopRightRadius-28px _borderBottomRightRadius-28px _borderBottomLeftRadius-28px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
+                  >
+                    <img
+                      height="56"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      style="object-fit: contain; border-radius: 28px; z-index: 1;"
+                      width="56"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-27px"
+                data-testid="output-currency-logo-container"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-56px _justifyContent-center _pointerEvents-auto _width-56px _position-relative"
+                  data-testid="token-logo"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-28px _borderTopRightRadius-28px _borderBottomRightRadius-28px _borderBottomLeftRadius-28px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
+                  >
+                    <img
+                      height="56"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                      style="object-fit: contain; border-radius: 28px; z-index: 1;"
+                      width="56"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_gap-_md_t-space-non101 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <div
+            class="_width-_sm_10037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-flex-end _gap-t-space-gap56"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080 _alignItems-center _width-max-content"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+              >
+                <a
+                  data-discover="true"
+                  href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                  style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
+                >
+                  <h3
+                    class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _transition-all0--2sease1024"
+                    data-disable-theme="true"
+                  >
+                    USDC / 
+                  </h3>
+                </a>
+                <a
+                  data-discover="true"
+                  href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                  style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
+                >
+                  <h3
+                    class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _transition-all0--2sease1024"
+                    data-disable-theme="true"
+                  >
+                    WETH
+                  </h3>
+                </a>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665587"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
+                  <span
+                    class="font_body _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _display-flex _flexDirection-row _alignItems-center _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _backgroundColor-surface3 _pt-t-space-spa94665587 _pb-t-space-spa94665587 _pr-t-space-pad95589112 _pl-t-space-pad95589112 _gap-t-space-spa94665589 _borderTopLeftRadius-t-radius-ro840690006 _borderTopRightRadius-t-radius-ro840690006 _borderBottomRightRadius-t-radius-ro840690006 _borderBottomLeftRadius-t-radius-ro840690006"
+                    data-disable-theme="true"
+                  >
+                    0.05%
+                  </span>
+                </div>
+              </div>
+              <div
+                class="is_TouchableArea  t_group_true"
+                data-testid="toggle-tokens-reverse-arrows"
+                role="button"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transform: scale(1); transition: 100ms;"
+                tabindex="0"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap56"
+          >
+            <div
+              class="_color-_platformweb_neutral2 _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-4px _cursor-pointer _position-relative _alignItems-center"
+              style="transition: 100ms;"
+            >
+              <div
+                class="_whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _maxWidth-calc100-0px38074892"
+              >
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                  data-disable-theme="true"
+                >
+                  0x88e6...5640
+                </span>
+              </div>
+              <div
+                class="_clear-_platformweb_both _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              />
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _width-16px _height-16px"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _alignItems-center _gap-t-space-gap56"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
+        >
+          <div
+            class="c0"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            >
+              <span
+                class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid-ignore="true"
+                >
+                  <span
+                    class="t_unmounted font_body  t_unmounted"
+                    data-disable-theme="true"
+                    style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; line-height: var(--f-lineHeight-medium); font-weight: var(--f-weight-book); display: flex; flex-direction: column; border-top-width: 0.5px; border-right-width: 0.5px; border-bottom-width: 0.5px; border-left-width: 0.5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); z-index: 970; min-width: 200px; overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; right: 0px; top: calc(100% + 10px); opacity: 0; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <div
+                      class="is_TouchableArea  t_group_true"
+                      role="button"
+                      style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded8); border-top-right-radius: var(--t-radius-rounded8); border-bottom-right-radius: var(--t-radius-rounded8); border-bottom-left-radius: var(--t-radius-rounded8); background-color: rgba(0, 0, 0, 0); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); gap: var(--t-space-gap12); height: 40px;"
+                      tabindex="0"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569 _width-10037"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+                          viewBox="0 0 123 123"
+                        >
+                          <path
+                            d="M25.79 58.4149C25.7901 57.7357 25.9244 57.0633 26.1851 56.4361C26.4458 55.809 26.8278 55.2396 27.3092 54.7605C27.7907 54.2814 28.3619 53.9021 28.9903 53.6444C29.6187 53.3867 30.2918 53.2557 30.971 53.2589L39.561 53.2869C40.9305 53.2869 42.244 53.831 43.2124 54.7994C44.1809 55.7678 44.725 57.0813 44.725 58.4509V90.9309C45.692 90.6439 46.934 90.3379 48.293 90.0179C49.237 89.7962 50.0783 89.262 50.6805 88.5019C51.2826 87.7418 51.6102 86.8006 51.61 85.8309V45.5409C51.61 44.1712 52.154 42.8576 53.1224 41.889C54.0908 40.9204 55.4043 40.3762 56.774 40.3759H65.381C66.7506 40.3762 68.0641 40.9204 69.0325 41.889C70.0009 42.8576 70.545 44.1712 70.545 45.5409V82.9339C70.545 82.9339 72.7 82.0619 74.799 81.1759C75.5787 80.8462 76.2441 80.2941 76.7122 79.5886C77.1803 78.8832 77.4302 78.0555 77.431 77.2089V32.6309C77.431 31.2615 77.9749 29.9481 78.9431 28.9797C79.9113 28.0113 81.2245 27.4672 82.5939 27.4669H91.201C92.5706 27.4669 93.884 28.0109 94.8525 28.9794C95.8209 29.9478 96.365 31.2613 96.365 32.6309V69.3399C103.827 63.9319 111.389 57.4279 117.39 49.6069C118.261 48.4717 118.837 47.1386 119.067 45.7267C119.297 44.3148 119.174 42.8678 118.709 41.5149C115.931 33.5227 111.516 26.1983 105.745 20.0105C99.974 13.8228 92.9749 8.90785 85.1955 5.58032C77.4161 2.2528 69.0277 0.585938 60.5671 0.686416C52.1065 0.786893 43.7601 2.6525 36.062 6.16383C28.3638 9.67517 21.4834 14.7549 15.8611 21.078C10.2388 27.401 5.99842 34.8282 3.41131 42.8842C0.824207 50.9401 -0.0526487 59.4474 0.836851 67.8617C1.72635 76.276 4.36263 84.4119 8.57696 91.7489C9.31111 93.0145 10.3912 94.0444 11.6903 94.7175C12.9894 95.3906 14.4536 95.679 15.911 95.5489C17.539 95.4059 19.566 95.2029 21.976 94.9199C23.0251 94.8008 23.9937 94.2999 24.6972 93.5126C25.4008 92.7253 25.7901 91.7067 25.791 90.6509L25.79 58.4149Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M25.6021 110.51C34.6744 117.11 45.3959 121.072 56.5802 121.957C67.7646 122.841 78.9757 120.615 88.9731 115.523C98.9705 110.431 107.364 102.673 113.226 93.1068C119.087 83.5405 122.188 72.539 122.185 61.3197C122.185 59.9197 122.12 58.5347 122.027 57.1577C99.808 90.2957 58.7831 105.788 25.604 110.505"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <div
+                          class="_flexGrow-_md_0 _flexShrink-_md_1 _flexBasis-_md_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexGrow-1 _flexDirection-row _alignItems-center _gap-t-space-gap52 _minWidth-0px"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            Pool
+                          </span>
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            0x88e6...5640
+                          </span>
+                        </div>
+                        <svg
+                          fill="none"
+                          stroke-width="0"
+                          style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div
+                      class="is_TouchableArea  t_group_true"
+                      role="button"
+                      style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded8); border-top-right-radius: var(--t-radius-rounded8); border-bottom-right-radius: var(--t-radius-rounded8); border-bottom-left-radius: var(--t-radius-rounded8); background-color: rgba(0, 0, 0, 0); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); gap: var(--t-space-gap12); height: 40px;"
+                      tabindex="0"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569 _width-10037"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+                          viewBox="0 0 123 123"
+                        >
+                          <path
+                            d="M25.79 58.4149C25.7901 57.7357 25.9244 57.0633 26.1851 56.4361C26.4458 55.809 26.8278 55.2396 27.3092 54.7605C27.7907 54.2814 28.3619 53.9021 28.9903 53.6444C29.6187 53.3867 30.2918 53.2557 30.971 53.2589L39.561 53.2869C40.9305 53.2869 42.244 53.831 43.2124 54.7994C44.1809 55.7678 44.725 57.0813 44.725 58.4509V90.9309C45.692 90.6439 46.934 90.3379 48.293 90.0179C49.237 89.7962 50.0783 89.262 50.6805 88.5019C51.2826 87.7418 51.6102 86.8006 51.61 85.8309V45.5409C51.61 44.1712 52.154 42.8576 53.1224 41.889C54.0908 40.9204 55.4043 40.3762 56.774 40.3759H65.381C66.7506 40.3762 68.0641 40.9204 69.0325 41.889C70.0009 42.8576 70.545 44.1712 70.545 45.5409V82.9339C70.545 82.9339 72.7 82.0619 74.799 81.1759C75.5787 80.8462 76.2441 80.2941 76.7122 79.5886C77.1803 78.8832 77.4302 78.0555 77.431 77.2089V32.6309C77.431 31.2615 77.9749 29.9481 78.9431 28.9797C79.9113 28.0113 81.2245 27.4672 82.5939 27.4669H91.201C92.5706 27.4669 93.884 28.0109 94.8525 28.9794C95.8209 29.9478 96.365 31.2613 96.365 32.6309V69.3399C103.827 63.9319 111.389 57.4279 117.39 49.6069C118.261 48.4717 118.837 47.1386 119.067 45.7267C119.297 44.3148 119.174 42.8678 118.709 41.5149C115.931 33.5227 111.516 26.1983 105.745 20.0105C99.974 13.8228 92.9749 8.90785 85.1955 5.58032C77.4161 2.2528 69.0277 0.585938 60.5671 0.686416C52.1065 0.786893 43.7601 2.6525 36.062 6.16383C28.3638 9.67517 21.4834 14.7549 15.8611 21.078C10.2388 27.401 5.99842 34.8282 3.41131 42.8842C0.824207 50.9401 -0.0526487 59.4474 0.836851 67.8617C1.72635 76.276 4.36263 84.4119 8.57696 91.7489C9.31111 93.0145 10.3912 94.0444 11.6903 94.7175C12.9894 95.3906 14.4536 95.679 15.911 95.5489C17.539 95.4059 19.566 95.2029 21.976 94.9199C23.0251 94.8008 23.9937 94.2999 24.6972 93.5126C25.4008 92.7253 25.7901 91.7067 25.791 90.6509L25.79 58.4149Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M25.6021 110.51C34.6744 117.11 45.3959 121.072 56.5802 121.957C67.7646 122.841 78.9757 120.615 88.9731 115.523C98.9705 110.431 107.364 102.673 113.226 93.1068C119.087 83.5405 122.188 72.539 122.185 61.3197C122.185 59.9197 122.12 58.5347 122.027 57.1577C99.808 90.2957 58.7831 105.788 25.604 110.505"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <div
+                          class="_flexGrow-_md_0 _flexShrink-_md_1 _flexBasis-_md_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexGrow-1 _flexDirection-row _alignItems-center _gap-t-space-gap52 _minWidth-0px"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            USDC
+                          </span>
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            0xA0b8...eB48
+                          </span>
+                        </div>
+                        <svg
+                          fill="none"
+                          stroke-width="0"
+                          style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div
+                      class="is_TouchableArea  t_group_true"
+                      role="button"
+                      style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded8); border-top-right-radius: var(--t-radius-rounded8); border-bottom-right-radius: var(--t-radius-rounded8); border-bottom-left-radius: var(--t-radius-rounded8); background-color: rgba(0, 0, 0, 0); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); gap: var(--t-space-gap12); height: 40px;"
+                      tabindex="0"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569 _width-10037"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+                          viewBox="0 0 123 123"
+                        >
+                          <path
+                            d="M25.79 58.4149C25.7901 57.7357 25.9244 57.0633 26.1851 56.4361C26.4458 55.809 26.8278 55.2396 27.3092 54.7605C27.7907 54.2814 28.3619 53.9021 28.9903 53.6444C29.6187 53.3867 30.2918 53.2557 30.971 53.2589L39.561 53.2869C40.9305 53.2869 42.244 53.831 43.2124 54.7994C44.1809 55.7678 44.725 57.0813 44.725 58.4509V90.9309C45.692 90.6439 46.934 90.3379 48.293 90.0179C49.237 89.7962 50.0783 89.262 50.6805 88.5019C51.2826 87.7418 51.6102 86.8006 51.61 85.8309V45.5409C51.61 44.1712 52.154 42.8576 53.1224 41.889C54.0908 40.9204 55.4043 40.3762 56.774 40.3759H65.381C66.7506 40.3762 68.0641 40.9204 69.0325 41.889C70.0009 42.8576 70.545 44.1712 70.545 45.5409V82.9339C70.545 82.9339 72.7 82.0619 74.799 81.1759C75.5787 80.8462 76.2441 80.2941 76.7122 79.5886C77.1803 78.8832 77.4302 78.0555 77.431 77.2089V32.6309C77.431 31.2615 77.9749 29.9481 78.9431 28.9797C79.9113 28.0113 81.2245 27.4672 82.5939 27.4669H91.201C92.5706 27.4669 93.884 28.0109 94.8525 28.9794C95.8209 29.9478 96.365 31.2613 96.365 32.6309V69.3399C103.827 63.9319 111.389 57.4279 117.39 49.6069C118.261 48.4717 118.837 47.1386 119.067 45.7267C119.297 44.3148 119.174 42.8678 118.709 41.5149C115.931 33.5227 111.516 26.1983 105.745 20.0105C99.974 13.8228 92.9749 8.90785 85.1955 5.58032C77.4161 2.2528 69.0277 0.585938 60.5671 0.686416C52.1065 0.786893 43.7601 2.6525 36.062 6.16383C28.3638 9.67517 21.4834 14.7549 15.8611 21.078C10.2388 27.401 5.99842 34.8282 3.41131 42.8842C0.824207 50.9401 -0.0526487 59.4474 0.836851 67.8617C1.72635 76.276 4.36263 84.4119 8.57696 91.7489C9.31111 93.0145 10.3912 94.0444 11.6903 94.7175C12.9894 95.3906 14.4536 95.679 15.911 95.5489C17.539 95.4059 19.566 95.2029 21.976 94.9199C23.0251 94.8008 23.9937 94.2999 24.6972 93.5126C25.4008 92.7253 25.7901 91.7067 25.791 90.6509L25.79 58.4149Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M25.6021 110.51C34.6744 117.11 45.3959 121.072 56.5802 121.957C67.7646 122.841 78.9757 120.615 88.9731 115.523C98.9705 110.431 107.364 102.673 113.226 93.1068C119.087 83.5405 122.188 72.539 122.185 61.3197C122.185 59.9197 122.12 58.5347 122.027 57.1577C99.808 90.2957 58.7831 105.788 25.604 110.505"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <div
+                          class="_flexGrow-_md_0 _flexShrink-_md_1 _flexBasis-_md_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexGrow-1 _flexDirection-row _alignItems-center _gap-t-space-gap52 _minWidth-0px"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            WETH
+                          </span>
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            0xC02a...6Cc2
+                          </span>
+                        </div>
+                        <svg
+                          fill="none"
+                          stroke-width="0"
+                          style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </span>
+              <div
+                style="width: 100%;"
+              >
+                <span
+                  class="font_body _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-inline-flex _justifyContent-center _alignItems-center _position-relative _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _textAlign-left _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                  data-disable-theme="true"
+                >
+                  <span
+                    class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-0 _flexDirection-row _height-10037 _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent"
+                    data-disable-theme="true"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-gap56 _width-10037"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 123 123"
+                      >
+                        <path
+                          d="M25.79 58.4149C25.7901 57.7357 25.9244 57.0633 26.1851 56.4361C26.4458 55.809 26.8278 55.2396 27.3092 54.7605C27.7907 54.2814 28.3619 53.9021 28.9903 53.6444C29.6187 53.3867 30.2918 53.2557 30.971 53.2589L39.561 53.2869C40.9305 53.2869 42.244 53.831 43.2124 54.7994C44.1809 55.7678 44.725 57.0813 44.725 58.4509V90.9309C45.692 90.6439 46.934 90.3379 48.293 90.0179C49.237 89.7962 50.0783 89.262 50.6805 88.5019C51.2826 87.7418 51.6102 86.8006 51.61 85.8309V45.5409C51.61 44.1712 52.154 42.8576 53.1224 41.889C54.0908 40.9204 55.4043 40.3762 56.774 40.3759H65.381C66.7506 40.3762 68.0641 40.9204 69.0325 41.889C70.0009 42.8576 70.545 44.1712 70.545 45.5409V82.9339C70.545 82.9339 72.7 82.0619 74.799 81.1759C75.5787 80.8462 76.2441 80.2941 76.7122 79.5886C77.1803 78.8832 77.4302 78.0555 77.431 77.2089V32.6309C77.431 31.2615 77.9749 29.9481 78.9431 28.9797C79.9113 28.0113 81.2245 27.4672 82.5939 27.4669H91.201C92.5706 27.4669 93.884 28.0109 94.8525 28.9794C95.8209 29.9478 96.365 31.2613 96.365 32.6309V69.3399C103.827 63.9319 111.389 57.4279 117.39 49.6069C118.261 48.4717 118.837 47.1386 119.067 45.7267C119.297 44.3148 119.174 42.8678 118.709 41.5149C115.931 33.5227 111.516 26.1983 105.745 20.0105C99.974 13.8228 92.9749 8.90785 85.1955 5.58032C77.4161 2.2528 69.0277 0.585938 60.5671 0.686416C52.1065 0.786893 43.7601 2.6525 36.062 6.16383C28.3638 9.67517 21.4834 14.7549 15.8611 21.078C10.2388 27.401 5.99842 34.8282 3.41131 42.8842C0.824207 50.9401 -0.0526487 59.4474 0.836851 67.8617C1.72635 76.276 4.36263 84.4119 8.57696 91.7489C9.31111 93.0145 10.3912 94.0444 11.6903 94.7175C12.9894 95.3906 14.4536 95.679 15.911 95.5489C17.539 95.4059 19.566 95.2029 21.976 94.9199C23.0251 94.8008 23.9937 94.2999 24.6972 93.5126C25.4008 92.7253 25.7901 91.7067 25.791 90.6509L25.79 58.4149Z"
+                          fill="currentColor"
+                        />
+                        <path
+                          d="M25.6021 110.51C34.6744 117.11 45.3959 121.072 56.5802 121.957C67.7646 122.841 78.9757 120.615 88.9731 115.523C98.9705 110.431 107.364 102.673 113.226 93.1068C119.087 83.5405 122.188 72.539 122.185 61.3197C122.185 59.9197 122.12 58.5347 122.027 57.1577C99.808 90.2957 58.7831 105.788 25.604 110.505"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c0"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            >
+              <span
+                class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid-ignore="true"
+                >
+                  <span
+                    class="t_unmounted font_body  t_unmounted"
+                    data-disable-theme="true"
+                    style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; line-height: var(--f-lineHeight-medium); font-weight: var(--f-weight-book); display: flex; flex-direction: column; border-top-width: 0.5px; border-right-width: 0.5px; border-bottom-width: 0.5px; border-left-width: 0.5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); z-index: 970; min-width: 200px; overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; right: 0px; top: calc(100% + 10px); opacity: 0; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <div
+                      class="is_TouchableArea  t_group_true"
+                      role="button"
+                      style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded8); border-top-right-radius: var(--t-radius-rounded8); border-bottom-right-radius: var(--t-radius-rounded8); border-bottom-left-radius: var(--t-radius-rounded8); background-color: rgba(0, 0, 0, 0); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); gap: var(--t-space-gap12); height: 40px;"
+                      tabindex="0"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569 _width-10037"
+                      >
+                        <svg
+                          fill="currentColor"
+                          stroke-width="8"
+                          style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+                          viewBox="0 0 24 25"
+                        >
+                          <path
+                            d="M10 17.5H7C5.676 17.5 4.42202 16.982 3.46802 16.042C2.51802 15.078 2 13.824 2 12.5C2 9.743 4.243 7.5 7 7.5H8C8.553 7.5 9 7.948 9 8.5C9 9.052 8.553 9.5 8 9.5H7C5.346 9.5 4 10.846 4 12.5C4 13.295 4.31308 14.051 4.88208 14.628C5.44908 15.187 6.205 15.5 7 15.5H10C11.654 15.5 13 14.154 13 12.5C13 11.948 13.447 11.5 14 11.5C14.553 11.5 15 11.948 15 12.5C15 15.257 12.757 17.5 10 17.5Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M17 17.5H16C15.447 17.5 15 17.052 15 16.5C15 15.948 15.447 15.5 16 15.5H17C18.654 15.5 20 14.154 20 12.5C20 11.705 19.6869 10.949 19.1179 10.372C18.5509 9.81301 17.795 9.5 17 9.5H14C12.346 9.5 11 10.846 11 12.5C11 13.052 10.553 13.5 10 13.5C9.447 13.5 9 13.052 9 12.5C9 9.743 11.243 7.5 14 7.5H17C18.324 7.5 19.578 8.01801 20.532 8.95801C21.482 9.92201 22 11.176 22 12.5C22 15.257 19.757 17.5 17 17.5Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <div
+                          class="_flexGrow-_md_0 _flexShrink-_md_1 _flexBasis-_md_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexGrow-1 _flexDirection-row _alignItems-center _gap-t-space-gap52 _minWidth-0px"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            Copy link
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="is_TouchableArea  t_group_true"
+                      role="button"
+                      style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded8); border-top-right-radius: var(--t-radius-rounded8); border-bottom-right-radius: var(--t-radius-rounded8); border-bottom-left-radius: var(--t-radius-rounded8); background-color: rgba(0, 0, 0, 0); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); gap: var(--t-space-gap12); height: 40px;"
+                      tabindex="0"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569 _width-10037"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M13 4.99092C13 4.09592 14.094 3.66096 14.709 4.31196L20.637 10.582C21.121 11.094 21.121 11.894 20.637 12.406L14.709 18.676C14.094 19.326 13 18.891 13 17.997V14.4919C5.437 14.4919 4.93602 16.962 4.96802 19.529C4.97402 20.019 4.32501 20.1811 4.08301 19.7561C3.46701 18.6751 3 17.1999 3 15.4909C3 8.99592 10 8.49702 13 8.49702V4.99092Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                        <div
+                          class="_flexGrow-_md_0 _flexShrink-_md_1 _flexBasis-_md_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-1 _flexGrow-1 _flexDirection-row _alignItems-center _gap-t-space-gap52 _minWidth-0px"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+                            data-disable-theme="true"
+                          >
+                            Share to Twitter
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </div>
+              </span>
+              <div
+                style="width: 100%;"
+              >
+                <span
+                  class="font_body _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-inline-flex _justifyContent-center _alignItems-center _position-relative _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _textAlign-left _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                  data-disable-theme="true"
+                >
+                  <span
+                    class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-0 _flexDirection-row _height-10037 _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent"
+                    data-disable-theme="true"
+                  >
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-gap56 _width-10037"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M13 4.99092C13 4.09592 14.094 3.66096 14.709 4.31196L20.637 10.582C21.121 11.094 21.121 11.894 20.637 12.406L14.709 18.676C14.094 19.326 13 18.891 13 17.997V14.4919C5.437 14.4919 4.93602 16.962 4.96802 19.529C4.97402 20.019 4.32501 20.1811 4.08301 19.7561C3.46701 18.6751 3 17.1999 3 15.4909C3 8.99592 10 8.49702 13 8.49702V4.99092Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

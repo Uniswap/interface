@@ -2,7 +2,6 @@ import { type ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ContractInteraction, RotatableChevron } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { TransactionApprovingSection } from 'wallet/src/components/dappRequests/TransactionApprovingSection'
@@ -119,12 +118,7 @@ export function TransactionPreviewCard({
                     {isDetailsExpanded ? t('dapp.transaction.details.hide') : t('common.button.viewDetails')}
                   </Text>
                 </Flex>
-                <RotatableChevron
-                  color="$neutral2"
-                  direction={isDetailsExpanded ? 'up' : 'down'}
-                  height={iconSizes.icon12}
-                  width={iconSizes.icon12}
-                />
+                <RotatableChevron color="$neutral2" direction={isDetailsExpanded ? 'up' : 'down'} size="$icon.12" />
               </Flex>
             </TouchableArea>
 

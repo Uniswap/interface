@@ -1,11 +1,11 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
+import { PositionField } from '~/types/position'
 
 export function getCurrencyForProtocol(
   currency: Currency,

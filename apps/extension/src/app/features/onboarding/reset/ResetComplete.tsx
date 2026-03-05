@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { useFinishExtensionOnboarding } from 'src/app/features/onboarding/useFinishExtensionOnboarding'
+import { OpenSidebarButton } from 'src/app/components/buttons/OpenSidebarButton'
+import { useFinishExtensionOnboarding } from 'src/app/features/onboarding/hooks/useFinishExtensionOnboarding'
+import { useOpenSidebar } from 'src/app/features/onboarding/hooks/useOpenSidebar'
 import { terminateStoreSynchronization } from 'src/store/storeSynchronization'
 import { Flex, Text } from 'ui/src'
 import { Check, GraduationCap } from 'ui/src/components/icons'
@@ -11,6 +13,8 @@ export function ResetComplete(): JSX.Element {
 
   // Activates onboarding accounts on component mount
   useFinishExtensionOnboarding({ callback: terminateStoreSynchronization })
+
+  const { openedSideBar, handleOpenSidebar, handleOpenWebApp } = useOpenSidebar()
 
   return (
     <>
@@ -24,6 +28,11 @@ export function ResetComplete(): JSX.Element {
             {t('onboarding.resetPassword.complete.subtitle')}
           </Text>
         </Flex>
+        <OpenSidebarButton
+          openedSideBar={openedSideBar}
+          handleOpenSidebar={handleOpenSidebar}
+          handleOpenWebApp={handleOpenWebApp}
+        />
         <Link
           style={{ textDecoration: 'none' }}
           target="_blank"

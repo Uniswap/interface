@@ -1,9 +1,34 @@
-import { createHelpArticleUrl, getCloudflareApiBaseUrl, helpUrl, TrafficFlows } from '@universe/api'
+import {
+  createHelpArticleUrl,
+  getCloudflareApiBaseUrl,
+  getMigratedForApiUrl,
+  helpUrl,
+  TrafficFlows,
+} from '@universe/api'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { config } from 'uniswap/src/config'
 import { isDevEnv, isPlaywrightEnv } from 'utilities/src/environment/env'
+import { isWebApp } from 'utilities/src/platform'
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
 const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
+
+/**
+ * Returns the FOR API URL based on the ForUrlMigration feature flag.
+ * When the flag is enabled, uses the new migrated URLs (staging/prod).
+ * When disabled, uses the legacy URL structure.
+ */
+export function getForApiUrl(): string {
+  if (config.forApiUrlOverride) {
+    return config.forApiUrlOverride
+  }
+
+  if (getFeatureFlag(FeatureFlags.ForUrlMigration)) {
+    return getMigratedForApiUrl()
+  }
+
+  return getCloudflareApiBaseUrl({ flow: TrafficFlows.FOR, postfix: 'v2/FOR.v1.FORService' })
+}
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
@@ -57,6 +82,7 @@ export const uniswapUrls = {
     positionsLearnMore: createHelpArticleUrl('8829880740109'),
     priceImpact: createHelpArticleUrl('8671539602317-What-is-Price-Impact'),
     providingLiquidityInfo: createHelpArticleUrl('20982919867021', 'sections'),
+    providingLiquidityVersions: createHelpArticleUrl('30998269400333'),
     recoveryPhraseHowToImport: createHelpArticleUrl(
       '11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet',
     ),
@@ -71,14 +97,30 @@ export const uniswapUrls = {
     smartWalletDelegation: createHelpArticleUrl('36391987158797'),
     swapProtection: createHelpArticleUrl('18814993155853'),
     swapSlippage: createHelpArticleUrl('8643879653261-What-is-Price-Slippage-'),
+    toucanBidHelp: createHelpArticleUrl(
+      '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#bidding-in-an-auction',
+    ),
+    toucanBidDetailsHelp: createHelpArticleUrl(
+      '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#bidding-in-an-auction',
+    ),
+    toucanIntro: createHelpArticleUrl('43107626487437'),
+    toucanFailedToLaunchHelp: createHelpArticleUrl(
+      '43107626487437-What-are-Continuous-Clearing-Auctions#what-is-a-graduation-threshold',
+    ),
+    toucanVerifiedAuctionsHelp: createHelpArticleUrl('43107250032781'),
     tokenWarning: createHelpArticleUrl('8723118437133-What-are-token-warnings-'),
+    toucanWithdrawHelp: createHelpArticleUrl(
+      '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#claiming-your-tokens-and-unspent-budget',
+    ),
     transactionFailure: createHelpArticleUrl('8643975058829-Why-did-my-transaction-fail-'),
     uniswapXInfo: createHelpArticleUrl('17544708791821'),
     uniswapXFailure: createHelpArticleUrl('17515489874189-Why-can-my-swap-not-be-filled-'),
     unsupportedTokenPolicy: createHelpArticleUrl('18783694078989-Unsupported-Token-Policy'),
     addingV4Hooks: createHelpArticleUrl('32402040565133'),
     routingSettings: createHelpArticleUrl('27362707722637'),
+    uniswapVersionsInfo: createHelpArticleUrl('7425482965517-Uniswap-v2-v3-and-v4'),
     v4HooksInfo: createHelpArticleUrl('30998263256717'),
+    subgraphDowntime: createHelpArticleUrl('23952001935373-Subgraph-downtime'),
     walletSecurityMeasures: createHelpArticleUrl('28278904584077-Uniswap-Wallet-Security-Measures'),
     whatIsPrivateKey: createHelpArticleUrl('11306371824653-What-is-a-private-key'),
     wethExplainer: createHelpArticleUrl('16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH'),
@@ -113,23 +155,31 @@ export const uniswapUrls = {
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',
   apiBaseUrl: config.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
-  apiBaseUrlV2: config.apiBaseUrlV2Override || `${getCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: config.graphqlUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  apiBaseUrlV2: config.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ postfix: 'v2' }),
+  dataApiBaseUrlV2:
+    config.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi, postfix: 'v2' }),
+  graphQLUrl:
+    config.graphqlUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.GraphQL, postfix: 'v1/graphql' }),
 
   // Proxies
   amplitudeProxyUrl:
-    config.amplitudeProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
-  statsigProxyUrl: config.statsigProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
+    config.amplitudeProxyUrlOverride ||
+    getCloudflareApiBaseUrl({ flow: TrafficFlows.Metrics, postfix: 'v1/amplitude-proxy' }),
+  // On web, proxy through same-origin "/config" — the BFF (Hono) rewrites to the real Cloudflare URL.
+  statsigProxyUrl:
+    config.statsigProxyUrlOverride ||
+    (isWebApp ? '/config' : getCloudflareApiBaseUrl({ flow: TrafficFlows.Gating, postfix: 'v1/statsig-proxy' })),
 
   // Feature service URL's
-  unitagsApiUrl: config.unitagsApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
+  unitagsApiUrl:
+    config.unitagsApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.Unitags, postfix: 'v2/unitags' }),
   scantasticApiUrl:
-    config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
-  tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
-  liquidityServiceUrl:
-    config.liquidityServiceUrlOverride ||
-    'https://liquidity.backend-prod.api.uniswap.org/uniswap.liquidity.v1.LiquidityService',
+    config.scantasticApiUrlOverride ||
+    getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic, postfix: 'v2/scantastic' }),
+  forApiUrl:
+    config.forApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.FOR, postfix: 'v2/FOR.v1.FORService' }),
+  tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.TradingApi }),
+  liquidityServiceUrl: config.liquidityServiceUrlOverride || 'https://liquidity.backend-prod.api.uniswap.org',
 
   // Merkl Docs for LP Incentives
   merklDocsUrl: 'https://docs.merkl.xyz/earn-with-merkl/faq-earn#how-are-aprs-calculated',
@@ -141,6 +191,7 @@ export const uniswapUrls = {
   evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
   embeddedWalletUrl: `https://${EMBEDDED_WALLET_HOSTNAME}`,
   passkeysManagementUrl: `https://${EMBEDDED_WALLET_HOSTNAME}/manage/passkey`,
+  privyEmbeddedWalletUrl: 'https://privy-embedded-wallet.backend-dev.api.uniswap.org',
 
   // API Paths
   trmPath: '/v1/screen',
@@ -153,7 +204,6 @@ export const uniswapUrls = {
     decreaseLp: `${tradingApiVersionPrefix}/lp/decrease`,
     increaseLp: `${tradingApiVersionPrefix}/lp/increase`,
     lpApproval: `${tradingApiVersionPrefix}/lp/approve`,
-    migrate: `${tradingApiVersionPrefix}/lp/migrate`,
     poolInfo: `${tradingApiVersionPrefix}/lp/pool_info`,
     order: `${tradingApiVersionPrefix}/order`,
     orders: `${tradingApiVersionPrefix}/orders`,
@@ -194,5 +244,5 @@ export const uniswapUrls = {
   walletFeedbackForm:
     'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
 
-  dataApiServiceUrl: `${getCloudflareApiBaseUrl()}/v2/data.v1.DataApiService`,
+  dataApiServiceUrl: getCloudflareApiBaseUrl({ postfix: 'v2/data.v1.DataApiService' }),
 }

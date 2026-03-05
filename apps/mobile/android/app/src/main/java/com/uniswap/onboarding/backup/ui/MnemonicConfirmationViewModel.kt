@@ -28,9 +28,9 @@ class MnemonicConfirmationViewModel(
   private val selectedWordPlaceholderFlow = MutableStateFlow("")
 
   val selectedWords: StateFlow<List<MnemonicWordUiState>> =
-    selectedWordsIndexes.combine(selectedWordPlaceholderFlow) { _, placeholder ->
+    combine(selectedWordsIndexes, selectedWordPlaceholderFlow, focusedIndex) { _, placeholder, focusedIndex ->
       List(sourceWords.size) { index ->
-        getMnemonicWordUiState(index, placeholder)
+        getMnemonicWordUiState(index, placeholder, focusedIndex)
       }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -77,6 +77,7 @@ class MnemonicConfirmationViewModel(
   }
 
   fun handleWordBankClick(wordBankIndex: Int) {
+    
     selectedWordsIndexes.update { indexes ->
       val updatedIndexes = indexes.toMutableList()
       updatedIndexes[focusedIndex.value] = wordBankIndex
@@ -112,7 +113,8 @@ class MnemonicConfirmationViewModel(
 
   private fun getMnemonicWordUiState(
     displayIndex: Int,
-    placeholderText: String
+    placeholderText: String,
+    focusedIndex: Int,
   ): MnemonicWordUiState {
     val selectedWord = getSelectedWord(displayIndex)
     var status = MnemonicInputStatus.CORRECT_INPUT
@@ -127,6 +129,7 @@ class MnemonicConfirmationViewModel(
       num = displayIndex + 1,
       text = selectedWord.ifEmpty { placeholderText },
       status = status,
+      isActive = displayIndex == focusedIndex,
     )
   }
 }

@@ -2,8 +2,8 @@ import userEvent from '@testing-library/user-event'
 import {
   LimitCustomMarketPriceButton,
   LimitPresetPriceButton,
-} from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
-import { render, screen } from 'test-utils/render'
+} from '~/components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
+import { render, screen } from '~/test-utils/render'
 
 describe('LimitPresetPriceButton', () => {
   it.each([

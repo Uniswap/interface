@@ -1,18 +1,12 @@
 import { act, render, renderHook } from '@testing-library/react'
-import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { useShakeAnimation } from 'ui/src/animations/hooks/useShakeAnimation'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-
-// Mock the errorShakeAnimation function
-vi.mock('ui/src/animations/errorShakeAnimation', () => ({
-  errorShakeAnimation: vi.fn(),
-}))
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Test component that uses useShakeAnimation
 const TestShakeComponent = () => {
-  const { triggerShakeAnimation } = useShakeAnimation()
+  const { shakeStyle, triggerShakeAnimation } = useShakeAnimation()
   return (
-    <div data-testid="shake-container">
+    <div data-testid="shake-container" style={shakeStyle as React.CSSProperties}>
       <button data-testid="shake-button" onClick={triggerShakeAnimation}>
         Shake Me
       </button>
@@ -23,6 +17,16 @@ const TestShakeComponent = () => {
 describe('useShakeAnimation', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    // Clean up injected styles
+    const styleElement = document.getElementById('uniswap-shake-animation')
+    if (styleElement) {
+      styleElement.remove()
+    }
   })
 
   it('should return shakeStyle and triggerShakeAnimation', () => {
@@ -34,37 +38,47 @@ describe('useShakeAnimation', () => {
     expect(typeof result.current.triggerShakeAnimation).toBe('function')
   })
 
-  it('should initialize and trigger shake animation', () => {
+  it('should inject CSS keyframes and apply shake animation on trigger', () => {
     // Arrange
     const result = render(<TestShakeComponent />)
     const container = result.getByTestId('shake-container')
     const button = result.getByTestId('shake-button')
 
-    // Assert initial state
-    expect(container.style).toBeDefined()
+    // Assert initial state - no animation
+    expect(container.style.animation).toBeFalsy()
 
     // Act - trigger the shake animation
     act(() => {
       button.click()
     })
 
-    // Assert - verify errorShakeAnimation was called
-    expect(errorShakeAnimation).toHaveBeenCalled()
+    // Assert - verify CSS keyframes were injected (web implementation)
+    const styleElement = document.getElementById('uniswap-shake-animation')
+    expect(styleElement).toBeTruthy()
+    expect(styleElement?.textContent).toContain('@keyframes')
+    expect(styleElement?.textContent).toContain('translateX')
+
+    // Assert - animation style is applied
+    expect(container.style.animation).toContain('uniswap-shake-animation')
+
+    // Act - advance timers to complete animation
+    act(() => {
+      vi.advanceTimersByTime(300)
+    })
+
+    // Assert - animation is cleared after completion
+    expect(container.style.animation).toBeFalsy()
   })
 
-  it('should maintain consistent references for returned values', () => {
+  it('should maintain consistent triggerShakeAnimation reference', () => {
     // Arrange
     const { result, rerender } = renderHook(() => useShakeAnimation())
-    const initialShakeStyle = result.current.shakeStyle
     const initialTriggerShakeAnimation = result.current.triggerShakeAnimation
 
     // Act
     rerender()
 
-    // Assert
-    // shakeStyle might be recreated but should have the same structure
-    expect(result.current.shakeStyle).toStrictEqual(initialShakeStyle)
-    // triggerShakeAnimation should maintain reference due to useEvent
+    // Assert - triggerShakeAnimation should maintain reference due to useCallback
     expect(result.current.triggerShakeAnimation).toBe(initialTriggerShakeAnimation)
   })
 })

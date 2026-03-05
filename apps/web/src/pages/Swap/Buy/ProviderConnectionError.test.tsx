@@ -1,6 +1,6 @@
-import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
-import { mockServiceProvider } from 'pages/Swap/Buy/test/constants'
-import { fireEvent, render, screen } from 'test-utils/render'
+import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
+import { mockServiceProvider } from '~/pages/Swap/Buy/test/constants'
+import { fireEvent, render, screen } from '~/test-utils/render'
 
 describe('ProviderConnectionError', () => {
   it('should render the component and call callbacks', () => {

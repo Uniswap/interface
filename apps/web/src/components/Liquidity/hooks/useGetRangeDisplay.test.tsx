@@ -1,13 +1,15 @@
 import { renderHook } from '@testing-library/react'
 import { Currency, Price } from '@uniswap/sdk-core'
-import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
-import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
-import { Bound } from 'state/mint/v3/actions'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { useGetRangeDisplay } from '~/components/Liquidity/hooks/useGetRangeDisplay'
+import useIsTickAtLimit, { Bound } from '~/hooks/useIsTickAtLimit'
 
-vi.mock('hooks/useIsTickAtLimit', () => ({
-  default: vi.fn(),
-}))
+vi.mock('~/hooks/useIsTickAtLimit', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    default: vi.fn(),
+  }
+})
 const useIsTickAtLimitMock = vi.mocked(useIsTickAtLimit)
 
 function createCurrency(symbol: string): Currency {

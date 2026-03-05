@@ -1,6 +1,6 @@
-import { expect, getTest } from 'playwright/fixtures'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { expect, getTest } from '~/playwright/fixtures'
 
 const test = getTest()
 

@@ -19,7 +19,7 @@ export const jupiterRoutingProvider: RoutingProvider = {
 
     const { routePlan } = trade.quote.quote
 
-    if (routePlan.length === 0) {
+    if (!routePlan?.length) {
       return []
     }
 
@@ -113,7 +113,7 @@ export const jupiterRoutingProvider: RoutingProvider = {
         type: 'genericHop' as const,
         inputCurrencyId: buildCurrencyId(UniverseChainId.Solana, route.swapInfo.inputMint),
         outputCurrencyId: buildCurrencyId(UniverseChainId.Solana, route.swapInfo.outputMint),
-        name: route.swapInfo.label,
+        name: route.swapInfo.label ?? '',
       }))
 
       return {

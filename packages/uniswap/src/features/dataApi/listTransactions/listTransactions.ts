@@ -1,5 +1,6 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { FiatOnRampParams, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
@@ -28,6 +29,7 @@ type ListTransactionsQueryArgs = {
   nftVisibility?: NFTKeyToVisibility
   chainIds?: UniverseChainId[]
   fiatOnRampParams?: PartialMessage<FiatOnRampParams>
+  filterTransactionTypes?: TransactionTypeFilter[]
 }
 
 /**
@@ -43,6 +45,7 @@ export function useListTransactions({
   chainIds,
   skip,
   fiatOnRampParams,
+  filterTransactionTypes,
 }: ListTransactionsQueryArgs & { skip?: boolean }): TransactionListDataResult {
   const { chains: defaultChainIds } = useEnabledChains()
   // Use provided chainIds or fallback to default chains
@@ -67,6 +70,7 @@ export function useListTransactions({
       chainIds: finalChainIds,
       pageSize: finalPageSize,
       fiatOnRampParams,
+      filterTransactionTypes,
     },
     enabled: !!(evmAddress || svmAddress) && !skip,
   })
@@ -156,6 +160,8 @@ function useFilteredTransactionsByVisibility(
 
 function getUniqueTransactionId(transaction: ListTransactionsResponse['transactions'][0]): string | undefined {
   switch (transaction.transaction.case) {
+    case 'plan':
+      return transaction.transaction.value.planId
     case 'onChain':
       return transaction.transaction.value.transactionHash
     case 'uniswapX':

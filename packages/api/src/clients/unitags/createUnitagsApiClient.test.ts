@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
+import 'utilities/src/logger/mocks'
 
 vi.mock('@universe/config', () => ({
   getConfig: vi.fn(() => ({
@@ -40,6 +41,7 @@ type FetcherConfig = {
     headers?: HeadersInit
     params?: unknown
   }>
+  transformResponse?: (response: unknown) => unknown
 }
 
 const mockFetchClient = {
@@ -265,6 +267,111 @@ describe('UnitagsApiClient', () => {
           'x-uni-sig': 'mock-signature',
         },
       })
+    })
+  })
+
+  describe('transformResponse functions', () => {
+    let fetcherConfigs: FetcherConfig[]
+
+    beforeEach(async () => {
+      vi.resetModules()
+      mockCreateFetcher.mockClear()
+      const { createUnitagsApiClient } = await import('./createUnitagsApiClient')
+
+      createUnitagsApiClient({ fetchClient: mockFetchClient })
+      fetcherConfigs = mockCreateFetcher.mock.calls.map((call) => call[0] as FetcherConfig)
+    })
+
+    it('should sanitize avatar URL in fetchUsername response', () => {
+      const config = fetcherConfigs.find((c) => c.url === '/username' && c.method === 'get')
+      expect(config?.transformResponse).toBeDefined()
+
+      const response = {
+        available: true,
+        requiresEnsMatch: false,
+        metadata: { avatar: 'https://example.com/avatar.png', description: 'test' },
+      }
+      const result = config!.transformResponse!(response) as typeof response
+      expect(result.metadata.avatar).toBe('https://example.com/avatar.png')
+
+      const maliciousResponse = {
+        available: true,
+        requiresEnsMatch: false,
+        // eslint-disable-next-line no-script-url
+        metadata: { avatar: 'javascript:alert(1)', description: 'test' },
+      }
+      const sanitizedResult = config!.transformResponse!(maliciousResponse) as typeof response
+      expect(sanitizedResult.metadata.avatar).toBeUndefined()
+    })
+
+    it('should sanitize avatar URL in fetchAddress response', () => {
+      const config = fetcherConfigs.find((c) => c.url === '/address')
+      expect(config?.transformResponse).toBeDefined()
+
+      const response = {
+        username: 'test',
+        metadata: { avatar: 'https://example.com/avatar.png' },
+      }
+      const result = config!.transformResponse!(response) as typeof response
+      expect(result.metadata.avatar).toBe('https://example.com/avatar.png')
+
+      const maliciousResponse = {
+        username: 'test',
+        metadata: { avatar: 'ipfs://QmHash123' },
+      }
+      const sanitizedResult = config!.transformResponse!(maliciousResponse) as typeof response
+      expect(sanitizedResult.metadata.avatar).toBeUndefined()
+    })
+
+    it('should sanitize avatar URLs in fetchUnitagsByAddresses response', () => {
+      const config = fetcherConfigs.find((c) => c.url === '/addresses')
+      expect(config?.transformResponse).toBeDefined()
+
+      const response = {
+        usernames: {
+          '0x123': { username: 'user1', metadata: { avatar: 'https://example.com/1.png' } },
+          '0x456': { username: 'user2', metadata: { avatar: 'data:image/png;base64,abc' } },
+        },
+      }
+      const result = config!.transformResponse!(response) as typeof response
+      expect(result.usernames['0x123'].metadata.avatar).toBe('https://example.com/1.png')
+      expect(result.usernames['0x456'].metadata.avatar).toBeUndefined()
+    })
+
+    it('should sanitize avatar URL in updateUnitagMetadata response', () => {
+      const config = fetcherConfigs.find((c) => c.url === '/username/:username/metadata')
+      expect(config?.transformResponse).toBeDefined()
+
+      const response = {
+        success: true,
+        metadata: { avatar: 'https://example.com/avatar.png' },
+      }
+      const result = config!.transformResponse!(response) as typeof response
+      expect(result.metadata.avatar).toBe('https://example.com/avatar.png')
+
+      const maliciousResponse = {
+        success: true,
+        metadata: { avatar: 'file:///etc/passwd' },
+      }
+      const sanitizedResult = config!.transformResponse!(maliciousResponse) as typeof response
+      expect(sanitizedResult.metadata.avatar).toBeUndefined()
+    })
+
+    it('should not have transformResponse for endpoints without avatar data', () => {
+      const claimEligibility = fetcherConfigs.find((c) => c.url === '/claim/eligibility')
+      expect(claimEligibility?.transformResponse).toBeUndefined()
+
+      const claimUnitag = fetcherConfigs.find((c) => c.url === '/username' && c.method === 'post')
+      expect(claimUnitag?.transformResponse).toBeUndefined()
+
+      const changeUnitag = fetcherConfigs.find((c) => c.url === '/username/change')
+      expect(changeUnitag?.transformResponse).toBeUndefined()
+
+      const deleteUnitag = fetcherConfigs.find((c) => c.url === '/username' && c.method === 'delete')
+      expect(deleteUnitag?.transformResponse).toBeUndefined()
+
+      const avatarUploadUrl = fetcherConfigs.find((c) => c.url === '/username/avatar-upload-url')
+      expect(avatarUploadUrl?.transformResponse).toBeUndefined()
     })
   })
 

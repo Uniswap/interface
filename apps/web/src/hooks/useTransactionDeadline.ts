@@ -1,22 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
-import { useAccount } from 'hooks/useAccount'
-import { useInterfaceMulticall } from 'hooks/useContract'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import { useCallback, useMemo } from 'react'
-import { useAppSelector } from 'state/hooks'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { useCallback } from 'react'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { useInterfaceMulticall } from '~/hooks/useContract'
+import { useAppSelector } from '~/state/hooks'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
-export default function useTransactionDeadline(): BigNumber | undefined {
-  const { chainId } = useAccount()
-  const ttl = useAppSelector((state) => state.user.userDeadline)
-  const blockTimestamp = useCurrentBlockTimestamp()
-  return useMemo(
-    () => timestampToDeadline({ chainId, blockTimestamp: BigNumber.from(blockTimestamp), ttl }),
-    [blockTimestamp, chainId, ttl],
-  )
-}
+// 5 minutes for L2 chains
+const L2_DEADLINE_FROM_NOW = 60 * 5
 
 /**
  * Returns an asynchronous function which will get the block timestamp and combine it with user settings for a deadline.

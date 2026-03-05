@@ -79,8 +79,5 @@ export const selectShouldShowPostSwapNudge = (state: WalletState, walletAddress:
 export const selectHasSeenCreatedSmartWalletModal = (state: WalletState): boolean =>
   state.behaviorHistory.hasSeenSmartWalletCreatedWalletModal ?? false
 
-export const selectHasDismissedMonadAnnouncement = (state: WalletState): boolean =>
-  state.behaviorHistory.hasDismissedMonadAnnouncement ?? false
-
 export const selectHasDismissedNoAppFeesAnnouncement = (state: WalletState): boolean =>
   state.behaviorHistory.hasDismissedNoAppFeesAnnouncement ?? false

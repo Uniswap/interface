@@ -1,22 +1,21 @@
 /**
- * Experiment parameter names
+ * Experiment parameter names. Ordered alphabetically.
  *
  * These must match parameter names on Statsig within an experiment
  */
 export enum Experiments {
+  EthAsErc20UniswapX = 'eth_as_erc20_uniswapx_experiment',
+  ExploreBackendSorting = 'explore_backend_sorting',
+  NativeTokenPercentageBuffer = 'lp_native_buffer',
   PriceUxUpdate = 'price_ux_update',
   PrivateRpc = 'private_rpc',
-  NativeTokenPercentageBuffer = 'lp_native_buffer',
   SwapConfirmation = 'swap-confirmation',
   UnichainFlashblocksModal = 'unichain_flashblocks_modal',
-  WebFORNudges = 'web_for_nudge',
-  ForFilters = 'for_filters',
-  PortfolioDisconnectedDemoView = 'portfolio_disconnected_demo_view',
 }
 
 export enum Layers {
+  ExplorePage = 'explore-page',
   SwapPage = 'swap-page',
-  PortfolioPage = 'portfolio-page',
 }
 
 // experiment groups
@@ -32,10 +31,6 @@ export enum ArbitrumXV2SamplingProperties {
   RoutingType = 'routingType',
 }
 
-export enum PriceUxUpdateProperties {
-  UpdatedPriceUX = 'updatedPriceUX',
-}
-
 export enum PrivateRpcProperties {
   FlashbotsEnabled = 'flashbots_enabled',
   RefundPercent = 'refund_percent',
@@ -49,40 +44,47 @@ export enum SwapConfirmationProperties {
   WaitTimes = 'wait_times',
 }
 
-export enum UnichainFlashblocksProperties {
+export enum ExploreBackendSortingProperties {
+  BackendSortingEnabled = 'backendSortingEnabled',
+}
+
+// Swap Layer experiment properties
+
+export enum SwapLayerProperties {
+  UpdatedPriceUX = 'updatedPriceUX',
   FlashblocksModalEnabled = 'flashblocksModalEnabled',
+  EthAsErc20UniswapXEnabled = 'ethAsErc20UniswapXEnabled',
+  MinEthErc20USDValueThresholdByChain = 'minEthErc20USDValueThresholdByChain',
 }
 
-export enum ForFiltersProperties {
-  ForFiltersEnabled = 'forFiltersEnabled',
+export enum PriceUxUpdateProperties {
+  UpdatedPriceUX = SwapLayerProperties.UpdatedPriceUX,
 }
 
-export enum WebFORNudgesProperties {
-  NudgeEnabled = 'nudgeEnabled',
+export enum UnichainFlashblocksProperties {
+  FlashblocksModalEnabled = SwapLayerProperties.FlashblocksModalEnabled,
 }
 
-export enum PortfolioDisconnectedDemoViewProperties {
-  DemoViewEnabled = 'demoViewEnabled',
+export enum EthAsErc20UniswapXProperties {
+  EthAsErc20UniswapXEnabled = SwapLayerProperties.EthAsErc20UniswapXEnabled,
+  MinEthErc20USDValueThresholdByChain = SwapLayerProperties.MinEthErc20USDValueThresholdByChain,
 }
 
+// Ordered alphabetically.
 export type ExperimentProperties = {
+  [Experiments.EthAsErc20UniswapX]: EthAsErc20UniswapXProperties
+  [Experiments.ExploreBackendSorting]: ExploreBackendSortingProperties
+  [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
   [Experiments.PriceUxUpdate]: PriceUxUpdateProperties
   [Experiments.PrivateRpc]: PrivateRpcProperties
-  [Experiments.NativeTokenPercentageBuffer]: NativeTokenPercentageBufferProperties
   [Experiments.SwapConfirmation]: SwapConfirmationProperties
   [Experiments.UnichainFlashblocksModal]: UnichainFlashblocksProperties
-  [Experiments.ForFilters]: ForFiltersProperties
-  [Experiments.WebFORNudges]: WebFORNudgesProperties
-  [Experiments.PortfolioDisconnectedDemoView]: PortfolioDisconnectedDemoViewProperties
 }
 
 // will be a spread of all experiment properties in that layer
 export const LayerProperties: Record<Layers, string[]> = {
-  [Layers.SwapPage]: Object.values({
-    ...PriceUxUpdateProperties,
-    ...UnichainFlashblocksProperties,
+  [Layers.ExplorePage]: Object.values({
+    ...ExploreBackendSortingProperties,
   }),
-  [Layers.PortfolioPage]: Object.values({
-    ...PortfolioDisconnectedDemoViewProperties,
-  }),
+  [Layers.SwapPage]: Object.values(SwapLayerProperties),
 }

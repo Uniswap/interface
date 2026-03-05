@@ -1,12 +1,6 @@
 import { WalletName as SolanaWalletName, WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
 import { Wallet as SolanaWallet, useWallet as useSolanaWallet } from '@solana/wallet-adapter-react'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
-import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
-import { createAccountsStoreGetters } from 'features/accounts/store/getters'
-import type { ExternalConnector, ExternalSession, ExternalWallet, WebAccountsData } from 'features/accounts/store/types'
-import { normalizeWalletName } from 'features/wallet/connection/connectors/multiplatform'
-import { useConnectWalletMutation } from 'features/wallet/connection/hooks/useConnectWalletMutation'
 import { useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import type { Account } from 'uniswap/src/features/accounts/store/types/Account'
@@ -14,6 +8,8 @@ import { AccessPattern, Connector, ConnectorStatus } from 'uniswap/src/features/
 import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Session'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { createAccountsStoreContextProvider } from 'uniswap/src/features/accounts/store/utils/createAccountsStoreContextProvider'
+import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -21,6 +17,7 @@ import type { PlatformSpecificAddress } from 'uniswap/src/features/platforms/typ
 import { isChainIdOnPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import {
   UseAccountReturnType,
+  useCapabilities,
   // biome-ignore lint/style/noRestrictedImports: direct wagmi hooks needed for web wallet integration
   useAccount as useWagmiAccount,
   // biome-ignore lint/style/noRestrictedImports: direct wagmi hooks needed for web wallet integration
@@ -28,6 +25,19 @@ import {
   useConnectors as useWagmiConnectors,
   Connector as WagmiConnector,
 } from 'wagmi'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/components/Web3Provider/constants'
+import { walletTypeToAmplitudeWalletType } from '~/components/Web3Provider/walletConnect'
+import { buildCAIP25Session } from '~/features/accounts/store/buildCAIP25Session'
+import { createAccountsStoreGetters } from '~/features/accounts/store/getters'
+import type {
+  ExternalConnector,
+  ExternalSession,
+  ExternalWallet,
+  WebAccountsData,
+} from '~/features/accounts/store/types'
+import { normalizeWalletName } from '~/features/wallet/connection/connectors/multiplatform'
+import { useConnectWalletMutation } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
+import { useOneClickSwapSetting } from '~/pages/Swap/settings/OneClickSwap'
 
 /**
  * Web package implementation of the unified accounts store architecture.
@@ -152,8 +162,9 @@ function buildSession<P extends Platform>(params: {
   walletId: string
   platform: P
   currentChainId: number
+  caip25Session?: CAIP25Session
 }): ExternalSession<P> {
-  const { walletId, platform, currentChainId } = params
+  const { walletId, platform, currentChainId, caip25Session } = params
 
   return {
     walletId,
@@ -166,6 +177,7 @@ function buildSession<P extends Platform>(params: {
           ? { supportedByApp: true, currentChainId }
           : { supportedByApp: false, unsupportedChain: currentChainId },
     },
+    caip25Info: caip25Session,
   }
 }
 
@@ -182,10 +194,15 @@ function buildAccount<P extends Platform>(info: PlatformWalletInfo<P>, walletId:
 }
 
 /** Creates an ExternalConnector from platform wallet info with appropriate access pattern. */
-function buildConnector<P extends Platform>(
-  info: PlatformWalletInfo<P>,
-  walletId: string,
-): Connector<P, ExternalSession<P>> {
+function buildConnector<P extends Platform>({
+  info,
+  walletId,
+  caip25Session,
+}: {
+  info: PlatformWalletInfo<P>
+  walletId: string
+  caip25Session?: CAIP25Session
+}): Connector<P, ExternalSession<P>> {
   const access = info.injected ? AccessPattern.Injected : AccessPattern.SDK
   const status = info.connectorStatus
   const id = info.connectorId
@@ -195,7 +212,12 @@ function buildConnector<P extends Platform>(
   }
 
   if (info.accountInfo) {
-    const session = buildSession({ walletId, platform: info.platform, currentChainId: info.accountInfo.chainId })
+    const session = buildSession({
+      walletId,
+      platform: info.platform,
+      currentChainId: info.accountInfo.chainId,
+      caip25Session,
+    })
 
     return { id, access, status, session }
   }
@@ -208,22 +230,36 @@ function buildConnector<P extends Platform>(
 }
 
 /** Creates an EVM-specific connector with external library ID. */
-function buildEVMConnector(info: PlatformWalletInfo<Platform.EVM>, walletId: string): ExternalConnector<Platform.EVM> {
-  return { ...buildConnector(info, walletId), platform: info.platform, externalLibraryId: info.libraryId }
+function buildEVMConnector({
+  info,
+  walletId,
+  caip25Session,
+}: {
+  info: PlatformWalletInfo<Platform.EVM>
+  walletId: string
+  caip25Session: CAIP25Session
+}): ExternalConnector<Platform.EVM> {
+  return {
+    ...buildConnector({ info, walletId, caip25Session }),
+    platform: info.platform,
+    externalLibraryId: info.libraryId,
+  }
 }
 
 /** Creates an SVM-specific connector with external library ID. */
 function buildSVMConnector(info: PlatformWalletInfo<Platform.SVM>, walletId: string): ExternalConnector<Platform.SVM> {
-  return { ...buildConnector(info, walletId), platform: info.platform, externalLibraryId: info.libraryId }
+  return { ...buildConnector({ info, walletId }), platform: info.platform, externalLibraryId: info.libraryId }
 }
 
 /** Builds complete store components (wallet, connectors, accounts) from cross-platform wallet info. */
 function buildStoreComponents({
   evm,
   svm,
+  caip25Session,
 }: {
   evm?: PlatformWalletInfo<Platform.EVM>
   svm?: PlatformWalletInfo<Platform.SVM>
+  caip25Session: CAIP25Session
 }): {
   wallet: ExternalWallet
   evmConnector?: ExternalConnector<Platform.EVM>
@@ -241,7 +277,7 @@ function buildStoreComponents({
 
   const accounts: Account<Platform>[] = infos.flatMap((info) => buildAccount(info, walletId) ?? [])
 
-  const evmConnector = evm ? buildEVMConnector(evm, walletId) : undefined
+  const evmConnector = evm ? buildEVMConnector({ info: evm, walletId, caip25Session }) : undefined
   const svmConnector = svm ? buildSVMConnector(svm, walletId) : undefined
 
   const wallet: ExternalWallet = {
@@ -285,10 +321,15 @@ function buildDeduplicationMap(infos: PlatformWalletInfo<Platform>[]): Deduplica
 }
 
 /** Builds the complete accounts state from platform wallet infos with deduplication. */
-function buildAccountsState(
-  infos: PlatformWalletInfo<Platform>[],
-  isConnecting: boolean,
-): Omit<WebAccountsData, 'connectionQuery'> {
+function buildAccountsState({
+  infos,
+  isConnecting,
+  caip25Session,
+}: {
+  infos: PlatformWalletInfo<Platform>[]
+  isConnecting: boolean
+  caip25Session: CAIP25Session
+}): Omit<WebAccountsData, 'connectionQuery'> {
   const activeConnectors: WebAccountsData['activeConnectors'] = {}
   const connectors: WebAccountsData['connectors'] = {}
   const accounts: WebAccountsData['accounts'] = {}
@@ -299,7 +340,7 @@ function buildAccountsState(
 
   for (const crossPlatformInfos of Object.values(deduplicationMap)) {
     // Step 1: Build the store components, deduplicating cross platform data for the same wallet if needed.
-    const components = buildStoreComponents(crossPlatformInfos)
+    const components = buildStoreComponents({ ...crossPlatformInfos, caip25Session })
 
     // Step 2: Store all connectors + references to active connectors.
     if (components.evmConnector) {
@@ -389,10 +430,11 @@ function useAccountsState(): WebAccountsData {
 
   const evmWalletInfos = useEVMWalletInfos(pendingWallet)
   const svmWalletInfos = useSVMWalletInfos()
+  const caip25Session = useCAIP25Session()
 
   return useMemo(
-    () => buildAccountsState([...evmWalletInfos, ...svmWalletInfos], isConnecting),
-    [evmWalletInfos, svmWalletInfos, isConnecting],
+    () => buildAccountsState({ infos: [...evmWalletInfos, ...svmWalletInfos], isConnecting, caip25Session }),
+    [evmWalletInfos, svmWalletInfos, isConnecting, caip25Session],
   )
 }
 
@@ -402,3 +444,20 @@ export const { AccountsStoreContextProvider: WebAccountsStoreProvider, useAccoun
     useAppAccountsState: useAccountsState,
     createGetters: createAccountsStoreGetters,
   })
+
+function useCAIP25Session(): CAIP25Session {
+  const { data: capabilities } = useCapabilities()
+  const { connector, address } = useWagmiAccount()
+  const { chains: enabledChains } = useEnabledChains()
+  const { enabled: isOneClickSwapEnabled } = useOneClickSwapSetting()
+
+  return useMemo(() => {
+    return buildCAIP25Session({
+      connector,
+      address,
+      capabilities,
+      enabledChains,
+      includeAtomicCapability: isOneClickSwapEnabled,
+    })
+  }, [capabilities, connector, address, enabledChains, isOneClickSwapEnabled])
+}

@@ -19,6 +19,7 @@ const classicQuoteFile = project.addSourceFileAtPath(`${path}/ClassicQuote.ts`)
 const chainedQuoteFile = project.addSourceFileAtPath(`${path}/ChainedQuote.ts`)
 const responseFiles = [approvalResponseFile, createSwapResponseFile, createSendResponseFile, classicQuoteFile]
 
+const planResponseFile = project.addSourceFileAtPath(`${path}/PlanResponse.ts`)
 
 
 const nullablePermitFile = project.addSourceFileAtPath(`${path}/NullablePermit.ts`)
@@ -185,14 +186,6 @@ function main() {
     replace: true,
   })
 
-  modifyType({
-    file: planStepFile,
-    typeName: 'PlanStep',
-    newProperties: [
-      { name: 'stepType', type: 'string', isOptional: true },
-    ],
-  })
-
   // TODO: NullablePermit is marked as nullable in api.json but not in the generated types.
   addToTypeAlias({
     file: nullablePermitFile,
@@ -200,6 +193,14 @@ function main() {
     typeToAdd: '| null',
   })
 
+  
+  modifyType({
+    file: planResponseFile,
+    typeName: 'PlanResponse',
+    newProperties: [
+      { name: 'lastUserActionAt', type: 'string', isOptional: true },
+    ],
+  })
 
   // Add new enum member
   addEnumMember({ file: routingFile, enumName: 'Routing', newMember: { name: 'JUPITER', value: 'JUPITER' } })
@@ -215,6 +216,7 @@ function main() {
     files: [
       requestFiles,
       responseFiles,
+      planResponseFile,
       routingFile,
       nullablePermitFile,
       orderTypeFile,

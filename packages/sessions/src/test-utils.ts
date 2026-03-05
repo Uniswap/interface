@@ -5,8 +5,6 @@ import { createConnectTransport } from '@connectrpc/connect-web'
 import {
   type ChallengeRequest,
   type ChallengeResponse,
-  type DeleteSessionRequest,
-  type DeleteSessionResponse,
   type GetChallengeTypesRequest,
   type GetChallengeTypesResponse,
   type InitSessionRequest,
@@ -33,7 +31,6 @@ export interface MockEndpoints {
   '/uniswap.platformservice.v1.SessionService/InitSession': MockEndpointHandler
   '/uniswap.platformservice.v1.SessionService/Challenge': MockEndpointHandler
   '/uniswap.platformservice.v1.SessionService/Verify': MockEndpointHandler
-  '/uniswap.platformservice.v1.SessionService/DeleteSession': MockEndpointHandler
   '/uniswap.platformservice.v1.SessionService/IntrospectSession': MockEndpointHandler
   '/uniswap.platformservice.v1.SessionService/UpdateSession': MockEndpointHandler
   '/uniswap.platformservice.v1.SessionService/GetChallengeTypes': MockEndpointHandler
@@ -173,13 +170,6 @@ export function createMockSessionClient(
 
       const response = await mockEndpoints['/uniswap.platformservice.v1.SessionService/Verify'](request, headers)
       return response as VerifyResponse
-    },
-    deleteSession: async (
-      request: PartialMessage<DeleteSessionRequest>,
-      _options?: CallOptions,
-    ): Promise<DeleteSessionResponse> => {
-      const response = await mockEndpoints['/uniswap.platformservice.v1.SessionService/DeleteSession'](request, {})
-      return response as DeleteSessionResponse
     },
     introspectSession: async (
       request: PartialMessage<IntrospectSessionRequest>,

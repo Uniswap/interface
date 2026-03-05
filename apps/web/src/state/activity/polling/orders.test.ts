@@ -1,17 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import ms from 'ms'
-import {
-  getQuickPollingInterval,
-  QUICK_POLL_INITIAL_INTERVAL,
-  QUICK_POLL_INITIAL_PHASE,
-  QUICK_POLL_MAX_INTERVAL,
-  QUICK_POLL_MEDIUM_INTERVAL,
-  QUICK_POLL_MEDIUM_PHASE,
-  usePollPendingOrders,
-} from 'state/activity/polling/orders'
-import * as hooks from 'state/transactions/hooks'
-import { act, renderHook } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
@@ -23,17 +12,28 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import type { Mock } from 'vitest'
+import {
+  getQuickPollingInterval,
+  QUICK_POLL_INITIAL_INTERVAL,
+  QUICK_POLL_INITIAL_PHASE,
+  QUICK_POLL_MAX_INTERVAL,
+  QUICK_POLL_MEDIUM_INTERVAL,
+  QUICK_POLL_MEDIUM_PHASE,
+  usePollPendingOrders,
+} from '~/state/activity/polling/orders'
+import * as hooks from '~/state/transactions/hooks'
+import { act, renderHook } from '~/test-utils/render'
 
-vi.mock('state/transactions/hooks', async () => {
-  const actual = await vi.importActual('state/transactions/hooks')
+vi.mock('~/state/transactions/hooks', async () => {
+  const actual = await vi.importActual('~/state/transactions/hooks')
   return {
     ...actual,
     usePendingUniswapXOrders: vi.fn(),
   }
 })
 
-vi.mock('state/hooks', async () => {
-  const actual = await vi.importActual('state/hooks')
+vi.mock('~/state/hooks', async () => {
+  const actual = await vi.importActual('~/state/hooks')
   return {
     ...actual,
     useAppDispatch: () => vi.fn(),
@@ -48,8 +48,8 @@ vi.mock('uniswap/src/features/transactions/slice', async () => {
   }
 })
 
-vi.mock('hooks/useAccount', async () => {
-  const actual = await vi.importActual('hooks/useAccount')
+vi.mock('~/hooks/useAccount', async () => {
+  const actual = await vi.importActual('~/hooks/useAccount')
   return {
     ...actual,
     useAccount: () => {
@@ -140,7 +140,7 @@ describe('getQuickPollingInterval', () => {
 describe('useStandardPolling', () => {
   beforeEach(() => {
     vi.useFakeTimers()
-    global.fetch = vi.fn()
+    global.fetch = vi.fn() as unknown as typeof fetch
   })
 
   afterEach(() => {
@@ -165,7 +165,7 @@ describe('useStandardPolling', () => {
     const onActivityUpdate = vi.fn()
     vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockL1Order])
     const mockResponse = { orders: [{ orderHash: mockL1Order.orderHash, orderStatus: TradingApi.OrderStatus.OPEN }] }
-    ;(global.fetch as Mock).mockImplementation(() =>
+    ;(global.fetch as unknown as Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockResponse),
       }),
@@ -204,7 +204,7 @@ describe('useStandardPolling', () => {
 
     // Start with returning the open order
     vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockOrder])
-    ;(global.fetch as Mock)
+    ;(global.fetch as unknown as Mock)
       .mockImplementationOnce(() =>
         Promise.resolve({
           json: () =>
@@ -260,7 +260,7 @@ describe('useStandardPolling', () => {
 describe('useQuickPolling', () => {
   beforeEach(() => {
     vi.useFakeTimers()
-    global.fetch = vi.fn()
+    global.fetch = vi.fn() as unknown as typeof fetch
   })
 
   afterEach(() => {
@@ -292,7 +292,7 @@ describe('useQuickPolling', () => {
     }
 
     vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([recentOrder])
-    ;(global.fetch as Mock).mockImplementation(() =>
+    ;(global.fetch as unknown as Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: TradingApi.OrderStatus.OPEN }] }),
       }),

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query/build/modern/useQuery'
+import { useQuery } from '@tanstack/react-query'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'

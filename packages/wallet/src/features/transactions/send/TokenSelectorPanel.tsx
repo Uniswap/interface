@@ -12,7 +12,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAddresses } from 'wallet/src/features/accounts/store/hooks'
 
 interface TokenSelectorPanelProps {
   currencyInfo: Maybe<CurrencyInfo>
@@ -44,7 +44,7 @@ export function TokenSelectorPanel({
   showTokenSelector,
 }: TokenSelectorPanelProps): JSX.Element {
   const { t } = useTranslation()
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const addresses = useActiveAddresses()
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const showMaxButton = currencyBalance && !currencyBalance.equalTo(0)
@@ -57,7 +57,7 @@ export function TokenSelectorPanel({
     <>
       <Flex fill overflow="hidden">
         <TokenSelectorModal
-          evmAddress={activeAccountAddress}
+          addresses={addresses}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           isModalOpen={showTokenSelector}
@@ -96,7 +96,7 @@ export function TokenSelectorPanel({
                 onSetPresetValue={onSetMax}
               />
             )}
-            <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+            <RotatableChevron color="$neutral3" direction="down" size="$icon.20" />
           </Flex>
         </Flex>
       </TouchableArea>

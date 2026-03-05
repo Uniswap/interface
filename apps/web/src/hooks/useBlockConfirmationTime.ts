@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useState } from 'react'
+import useBlockNumber from '~/lib/hooks/useBlockNumber'
 
 export function useBlockConfirmationTime() {
   const { provider } = useWeb3React()

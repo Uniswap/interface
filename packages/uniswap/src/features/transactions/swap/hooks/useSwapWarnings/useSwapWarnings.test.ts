@@ -30,6 +30,7 @@ const emptySwapInfo: Pick<
 
 const swapState: DerivedSwapInfo = {
   ...emptySwapInfo,
+
   currencyAmounts: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
     [CurrencyField.OUTPUT]: undefined,

@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { GasFeeResult } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, UniswapXText } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
@@ -12,9 +13,8 @@ import {
   useGasFeeFormattedDisplayAmounts,
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { isZero } from 'uniswap/src/utils/number'
 import { isWebApp } from 'utilities/src/platform'
 
 export function NetworkFee({
@@ -44,6 +44,7 @@ export function NetworkFee({
   })
 
   const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
+  const isGasFeeFree = gasFee.value !== undefined && isZero(gasFee.value)
 
   const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, transactionUSDValue)
   const showHighGasFeeUI = gasFeeHighRelativeToValue && !isWebApp // Avoid high gas UI on interface
@@ -71,7 +72,11 @@ export function NetworkFee({
                 {t('common.text.notAvailable')}
               </Text>
             ) : uniswapXGasBreakdown ? (
-              <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={uniswapXGasFeeInfo?.preSavingsGasFeeFormatted} />
+              <UniswapXFee
+                gasFee={gasFeeFormatted}
+                isFree={isGasFeeFree}
+                preSavingsGasFee={uniswapXGasFeeInfo?.preSavingsGasFeeFormatted}
+              />
             ) : (
               <Text
                 color={gasFee.isLoading ? '$neutral3' : showHighGasFeeUI ? '$statusCritical' : '$neutral1'}
@@ -92,46 +97,26 @@ export function NetworkFee({
   )
 }
 
-type UniswapXFeeProps = { gasFee: string; preSavingsGasFee?: string; smaller?: boolean; loading?: boolean }
-export function UniswapXFee({
-  gasFee,
-  preSavingsGasFee,
-  smaller = false,
-  loading = false,
-}: UniswapXFeeProps): JSX.Element {
-  const priceUxEnabled = usePriceUXEnabled()
-
-  if (priceUxEnabled) {
-    return (
-      <Flex centered row gap="$spacing4">
-        <UniswapX marginEnd="$spacing2" size={smaller ? '$icon.12' : '$icon.16'} />
-        <UniswapXText mr="$spacing6" variant={smaller ? 'body4' : 'body3'}>
-          {gasFee}
-        </UniswapXText>
-        {preSavingsGasFee && (
-          <Text
-            color={loading ? '$neutral3' : '$neutral2'}
-            textDecorationLine="line-through"
-            variant={smaller ? 'body4' : 'body3'}
-          >
-            {preSavingsGasFee}
-          </Text>
-        )}
-      </Flex>
-    )
-  }
+type UniswapXFeeProps = {
+  gasFee: string
+  isFree?: boolean
+  preSavingsGasFee?: string
+  smaller?: boolean
+  loading?: boolean
+}
+export function UniswapXFee({ gasFee, isFree, preSavingsGasFee, smaller = false }: UniswapXFeeProps): JSX.Element {
+  const { t } = useTranslation()
+  const gasFeeDisplayed = isFree ? t('common.free') : gasFee
 
   return (
     <Flex centered row>
-      <UniswapX marginEnd="$spacing2" size={smaller ? '$icon.12' : '$icon.16'} />
-      <UniswapXText mr="$spacing6" variant={smaller ? 'body4' : 'body3'}>
-        {gasFee}
-      </UniswapXText>
       {preSavingsGasFee && (
-        <Text color="$neutral2" textDecorationLine="line-through" variant={smaller ? 'body4' : 'body3'}>
+        <Text color="$neutral2" mr="$spacing6" textDecorationLine="line-through" variant={smaller ? 'body4' : 'body3'}>
           {preSavingsGasFee}
         </Text>
       )}
+      <UniswapX marginEnd="$spacing2" size={smaller ? '$icon.12' : '$icon.16'} />
+      <UniswapXText variant={smaller ? 'body4' : 'body3'}>{gasFeeDisplayed}</UniswapXText>
     </Flex>
   )
 }

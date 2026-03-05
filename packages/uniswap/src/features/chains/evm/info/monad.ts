@@ -1,7 +1,12 @@
+import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
-import { MONAD_LOGO } from 'ui/src/assets'
-import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
+import { MONAD_LOGO_FILLED } from 'ui/src/assets'
+import {
+  DEFAULT_MS_BEFORE_WARNING,
+  DEFAULT_NATIVE_ADDRESS_LEGACY,
+  getQuicknodeEndpointUrl,
+} from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
   GqlChainId,
@@ -12,67 +17,65 @@ import {
 } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
+import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 
-const tokens = buildChainTokens({
+const mainnetTokens = buildChainTokens({
   stables: {
-    USDT: buildUSDT('0xfBC2D240A5eD44231AcA3A9e9066bc4b33f01149', UniverseChainId.MonadTestnet),
+    USDC: buildUSDC('0x754704Bc059F8C67012fEd69BC8A327a5aafb603', UniverseChainId.Monad),
+    AUSD: new Token(UniverseChainId.Monad, '0x00000000eFE302BEAA2b3e6e1b18d08D69a9012a', 6, 'AUSD', 'Agora USD'),
   },
 })
 
 export const MONAD_CHAIN_INFO = {
-  id: UniverseChainId.MonadTestnet,
+  id: UniverseChainId.Monad,
   platform: Platform.EVM,
-  testnet: true,
-  assetRepoNetworkName: undefined,
+  testnet: false,
+  assetRepoNetworkName: 'monad',
   backendChain: {
-    chain: GraphQLApi.Chain.MonadTestnet as GqlChainId,
+    chain: GraphQLApi.Chain.Monad as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
-  bridge: undefined,
+  bridge: 'https://monadbridge.com/',
   docs: 'https://docs.monad.xyz/',
-  label: 'Monad Testnet',
-  logo: MONAD_LOGO,
-  name: 'Monad Testnet',
+  label: 'Monad',
+  logo: MONAD_LOGO_FILLED,
+  name: 'Monad',
   nativeCurrency: {
     name: 'Monad',
     symbol: 'MON',
     decimals: 18,
     address: DEFAULT_NATIVE_ADDRESS_LEGACY,
-    logo: MONAD_LOGO,
+    logo: MONAD_LOGO_FILLED,
   },
   networkLayer: NetworkLayer.L1,
+  blockTimeMs: 500,
   pendingTransactionsRetryOptions: undefined,
-  statusPage: undefined,
-  supportsV4: false,
-  urlParam: 'monad_testnet',
+  statusPage: undefined, // TODO: Add status page URL when available
+  supportsV4: true,
+  supportsNFTs: false,
+  urlParam: 'monad',
   rpcUrls: {
-    [RPCType.Public]: {
-      http: [getQuicknodeEndpointUrl(UniverseChainId.MonadTestnet)],
-    },
-    [RPCType.Default]: {
-      http: [getQuicknodeEndpointUrl(UniverseChainId.MonadTestnet)],
-    },
-    [RPCType.Interface]: {
-      http: [getQuicknodeEndpointUrl(UniverseChainId.MonadTestnet)],
-    },
+    [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
+    [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
+    [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Monad)] },
   },
   wrappedNativeCurrency: {
     name: 'Wrapped Monad',
     symbol: 'WMON',
     decimals: 18,
-    address: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701',
+    address: '0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A',
   },
   blockPerMainnetEpochForChainId: 1,
-  blockWaitMsBeforeWarning: undefined,
-  elementName: ElementName.ChainMonadTestnet,
+  blockWaitMsBeforeWarning: DEFAULT_MS_BEFORE_WARNING,
+  elementName: ElementName.ChainMonad,
   explorer: {
-    name: 'Monad Explorer',
-    url: 'https://testnet.monadexplorer.com/',
+    name: 'MonadVision',
+    url: 'https://monadvision.com/',
   },
   interfaceName: 'monad',
-  tokens,
+  tokens: mainnetTokens,
+  tradingApiPollingIntervalMs: 150, // approximately 1/3 of block time, which is around 400-500 ms
   gasConfig: {
     send: {
       configKey: SwapConfigKey.MonSendMinGasAmount,
@@ -83,5 +86,5 @@ export const MONAD_CHAIN_INFO = {
       default: 150, // .015 ETH equivalent
     },
   },
-  tradingApiPollingIntervalMs: 200,
+  acrossProtocolAddress: '0xd2ecb3afe598b746F8123CaE365a598DA831A449',
 } as const satisfies UniverseChainInfo

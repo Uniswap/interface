@@ -23,7 +23,9 @@ export const UNLIMITED_APPROVAL_AMOUNT = 'UNLIMITED'
 const MAX_DECIMAL_PLACES = 6
 
 /**
- * Rounds a numeric value to a maximum of 6 decimal places
+ * Rounds a numeric value to a maximum of 6 decimal places.
+ * If a non-zero value would round to 0, the original value is preserved
+ * so downstream formatters can apply appropriate "<X" treatments (e.g. "<0.001").
  * @param value - The value to round (number or string)
  * @returns Rounded value as string
  */
@@ -36,6 +38,12 @@ export function roundToDecimals(value: number | string): string {
 
   // Round to 6 decimal places and remove trailing zeros
   const rounded = parseFloat(numValue.toFixed(MAX_DECIMAL_PLACES))
+
+  // Preserve non-zero values — toFixed avoids scientific notation from String()
+  if (rounded === 0 && numValue !== 0) {
+    return numValue.toFixed(MAX_DECIMAL_PLACES + 14).replace(/\.?0+$/, '')
+  }
+
   return String(rounded)
 }
 

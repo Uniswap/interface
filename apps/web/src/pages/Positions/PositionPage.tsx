@@ -4,38 +4,10 @@ import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { WrappedLiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
-import { Dropdown } from 'components/Dropdowns/Dropdown'
-import { BaseQuoteFiatAmount } from 'components/Liquidity/BaseQuoteFiatAmount'
-import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
-import { useReportPositionHandler } from 'components/Liquidity/hooks/useReportPositionHandler'
-import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPositionAmountRows'
-import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { LiquidityPositionStackedBars } from 'components/Liquidity/LiquidityPositionStackedBars'
-import { LoadingRow } from 'components/Liquidity/Loader'
-import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { PositionPageActionButtons } from 'components/Liquidity/PositionPageActionButtons'
-import type { PositionInfo } from 'components/Liquidity/types'
-import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
-import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
-import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
-import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { useCurrencyInfo } from 'hooks/Tokens'
-import { useAccount } from 'hooks/useAccount'
-import { useSrcColor } from 'hooks/useColor'
-import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
-import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
-import NotFound from 'pages/NotFound'
 import { useMemo, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router'
-import { MultichainContextProvider } from 'state/multichain/MultichainContext'
-import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import {
   Button,
   Flex,
@@ -47,6 +19,7 @@ import {
   TouchableArea,
   useSporeColors,
 } from 'ui/src'
+import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
 import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -65,14 +38,41 @@ import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useChainIdFromUrlParam } from 'utils/chainParams'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
+import { WrappedLiquidityPositionRangeChart } from '~/components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { Dropdown } from '~/components/Dropdowns/Dropdown'
+import { BaseQuoteFiatAmount } from '~/components/Liquidity/BaseQuoteFiatAmount'
+import { useGetRangeDisplay } from '~/components/Liquidity/hooks/useGetRangeDisplay'
+import { useReportPositionHandler } from '~/components/Liquidity/hooks/useReportPositionHandler'
+import { LiquidityPositionAmountRows } from '~/components/Liquidity/LiquidityPositionAmountRows'
+import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
+import { LiquidityPositionStackedBars } from '~/components/Liquidity/LiquidityPositionStackedBars'
+import { LoadingRow } from '~/components/Liquidity/Loader'
+import { PositionNFT } from '~/components/Liquidity/PositionNFT'
+import { PositionPageActionButtons } from '~/components/Liquidity/PositionPageActionButtons'
+import type { PositionInfo } from '~/components/Liquidity/types'
+import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
+import { parseRestPosition } from '~/components/Liquidity/utils/parseFromRest'
+import { LoadingFullscreen, LoadingRows } from '~/components/Loader/styled'
+import { LP_INCENTIVES_REWARD_TOKEN } from '~/components/LpIncentives/constants'
+import { MouseoverTooltip } from '~/components/Tooltip'
+import { useCurrencyInfo } from '~/hooks/Tokens'
+import { useAccount } from '~/hooks/useAccount'
+import { useSrcColor } from '~/hooks/useColor'
+import { useLpIncentivesFormattedEarnings } from '~/hooks/useLpIncentivesFormattedEarnings'
+import { usePositionTokenURI } from '~/hooks/usePositionTokenURI'
+import NotFound from '~/pages/NotFound'
+import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
+import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { useChainIdFromUrlParam } from '~/utils/chainParams'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -345,7 +345,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
         <Flex gap="$gap20">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
             <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-              <ArrowLeft size={14} /> <Trans i18nKey="pool.positions.title" />
+              <ArrowLeft size="$icon.16" /> {t('pool.positions.title')}
             </BreadcrumbNavLink>
           </BreadcrumbNavContainer>
           <Flex
@@ -459,7 +459,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                       {...ClickableTamaguiStyle}
                     >
                       {mainViewOptions.find((p) => p.value === mainView)?.display}
-                      <RotatableChevron direction="down" height={16} width={16} color="$neutral2" />
+                      <RotatableChevron direction="down" size="$icon.16" color="$neutral2" />
                     </Flex>
                   }
                   buttonStyle={{
@@ -519,7 +519,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                         {...ClickableTamaguiStyle}
                       >
                         {timePeriodOptions.options.find((p) => p.value === timePeriodOptions.selected)?.display}
-                        <RotatableChevron direction="down" height={16} width={16} color="$neutral2" />
+                        <RotatableChevron direction="down" size="$icon.16" color="$neutral2" />
                       </Flex>
                     }
                     buttonStyle={{
@@ -605,17 +605,19 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                   totalApr={positionInfo.totalApr}
                 />
               )}
-            <Flex row justifyContent="space-between">
-              <Text variant="body3" color="$neutral3">
-                {t('reporting.pool.details.title')}
-              </Text>
-              <TouchableArea row gap="$gap4" alignItems="center" onPress={reportPositionHandler}>
-                <Flag size="$icon.16" color="$statusCritical" />
-                <Text variant="body3" color="$statusCritical">
-                  {t('nft.reportSpam')}
+            {!positionInfo.isHidden && (
+              <Flex row justifyContent="space-between">
+                <Text variant="body3" color="$neutral3">
+                  {t('reporting.pool.details.title')}
                 </Text>
-              </TouchableArea>
-            </Flex>
+                <TouchableArea row gap="$gap4" alignItems="center" onPress={reportPositionHandler}>
+                  <Flag size="$icon.16" color="$statusCritical" />
+                  <Text variant="body3" color="$statusCritical">
+                    {t('nft.reportSpam')}
+                  </Text>
+                </TouchableArea>
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </BodyWrapper>
@@ -714,7 +716,7 @@ const PositionSection = ({
     <SectionContainer>
       <Flex gap="$gap8">
         <Text color="$neutral2" variant="body2">
-          <Trans i18nKey="pool.position" />
+          {t('pool.position')}
         </Text>
         {position.status === PositionStatus.CLOSED ? (
           <Text variant="heading2" $lg={{ variant: 'heading3' }}>

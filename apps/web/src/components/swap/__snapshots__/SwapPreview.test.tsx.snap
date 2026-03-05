@@ -2,65 +2,15 @@
 
 exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 24px;
-}
-
-.c5 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c0 {
+  .c0 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 8px;
 }
 
-.c3 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c4 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.c9 {
+.c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c6 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
-}
-
-.c10 {
-  cursor: help;
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
 }
 
 .c1 {
@@ -76,89 +26,85 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
       gap="sm"
     >
       <div
-        class="c2"
-        gap="lg"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
       >
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
-              <div
-                class="c7 c8 css-142zc9n"
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 Sell
-              </div>
-            </div>
+              </span>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="input-amount"
               >
                 &lt;0.00001 ABC
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
               <div
-                class="c9"
+                class="c2"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
-                  <div
-                    class="c7 c10 css-142zc9n"
-                    cursor="help"
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _cursor-help"
+                    data-disable-theme="true"
                   >
                     Buy
-                  </div>
+                  </span>
                 </div>
               </div>
-            </div>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="output-amount"
               >
                 &lt;0.00001 DEF
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -173,65 +119,15 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 
 exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swap 1`] = `
 <DocumentFragment>
-  .c2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 24px;
-}
-
-.c5 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c0 {
+  .c0 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 8px;
 }
 
-.c3 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c4 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.c9 {
+.c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c6 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
-}
-
-.c10 {
-  cursor: help;
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
 }
 
 .c1 {
@@ -247,43 +143,41 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
       gap="sm"
     >
       <div
-        class="c2"
-        gap="lg"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
       >
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
-              <div
-                class="c7 c8 css-142zc9n"
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 Sell
-              </div>
-            </div>
+              </span>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="input-amount"
               >
                 &lt;0.00001 ETH
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
           <div
@@ -307,48 +201,46 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
           </div>
         </div>
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
               <div
-                class="c9"
+                class="c2"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
-                  <div
-                    class="c7 c10 css-142zc9n"
-                    cursor="help"
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _cursor-help"
+                    data-disable-theme="true"
                   >
                     Buy
-                  </div>
+                  </span>
                 </div>
               </div>
-            </div>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="output-amount"
               >
                 &lt;0.00001 DEF
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -363,65 +255,15 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
 
 exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 swap 1`] = `
 <DocumentFragment>
-  .c2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 24px;
-}
-
-.c5 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c0 {
+  .c0 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 8px;
 }
 
-.c3 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c4 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.c9 {
+.c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c6 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
-}
-
-.c10 {
-  cursor: help;
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
 }
 
 .c1 {
@@ -437,43 +279,41 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
       gap="sm"
     >
       <div
-        class="c2"
-        gap="lg"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
       >
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
-              <div
-                class="c7 c8 css-142zc9n"
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 Sell
-              </div>
-            </div>
+              </span>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="input-amount"
               >
                 &lt;0.00001 ETH
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
           <div
@@ -497,48 +337,46 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
           </div>
         </div>
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
               <div
-                class="c9"
+                class="c2"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
-                  <div
-                    class="c7 c10 css-142zc9n"
-                    cursor="help"
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _cursor-help"
+                    data-disable-theme="true"
                   >
                     Buy
-                  </div>
+                  </span>
                 </div>
               </div>
-            </div>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="output-amount"
               >
                 &lt;0.00001 DEF
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -553,65 +391,15 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
 
 exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 <DocumentFragment>
-  .c2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 24px;
-}
-
-.c5 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c0 {
+  .c0 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 8px;
 }
 
-.c3 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c4 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.c9 {
+.c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c6 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
-}
-
-.c10 {
-  cursor: help;
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
 }
 
 .c1 {
@@ -627,89 +415,85 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
       gap="sm"
     >
       <div
-        class="c2"
-        gap="lg"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
       >
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
-              <div
-                class="c7 c8 css-142zc9n"
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 Sell
-              </div>
-            </div>
+              </span>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="input-amount"
               >
                 &lt;0.00001 DEF
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
               <div
-                class="c9"
+                class="c2"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
-                  <div
-                    class="c7 c10 css-142zc9n"
-                    cursor="help"
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _cursor-help"
+                    data-disable-theme="true"
                   >
                     Buy
-                  </div>
+                  </span>
                 </div>
               </div>
-            </div>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c6 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="output-amount"
               >
                 &lt;0.00001 DEF
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>
@@ -724,65 +508,15 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 
 exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
 <DocumentFragment>
-  .c2 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 24px;
-}
-
-.c5 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c0 {
+  .c0 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 8px;
 }
 
-.c3 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c4 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.c9 {
+.c2 {
   display: inline-block;
   height: inherit;
-}
-
-.c6 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c7 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
-}
-
-.c10 {
-  cursor: help;
-  color: rgba(19, 19, 19, 0.63);
-  margin-right: 8px;
 }
 
 .c1 {
@@ -798,89 +532,85 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
       gap="sm"
     >
       <div
-        class="c2"
-        gap="lg"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
       >
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
-              <div
-                class="c7 c8 css-142zc9n"
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 Sell
-              </div>
-            </div>
+              </span>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="input-amount"
               >
                 &lt;0.00001 ABC
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>
         <div
-          align="center"
-          class="c3 c4"
-          gap="md"
-          justify="space-between"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _gap-t-space-gap1569"
         >
           <div
-            class="c5"
-            gap="xs"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
           >
-            <div
-              class="c6 css-1urox24"
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
             >
               <div
-                class="c9"
+                class="c2"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
-                  <div
-                    class="c7 c10 css-142zc9n"
-                    cursor="help"
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-t-space-spa94665593 _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _cursor-help"
+                    data-disable-theme="true"
                   >
                     Buy
-                  </div>
+                  </span>
                 </div>
               </div>
-            </div>
+            </span>
             <div
-              class="c5"
-              gap="xs"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
             >
-              <div
-                class="c7 css-15popx1"
+              <h2
+                class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
                 data-testid="output-amount"
               >
                 &lt;0.00001 GHI
-              </div>
-              <div
-                class="c6 css-142zc9n"
+              </h2>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
               >
                 -
-              </div>
+              </span>
             </div>
           </div>
         </div>

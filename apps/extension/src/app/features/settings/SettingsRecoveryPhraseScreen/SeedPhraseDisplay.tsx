@@ -6,7 +6,7 @@ import { Flex, Separator, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { logger } from 'utilities/src/logger/logger'
 import { mnemonicUnlockedQuery } from 'wallet/src/features/wallet/Keyring/queries'
 
@@ -112,15 +112,6 @@ export function SeedPhraseDisplay({ mnemonicId }: { mnemonicId: string }): JSX.E
 
   useEffect(() => {
     sendAnalyticsEvent(WalletEventName.ViewRecoveryPhrase)
-
-    // Clear clipboard when the component unmounts
-    return () => {
-      navigator.clipboard.writeText('').catch((error) => {
-        logger.error(error, {
-          tags: { file: 'SeedPhraseDisplay.tsx', function: 'navigator.clipboard.writeText' },
-        })
-      })
-    }
   }, [])
 
   return (

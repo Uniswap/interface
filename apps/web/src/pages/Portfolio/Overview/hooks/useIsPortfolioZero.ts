@@ -1,7 +1,8 @@
-import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useMemo } from 'react'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 
 /**
  * Hook to determine if the portfolio balance is zero.
@@ -10,6 +11,7 @@ import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/ba
 export function useIsPortfolioZero(): boolean {
   const portfolioAddresses = usePortfolioAddresses()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const { hidden: hiddenTokens } = useTransformTokenTableData({})
 
   // Fetch portfolio total value to determine if portfolio is zero
   const { data: portfolioData } = usePortfolioTotalValue({
@@ -18,7 +20,11 @@ export function useIsPortfolioZero(): boolean {
   })
 
   const { balanceUSD } = portfolioData || {}
+  const hasHiddenTokens = hiddenTokens && hiddenTokens.length > 0
 
   // Calculate isPortfolioZero - denominated portfolio balance on testnet is always 0
-  return useMemo(() => !isTestnetModeEnabled && balanceUSD === 0, [isTestnetModeEnabled, balanceUSD])
+  return useMemo(
+    () => !isTestnetModeEnabled && balanceUSD === 0 && !hasHiddenTokens,
+    [isTestnetModeEnabled, balanceUSD, hasHiddenTokens],
+  )
 }

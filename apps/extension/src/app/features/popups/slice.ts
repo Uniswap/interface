@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export enum PopupName {
   Connect = 'connect',
@@ -26,8 +26,9 @@ const slice = createSlice({
     closePopup: (state, action: PayloadAction<PopupName>) => {
       state[action.payload].isOpen = false
     },
+    resetPopups: () => initialState,
   },
 })
 
-export const { openPopup, closePopup } = slice.actions
+export const { openPopup, closePopup, resetPopups } = slice.actions
 export const { reducer: popupsReducer } = slice

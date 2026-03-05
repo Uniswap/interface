@@ -241,7 +241,7 @@ const RowRightContent = memo(
                 />
               </Skeleton>
             ))}
-          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
+          <RotatableChevron color="$neutral3" direction="end" size="$icon.24" />
         </Flex>
       )
     }

@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UNISWAP_WEB_URL, uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
@@ -117,7 +117,15 @@ export function getExplorerLink({
   data?: string
   type: ExplorerDataType
 }): string {
-  const { explorer, nativeCurrency } = getChainInfo(chainId)
+  const chainInfo = getChainInfo(chainId)
+
+  // Handle unsupported chain IDs gracefully
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- chainInfo can be undefined in edge cases (SDK mismatch)
+  if (!chainInfo) {
+    return ''
+  }
+
+  const { explorer, nativeCurrency } = chainInfo
   const prefix = explorer.url
 
   if (!data) {
@@ -227,6 +235,11 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
 }
 
+export function getFiatOnRampURL(chainId?: UniverseChainId): string {
+  const chainParam = chainId ? `?chain=${getChainInfo(chainId).urlParam}` : ''
+  return `/buy${chainParam}`
+}
+
 export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {
   const chainName = getChainInfo(chain).urlParam
   return `/explore/pools/${chainName}/${address}`
@@ -254,6 +267,10 @@ export async function openOfframpPendingSupportLink(): Promise<void> {
 
 export function getProfileUrl(walletAddress: string): string {
   return `${uniswapUrls.webInterfaceAddressUrl}/${walletAddress}`
+}
+
+export function getPortfolioUrl(walletAddress: string): string {
+  return `${UNISWAP_WEB_URL}/portfolio/${walletAddress}`
 }
 
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'

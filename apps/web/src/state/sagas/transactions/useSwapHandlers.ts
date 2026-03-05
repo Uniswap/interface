@@ -1,7 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
-import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
-import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
 import {
   ExecuteSwapCallback,
   ExecuteSwapParams,
@@ -10,6 +8,8 @@ import {
 } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { useSwapCallback } from '~/state/sagas/transactions/swapSaga'
+import { useWrapCallback } from '~/state/sagas/transactions/wrapSaga'
 
 /**
  * Validates that all required parameters for a wrap transaction are present.
@@ -44,7 +44,7 @@ export function useSwapHandlers(): SwapHandlers {
   const execute: ExecuteSwapCallback = useCallback(
     async (params) => {
       const {
-        account,
+        address,
         swapTxContext,
         currencyInAmountUSD,
         currencyOutAmountUSD,
@@ -58,6 +58,7 @@ export function useSwapHandlers(): SwapHandlers {
         setCurrentStep,
         setSteps,
         isFiatInputMode,
+        onClearForm,
       } = params
 
       // Route to appropriate callback based on transaction type
@@ -68,7 +69,7 @@ export function useSwapHandlers(): SwapHandlers {
           const txRequest = swapTxContext.txRequests[0]
 
           wrapCallback({
-            account,
+            address,
             inputCurrencyAmount,
             txRequest,
             txId,
@@ -84,7 +85,7 @@ export function useSwapHandlers(): SwapHandlers {
       } else {
         // Handle regular swap transactions
         swapCallback({
-          account,
+          onClearForm,
           swapTxContext,
           currencyInAmountUSD,
           currencyOutAmountUSD,

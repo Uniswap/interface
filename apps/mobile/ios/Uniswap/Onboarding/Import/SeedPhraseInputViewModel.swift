@@ -15,7 +15,7 @@ class SeedPhraseInputViewModel: ObservableObject {
     case error
   }
 
-  enum MnemonicError {
+  enum MnemonicError: Equatable {
     case invalidPhrase
     case invalidWord(String)
     case notEnoughWords
@@ -190,18 +190,22 @@ class SeedPhraseInputViewModel: ObservableObject {
     let firstInvalidWord = rnEthersRS.findInvalidWord(mnemonic: mnemonic)
     
     let isAddress = mnemonic.starts(with: "0x") && mnemonic.count == 42
+    let isFirstWordInvalid = firstInvalidWord == words.last && skipInvalidWord
+    let isInvalidLengthError = (error == .notEnoughWords || error == .tooManyWords) && !isValidLength
 
-    if (firstInvalidWord == words.last && skipInvalidWord) {
-      status = .none
-    } else if (firstInvalidWord == "" && isValidLength) {
-      status = .valid
+    if (isFirstWordInvalid) {
+      return
     } else if (isAddress) {
       status = .error
       error = .wordIsAddress
     } else if (firstInvalidWord != "") {
       status = .error
       error = .invalidWord(firstInvalidWord)
-    } else {
+    } else if (isInvalidLengthError) {
+      return
+    } else if (firstInvalidWord == "" && isValidLength) {
+      status = .valid
+    } else{
       status = .none
     }
 
@@ -209,7 +213,7 @@ class SeedPhraseInputViewModel: ObservableObject {
       error = nil
     }
 
-    let canSubmit = error == nil && mnemonic != "" && firstInvalidWord == "" && isValidLength
+    let canSubmit = error == nil && mnemonic != ""
     onInputValidated(["canSubmit": canSubmit])
   }
 }

@@ -1,47 +1,73 @@
-import { RowBetween } from 'components/deprecated/Row'
-import { deprecatedStyled } from 'lib/styled-components'
+import { Flex, Input, styled } from 'ui/src'
 
-export const MenuItem = deprecatedStyled(RowBetween)<{ dim?: boolean }>`
-  padding: 4px 20px;
-  height: 60px;
-  display: grid;
-  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
-  grid-gap: 16px;
-  cursor: ${({ disabled }) => !disabled && 'pointer'};
-  pointer-events: ${({ disabled }) => disabled && 'none'};
-  &:hover {
-    background-color: ${({ theme }) => theme.deprecated_hoverDefault};
-  }
-  opacity: ${({ disabled, selected, dim }) => (dim || disabled || selected ? 0.4 : 1)};
-`
+export const MenuItem = styled(Flex, {
+  row: true,
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  py: '$spacing4',
+  px: '$spacing20',
+  height: '$spacing60',
+  gap: '$gap16',
+  cursor: 'pointer',
+  width: '100%',
 
-export const SearchInput = deprecatedStyled.input`
-  padding: 16px;
-  padding-left: 40px;
-  height: 40px;
-  align-items: center;
-  width: 100%;
-  white-space: nowrap;
-  background-color: ${({ theme }) => theme.surface2};
-  border: none;
-  outline: none;
-  border-radius: 12px;
-  color: ${({ theme }) => theme.neutral1};
-  border-style: solid;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  -webkit-appearance: none;
-  font-weight: 485;
+  '$platform-web': {
+    display: 'grid',
+    gridTemplateColumns: 'auto minmax(auto, 1fr) auto minmax(0, 72px)',
+  },
 
-  font-size: 16px;
+  hoverStyle: {
+    backgroundColor: '$surface3',
+  },
 
-  ::placeholder {
-    color: ${({ theme }) => theme.neutral3};
-    font-size: 16px;
-  }
-  transition: border 100ms;
-  :focus {
-    border: 1px solid ${({ theme }) => theme.surface3};
-    background-color: ${({ theme }) => theme.surface2};
-    outline: none;
-  }
-`
+  variants: {
+    disabled: {
+      true: {
+        cursor: 'default',
+        pointerEvents: 'none',
+        opacity: 0.4,
+      },
+    },
+    selected: {
+      true: {
+        opacity: 0.4,
+      },
+    },
+    dim: {
+      true: {
+        opacity: 0.4,
+      },
+    },
+  } as const,
+})
+
+export const SearchInput = styled(Input, {
+  py: '$padding16',
+  pl: '$spacing40',
+  pr: '$padding16',
+  height: '$spacing40',
+  alignItems: 'center',
+  width: '100%',
+  whiteSpace: 'nowrap',
+  backgroundColor: '$surface2',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: '$surface3',
+  borderRadius: '$rounded12',
+  color: '$neutral1',
+  fontWeight: '500',
+  fontSize: 16,
+  outlineWidth: 0,
+
+  '$platform-web': {
+    WebkitAppearance: 'none',
+  },
+
+  placeholderTextColor: '$neutral3',
+
+  focusStyle: {
+    borderColor: '$surface3',
+    backgroundColor: '$surface2',
+    outlineWidth: 0,
+  },
+})

@@ -1,9 +1,8 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import type { ClassicQuoteResponse } from '@universe/api'
+import type { ClassicQuoteResponse, GasFeeResult } from '@universe/api'
 import { FeeType, TradingApi } from '@universe/api'
 import type { providers } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
 import { UnknownSimulationError } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
@@ -61,47 +60,56 @@ describe('processWrapResponse', () => {
 })
 
 describe('processWrapResponse (smart contract unwrap fallback)', () => {
-  it('should fallback to hardcoded gas limit when gas params are missing for a smart contract unwrap', () => {
-    jest.isolateModules(() => {
-      jest.doMock('utilities/src/platform', () => ({
-        __esModule: true,
-        ...jest.requireActual('utilities/src/platform'),
+  it('should fallback to hardcoded gas limit when gas params are missing for a smart contract unwrap', async () => {
+    // Reset modules to allow re-mocking
+    vi.resetModules()
+
+    // Mock the platform module before importing
+    vi.doMock('utilities/src/platform', async () => {
+      const actual = await vi.importActual<typeof import('utilities/src/platform')>('utilities/src/platform')
+      return {
+        ...actual,
         isWebApp: true,
-      }))
-
-      const {
-        processWrapResponse: mockedProcessWrapResponse,
-      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils')
-
-      const {
-        WRAP_FALLBACK_GAS_LIMIT_IN_GWEI,
-      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants')
-
-      const gasFeeResult: GasFeeResult = {
-        value: '1000',
-        displayValue: '0.001',
-        isLoading: false,
-        error: null,
-        params: undefined,
       }
-
-      const wrapTxRequest = {
-        to: '0x123',
-        value: '1000000',
-      } as providers.TransactionRequest
-
-      const expectedGasLimit = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9
-
-      const fallbackGasParams = { gasLimit: expectedGasLimit }
-
-      const result = mockedProcessWrapResponse({
-        gasFeeResult,
-        wrapTxRequest,
-        fallbackGasParams,
-      })
-
-      expect(result.txRequests?.[0]).toEqual(expect.objectContaining({ gasLimit: expectedGasLimit }))
     })
+
+    // Use dynamic imports to get modules with the mock applied
+    const { processWrapResponse: mockedProcessWrapResponse } = await import(
+      'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
+    )
+
+    const { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } = await import(
+      'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
+    )
+
+    const gasFeeResult: GasFeeResult = {
+      value: '1000',
+      displayValue: '0.001',
+      isLoading: false,
+      error: null,
+      params: undefined,
+    }
+
+    const wrapTxRequest = {
+      to: '0x123',
+      value: '1000000',
+    } as providers.TransactionRequest
+
+    const expectedGasLimit = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9
+
+    const fallbackGasParams = { gasLimit: expectedGasLimit }
+
+    const result = mockedProcessWrapResponse({
+      gasFeeResult,
+      wrapTxRequest,
+      fallbackGasParams,
+    })
+
+    expect(result.txRequests?.[0]).toEqual(expect.objectContaining({ gasLimit: expectedGasLimit }))
+
+    // Clean up by resetting mocks
+    vi.resetModules()
+    vi.doUnmock('utilities/src/platform')
   })
 })
 
@@ -137,6 +145,7 @@ describe('createPrepareSwapRequestParams', () => {
     })
 
     // Then
+    // Note: urgency is 'normal' in web environment (jsdom), undefined in mobile
     expect(result).toEqual({
       quote: swapQuoteResponse.quote,
       permitData: swapQuoteResponse.permitData,
@@ -145,7 +154,7 @@ describe('createPrepareSwapRequestParams', () => {
       deadline: expect.any(Number),
       refreshGasPrice: true,
       gasStrategies: [DEFAULT_GAS_STRATEGY],
-      urgency: undefined,
+      urgency: 'normal',
     })
   })
 })

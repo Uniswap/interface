@@ -1,0 +1,26 @@
+{
+  "data": {
+    "portfolios": [
+      {
+        "id": "UG9ydGZvbGlvOmVtcHR5",
+        "tokensTotalDenominatedValue": {
+          "value": 0,
+          "__typename": "Amount"
+        },
+        "tokensTotalDenominatedValueChange": {
+          "absolute": {
+            "value": 0,
+            "__typename": "Amount"
+          },
+          "percentage": {
+            "value": 0,
+            "__typename": "Amount"
+          },
+          "__typename": "AmountChange"
+        },
+        "tokenBalances": [],
+        "__typename": "Portfolio"
+      }
+    ]
+  }
+}

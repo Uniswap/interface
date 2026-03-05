@@ -1,7 +1,74 @@
+/**
+ * Isolated tests for individual migration functions.
+ *
+ * Tests each migration independently with various input states, edge cases,
+ * and error handling, without relying on output from previous migrations.
+ *
+ * For tests of the full migration chain, see uniswapMigrationTests.ts.
+ */
 /* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
-import { migrateSearchHistory, removeThaiBahtFromFiatCurrency } from 'uniswap/src/state/uniswapMigrations'
+import {
+  addActivityVisibility,
+  addDismissedBridgedAndCompatibleWarnings,
+  migrateDismissedTokenWarnings,
+  migrateSearchHistory,
+  removeThaiBahtFromFiatCurrency,
+  unchecksumDismissedTokenWarningKeys,
+} from 'uniswap/src/state/uniswapMigrations'
+import { createThrowingProxy } from 'utilities/src/test/utils'
+
+// Mobile: 82
+// Extension: 18
+// Web: 21
+describe('unchecksumDismissedTokenWarningKeys', () => {
+  it('lowercases checksummed addresses in dismissed token warnings', () => {
+    const state = {
+      tokens: {
+        dismissedTokenWarnings: {
+          [UniverseChainId.Mainnet]: {
+            '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': {
+              chainId: UniverseChainId.Mainnet,
+              address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+            },
+          },
+        },
+      },
+    }
+    const result = unchecksumDismissedTokenWarningKeys(state)
+    expect(result.tokens.dismissedTokenWarnings[UniverseChainId.Mainnet]).toHaveProperty(
+      '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    )
+    expect(result.tokens.dismissedTokenWarnings[UniverseChainId.Mainnet]).not.toHaveProperty(
+      '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    )
+  })
+
+  it('handles missing tokens state', () => {
+    const state = { otherData: 'preserved' }
+    const result = unchecksumDismissedTokenWarningKeys(state)
+    expect(result).toEqual(state)
+  })
+
+  it('handles empty dismissed warnings', () => {
+    const state = { tokens: { dismissedTokenWarnings: {} } }
+    const result = unchecksumDismissedTokenWarningKeys(state)
+    expect(result.tokens.dismissedTokenWarnings).toEqual({})
+  })
+
+  it('falls back to empty warnings on error', () => {
+    const state = {
+      tokens: { dismissedTokenWarnings: createThrowingProxy({}, { throwingMethods: ['*'] }) },
+      otherData: 'preserved',
+    }
+    const result = unchecksumDismissedTokenWarningKeys(state)
+    expect(result.tokens.dismissedTokenWarnings).toEqual({})
+    expect(result.otherData).toBe('preserved')
+  })
+})
 
 // Mobile: 89
 // Extension: 25
@@ -221,5 +288,136 @@ describe('migrateSearchHistory', () => {
   it('should handle undefined state', () => {
     const result = migrateSearchHistory({})
     expect(result).toEqual({})
+  })
+
+  it('falls back to empty search history on error', () => {
+    const state = {
+      searchHistory: { results: createThrowingProxy([], { throwingMethods: ['map'] }) },
+      otherData: 'preserved',
+    }
+    const result = migrateSearchHistory(state)
+    expect(result.searchHistory).toEqual({ results: [] })
+    expect(result.otherData).toBe('preserved')
+  })
+})
+
+// Mobile: 94
+// Extension: 28
+// Web: 57
+describe('addDismissedBridgedAndCompatibleWarnings', () => {
+  it('adds empty maps for bridged and compatible warnings', () => {
+    const state = {
+      tokens: {
+        dismissedTokenWarnings: {},
+      },
+    }
+    const result = addDismissedBridgedAndCompatibleWarnings(state)
+    expect(result.tokens.dismissedBridgedAssetWarnings).toEqual({})
+    expect(result.tokens.dismissedCompatibleAddressWarnings).toEqual({})
+  })
+
+  it('preserves existing bridged and compatible warnings', () => {
+    const state = {
+      tokens: {
+        dismissedTokenWarnings: {},
+        dismissedBridgedAssetWarnings: { existing: 'data' },
+        dismissedCompatibleAddressWarnings: { existing: 'data' },
+      },
+    }
+    const result = addDismissedBridgedAndCompatibleWarnings(state)
+    expect(result.tokens.dismissedBridgedAssetWarnings).toEqual({ existing: 'data' })
+    expect(result.tokens.dismissedCompatibleAddressWarnings).toEqual({ existing: 'data' })
+  })
+
+  it('handles missing tokens state', () => {
+    const state = { otherData: 'preserved' }
+    const result = addDismissedBridgedAndCompatibleWarnings(state)
+    expect(result).toEqual(state)
+  })
+})
+
+// Mobile: 95
+// Extension: 29
+// Web: 59
+describe('addActivityVisibility', () => {
+  it('adds empty activity visibility map', () => {
+    const state = {
+      visibility: {
+        tokens: {},
+        nfts: {},
+      },
+    }
+    const result = addActivityVisibility(state)
+    expect(result.visibility.activity).toEqual({})
+  })
+
+  it('preserves existing visibility data', () => {
+    const state = {
+      visibility: {
+        tokens: { someToken: true },
+        nfts: { someNft: false },
+      },
+    }
+    const result = addActivityVisibility(state)
+    expect(result.visibility.tokens).toEqual({ someToken: true })
+    expect(result.visibility.nfts).toEqual({ someNft: false })
+    expect(result.visibility.activity).toEqual({})
+  })
+
+  it('handles missing visibility state', () => {
+    const state = { otherData: 'preserved' }
+    const result = addActivityVisibility(state)
+    expect(result).toEqual(state)
+  })
+})
+
+// Mobile: 96
+// Extension: 30
+// Web: 60
+describe('migrateDismissedTokenWarnings', () => {
+  it('converts token dismiss info to token warning dismissal format', () => {
+    const state = {
+      tokens: {
+        dismissedTokenWarnings: {
+          [UniverseChainId.Mainnet]: {
+            '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': {
+              chainId: UniverseChainId.Mainnet,
+              address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+            },
+          },
+        },
+      },
+    }
+    const result = migrateDismissedTokenWarnings(state)
+
+    const warning =
+      result.tokens.dismissedTokenWarnings[UniverseChainId.Mainnet]['0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48']
+    expect(warning.token).toEqual({
+      chainId: UniverseChainId.Mainnet,
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+    })
+    expect(warning.warnings).toEqual([TokenProtectionWarning.NonDefault])
+  })
+
+  it('handles missing tokens state', () => {
+    const state = { otherData: 'preserved' }
+    const result = migrateDismissedTokenWarnings(state)
+    expect(result).toEqual(state)
+  })
+
+  it('handles empty dismissed warnings', () => {
+    const state = { tokens: { dismissedTokenWarnings: {} } }
+    const result = migrateDismissedTokenWarnings(state)
+    expect(result.tokens.dismissedTokenWarnings).toEqual({})
+  })
+
+  it('falls back to empty warnings on error', () => {
+    const state = {
+      tokens: { dismissedTokenWarnings: createThrowingProxy({}, { throwingMethods: ['*'] }) },
+      otherData: 'preserved',
+    }
+    const result = migrateDismissedTokenWarnings(state)
+    expect(result.tokens.dismissedTokenWarnings).toEqual({})
+    expect(result.otherData).toBe('preserved')
   })
 })

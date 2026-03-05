@@ -28,7 +28,9 @@ export function useSwapOnPrevious(): {
       // We make sure that one of the input fields is focused (and the `DecimalPad` open) when the user goes back.
       updateSwapForm({ focusOnCurrencyField: ctxExactCurrencyField })
     }
-    // On interface, closing the review modal should cancel the transaction flow saga and remove submitting UI.
+    // On interface, closing the review modal should cancel the transaction flow saga
+    // and remove submitting UI. Plans do not stop on this signal as it can continue
+    // while backgrounded.
     if (isWebApp) {
       updateSwapForm({ isSubmitting: false })
       dispatch(interruptTransactionFlow())

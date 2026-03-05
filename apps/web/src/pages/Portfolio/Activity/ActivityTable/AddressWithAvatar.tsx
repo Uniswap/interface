@@ -1,4 +1,3 @@
-import { useActivityAddressLookupValue } from 'pages/Portfolio/Activity/ActivityTable/ActivityAddressLookupStore'
 import { memo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -7,6 +6,7 @@ import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/u
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useActivityAddressLookupValue } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAddressLookupStore'
 
 interface AddressWithAvatarProps {
   address: Address
@@ -38,7 +38,11 @@ function _AddressWithAvatar({ address, showAvatar = true }: AddressWithAvatarPro
       <Text variant="body3" color="$neutral1">
         {displayName}
       </Text>
-      {hasUnitag && <Unitag size={16} />}
+      {hasUnitag && (
+        <Flex pt="$spacing1">
+          <Unitag size={16} />
+        </Flex>
+      )}
     </Flex>
   )
 }

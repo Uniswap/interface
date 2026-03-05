@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
-import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 import i18n from 'uniswap/src/i18n'
+import { MetaTagInjectorInput } from '~/shared-cloud/metatags'
 
 const DEFAULT_METATAGS: MetaTagInjectorInput = {
   title: i18n.t('interface.metatags.title'),

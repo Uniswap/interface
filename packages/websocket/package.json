@@ -1,0 +1,37 @@
+{
+  "name": "@universe/websocket",
+  "version": "0.0.0",
+  "dependencies": {
+    "partysocket": "1.1.10",
+    "zustand": "5.0.6"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.1",
+    "@typescript/native-preview": "7.0.0-dev.20260108.1",
+    "@uniswap/eslint-config": "workspace:^",
+    "@vitest/coverage-v8": "3.2.1",
+    "depcheck": "1.4.7",
+    "eslint": "8.57.1",
+    "typescript": "5.8.3",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "test": "nx test websocket",
+    "test:coverage": "nx test:coverage websocket",
+    "typecheck": "nx typecheck websocket",
+    "typecheck:tsgo": "nx typecheck:tsgo websocket",
+    "lint": "nx lint websocket",
+    "lint:fix": "nx lint:fix websocket",
+    "lint:biome": "nx lint:biome websocket",
+    "lint:biome:fix": "nx lint:biome:fix websocket",
+    "lint:eslint": "nx lint:eslint websocket",
+    "lint:eslint:fix": "nx lint:eslint:fix websocket",
+    "check:deps:usage": "nx check:deps:usage websocket"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

@@ -2,7 +2,7 @@
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/highlight-bar-crosshair/highlight-bar-crosshair.ts.
  * Modifications are called out with comments.
  */
-import { roundRect } from 'components/Charts/utils'
+
 import { CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CrosshairMode,
@@ -13,6 +13,7 @@ import {
   SeriesAttachedParameter,
   Time,
 } from 'lightweight-charts'
+import { roundRect } from '~/components/Charts/utils'
 
 interface BitmapPositionLength {
   /** coordinate for use with a bitmap rendering scope */

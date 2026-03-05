@@ -2,6 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { OneSignal } from 'react-native-onesignal'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
+import { setOnboardingTimestamp } from 'src/features/analytics/onboardingTimestamp'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { initNotifsForNewUser } from 'src/features/notifications/slice'
 import { MobileAppsFlyerEvents } from 'uniswap/src/features/telemetry/constants'
@@ -62,6 +63,7 @@ export function useCompleteOnboardingCallback({
 
     // Exit flow
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+    setOnboardingTimestamp()
     if (entryPoint === OnboardingEntryPoint.Sidebar) {
       navigation.navigate(MobileScreens.Home)
     }

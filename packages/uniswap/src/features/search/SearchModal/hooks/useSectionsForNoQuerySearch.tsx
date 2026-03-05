@@ -1,6 +1,5 @@
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG, GqlResult } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { usePoolStatsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolStatsToPoolOptions'
 import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
@@ -28,9 +27,6 @@ export function useSectionsForNoQuerySearch({
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
-  const viewExternalWalletsFeatureEnabled = useFeatureFlag(FeatureFlags.ViewExternalWalletsOnWeb)
-  const walletSearchEnabledOnWeb = isWebApp && viewExternalWalletsFeatureEnabled
-
   const recentlySearchedOptions: SearchModalOption[] = useRecentlySearchedOptions({
     chainFilter,
     activeTab,
@@ -87,8 +83,7 @@ export function useSectionsForNoQuerySearch({
     options: trendingPoolOptions,
   })
 
-  const skipFavoriteWallets =
-    activeTab !== SearchTab.Wallets && !(isWebApp && walletSearchEnabledOnWeb && activeTab === SearchTab.All)
+  const skipFavoriteWallets = activeTab !== SearchTab.Wallets && !(isWebApp && activeTab === SearchTab.All)
   const favoriteWalletsOptions = useFavoriteWalletOptions({ skip: skipFavoriteWallets })
   const favoriteWalletsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.FavoriteWallets,
@@ -129,12 +124,12 @@ export function useSectionsForNoQuerySearch({
       default:
       case SearchTab.All:
         if (isWebPlatform) {
-          const webSections = [
+          sections = [
             ...(recentSearchSection ?? []),
             ...(trendingTokenSection ?? []),
             ...(trendingPoolSection ?? []),
+            ...(favoriteWalletsSection ?? []),
           ]
-          sections = walletSearchEnabledOnWeb ? [...webSections, ...(favoriteWalletsSection ?? [])] : webSections
         } else {
           sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? [])]
         }
@@ -160,6 +155,5 @@ export function useSectionsForNoQuerySearch({
     tokensError,
     trendingPoolSection,
     trendingTokenSection,
-    walletSearchEnabledOnWeb,
   ])
 }

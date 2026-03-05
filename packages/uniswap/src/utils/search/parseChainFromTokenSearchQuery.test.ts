@@ -19,19 +19,19 @@ describe('parseChainFromTokenSearchQuery', () => {
   })
 
   describe('single word searches', () => {
-    it('returns chain filter for chain names (native currency and interface)', () => {
+    it('returns search term for chain names without filtering', () => {
       expect(parseChainFromTokenSearchQuery('ethereum', enabledChains)).toEqual({
-        chainFilter: UniverseChainId.Mainnet,
-        searchTerm: null,
+        chainFilter: null,
+        searchTerm: 'ethereum',
       })
       expect(parseChainFromTokenSearchQuery('mainnet', enabledChains)).toEqual({
-        chainFilter: UniverseChainId.Mainnet,
-        searchTerm: null,
+        chainFilter: null,
+        searchTerm: 'mainnet',
       })
-      expect(parseChainFromTokenSearchQuery('EtHeReUm', enabledChains)).toEqual({
-        chainFilter: UniverseChainId.Mainnet,
-        searchTerm: null,
-      }) // case insensitive
+      expect(parseChainFromTokenSearchQuery('EtHeReUM', enabledChains)).toEqual({
+        chainFilter: null,
+        searchTerm: 'EtHeReUM',
+      }) // preserves original casing
     })
 
     it('returns search term for non-chain words', () => {
@@ -103,8 +103,8 @@ describe('parseChainFromTokenSearchQuery', () => {
 
     it('handles chain name that matches but no search term remains', () => {
       expect(parseChainFromTokenSearchQuery('ethereum', enabledChains)).toEqual({
-        chainFilter: UniverseChainId.Mainnet,
-        searchTerm: null,
+        chainFilter: null,
+        searchTerm: 'ethereum',
       })
     })
   })

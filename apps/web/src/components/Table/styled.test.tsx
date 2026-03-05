@@ -1,7 +1,7 @@
 import { GraphQLApi } from '@universe/api'
-import { TokenLinkCell } from 'components/Table/styled'
-import { validBEPoolToken0 } from 'test-utils/pools/fixtures'
-import { render, screen } from 'test-utils/render'
+import { TokenLinkCell } from '~/components/Table/styled'
+import { validBEPoolToken0 } from '~/test-utils/pools/fixtures'
+import { render, screen } from '~/test-utils/render'
 
 describe('TokenLinkCell', () => {
   it('renders unknown token', () => {

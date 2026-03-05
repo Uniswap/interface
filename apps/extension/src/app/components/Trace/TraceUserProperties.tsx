@@ -1,4 +1,7 @@
 import { datadogRum } from '@datadog/browser-rum'
+import { useQuery } from '@tanstack/react-query'
+import { provideUniswapIdentifierService } from '@universe/api'
+import { uniswapIdentifierQuery } from '@universe/sessions'
 import { useEffect } from 'react'
 import { useIsDarkMode } from 'ui/src'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
@@ -30,6 +33,8 @@ export function TraceUserProperties(): null {
   const { isTestnetModeEnabled } = useEnabledChains()
   const displayName = useDisplayName(activeAccount?.address)
 
+  const { data: uniswapIdentifier } = useQuery(uniswapIdentifierQuery(provideUniswapIdentifierService))
+
   useGatingUserPropertyUsernames()
 
   // Set user properties for datadog
@@ -37,6 +42,12 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     datadogRum.setUserProperty(ExtensionUserPropertyName.ActiveWalletAddress, activeAccount?.address)
   }, [activeAccount?.address])
+
+  useEffect(() => {
+    if (uniswapIdentifier) {
+      datadogRum.setUserProperty(ExtensionUserPropertyName.UniswapIdentifier, uniswapIdentifier)
+    }
+  }, [uniswapIdentifier])
 
   // Set user properties for amplitude
 

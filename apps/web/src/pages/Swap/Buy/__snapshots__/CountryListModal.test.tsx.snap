@@ -1,37 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`CountryListModal > should render options and call select callback 1`] = `
-.c0 {
-  padding: 16px;
-  padding-left: 40px;
-  height: 40px;
-  align-items: center;
-  width: 100%;
-  white-space: nowrap;
-  background-color: #F9F9F9;
-  border: none;
-  outline: none;
-  border-radius: 12px;
-  color: #131313;
-  border-style: solid;
-  border: 1px solid rgba(19, 19, 19, 0.08);
-  -webkit-appearance: none;
-  font-weight: 485;
-  font-size: 16px;
-  transition: border 100ms;
-}
-
-.c0 ::placeholder {
-  color: rgba(19, 19, 19, 0.35);
-  font-size: 16px;
-}
-
-.c0 :focus {
-  border: 1px solid rgba(19, 19, 19, 0.08);
-  background-color: #F9F9F9;
-  outline: none;
-}
-
 <span
   class=""
   style="display: contents;"
@@ -67,7 +36,7 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                   class="is_TouchableArea  t_group_true"
                   data-testid="CountryListModal-close"
                   role="button"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
                   tabindex="0"
                 >
                   <div
@@ -93,15 +62,29 @@ exports[`CountryListModal > should render options and call select callback 1`] =
                 <svg
                   data-testid="mocked-svg"
                 />
-                <input
-                  autocomplete="off"
-                  class="c0"
-                  data-testid="for-country-search-input"
-                  id="for-country-search-input"
-                  placeholder="Search by country or region"
-                  type="text"
-                  value=""
-                />
+                <span
+                  class="_dsp_contents"
+                >
+                  <span
+                    class="_dsp_contents"
+                  >
+                    <input
+                      autocapitalize="sentences"
+                      autocomplete="on"
+                      autocorrect="on"
+                      class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-surface3 _borderRightColor-0focus-surface3 _borderBottomColor-0focus-surface3 _borderLeftColor-0focus-surface3 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _WebkitAppearance-_platformweb_none _backgroundColor-0focus-surface2 _outlineWidth-0focus-0px _fontFamily-f-family _fontWeight-500 _fontSize-16px _lineHeight-f-lineHeigh507465454 _color-neutral1 _pr-t-space-pad1331704925 _pl-t-space-spa1360333989 _height-t-size-spac100347358 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _backgroundColor-surface2 _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _pt-t-space-pad1331704925 _pb-t-space-pad1331704925 _alignItems-center _width-10037 _whiteSpace-nowrap true "
+                      data-disable-theme="true"
+                      dir="auto"
+                      placeholder="Search by country or region"
+                      rows="1"
+                      spellcheck="true"
+                      style="--placeholderTextColor: var(--neutral3);"
+                      tabindex="0"
+                      value=""
+                      virtualkeyboardpolicy="auto"
+                    />
+                  </span>
+                </span>
               </div>
             </div>
             <div

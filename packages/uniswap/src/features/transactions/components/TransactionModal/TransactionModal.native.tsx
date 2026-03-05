@@ -58,7 +58,6 @@ export function TransactionModal({
         // line as a visual artifact on mobile. For example, if a white background is rendered
         // on a white background, a grey line sometimes appears as the bottom sheet resizes.
         backgroundColor: 'transparent',
-        overflow: 'hidden',
         height: fullscreen ? '100%' : undefined,
       },
       animatedBorderRadius,

@@ -16,7 +16,7 @@ import {
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { iconSizes, spacing, zIndexes } from 'ui/src/theme'
+import { spacing, zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
@@ -189,14 +189,7 @@ export function ActionSheetDropdown({
         >
           {children}
           {showArrow && (
-            <RotatableChevron
-              animation="100ms"
-              color="$neutral2"
-              direction={isOpen ? 'up' : 'down'}
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
-              $group-item-hover={{}}
-            />
+            <RotatableChevron animation="100ms" color="$neutral2" direction={isOpen ? 'up' : 'down'} size="$icon.20" />
           )}
         </Flex>
       </TouchableArea>

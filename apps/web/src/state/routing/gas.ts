@@ -1,7 +1,5 @@
 import { MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
 import { Currency } from '@uniswap/sdk-core'
-import { RPC_PROVIDERS } from 'constants/providers'
-import { ApproveInfo, WrapInfo } from 'state/routing/types'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20, Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
@@ -9,6 +7,8 @@ import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { getContract } from 'utilities/src/contracts/getContract'
+import { RPC_PROVIDERS } from '~/constants/providers'
+import { ApproveInfo, WrapInfo } from '~/state/routing/types'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
 const APPROVE_FALLBACK_GAS_LIMIT_IN_GWEI = 65_000

@@ -4,7 +4,8 @@ import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
-import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
+import { clearNotificationsByType } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { prepareSwapFormState, TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -12,7 +13,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwapFlow'
 import { invalidateAndRefetchWalletDelegationQueries } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
-import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SwapFlowScreen(): JSX.Element {
   const dispatch = useDispatch()
@@ -31,16 +32,12 @@ export function SwapFlowScreen(): JSX.Element {
     filteredChainIdsOverride: ignorePersistedFilteredChainIds ? undefined : persistedFilteredChainIds,
   })
 
-  const signerMnemonicAccounts = useSignerAccounts()
-  const chains = useEnabledChains()
-  const accountAddresses = signerMnemonicAccounts.map((account) => account.address)
-
   // Update flow start timestamp every time modal is opened for logging
   useEffect(() => {
-    invalidateAndRefetchWalletDelegationQueries({ accountAddresses, chainIds: chains.chains }).catch((error) =>
+    invalidateAndRefetchWalletDelegationQueries().catch((error) =>
       logger.debug('SwapFlowScreen', 'useEffect', 'Failed to invalidate and refetch wallet delegation queries', error),
     )
-  }, [accountAddresses, chains.chains])
+  }, [])
 
   const preservedTransactionStateRef = useRef<TransactionState | null>(null)
   const initialTransactionState = useMemo(() => {
@@ -61,9 +58,13 @@ export function SwapFlowScreen(): JSX.Element {
 
   const swapPrefilledState = useSwapPrefilledState(initialTransactionState)
 
-  // Clear all notification toasts when the swap flow closes
+  // Clear network change notification toasts when the swap flow closes
   const onClose = useCallback(() => {
-    dispatch(clearNotificationQueue())
+    dispatch(
+      clearNotificationsByType({
+        types: [AppNotificationType.NetworkChanged, AppNotificationType.NetworkChangedBridge],
+      }),
+    )
     navigateBack()
   }, [dispatch, navigateBack])
 

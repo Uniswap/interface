@@ -1,11 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import React, { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, ViewStyle } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
-import { PermitInfo } from 'src/components/Requests/RequestModal/ClientDetails'
 import {
-  isBatchedTransactionRequest,
   isPersonalSignRequest,
   isTransactionRequest,
   SignRequest,
@@ -19,7 +15,6 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { AddressButton } from 'wallet/src/components/buttons/AddressButton'
 import {
   SpendingDetails,
@@ -28,21 +23,7 @@ import {
 import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
 
-const MAX_MODAL_MESSAGE_HEIGHT = 200
 const MAX_TYPED_DATA_PARSE_DEPTH = 3
-
-const commonCardStyles = {
-  backgroundColor: '$surface2' as const,
-  borderColor: '$surface3' as const,
-  borderRadius: '$rounded16' as const,
-  borderWidth: '$spacing1' as const,
-}
-
-const requestMessageStyle: StyleProp<ViewStyle> = {
-  // need a fixed height here or else modal gets confused about total height
-  maxHeight: MAX_MODAL_MESSAGE_HEIGHT,
-  overflow: 'hidden',
-}
 
 const getStrMessage = (request: WalletConnectSigningRequest): string => {
   if (isPersonalSignRequest(request)) {
@@ -164,16 +145,15 @@ function TransactionDetails({
   )
 }
 
-type RequestDetailsProps = {
+interface RequestDetailsContentProps {
   request: WalletConnectSigningRequest
-  permitInfo?: PermitInfo
 }
 
 function isSignTypedDataRequest(request: WalletConnectSigningRequest): request is SignRequest {
   return request.type === EthMethod.SignTypedData || request.type === EthMethod.SignTypedDataV4
 }
 
-export function RequestDetailsContent({ request }: RequestDetailsProps): JSX.Element {
+export function RequestDetailsContent({ request }: RequestDetailsContentProps): JSX.Element {
   const { t } = useTranslation()
 
   if (isSignTypedDataRequest(request)) {
@@ -195,30 +175,5 @@ export function RequestDetailsContent({ request }: RequestDetailsProps): JSX.Ele
     <Text color="$neutral2" variant="body3">
       {message || t('qrScanner.request.message.unavailable')}
     </Text>
-  )
-}
-
-export function RequestDetails({ request, permitInfo }: RequestDetailsProps): JSX.Element {
-  if (isBatchedTransactionRequest(request)) {
-    return <BatchedRequestDetailsContent calls={request.calls} chainId={request.chainId} />
-  }
-
-  return (
-    <Flex
-      backgroundColor={commonCardStyles.backgroundColor}
-      borderColor={commonCardStyles.borderColor}
-      borderRadius={commonCardStyles.borderRadius}
-      borderWidth={commonCardStyles.borderWidth}
-      my="$spacing4"
-      mx="$spacing24"
-    >
-      {!permitInfo && (
-        <Flex p="$spacing16" style={requestMessageStyle}>
-          <ScrollView>
-            <RequestDetailsContent request={request} />
-          </ScrollView>
-        </Flex>
-      )}
-    </Flex>
   )
 }

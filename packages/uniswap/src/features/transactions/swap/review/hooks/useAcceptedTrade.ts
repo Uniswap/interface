@@ -34,16 +34,21 @@ export function useAcceptedTrade({
       return
     }
 
-    // auto-accept: 1) first valid trade for the user or 2) new trade if price movement is below threshold
-    if (!acceptedTrade || !newTradeRequiresAcceptance) {
-      setAcceptedDerivedSwapInfo(derivedSwapInfo)
-    }
-
     // If a new trade requires acceptance, interrupt interface's transaction flow
     if (isWebApp && newTradeRequiresAcceptance) {
       dispatch(interruptTransactionFlow())
     }
-  }, [trade, acceptedTrade, indicativeTrade, newTradeRequiresAcceptance, derivedSwapInfo, dispatch])
+
+    // Avoid updating the accepted trade if submission is in progress
+    if (isSubmitting) {
+      return
+    }
+
+    // auto-accept: 1) first valid trade for the user or 2) new trade if price movement is below threshold
+    if (!acceptedTrade || !newTradeRequiresAcceptance) {
+      setAcceptedDerivedSwapInfo(derivedSwapInfo)
+    }
+  }, [trade, acceptedTrade, indicativeTrade, newTradeRequiresAcceptance, derivedSwapInfo, dispatch, isSubmitting])
 
   const onAcceptTrade = (): undefined => {
     if (!trade) {

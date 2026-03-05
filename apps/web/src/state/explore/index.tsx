@@ -5,6 +5,7 @@ import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useProtocolStatsQuery } from 'uniswap/src/data/rest/protocolStats'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useExploreBackendSortingEnabled } from '~/state/explore/useExploreBackendSortingEnabled'
 
 interface QueryResult<T> {
   data?: T
@@ -49,13 +50,16 @@ export function ExploreContextProvider({
   children: React.ReactNode
 }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
+  const isExploreBackendSortingEnabled = useExploreBackendSortingEnabled()
 
+  // Skip exploreStats query when backend sorting is enabled (tokens/pools tables use new endpoints)
   const {
     data: exploreStatsData,
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
   } = useExploreStatsQuery<ExploreStatsResponse>({
     input: { chainId: isSupportedChain ? chainId.toString() : ALL_NETWORKS_ARG },
+    enabled: !isExploreBackendSortingEnabled,
   })
   const {
     data: protocolStatsData,

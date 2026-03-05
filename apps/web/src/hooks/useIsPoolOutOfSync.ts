@@ -4,7 +4,7 @@ import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 
 // Show warning if the price diverges by more than 5%
 const WARNING_THRESHOLD = new Fraction(5, 100)
@@ -28,10 +28,15 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
     return undefined
   }
 
-  const marketPrice = new Fraction(
-    baseCurrencyUSDPrice.multiply(DECIMAL_SCALAR).toFixed(0),
-    quoteCurrencyUSDPrice.multiply(DECIMAL_SCALAR).toFixed(0),
-  )
+  const numerator = baseCurrencyUSDPrice.multiply(DECIMAL_SCALAR).toFixed(0)
+  const denominator = quoteCurrencyUSDPrice.multiply(DECIMAL_SCALAR).toFixed(0)
+
+  // Avoid division by zero when the denominator rounds to 0
+  if (denominator === '0') {
+    return undefined
+  }
+
+  const marketPrice = new Fraction(numerator, denominator)
 
   return marketPrice
 }

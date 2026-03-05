@@ -1,22 +1,10 @@
 import { createColumnHelper, Row } from '@tanstack/react-table'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import {
-  useOpenOffchainActivityModal,
-  useOrderAmounts,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import { Table } from 'components/Table'
-import { Cell } from 'components/Table/Cell'
-import { HeaderCell } from 'components/Table/styled'
-import { hasRow } from 'components/Table/utils/hasRow'
 import { TFunction } from 'i18next'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
-import { MAX_LIMITS_LOADING_ROWS } from 'pages/Portfolio/Overview/constants'
-import { TableSectionHeader } from 'pages/Portfolio/Overview/TableSectionHeader'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useScrollbarStyles } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -29,6 +17,18 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
+import { useOpenLimitOrders } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import {
+  useOpenOffchainActivityModal,
+  useOrderAmounts,
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
+import { Table } from '~/components/Table'
+import { Cell } from '~/components/Table/Cell'
+import { HeaderCell } from '~/components/Table/styled'
+import { hasRow } from '~/components/Table/utils/hasRow'
+import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
+import { MAX_LIMITS_LOADING_ROWS } from '~/pages/Portfolio/Overview/constants'
+import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 
 /**
  * Type guard to check if order amounts are fully defined with currencies.
@@ -56,16 +56,12 @@ function getExpiryText(expiry: number | undefined, t: TFunction): string | null 
   return t('common.limits.expiresIn', { duration: durationString })
 }
 
-interface OpenLimitsTableProps {
-  account: string
-  maxLimits?: number
-}
-
 // Left column cell component
 const LimitInfoCell = memo(function LimitInfoCell({ order }: { order: UniswapXOrderDetails }) {
   const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
   const amounts = useOrderAmounts(order)
+  const scrollbarStyles = useScrollbarStyles()
 
   const inputCurrencyInfo = useCurrencyInfo(
     amounts?.inputAmount.currency ? currencyId(amounts.inputAmount.currency) : undefined,
@@ -81,24 +77,26 @@ const LimitInfoCell = memo(function LimitInfoCell({ order }: { order: UniswapXOr
   }
 
   return (
-    <Flex row alignItems="center" gap="$gap8">
-      <SplitLogo
-        chainId={order.chainId}
-        inputCurrencyInfo={inputCurrencyInfo}
-        outputCurrencyInfo={outputCurrencyInfo}
-        size={iconSizes.icon24}
-      />
-      <Flex>
-        <Text variant="body3" color="$neutral1">
-          {formatCurrencyAmount({
-            value: amounts.inputAmount,
-            type: NumberType.TokenTx,
-          })}{' '}
-          {amounts.inputAmount.currency.symbol} → {amounts.outputAmount.currency.symbol}
-        </Text>
-        <Text variant="body4" color="$neutral2">
-          {getExpiryText(order.expiry, t)}
-        </Text>
+    <Flex width="100%" $platform-web={{ overflowX: 'auto' }} style={scrollbarStyles}>
+      <Flex row alignItems="center" gap="$gap8" width="max-content">
+        <SplitLogo
+          chainId={order.chainId}
+          inputCurrencyInfo={inputCurrencyInfo}
+          outputCurrencyInfo={outputCurrencyInfo}
+          size={iconSizes.icon24}
+        />
+        <Flex>
+          <Text variant="body3" color="$neutral1">
+            {formatCurrencyAmount({
+              value: amounts.inputAmount,
+              type: NumberType.TokenTx,
+            })}{' '}
+            {amounts.inputAmount.currency.symbol} → {amounts.outputAmount.currency.symbol}
+          </Text>
+          <Text variant="body4" color="$neutral2">
+            {getExpiryText(order.expiry, t)}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   )
@@ -142,7 +140,13 @@ const LimitActionCell = memo(function LimitActionCell({ order }: { order: Uniswa
   )
 })
 
-export const OpenLimitsTable = memo(function OpenLimitsTable({ account, maxLimits = 5 }: OpenLimitsTableProps) {
+export const OpenLimitsTable = memo(function OpenLimitsTable({
+  account,
+  maxLimits,
+}: {
+  account: string
+  maxLimits?: number
+}) {
   const { t } = useTranslation()
   const trace = useTrace()
   const { openLimitOrders, loading } = useOpenLimitOrders(account)
@@ -150,6 +154,9 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({ account, maxLimit
 
   // Limit the number of orders displayed
   const limitedOrders = useMemo(() => {
+    if (!maxLimits) {
+      return openLimitOrders
+    }
     return openLimitOrders.slice(0, maxLimits)
   }, [openLimitOrders, maxLimits])
 
@@ -161,6 +168,7 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({ account, maxLimit
       // Left Column - Limit Info
       columnHelper.display({
         id: 'limitInfo',
+        minSize: 200,
         header: () => (
           <HeaderCell justifyContent="flex-start">
             <Text variant="body3" color="$neutral2" fontWeight="500">

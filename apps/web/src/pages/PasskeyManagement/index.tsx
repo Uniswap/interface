@@ -1,16 +1,16 @@
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
-import { useAccount } from 'hooks/useAccount'
-import { useDisconnect } from 'hooks/useDisconnect'
-import { useModalState } from 'hooks/useModalState'
-import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
-import Swap from 'pages/Swap'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
+import { useAccount } from '~/hooks/useAccount'
+import { useDisconnect } from '~/hooks/useDisconnect'
+import { useModalState } from '~/hooks/useModalState'
+import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
+import Swap from '~/pages/Swap'
 
 type PasskeyManagementEffectDependencies = {
   account: {

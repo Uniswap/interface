@@ -3,6 +3,7 @@ import { Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { DYNAMIC_FEE_AMOUNT, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -50,8 +51,8 @@ function getProtocolLabel(route: { protocol: Protocol; pools: UniswapPool[] }): 
 
 export const uniswapRoutingProvider: RoutingProvider = {
   name: 'Uniswap API',
-  icon: undefined,
-  iconColor: '$neutral1',
+  icon: UniswapLogo,
+  iconColor: '$accent1',
 
   getRoutingEntries: (trade: Trade): RoutingDiagramEntry[] => {
     if (!isClassic(trade)) {

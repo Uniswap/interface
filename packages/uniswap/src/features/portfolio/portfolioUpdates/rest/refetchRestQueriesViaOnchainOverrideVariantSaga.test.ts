@@ -1,3 +1,4 @@
+import 'utilities/src/logger/mocks'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
@@ -13,19 +14,6 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-
-jest.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  },
-  createLogger: jest.fn(() => ({
-    debug: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  })),
-}))
 
 const MOCK_TOKEN_ADDRESS = '0x1234567890123456789012345678901234567890'
 const MOCK_OTHER_ADDRESS = '0x9876543210987654321098765432109876543210'
@@ -57,7 +45,7 @@ describe('mergeOnChainBalances', () => {
           },
         ],
       },
-      clone: jest.fn().mockReturnThis(),
+      clone: vi.fn().mockReturnThis(),
     } as unknown as GetPortfolioResponse
 
     const onchainBalances = new Map()
@@ -79,7 +67,7 @@ describe('mergeOnChainBalances', () => {
 
     const mockPortfolioData: GetPortfolioResponse = {
       portfolio: portfolioData,
-      clone: jest.fn().mockReturnValue({
+      clone: vi.fn().mockReturnValue({
         portfolio: portfolioData,
       }),
     } as unknown as GetPortfolioResponse
@@ -109,7 +97,7 @@ describe('mergeOnChainBalances', () => {
 
     const mockPortfolioData: GetPortfolioResponse = {
       portfolio: portfolioData,
-      clone: jest.fn().mockReturnValue({
+      clone: vi.fn().mockReturnValue({
         portfolio: portfolioData,
       }),
     } as unknown as GetPortfolioResponse
@@ -140,7 +128,7 @@ describe('mergeOnChainBalances', () => {
 
     const mockPortfolioData: GetPortfolioResponse = {
       portfolio: portfolioData,
-      clone: jest.fn().mockReturnValue({
+      clone: vi.fn().mockReturnValue({
         portfolio: portfolioData,
       }),
     } as unknown as GetPortfolioResponse
@@ -158,6 +146,73 @@ describe('mergeOnChainBalances', () => {
     expect(result?.portfolio?.balances[1]?.token?.address).toBe(MOCK_NEW_TOKEN_ADDRESS)
     expect(result?.portfolio?.balances[1]?.amount?.amount).toBe(5)
     expect(result?.portfolio?.balances[1]?.valueUsd).toBe(50)
+  })
+
+  it('should not add new balances for tokens with zero balance', () => {
+    const newCurrencyId = buildCurrencyId(mockChainId, MOCK_NEW_TOKEN_ADDRESS).toLowerCase()
+
+    const portfolioData = {
+      balances: [
+        {
+          token: { chainId: mockChainId, address: MOCK_EXISTING_TOKEN_ADDRESS },
+          amount: { amount: 2, raw: MOCK_BALANCE_2_ETH },
+          valueUsd: 20,
+        },
+      ],
+    }
+
+    const mockPortfolioData: GetPortfolioResponse = {
+      portfolio: portfolioData,
+      clone: vi.fn().mockReturnValue({
+        portfolio: portfolioData,
+      }),
+    } as unknown as GetPortfolioResponse
+
+    const zeroOnchainBalance: PartialMessage<Balance> = {
+      token: { chainId: mockChainId, address: MOCK_NEW_TOKEN_ADDRESS },
+      amount: { amount: 0, raw: '0' },
+      valueUsd: 0,
+    }
+    const onchainBalances: OnChainMapRest = new Map([[newCurrencyId, zeroOnchainBalance]])
+
+    const result = mergeOnChainBalances(mockPortfolioData, onchainBalances)
+
+    // Should only have the existing balance, zero-balance token should not be added
+    expect(result?.portfolio?.balances).toHaveLength(1)
+    expect(result?.portfolio?.balances[0]?.token?.address).toBe(MOCK_EXISTING_TOKEN_ADDRESS)
+  })
+
+  it('should not add new balances for tokens with negative balance', () => {
+    const newCurrencyId = buildCurrencyId(mockChainId, MOCK_NEW_TOKEN_ADDRESS).toLowerCase()
+
+    const portfolioData = {
+      balances: [
+        {
+          token: { chainId: mockChainId, address: MOCK_EXISTING_TOKEN_ADDRESS },
+          amount: { amount: 2, raw: MOCK_BALANCE_2_ETH },
+          valueUsd: 20,
+        },
+      ],
+    }
+
+    const mockPortfolioData: GetPortfolioResponse = {
+      portfolio: portfolioData,
+      clone: vi.fn().mockReturnValue({
+        portfolio: portfolioData,
+      }),
+    } as unknown as GetPortfolioResponse
+
+    const negativeOnchainBalance: PartialMessage<Balance> = {
+      token: { chainId: mockChainId, address: MOCK_NEW_TOKEN_ADDRESS },
+      amount: { amount: -1, raw: '0' },
+      valueUsd: 0,
+    }
+    const onchainBalances: OnChainMapRest = new Map([[newCurrencyId, negativeOnchainBalance]])
+
+    const result = mergeOnChainBalances(mockPortfolioData, onchainBalances)
+
+    expect(result?.portfolio?.balances).toHaveLength(1)
+    expect(result?.portfolio?.balances[0]?.token?.address).toBe(MOCK_EXISTING_TOKEN_ADDRESS)
   })
 
   it('should remove balances that become zero', () => {
@@ -178,7 +233,7 @@ describe('mergeOnChainBalances', () => {
 
     const mockPortfolioData: GetPortfolioResponse = {
       portfolio: portfolioData,
-      clone: jest.fn().mockReturnValue({
+      clone: vi.fn().mockReturnValue({
         portfolio: portfolioData,
       }),
     } as unknown as GetPortfolioResponse
@@ -217,7 +272,7 @@ describe('mergeOnChainBalances', () => {
 
     const mockPortfolioData: GetPortfolioResponse = {
       portfolio: portfolioData,
-      clone: jest.fn().mockReturnValue({
+      clone: vi.fn().mockReturnValue({
         portfolio: portfolioData,
       }),
     } as unknown as GetPortfolioResponse

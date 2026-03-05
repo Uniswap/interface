@@ -34,7 +34,7 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="Dialog--:r5:-title"
+        id="Dialog--:r4:-title"
         role="heading"
       />
     </span>
@@ -42,48 +42,39 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
       class="is_TouchableArea  t_group_true"
       data-testid="nav-search-input"
       role="button"
-      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 340px; transform: [object Object];"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 340px; transform: scale(1);"
       tabindex="0"
     >
       <div
         class="_backgroundColor-0hover-surface1Hov3121676 _color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _height-40px _alignItems-center _justifyContent-space-betwe3241 _color-accent3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa1360334080"
         >
           <div
             class="c0"
-            data-cy="nav-search-icon"
+            data-testid="nav-search-icon"
           >
             <svg
               fill="none"
-              height="20px"
-              stroke="rgba(19, 19, 19, 0.63)"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="20px"
-              xmlns="http://www.w3.org/2000/svg"
+              stroke-width="8"
+              style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 26 26"
             >
-              <circle
-                cx="11"
-                cy="11"
-                r="8"
-              />
-              <line
-                x1="21"
-                x2="16.65"
-                y1="21"
-                y2="16.65"
+              <path
+                clip-rule="evenodd"
+                d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                fill="currentColor"
+                fill-opacity="0.63"
+                fill-rule="evenodd"
               />
             </svg>
           </div>
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _textAlign-left"
+            class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _textAlign-left"
             data-disable-theme="true"
           >
-            Search tokens
+            Search tokens, pools, and wallets
           </span>
         </div>
         <div

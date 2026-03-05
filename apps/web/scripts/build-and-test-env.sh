@@ -19,7 +19,7 @@ fi
 echo "🧪 Testing production environment variable loading..."
 
 # Run production build and capture output
-BUILD_OUTPUT=$(bun run build:production 2>&1)
+BUILD_OUTPUT=$(NODE_OPTIONS="--max-old-space-size=16384" bun run build:production 2>&1)
 
 # Check that the correct production GraphQL endpoint is loaded
 if echo "$BUILD_OUTPUT" | grep -q "ENV_LOADED:.*mode=production.*interface\.gateway\.uniswap\.org/v1/graphql"; then

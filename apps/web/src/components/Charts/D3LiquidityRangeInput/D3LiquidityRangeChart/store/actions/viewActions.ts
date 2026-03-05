@@ -1,14 +1,17 @@
+import { CHART_BEHAVIOR } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import {
-  CHART_BEHAVIOR,
-  CHART_DIMENSIONS,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import type { ChartStoreState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { boundPanY } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/boundPanY'
-import { calculateDynamicZoomMin } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/chartUtils'
-import { getClosestTick } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/getClosestTick'
-import { calculateRangeViewport } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/rangeViewportUtils'
-import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
-import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
+  type ChartStoreState,
+  DefaultPriceStrategy,
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { boundPanY } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/boundPanY'
+import { calculateStrategyTicks } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceStrategies'
+import {
+  calculateMaxZoom,
+  calculateRangeViewport,
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/rangeViewportUtils'
+import { snapTickToSpacing } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
+import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
+import { RangeAmountInputPriceMode } from '~/components/Liquidity/Create/types'
 
 interface ViewActionCallbacks {
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
@@ -24,7 +27,7 @@ export const createViewActions = ({
   callbacks: ViewActionCallbacks
 }) => ({
   zoom: (targetZoom: number) => {
-    const { zoomLevel, panY, actions, dimensions, renderingContext } = get()
+    const { zoomLevel, panY, actions, dimensions } = get()
 
     const viewportHeight = dimensions.height
     const centerY = viewportHeight / 2
@@ -33,109 +36,87 @@ export const createViewActions = ({
     const zoomRatio = targetZoom / zoomLevel
     const newPanY = centerY - (centerY - panY) * zoomRatio
 
-    const targetPanY = renderingContext?.liquidityData
-      ? boundPanY({
-          panY: newPanY,
-          viewportHeight,
-          liquidityData: renderingContext.liquidityData,
-          zoomLevel: targetZoom,
-        })
-      : newPanY
+    const targetPanY = boundPanY({
+      panY: newPanY,
+      viewportHeight,
+      zoomLevel: targetZoom,
+    })
 
     actions.animateToState({
       targetZoom,
       targetPan: targetPanY,
-      targetMinPrice: undefined,
-      targetMaxPrice: undefined,
+      targetMinTick: undefined,
+      targetMaxTick: undefined,
     })
   },
 
   zoomIn: () => {
-    const { actions, zoomLevel } = get()
-    const targetZoom = Math.min(zoomLevel * CHART_BEHAVIOR.ZOOM_FACTOR, CHART_BEHAVIOR.ZOOM_MAX)
+    const { actions, zoomLevel, tickSpacing } = get()
+    const targetZoom = Math.min(zoomLevel * CHART_BEHAVIOR.ZOOM_FACTOR, calculateMaxZoom(tickSpacing))
 
     actions.zoom(targetZoom)
   },
 
   zoomOut: () => {
-    const { actions, zoomLevel, dynamicZoomMin } = get()
+    const { actions, zoomLevel } = get()
 
-    const targetZoom = Math.max(zoomLevel / CHART_BEHAVIOR.ZOOM_FACTOR, dynamicZoomMin)
+    const targetZoom = Math.max(zoomLevel / CHART_BEHAVIOR.ZOOM_FACTOR, CHART_BEHAVIOR.ZOOM_MIN)
 
     actions.zoom(targetZoom)
   },
 
   centerRange: () => {
-    const { minPrice, maxPrice, dimensions, dynamicZoomMin, renderingContext, actions } = get()
+    const { minTick, maxTick, renderingContext, actions } = get()
 
-    if (
-      minPrice === undefined ||
-      maxPrice === undefined ||
-      !renderingContext?.liquidityData ||
-      renderingContext.liquidityData.length === 0
-    ) {
+    if (minTick === undefined || maxTick === undefined || !renderingContext) {
       return
     }
 
-    const { liquidityData } = renderingContext
-
-    // Find the ticks that correspond to minPrice and maxPrice
-    const { index: minTickIndex } = getClosestTick(liquidityData, minPrice)
-    const { index: maxTickIndex } = getClosestTick(liquidityData, maxPrice)
+    const { tickSpacing } = renderingContext
 
     const { targetZoom, targetPanY } = calculateRangeViewport({
-      minTickIndex,
-      maxTickIndex,
-      liquidityData,
-      dimensions,
-      dynamicZoomMin,
+      minTick,
+      maxTick,
+      tickSpacing,
     })
 
     // Animate to the calculated state
     actions.animateToState({
       targetZoom,
       targetPan: targetPanY,
-      targetMinPrice: undefined,
-      targetMaxPrice: undefined,
+      targetMinTick: undefined,
+      targetMaxTick: undefined,
     })
   },
 
-  reset: (params?: { animate?: boolean; minPrice?: number | null; maxPrice?: number | null }) => {
-    const { animate = true, minPrice: providedMinPrice, maxPrice: providedMaxPrice } = params ?? {}
-    const { actions, isFullRange, dynamicZoomMin, renderingContext } = get()
+  reset: (params?: { animate?: boolean; minTick?: number | null; maxTick?: number | null }) => {
+    const { animate = true, minTick: providedMinTick, maxTick: providedMaxTick } = params ?? {}
+    const { actions, isFullRange, renderingContext } = get()
 
     if (!renderingContext) {
       return
     }
 
-    const { priceData, liquidityData } = renderingContext
+    const { priceData, liquidityData, tickSpacing, currentTick } = renderingContext
 
     // If full range, use the min and max liquidity data points
-    const minPriceValue = liquidityData[0].price0
-    const maxPriceValue = liquidityData[liquidityData.length - 1].price0
 
-    // If minPrice or maxPrice is not provided, use 20%-80% of the viewport range
-    // The viewport is centered on current price and sized to fit all historical data
+    const minTickValue = liquidityData[0].tick
+    const maxTickValue = liquidityData[liquidityData.length - 1].tick
+
+    // Calculate default range using price RATIOS relative to current price.
+    // This correctly handles token decimal differences (e.g., WBTC 8 decimals vs USDC 6 decimals)
+    // because tick differences represent price ratios: price1/price2 = 1.0001^(tick1-tick2)
     //
     // Step by step calculation:
-    // 1. Find the distance from current price to the data bounds
-    // 2. Create viewport that extends equally in both directions from current price
-    // 3. Take middle 60% (20%-80%) of that viewport as default range
+    // 1. Find historical price bounds and current price
+    // 2. Calculate viewport prices centered on current price
+    // 3. Convert price ratios to tick offsets from currentTick
     //
     // For example, if the pair is stablecoin (e.g. USDC/USDT):
-    // - price data bounds: 0.98 to 1.02
-    // - current price: 1.00
-    // - max spread: max(1.00 - 0.98, 1.02 - 1.00) = 0.02
-    // - viewport: 1.00 ± (2 × 0.02) / 2 = 0.98 to 1.02
-    // - default range: 0.98 + (1.02 - 0.98) × 0.2 = 0.988 to 1.016
-
-    //
-    // For volatile pairs (e.g. ETH/USDC):
-    // - price data bounds: 2000 to 5000
-    // - current price: 3200
-    // - max spread: max(3200 - 2000, 5000 - 3200) = 1800
-    // - viewport: 3200 ± (2 × 1800) / 2 = 1400 to 5000
-    // - default range: 1400 + (5000 - 1400) × 0.2 = 2120 to 4280
+    // - price bounds: 0.98 to 1.02, current: 1.00
+    // - min ratio: 0.988/1.00 = 0.988, max ratio: 1.016/1.00 = 1.016
+    // - min tick offset: log(0.988)/log(1.0001) ≈ -120, max: log(1.016)/log(1.0001) ≈ +159
 
     // Calculate price data bounds (historical price range)
     const { min: priceDataMin, max: priceDataMax } = getCandlestickPriceBounds(priceData)
@@ -156,90 +137,101 @@ export const createViewActions = ({
     const calculatedDefaultMinPrice = minVisiblePrice + visibleRange * 0.2
     const calculatedDefaultMaxPrice = minVisiblePrice + visibleRange * 0.8
 
-    // Find ticks for calculated default prices
-    const { index: defaultMinTickIndex } = getClosestTick(liquidityData, calculatedDefaultMinPrice)
-    const { index: defaultMaxTickIndex } = getClosestTick(liquidityData, calculatedDefaultMaxPrice)
-    const defaultMinPrice = liquidityData[defaultMinTickIndex].price0
-    const defaultMaxPrice = liquidityData[defaultMaxTickIndex].price0
+    // Convert price ratios to tick offsets from currentTick
+    // This handles token decimals correctly because: tick_offset = log(price_ratio) / log(1.0001)
+    const minPriceRatio = calculatedDefaultMinPrice / currentPrice
+    const maxPriceRatio = calculatedDefaultMaxPrice / currentPrice
+    const minTickOffset = Math.round(Math.log(minPriceRatio) / Math.log(1.0001))
+    const maxTickOffset = Math.round(Math.log(maxPriceRatio) / Math.log(1.0001))
 
-    // Store default prices in state
+    // Apply offsets to currentTick and snap to tickSpacing
+    const defaultMinTick = snapTickToSpacing(currentTick + minTickOffset, tickSpacing)
+    const defaultMaxTick = snapTickToSpacing(currentTick + maxTickOffset, tickSpacing)
+
+    // Store default ticks in state
     set((state) => ({
       ...state,
-      defaultMinPrice,
-      defaultMaxPrice,
+      defaultMinTick,
+      defaultMaxTick,
       selectedPriceStrategy: undefined,
     }))
 
-    // For the actual position, use provided prices or fall back to defaults
-    const minPrice = providedMinPrice ?? defaultMinPrice
-    const maxPrice = providedMaxPrice ?? defaultMaxPrice
+    // For the actual position, use provided ticks or fall back to defaults
+    let minTick = providedMinTick ?? defaultMinTick
+    let maxTick = providedMaxTick ?? defaultMaxTick
 
-    // Find ticks for the actual position
-    const { index: minTickIndex } = getClosestTick(liquidityData, minPrice)
-    const { index: maxTickIndex } = getClosestTick(liquidityData, maxPrice)
+    // If there is not enough data to calculate the default range, use the stable strategy (±3 ticks)
+    if (minTick === maxTick) {
+      const { minTick: newMinTick, maxTick: newMaxTick } = calculateStrategyTicks({
+        priceStrategy: DefaultPriceStrategy.STABLE,
+        currentTick,
+        tickSpacing,
+        defaultMinTick,
+        defaultMaxTick,
+      })
 
-    const resetDimensions = { width: 0, height: CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT }
-
-    // Center the range on the default min and max prices
-    const { targetZoom: desiredZoom, targetPanY: centerPanY } = calculateRangeViewport({
-      minTickIndex,
-      maxTickIndex,
-      liquidityData,
-      dimensions: resetDimensions,
-      dynamicZoomMin,
-    })
+      minTick = newMinTick
+      maxTick = newMaxTick
+    }
 
     if (isFullRange) {
+      const { targetZoom: desiredZoom, targetPanY: centerPanY } = calculateRangeViewport({
+        minTick: minTickValue,
+        maxTick: maxTickValue,
+        tickSpacing,
+      })
+
       actions.setChartState({
         zoomLevel: desiredZoom,
         panY: centerPanY,
-        minPrice: minPriceValue,
-        maxPrice: maxPriceValue,
+        minTick: minTickValue,
+        maxTick: maxTickValue,
       })
 
       return
     }
 
+    // Center the range on the default min and max prices
+    const { targetZoom: desiredZoom, targetPanY: centerPanY } = calculateRangeViewport({
+      minTick,
+      maxTick,
+      tickSpacing,
+    })
+
     if (animate) {
       actions.animateToState({
         targetZoom: desiredZoom,
         targetPan: centerPanY,
-        targetMinPrice: minPrice,
-        targetMaxPrice: maxPrice,
+        targetMinTick: minTick,
+        targetMaxTick: maxTick,
       })
     } else {
       actions.setChartState({
         zoomLevel: desiredZoom,
         panY: centerPanY,
-        minPrice,
-        maxPrice,
+        minTick,
+        maxTick,
       })
     }
 
-    // Wait until animation is complete before calling handlePriceChange
+    // Wait until animation is complete before calling handleTickChange
     setTimeout(
       () => {
-        actions.handlePriceChange('min', minPrice)
-        actions.handlePriceChange('max', maxPrice)
+        actions.handleTickChange({ changeType: 'min', tick: minTick })
+        actions.handleTickChange({ changeType: 'max', tick: maxTick })
       },
       animate ? CHART_BEHAVIOR.ANIMATION_DURATION : 0,
     )
   },
 
   initializeView: () => {
-    const { initialViewSet, actions, minPrice, maxPrice, renderingContext } = get()
+    const { initialViewSet, actions, minTick, maxTick, renderingContext } = get()
     if (!renderingContext) {
       return
     }
-    const { liquidityData } = renderingContext
-
-    // Calculate and store dynamic zoom minimum when data is initialized
-    const dynamicZoomMin = calculateDynamicZoomMin(liquidityData.length)
-
-    set((state) => ({ ...state, dynamicZoomMin }))
 
     if (!initialViewSet) {
-      actions.reset({ animate: false, minPrice, maxPrice })
+      actions.reset({ animate: false, minTick, maxTick })
 
       set((state) => ({
         ...state,

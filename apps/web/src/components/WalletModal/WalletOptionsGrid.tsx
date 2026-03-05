@@ -1,14 +1,14 @@
-import { MenuStateVariant, useSetMenuCallback } from 'components/AccountDrawer/menuState'
-import { UniswapMobileWalletConnectorOption } from 'components/WalletModal/UniswapMobileWalletConnectorOption'
-import { OtherWalletsOption, WalletConnectorOption } from 'components/WalletModal/WalletConnectorOption'
-import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useOrderedWallets } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { Fragment } from 'react'
-import { transitions } from 'theme/styles'
 import { Flex, Separator } from 'ui/src'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isMobileWeb } from 'utilities/src/platform'
+import { MenuStateVariant, useSetMenuCallback } from '~/components/AccountDrawer/menuState'
+import { UniswapMobileWalletConnectorOption } from '~/components/WalletModal/UniswapMobileWalletConnectorOption'
+import { OtherWalletsOption, WalletConnectorOption } from '~/components/WalletModal/WalletConnectorOption'
+import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { useOrderedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
+import { transitions } from '~/theme/styles'
 
 interface WalletOptionsGridProps {
   connectOnPlatform?: Platform | 'any'
@@ -43,7 +43,7 @@ export function WalletOptionsGrid({
         width="100%"
         maxHeight={maxHeight}
         opacity={opacity}
-        transition={`${transitions.duration.fast} ${transitions.timing.inOut}`}
+        transition={`${transitions.duration.medium} ${transitions.timing.inOut}`}
         data-testid="option-grid"
       >
         {shouldShowMobileConnector && (

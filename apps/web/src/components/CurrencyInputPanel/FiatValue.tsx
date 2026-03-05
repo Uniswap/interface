@@ -1,12 +1,12 @@
 import { Percent } from '@uniswap/sdk-core'
-import { LoadingBubble } from 'components/Tokens/loading'
-import { MouseoverTooltip } from 'components/Tooltip'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { warningSeverity } from 'utils/prices'
+import { LoadingBubble } from '~/components/Tokens/loading'
+import { MouseoverTooltip } from '~/components/Tooltip'
+import { warningSeverity } from '~/utils/prices'
 
 export function FiatValue({
   fiatValue,
@@ -37,7 +37,7 @@ export function FiatValue({
   }, [priceImpact])
 
   if (fiatValue.isLoading) {
-    return <LoadingBubble borderRadius="$rounded4" width={64} height={14} />
+    return <LoadingBubble height={14} width={64} skeletonProps={{ borderRadius: '$rounded4' }} />
   }
 
   return (

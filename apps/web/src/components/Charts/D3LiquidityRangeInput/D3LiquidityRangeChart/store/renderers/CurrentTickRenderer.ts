@@ -1,11 +1,10 @@
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import type {
   ChartState,
   Renderer,
   RenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { getColorForPrice } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/colorUtils'
-import * as d3 from 'd3'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { getColorForTick } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/colorUtils'
 
 const CURRENT_PRICE_CLASSES = {
   LINE: 'current-price-line',
@@ -28,13 +27,13 @@ export function createCurrentTickRenderer({
     // Clear previous current tick elements
     currentTickGroup.selectAll('*').remove()
 
-    const { colors, dimensions, priceData, priceToY } = context
-    const { minPrice, maxPrice } = getState()
-
-    // Get current price from the latest data point
-    const currentPriceData = priceData[priceData.length - 1]
-
-    const currentPrice = currentPriceData.value
+    const { colors, dimensions, tickToY, currentTick } = context
+    const { minTick, maxTick, renderedBuckets } = getState()
+    // Find the bucket containing the current tick and center the line within it
+    const currentBucket = renderedBuckets?.find((b) => currentTick >= b.startTick && currentTick < b.endTick)
+    const centerY = currentBucket
+      ? (tickToY({ tick: currentBucket.startTick }) + tickToY({ tick: currentBucket.endTick })) / 2
+      : tickToY({ tick: currentTick })
 
     // Draw dotted line across the entire chart for current price
     currentTickGroup
@@ -42,8 +41,8 @@ export function createCurrentTickRenderer({
       .attr('class', CURRENT_PRICE_CLASSES.LINE)
       .attr('x1', 0) // Start from left edge
       .attr('x2', dimensions.width + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET) // Extend to right edge
-      .attr('y1', priceToY({ price: currentPrice }))
-      .attr('y2', priceToY({ price: currentPrice }))
+      .attr('y1', centerY)
+      .attr('y2', centerY)
       .attr('stroke', colors.neutral2.val)
       .attr('stroke-width', 1.5)
       .attr('stroke-linecap', 'round')
@@ -51,10 +50,10 @@ export function createCurrentTickRenderer({
       .attr('opacity', 0.8)
 
     // Draw a circle at the current price position on the price line
-    const dotColor = getColorForPrice({
-      value: currentPrice,
-      minPrice,
-      maxPrice,
+    const dotColor = getColorForTick({
+      tick: currentTick,
+      minTick,
+      maxTick,
       getActiveColor: () => colors.accent1.val,
       getInactiveColor: () => colors.neutral2.val,
     })
@@ -63,7 +62,7 @@ export function createCurrentTickRenderer({
       .append('circle')
       .attr('class', CURRENT_PRICE_CLASSES.DOT)
       .attr('cx', dimensions.width)
-      .attr('cy', priceToY({ price: currentPrice }))
+      .attr('cy', centerY)
       .attr('r', CHART_DIMENSIONS.PRICE_DOT_RADIUS)
       .attr('fill', dotColor)
       .attr('opacity', 1)

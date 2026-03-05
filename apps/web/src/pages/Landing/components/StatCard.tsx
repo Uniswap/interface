@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
-import { deprecatedStyled, keyframes } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
 const Mask = motion(deprecatedStyled.div`
   position: relative;

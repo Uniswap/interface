@@ -145,7 +145,7 @@ export function UnitagChooseProfilePicContent({
           loading={isClaiming}
           testID={TestID.Continue}
           isDisabled={!!claimError || isClaiming}
-          size="medium"
+          size="large"
           variant="branded"
           onPress={onPressContinue}
         >

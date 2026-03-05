@@ -1,7 +1,7 @@
 import { TickMath } from '@uniswap/v3-sdk'
-import { getAmount0, getAmount1 } from 'components/Charts/LiquidityChart/utils/getAmounts'
 import JSBI from 'jsbi'
 import { describe, expect, it } from 'vitest'
+import { getAmount0, getAmount1 } from '~/components/Charts/LiquidityChart/utils/getAmounts'
 
 describe('getAmount0', () => {
   it('should return full amount when currentTick is below tickLower', () => {
@@ -95,19 +95,6 @@ describe('getAmount1', () => {
 
     // When current tick is below range, position is entirely in token0, no token1
     expect(result.toString()).toBe('0')
-  })
-
-  it('should return full amount when currentTick equals tickLower', () => {
-    const tickLower = 100
-    const tickUpper = 110
-    const currentTick = 100
-    const liquidity = JSBI.BigInt(1000000)
-    const currSqrtPriceX96 = TickMath.getSqrtRatioAtTick(currentTick)
-
-    const result = getAmount1({ tickLower, tickUpper, currentTick, liquidity, currSqrtPriceX96 })
-
-    // At tickLower, we get the full range amount
-    expect(JSBI.greaterThan(result, JSBI.BigInt(0))).toBe(true)
   })
 
   it('should return partial amount when currentTick is between tickLower and tickUpper', () => {

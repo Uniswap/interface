@@ -2,10 +2,14 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "extends": "nx/presets/npm.json",
   "defaultBase": "main",
+  "tui": {
+    "enabled": false
+  },
   "targetDefaults": {
     "prepare": {
-      "inputs": ["default", "dependencies"],
-      "cache": true
+      "inputs": ["dependencies"],
+      "cache": true,
+      "outputs": []
     },
     "build": {
       "dependsOn": ["^prepare", "prepare", "^build"],
@@ -26,28 +30,47 @@
       "cache": true
     },
     "typecheck": {
-      "command": "tsc -b",
+      "command": "test \"$ENABLE_TSGO\" = \"true\" && { bun run nx typecheck:tsgo || exit $?; } || NODE_OPTIONS=--max_old_space_size=16384 tsc -b",
       "options": {
         "cwd": "{projectRoot}"
       },
       "dependsOn": ["prepare", "^typecheck"],
       "inputs": [
-        "{projectRoot}/package.json",
-        "{workspaceRoot}/config/tsconfig/app.json",
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/config/tsconfig/*",
         "{workspaceRoot}/tsconfig.base.json",
-        "{projectRoot}/tsconfig.json",
-        "{projectRoot}/src/**/*.ts",
-        "{projectRoot}/src/**/*.tsx",
-        "{projectRoot}/src/**/*.json",
-        "!{projectRoot}/src/**/*.spec.ts",
-        "!{projectRoot}/src/**/*.spec.tsx",
-        "!{projectRoot}/src/**/*.test.ts",
-        "!{projectRoot}/src/**/*.test.tsx",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.*.json",
+        "{projectRoot}/**/*.ts",
+        "{projectRoot}/**/*.tsx",
+        "{projectRoot}/**/*.json",
         {
           "dependentTasksOutputFiles": "**/*.d.ts"
         }
       ],
-      "outputs": [],
+      "outputs": ["{workspaceRoot}/dist/out-tsc/{projectRoot}"],
+      "cache": true
+    },
+    "typecheck:tsgo": {
+      "command": "tsgo -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^prepare", "prepare"],
+      "inputs": [
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/config/tsconfig/*",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/package.json",
+        "{projectRoot}/tsconfig.*.json",
+        "{projectRoot}/**/*.ts",
+        "{projectRoot}/**/*.tsx",
+        "{projectRoot}/**/*.json",
+        {
+          "dependentTasksOutputFiles": "**/*.d.ts"
+        }
+      ],
+      "outputs": ["{workspaceRoot}/dist/out-tsc/{projectRoot}"],
       "cache": true
     },
     "lint:biome": {
@@ -55,30 +78,44 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["@uniswap/biome-config:prepare"]
+      "dependsOn": ["@uniswap/biome-config:prepare"],
+      "cache": true,
+      "inputs": [
+        "default",
+        "lintConfig",
+        "{workspaceRoot}/biome.json"
+      ]
     },
     "lint:biome:fix": {
       "command": "biome check . --write",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["@uniswap/biome-config:prepare"]
+      "dependsOn": ["@uniswap/biome-config:prepare"],
+      "cache": false
     },
     "lint:eslint": {
       "command": "eslint . --ext ts,tsx --max-warnings=0",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "lintConfig",
+        "{projectRoot}/.eslint*"
+      ]
     },
     "lint:eslint:fix": {
       "command": "eslint . --ext ts,tsx --fix",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "cache": false
     },
     "lint": {
       "executor": "nx:noop",
-      "dependsOn": ["typecheck", "check:circular", "lint:eslint", "lint:biome"],
+      "dependsOn": ["typecheck", "check:circular", "lint:biome", "lint:eslint"],
       "inputs": ["default"],
       "cache": true
     },
@@ -121,13 +158,18 @@
       "cache": false
     },
     "snapshots": {
-      "dependsOn": ["prepare", "typecheck", "lint"],
+      "dependsOn": ["^prepare", "prepare"],
       "cache": true
     },
     "check:circular": {
       "cache": true
     },
     "check:deps:usage": {
+      "command": "depcheck",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": ["sourceFiles", "{projectRoot}/package.json", "{projectRoot}/.depcheckrc"],
       "cache": true
     },
     "storybook:test:standalone": {
@@ -154,9 +196,7 @@
         "{projectRoot}/src/data/**/*.graphql"
       ],
       "outputs": [
-        "{projectRoot}/src/**/types-and-hooks.ts",
         "{projectRoot}/src/data/graphql/**/__generated__/**",
-        "{projectRoot}/src/data/tradingApi/__generated__/**",
         "{projectRoot}/data/__generated__/**",
         "{projectRoot}/graphql/__generated__/**"
       ],
@@ -188,17 +228,17 @@
       "!{projectRoot}/**/*.stories.ts"
     ],
     "sharedGlobals": [
-      "{workspaceRoot}/.github/actions/**/*.yml",
-      "{workspaceRoot}/.github/workflows/*.yml",
       "{workspaceRoot}/tsconfig.base.json",
-      "{workspaceRoot}/tsconfig.json",
-      "{workspaceRoot}/bun.lock",
-      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/tsconfig.json"
+    ],
+    "lintConfig": [
       "{workspaceRoot}/.biome*",
       "{workspaceRoot}/.eslint*",
       "{workspaceRoot}/.depcheckrc*",
-      "{workspaceRoot}/.env*",
-      "!{workspaceRoot}/.env.defaults",
+      "{workspaceRoot}/packages/biome-config/**/*",
+      "{workspaceRoot}/packages/eslint-config/**/*"
+    ],
+    "mobileGlobals": [
       "{workspaceRoot}/metro.config.*",
       "{workspaceRoot}/Gemfile*"
     ],
@@ -209,7 +249,7 @@
       "{projectRoot}/**/*.js",
       "{projectRoot}/**/*.jsx"
     ],
-    "dependencies": ["{workspaceRoot}/bun.lock", "{workspaceRoot}/package.json", "{projectRoot}/package.json"],
+    "dependencies": ["{workspaceRoot}/package.json", "{projectRoot}/package.json"],
     "tsConfig": ["{projectRoot}/tsconfig*.json"]
   },
   "workspaceLayout": {
@@ -240,5 +280,10 @@
         }
       }
     }
-  ]
+  ],
+  "pluginsConfig": {
+    "@nx/js": {
+      "analyzeSourceFiles": true
+    }
+  }
 }

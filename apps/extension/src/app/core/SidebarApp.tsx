@@ -19,12 +19,15 @@ import { SendFlow } from 'src/app/features/send/SendFlow'
 import { BackupRecoveryPhraseScreen } from 'src/app/features/settings/BackupRecoveryPhrase/BackupRecoveryPhraseScreen'
 import { DeviceAccessScreen } from 'src/app/features/settings/DeviceAccessScreen'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
+import { HashcashBenchmarkScreen } from 'src/app/features/settings/HashcashBenchmarkScreen'
+import { SessionsDebugScreen } from 'src/app/features/settings/SessionsDebugScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
 import { ViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/ViewRecoveryPhraseScreen'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
 import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
+import { SettingsStorageScreen } from 'src/app/features/settings/SettingsStorageScreen'
 import { SmartWalletSettingsScreen } from 'src/app/features/settings/SmartWalletSettingsScreen'
 import { SwapFlowScreen } from 'src/app/features/swap/SwapFlowScreen'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
@@ -75,12 +78,22 @@ const router = createHashRouter([
             path: SettingsRoutes.DeviceAccess,
             element: <DeviceAccessScreen />,
           },
-          isDevEnv()
-            ? {
-                path: SettingsRoutes.DevMenu,
-                element: <DevMenuScreen />,
-              }
-            : {},
+          ...(isDevEnv()
+            ? [
+                {
+                  path: SettingsRoutes.DevMenu,
+                  element: <DevMenuScreen />,
+                },
+                {
+                  path: SettingsRoutes.SessionsDebug,
+                  element: <SessionsDebugScreen />,
+                },
+                {
+                  path: SettingsRoutes.HashcashBenchmark,
+                  element: <HashcashBenchmarkScreen />,
+                },
+              ]
+            : []),
           {
             path: SettingsRoutes.ViewRecoveryPhrase,
             element: <ViewRecoveryPhraseScreen />,
@@ -109,6 +122,10 @@ const router = createHashRouter([
           {
             path: SettingsRoutes.SmartWallet,
             element: <SmartWalletSettingsScreen />,
+          },
+          {
+            path: SettingsRoutes.Storage,
+            element: <SettingsStorageScreen />,
           },
         ],
       },

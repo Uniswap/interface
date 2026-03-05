@@ -1,29 +1,16 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
-import {
-  calculateTickSpacingFromFeeAmount,
-  getFeeTierKey,
-  isDynamicFeeTier,
-  MAX_FEE_TIER_DECIMALS,
-  validateFeeTier,
-} from 'components/Liquidity/utils/feeTiers'
-import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
-import { StyledPercentInput } from 'components/PercentInput'
 import ms from 'ms'
-import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
-import { NumericalInputMimic, NumericalInputSymbolContainer } from 'pages/Swap/common/shared'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 // biome-ignore lint/style/noRestrictedImports: styled-components needed for custom component styling
 import styled from 'styled-components'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Text, Tooltip } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { Search } from 'ui/src/components/icons/Search'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
+import { zIndexes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -36,6 +23,20 @@ import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useAllFeeTierPoolData } from '~/components/Liquidity/hooks/useAllFeeTierPoolData'
+import {
+  calculateTickSpacingFromFeeAmount,
+  getFeeTierKey,
+  isDynamicFeeTier,
+  MAX_FEE_TIER_DECIMALS,
+  validateFeeTier,
+} from '~/components/Liquidity/utils/feeTiers'
+import { LpIncentivesAprDisplay } from '~/components/LpIncentives/LpIncentivesAprDisplay'
+import { StyledPercentInput } from '~/components/PercentInput'
+import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { NumericalInputMimic, NumericalInputSymbolContainer } from '~/pages/Swap/common/shared'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 const FeeTierPercentInput = styled(StyledPercentInput)`
   flex-grow: 0;
@@ -398,7 +399,17 @@ export function FeeTierSearchModal() {
                       <Flex row alignItems="center">
                         <Text variant="subheading2">{pool.formattedFee}</Text>
                         {isLpIncentivesEnabled && pool.boostedApr !== undefined && pool.boostedApr > 0 && (
-                          <LpIncentivesAprDisplay lpIncentiveRewardApr={pool.boostedApr} isSmall ml="$spacing8" />
+                          <Tooltip placement="right">
+                            <Tooltip.Trigger>
+                              <LpIncentivesAprDisplay lpIncentiveRewardApr={pool.boostedApr} isSmall ml="$spacing8" />
+                            </Tooltip.Trigger>
+                            <Tooltip.Content zIndex={zIndexes.tooltip}>
+                              <Tooltip.Arrow />
+                              <Text variant="body4" color="$neutral2" textAlign="center">
+                                {t('pool.incentives.eligibleTooltip')}
+                              </Text>
+                            </Tooltip.Content>
+                          </Tooltip>
                         )}
                       </Flex>
                       <Flex row gap="$gap12" alignItems="center">

@@ -1,4 +1,5 @@
 {
+  "tags": ["scope:eslint-config", "type:tooling"],
   "targets": {
     "lint:biome": {},
     "lint:biome:fix": {},

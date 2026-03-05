@@ -2,6 +2,7 @@ import { call } from '@redux-saga/core/effects'
 import { TradingApi } from '@universe/api'
 import { expectSaga } from 'redux-saga-test-plan'
 import type { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -72,10 +73,13 @@ describe('executeSwapSaga', () => {
   let executeSwapSaga: ReturnType<typeof createExecuteSwapSaga>
   let mockPrepareAndSignSwapSaga: jest.Mock
 
+  // Helper for consistent account object structure across tests
+  const mockAccountObject = { address: account.address, type: AccountType.SignerMnemonic } as const
+
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [
       call(createTransactionServices, mockTransactionSagaDependencies, {
-        account,
+        account: mockAccountObject,
         chainId: CHAIN_ID,
         submitViaPrivateRpc: false,
         delegationType: DelegationType.Auto,
@@ -708,7 +712,7 @@ describe('executeSwapSaga', () => {
         .provide([
           [
             call(createTransactionServices, mockTransactionSagaDependencies, {
-              account,
+              account: mockAccountObject,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
@@ -766,14 +770,14 @@ describe('executeSwapSaga', () => {
           [
             call(mockPrepareAndSignSwapSaga, {
               swapTxContext: params.swapTxContext,
-              account: params.account,
+              account: { address: params.address, type: AccountType.SignerMnemonic },
             }),
             mockPreSignedTransaction,
           ],
         ])
         .call(mockPrepareAndSignSwapSaga, {
           swapTxContext: params.swapTxContext,
-          account: params.account,
+          account: { address: params.address, type: AccountType.SignerMnemonic },
         })
         .call(params.onSuccess)
         .run()
@@ -816,7 +820,7 @@ describe('executeSwapSaga', () => {
         .provide([
           [
             call(createTransactionServices, mockTransactionSagaDependencies, {
-              account,
+              account: mockAccountObject,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
@@ -864,7 +868,7 @@ describe('executeSwapSaga', () => {
       const mockCreateApprovalParams = jest.fn().mockReturnValue({
         typeInfo: { type: TransactionType.Approve },
         chainId: CHAIN_ID,
-        account: params.account,
+        account: { address: params.address, type: AccountType.SignerMnemonic },
       })
 
       const mockDependencies = {
@@ -881,7 +885,7 @@ describe('executeSwapSaga', () => {
         .provide([
           [
             call(createTransactionServices, mockDependencies, {
-              account,
+              account: mockAccountObject,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
               delegationType: DelegationType.Auto,
@@ -939,7 +943,7 @@ describe('executeSwapSaga', () => {
         .provide([
           [
             call(createTransactionServices, mockTransactionSagaDependencies, {
-              account,
+              account: mockAccountObject,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: true,
               delegationType: DelegationType.Auto,
@@ -960,7 +964,7 @@ describe('executeSwapSaga', () => {
           ],
         ])
         .call(createTransactionServices, mockTransactionSagaDependencies, {
-          account,
+          account: mockAccountObject,
           chainId: CHAIN_ID,
           submitViaPrivateRpc: true,
           delegationType: DelegationType.Auto,
@@ -975,6 +979,9 @@ describe('executeSwapSaga', () => {
 describe('Sync transaction submission', () => {
   let executeSwapSaga: ReturnType<typeof createExecuteSwapSaga>
   let mockPrepareAndSignSwapSaga: jest.Mock
+
+  // Helper for consistent account object structure across tests
+  const mockAccountObject = { address: account.address, type: AccountType.SignerMnemonic } as const
 
   beforeAll(() => {
     mockPrepareAndSignSwapSaga = jest.fn()
@@ -1007,7 +1014,7 @@ describe('Sync transaction submission', () => {
       .provide([
         [
           call(createTransactionServices, mockTransactionSagaDependencies, {
-            account,
+            account: mockAccountObject,
             chainId: CHAIN_ID,
             submitViaPrivateRpc: false,
             delegationType: DelegationType.Auto,

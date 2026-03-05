@@ -19,6 +19,7 @@ import { parseRestReceiveTransaction } from 'uniswap/src/features/activity/parse
 import { parseRestSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
   parseRestSwapTransaction,
+  parseRestWithdrawTransaction,
   parseRestWrapTransaction,
 } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -29,6 +30,7 @@ import {
   SAMPLE_SEED_ADDRESS_3,
   SAMPLE_SEED_ADDRESS_4,
   SAMPLE_SEED_ADDRESS_5,
+  SAMPLE_SEED_ADDRESS_6,
 } from 'uniswap/src/test/fixtures'
 
 /**
@@ -94,6 +96,30 @@ const SPAM_TOKEN_MOCK = {
   type: TokenType.ERC20,
   metadata: {
     spamCode: RestSpamCode.SPAM,
+  },
+}
+
+/**
+ * Mock for a Fee-on-Transfer (FOT) token.
+ * FOT tokens have feeTakenOnTransfer: true in their metadata.
+ * Uses a different address than ERC20_TOKEN_MOCK to avoid filterTokenAddress conflicts.
+ */
+const FOT_TOKEN_ADDRESS = SAMPLE_SEED_ADDRESS_6
+const FOT_TOKEN_MOCK = {
+  address: FOT_TOKEN_ADDRESS,
+  symbol: 'FOT',
+  decimals: 18,
+  type: TokenType.ERC20,
+  chainId: UniverseChainId.Mainnet,
+  metadata: {
+    spamCode: RestSpamCode.NOT_SPAM,
+    feeData: {
+      feeDetector: {
+        feeTakenOnTransfer: true,
+        buyFeeBps: '500', // 5% buy fee
+        sellFeeBps: '500', // 5% sell fee
+      },
+    },
   },
 }
 
@@ -569,6 +595,71 @@ describe(parseRestSwapTransaction, () => {
       outputCurrencyAmountRaw: '10942066284405611153912',
     })
   })
+
+  it('Swap: FOT token - filters out fee transfer to non-owner address when feeTakenOnTransfer is true', () => {
+    // Simulates a FOT (Fee-on-Transfer) token swap where Zerion returns two RECEIVE transfers:
+    // 1. The fee transfer going to a fee recipient (SAMPLE_SEED_ADDRESS_5) - should be filtered out
+    // 2. The actual swap amount going to the owner (FROM_ADDRESS) - should be used
+    // The parser should only count the transfer TO the owner when the token has feeTakenOnTransfer: true
+    const MOCK_FOT_SWAP: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.SWAP,
+      transfers: [
+        // User sends a regular token
+        {
+          direction: Direction.SEND,
+          asset: {
+            case: 'token',
+            value: ERC20_TOKEN_MOCK,
+          },
+          amount: {
+            amount: 1000,
+            raw: '1000000000000000000000',
+          },
+          from: FROM_ADDRESS,
+          to: SAMPLE_SEED_ADDRESS_3, // Goes to router/pool
+        },
+        // FOT fee goes to fee recipient (NOT the owner) - this should be filtered out
+        {
+          direction: Direction.RECEIVE,
+          asset: {
+            case: 'token',
+            value: FOT_TOKEN_MOCK, // This token has feeTakenOnTransfer: true
+          },
+          amount: {
+            amount: 50, // ~5% fee
+            raw: '50000000000000000000',
+          },
+          from: SAMPLE_SEED_ADDRESS_3,
+          to: SAMPLE_SEED_ADDRESS_5, // Fee recipient, NOT the owner
+        },
+        // Actual swap output goes to the owner - this should be used
+        {
+          direction: Direction.RECEIVE,
+          asset: {
+            case: 'token',
+            value: FOT_TOKEN_MOCK, // This token has feeTakenOnTransfer: true
+          },
+          amount: {
+            amount: 950, // 95% after fee
+            raw: '950000000000000000000',
+          },
+          from: SAMPLE_SEED_ADDRESS_3,
+          to: FROM_ADDRESS, // Owner receives the actual swap output
+        },
+      ],
+    } as OnChainTransaction
+
+    expect(parseRestSwapTransaction(MOCK_FOT_SWAP)).toEqual({
+      type: TransactionType.Swap,
+      inputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
+      outputCurrencyId: `1-${FOT_TOKEN_ADDRESS}`,
+      transactedUSDValue: undefined,
+      inputCurrencyAmountRaw: '1000000000000000000000',
+      // Should be 950 (the amount to owner), NOT 50 (the fee) or 1000 (total)
+      outputCurrencyAmountRaw: '950000000000000000000',
+    })
+  })
 })
 
 describe(parseRestWrapTransaction, () => {
@@ -577,6 +668,109 @@ describe(parseRestWrapTransaction, () => {
       type: TransactionType.Wrap,
       unwrapped: false,
       currencyAmountRaw: '1000000000000000000',
+    })
+  })
+  it('Wrap: parse unwrap', () => {
+    const MOCK_NATIVE_UNWRAP: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.UNWRAP,
+      transfers: MOCK_NATIVE_WRAP.transfers,
+    } as OnChainTransaction
+    expect(parseRestWrapTransaction(MOCK_NATIVE_UNWRAP)).toEqual({
+      type: TransactionType.Wrap,
+      unwrapped: true,
+      currencyAmountRaw: '1000000000000000000',
+    })
+  })
+})
+
+/** Withdraw Transactions */
+
+const MOCK_ERC20_WITHDRAW: OnChainTransaction = {
+  ...TRANSACTION_BASE,
+  label: OnChainTransactionLabel.WITHDRAW,
+  transfers: [
+    {
+      direction: Direction.RECEIVE,
+      asset: {
+        case: 'token',
+        value: ERC20_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '1000000000000000000',
+      },
+      to: FROM_ADDRESS,
+      from: TO_ADDRESS,
+    },
+    {
+      direction: Direction.SEND,
+      asset: {
+        case: 'token',
+        value: WRAPPED_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '1000000000000000000',
+      },
+      from: FROM_ADDRESS,
+      to: TO_ADDRESS,
+    },
+  ],
+  protocol: {
+    name: 'Superfluid',
+    logoUrl: 'https://superfluid.logo',
+  },
+} as OnChainTransaction
+
+describe(parseRestWithdrawTransaction, () => {
+  it('Withdraw: handle empty transfers', () => {
+    expect(parseRestWithdrawTransaction(TRANSACTION_BASE)).toBeUndefined()
+  })
+  it('Withdraw: parse ERC20 withdraw', () => {
+    expect(parseRestWithdrawTransaction(MOCK_ERC20_WITHDRAW)).toEqual({
+      type: TransactionType.Withdraw,
+      assetType: 'currency',
+      tokenAddress: ERC20_ASSET_ADDRESS,
+      currencyAmountRaw: '1000000000000000000',
+      dappInfo: {
+        name: 'Superfluid',
+        icon: 'https://superfluid.logo',
+      },
+    })
+  })
+  it('Withdraw: does not produce TransactionType.Wrap', () => {
+    const result = parseRestWithdrawTransaction(MOCK_ERC20_WITHDRAW)
+    expect(result?.type).not.toEqual(TransactionType.Wrap)
+  })
+  it('Withdraw: picks RECEIVE transfer even when SEND comes first', () => {
+    const reorderedWithdraw: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.WITHDRAW,
+      transfers: [
+        {
+          direction: Direction.SEND,
+          asset: { case: 'token', value: WRAPPED_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: FROM_ADDRESS,
+          to: TO_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 1, raw: '2000000000000000000' },
+          to: FROM_ADDRESS,
+          from: TO_ADDRESS,
+        },
+      ],
+    } as OnChainTransaction
+    const result = parseRestWithdrawTransaction(reorderedWithdraw)
+    expect(result).toEqual({
+      type: TransactionType.Withdraw,
+      assetType: 'currency',
+      tokenAddress: ERC20_ASSET_ADDRESS,
+      currencyAmountRaw: '2000000000000000000',
+      dappInfo: undefined,
     })
   })
 })
@@ -883,6 +1077,41 @@ const MOCK_COLLECT_FEES: OnChainTransaction = {
   },
 } as OnChainTransaction
 
+const MOCK_COLLECT_FEES_TWO_TOKENS: OnChainTransaction = {
+  ...TRANSACTION_BASE,
+  label: OnChainTransactionLabel.CLAIM,
+  transfers: [
+    {
+      direction: Direction.RECEIVE,
+      asset: {
+        case: 'token',
+        value: ERC20_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '200000000000000000',
+      },
+      from: TO_ADDRESS,
+    },
+    {
+      direction: Direction.RECEIVE,
+      asset: {
+        case: 'token',
+        value: WRAPPED_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '150000000000000000',
+      },
+      from: TO_ADDRESS,
+    },
+  ],
+  protocol: {
+    name: 'Uniswap V3',
+    logoUrl: 'https://logo.url',
+  },
+} as OnChainTransaction
+
 describe(parseRestLiquidityTransaction, () => {
   it('Liquidity: handle empty transfers', () => {
     const result = parseRestLiquidityTransaction(TRANSACTION_BASE)
@@ -934,7 +1163,7 @@ describe(parseRestLiquidityTransaction, () => {
     })
   })
 
-  it('Liquidity: parse collect fees', () => {
+  it('Liquidity: parse collect fees with single token', () => {
     expect(parseRestLiquidityTransaction(MOCK_COLLECT_FEES)).toEqual({
       type: TransactionType.CollectFees,
       currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
@@ -944,6 +1173,21 @@ describe(parseRestLiquidityTransaction, () => {
       isSpam: false,
       dappInfo: {
         name: 'Uniswap',
+        icon: 'https://logo.url',
+      },
+    })
+  })
+
+  it('Liquidity: parse collect fees with two tokens', () => {
+    expect(parseRestLiquidityTransaction(MOCK_COLLECT_FEES_TWO_TOKENS)).toEqual({
+      type: TransactionType.CollectFees,
+      currency0Id: `1-${ERC20_ASSET_ADDRESS}`,
+      currency1Id: `1-${WRAPPED_NATIVE_ADDRESS}`,
+      currency0AmountRaw: '200000000000000000',
+      currency1AmountRaw: '150000000000000000',
+      isSpam: false,
+      dappInfo: {
+        name: 'Uniswap V3',
         icon: 'https://logo.url',
       },
     })
@@ -1021,6 +1265,16 @@ describe(extractRestOnChainTransactionDetails, () => {
     const txns = extractRestOnChainTransactionDetails(MOCK_BRIDGE)
     expect(txns).toHaveLength(1)
     expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Bridge)
+  })
+  it('Withdraw', () => {
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_WITHDRAW)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Withdraw)
+  })
+  it('Withdraw does not produce Wrap type', () => {
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_WITHDRAW)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).not.toEqual(TransactionType.Wrap)
   })
   it('Unknown', () => {
     const txns = extractRestOnChainTransactionDetails({

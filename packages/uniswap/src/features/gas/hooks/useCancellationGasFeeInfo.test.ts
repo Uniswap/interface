@@ -1,87 +1,97 @@
+import 'utilities/src/logger/mocks'
 import { useQuery } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
 import { providers } from 'ethers'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { useCancellationGasFeeInfo } from 'uniswap/src/features/gas/hooks/useCancellationGasFeeInfo'
+import { usePlanCancellationGasFeeInfo } from 'uniswap/src/features/gas/hooks/usePlanCancellationGasFeeInfo'
 import * as CancelUtils from 'uniswap/src/features/gas/utils/cancel'
 import * as CancelMultipleOrders from 'uniswap/src/features/transactions/cancel/cancelMultipleOrders'
 import { getCancelOrderTxRequest } from 'uniswap/src/features/transactions/cancel/getCancelOrderTxRequest'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionDetails, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionDetails,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { Mock } from 'vitest'
 
 // Mock QueryClient before any imports that might use it
-jest.mock('@tanstack/react-query', () => ({
-  QueryClient: jest.fn().mockImplementation(() => ({
+vi.mock('@tanstack/react-query', () => ({
+  QueryClient: vi.fn().mockImplementation(() => ({
     defaultOptions: {},
   })),
-  useQuery: jest.fn(),
+  useQuery: vi.fn(),
 }))
 
-jest.mock('ui/src/assets/logos/png/all-networks-icon.png', () => 'mocked-image', { virtual: true })
-jest.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-  },
-}))
+vi.mock('ui/src/assets/logos/png/all-networks-icon.png', () => ({ default: 'mocked-image' }))
 
-jest.mock('uniswap/src/features/gas/hooks', () => ({
-  useTransactionGasFee: jest.fn(),
+vi.mock('uniswap/src/features/gas/hooks', () => ({
+  useTransactionGasFee: vi.fn(),
 }))
-jest.mock('uniswap/src/features/gas/utils/cancel', () => ({
+vi.mock('uniswap/src/features/gas/hooks/usePlanCancellationGasFeeInfo', () => ({
+  usePlanCancellationGasFeeInfo: vi.fn(),
+}))
+vi.mock('uniswap/src/features/gas/utils/cancel', () => ({
   CancellationType: {
     Classic: 'classic',
     UniswapX: 'uniswapx',
   },
-  getCancellationType: jest.fn(),
-  createClassicCancelRequest: jest.fn(),
-  calculateCancellationGasFee: jest.fn(),
+  getCancellationType: vi.fn(),
+  createClassicCancelRequest: vi.fn(),
+  calculateCancellationGasFee: vi.fn(),
 }))
-jest.mock('uniswap/src/features/transactions/cancel/getCancelOrderTxRequest')
-jest.mock('uniswap/src/features/transactions/cancel/cancelMultipleOrders', () => ({
-  extractCancellationData: jest.fn(),
-  getCancelMultipleUniswapXOrdersTransaction: jest.fn(),
+vi.mock('uniswap/src/features/transactions/cancel/getCancelOrderTxRequest')
+vi.mock('uniswap/src/features/transactions/cancel/cancelMultipleOrders', () => ({
+  extractCancellationData: vi.fn(),
+  getCancelMultipleUniswapXOrdersTransaction: vi.fn(),
 }))
-jest.mock('uniswap/src/features/transactions/swap/utils/routing')
+vi.mock('uniswap/src/features/transactions/swap/utils/routing')
 
 describe('useCancellationGasFeeInfo', () => {
-  let mockUseTransactionGasFee: jest.Mock
-  let mockCalculateCancellationGasFee: jest.Mock
-  let mockGetCancellationType: jest.Mock
-  let mockCreateClassicCancelRequest: jest.Mock
-  let mockGetCancelOrderTxRequest: jest.Mock
-  let mockExtractCancellationData: jest.Mock
-  let mockGetCancelMultipleUniswapXOrdersTransaction: jest.Mock
-  let mockIsUniswapX: jest.Mock
-  let mockUseQuery: jest.Mock
+  let mockUseTransactionGasFee: Mock
+  let mockUsePlanCancellationGasFeeInfo: Mock
+  let mockCalculateCancellationGasFee: Mock
+  let mockGetCancellationType: Mock
+  let mockCreateClassicCancelRequest: Mock
+  let mockGetCancelOrderTxRequest: Mock
+  let mockExtractCancellationData: Mock
+  let mockGetCancelMultipleUniswapXOrdersTransaction: Mock
+  let mockIsUniswapX: Mock
+  let mockUseQuery: Mock
 
-  const mockTx: TransactionDetails = { id: 'mockTx', chainId: 1, from: '0x123' } as TransactionDetails
+  const mockTx: TransactionDetails = {
+    id: 'mockTx',
+    chainId: 1,
+    from: '0x123',
+    typeInfo: { type: TransactionType.Swap },
+  } as TransactionDetails
   const mockOrders: UniswapXOrderDetails[] = [{ id: 'mockOrder', orderHash: '0xorder1' } as UniswapXOrderDetails]
   const mockGasFee = { value: '100', displayValue: '0.1' }
   const mockClassicCancelRequest = { to: 'classic' } as providers.TransactionRequest
   const mockUniswapXCancelRequest = { to: 'uniswapx' } as providers.TransactionRequest
 
   beforeEach(() => {
-    mockUseTransactionGasFee = useTransactionGasFee as jest.Mock
-    mockCalculateCancellationGasFee = CancelUtils.calculateCancellationGasFee as jest.Mock
-    mockGetCancellationType = CancelUtils.getCancellationType as jest.Mock
-    mockCreateClassicCancelRequest = CancelUtils.createClassicCancelRequest as jest.Mock
-    mockGetCancelOrderTxRequest = getCancelOrderTxRequest as jest.Mock
-    mockExtractCancellationData = CancelMultipleOrders.extractCancellationData as jest.Mock
+    mockUseTransactionGasFee = useTransactionGasFee as Mock
+    mockUsePlanCancellationGasFeeInfo = usePlanCancellationGasFeeInfo as Mock
+    mockCalculateCancellationGasFee = CancelUtils.calculateCancellationGasFee as Mock
+    mockGetCancellationType = CancelUtils.getCancellationType as Mock
+    mockCreateClassicCancelRequest = CancelUtils.createClassicCancelRequest as Mock
+    mockGetCancelOrderTxRequest = getCancelOrderTxRequest as Mock
+    mockExtractCancellationData = CancelMultipleOrders.extractCancellationData as Mock
     mockGetCancelMultipleUniswapXOrdersTransaction =
-      CancelMultipleOrders.getCancelMultipleUniswapXOrdersTransaction as jest.Mock
-    mockIsUniswapX = isUniswapX as unknown as jest.Mock
-    mockUseQuery = useQuery as jest.Mock
+      CancelMultipleOrders.getCancelMultipleUniswapXOrdersTransaction as Mock
+    mockIsUniswapX = isUniswapX as unknown as Mock
+    mockUseQuery = useQuery as Mock
 
     mockUseTransactionGasFee.mockReturnValue(mockGasFee)
+    mockUsePlanCancellationGasFeeInfo.mockReturnValue(undefined)
     mockCreateClassicCancelRequest.mockReturnValue(mockClassicCancelRequest)
     mockUseQuery.mockReturnValue({ data: mockUniswapXCancelRequest, isLoading: false, error: null })
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should return undefined if calculateCancellationGasFee returns undefined', () => {

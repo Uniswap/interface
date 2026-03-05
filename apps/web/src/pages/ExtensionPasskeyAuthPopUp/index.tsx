@@ -1,4 +1,3 @@
-import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -23,6 +22,7 @@ import { getChromeRuntime, getChromeRuntimeWithThrow } from 'utilities/src/chrom
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 
 // Passkey Auth Flow: Extension <> Web App
 // For a detailed flow chart of how the Web App and the Extension exchange messages,

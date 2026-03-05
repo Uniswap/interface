@@ -15,9 +15,9 @@ import { SmartWalletInsufficientFundsOnNetworkModal } from 'wallet/src/component
 import { SmartWalletUnavailableModal } from 'wallet/src/components/smartWallet/modals/SmartWalletUnavailableModal'
 import { setIsAllSmartWalletNudgesDisabled } from 'wallet/src/features/behaviorHistory/slice'
 import { useNetworkBalances } from 'wallet/src/features/smartWallet/hooks/useNetworkBalances'
-import { SmartWalletDisableModal } from 'wallet/src/features/smartWallet/SmartWalletDisableModal'
+import { SmartWalletStatusModal } from 'wallet/src/features/smartWallet/SmartWalletStatusModal'
 import { removeDelegationActions } from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
-import { SmartWalletModalState, WalletData } from 'wallet/src/features/smartWallet/types'
+import { SmartWalletModalState, type WalletData } from 'wallet/src/features/smartWallet/types'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import {
   useActiveAccountAddressWithThrow,
@@ -45,14 +45,15 @@ interface SmartWalletModalsManagerProps {
  * Initial State: None
  *
  * From None:
- * ├─ Click Active Wallet → Disable
- * ├─ Click Inactive Wallet → EnabledSuccess (+ dispatch setSmartWalletConsent(true))
+ * ├─ Click Active Wallet → Status Modal
+ * ├─ Click Inactive Wallet → Status Modal
  * ├─ Click ActionRequired Wallet → ActionRequired
  * └─ Click Unavailable Wallet → Unavailable
  *
- * From Disable:
+ * From Status Modal:
  * ├─ onClose → None
- * └─ onConfirm → DisableWarning (if has delegations) OR None (+ dispatch setSmartWalletConsent(false)) (if no delegations)
+ * ├─ onDisable → DisableWarning (if has delegations) OR None (+ dispatch setSmartWalletConsent(false)) (if no delegations)
+ * └─ onEnable → EnabledSuccess (+ dispatch setSmartWalletConsent(true))
  *
  * From DisableWarning:
  * ├─ onClose/onReject → None
@@ -193,6 +194,28 @@ export function SmartWalletModalsManager({
     )
   })
 
+  const handleEnableConfirm = useEvent(() => {
+    if (!selectedWallet?.walletAddress) {
+      return
+    }
+
+    dispatch(
+      setSmartWalletConsent({
+        address: selectedWallet.walletAddress,
+        smartWalletConsent: true,
+      }),
+    )
+    dispatch(setIsAllSmartWalletNudgesDisabled({ walletAddress: selectedWallet.walletAddress, isDisabled: false }))
+    onModalStateChange(SmartWalletModalState.EnabledSuccess)
+
+    refreshDelegationData().catch((delegationError) => {
+      logger.error(delegationError, {
+        tags: { file: 'SmartWalletModalsManager', function: 'handleEnableConfirm' },
+        extra: { activeAccountAddress },
+      })
+    })
+  })
+
   const handleDisableConfirm = useCallback(async () => {
     if (!selectedWallet?.walletAddress || activeAccount.type !== AccountType.SignerMnemonic) {
       return
@@ -206,6 +229,27 @@ export function SmartWalletModalsManager({
       await onDelegationsRemoved()
     }
   }, [selectedWallet, activeAccount, onDelegationsRemoved, onModalStateChange])
+
+  const handleReactivate = useEvent(() => {
+    if (!selectedWallet?.walletAddress) {
+      return
+    }
+
+    dispatch(
+      setSmartWalletConsent({
+        address: selectedWallet.walletAddress,
+        smartWalletConsent: true,
+      }),
+    )
+    closeModal(SmartWalletModalState.ActionRequired)
+
+    refreshDelegationData().catch((delegationError) => {
+      logger.error(delegationError, {
+        tags: { file: 'SmartWalletModalsManager', function: 'onReactivate' },
+        extra: { activeAccountAddress },
+      })
+    })
+  })
 
   const unavailableWalletDisplayName = selectedWalletDisplayName?.name || selectedWallet?.walletAddress
 
@@ -254,11 +298,12 @@ export function SmartWalletModalsManager({
       )}
       {selectedWallet && (
         <>
-          <SmartWalletDisableModal
+          <SmartWalletStatusModal
             wallet={selectedWallet}
             isOpen={modalState === SmartWalletModalState.Disable}
             onClose={() => closeModal(SmartWalletModalState.Disable)}
-            onConfirm={handleDisableConfirm}
+            onEnable={handleEnableConfirm}
+            onDisable={handleDisableConfirm}
           />
           <SmartWalletConfirmModal
             isOpen={modalState === SmartWalletModalState.Confirm}
@@ -283,15 +328,7 @@ export function SmartWalletModalsManager({
             walletAddress={selectedWallet.walletAddress}
             onClose={() => closeModal(SmartWalletModalState.ActionRequired)}
             onConfirm={() => onModalStateChange(SmartWalletModalState.Confirm)}
-            onReactivate={() => {
-              dispatch(
-                setSmartWalletConsent({
-                  address: selectedWallet.walletAddress,
-                  smartWalletConsent: true,
-                }),
-              )
-              closeModal(SmartWalletModalState.ActionRequired)
-            }}
+            onReactivate={handleReactivate}
           />
         </>
       )}

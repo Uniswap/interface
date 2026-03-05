@@ -1,25 +1,23 @@
-import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
-import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
-import { getLocalCurrencyIcon } from 'constants/localCurrencies'
-import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
-import { deprecatedStyled } from 'lib/styled-components'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
+import { Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
-
-const StyledLocalCurrencyIcon = deprecatedStyled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  overflow: hidden;
-`
+import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
+import { MenuColumn, MenuItem } from '~/components/AccountDrawer/shared'
+import { getLocalCurrencyIcon } from '~/constants/localCurrencies'
+import { useLocalCurrencyLinkProps } from '~/hooks/useLocalCurrencyLinkProps'
 
 function LocalCurrencyMenuItem({ localCurrency, isActive }: { localCurrency: FiatCurrency; isActive: boolean }) {
   const { to, onClick } = useLocalCurrencyLinkProps(localCurrency)
 
   const LocalCurrencyIcon = useMemo(() => {
-    return <StyledLocalCurrencyIcon>{getLocalCurrencyIcon(localCurrency)}</StyledLocalCurrencyIcon>
+    return (
+      <Flex width={iconSizes.icon20} height={iconSizes.icon20} borderRadius="$roundedFull" overflow="hidden">
+        {getLocalCurrencyIcon(localCurrency)}
+      </Flex>
+    )
   }, [localCurrency])
 
   if (!to) {

@@ -1,11 +1,8 @@
 import type { MutableRefObject, RefObject } from 'react'
-import { useCallback, useMemo, useState } from 'react'
-import type { LayoutChangeEvent, TextInputProps } from 'react-native'
-import { type ButtonProps, Flex, type FlexProps } from 'ui/src'
-import {
-  AmountInputPresets,
-  PRESET_BUTTON_PROPS,
-} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
+import { useCallback, useMemo } from 'react'
+import type { TextInputProps } from 'react-native'
+import { AnimatePresence, type ButtonProps, Flex, type FlexProps, useMedia } from 'ui/src'
+import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
@@ -28,17 +25,18 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { useImmediateVisibility } from 'utilities/src/react/useImmediateVisibility'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const SHORT_BREAKPOINT_STYLE: FlexProps['$short'] = { gap: '$none' }
 
-const AMOUNT_INPUT_PRESET_BUTTON_PROPS: ButtonProps = {
+const getAmountInputPresetButtonProps = (isShortScreen: boolean): ButtonProps => ({
+  variant: 'default',
   emphasis: 'tertiary',
-  size: 'xsmall',
-  // set to height of the button for full rounding
-  borderRadius: 16,
+  size: isShortScreen ? 'xsmall' : 'small',
+  borderRadius: '$roundedFull',
   fill: true,
-}
+})
 
 type SwapFormDecimalPadProps = {
   decimalPadRef: RefObject<DecimalPadInputRef | null>
@@ -122,11 +120,26 @@ function SwapFormDecimalPadContent({
     ? MAX_FIAT_INPUT_DECIMALS
     : (currencies[decimalPadControlledField]?.currency.decimals ?? 0)
 
-  const [additionalElementsHeight, setAdditionalElementsHeight] = useState<number | undefined>(undefined)
+  const media = useMedia()
 
-  const onAmountInputPresetsLayout = useEvent((event: LayoutChangeEvent): void => {
-    setAdditionalElementsHeight(event.nativeEvent.layout.height)
+  const showPresetButtons = useMemo(
+    () =>
+      !!currencyBalances[CurrencyField.INPUT] &&
+      !currencyAmounts[CurrencyField.INPUT]?.greaterThan(0) &&
+      !currencyAmounts[CurrencyField.OUTPUT]?.greaterThan(0),
+    [
+      currencyBalances[CurrencyField.INPUT],
+      currencyAmounts[CurrencyField.INPUT],
+      currencyAmounts[CurrencyField.OUTPUT],
+    ],
+  )
+
+  const { isVisible: isPresetsVisible, handleAction: handleSetPresetValue } = useImmediateVisibility({
+    shouldShow: showPresetButtons,
+    onAction: onSetPresetValue,
   })
+
+  const amountInputPresetButtonProps = useMemo(() => getAmountInputPresetButtonProps(media.short), [media.short])
 
   const renderPreset = useCallback(
     (preset: PresetPercentage) => (
@@ -136,11 +149,16 @@ function SwapFormDecimalPadContent({
         currencyBalance={currencyBalances[CurrencyField.INPUT]}
         currencyField={CurrencyField.INPUT}
         elementName={ElementName.PresetPercentage}
-        buttonProps={{ ...PRESET_BUTTON_PROPS, ...AMOUNT_INPUT_PRESET_BUTTON_PROPS }}
-        onSetPresetValue={onSetPresetValue}
+        buttonProps={amountInputPresetButtonProps}
+        onSetPresetValue={handleSetPresetValue}
       />
     ),
-    [currencyAmounts[CurrencyField.INPUT], currencyBalances[CurrencyField.INPUT], onSetPresetValue],
+    [
+      currencyAmounts[CurrencyField.INPUT],
+      currencyBalances[CurrencyField.INPUT],
+      handleSetPresetValue,
+      amountInputPresetButtonProps,
+    ],
   )
 
   return (
@@ -148,7 +166,6 @@ function SwapFormDecimalPadContent({
       <DecimalPadCalculateSpace
         id={DecimalPadCalculatedSpaceId.Swap}
         decimalPadRef={decimalPadRef}
-        additionalElementsHeight={additionalElementsHeight}
         isDecimalPadReady={isDecimalPadReady}
       />
 
@@ -164,23 +181,40 @@ function SwapFormDecimalPadContent({
       >
         <Flex grow justifyContent="flex-end">
           {/**
+
            * *********** IMPORTANT! ***********
            *
-           * If you add any additional elements inside this `Flex` you need to add the height to `additionalElementsHeight`,
+           * If you add any additional elements inside this `Flex` you need to pass the `additionalElementsHeight` prop to `DecimalPadCalculateSpace`,
            * otherwise it will break the `DecimalPad` auto-resizing.
            *
            * *********** IMPORTANT! ***********
            */}
-          {currencyBalances[CurrencyField.INPUT] && (
-            <AmountInputPresets
-              flex={1}
-              gap="$gap8"
-              pb="$padding16"
-              presets={PRESET_PERCENTAGES}
-              renderPreset={renderPreset}
-              onLayout={onAmountInputPresetsLayout}
-            />
-          )}
+          <AnimatePresence>
+            {showPresetButtons && isPresetsVisible && (
+              <Flex
+                key="preset-buttons"
+                animation="quick"
+                enterStyle={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                exitStyle={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                opacity={1}
+                y={0}
+              >
+                <AmountInputPresets
+                  flex={1}
+                  gap="$gap8"
+                  pb="$padding16"
+                  presets={PRESET_PERCENTAGES}
+                  renderPreset={renderPreset}
+                />
+              </Flex>
+            )}
+          </AnimatePresence>
           <DecimalPadInput
             ref={decimalPadRef}
             maxDecimals={maxDecimals}

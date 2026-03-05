@@ -1,14 +1,13 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import application from 'state/application/reducer'
-import fiatOnRampTransactions from 'state/fiatOnRampTransactions/reducer'
-import lists from 'state/lists/reducer'
-import logs from 'state/logs/slice'
-import mint from 'state/mint/reducer'
-import mintV3 from 'state/mint/v3/reducer'
-import { routingApi } from 'state/routing/slice'
-import user from 'state/user/reducer'
-import walletCapabilities from 'state/walletCapabilities/reducer'
 import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
+import application from '~/state/application/reducer'
+import fiatOnRampTransactions from '~/state/fiatOnRampTransactions/reducer'
+import lists from '~/state/lists/reducer'
+import logs from '~/state/logs/slice'
+import { routingApi } from '~/state/routing/slice'
+import { monitoredSagaReducers } from '~/state/sagas/root'
+import user from '~/state/user/reducer'
+import walletCapabilities from '~/state/walletCapabilities/reducer'
 
 const interfaceReducers = {
   ...uniswapReducers,
@@ -17,9 +16,8 @@ const interfaceReducers = {
   fiatOnRampTransactions,
   application,
   walletCapabilities,
-  mint,
-  mintV3,
   logs,
+  saga: monitoredSagaReducers,
   [routingApi.reducerPath]: routingApi.reducer,
 } as const
 

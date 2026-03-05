@@ -9,6 +9,7 @@ import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type NavigateToNftItemArgs = {
@@ -21,12 +22,19 @@ export type NavigateToNftItemArgs = {
   fallbackData?: NFTItem
 }
 
+export type NavigateToSwapFlowArgs = {
+  inputCurrencyId?: string
+  outputCurrencyId?: string
+  exactCurrencyField?: CurrencyField
+  exactAmountToken?: string
+}
+
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContextValue {
   navigateToBuyOrReceiveWithEmptyWallet?: () => void
   navigateToFiatOnRamp: (args: { prefilledCurrency?: FiatOnRampCurrency }) => void
-  navigateToSwapFlow: (args: { inputCurrencyId?: string; outputCurrencyId?: string }) => void
-  navigateToSendFlow: (args: { chainId: UniverseChainId; currencyAddress?: Address }) => void
+  navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
+  navigateToSendFlow: (args: { chainId: UniverseChainId; currencyAddress?: Address; recipient?: Address }) => void
   navigateToReceive: () => void
   navigateToTokenDetails: (currencyId: string) => void
   navigateToExternalProfile: (args: { address: Address }) => void
@@ -34,6 +42,7 @@ interface UniswapContextValue {
   navigateToNftCollection: (args: { collectionAddress: Address; chainId: UniverseChainId }) => void
   navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void
   handleShareToken: (args: { currencyId: string }) => void
+  navigateToAdvancedSettings: () => void
   onSwapChainsChanged: (args: {
     chainId: UniverseChainId
     prevChainId?: UniverseChainId
@@ -76,6 +85,7 @@ export function UniswapProvider({
   navigateToNftCollection,
   navigateToPoolDetails,
   handleShareToken,
+  navigateToAdvancedSettings,
   onSwapChainsChanged,
   signer,
   useProviderHook,
@@ -108,6 +118,7 @@ export function UniswapProvider({
       navigateToNftDetails,
       navigateToPoolDetails,
       handleShareToken,
+      navigateToAdvancedSettings,
       onSwapChainsChanged: ({
         chainId,
         prevChainId,
@@ -150,6 +161,7 @@ export function UniswapProvider({
       navigateToNftDetails,
       navigateToPoolDetails,
       handleShareToken,
+      navigateToAdvancedSettings,
       signer,
       useProviderHook,
       useWalletDisplayName,

@@ -2,7 +2,7 @@
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
-import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
+import { type LoggerErrorContext, type LogLevel } from 'utilities/src/logger/types'
 import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
@@ -154,11 +154,11 @@ export function addErrorExtras(error: unknown, captureContext: LoggerErrorContex
     const { nativeStackAndroid, userInfo } = error as RNError
 
     if (Array.isArray(nativeStackAndroid) && nativeStackAndroid.length > 0) {
-      extras.nativeStackAndroid = nativeStackAndroid
+      extras['nativeStackAndroid'] = nativeStackAndroid
     }
 
     if (userInfo) {
-      extras.userInfo = userInfo
+      extras['userInfo'] = userInfo
     }
 
     updatedContext.extra = { ...updatedContext.extra, ...extras }
@@ -218,17 +218,22 @@ export function createLogger(
   logPrefix?: string,
 ): {
   debug: (message: string, extra?: unknown) => void
+  info: (message: string, extra?: unknown) => void
   warn: (message: string, extra?: unknown) => void
   error: (error: unknown, extra?: Record<string, unknown>) => void
 } {
+  const getPrefixedMessage = (message: string): string =>
+    logPrefix && !message.startsWith(logPrefix) ? `${logPrefix} ${message}` : message
+
   return {
     debug: (message: string, extra?: unknown): void => {
-      const prefixedMessage = logPrefix && !message.startsWith(logPrefix) ? `${logPrefix} ${message}` : message
-      logger.debug(fileName, functionName, prefixedMessage, extra)
+      logger.debug(fileName, functionName, getPrefixedMessage(message), extra)
+    },
+    info: (message: string, extra?: unknown): void => {
+      logger.info(fileName, functionName, getPrefixedMessage(message), extra)
     },
     warn: (message: string, extra?: unknown): void => {
-      const prefixedMessage = logPrefix && !message.startsWith(logPrefix) ? `${logPrefix} ${message}` : message
-      logger.warn(fileName, functionName, prefixedMessage, extra)
+      logger.warn(fileName, functionName, getPrefixedMessage(message), extra)
     },
     error: (error: unknown, extra?: Record<string, unknown>): void => {
       logger.error(error as Error, {

@@ -1,7 +1,7 @@
-import { deprecatedStyled } from 'lib/styled-components'
 import { useRef } from 'react'
 import { Flex, FlexProps } from 'ui/src'
 import { v4 as uuid } from 'uuid'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 // Gradient with a fallback to solid color.
 const Gradient = deprecatedStyled.div`
@@ -46,7 +46,7 @@ export const UniswapXRouterIcon = ({ testId }: { testId?: string }) => {
   )
 }
 
-export type UnswapXRouterLabelProps = FlexProps & {
+type UnswapXRouterLabelProps = FlexProps & {
   disableTextGradient?: boolean
   testId?: string
 }

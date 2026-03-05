@@ -17,8 +17,8 @@ export const ErrorLogSchema = MessageSchema.extend({
   message: z.string(),
   fileName: z.string(),
   functionName: z.string(),
-  tags: z.record(z.string()).optional(),
-  extra: z.record(z.unknown()).optional(),
+  tags: z.record(z.string(), z.string()).optional(),
+  extra: z.record(z.string(), z.unknown()).optional(),
 })
 export type ErrorLog = z.infer<typeof ErrorLogSchema>
 
@@ -32,7 +32,7 @@ export type ArcBrowserCheckMessage = z.infer<typeof ArcBrowserCheckMessageSchema
 export const AnalyticsLogSchema = MessageSchema.extend({
   type: z.literal(ContentScriptUtilityMessageType.AnalyticsLog),
   message: z.string(),
-  tags: z.record(z.string()),
+  tags: z.record(z.string(), z.string()),
 })
 export type AnalyticsLog = z.infer<typeof AnalyticsLogSchema>
 
@@ -54,6 +54,7 @@ export const DappRequestMessageSchema = z.object({
   senderTabInfo: z.object({
     id: z.number(),
     url: z.string(),
+    frameUrl: z.string().optional(),
     favIconUrl: z.string().optional(),
   }),
   isSidebarClosed: z.optional(z.boolean()),

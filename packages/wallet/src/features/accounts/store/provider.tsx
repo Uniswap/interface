@@ -6,6 +6,9 @@ import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Sessio
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { createAccountsStoreContextProvider } from 'uniswap/src/features/accounts/store/utils/createAccountsStoreContextProvider'
 import { AccountType as ReduxAccountType } from 'uniswap/src/features/accounts/types'
+import { DEFAULT_EVM_METHODS, EVM_NAMESPACE_IDENTIFIER } from 'uniswap/src/features/capabilities/caip25/constants'
+import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { isNonEmptyArray, NonEmptyArray } from 'utilities/src/primitives/array'
@@ -18,6 +21,7 @@ import {
   ReadonlyWallet,
   WalletAppsAccountsData,
 } from 'wallet/src/features/accounts/store/types'
+import { useGetSwapDelegationInfoForActiveAccount } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import {
   Account as ReduxAccount,
   SignerMnemonicAccount as ReduxSignerMnemonicAccount,
@@ -47,8 +51,16 @@ function getWalletId(account: ReduxAccount): string {
 }
 
 /** Creates a local connector with native access pattern and multi-chain scope. */
-function createLocalConnector(account: ReduxAccount | null, finishedOnboarding?: boolean): LocalConnector {
-  if (!account) {
+function createLocalConnector({
+  activeAccount,
+  finishedOnboarding,
+  caip25Session,
+}: {
+  activeAccount: ReduxAccount | null
+  finishedOnboarding?: boolean
+  caip25Session: CAIP25Session
+}): LocalConnector {
+  if (!activeAccount) {
     const error = !finishedOnboarding
       ? ConnectorErrorType.OnboardingNotFinished
       : ConnectorErrorType.UnexpectedEmptyAccountState
@@ -63,15 +75,16 @@ function createLocalConnector(account: ReduxAccount | null, finishedOnboarding?:
   }
 
   // Readonly wallets will only ever point to index 0, since they have one account.
-  const currentAccountIndex = account.type === ReduxAccountType.Readonly ? 0 : account.derivationIndex
+  const currentAccountIndex = activeAccount.type === ReduxAccountType.Readonly ? 0 : activeAccount.derivationIndex
 
   const session: LocalSession = {
-    walletId: getWalletId(account),
+    walletId: getWalletId(activeAccount),
     currentAccountIndex,
     chainScope: {
       type: ChainScopeType.MultiChain,
       supportedChains: 'all',
     },
+    caip25Info: caip25Session,
   }
 
   return {
@@ -148,9 +161,10 @@ function useAccountsState(): WalletAppsAccountsData {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
   const activeAccount = useActiveReduxAccount()
 
+  const caip25Session = useCAIP25Session(activeAccount?.address)
   const localConnector = useMemo(
-    () => createLocalConnector(activeAccount, finishedOnboarding),
-    [activeAccount, finishedOnboarding],
+    () => createLocalConnector({ activeAccount, finishedOnboarding, caip25Session }),
+    [activeAccount, finishedOnboarding, caip25Session],
   )
   const accounts = useMemo(() => createAccounts(Object.values(reduxAccounts)), [reduxAccounts])
   const wallets = useMemo(() => createWallets(Object.values(reduxAccounts)), [reduxAccounts])
@@ -173,3 +187,59 @@ export const { AccountsStoreContextProvider, useAccountsStoreContext } = createA
   useAppAccountsState: useAccountsState,
   createGetters: createAccountsStoreGetters,
 })
+
+function useCAIP25Session(activeAddress?: string): CAIP25Session {
+  const { chains: enabledChains } = useEnabledChains()
+
+  const getSwapDelegationInfo = useGetSwapDelegationInfoForActiveAccount()
+
+  return useMemo(() => {
+    // 1. Create default scope
+    const defaultScope = {
+      chains: enabledChains.map((chainId) => chainId.toString()),
+      accounts: activeAddress ? [activeAddress] : [],
+      methods: DEFAULT_EVM_METHODS,
+      notifications: [],
+      capabilities: {},
+      clientContext: {
+        directPrivateKeyAccess: true,
+      },
+    }
+
+    // 2. Add overrides if smart wallet upgrades are planned
+    const scopes: CAIP25Session['scopes'] = {}
+    for (const chainId of enabledChains) {
+      const swapDelegationInfo = getSwapDelegationInfo(chainId)
+
+      if (swapDelegationInfo.delegationInclusion) {
+        // Update the default scope to remove this chain we are overriding
+        defaultScope.chains = defaultScope.chains.filter((c) => c !== chainId.toString())
+
+        scopes[`${EVM_NAMESPACE_IDENTIFIER}:${chainId}`] = {
+          accounts: activeAddress ? [activeAddress] : [],
+          methods: [...DEFAULT_EVM_METHODS, 'wallet_sendCalls'],
+          notifications: [],
+          clientContext: {
+            directPrivateKeyAccess: true,
+            nextEvmUpgradeAddress: swapDelegationInfo.delegationAddress,
+          },
+        }
+      }
+    }
+
+    // `defaultScope` now only contains chains that don't have overrides -- add it to scopes
+    scopes[`${EVM_NAMESPACE_IDENTIFIER}`] = defaultScope
+
+    return {
+      scopes,
+      properties: {
+        expiry: '0',
+        walletInfo: {
+          uuid: 'local',
+          rdns: 'org.uniswap.app',
+          name: 'Uniswap Wallet',
+        },
+      },
+    }
+  }, [activeAddress, enabledChains, getSwapDelegationInfo])
+}

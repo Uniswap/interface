@@ -1,11 +1,11 @@
-import Column from 'components/deprecated/Column'
-import { RowBetween } from 'components/deprecated/Row'
-import RouterLabel from 'components/RouterLabel'
-import { UniswapXDescription } from 'components/swap/GasBreakdownTooltip'
 import { Trans } from 'react-i18next'
-import { SubmittableTrade } from 'state/routing/types'
-import { ThemedText } from 'theme/components'
 import { Separator } from 'ui/src'
+import Column from '~/components/deprecated/Column'
+import { RowBetween } from '~/components/deprecated/Row'
+import RouterLabel from '~/components/RouterLabel'
+import { UniswapXDescription } from '~/components/swap/GasBreakdownTooltip'
+import { SubmittableTrade } from '~/state/routing/types'
+import { ThemedText } from '~/theme/components'
 
 function RouteLabel({ trade }: { trade: SubmittableTrade }) {
   return (

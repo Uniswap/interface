@@ -1,7 +1,6 @@
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { iconSizes } from 'ui/src/theme'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
+import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -95,14 +94,7 @@ export function NftTransactionContent({
             <Text color="$neutral2" numberOfLines={1} variant="body3">
               {nftSummaryInfo.collectionName}
             </Text>
-            {!disableOnPressNftCollection && (
-              <RotatableChevron
-                color="$neutral2"
-                direction="right"
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
-            )}
+            {!disableOnPressNftCollection && <RotatableChevron color="$neutral2" direction="right" size="$icon.16" />}
           </Flex>
         </TouchableArea>
       </Flex>

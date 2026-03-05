@@ -1,211 +1,70 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders UnitagName with a name 1`] = `
-<View
-  collapsable={false}
-  forwardedRef={[Function]}
-  jestAnimatedProps={
-    {
-      "value": {},
-    }
-  }
-  jestAnimatedStyle={
-    {
-      "value": {
-        "opacity": 0,
-      },
-    }
-  }
-  jestInlineStyle={
-    [
-      {
-        "alignItems": "center",
-        "alignSelf": "center",
-        "flexDirection": "row",
-      },
-    ]
-  }
-  style={
-    [
-      {
-        "alignItems": "center",
-        "alignSelf": "center",
-        "flexDirection": "row",
-      },
-      {
-        "opacity": 0,
-      },
-    ]
-  }
-  testID="testing.uni.eth"
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 12,
-        "fontWeight": "400",
-        "lineHeight": 40,
-      }
-    }
-    suppressHighlighting={true}
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    testing
-  </Text>
-  <View
-    collapsable={false}
-    forwardedRef={[Function]}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "opacity": 0,
-          "right": -24,
-          "top": -4,
-          "transform": [
-            {
-              "translateX": 20,
-            },
-            {
-              "scale": 0.8,
-            },
-          ],
-        },
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "flexDirection": "row",
-          "marginLeft": 4,
-          "position": "absolute",
-        },
-      ]
-    }
-    style={
-      [
-        {
-          "flexDirection": "row",
-          "marginLeft": 4,
-          "position": "absolute",
-        },
-        {
-          "opacity": 0,
-          "right": -24,
-          "top": -4,
-          "transform": [
-            {
-              "translateX": 20,
-            },
-            {
-              "scale": 0.8,
-            },
-          ],
-        },
-      ]
-    }
-  />
-</View>
+    <div
+      class="t_unmounted  t_unmounted"
+      data-testid="testing.uni.eth"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-self: center; opacity: 0; align-items: center; transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
+    >
+      <span
+        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-12px _lineHeight-40px _fontWeight-400"
+        data-disable-theme="true"
+      >
+        testing
+      </span>
+      <div
+        class="t_unmounted  t_unmounted"
+        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; position: absolute; right: -24px; top: -4px; opacity: 0; transform: translateX(20px) scale(0.8); transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
+      >
+        <img
+          height="24"
+          src="mock-asset-UNITAG_DARK_SMALL.png"
+          style="vertical-align: sub;"
+          width="24"
+        />
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
 exports[`renders UnitagName without a name 1`] = `
-<View
-  collapsable={false}
-  forwardedRef={[Function]}
-  jestAnimatedProps={
-    {
-      "value": {},
-    }
-  }
-  jestAnimatedStyle={
-    {
-      "value": {
-        "opacity": 0,
-      },
-    }
-  }
-  jestInlineStyle={
-    [
-      {
-        "alignItems": "center",
-        "alignSelf": "center",
-        "flexDirection": "row",
-      },
-    ]
-  }
-  style={
-    [
-      {
-        "alignItems": "center",
-        "alignSelf": "center",
-        "flexDirection": "row",
-      },
-      {
-        "opacity": 0,
-      },
-    ]
-  }
-  testID="undefined.uni.eth"
->
-  <Text
-    allowFontScaling={true}
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#FFFFFF",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 12,
-        "fontWeight": "400",
-        "lineHeight": 40,
-      }
-    }
-    suppressHighlighting={true}
-  />
-  <View
-    collapsable={false}
-    forwardedRef={[Function]}
-    jestAnimatedProps={
-      {
-        "value": {},
-      }
-    }
-    jestAnimatedStyle={
-      {
-        "value": {
-          "right": -24,
-          "top": -4,
-        },
-      }
-    }
-    jestInlineStyle={
-      [
-        {
-          "flexDirection": "row",
-          "marginLeft": 4,
-          "position": "absolute",
-        },
-      ]
-    }
-    style={
-      [
-        {
-          "flexDirection": "row",
-          "marginLeft": 4,
-          "position": "absolute",
-        },
-        {
-          "right": -24,
-          "top": -4,
-        },
-      ]
-    }
-  />
-</View>
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="t_unmounted  t_unmounted"
+      data-testid="undefined.uni.eth"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-self: center; opacity: 0; align-items: center; transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
+    >
+      <span
+        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-12px _lineHeight-40px _fontWeight-400"
+        data-disable-theme="true"
+      />
+      <div
+        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; position: absolute; right: -24px; top: -4px; transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
+      >
+        <img
+          height="24"
+          src="mock-asset-UNITAG_DARK_SMALL.png"
+          style="vertical-align: sub;"
+          width="24"
+        />
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

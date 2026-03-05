@@ -12,9 +12,9 @@ const iconsCache = new Map<UniverseChainId, React.FC<IconComponentProps>>()
 function buildIconComponent(chainId: UniverseChainId): React.FC<IconComponentProps> {
   const explorer = getChainInfo(chainId).explorer
 
-  const Component = ({ size }: IconComponentProps): JSX.Element => {
+  const Component = ({ size, color }: IconComponentProps): JSX.Element => {
     const Logo = useBlockExplorerLogo(chainId)
-    return <Logo size={size} />
+    return <Logo size={size} color={color} />
   }
   Component.displayName = `BlockExplorerIcon_${explorer.name}`
   iconsCache.set(chainId, Component)

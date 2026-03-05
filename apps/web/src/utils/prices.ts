@@ -2,7 +2,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { PriceChartData } from 'components/Charts/PriceChart'
+import { PriceChartData } from '~/components/Charts/PriceChart'
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -11,7 +11,7 @@ import {
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
   ONE_HUNDRED_PERCENT,
   ZERO_PERCENT,
-} from 'constants/misc'
+} from '~/constants/misc'
 
 const THIRTY_BIPS_FEE = new Percent(30, BIPS_BASE)
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)

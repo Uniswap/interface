@@ -1,16 +1,16 @@
-import {
-  ConnectWalletMutationParams,
-  useConnectWalletMutation,
-} from 'features/wallet/connection/hooks/useConnectWalletMutation'
-import { useGetConnectionService } from 'features/wallet/connection/services/getConnectionService'
-import { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
 import { logger } from 'utilities/src/logger/logger'
 import { pipe } from 'utilities/src/primitives/array'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import {
+  ConnectWalletMutationParams,
+  useConnectWalletMutation,
+} from '~/features/wallet/connection/hooks/useConnectWalletMutation'
+import { useGetConnectionService } from '~/features/wallet/connection/services/getConnectionService'
+import { ConnectionService } from '~/features/wallet/connection/services/IConnectionService'
+import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 /** Wraps a connect wallet service with functionality to log connection events. */
 function wrapConnectionServiceWithLogging(baseService: ConnectionService): ConnectionService {

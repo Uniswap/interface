@@ -126,6 +126,14 @@ export interface ReceiveNFTNotification extends TransferNFTNotificationBase {
   sender: Address
 }
 
+export interface PlanTxNotification extends TransactionNotificationBase {
+  txType: TransactionType.Plan
+  inputCurrencyId: string
+  outputCurrencyId: string
+  inputCurrencyAmountRaw: string
+  outputCurrencyAmountRaw: string
+}
+
 export interface UnknownTxNotification extends TransactionNotificationBase {
   txType: TransactionType.Unknown
 }
@@ -256,3 +264,4 @@ export type AppNotification =
   | NotSupportedNetworkNotification
   | TransactionPendingNotification
   | PasswordChangedNotification
+  | PlanTxNotification

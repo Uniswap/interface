@@ -1,5 +1,14 @@
 import { memo, useState } from 'react'
-import { Flex, Loader, Text, TextProps, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  FlexProps,
+  Loader,
+  Text,
+  TextProps,
+  UniversalImage,
+  useColorSchemeFromSeed,
+  useSporeColors,
+} from 'ui/src'
 import { iconSizes, validColor, zIndexes } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -18,6 +27,7 @@ interface TokenLogoProps {
   loading?: boolean
   webFontSize?: number
   lineHeight?: TextProps['lineHeight']
+  transition?: FlexProps['transition']
 }
 
 const TESTNET_BORDER_DIVISOR = 15
@@ -34,6 +44,7 @@ export const TokenLogo = memo(function _TokenLogo({
   loading,
   webFontSize = 10,
   lineHeight = 14,
+  transition,
 }: TokenLogoProps): JSX.Element {
   const isTestnetToken = !!chainId && isTestnetChain(chainId)
 
@@ -98,6 +109,7 @@ export const TokenLogo = memo(function _TokenLogo({
       pointerEvents="auto"
       width={size}
       position="relative"
+      transition={transition}
     >
       {!isTestnetToken && (
         <Flex
@@ -121,6 +133,7 @@ export const TokenLogo = memo(function _TokenLogo({
           image: {
             borderRadius: size / 2,
             zIndex: zIndexes.default,
+            ...(transition && { transition }),
           },
         }}
         testID="token-image"

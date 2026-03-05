@@ -1,6 +1,28 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
+.c0 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c0 :hover {
+  opacity: 0.6;
+}
+
+.c0 :active {
+  opacity: 0.4;
+}
+
+.c1 {
+  font-weight: 535;
+  color: rgba(19, 19, 19, 0.63);
+}
+
 <body>
   <dialog
     aria-closed="true"
@@ -33,13 +55,595 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
       style="display: contents;"
     >
       <div
-        class="_position-_platformweb_fixed _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-auto _top-72px _right-t-space-spa1360334080 _zIndex-990 _width-368px"
-        data-testid="account-drawer"
-      />
+        class="_position-_platformweb_fixed _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-auto _width-368px _right-t-space-spa1360334080 _top-72px _zIndex-990"
+        data-testid="account-drawer-container"
+      >
+        <span
+          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            data-testid-ignore="true"
+          >
+            <span
+              class="t_unmounted font_body  t_unmounted"
+              data-disable-theme="true"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; line-height: var(--f-lineHeight-medium); font-weight: var(--f-weight-book); display: flex; flex-direction: column; min-width: 150px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; z-index: 970; border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); padding: 0px 0px 0px 0px; width: 100%; max-height: calc(100vh - 88px); overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; top: calc(100% + 10px); opacity: 0; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _height-10037"
+              >
+                <div
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; width: 100%; flex-grow: 1; transform: translateX(0px); transition: all 100ms ease-in-out;"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _pb-t-space-pad1331704900 _flexGrow-1 _gap-t-space-gap1573"
+                    data-testid="wallet-modal"
+                  >
+                    <span
+                      class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+                    >
+                      <h2
+                        class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
+                        data-disable-theme="true"
+                        id="Dialog--:rc:-title"
+                        role="heading"
+                      />
+                    </span>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _width-10037"
+                      >
+                        <span
+                          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                          data-disable-theme="true"
+                        >
+                          Connect a wallet
+                        </span>
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-16px"
+                      >
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-8px"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _maxHeight-72px _width-10037 _backgroundColor-white _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px _position-relative"
+                            data-testid="download-uniswap-wallet"
+                          >
+                            <div
+                              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); opacity: 1; max-height: 72px; background: url(/images/extension_promo/background_connector.png); background-repeat: no-repeat; background-size: cover; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            />
+                            <div
+                              class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-transparent _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="height: 40px; width: 40px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                  style="background-image: url(/src/assets/wallets/uniswap-wallet-icon.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="/src/assets/wallets/uniswap-wallet-icon.png"
+                                />
+                              </div>
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-4px"
+                              >
+                                <div
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                >
+                                  <span
+                                    class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                    data-disable-theme="true"
+                                  >
+                                    Get Uniswap Wallet
+                                  </span>
+                                  <span
+                                    class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                    data-disable-theme="true"
+                                  >
+                                    Available on iOS, Android, and Chrome
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 40px; height: 40px; min-width: 40px; background-color: rgba(255, 55, 199, 0.08); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px; color: rgb(255, 55, 199);"
+                              viewBox="0 0 22 22"
+                            >
+                              <path
+                                d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.75"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
+                            >
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                  data-disable-theme="true"
+                                >
+                                  Uniswap Mobile
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                  data-disable-theme="true"
+                                >
+                                  Scan QR code to connect
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-8px _pb-8px _userSelect-none _cursor-pointer"
+                        style="transition: 100ms;"
+                      >
+                        <div
+                          class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                        />
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _mr-18px _ml-18px"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                            data-disable-theme="true"
+                          >
+                            Other wallets
+                          </span>
+                          <svg
+                            fill="none"
+                            stroke-width="8"
+                            style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                            viewBox="0 0 28 28"
+                          >
+                            <path
+                              d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="M14.0928 15C13.8115 15 13.5654 15.1318 13.2754 15.3604L7.34277 20.1592C7.13184 20.335 7 20.5986 7 20.9238C7 21.5215 7.4834 21.9609 8.03711 21.9609C8.29199 21.9609 8.54688 21.8643 8.80176 21.6621L14.1016 17.3906L19.3926 21.6621C19.6387 21.8643 19.9023 21.9609 20.1572 21.9609C20.7109 21.9609 21.1943 21.5215 21.1943 20.9238C21.1943 20.5986 21.0625 20.335 20.8516 20.1592L14.9102 15.3604C14.6289 15.1318 14.3828 15 14.0928 15Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </div>
+                        <div
+                          class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-flex-start"
+                      >
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _overflowX-hidden _overflowY-hidden _width-10037 _maxHeight-100vh _opacity-1 _transition-250msease-i1019171151"
+                          data-testid="option-grid"
+                        >
+                          <div
+                            class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _alignItems-center _width-10037 _justifyContent-space-betwe3241 _position-relative _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334074 _pb-t-space-spa1360334074 _cursor-pointer _opacity-1"
+                          >
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+                            >
+                              <img
+                                alt="Coinbase Wallet"
+                                src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_13571_129878)'%3e%3crect%20width='40'%20height='40'%20fill='%230052FF'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M8.3312%200H31.6672C36.2704%200%2040%204.0128%2040%208.9632V31.0368C40%2035.9872%2036.2704%2040%2031.6688%2040H8.3312C3.7296%2040%200%2035.9872%200%2031.0368V8.9632C0%204.0128%203.7296%200%208.3312%200Z'%20fill='%230052FF'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M19.9989%205.79443C27.8453%205.79443%2034.2053%2012.1544%2034.2053%2020.0008C34.2053%2027.8472%2027.8453%2034.2072%2019.9989%2034.2072C12.1525%2034.2072%205.79254%2027.8472%205.79254%2020.0008C5.79254%2012.1544%2012.1525%205.79443%2019.9989%205.79443Z'%20fill='white'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M16.5005%2015.459H23.4973C24.0733%2015.459%2024.5389%2015.9614%2024.5389%2016.579V23.419C24.5389%2024.0382%2024.0717%2024.539%2023.4973%2024.539H16.5005C15.9245%2024.539%2015.4589%2024.0366%2015.4589%2023.419V16.579C15.4589%2015.9614%2015.9261%2015.459%2016.5005%2015.459Z'%20fill='%230052FF'/%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_13571_129878'%3e%3crect%20width='40'%20height='40'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e"
+                                style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(19, 19, 19, 0.08);"
+                              />
+                              <span
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                data-disable-theme="true"
+                              >
+                                Coinbase Wallet
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                          />
+                          <div
+                            class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _alignItems-center _width-10037 _justifyContent-space-betwe3241 _position-relative _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334074 _pb-t-space-spa1360334074 _cursor-pointer _opacity-1"
+                          >
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="height: 40px; width: 40px; border-top-left-radius: var(--t-radius-rounded8); border-top-right-radius: var(--t-radius-rounded8); border-bottom-right-radius: var(--t-radius-rounded8); border-bottom-left-radius: var(--t-radius-rounded8);"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                  style="background-image: url(binance-wallet-icon.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="binance-wallet-icon.png"
+                                />
+                              </div>
+                              <span
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                data-disable-theme="true"
+                              >
+                                Binance Wallet
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+                      >
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _textAlign-center"
+                            data-disable-theme="true"
+                          >
+                            By connecting a wallet, you agree to Uniswap Labs’ 
+                            <a
+                              class="c0 c1"
+                              href="https://uniswap.org/terms-of-service/"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >
+                              Terms of Service
+                            </a>
+                             and consent to its 
+                            <a
+                              class="c0 c1"
+                              href="https://uniswap.org/privacy-policy"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >
+                              Privacy Policy
+                            </a>
+                            .
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </span>
+        <div
+          style="width: 100%;"
+        >
+          <span
+            class="font_body _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-inline-flex _justifyContent-center _alignItems-center _position-relative _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _textAlign-left _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+            data-disable-theme="true"
+          >
+            <span
+              class="t_unmounted font_body  t_unmounted"
+              data-disable-theme="true"
+              data-testid="account-drawer"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; line-height: var(--f-lineHeight-medium); font-weight: var(--f-weight-book); display: flex; flex-direction: column; min-width: 150px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; z-index: 970; border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); padding: 0px 0px 0px 0px; width: 100%; max-height: calc(100vh - 88px); overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; top: calc(100% + 10px); opacity: 0; position: relative; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _height-10037"
+              >
+                <div
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; width: 100%; flex-grow: 1; transform: translateX(0px); transition: all 100ms ease-in-out;"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _pb-t-space-pad1331704900 _flexGrow-1 _gap-t-space-gap1573"
+                    data-testid="wallet-modal"
+                  >
+                    <span
+                      class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+                    >
+                      <h2
+                        class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
+                        data-disable-theme="true"
+                        id="Dialog--:r1t:-title"
+                        role="heading"
+                      />
+                    </span>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _width-10037"
+                      >
+                        <span
+                          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                          data-disable-theme="true"
+                        >
+                          Connect a wallet
+                        </span>
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-16px"
+                      >
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-8px"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _maxHeight-72px _width-10037 _backgroundColor-white _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px _position-relative"
+                            data-testid="download-uniswap-wallet"
+                          >
+                            <div
+                              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); opacity: 1; max-height: 72px; background: url(/images/extension_promo/background_connector.png); background-repeat: no-repeat; background-size: cover; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                            />
+                            <div
+                              class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-transparent _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="height: 40px; width: 40px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                  style="background-image: url(/src/assets/wallets/uniswap-wallet-icon.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="/src/assets/wallets/uniswap-wallet-icon.png"
+                                />
+                              </div>
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-4px"
+                              >
+                                <div
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                >
+                                  <span
+                                    class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                    data-disable-theme="true"
+                                  >
+                                    Get Uniswap Wallet
+                                  </span>
+                                  <span
+                                    class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                    data-disable-theme="true"
+                                  >
+                                    Available on iOS, Android, and Chrome
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 40px; height: 40px; min-width: 40px; background-color: rgba(255, 55, 199, 0.08); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px; color: rgb(255, 55, 199);"
+                              viewBox="0 0 22 22"
+                            >
+                              <path
+                                d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="1.75"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
+                            >
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                  data-disable-theme="true"
+                                >
+                                  Uniswap Mobile
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                  data-disable-theme="true"
+                                >
+                                  Scan QR code to connect
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-8px _pb-8px _userSelect-none _cursor-pointer"
+                        style="transition: 100ms;"
+                      >
+                        <div
+                          class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                        />
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _mr-18px _ml-18px"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                            data-disable-theme="true"
+                          >
+                            Other wallets
+                          </span>
+                          <svg
+                            fill="none"
+                            stroke-width="8"
+                            style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                            viewBox="0 0 28 28"
+                          >
+                            <path
+                              d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="M14.0928 15C13.8115 15 13.5654 15.1318 13.2754 15.3604L7.34277 20.1592C7.13184 20.335 7 20.5986 7 20.9238C7 21.5215 7.4834 21.9609 8.03711 21.9609C8.29199 21.9609 8.54688 21.8643 8.80176 21.6621L14.1016 17.3906L19.3926 21.6621C19.6387 21.8643 19.9023 21.9609 20.1572 21.9609C20.7109 21.9609 21.1943 21.5215 21.1943 20.9238C21.1943 20.5986 21.0625 20.335 20.8516 20.1592L14.9102 15.3604C14.6289 15.1318 14.3828 15 14.0928 15Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </div>
+                        <div
+                          class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-flex-start"
+                      >
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _overflowX-hidden _overflowY-hidden _width-10037 _maxHeight-100vh _opacity-1 _transition-250msease-i1019171151"
+                          data-testid="option-grid"
+                        >
+                          <div
+                            class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _alignItems-center _width-10037 _justifyContent-space-betwe3241 _position-relative _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334074 _pb-t-space-spa1360334074 _cursor-pointer _opacity-1"
+                          >
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+                            >
+                              <img
+                                alt="Coinbase Wallet"
+                                src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_13571_129878)'%3e%3crect%20width='40'%20height='40'%20fill='%230052FF'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M8.3312%200H31.6672C36.2704%200%2040%204.0128%2040%208.9632V31.0368C40%2035.9872%2036.2704%2040%2031.6688%2040H8.3312C3.7296%2040%200%2035.9872%200%2031.0368V8.9632C0%204.0128%203.7296%200%208.3312%200Z'%20fill='%230052FF'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M19.9989%205.79443C27.8453%205.79443%2034.2053%2012.1544%2034.2053%2020.0008C34.2053%2027.8472%2027.8453%2034.2072%2019.9989%2034.2072C12.1525%2034.2072%205.79254%2027.8472%205.79254%2020.0008C5.79254%2012.1544%2012.1525%205.79443%2019.9989%205.79443Z'%20fill='white'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M16.5005%2015.459H23.4973C24.0733%2015.459%2024.5389%2015.9614%2024.5389%2016.579V23.419C24.5389%2024.0382%2024.0717%2024.539%2023.4973%2024.539H16.5005C15.9245%2024.539%2015.4589%2024.0366%2015.4589%2023.419V16.579C15.4589%2015.9614%2015.9261%2015.459%2016.5005%2015.459Z'%20fill='%230052FF'/%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_13571_129878'%3e%3crect%20width='40'%20height='40'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e"
+                                style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(19, 19, 19, 0.08);"
+                              />
+                              <span
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                data-disable-theme="true"
+                              >
+                                Coinbase Wallet
+                              </span>
+                            </div>
+                          </div>
+                          <div
+                            class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                          />
+                          <div
+                            class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _alignItems-center _width-10037 _justifyContent-space-betwe3241 _position-relative _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334074 _pb-t-space-spa1360334074 _cursor-pointer _opacity-1"
+                          >
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="height: 40px; width: 40px; border-top-left-radius: var(--t-radius-rounded8); border-top-right-radius: var(--t-radius-rounded8); border-bottom-right-radius: var(--t-radius-rounded8); border-bottom-left-radius: var(--t-radius-rounded8);"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                  style="background-image: url(binance-wallet-icon.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="binance-wallet-icon.png"
+                                />
+                              </div>
+                              <span
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                data-disable-theme="true"
+                              >
+                                Binance Wallet
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+                      >
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
+                        >
+                          <span
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _textAlign-center"
+                            data-disable-theme="true"
+                          >
+                            By connecting a wallet, you agree to Uniswap Labs’ 
+                            <a
+                              class="c0 c1"
+                              href="https://uniswap.org/terms-of-service/"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >
+                              Terms of Service
+                            </a>
+                             and consent to its 
+                            <a
+                              class="c0 c1"
+                              href="https://uniswap.org/privacy-policy"
+                              rel="noopener noreferrer"
+                              target="_blank"
+                            >
+                              Privacy Policy
+                            </a>
+                            .
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </span>
+        </div>
+      </div>
       <div
         style="display: contents;"
       />
     </span>
   </div>
+  <span
+    style="z-index: 1060; position: fixed; inset: 0; contain: strict; pointer-events: none;"
+  >
+    <span
+      class=" "
+      style="display: contents;"
+    >
+      <span
+        class="t_sub_theme t_light is_Theme"
+        style="display: contents;"
+      />
+    </span>
+  </span>
+  <span
+    style="z-index: 1060; position: fixed; inset: 0; contain: strict; pointer-events: none;"
+  >
+    <span
+      class=" "
+      style="display: contents;"
+    >
+      <span
+        class="t_sub_theme t_light is_Theme"
+        style="display: contents;"
+      />
+    </span>
+  </span>
 </body>
 `;

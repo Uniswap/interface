@@ -1,10 +1,8 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from 'state/routing/types'
-import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { planAnalyticsToSnakeCase } from 'uniswap/src/features/transactions/swap/plan/types'
 import {
   BridgeTrade,
   ChainedActionTrade,
@@ -15,9 +13,15 @@ import {
   UniswapXV3Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  type PlanSwapTransactionInfoFields,
+  TransactionOriginType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from '~/state/routing/types'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from '~/state/routing/utils'
+import { computeRealizedPriceImpact } from '~/utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
   if (!futureTimestampInSecondsSinceEpoch) {
@@ -162,8 +166,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   isBatched,
   batchId,
   includedPermitTransactionStep,
-  planId,
-  stepIndex,
+  planAnalytics,
 }: {
   trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
@@ -175,8 +178,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   isBatched?: boolean
   batchId?: string
   includedPermitTransactionStep?: boolean
-  planId?: string
-  stepIndex?: number
+  planAnalytics?: PlanSwapTransactionInfoFields
 }) => ({
   ...trace,
   total_balances_usd: portfolioBalanceUsd,
@@ -185,8 +187,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   token_out_amount_usd: fiatValues.amountOut,
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
-  plan_id: planId,
-  step_index: stepIndex,
+  ...planAnalyticsToSnakeCase(planAnalytics),
   ...['routing' in trade ? getRouteAnalyticsData(trade) : undefined],
   ...formatCommonPropertiesForTrade({
     trade,
@@ -196,6 +197,8 @@ export const formatSwapSignedAnalyticsEventProperties = ({
     batchId,
     includedPermitTransactionStep,
   }),
+  // Override routing with per-step routing for plan steps
+  ...(planAnalytics?.stepRouting ? { routing: planAnalytics.stepRouting } : {}),
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {

@@ -40,9 +40,12 @@ export enum SettingsRoutes {
   BiometricUnlockSetUp = 'biometric-unlock-set-up',
   DevMenu = 'dev-menu',
   DeviceAccess = 'device-access',
+  HashcashBenchmark = 'hashcash-benchmark',
   ManageConnections = 'manage-connections',
   RemoveRecoveryPhrase = 'remove-recovery-phrase',
+  SessionsDebug = 'sessions-debug',
   SmartWallet = 'smart-wallet',
+  Storage = 'storage',
   ViewRecoveryPhrase = 'view-recovery-phrase',
 }
 

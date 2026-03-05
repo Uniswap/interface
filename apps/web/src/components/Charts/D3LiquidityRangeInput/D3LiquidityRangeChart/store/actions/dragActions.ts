@@ -1,12 +1,8 @@
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import type { ChartStoreState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import {
-  calculateNewRange,
-  calculateTickIndices,
-  findClosestTick,
-  getDataBounds,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
+import { TickMath } from '@uniswap/v3-sdk'
 import * as d3 from 'd3'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import type { ChartStoreState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { snapTickToSpacing } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
 
 export function createDragActions(get: () => ChartStoreState) {
   return {
@@ -16,7 +12,7 @@ export function createDragActions(get: () => ChartStoreState) {
         throw new Error('Rendering context not initialized')
       }
 
-      const { yToPrice, priceToY, dimensions } = renderingContext
+      const { yToTick, tickToY, tickSpacing, dimensions } = renderingContext
 
       // Helper function to constrain Y position to chart boundaries
       const clampYToChartBounds = (y: number) =>
@@ -34,8 +30,8 @@ export function createDragActions(get: () => ChartStoreState) {
         }
       }
 
-      const shouldSwapLines = (draggedY: number, otherY: number): boolean => {
-        return lineType === 'min' ? draggedY < otherY : draggedY > otherY
+      const shouldSwapLines = (draggedTick: number, otherTick: number): boolean => {
+        return lineType === 'min' ? draggedTick > otherTick : draggedTick < otherTick
       }
 
       const applyMinHeightConstraint = (draggedY: number, otherY: number): number => {
@@ -48,77 +44,81 @@ export function createDragActions(get: () => ChartStoreState) {
         return draggedY
       }
 
-      let initialMinPrice: number | undefined
-      let initialMaxPrice: number | undefined
+      let initialMinTick: number | undefined
+      let initialMaxTick: number | undefined
 
-      // Helper function to calculate final prices from drag
-      const calculateFinalPrices = (draggedY: number) => {
-        const otherPrice = lineType === 'min' ? initialMaxPrice : initialMinPrice
+      // Helper function to calculate final ticks from drag
+      const calculateFinalTicks = (draggedY: number) => {
+        const otherTick = lineType === 'min' ? initialMaxTick : initialMinTick
 
-        if (!otherPrice) {
-          const newPrice = yToPrice(draggedY)
+        // Get raw tick from Y and snap to tickSpacing
+        const rawTick = yToTick(draggedY)
+        const snappedTick = snapTickToSpacing(rawTick, tickSpacing)
+
+        if (otherTick === undefined) {
           return {
-            finalMinPrice: lineType === 'min' ? newPrice : initialMinPrice,
-            finalMaxPrice: lineType === 'min' ? initialMaxPrice : newPrice,
+            minTick: lineType === 'min' ? snappedTick : initialMinTick,
+            maxTick: lineType === 'min' ? initialMaxTick : snappedTick,
             constrainedY: draggedY,
           }
         }
 
-        const otherY = priceToY({ price: otherPrice })
+        const otherY = tickToY({ tick: otherTick })
 
-        const shouldSwap = shouldSwapLines(draggedY, otherY)
+        const shouldSwap = shouldSwapLines(snappedTick, otherTick)
         const constrainedY = applyMinHeightConstraint(draggedY, otherY)
-        const newPrice = yToPrice(draggedY)
-        const constrainedPrice = yToPrice(constrainedY)
+        const constrainedTick = snapTickToSpacing(yToTick(constrainedY), tickSpacing)
 
-        let finalMinPrice: number | undefined
-        let finalMaxPrice: number | undefined
+        let finalMinTick: number
+        let finalMaxTick: number
 
         if (shouldSwap) {
-          const swappedMinPrice = lineType === 'min' ? otherPrice : newPrice
-          const swappedMaxPrice = lineType === 'min' ? newPrice : otherPrice
-          const swappedDistance = Math.abs(priceToY({ price: swappedMaxPrice }) - priceToY({ price: swappedMinPrice! }))
+          // Swap the lines
+          finalMinTick = lineType === 'min' ? otherTick : snappedTick
+          finalMaxTick = lineType === 'min' ? snappedTick : otherTick
 
-          if (swappedDistance >= CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT) {
-            finalMinPrice = swappedMinPrice
-            finalMaxPrice = swappedMaxPrice
-          } else {
+          // Check if swapped distance meets minimum
+          const swappedDistance = Math.abs(tickToY({ tick: finalMaxTick }) - tickToY({ tick: finalMinTick }))
+          if (swappedDistance < CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT) {
             const constrainedSwapY =
               lineType === 'min'
                 ? otherY - CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT
                 : otherY + CHART_DIMENSIONS.RANGE_INDICATOR_MIN_HEIGHT
-            const constrainedSwapPrice = yToPrice(constrainedSwapY)
+            const constrainedSwapTick = snapTickToSpacing(yToTick(constrainedSwapY), tickSpacing)
 
-            finalMinPrice = lineType === 'min' ? otherPrice : constrainedSwapPrice
-            finalMaxPrice = lineType === 'min' ? constrainedSwapPrice : otherPrice
-            draggedY = constrainedSwapY
+            finalMinTick = lineType === 'min' ? otherTick : constrainedSwapTick
+            finalMaxTick = lineType === 'min' ? constrainedSwapTick : otherTick
           }
         } else {
-          finalMinPrice = lineType === 'min' ? constrainedPrice : otherPrice
-          finalMaxPrice = lineType === 'min' ? otherPrice : constrainedPrice
+          finalMinTick = lineType === 'min' ? constrainedTick : otherTick
+          finalMaxTick = lineType === 'min' ? otherTick : constrainedTick
         }
 
-        return { finalMinPrice, finalMaxPrice, constrainedY: draggedY }
+        return {
+          minTick: finalMinTick,
+          maxTick: finalMaxTick,
+          constrainedY,
+        }
       }
 
       return d3
         .drag()
         .on('start', () => {
-          const { minPrice, maxPrice } = get()
-          initialMinPrice = minPrice
-          initialMaxPrice = maxPrice
+          const { minTick, maxTick } = get()
+          initialMinTick = minTick
+          initialMaxTick = maxTick
         })
         .on('drag', (event) => {
           const clampedY = clampYToChartBounds(event.y)
-          const { finalMinPrice, finalMaxPrice, constrainedY } = calculateFinalPrices(clampedY)
+          const { constrainedY, minTick, maxTick } = calculateFinalTicks(clampedY)
 
           // Update visual position of the dragged element
           updateElementPosition(d3.select(event.sourceEvent.target), constrainedY)
 
           // Update state for all other renderers
           actions.setChartState({
-            minPrice: finalMinPrice,
-            maxPrice: finalMaxPrice,
+            minTick,
+            maxTick,
           })
 
           // Update all related elements
@@ -126,25 +126,23 @@ export function createDragActions(get: () => ChartStoreState) {
         })
         .on('end', (event) => {
           const clampedY = clampYToChartBounds(event.y)
-          const { finalMinPrice, finalMaxPrice } = calculateFinalPrices(clampedY)
+          const { minTick, maxTick } = calculateFinalTicks(clampedY)
 
           // Update state for all other renderers
           actions.setChartState({
-            minPrice: finalMinPrice,
-            maxPrice: finalMaxPrice,
+            minTick,
+            maxTick,
           })
 
           // Call callbacks once when drag ends
-          if (finalMinPrice !== undefined && finalMaxPrice !== undefined) {
-            actions.handlePriceChange('min', finalMinPrice)
-            actions.handlePriceChange('max', finalMaxPrice)
-          }
+          actions.handleTickChange({ changeType: 'min', tick: minTick })
+          actions.handleTickChange({ changeType: 'max', tick: maxTick })
         })
     },
 
     createTickBasedDragBehavior: () => {
       let dragOffsetY = 0
-      let tickRangeSize = 0
+      let tickRangeSize = 0 // Now stores actual tick difference, not index difference
 
       // Helper function to handle common drag logic
       const handleTickDrag = ({
@@ -154,72 +152,68 @@ export function createDragActions(get: () => ChartStoreState) {
         event: d3.D3DragEvent<SVGRectElement, unknown, unknown>
         isEnd: boolean
       }) => {
-        const { minPrice, maxPrice, renderingContext, actions } = get()
+        const { minTick, maxTick, renderingContext, actions } = get()
 
-        if (minPrice === undefined || maxPrice === undefined || !renderingContext) {
+        if (minTick === undefined || maxTick === undefined || !renderingContext) {
           return
         }
 
-        const { yToPrice, liquidityData, priceData, dimensions } = renderingContext
+        const { dimensions, yToTick, tickSpacing } = renderingContext
 
         // Apply the stored offset to maintain consistent drag feel
         const adjustedY = event.y - dragOffsetY
         const newCenterY = Math.max(0, Math.min(dimensions.height, adjustedY))
-        const draggedPrice = yToPrice(newCenterY)
+        const draggedTick = yToTick(newCenterY)
 
-        // Find the tick corresponding to the dragged center position
-        const centerTick = findClosestTick(liquidityData, draggedPrice)
+        // Snap center tick to tickSpacing
+        const centerTick = snapTickToSpacing(draggedTick, tickSpacing)
 
-        if (centerTick) {
-          const tickIndices = calculateTickIndices(liquidityData)
-          const newRange = calculateNewRange({ centerTick, tickRangeSize, tickIndices, liquidityData })
+        // Calculate new min/max ticks based on center and range size
+        const halfRange = Math.floor(tickRangeSize / 2)
+        let newMinTick = snapTickToSpacing(centerTick - halfRange, tickSpacing)
+        let newMaxTick = snapTickToSpacing(centerTick + halfRange, tickSpacing)
 
-          // Get data bounds to prevent dragging outside chart
-          const dataBounds = getDataBounds(priceData, liquidityData)
+        // Clamp to valid tick range
+        if (newMinTick < TickMath.MIN_TICK) {
+          newMinTick = snapTickToSpacing(TickMath.MIN_TICK, tickSpacing)
+          newMaxTick = snapTickToSpacing(newMinTick + tickRangeSize, tickSpacing)
+        }
+        if (newMaxTick > TickMath.MAX_TICK) {
+          newMaxTick = snapTickToSpacing(TickMath.MAX_TICK, tickSpacing)
+          newMinTick = snapTickToSpacing(newMaxTick - tickRangeSize, tickSpacing)
+        }
 
-          // Only update if range stays within data bounds
-          if (newRange.minPrice >= dataBounds.min && newRange.maxPrice <= dataBounds.max) {
-            // Update state for all renderers following Zustand pattern
-            actions.setChartState({
-              minPrice: newRange.minPrice,
-              maxPrice: newRange.maxPrice,
-            })
+        // Update state for all renderers
+        actions.setChartState({
+          minTick: newMinTick,
+          maxTick: newMaxTick,
+        })
 
-            // Update all related elements
-            actions.drawAll()
+        // Update all related elements
+        actions.drawAll()
 
-            // Call callbacks only when drag ends
-            if (isEnd) {
-              actions.handlePriceChange('min', newRange.minPrice)
-              actions.handlePriceChange('max', newRange.maxPrice)
-            }
-          }
+        // Call callbacks only when drag ends
+        if (isEnd) {
+          actions.handleTickChange({ changeType: 'min', tick: newMinTick })
+          actions.handleTickChange({ changeType: 'max', tick: newMaxTick })
         }
       }
 
       return d3
         .drag<SVGRectElement, unknown>()
         .on('start', (event) => {
-          const { minPrice, maxPrice, renderingContext } = get()
-          if (minPrice === undefined || maxPrice === undefined || !renderingContext) {
+          const { minTick, maxTick, renderingContext } = get()
+          if (minTick === undefined || maxTick === undefined || !renderingContext) {
             return
           }
-          const { priceToY, liquidityData } = renderingContext
+          const { tickToY } = renderingContext
 
           // Store the initial offset relative to the range center
-          const currentRangeCenterY = (priceToY({ price: maxPrice }) + priceToY({ price: minPrice })) / 2
+          const currentRangeCenterY = (tickToY({ tick: maxTick }) + tickToY({ tick: minTick })) / 2
           dragOffsetY = event.y - currentRangeCenterY
 
-          // Calculate and store the initial tick range size
-          const minTick = findClosestTick(liquidityData, minPrice)
-          const maxTick = findClosestTick(liquidityData, maxPrice)
-
-          if (minTick && maxTick) {
-            const tickIndices = calculateTickIndices(liquidityData)
-            const minIndex = tickIndices.find((t) => t.tick === minTick.tick)?.index || 0
-            const maxIndex = tickIndices.find((t) => t.tick === maxTick.tick)?.index || 0
-            tickRangeSize = Math.abs(maxIndex - minIndex)
-          }
+          // Store the initial tick range size (actual tick difference)
+          tickRangeSize = maxTick - minTick
         })
         .on('drag', (event) => handleTickDrag({ event, isEnd: false }))
         .on('end', (event) => handleTickDrag({ event, isEnd: true }))

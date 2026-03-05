@@ -1,10 +1,15 @@
-import { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  PlanTransactionDetails,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ConfirmedTransactionDetails, TransactionDetails } from '~/state/transactions/types'
 
 export enum ActivityUpdateTransactionType {
   BaseTransaction = 'transaction',
   UniswapXOrder = TransactionType.UniswapXOrder,
+  Plan = TransactionType.Plan,
 }
 
 interface BaseUpdate<T> {
@@ -24,5 +29,10 @@ export interface UniswapXOrderUpdate extends Omit<BaseUpdate<UniswapXOrderDetail
   update: UniswapXOrderDetails
 }
 
-export type ActivityUpdate = TransactionUpdate | UniswapXOrderUpdate
-export type OnActivityUpdate = (update: ActivityUpdate) => void
+export interface ActivityPlanUpdate extends Omit<BaseUpdate<PlanTransactionDetails>, 'original'> {
+  type: ActivityUpdateTransactionType.Plan
+  update: PlanTransactionDetails
+}
+
+export type ActivityUpdate = TransactionUpdate | UniswapXOrderUpdate | ActivityPlanUpdate
+export type OnActivityUpdate<T extends ActivityUpdate = ActivityUpdate> = (update: T) => void

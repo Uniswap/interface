@@ -265,13 +265,15 @@ export const prepareUniswapXPreSignedSwapTransaction = createFixture<UniswapXPre
  */
 export const prepareExecuteSwapSagaParams = createFixture<SwapParams>()(() => ({
   txId: 'test-tx-id',
-  account: mockSignerAccount,
+  address: mockSignerAccount.address,
   analytics: mockAnalytics,
   swapTxContext: prepareSwapTxContext(),
   onSuccess: jest.fn(),
   onFailure: jest.fn(),
   onPending: jest.fn(),
+  onClearForm: jest.fn(),
   preSignedTransaction: preparePreSignedSwapTransaction(),
   setCurrentStep: jest.fn(),
   setSteps: jest.fn(),
+  caip25Info: undefined,
 }))

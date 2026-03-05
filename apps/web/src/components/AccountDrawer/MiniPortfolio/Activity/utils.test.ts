@@ -1,6 +1,11 @@
+import 'utilities/src/logger/mocks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { GraphQLApi } from '@universe/api'
-import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
+import { vi } from 'vitest'
+import { type Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 import {
   createActivityMapByHash,
   createGroups,
@@ -8,21 +13,9 @@ import {
   getCurrencyAddress,
   haveSameNonce,
   parseTokenAmount,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
-import { vi } from 'vitest'
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/utils'
 
 const nowTimestampMs = 1749832099000
-
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  },
-}))
 
 describe('createGroups', () => {
   beforeEach(() => {

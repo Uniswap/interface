@@ -1,4 +1,4 @@
-import { render, screen } from 'test-utils/render'
+import { render, screen } from '~/test-utils/render'
 
 describe('matchers', () => {
   describe('toBeVisible', () => {

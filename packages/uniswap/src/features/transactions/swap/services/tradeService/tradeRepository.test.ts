@@ -8,7 +8,7 @@ import {
 import type { Logger } from 'utilities/src/logger/logger'
 
 // Mock dependencies
-jest.mock('uniswap/src/features/transactions/swap/analytics')
+vi.mock('uniswap/src/features/transactions/swap/analytics')
 
 describe('TradeRepository', () => {
   // Minimal test params
@@ -31,9 +31,9 @@ describe('TradeRepository', () => {
   }
 
   // Setup mocks
-  const mockFetchQuote = jest.fn().mockResolvedValue(mockResult as DiscriminatedQuoteResponse)
-  const mockFetchIndicativeQuote = jest.fn().mockResolvedValue(mockResult as DiscriminatedQuoteResponse)
-  const mockLogger = { info: jest.fn(), error: jest.fn() } as Partial<Logger> as Logger
+  const mockFetchQuote = vi.fn().mockResolvedValue(mockResult as DiscriminatedQuoteResponse)
+  const mockFetchIndicativeQuote = vi.fn().mockResolvedValue(mockResult as DiscriminatedQuoteResponse)
+  const mockLogger = { info: vi.fn(), error: vi.fn() } as Partial<Logger> as Logger
 
   // Helper for repository creation
   const createTestRepo = (options = {}): TradeRepository =>
@@ -44,7 +44,7 @@ describe('TradeRepository', () => {
     })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('fetchQuote', () => {
@@ -61,40 +61,60 @@ describe('TradeRepository', () => {
     })
 
     describe('analytics', () => {
-      it('logs swap quote fetch with chainId and isUSDQuote', async () => {
+      it('logs swap quote fetch with chainId, isUSDQuote, and quoteSource', async () => {
         const repository = createTestRepo()
         await repository.fetchQuote(mockParams)
-        expect(logSwapQuoteFetch).toHaveBeenCalledWith({ chainId: mockParams.tokenInChainId, isUSDQuote: undefined })
+        expect(logSwapQuoteFetch).toHaveBeenCalledWith({
+          chainId: mockParams.tokenInChainId,
+          isUSDQuote: undefined,
+          quoteSource: 'trading_api',
+        })
       })
 
       it('logs swap quote fetch with isUSDQuote=true when specified', async () => {
         const repository = createTestRepo()
         await repository.fetchQuote({ ...mockParams, isUSDQuote: true })
-        expect(logSwapQuoteFetch).toHaveBeenCalledWith({ chainId: mockParams.tokenInChainId, isUSDQuote: true })
+        expect(logSwapQuoteFetch).toHaveBeenCalledWith({
+          chainId: mockParams.tokenInChainId,
+          isUSDQuote: true,
+          quoteSource: 'trading_api',
+        })
       })
     })
 
     describe('latency logging', () => {
-      beforeEach(() => jest.clearAllMocks())
+      beforeEach(() => vi.clearAllMocks())
 
-      test.each([
-        ['USD quote', true, false],
-        ['no logger provided', false, false],
-      ])(
-        'does not log latency when %s',
-        // eslint-disable-next-line max-params
-        async (_, isUSDQuote, includeLogger) => {
-          const repository = createTestRepo(includeLogger ? { logger: mockLogger } : {})
-          await repository.fetchQuote({ ...mockParams, isUSDQuote })
+      it('does not log latency when no logger provided', async () => {
+        const repository = createTestRepo()
+        await repository.fetchQuote(mockParams)
 
-          expect(mockLogger.info).not.toHaveBeenCalled()
-          expect(mockFetchQuote).toHaveBeenCalledTimes(1)
-        },
-      )
+        expect(mockLogger.info).not.toHaveBeenCalled()
+        expect(mockFetchQuote).toHaveBeenCalledTimes(1)
+      })
+
+      it('logs USD Quote Latency for USD quotes when logger is provided', async () => {
+        const dateSpy = vi
+          .spyOn(Date, 'now')
+          .mockReturnValueOnce(100) // First call - start time
+          .mockReturnValueOnce(300) // Second call - end time (200ms later)
+
+        const repository = createTestRepo({ logger: mockLogger })
+        await repository.fetchQuote({ ...mockParams, isUSDQuote: true })
+
+        expect(mockLogger.info).toHaveBeenCalledWith('tradeRepository', 'fetchQuote', 'USD Quote Latency', {
+          quoteLatency: 200,
+          chainIdIn: mockParams.tokenInChainId,
+          chainIdOut: mockParams.tokenOutChainId,
+          isUSDQuote: true,
+        })
+
+        dateSpy.mockRestore()
+      })
 
       it('logs latency with all required fields when conditions are met', async () => {
         // Create a spy on Date.now that returns controlled values
-        const dateSpy = jest
+        const dateSpy = vi
           .spyOn(Date, 'now')
           .mockReturnValueOnce(100) // First call - start time
           .mockReturnValueOnce(300) // Second call - end time (200ms later)
@@ -173,7 +193,7 @@ describe('TradeRepository', () => {
     })
 
     it('logs indicative quote latency when logger is provided', async () => {
-      const dateSpy = jest.spyOn(Date, 'now').mockReturnValueOnce(100).mockReturnValueOnce(300)
+      const dateSpy = vi.spyOn(Date, 'now').mockReturnValueOnce(100).mockReturnValueOnce(300)
 
       const repository = createTestRepo({ logger: mockLogger })
       await repository.fetchIndicativeQuote(indicativeParams)

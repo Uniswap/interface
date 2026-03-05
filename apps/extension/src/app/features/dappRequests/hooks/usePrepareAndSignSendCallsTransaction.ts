@@ -1,3 +1,4 @@
+import { GasFeeResult } from '@universe/api'
 import { useMemo } from 'react'
 import { usePrepareAndSignDappTransaction } from 'src/app/features/dappRequests/hooks/usePrepareAndSignDappTransaction'
 import { useTransactionGasEstimation } from 'src/app/features/dappRequests/hooks/useTransactionGasEstimation'
@@ -5,7 +6,6 @@ import { DappRequestStoreItemForSendCallsTxn } from 'src/app/features/dappReques
 import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
 import { useWalletEncode7702Query } from 'uniswap/src/data/apiClients/tradingApi/useWalletEncode7702Query'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
 import { useLiveAccountDelegationDetails } from 'wallet/src/features/smartWallet/hooks/useLiveAccountDelegationDetails'

@@ -1,9 +1,9 @@
 import type { TokenList } from '@uniswap/token-lists'
-import contenthashToUri from 'lib/utils/contenthashToUri'
-import parseENSAddress from 'lib/utils/parseENSAddress'
 import { uriToHttpUrls } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { validateTokenList } from 'utils/validateTokenList'
+import contenthashToUri from '~/lib/utils/contenthashToUri'
+import parseENSAddress from '~/lib/utils/parseENSAddress'
+import { validateTokenList } from '~/utils/validateTokenList'
 
 const listCache = new Map<string, TokenList>()
 

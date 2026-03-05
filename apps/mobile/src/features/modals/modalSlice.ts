@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ModalsState } from 'src/features/modals/ModalsState'
-import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { type ModalsState } from 'src/features/modals/ModalsState'
+import { type FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { type TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { type TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { getKeys } from 'utilities/src/primitives/objects'
 
 /**
@@ -82,8 +82,9 @@ const slice = createSlice({
         state[modalName].initialState = undefined
       })
     },
+    resetModals: () => initialModalsState,
   },
 })
 
-export const { openModal, closeModal, closeAllModals } = slice.actions
+export const { openModal, closeModal, closeAllModals, resetModals } = slice.actions
 export const { reducer: modalsReducer } = slice

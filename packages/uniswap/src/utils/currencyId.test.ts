@@ -93,6 +93,9 @@ describe('currencyId', () => {
     [UniverseChainId.Solana, getNativeAddress(UniverseChainId.Solana), true],
     [UniverseChainId.Solana, '11111', false],
     [UniverseChainId.Solana, DEFAULT_NATIVE_ADDRESS_SOLANA, true],
+    // Invalid chainId should return false instead of crashing
+    [10143, DAI.address, false],
+    [99999, null, false],
   ])(
     'isNativeCurrencyAddress returns correct result for chainId=%s + address=%s = %s',
     // eslint-disable-next-line max-params

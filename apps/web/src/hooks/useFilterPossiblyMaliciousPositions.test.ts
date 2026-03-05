@@ -1,11 +1,11 @@
-import 'test-utils/tokens/mocks'
+import '~/test-utils/tokens/mocks'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
-import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
-import { mocked } from 'test-utils/mocked'
-import { renderHook } from 'test-utils/render'
-import { PositionDetails } from 'types/position'
+import { useFilterPossiblyMaliciousPositions } from '~/hooks/useFilterPossiblyMaliciousPositions'
+import { useTokenContractsConstant } from '~/hooks/useTokenContractsConstant'
+import { mocked } from '~/test-utils/mocked'
+import { renderHook } from '~/test-utils/render'
+import { PositionDetails } from '~/types/position'
 
 vi.mock('./useTokenContractsConstant')
 

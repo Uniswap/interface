@@ -58,6 +58,14 @@ query TokenWeb($chain: Chain!, $address: String = null) {
           value
           currency
         }
+        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+          id
+          value
+        }
+        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+          id
+          value
+        }
       }
     }
   }

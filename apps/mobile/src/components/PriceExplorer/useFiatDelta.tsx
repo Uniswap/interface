@@ -110,7 +110,7 @@ export function useLineChartFiatDelta({
 
     // When not scrubbing, use the pre-calculated last point delta
     return lastPointDelta
-  })
+  }, [lastPointDelta])
 
   return { formatted }
 }

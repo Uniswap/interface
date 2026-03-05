@@ -1,5 +1,5 @@
-import { createWeb3Provider } from 'components/Web3Provider/createWeb3Provider'
-import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { createWeb3Provider } from '~/components/Web3Provider/createWeb3Provider'
+import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
 
 /**
  * Web3Provider variant for Vitest/Playwright.

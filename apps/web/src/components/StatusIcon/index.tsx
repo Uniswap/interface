@@ -1,14 +1,14 @@
-import sockImg from 'assets/svg/socks.svg'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
-import { useActiveAddresses, useActiveWallet } from 'features/accounts/store/hooks'
-import { useHasSocks } from 'hooks/useSocksBalance'
-import { deprecatedStyled } from 'lib/styled-components'
-import { flexColumnNoWrap } from 'theme/styles'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { breakpoints } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import sockImg from '~/assets/svg/socks.svg'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/components/Web3Provider/constants'
+import { useActiveAddresses, useActiveWallet } from '~/features/accounts/store/hooks'
+import { useHasSocks } from '~/hooks/useSocksBalance'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { flexColumnNoWrap } from '~/theme/styles'
 
 const IconWrapper = deprecatedStyled.div<{ size?: number }>`
   position: relative;
@@ -30,7 +30,7 @@ const IconWrapper = deprecatedStyled.div<{ size?: number }>`
 
 const MINI_ICON_SIZE = 16
 
-const MiniIconContainer = deprecatedStyled.div<{ side: 'left' | 'right'; size?: number; isIndicator?: boolean }>`
+const MiniIconContainer = deprecatedStyled.div<{ $side: 'left' | 'right'; size?: number; isIndicator?: boolean }>`
   position: absolute;
   display: flex;
   justify-content: center;
@@ -38,7 +38,7 @@ const MiniIconContainer = deprecatedStyled.div<{ side: 'left' | 'right'; size?: 
   width: ${({ size }) => size ?? MINI_ICON_SIZE + 'px'};
   height: ${({ size }) => size ?? MINI_ICON_SIZE + 'px'};
   bottom: ${({ size, isIndicator }) => `-${isIndicator ? 0 : (size ?? MINI_ICON_SIZE) / 4}px`};
-  ${({ side, size, isIndicator }) => `${side === 'left' ? 'left' : 'right'}: -${isIndicator ? 0 : (size ?? MINI_ICON_SIZE) / 4}px`};
+  ${({ $side, size, isIndicator }) => `${$side === 'left' ? 'left' : 'right'}: -${isIndicator ? 0 : (size ?? MINI_ICON_SIZE) / 4}px`};
   border-radius: 50%;
   outline: 2px solid ${({ theme }) => theme.surface1};
   outline-offset: -0.1px;
@@ -56,7 +56,7 @@ const MiniImg = deprecatedStyled.img`
 
 function Socks() {
   return (
-    <MiniIconContainer side="left">
+    <MiniIconContainer $side="left">
       <MiniImg src={sockImg} />
     </MiniIconContainer>
   )
@@ -72,7 +72,7 @@ function MiniWalletIcon({ platform }: { platform: Platform }) {
   const icon = CONNECTOR_ICON_OVERRIDE_MAP[wallet.name] ?? wallet.icon
 
   return (
-    <MiniIconContainer side="right" data-testid="MiniIcon">
+    <MiniIconContainer $side="right" data-testid="MiniIcon">
       <MiniImg src={icon} alt={`${wallet.name} icon`} />
     </MiniIconContainer>
   )
@@ -80,7 +80,7 @@ function MiniWalletIcon({ platform }: { platform: Platform }) {
 
 function MiniConnectedIndicator() {
   return (
-    <MiniIconContainer isIndicator side="right" size={10}>
+    <MiniIconContainer isIndicator $side="right" size={10}>
       <Flex backgroundColor="$statusSuccess" borderRadius="$roundedFull" height={10} width={10} />
     </MiniIconContainer>
   )

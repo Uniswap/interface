@@ -4,15 +4,14 @@ import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function useTrendingTokensOptions({
-  evmAddress,
-  svmAddress,
+  addresses,
   chainFilter,
 }: {
-  evmAddress: Address | undefined
-  svmAddress: Address | undefined
+  addresses: AddressGroup
   chainFilter: Maybe<UniverseChainId>
 }): GqlResult<TokenOption[] | undefined> {
   const {
@@ -20,7 +19,7 @@ export function useTrendingTokensOptions({
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPortfolioBalancesById,
-  } = usePortfolioBalancesForAddressById({ evmAddress, svmAddress })
+  } = usePortfolioBalancesForAddressById(addresses)
 
   const {
     data: tokens,

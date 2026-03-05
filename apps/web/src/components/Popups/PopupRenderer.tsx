@@ -1,10 +1,10 @@
-import { PopupItem } from 'components/Popups/PopupItem'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupContent } from 'components/Popups/types'
-import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useEffect } from 'react'
 import { Toaster, toast } from 'sonner'
 import { spacing } from 'ui/src/theme'
+import { PopupItem } from '~/components/Popups/PopupItem'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupContent } from '~/components/Popups/types'
+import { DEFAULT_TXN_DISMISS_MS } from '~/constants/misc'
 
 export function PopupRenderer() {
   useEffect(() => {

@@ -1,18 +1,6 @@
-import AppStoreBadge from 'assets/images/app-store-badge.png'
-import ExtensionIllustration from 'assets/images/extensionIllustration.png'
-import PlayStoreBadge from 'assets/images/play-store-badge.png'
-import WalletIllustration from 'assets/images/walletIllustration.png'
-import { Wiggle } from 'components/animations/Wiggle'
-import Column from 'components/deprecated/Column'
-import { AndroidLogo } from 'components/Icons/AndroidLogo'
-import { AppleLogo } from 'components/Icons/AppleLogo'
-import { useAccount } from 'hooks/useAccount'
-import { deprecatedStyled } from 'lib/styled-components'
 import { lazy, PropsWithChildren, ReactNode, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { updateDownloadGraduatedWalletCardsDismissed } from 'state/application/reducer'
-import { ExternalLink } from 'theme/components/Links'
 import {
   AnimatedPager,
   Flex,
@@ -33,9 +21,21 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
+import AppStoreBadge from '~/assets/images/app-store-badge.png'
+import ExtensionIllustration from '~/assets/images/extensionIllustration.png'
+import PlayStoreBadge from '~/assets/images/play-store-badge.png'
+import WalletIllustration from '~/assets/images/walletIllustration.png'
+import { Wiggle } from '~/components/animations/Wiggle'
+import Column from '~/components/deprecated/Column'
+import { AndroidLogo } from '~/components/Icons/AndroidLogo'
+import { AppleLogo } from '~/components/Icons/AppleLogo'
+import { useAccount } from '~/hooks/useAccount'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { updateDownloadGraduatedWalletCardsDismissed } from '~/state/application/reducer'
+import { ExternalLink } from '~/theme/components/Links'
 
 const LazyWalletOneLinkQR = lazy(async () => {
-  const module = await import('components/WalletOneLinkQR')
+  const module = await import('~/components/WalletOneLinkQR')
   return { default: module.WalletOneLinkQR }
 })
 
@@ -58,7 +58,7 @@ const IllustrationContainer = deprecatedStyled.div`
   display: flex;
   width: 100%;
   border-radius: 16px;
-  border: ${({ theme }) => `1px solid ${theme.neutral3}`};
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
   overflow: hidden;
 `
 const Illustration = deprecatedStyled.img`
@@ -90,7 +90,7 @@ function ModalContent({
           <Text variant="heading3" color="$neutral1">
             {title}
           </Text>
-          <Text variant="body2" color="$neutral2" textAlign="center">
+          <Text variant="body2" color="$neutral2" textAlign="center" maxWidth="65%" $md={{ maxWidth: '80%' }}>
             {subtext}
           </Text>
         </Flex>

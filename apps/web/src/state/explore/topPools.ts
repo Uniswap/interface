@@ -1,48 +1,48 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { useContext, useMemo } from 'react'
+import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import {
   calculate1DVolOverTvl,
   calculateApr,
   PoolSortFields,
   PoolTableSortState,
-} from 'appGraphql/data/pools/useTopPools'
-import { OrderDirection } from 'appGraphql/data/util'
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { useAtomValue } from 'jotai/utils'
-import { useContext, useMemo } from 'react'
-import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
-import { PoolStat } from 'state/explore/types'
-import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+} from '~/appGraphql/data/pools/useTopPools'
+import { OrderDirection } from '~/appGraphql/data/util'
+import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
+import { ExploreContext, giveExploreStatDefaultValue } from '~/state/explore'
+import { PoolStat } from '~/state/explore/types'
 
-function useFilteredPools(pools?: PoolStat[]) {
-  const filterString = useAtomValue(exploreSearchStringAtom)
+function useFilteredPools(pools?: PoolStat[], enabled = true) {
+  const filterString = useExploreTablesFilterStore((s) => s.filterString)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
-  return useMemo(
-    () =>
-      pools?.filter((pool) => {
-        const addressIncludesFilterString = pool.id.toLowerCase().includes(lowercaseFilterString)
-        const token0IncludesFilterString = pool.token0?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        const token1IncludesFilterString = pool.token1?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        const token0HashIncludesFilterString =
-          pool.token0?.address && normalizeTokenAddressForCache(pool.token0.address).includes(lowercaseFilterString)
-        const token1HashIncludesFilterString =
-          pool.token1?.address && normalizeTokenAddressForCache(pool.token1.address).includes(lowercaseFilterString)
-        const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
-        const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
-        return (
-          token0IncludesFilterString ||
-          token1IncludesFilterString ||
-          addressIncludesFilterString ||
-          token0HashIncludesFilterString ||
-          token1HashIncludesFilterString ||
-          poolNameIncludesFilterString
-        )
-      }),
-    [lowercaseFilterString, pools],
-  )
+  return useMemo(() => {
+    if (!enabled) {
+      return undefined
+    }
+    return pools?.filter((pool) => {
+      const addressIncludesFilterString = pool.id.toLowerCase().includes(lowercaseFilterString)
+      const token0IncludesFilterString = pool.token0?.symbol?.toLowerCase().includes(lowercaseFilterString)
+      const token1IncludesFilterString = pool.token1?.symbol?.toLowerCase().includes(lowercaseFilterString)
+      const token0HashIncludesFilterString =
+        pool.token0?.address && normalizeTokenAddressForCache(pool.token0.address).includes(lowercaseFilterString)
+      const token1HashIncludesFilterString =
+        pool.token1?.address && normalizeTokenAddressForCache(pool.token1.address).includes(lowercaseFilterString)
+      const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
+      const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
+      return (
+        token0IncludesFilterString ||
+        token1IncludesFilterString ||
+        addressIncludesFilterString ||
+        token0HashIncludesFilterString ||
+        token1HashIncludesFilterString ||
+        poolNameIncludesFilterString
+      )
+    })
+  }, [enabled, lowercaseFilterString, pools])
 }
 
 function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
@@ -121,26 +121,39 @@ interface TopPoolData {
   isError: boolean
 }
 
-export function useExploreContextTopPools(sortState: PoolTableSortState, protocol?: ProtocolVersion) {
+export function useExploreContextTopPools({
+  sortState,
+  protocol,
+  enabled = true,
+}: {
+  sortState: PoolTableSortState
+  protocol?: ProtocolVersion
+  enabled?: boolean
+}) {
   const {
     exploreStats: { data, isLoading, error: isError },
   } = useContext(ExploreContext)
-  return useTopPools({ topPoolData: { data, isLoading, isError }, sortState, protocol })
+  return useTopPoolsLegacy({ topPoolData: { data, isLoading, isError }, sortState, protocol, enabled })
 }
 
-export function useTopPools({
+export function useTopPoolsLegacy({
   topPoolData,
   sortState,
   protocol,
+  enabled = true,
 }: {
   topPoolData: TopPoolData
   sortState: PoolTableSortState
   protocol?: ProtocolVersion
+  enabled?: boolean
 }) {
   const { data, isLoading, isError } = topPoolData
   const poolStatsByProtocol = getPoolDataByProtocol(data, protocol)
 
   const { sortedPoolStats, boostedPoolStats } = useMemo(() => {
+    if (!enabled) {
+      return { sortedPoolStats: undefined, boostedPoolStats: undefined }
+    }
     const poolStats = poolStatsByProtocol?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
     const sortedPools = sortPools(sortState, poolStats)
     const boostedPools = sortedPools
@@ -148,9 +161,14 @@ export function useTopPools({
       .sort((a, b) => (b.boostedApr ?? 0) - (a.boostedApr ?? 0))
 
     return { sortedPoolStats: sortedPools, boostedPoolStats: boostedPools }
-  }, [poolStatsByProtocol, sortState])
+  }, [enabled, poolStatsByProtocol, sortState])
 
-  const filteredPoolStats = useFilteredPools(sortedPoolStats)
+  const filteredPoolStats = useFilteredPools(sortedPoolStats, enabled)
 
-  return { topPools: filteredPoolStats, topBoostedPools: boostedPoolStats, isLoading, isError }
+  return {
+    topPools: filteredPoolStats,
+    topBoostedPools: boostedPoolStats,
+    isLoading: enabled && isLoading,
+    isError: enabled && isError,
+  }
 }

@@ -43,7 +43,7 @@
       "project": {
         "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4MWY5ODQwYTg1ZDVhZjViZjFkMTc2MmY5MjViZGFkZGM0MjAxZjk4NF9Vbmlzd2Fw",
         "name": "Uniswap",
-        "description": "UNI is the governance token for Uniswap, an Automated Market Marker DEX on the Ethereum blockchain. The UNI token allows token holders to participate in the governance of the protocol. Key decisions such as usage of the treasury or future upgrades can be decided through a governance vote.",
+        "description": "UNI is the governance token for Uniswap, an Automated Market Maker DEX on the Ethereum blockchain. The UNI token allows token holders to participate in the governance of the protocol. Key decisions such as usage of the treasury or future upgrades can be decided through a governance vote. UNI holders can delegate their voting power to themselves or others to influence protocol development and treasury allocation.",
         "homepageUrl": "https://uniswap.org/",
         "twitterName": "Uniswap",
         "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",

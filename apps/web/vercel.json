@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "bunx nx run web:build-vercel",
+  "outputDirectory": ".vercel/output",
+  "framework": null
+}

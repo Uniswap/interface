@@ -3,6 +3,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Flex, FlexProps } from 'ui/src'
 
 const BACK_BUTTON_SIZE = 24
+const BACK_BUTTON_SIZE_TOKEN = '$icon.24'
 
 type BackButtonRowProps = {
   alignment?: 'left' | 'center'
@@ -24,7 +25,7 @@ export function BackHeader({
       justifyContent={alignment === 'left' ? 'flex-start' : 'space-between'}
       {...spacingProps}
     >
-      <BackButton size={BACK_BUTTON_SIZE} onPressBack={onPressBack} />
+      <BackButton size={BACK_BUTTON_SIZE_TOKEN} onPressBack={onPressBack} />
       {children}
       {endAdornment}
     </Flex>

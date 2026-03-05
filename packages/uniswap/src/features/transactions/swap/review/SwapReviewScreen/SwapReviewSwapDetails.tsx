@@ -23,6 +23,7 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
     reviewScreenWarning,
     txSimulationErrors,
     swapTxContext,
+    onAcceptTrade,
   } = useSwapReviewTransactionStore((s) => ({
     acceptedDerivedSwapInfo: s.acceptedDerivedSwapInfo,
     derivedSwapInfo: s.derivedSwapInfo,
@@ -34,13 +35,11 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
     reviewScreenWarning: s.reviewScreenWarning,
     txSimulationErrors: s.txSimulationErrors,
     swapTxContext: s.swapTxContext,
+    onAcceptTrade: s.onAcceptTrade,
   }))
   const tokenWarningChecked = useSwapReviewWarningStore((s) => s.tokenWarningChecked)
   const { setTokenWarningChecked } = useSwapReviewWarningStateActions()
-  const { onAcceptTrade, onShowWarning } = useSwapReviewCallbacksStore((s) => ({
-    onAcceptTrade: s.onAcceptTrade,
-    onShowWarning: s.onShowWarning,
-  }))
+  const onShowWarning = useSwapReviewCallbacksStore((s) => s.onShowWarning)
   const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
   const autoSlippageTolerance = useTransactionSettingsAutoSlippageToleranceStore((s) => s.autoSlippageTolerance)
 

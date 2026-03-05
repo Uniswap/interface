@@ -1,8 +1,8 @@
 import { useUpdateAtom } from 'jotai/utils'
-import { multicallUpdaterSwapChainIdAtom } from 'lib/hooks/useBlockNumber'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
-import { MultichainContext } from 'state/multichain/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { multicallUpdaterSwapChainIdAtom } from '~/lib/hooks/useBlockNumber'
+import { MultichainContext } from '~/state/multichain/types'
 
 export function MultichainContextProvider({
   children,

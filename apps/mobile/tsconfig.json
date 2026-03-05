@@ -5,16 +5,13 @@
   "exclude": [".storybook/storybook.requires.ts"],
   "references": [
     {
-      "path": "../../packages/wallet"
-    },
-    {
-      "path": "../../packages/utilities"
-    },
-    {
-      "path": "../../packages/uniswap"
-    },
-    {
       "path": "../../packages/sessions"
+    },
+    {
+      "path": "../../packages/notifications"
+    },
+    {
+      "path": "../../packages/hashcash-native"
     },
     {
       "path": "../../packages/gating"
@@ -23,12 +20,23 @@
       "path": "../../packages/api"
     },
     {
-      "path": "../../packages/gating"
+      "path": "../../packages/wallet"
+    },
+    {
+      "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/uniswap"
     }
   ],
   "compilerOptions": {
-    "baseUrl": "./",
-    "types": ["jest", "node"]
+    "types": ["jest", "node"],
+    "paths": {
+      "src/*": ["./src/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx", "global.d.ts"]
 }

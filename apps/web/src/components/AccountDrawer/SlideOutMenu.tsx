@@ -1,5 +1,13 @@
-import { ArrowLeft } from 'react-feather'
-import { Flex, Text, useScrollbarStyles } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea, useScrollbarStyles } from 'ui/src'
+import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
+
+type SlideOutMenuProps = {
+  children: React.ReactNode
+  onClose: () => void
+  title: React.ReactNode
+  rightIcon?: React.ReactNode
+  versionComponent?: React.ReactNode
+} & FlexProps
 
 export const SlideOutMenu = ({
   children,
@@ -7,14 +15,8 @@ export const SlideOutMenu = ({
   title,
   rightIcon,
   versionComponent,
-}: {
-  onClose: () => void
-  title: React.ReactNode
-  children: React.ReactNode
-  onClear?: () => void
-  rightIcon?: React.ReactNode
-  versionComponent?: React.ReactNode
-}) => {
+  ...flexProps
+}: SlideOutMenuProps) => {
   const scrollbarStyles = useScrollbarStyles()
 
   const updatedScrollbarStyles = {
@@ -34,23 +36,22 @@ export const SlideOutMenu = ({
         mt="$spacing4"
         py="$padding12"
         px="$padding16"
-        minHeight="85vh"
-        $md={{
-          minHeight: '0px',
-        }}
+        {...flexProps}
       >
         <Flex grow justifyContent="space-between">
           <Flex grow>
             <Flex row mb="$spacing20" justifyContent="space-between" width="100%" alignItems="center">
-              <ArrowLeft data-testid="wallet-back" onClick={onClose} size={24} cursor="pointer" />
-              <Text color="$neutral1"> {title}</Text>
-              {rightIcon ? <>{rightIcon}</> : <Flex />}
+              <TouchableArea width="15%" data-testid="wallet-back" onPress={onClose}>
+                <ArrowLeft color="$neutral2" size="$icon.24" />
+              </TouchableArea>
+              <Text color="$neutral1">{title}</Text>
+              <Flex width="15%">{rightIcon}</Flex>
             </Flex>
             {children}
           </Flex>
         </Flex>
+        {versionComponent}
       </Flex>
-      {versionComponent}
     </>
   )
 }

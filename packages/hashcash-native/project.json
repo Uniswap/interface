@@ -1,0 +1,54 @@
+{
+  "name": "hashcash-native",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/hashcash-native/src",
+  "projectType": "library",
+  "tags": ["platform:native", "scope:hashcash", "type:lib"],
+  "targets": {
+    "typecheck": {},
+    "typecheck:tsgo": {},
+    "build": {
+      "command": "tsc",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "clean": {
+      "command": "rm -rf android/build node_modules/**/android/build lib",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "lint": {},
+    "lint:fix": {},
+    "check:deps:usage": {},
+    "lint-ci": {
+      "command": "eslint \"**/*.{js,ts,tsx}\" -f @jamesacarr/github-actions",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "specs": {
+      "command": "tsc --noEmit false && nitrogen --logLevel=\"debug\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "codegen:clean": {
+      "command": "rm -rf nitrogen/generated",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "codegen": {
+      "command": "rm -rf nitrogen/generated && tsc --noEmit false && nitrogen --logLevel=\"debug\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

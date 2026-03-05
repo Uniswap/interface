@@ -1,4 +1,3 @@
-import { fiatOnRampToCurrency, gqlToCurrency, PricePoint } from 'appGraphql/data/util'
 import { GraphQLApi } from '@universe/api'
 import { useCallback } from 'react'
 import { useAllCommonBaseCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useAllCommonBaseCurrencies'
@@ -11,6 +10,7 @@ import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCur
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { fiatOnRampToCurrency, gqlToCurrency, PricePoint } from '~/appGraphql/data/util'
 
 // TODO(WEB-3839): replace all usage of Currency in the web app with CurrencyInfo
 

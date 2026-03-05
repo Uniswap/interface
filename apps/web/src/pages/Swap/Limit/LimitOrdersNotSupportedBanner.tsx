@@ -1,6 +1,6 @@
-import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
 
 interface LimitOrdersNotSupportedBannerProps {
   onMoreDetails: () => void

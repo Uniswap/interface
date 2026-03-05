@@ -9,33 +9,37 @@ import {
   createProtocolFilter,
   FrontendSupportedProtocol,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import type { Mock } from 'vitest'
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn(),
-  getFeatureFlag: jest.fn(),
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
+  return {
+    ...actual,
+    useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
+  }
+})
+
+vi.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled', () => ({
+  useV4SwapEnabled: vi.fn(),
+  createGetV4SwapEnabled: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled', () => ({
-  useV4SwapEnabled: jest.fn(),
-  createGetV4SwapEnabled: jest.fn(),
+vi.mock('uniswap/src/contexts/UniswapContext', () => ({
+  useUniswapContextSelector: vi.fn(),
 }))
 
-jest.mock('uniswap/src/contexts/UniswapContext', () => ({
-  useUniswapContextSelector: jest.fn(),
+vi.mock('uniswap/src/features/chains/hooks/useSupportedChainId', () => ({
+  createGetSupportedChainId: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/chains/hooks/useSupportedChainId', () => ({
-  createGetSupportedChainId: jest.fn(),
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
-  useEnabledChains: jest.fn(),
-}))
-
-const mockGetFeatureFlag = getFeatureFlag as jest.Mock
-const mockCreateGetV4SwapEnabled = createGetV4SwapEnabled as jest.Mock
-const mockCreateGetSupportedChainId = createGetSupportedChainId as jest.Mock
+const mockGetFeatureFlag = getFeatureFlag as Mock
+const mockCreateGetV4SwapEnabled = createGetV4SwapEnabled as Mock
+const mockCreateGetSupportedChainId = createGetSupportedChainId as Mock
 
 describe('protocols', () => {
   const allProtocols: FrontendSupportedProtocol[] = [
@@ -46,7 +50,7 @@ describe('protocols', () => {
   ]
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('createProtocolFilter', () => {
@@ -223,7 +227,7 @@ describe('protocols', () => {
     })
 
     it('returns false when chainId is undefined without checking flags', () => {
-      const mGetFeatureFlag = jest.fn(() => true)
+      const mGetFeatureFlag = vi.fn(() => true)
       const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
         getFeatureFlag: mGetFeatureFlag,
       })
@@ -295,7 +299,7 @@ describe('protocols', () => {
         return flag === FeatureFlags.UniswapX // Feature flag is enabled
       })
 
-      const getIsUniswapXSupported = jest.fn(() => false) // But chain support says no
+      const getIsUniswapXSupported = vi.fn(() => false) // But chain support says no
 
       const getProtocolsFilter = createGetProtocolsForChain({
         getEnabledChains: () => [UniverseChainId.Mainnet],
@@ -309,7 +313,7 @@ describe('protocols', () => {
     })
 
     it('correctly creates V4 swap enabled checker', () => {
-      const mockGetV4SwapAllowed = jest.fn((chainId?: number) => chainId === UniverseChainId.Mainnet)
+      const mockGetV4SwapAllowed = vi.fn((chainId?: number) => chainId === UniverseChainId.Mainnet)
       mockCreateGetV4SwapEnabled.mockReturnValue(mockGetV4SwapAllowed)
 
       const getProtocolsFilter = createGetProtocolsForChain({

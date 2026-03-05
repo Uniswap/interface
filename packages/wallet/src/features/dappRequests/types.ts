@@ -1,5 +1,5 @@
 import { DappVerificationStatus } from '@universe/api'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { z } from 'zod'
 
 export const CapabilitySchema = z.record(z.string(), z.unknown())
@@ -34,10 +34,9 @@ export const SendCallsParamsSchema = z.object({
 export const SendCallsResultSchema = z.object({
   id: z.string(),
   capabilities: z
-    .object({
+    .looseObject({
       caip345: Caip345Schema.optional(),
-    })
-    .passthrough() // Allow other capability fields for future extensibility
+    }) // Allow other capability fields for future extensibility
     .optional(),
 })
 
@@ -84,6 +83,7 @@ export interface DappConnectionInfo {
   name: string
   url: string
   icon: string | null
+  frameUrl?: string
 }
 
 /**

@@ -1,4 +1,4 @@
-import { mocked } from 'test-utils/mocked'
+import { mocked } from '~/test-utils/mocked'
 
 test('mocked works', () => {
   const fn = vi.fn(() => 42)

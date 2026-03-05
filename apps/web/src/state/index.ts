@@ -1,19 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import localForage from 'localforage'
-import { PersistConfig, persistReducer, persistStore } from 'redux-persist'
+import { type PersistConfig, persistReducer, persistStore } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
-import { updateVersion } from 'state/global/actions'
-import { customCreateMigrate, INDEXED_DB_REDUX_TABLE_NAME, migrations, PERSIST_VERSION } from 'state/migrations'
-import { routingApi } from 'state/routing/slice'
-import { rootWebSaga } from 'state/sagas/root'
-import { walletCapabilitiesListenerMiddleware } from 'state/walletCapabilities/reducer'
-import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
-import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { ALLOW_ANALYTICS_ATOM_KEY } from 'utilities/src/telemetry/analytics/constants'
+import { updateVersion } from '~/state/global/actions'
+import { customCreateMigrate, INDEXED_DB_REDUX_TABLE_NAME, migrations, PERSIST_VERSION } from '~/state/migrations'
+import { routingApi } from '~/state/routing/slice'
+import { rootWebSaga, sagaTriggerActions } from '~/state/sagas/root'
+import { walletCapabilitiesListenerMiddleware } from '~/state/walletCapabilities/reducer'
+import { type InterfaceState, interfacePersistedStateList, interfaceReducer } from '~/state/webReducer'
 
 const persistConfig: PersistConfig<InterfaceState> = {
   key: 'interface',
@@ -66,6 +65,8 @@ export function createDefaultStore() {
               ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade'],
               ignoredPaths: [routingApi.reducerPath],
               ignoredActions: [
+                // ignore saga trigger actions
+                ...sagaTriggerActions,
                 // ignore the redux-persist actions
                 'persist/PERSIST',
                 'persist/REHYDRATE',
@@ -75,7 +76,6 @@ export function createDefaultStore() {
             },
       })
         .concat(routingApi.middleware)
-        .concat(fiatOnRampAggregatorApi.middleware)
         .concat(sagaMiddleware)
         .concat(walletCapabilitiesListenerMiddleware.middleware)
         .concat(delegationListenerMiddleware.middleware),

@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react'
-import { useDerivedSendInfo } from 'state/send/hooks'
-import { SendState } from 'state/send/SendContext'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
 import { getAddress } from 'viem'
 import type { Mock } from 'vitest'
+import { useDerivedSendInfo } from '~/state/send/hooks'
+import { SendState } from '~/state/send/SendContext'
 
 vi.mock('@web3-react/core', () => ({
   useWeb3React: () => ({
@@ -13,11 +13,11 @@ vi.mock('@web3-react/core', () => ({
     provider: {},
   }),
 }))
-vi.mock('hooks/useAccount', () => ({
+vi.mock('~/hooks/useAccount', () => ({
   useAccount: () => '0xYourAccountAddress',
 }))
-vi.mock('state/multichain/useMultichainContext', async () => {
-  const actual = await vi.importActual('state/multichain/useMultichainContext')
+vi.mock('~/state/multichain/useMultichainContext', async () => {
+  const actual = await vi.importActual('~/state/multichain/useMultichainContext')
   return {
     ...actual,
     useMultichainContext: () => ({
@@ -25,8 +25,8 @@ vi.mock('state/multichain/useMultichainContext', async () => {
     }),
   }
 })
-vi.mock('hooks/useTransactionGasFee', async () => {
-  const actual = await vi.importActual('hooks/useTransactionGasFee')
+vi.mock('~/hooks/useTransactionGasFee', async () => {
+  const actual = await vi.importActual('~/hooks/useTransactionGasFee')
   return {
     ...actual,
     useTransactionGasFee: () => ({
@@ -39,16 +39,16 @@ vi.mock('hooks/useTransactionGasFee', async () => {
     },
   }
 })
-vi.mock('hooks/Tokens', () => ({
+vi.mock('~/hooks/Tokens', () => ({
   useCurrency: () => undefined,
 }))
-vi.mock('hooks/useUSDTokenUpdater', () => ({
+vi.mock('~/hooks/useUSDTokenUpdater', () => ({
   useUSDTokenUpdater: () => ({ formattedAmount: '100' }),
 }))
-vi.mock('lib/hooks/useCurrencyBalance', () => ({
+vi.mock('~/lib/hooks/useCurrencyBalance', () => ({
   useCurrencyBalances: () => [undefined, undefined],
 }))
-vi.mock('utils/transfer', () => ({
+vi.mock('~/utils/transfer', () => ({
   useCreateTransferTransaction: () => undefined,
 }))
 vi.mock('uniswap/src/features/ens/api', () => ({

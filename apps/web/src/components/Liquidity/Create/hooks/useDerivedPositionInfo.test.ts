@@ -5,24 +5,21 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { getFeatureFlag } from '@universe/gating'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { DAI, nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   getSortedCurrenciesForProtocol,
   useDerivedPositionInfo,
-} from 'components/Liquidity/Create/hooks/useDerivedPositionInfo'
+} from '~/components/Liquidity/Create/hooks/useDerivedPositionInfo'
 import {
   CreateV2PositionInfo,
   CreateV3PositionInfo,
   CreateV4PositionInfo,
   PositionState,
-} from 'components/Liquidity/Create/types'
-import { PoolState } from 'hooks/usePools'
-import { PairState } from 'hooks/useV2Pairs'
-import { ETH_MAINNET } from 'test-utils/constants'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { DAI, nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+} from '~/components/Liquidity/Create/types'
+import { ETH_MAINNET } from '~/test-utils/constants'
 
 class MockPoolInformation extends PoolInformation {
   fee = FeeAmount.MEDIUM
@@ -72,45 +69,16 @@ const mockPair = new Pair(
   CurrencyAmount.fromRawAmount(USDT, mockV2PairInformation.token1Reserves),
 )
 
-// remove the following mocks once the PoolInfoEndpoint is fully rolled out
-const mockUseMultichainContext = vi.fn()
-const mockUseGetPoolsByTokens = vi.fn()
-const mockGetFeatureFlag = vi.mocked(getFeatureFlag)
-const mockUseV2Pair = vi.fn()
-const mockUsePool = vi.fn()
-
 const mockUsePoolInfoQuery = vi.fn()
 const mockUseDefaultInitialPrice = vi.fn()
 
-vi.mock('state/multichain/useMultichainContext', () => ({
-  useMultichainContext: () => mockUseMultichainContext(),
-}))
-
-vi.mock('uniswap/src/data/rest/getPools', () => ({
-  useGetPoolsByTokens: () => mockUseGetPoolsByTokens(),
-}))
-
-vi.mock('@universe/gating', async (importOriginal) => ({
-  ...(await importOriginal()),
-  getFeatureFlag: vi.fn(),
-}))
-
-vi.mock('hooks/useV2Pairs', async (importOriginal) => ({
-  ...(await importOriginal()),
-  useV2Pair: () => mockUseV2Pair(),
-}))
-
-vi.mock('hooks/usePools', async (importOriginal) => ({
-  ...(await importOriginal()),
-  usePool: () => mockUsePool(),
-}))
-
-vi.mock('components/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
+vi.mock('~/components/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
   useDefaultInitialPrice: () => mockUseDefaultInitialPrice(),
 }))
 
-vi.mock('uniswap/src/data/apiClients/tradingApi/usePoolInfoQuery', () => ({
-  usePoolInfoQuery: () => mockUsePoolInfoQuery(),
+vi.mock('@tanstack/react-query', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useQuery: () => mockUsePoolInfoQuery(),
 }))
 
 describe('useDerivedPositionInfo', () => {
@@ -131,22 +99,6 @@ describe('useDerivedPositionInfo', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-
-    mockGetFeatureFlag.mockReturnValue(true)
-
-    mockUseMultichainContext.mockReturnValue({
-      chainId: UniverseChainId.Mainnet,
-    })
-
-    mockUseGetPoolsByTokens.mockReturnValue({
-      data: undefined,
-      isLoading: false,
-      isFetched: true,
-      refetch: vi.fn(),
-    })
-
-    mockUseV2Pair.mockReturnValue([PairState.EXISTS, mockPair])
-    mockUsePool.mockReturnValue([PoolState.EXISTS, mockV3Pool])
 
     mockUseDefaultInitialPrice.mockReturnValue({
       price: 1000,

@@ -136,6 +136,7 @@ export type WalletNavigationContextState = {
   navigateToReceive: () => void
   navigateToSend: (args: NavigateToSendFlowArgs) => void
   handleShareToken: (args: ShareTokenArgs) => void
+  navigateToAdvancedSettings: () => void
 }
 
 export const WalletNavigationContext = createContext<WalletNavigationContextState | undefined>(undefined)

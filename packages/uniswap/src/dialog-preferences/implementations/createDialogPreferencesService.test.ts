@@ -1,27 +1,32 @@
 import type { StorageDriver } from 'uniswap/src/dialog-preferences'
 import { createDialogPreferencesService } from 'uniswap/src/dialog-preferences'
 import { DialogVisibilityId } from 'uniswap/src/dialog-preferences/types'
-import { logger } from 'utilities/src/logger/logger'
+import type { Mocked } from 'vitest'
 
-jest.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    debug: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
+const { mockLogger } = vi.hoisted(() => ({
+  mockLogger: {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    setDatadogEnabled: vi.fn(),
   },
 }))
 
+vi.mock('utilities/src/logger/logger', () => ({
+  logger: mockLogger,
+}))
+
 describe('createDialogPreferencesService', () => {
-  let mockStorage: jest.Mocked<StorageDriver>
+  let mockStorage: Mocked<StorageDriver>
 
   beforeEach(() => {
     mockStorage = {
-      get: jest.fn(),
-      set: jest.fn(),
-      remove: jest.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
+      remove: vi.fn(),
     }
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('shouldShowDialog', () => {
@@ -53,7 +58,7 @@ describe('createDialogPreferencesService', () => {
       const result = await service.shouldShowDialog(DialogVisibilityId.StorybookExample)
 
       expect(result).toBe(true)
-      expect(logger.error).toHaveBeenCalledWith(error, {
+      expect(mockLogger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'createDialogPreferencesService', function: 'shouldShowDialog' },
         extra: { dialogId: 'storybook-example' },
       })
@@ -91,7 +96,7 @@ describe('createDialogPreferencesService', () => {
 
     it('calls onChange callback after marking dialog hidden', async () => {
       mockStorage.set.mockResolvedValue(undefined)
-      const mockOnChange = jest.fn().mockResolvedValue(undefined)
+      const mockOnChange = vi.fn().mockResolvedValue(undefined)
       const service = createDialogPreferencesService({ storage: mockStorage, onChange: mockOnChange })
       await service.markDialogHidden(DialogVisibilityId.StorybookExample)
       expect(mockOnChange).toHaveBeenCalledWith('storybook-example')
@@ -104,7 +109,7 @@ describe('createDialogPreferencesService', () => {
 
       await expect(service.markDialogHidden(DialogVisibilityId.StorybookExample)).resolves.toBeUndefined()
 
-      expect(logger.error).toHaveBeenCalledWith(error, {
+      expect(mockLogger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'createDialogPreferencesService', function: 'markDialogHidden' },
         extra: { dialogId: 'storybook-example' },
       })
@@ -123,7 +128,7 @@ describe('createDialogPreferencesService', () => {
 
     it('calls onChange callback after resetting dialog', async () => {
       mockStorage.remove.mockResolvedValue(undefined)
-      const mockOnChange = jest.fn().mockResolvedValue(undefined)
+      const mockOnChange = vi.fn().mockResolvedValue(undefined)
       const service = createDialogPreferencesService({ storage: mockStorage, onChange: mockOnChange })
       await service.resetDialog(DialogVisibilityId.StorybookExample)
       expect(mockOnChange).toHaveBeenCalledWith('storybook-example')
@@ -136,7 +141,7 @@ describe('createDialogPreferencesService', () => {
 
       await expect(service.resetDialog(DialogVisibilityId.StorybookExample)).resolves.toBeUndefined()
 
-      expect(logger.error).toHaveBeenCalledWith(error, {
+      expect(mockLogger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'createDialogPreferencesService', function: 'resetDialog' },
         extra: { dialogId: 'storybook-example' },
       })

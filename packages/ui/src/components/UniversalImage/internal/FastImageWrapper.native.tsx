@@ -11,6 +11,7 @@ export function FastImageWrapper({
   resizeMode,
   style,
   setError,
+  shouldRasterizeIOS,
 }: FastImageWrapperProps): JSX.Element | null {
   const isLoaded = useSharedValue(false)
 
@@ -45,6 +46,7 @@ export function FastImageWrapper({
     <Animated.View style={[styles.fullWidth, animatedImageContainerStyle]}>
       <FastImage
         resizeMode={resizeMode ?? FastImage.resizeMode.contain}
+        shouldRasterizeIOS={shouldRasterizeIOS}
         source={{
           uri,
           cache: FastImage.cacheControl.immutable,

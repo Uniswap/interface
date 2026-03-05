@@ -1,8 +1,8 @@
 import { GraphQLApi } from '@universe/api'
 import client from 'functions/client'
 import { Data } from 'functions/utils/cache'
-import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
-import { NATIVE_CHAIN_ID } from 'src/constants/tokens'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { formatTokenMetatagTitleName } from '~/shared-cloud/metatags'
 
 const convertTokenAddress = (networkName: string, tokenAddress: string) => {
   if (tokenAddress === NATIVE_CHAIN_ID) {

@@ -63,6 +63,7 @@ export const BASE_CHAIN_INFO = {
     logo: ETH_LOGO,
   },
   networkLayer: NetworkLayer.L2,
+  blockTimeMs: 2000,
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   statusPage: 'https://status.base.org/',
   supportsV4: true,

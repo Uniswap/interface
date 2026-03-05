@@ -25,6 +25,7 @@ interface CurrencyInputPanelHeaderProps {
   currencyInfo: Maybe<CurrencyInfo>
   onSetPresetValue: (amount: string, percentage: PresetPercentage) => void
   showDefaultTokenOptions: boolean
+  hidePresets?: boolean
 }
 
 export function CurrencyInputPanelHeader({
@@ -35,6 +36,7 @@ export function CurrencyInputPanelHeader({
   currencyInfo,
   onSetPresetValue,
   showDefaultTokenOptions,
+  hidePresets,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
   const priceUXEnabled = usePriceUXEnabled()
 
@@ -61,7 +63,7 @@ export function CurrencyInputPanelHeader({
   }
 
   const showInputPresets =
-    (isWebAppDesktop || isExtensionApp) && currencyField === CurrencyField.INPUT && currencyBalance
+    (isWebAppDesktop || isExtensionApp) && !hidePresets && currencyField === CurrencyField.INPUT && currencyBalance
 
   return (
     <Flex row justifyContent="space-between">

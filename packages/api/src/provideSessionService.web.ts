@@ -8,6 +8,7 @@ import {
   createSessionRepository,
   createSessionService,
   type SessionService,
+  type UniswapIdentifierService,
 } from '@universe/sessions'
 import type { Logger } from 'utilities/src/logger/logger'
 import { isWebApp } from 'utilities/src/platform'
@@ -17,6 +18,8 @@ function provideSessionService(ctx: {
   getBaseUrl: () => string
   getIsSessionServiceEnabled: () => boolean
   getLogger?: () => Logger
+  /** Optional custom UniswapIdentifierService. If not provided, uses default localStorage-based service. */
+  uniswapIdentifierService?: UniswapIdentifierService
 }): SessionService {
   if (!ctx.getIsSessionServiceEnabled()) {
     return createNoopSessionService()
@@ -34,7 +37,11 @@ function provideSessionService(ctx: {
  *
  * When more services are added to the Entry Gateway, we can remove this and rely on those typical requests to instantiate the cookie.
  */
-function getWebAppSessionService(ctx: { getBaseUrl: () => string; getLogger?: () => Logger }): SessionService {
+function getWebAppSessionService(ctx: {
+  getBaseUrl: () => string
+  getLogger?: () => Logger
+  uniswapIdentifierService?: UniswapIdentifierService
+}): SessionService {
   const sessionClient = createSessionClient({
     transport: getTransport({
       getBaseUrl: ctx.getBaseUrl,
@@ -50,12 +57,16 @@ function getWebAppSessionService(ctx: { getBaseUrl: () => string; getLogger?: ()
   return createSessionService({
     sessionStorage: provideSessionStorage(),
     deviceIdService: provideDeviceIdService(),
-    uniswapIdentifierService: provideUniswapIdentifierService(),
+    uniswapIdentifierService: ctx.uniswapIdentifierService ?? provideUniswapIdentifierService(),
     sessionRepository,
   })
 }
 
-function getExtensionSessionService(ctx: { getBaseUrl: () => string; getLogger?: () => Logger }): SessionService {
+function getExtensionSessionService(ctx: {
+  getBaseUrl: () => string
+  getLogger?: () => Logger
+  uniswapIdentifierService?: UniswapIdentifierService
+}): SessionService {
   const sessionClient = createSessionClient({
     transport: getTransport({
       getBaseUrl: ctx.getBaseUrl,
@@ -68,7 +79,7 @@ function getExtensionSessionService(ctx: { getBaseUrl: () => string; getLogger?:
   return createSessionService({
     sessionStorage: provideSessionStorage(),
     deviceIdService: provideDeviceIdService(),
-    uniswapIdentifierService: provideUniswapIdentifierService(),
+    uniswapIdentifierService: ctx.uniswapIdentifierService ?? provideUniswapIdentifierService(),
     sessionRepository,
   })
 }

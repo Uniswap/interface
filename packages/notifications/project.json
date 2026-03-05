@@ -3,14 +3,28 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/notifications/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:notifications", "type:lib"],
   "targets": {
     "typecheck": {},
+    "typecheck:tsgo": {},
     "lint:biome": {},
     "lint:biome:fix": {},
     "lint:eslint": {},
     "lint:eslint:fix": {},
     "lint": {},
-    "lint:fix": {}
+    "lint:fix": {},
+    "check:deps:usage": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:coverage": {
+      "command": "vitest run --coverage",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
   }
 }

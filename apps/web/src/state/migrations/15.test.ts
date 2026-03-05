@@ -1,19 +1,20 @@
 import { createMigrate } from 'redux-persist'
-import { migration1 } from 'state/migrations/1'
-import { migration2 } from 'state/migrations/2'
-import { migration3 } from 'state/migrations/3'
-import { migration4 } from 'state/migrations/4'
-import { migration5 } from 'state/migrations/5'
-import { migration6 } from 'state/migrations/6'
-import { migration7 } from 'state/migrations/7'
-import { migration8 } from 'state/migrations/8'
-import { migration9 } from 'state/migrations/9'
-import { migration10 } from 'state/migrations/10'
-import { migration11 } from 'state/migrations/11'
-import { migration12 } from 'state/migrations/12'
-import { migration13 } from 'state/migrations/13'
-import { migration14 } from 'state/migrations/14'
-import { migration15, PersistAppStateV15 } from 'state/migrations/15'
+import { vi } from 'vitest'
+import { migration1 } from '~/state/migrations/1'
+import { migration2 } from '~/state/migrations/2'
+import { migration3 } from '~/state/migrations/3'
+import { migration4 } from '~/state/migrations/4'
+import { migration5 } from '~/state/migrations/5'
+import { migration6 } from '~/state/migrations/6'
+import { migration7 } from '~/state/migrations/7'
+import { migration8 } from '~/state/migrations/8'
+import { migration9 } from '~/state/migrations/9'
+import { migration10 } from '~/state/migrations/10'
+import { migration11 } from '~/state/migrations/11'
+import { migration12 } from '~/state/migrations/12'
+import { migration13 } from '~/state/migrations/13'
+import { migration14 } from '~/state/migrations/14'
+import { migration15, PersistAppStateV15 } from '~/state/migrations/15'
 
 const previousState: PersistAppStateV15 = {
   _persist: {
@@ -49,6 +50,16 @@ describe('migration to v15', () => {
     expect(result.searchHistory).toMatchObject({
       results: [],
     })
+  })
+
+  it('should handle invalid JSON in localStorage gracefully', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    localStorage.setItem('recentlySearchedAssetsV3', 'invalid json {{{')
+
+    const result: any = migration15(previousState)
+
+    expect(result?.searchHistory).toEqual({ results: [] })
+    expect(result?._persist.version).toEqual(15)
   })
 
   it('migrates recentlySearchedAssets atom to searchHistory', async () => {

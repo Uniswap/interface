@@ -1,9 +1,9 @@
 // biome-ignore lint/style/noRestrictedImports: Trading API fixtures need direct Playwright imports
-import { test as base } from '@playwright/test'
-import { type Page } from 'playwright/test'
+import { test as base, type Page } from '@playwright/test'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Mocks } from '~/playwright/mocks/mocks'
 
-export const DEFAULT_TEST_GAS_LIMIT = '20000000'
+const DEFAULT_TEST_GAS_LIMIT = '20000000'
 
 const shouldIgnorePageError = (error: Error): { ignored: boolean } => {
   if (
@@ -32,7 +32,7 @@ export async function stubTradingApiEndpoint({
   modifyRequestData?: (data: any) => any
   modifyResponseData?: (data: any) => any
 }) {
-  await page.route(`${uniswapUrls.tradingApiUrl}${endpoint}`, async (route) => {
+  await page.route(`${uniswapUrls.tradingApiUrl}${endpoint}*`, async (route) => {
     try {
       const request = route.request()
       const postData = request.postDataJSON()
@@ -83,6 +83,17 @@ export async function stubTradingApiEndpoint({
 
       throw error
     }
+  })
+}
+
+/**
+ * Mocks the /v1/swap endpoint with a static mock response
+ * Use this instead of stubTradingApiEndpoint when you need to avoid calling the real API
+ */
+// eslint-disable-next-line import/no-unused-modules
+export async function mockTradingApiSwapResponse({ page }: { page: Page }) {
+  await page.route(`**/${uniswapUrls.tradingApiPaths.swap}`, async (route) => {
+    await route.fulfill({ path: Mocks.TradingApi.swap })
   })
 }
 

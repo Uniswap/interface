@@ -1,7 +1,7 @@
-import { POPUP_MAX_WIDTH } from 'components/Popups/constants'
 import * as React from 'react'
 import { Flex, Text, TouchableArea, useShadowPropsMedium } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
+import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
 
 type ToastProps = {
   children: React.ReactNode

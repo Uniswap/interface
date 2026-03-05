@@ -7,6 +7,7 @@ import type { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInput
 import type { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/hooks/useDecimalPadControlledField'
 import { useOnToggleIsFiatMode } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useOnToggleIsFiatMode'
+import { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -20,6 +21,7 @@ export function useSwapFormScreenCallbacks({
   exactOutputWouldFailIfCurrenciesSwitched,
   exactFieldIsInput,
   isCrossChain,
+  sameAssetBridgeDetected,
   formattedDerivedValueRef,
   inputRef,
   outputRef,
@@ -30,6 +32,7 @@ export function useSwapFormScreenCallbacks({
   exactOutputWouldFailIfCurrenciesSwitched: boolean
   exactFieldIsInput: boolean
   isCrossChain: boolean
+  sameAssetBridgeDetected: boolean
   formattedDerivedValueRef: MutableRefObject<string>
   inputRef: RefObject<CurrencyInputPanelRef | null>
   outputRef: RefObject<CurrencyInputPanelRef | null>
@@ -187,6 +190,7 @@ export function useSwapFormScreenCallbacks({
       exactAmountToken: amount,
       exactCurrencyField: CurrencyField.INPUT,
       focusOnCurrencyField: undefined,
+      isFiatMode: false,
       isMax: isMaxPercentage(percentage),
       presetPercentage: percentage,
     })
@@ -207,36 +211,33 @@ export function useSwapFormScreenCallbacks({
   })
 
   const onSwitchCurrencies = useEvent(() => {
-    const { newExactCurrencyField, newFilteredChainIds } = isCrossChain
-      ? {
-          newExactCurrencyField: CurrencyField.INPUT,
-          // If for a cross-chain swap, when currencies are switched, update the new output to the old output chainId and change input to all networks
-          newFilteredChainIds: {
-            input: undefined,
-            output: output?.chainId,
-          },
-        }
-      : {
-          // If exact output would fail if currencies switch, we never want to have OUTPUT as exact field / focused field
-          newExactCurrencyField: exactOutputWouldFailIfCurrenciesSwitched
-            ? CurrencyField.INPUT
-            : exactFieldIsInput
-              ? CurrencyField.OUTPUT
-              : CurrencyField.INPUT,
-          newFilteredChainIds: undefined,
-        }
+    const update: Partial<SwapFormState> = { input: output, output: input }
 
-    updateSwapForm({
-      exactCurrencyField: newExactCurrencyField,
-      focusOnCurrencyField: newExactCurrencyField,
-      input: output,
-      output: input,
-      // Preserve the derived output amount if we force exact field to be input to keep USD value of the trade constant after switching
-      ...(exactOutputWouldFailIfCurrenciesSwitched && exactFieldIsInput && !isFiatMode
-        ? { exactAmountToken: formattedDerivedValueRef.current }
-        : undefined),
-      ...(isCrossChain ? { filteredChainIds: newFilteredChainIds } : undefined),
-    })
+    if (exactOutputWouldFailIfCurrenciesSwitched) {
+      update.exactCurrencyField = CurrencyField.INPUT
+      update.focusOnCurrencyField = CurrencyField.INPUT
+
+      // Preserve the derived output amount to keep USD value of the trade constant after switching, unless disqualified by any of the following conditions
+      const canReuseDerivedOutputAmount = exactFieldIsInput && !isFiatMode && !sameAssetBridgeDetected
+
+      if (canReuseDerivedOutputAmount) {
+        update.exactAmountToken = formattedDerivedValueRef.current
+      }
+    } else {
+      const currentDependentField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
+      update.exactCurrencyField = currentDependentField
+      update.focusOnCurrencyField = currentDependentField
+    }
+
+    // For cross-chain, update the new output to the old output chainId and change input to all networks
+    if (isCrossChain) {
+      update.filteredChainIds = {
+        input: undefined,
+        output: output?.chainId,
+      }
+    }
+
+    updateSwapForm(update)
 
     // When we have FOT disable exact output logic, the cursor gets out of sync when switching currencies
     setTimeout(() => {

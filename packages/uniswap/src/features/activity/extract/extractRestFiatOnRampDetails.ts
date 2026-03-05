@@ -2,6 +2,7 @@ import { FiatOnRampTransaction, FiatOnRampTransactionStatus } from '@uniswap/cli
 import { TradingApi } from '@universe/api'
 
 import { parseRestOnRampTransaction } from 'uniswap/src/features/activity/parse/parseOnRampTransaction'
+import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
   TransactionDetails,
   TransactionOriginType,
@@ -56,6 +57,7 @@ export default function extractRestFiatOnRampDetails(transaction: FiatOnRampTran
           tokenSymbol: transactionFee.symbol,
           tokenAddress: transactionFee.address,
           chainId,
+          valueType: ValueType.Exact,
         }
       : undefined
 

@@ -1,6 +1,6 @@
 import { ReactNode, RefObject } from 'react'
 import { Flex, FlexProps, Popover, styled, useScrollbarStyles, useShadowPropsMedium, WebBottomSheet } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 
 const NavDropdownContent = styled(Flex, {
   borderRadius: '$rounded16',
@@ -37,7 +37,7 @@ interface NavDropdownProps {
   isOpen: boolean
   width?: number
   minWidth?: number
-  dropdownRef?: RefObject<HTMLDivElement>
+  dropdownRef?: RefObject<HTMLDivElement | null>
   dataTestId?: string
   padded?: boolean
   mr?: number
@@ -61,6 +61,7 @@ export function NavDropdown({
   return (
     <>
       <Popover.Content
+        zIndex={zIndexes.popover}
         backgroundColor="transparent"
         enterStyle={{ scale: 0.95, opacity: 0 }}
         exitStyle={{ scale: 0.95, opacity: 0 }}

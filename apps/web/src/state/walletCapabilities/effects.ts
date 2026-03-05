@@ -1,8 +1,8 @@
-import { getAtomicSupportedChainIds } from 'state/walletCapabilities/lib/handleGetCapabilities'
-import type { GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
-import { WalletCapabilitiesState } from 'state/walletCapabilities/types'
 import { Logger } from 'utilities/src/logger/logger'
 import { deepEqual } from 'wagmi'
+import { getAtomicSupportedChainIds } from '~/state/walletCapabilities/lib/handleGetCapabilities'
+import type { GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
+import { WalletCapabilitiesState } from '~/state/walletCapabilities/types'
 
 export function createOnSetCapabilitiesByChainEffect(ctx: {
   getOriginalState: () => { walletCapabilities: WalletCapabilitiesState }

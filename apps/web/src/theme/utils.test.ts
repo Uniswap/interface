@@ -1,4 +1,4 @@
-import { getAccent2, getNeutralContrast, passesContrast } from 'theme/utils'
+import { getAccent2, getNeutralContrast, passesContrast } from '~/theme/utils'
 
 describe('passesContrast', () => {
   it('should return true for contrasting colors', () => {

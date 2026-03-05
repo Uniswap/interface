@@ -1,23 +1,32 @@
+import { formatUnits } from 'viem'
+import type { ChartMode } from '~/components/Charts/ToucanChart/renderer'
 import {
   CHART_CONSTRAINTS,
   DEFAULT_Y_AXIS_LEVELS,
   LABEL_GENERATION,
+  MAX_RENDERABLE_BARS,
   NICE_VALUES,
   TOLERANCE,
-} from 'components/Toucan/Auction/BidDistributionChart/constants'
+} from '~/components/Toucan/Auction/BidDistributionChart/constants'
 import {
   BidConcentrationResult,
   calculateBidConcentration,
-} from 'components/Toucan/Auction/BidDistributionChart/utils/bidConcentration'
-import { BidDistributionData, BidTokenInfo, DisplayMode } from 'components/Toucan/Auction/store/types'
-import { formatUnits } from 'viem'
+} from '~/components/Toucan/Auction/BidDistributionChart/utils/bidConcentration'
+import {
+  calculateTickQ96,
+  fromQ96ToDecimalWithTokenDecimals,
+} from '~/components/Toucan/Auction/BidDistributionChart/utils/q96'
+import { BidDistributionData, BidTokenInfo, OptimisticBid, UserBid } from '~/components/Toucan/Auction/store/types'
+import { approximateNumberFromRaw } from '~/components/Toucan/Auction/utils/fixedPointFdv'
 
+/* eslint-disable max-lines -- TODO(Toucan): refactor/ split into smaller modules */
 /**
  * Represents a single bar in the distribution chart
  */
 // eslint-disable-next-line import/no-unused-modules
 export interface ChartBarData {
-  tick: number // Tick value in smallest unit
+  tick: number // Tick value in smallest unit (decimal, for chart rendering)
+  tickQ96: string // Original Q96 string for precise matching and click handling
   tickDisplay: string // Formatted tick for display
   amount: number // Bid amount in USD (converted from base token using bidTokenInfo.priceFiat)
   index: number // Bar index for positioning
@@ -33,8 +42,81 @@ export interface ProcessedChartData {
   minTick: number
   maxTick: number
   maxAmount: number
+  /** Total bid volume including all entries (even those outside the windowed bars) */
+  totalBidVolume: number
   labelIncrement?: number
   concentration: BidConcentrationResult | null
+  /** The max tick from actual bid data (before any extension). Used for auto-clearing custom bid tick. */
+  maxTickFromData: number
+}
+
+function parseBigInt(value: string): bigint | null {
+  try {
+    return BigInt(value)
+  } catch {
+    return null
+  }
+}
+
+export function mergeUserBidVolumes(params: {
+  bidDistributionData: BidDistributionData | null
+  userBids: UserBid[]
+  optimisticBid?: OptimisticBid | null
+}): BidDistributionData | null {
+  const { bidDistributionData, userBids, optimisticBid } = params
+
+  if (!bidDistributionData) {
+    return bidDistributionData
+  }
+
+  if (userBids.length === 0 && !optimisticBid) {
+    return bidDistributionData
+  }
+
+  const aggregatedVolumes = new Map<string, bigint>()
+
+  const addVolume = (tickQ96: string | undefined, volumeRaw: string | undefined): void => {
+    if (!tickQ96 || !volumeRaw) {
+      return
+    }
+
+    const volume = parseBigInt(volumeRaw)
+    if (!volume || volume <= 0n) {
+      return
+    }
+
+    const current = aggregatedVolumes.get(tickQ96) ?? 0n
+    aggregatedVolumes.set(tickQ96, current + volume)
+  }
+
+  userBids.forEach((bid) => {
+    addVolume(bid.maxPrice, bid.baseTokenInitial)
+  })
+
+  if (optimisticBid) {
+    addVolume(optimisticBid.maxPriceQ96, optimisticBid.budgetRaw)
+  }
+
+  if (aggregatedVolumes.size === 0) {
+    return bidDistributionData
+  }
+
+  let updatedMap: BidDistributionData | null = null
+
+  aggregatedVolumes.forEach((userVolume, tickQ96) => {
+    const existingRaw = bidDistributionData.get(tickQ96)
+    const existingVolume = existingRaw ? (parseBigInt(existingRaw) ?? 0n) : 0n
+
+    if (userVolume > existingVolume) {
+      if (!updatedMap) {
+        updatedMap = new Map(bidDistributionData)
+      }
+      updatedMap.set(tickQ96, userVolume.toString())
+    }
+  })
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- updatedMap may be set inside forEach
+  return updatedMap ?? bidDistributionData
 }
 
 /**
@@ -84,6 +166,22 @@ function calculateBarStepAndRange(params: { minTick: number; maxTick: number; ti
       totalBars: CHART_CONSTRAINTS.MIN_BARS,
     }
   }
+}
+
+function getTickIndex(params: {
+  tick: number
+  floorTick: number
+  tickSize: number
+  rounding?: 'round' | 'floor'
+}): number {
+  const { tick, floorTick, tickSize, rounding = 'round' } = params
+  const rawIndex = (tick - floorTick) / tickSize
+  return rounding === 'floor' ? Math.floor(rawIndex) : Math.round(rawIndex)
+}
+
+function getTickFromIndex(params: { index: number; floorTick: number; tickSize: number }): number {
+  const { index, floorTick, tickSize } = params
+  return floorTick + index * tickSize
 }
 
 /**
@@ -191,18 +289,27 @@ function isNiceMultiplier(multiplier: number, niceValues: readonly number[] = NI
 
 /**
  * Calculate x-axis label increment for optimal evenly spaced labels
- * Labels align with tick_size boundaries and aim for 7-12 total labels
+ * Labels align with tick_size boundaries and aim for 7-12 total labels (or custom target)
  * Prefers "nice" round numbers (multiples of 1, 2, 5, 10, 20, 50, 100, etc.)
  * Dynamically handles any range size from tiny to extreme
  */
-function calculateLabelIncrement(params: { minTick: number; rangeMax: number; tickSize: number }): number {
-  const { minTick, rangeMax, tickSize } = params
+function calculateLabelIncrement(params: {
+  minTick: number
+  rangeMax: number
+  tickSize: number
+  targetMaxLabels?: number
+}): number {
+  const { minTick, rangeMax, tickSize, targetMaxLabels } = params
   const range = rangeMax - minTick
 
+  const maxLabels = targetMaxLabels ?? LABEL_GENERATION.MAX_LABELS
+  const minLabels = targetMaxLabels ? Math.max(2, targetMaxLabels - 2) : LABEL_GENERATION.MIN_LABELS
+  const idealLabels = targetMaxLabels ?? LABEL_GENERATION.IDEAL_LABELS
+
   // Calculate theoretical multiplier bounds to achieve target label count
-  // minMultiplier produces MAX_LABELS, maxMultiplier produces MIN_LABELS
-  const minMultiplier = Math.max(1, Math.ceil(range / (LABEL_GENERATION.MAX_LABELS * tickSize)))
-  const maxMultiplier = Math.max(1, Math.floor(range / (LABEL_GENERATION.MIN_LABELS * tickSize)))
+  // minMultiplier produces maxLabels, maxMultiplier produces minLabels
+  const minMultiplier = Math.max(1, Math.ceil(range / (maxLabels * tickSize)))
+  const maxMultiplier = Math.max(1, Math.floor(range / (minLabels * tickSize)))
 
   // Generate candidates dynamically based on the actual range
   const candidates = generateDynamicCandidates({ minMultiplier, maxMultiplier })
@@ -216,12 +323,12 @@ function calculateLabelIncrement(params: { minTick: number; rangeMax: number; ti
     const numLabels = Math.floor(range / labelIncrement) + 1
 
     // Skip if outside acceptable range
-    if (numLabels < LABEL_GENERATION.MIN_LABELS || numLabels > LABEL_GENERATION.MAX_LABELS) {
+    if (numLabels < minLabels || numLabels > maxLabels) {
       continue
     }
 
     // Score based on: distance from ideal count + preference for nice round numbers
-    const countDiff = Math.abs(numLabels - LABEL_GENERATION.IDEAL_LABELS)
+    const countDiff = Math.abs(numLabels - idealLabels)
     const roundnessBonus = isNiceMultiplier(multiplier) ? -2 : 0
     const score = countDiff + roundnessBonus
 
@@ -231,21 +338,21 @@ function calculateLabelIncrement(params: { minTick: number; rangeMax: number; ti
     }
   }
 
-  // Fallback: if no candidate produces 7-12 labels, calculate the ideal multiplier
+  // Fallback: if no candidate produces acceptable labels, calculate the ideal multiplier
   if (bestMultiplier === 0) {
-    const idealMultiplier = Math.max(1, Math.ceil(range / (LABEL_GENERATION.IDEAL_LABELS * tickSize)))
+    const idealMultiplier = Math.max(1, Math.ceil(range / (idealLabels * tickSize)))
     bestMultiplier = roundToNiceNumber(idealMultiplier)
 
     // Validate the fallback produces acceptable label count
     const fallbackLabelCount = Math.floor(range / (bestMultiplier * tickSize)) + 1
 
     // If still outside range, relax to nearest boundary
-    if (fallbackLabelCount < LABEL_GENERATION.MIN_LABELS) {
+    if (fallbackLabelCount < minLabels) {
       // Too few labels - reduce multiplier to increase label count
-      bestMultiplier = Math.max(1, Math.floor(range / ((LABEL_GENERATION.MIN_LABELS - 1) * tickSize)))
-    } else if (fallbackLabelCount > LABEL_GENERATION.MAX_LABELS) {
+      bestMultiplier = Math.max(1, Math.floor(range / ((minLabels - 1) * tickSize)))
+    } else if (fallbackLabelCount > maxLabels) {
       // Too many labels - increase multiplier to decrease label count
-      bestMultiplier = Math.max(1, Math.ceil(range / ((LABEL_GENERATION.MAX_LABELS + 1) * tickSize)))
+      bestMultiplier = Math.max(1, Math.ceil(range / ((maxLabels + 1) * tickSize)))
     }
   }
 
@@ -267,37 +374,36 @@ function calculateYAxisLevels(maxAmount: number): number[] {
 
 function calculateTickDisplayValue(params: {
   tickValue: number
-  displayMode: DisplayMode
   bidTokenInfo: BidTokenInfo
   totalSupply?: string
   auctionTokenDecimals?: number
 }): number {
-  const { tickValue, displayMode, bidTokenInfo, totalSupply, auctionTokenDecimals = 18 } = params
+  const { tickValue, bidTokenInfo, totalSupply, auctionTokenDecimals = 18 } = params
   // Convert tick value to USD (tick is already in bid token units, multiply by price)
-  const tickInUSD = tickValue * bidTokenInfo.priceFiat
+  // When priceFiat is 0 (unavailable), return 0 and let caller handle fallback display
+  const tickInUSD = bidTokenInfo.priceFiat === 0 ? 0 : tickValue * bidTokenInfo.priceFiat
 
-  if (displayMode === DisplayMode.TOKEN_PRICE) {
-    // Show as token price in USD
+  // Always show as FDV: multiply by total supply
+  if (!totalSupply) {
     return tickInUSD
-  } else {
-    // Valuation mode: multiply by total supply to get FDV
-    if (!totalSupply) {
-      return tickInUSD
-    }
-
-    // Convert totalSupply to decimal tokens using the auction token decimals
-    const totalTokens = toDecimal(totalSupply, auctionTokenDecimals)
-    return tickInUSD * totalTokens
   }
+
+  // Convert totalSupply to an approximate decimal token count (avoid Number(formatUnits(...)) precision loss)
+  const totalTokensApprox = approximateNumberFromRaw({
+    raw: BigInt(totalSupply),
+    decimals: auctionTokenDecimals,
+    significantDigits: 15,
+  })
+  return tickInUSD * totalTokensApprox
 }
 
 /**
  * Format tick value for display (exported for chart component)
  * Uses provided formatter function for localized formatting
+ * Always displays as FDV (Fully Diluted Valuation) when totalSupply is available
  */
 export function formatTickForDisplay(params: {
   tickValue: number
-  displayMode: DisplayMode
   bidTokenInfo: BidTokenInfo
   totalSupply?: string
   auctionTokenDecimals?: number
@@ -309,70 +415,235 @@ export function formatTickForDisplay(params: {
 }
 
 /**
+ * Computes cumulative sum from right to left (highest tick to lowest) using all bid entries.
+ * The bar at the lowest tick will have the total sum, decreasing rightward.
+ * This represents "demand at or below this price" - how much volume would be filled
+ * at each price point.
+ *
+ * Unlike the old computeCumulativeSum which only used windowed bars, this function
+ * uses all entries to ensure cumulative volumes include bids outside the visible window.
+ */
+function computeCumulativeBarsFromEntries({
+  bars,
+  entries,
+  tickSize,
+  excludedVolumeAboveWindow = 0,
+}: {
+  bars: ChartBarData[]
+  entries: { tick: number; amount: number }[]
+  tickSize: number
+  excludedVolumeAboveWindow?: number
+}): ChartBarData[] {
+  // Sort bars descending by tick (right-to-left cumulation)
+  const sortedBars = [...bars].sort((a, b) => b.tick - a.tick)
+  // Sort entries descending by tick
+  const sortedEntries = [...entries].sort((a, b) => b.tick - a.tick)
+  const tolerance = tickSize * TOLERANCE.TICK_COMPARISON
+
+  // Start with excluded volume from early cap (bids above MAX_RENDERABLE_BARS cap)
+  let cumulative = excludedVolumeAboveWindow
+  let entryIndex = 0
+  const result: ChartBarData[] = []
+
+  for (const bar of sortedBars) {
+    // Add all entries at or above this bar's tick to cumulative
+    while (entryIndex < sortedEntries.length && sortedEntries[entryIndex].tick >= bar.tick - tolerance) {
+      cumulative += sortedEntries[entryIndex].amount
+      entryIndex += 1
+    }
+    result.push({ ...bar, amount: cumulative })
+  }
+
+  // Return in original tick order (ascending)
+  return result.sort((a, b) => a.tick - b.tick)
+}
+
+/**
  * Generate chart data from raw bid distribution data
  */
-export function generateChartData(params: {
+export function generateChartData({
+  bidData,
+  bidTokenInfo,
+  totalSupply,
+  auctionTokenDecimals = 18,
+  clearingPrice,
+  floorPrice,
+  tickSize,
+  formatter,
+  chartMode = 'distribution',
+  excludedVolume,
+  extendedMaxTick,
+}: {
   bidData: BidDistributionData
   bidTokenInfo: BidTokenInfo
-  displayMode: DisplayMode
   totalSupply?: string
   auctionTokenDecimals?: number
   clearingPrice: string
+  floorPrice: string
   tickSize: string
   formatter: (amount: number) => string
+  chartMode?: ChartMode
+  /** Volume from bids excluded due to MAX_RENDERABLE_BARS cap (raw string in bid token wei) */
+  excludedVolume?: string | null
+  /** Optional extended max tick (decimal form) for rendering out-of-range user bids */
+  extendedMaxTick?: number | null
 }): ProcessedChartData {
-  const {
-    bidData,
-    bidTokenInfo,
-    displayMode,
-    totalSupply,
-    auctionTokenDecimals = 18,
-    clearingPrice,
-    tickSize,
-    formatter,
-  } = params
-
-  // Convert tick_size to decimal
-  const tickSizeDecimal = toDecimal(tickSize, bidTokenInfo.decimals)
+  // Convert tick_size from Q96 to decimal (prices are in Q96 format from contract)
+  const tickSizeDecimal = fromQ96ToDecimalWithTokenDecimals({
+    q96Value: tickSize,
+    bidTokenDecimals: bidTokenInfo.decimals,
+    auctionTokenDecimals,
+  })
 
   // Convert map entries to sorted array using BigInt-safe conversion
+  // Tick prices are in Q96 format, amounts are in token smallest units (wei)
+  // Preserve original Q96 strings for precise matching in click handlers
+  // When priceFiat is available, convert to USD; otherwise use bid token amounts for chart display
   const entries = Array.from(bidData.entries())
-    .map(([tick, amount]) => ({
-      tick: toDecimal(tick, bidTokenInfo.decimals),
-      amount: toDecimal(amount, bidTokenInfo.decimals) * bidTokenInfo.priceFiat, // Convert to USD
-    }))
+    .map(([tickQ96, amount]) => {
+      const amountInBidToken = toDecimal(amount, bidTokenInfo.decimals)
+      return {
+        tick: fromQ96ToDecimalWithTokenDecimals({
+          q96Value: tickQ96,
+          bidTokenDecimals: bidTokenInfo.decimals,
+          auctionTokenDecimals,
+        }),
+        tickQ96, // Preserve original Q96 string for precision
+        amount: bidTokenInfo.priceFiat > 0 ? amountInBidToken * bidTokenInfo.priceFiat : amountInBidToken,
+      }
+    })
     .sort((a, b) => a.tick - b.tick)
 
-  if (entries.length === 0) {
-    // Derive maxTick from tickSize: maxTick = minTick + (MIN_BARS - 1) * tickSize ensures exactly 20 bars
-    const emptyMaxTick = (CHART_CONSTRAINTS.MIN_BARS - 1) * tickSizeDecimal
+  // Convert prices from Q96 to decimal (prices are in Q96 format from contract)
+  const clearingPriceDecimal = fromQ96ToDecimalWithTokenDecimals({
+    q96Value: clearingPrice,
+    bidTokenDecimals: bidTokenInfo.decimals,
+    auctionTokenDecimals,
+  })
+  const floorPriceDecimal = fromQ96ToDecimalWithTokenDecimals({
+    q96Value: floorPrice,
+    bidTokenDecimals: bidTokenInfo.decimals,
+    auctionTokenDecimals,
+  })
 
-    return {
-      bars: [],
-      yAxisLevels: [...DEFAULT_Y_AXIS_LEVELS],
-      minTick: 0,
-      maxTick: emptyMaxTick,
-      maxAmount: 0,
-      concentration: null,
+  const minTickFromData = Math.min(floorPriceDecimal, entries[0]?.tick ?? floorPriceDecimal)
+  const maxTickFromEntries = Math.max(entries[entries.length - 1]?.tick ?? floorPriceDecimal, floorPriceDecimal)
+
+  const minTickIndexAvailable = getTickIndex({
+    tick: minTickFromData,
+    floorTick: floorPriceDecimal,
+    tickSize: tickSizeDecimal,
+  })
+  const maxTickIndexAvailable = getTickIndex({
+    tick: maxTickFromEntries,
+    floorTick: floorPriceDecimal,
+    tickSize: tickSizeDecimal,
+  })
+
+  const clearingLowerIndex = getTickIndex({
+    tick: clearingPriceDecimal,
+    floorTick: floorPriceDecimal,
+    tickSize: tickSizeDecimal,
+    rounding: 'floor',
+  })
+  const firstAboveClearingIndex = clearingLowerIndex + 1
+  const minRequiredMaxIndex = firstAboveClearingIndex + (CHART_CONSTRAINTS.MIN_TICKS_ABOVE_CLEARING_PRICE - 1)
+
+  const totalTickCount = Math.max(1, maxTickIndexAvailable - minTickIndexAvailable + 1)
+
+  let windowMinIndex = minTickIndexAvailable
+  let windowMaxIndex = Math.max(maxTickIndexAvailable, minRequiredMaxIndex)
+
+  if (totalTickCount > MAX_RENDERABLE_BARS) {
+    const maxBelowAllowed = Math.max(0, MAX_RENDERABLE_BARS - CHART_CONSTRAINTS.MIN_TICKS_ABOVE_CLEARING_PRICE)
+    const desiredBelowTicks = Math.min(CHART_CONSTRAINTS.PREFERRED_TICKS_BELOW_CLEARING_PRICE, maxBelowAllowed)
+    const availableBelowTicks = Math.max(0, clearingLowerIndex - minTickIndexAvailable + 1)
+    const belowTickCount = Math.min(desiredBelowTicks, availableBelowTicks)
+
+    windowMinIndex = clearingLowerIndex - Math.max(0, belowTickCount - 1)
+    windowMaxIndex = windowMinIndex + (MAX_RENDERABLE_BARS - 1)
+
+    if (windowMaxIndex < minRequiredMaxIndex) {
+      windowMaxIndex = minRequiredMaxIndex
+      windowMinIndex = windowMaxIndex - (MAX_RENDERABLE_BARS - 1)
     }
   }
 
-  // Convert clearingPrice to decimal
-  const clearingPriceDecimal = toDecimal(clearingPrice, bidTokenInfo.decimals)
+  // Store the original max tick from data before any extension
+  const maxTickFromDataValue = getTickFromIndex({
+    index: windowMaxIndex,
+    floorTick: floorPriceDecimal,
+    tickSize: tickSizeDecimal,
+  })
 
-  // Rule 1 & 5: Use clearingPrice as minTick if it's lower than the lowest bid tick
-  let minTick = entries[0].tick
-  if (clearingPriceDecimal < minTick) {
-    minTick = clearingPriceDecimal
+  // If extendedMaxTick is provided and beyond current range, extend windowMaxIndex
+  if (extendedMaxTick && extendedMaxTick > maxTickFromDataValue) {
+    const extendedMaxIndex = getTickIndex({
+      tick: extendedMaxTick,
+      floorTick: floorPriceDecimal,
+      tickSize: tickSizeDecimal,
+    })
+    windowMaxIndex = Math.max(windowMaxIndex, extendedMaxIndex)
   }
 
-  const maxTickFromData = entries[entries.length - 1].tick
-  const maxAmount = Math.max(...entries.map((e) => e.amount))
+  const windowMinTick = getTickFromIndex({
+    index: windowMinIndex,
+    floorTick: floorPriceDecimal,
+    tickSize: tickSizeDecimal,
+  })
+  const windowMaxTick = getTickFromIndex({
+    index: windowMaxIndex,
+    floorTick: floorPriceDecimal,
+    tickSize: tickSizeDecimal,
+  })
+
+  const effectiveEntries = entries.filter((entry) => entry.tick >= windowMinTick && entry.tick <= windowMaxTick)
+
+  // Calculate excluded volume in display units (USD or bid token amount)
+  const excludedVolumeNumber = excludedVolume
+    ? toDecimal(excludedVolume, bidTokenInfo.decimals) * (bidTokenInfo.priceFiat > 0 ? bidTokenInfo.priceFiat : 1)
+    : 0
+
+  // Calculate total bid volume from ALL entries (not just windowed ones) plus excluded volume
+  const totalBidVolume = entries.reduce((sum, entry) => sum + entry.amount, 0) + excludedVolumeNumber
+
+  if (effectiveEntries.length === 0) {
+    // Use floorPrice as the anchor for the tick grid even when there are no bids
+    const emptyMaxIndex = Math.max(minRequiredMaxIndex, CHART_CONSTRAINTS.MIN_BARS - 1)
+    const emptyMaxTick = getTickFromIndex({
+      index: emptyMaxIndex,
+      floorTick: floorPriceDecimal,
+      tickSize: tickSizeDecimal,
+    })
+    return {
+      bars: [],
+      yAxisLevels: [...DEFAULT_Y_AXIS_LEVELS],
+      minTick: getTickFromIndex({
+        index: Math.min(0, windowMinIndex),
+        floorTick: floorPriceDecimal,
+        tickSize: tickSizeDecimal,
+      }),
+      maxTick: emptyMaxTick,
+      maxAmount: 0,
+      totalBidVolume,
+      concentration: null,
+      maxTickFromData: maxTickFromDataValue,
+    }
+  }
+
+  // Use floorPrice as tick grid anchor (at tick boundary). clearingPrice is for display only (may be between ticks)
+  let minTick = windowMinTick
+  if (effectiveEntries.length > 0 && effectiveEntries[0].tick < minTick) {
+    minTick = effectiveEntries[0].tick
+  }
+
+  const maxTickInWindow = Math.max(windowMaxTick, effectiveEntries[effectiveEntries.length - 1].tick)
+  const maxAmount = Math.max(...effectiveEntries.map((e) => e.amount))
 
   // Rule 3 & 6 & 7: Calculate bar step and range
   const { barStep, rangeMax, totalBars } = calculateBarStepAndRange({
     minTick,
-    maxTick: maxTickFromData,
+    maxTick: maxTickInWindow,
     tickSize: tickSizeDecimal,
   })
 
@@ -385,7 +656,12 @@ export function generateChartData(params: {
 
   // Build bars array - one bar per tick_size step
   const bars: ChartBarData[] = []
-  const bidLookup = new Map(entries.map((e) => [e.tick, e.amount]))
+  // Store both amount and Q96 string for precise matching
+  const bidLookup = new Map(effectiveEntries.map((e) => [e.tick, { amount: e.amount, tickQ96: e.tickQ96 }]))
+
+  // Calculate base tick offset: how many ticks from floorPrice to minTick
+  // This is needed to correctly calculate Q96 for ticks that don't have bid data
+  const floorToMinOffset = Math.round((minTick - floorPriceDecimal) / tickSizeDecimal)
 
   for (let i = 0; i < totalBars; i++) {
     const currentTick = minTick + i * barStep
@@ -395,9 +671,9 @@ export function generateChartData(params: {
     let matchedEntry = bidLookup.get(currentTick)
     if (!matchedEntry) {
       // Check for near matches
-      for (const [tick, amount] of bidLookup.entries()) {
+      for (const [tick, data] of bidLookup.entries()) {
         if (Math.abs(tick - currentTick) < tolerance) {
-          matchedEntry = amount
+          matchedEntry = data
           break
         }
       }
@@ -405,26 +681,53 @@ export function generateChartData(params: {
 
     const displayValue = calculateTickDisplayValue({
       tickValue: currentTick,
-      displayMode,
       bidTokenInfo,
       totalSupply,
       auctionTokenDecimals,
     })
 
+    // Use matched Q96 if available, otherwise calculate from floor price
+    const tickQ96 =
+      matchedEntry?.tickQ96 ??
+      calculateTickQ96({
+        basePriceQ96: floorPrice,
+        tickSizeQ96: tickSize,
+        tickOffset: floorToMinOffset + i,
+      })
+
     bars.push({
       tick: currentTick,
+      tickQ96,
       tickDisplay: formatter(displayValue),
-      amount: matchedEntry ?? 0,
+      amount: matchedEntry?.amount ?? 0,
       index: i,
     })
   }
 
-  const yAxisLevels = calculateYAxisLevels(maxAmount)
+  // Apply cumulative sum transformation for demand chart mode
+  // Use all entries (not just windowed bars) to ensure cumulative volumes include out-of-window bids
+  const finalBars =
+    chartMode === 'demand'
+      ? computeCumulativeBarsFromEntries({
+          bars,
+          entries,
+          tickSize: tickSizeDecimal,
+          excludedVolumeAboveWindow: excludedVolumeNumber,
+        })
+      : bars
+
+  // Recalculate maxAmount after transformation (for Y-axis scaling)
+  const finalMaxAmount = chartMode === 'demand' ? Math.max(...finalBars.map((b) => b.amount), 0) : maxAmount
+
+  const yAxisLevels = calculateYAxisLevels(finalMaxAmount)
 
   // Calculate bid concentration (only for bids at or above clearing price)
+  // Note: For demand mode, concentration is not shown, but we still compute it
+  // for potential use in tooltips or other features
   const concentration = calculateBidConcentration({
     bars: bars.map((bar) => ({
       tick: bar.tick,
+      tickQ96: bar.tickQ96,
       amount: bar.amount,
       index: bar.index,
     })),
@@ -432,13 +735,15 @@ export function generateChartData(params: {
   })
 
   return {
-    bars,
+    bars: finalBars,
     yAxisLevels,
     minTick,
     maxTick: rangeMax,
-    maxAmount,
-    labelIncrement, // Export for chart component to use
+    maxAmount: finalMaxAmount,
+    totalBidVolume,
+    labelIncrement,
     concentration,
+    maxTickFromData: maxTickFromDataValue,
   }
 }
 
@@ -456,39 +761,94 @@ export function calculateInitialVisibleRange(params: {
   tickSize: number
   initialTickCount?: number
 }): { from: number; to: number } {
-  const { clearingPrice, tickSize, initialTickCount = 20 } = params
+  const { clearingPrice, minTick, tickSize, initialTickCount = 20 } = params
 
-  // Start from clearing price
-  const startTick = clearingPrice
+  const maxTick = params.maxTick
 
-  // Calculate end tick by adding initialTickCount ticks
-  const endTick = startTick + initialTickCount * tickSize
+  // If clearing price is outside the data range, anchor the initial view to the data itself.
+  // Setting a visible range that contains *no data points* can cause lightweight-charts to throw
+  // internally during visible-range recalculations (we've seen "Value is null").
+  const canAnchorToClearingPrice =
+    Number.isFinite(clearingPrice) &&
+    Number.isFinite(minTick) &&
+    Number.isFinite(maxTick) &&
+    clearingPrice >= minTick &&
+    clearingPrice <= maxTick
 
-  // Make sure we don't exceed maxTick (but allow exceeding if needed to show initial count)
-  // The chart will handle empty bars beyond the data range
-  const finalEndTick = endTick
+  const anchorTick = canAnchorToClearingPrice ? clearingPrice : minTick
+
+  // Start one tick before the anchor when possible to provide padding on initial render.
+  const safeTickSize = Number.isFinite(tickSize) && tickSize > 0 ? tickSize : 0
+  const startTick = safeTickSize > 0 ? Math.max(minTick, anchorTick - safeTickSize) : minTick
+
+  // Calculate end tick by adding initialTickCount ticks and clamp to the available data range
+  const endTick = safeTickSize > 0 ? startTick + initialTickCount * safeTickSize : maxTick
+  const clampedEndTick = Number.isFinite(maxTick) ? Math.min(maxTick, endTick) : endTick
+
+  // Ensure a non-zero range (required by lightweight-charts). If maxTick is too close, allow a minimal
+  // window above startTick so the range still intersects the data.
+  const minWindow = safeTickSize > 0 ? safeTickSize : 1
+  const to = clampedEndTick > startTick ? clampedEndTick : startTick + minWindow
+
+  return { from: startTick, to }
+}
+
+/**
+ * Calculate padded range around a concentration window.
+ */
+export function getPaddedConcentrationRange(params: {
+  startTick: number
+  endTick: number
+  minTick: number
+  maxTick: number
+  tickSizeDecimal: number
+  beforePercentOfFullRange: number
+  afterPercentOfFullRange: number
+  minPadTicks: number
+}): { from: number; to: number } {
+  const {
+    startTick,
+    endTick,
+    minTick,
+    maxTick,
+    tickSizeDecimal,
+    beforePercentOfFullRange,
+    afterPercentOfFullRange,
+    minPadTicks,
+  } = params
+
+  // Full range expressed as ticks, clamped to at least 1 to keep padding sane.
+  const fullTickCount = Math.max(1, Math.round((maxTick - minTick) / tickSizeDecimal))
+  const padBeforeTicks = Math.max(minPadTicks, Math.round(fullTickCount * beforePercentOfFullRange))
+  const padAfterTicks = Math.max(minPadTicks, Math.round(fullTickCount * afterPercentOfFullRange))
+
+  const paddedFrom = startTick - padBeforeTicks * tickSizeDecimal
+  const paddedTo = endTick + padAfterTicks * tickSizeDecimal
 
   return {
-    from: startTick,
-    to: Math.max(finalEndTick, startTick + tickSize), // Ensure at least one tick is shown
+    from: Math.max(minTick, paddedFrom),
+    to: Math.min(maxTick, paddedTo),
   }
 }
 
 /**
  * Calculate label increment dynamically based on current visible range
  * Reuses the existing calculateLabelIncrement logic but applies it to the visible range
+ * @param targetMaxLabels - Optional target max labels for responsive layouts (smaller screens use fewer labels)
  */
 export function calculateDynamicLabelIncrement(params: {
   visibleFrom: number
   visibleTo: number
   tickSize: number
+  targetMaxLabels?: number
 }): number {
-  const { visibleFrom, visibleTo, tickSize } = params
+  const { visibleFrom, visibleTo, tickSize, targetMaxLabels } = params
 
   // Use the existing label increment calculation logic
   return calculateLabelIncrement({
     minTick: visibleFrom,
     rangeMax: visibleTo,
     tickSize,
+    targetMaxLabels,
   })
 }

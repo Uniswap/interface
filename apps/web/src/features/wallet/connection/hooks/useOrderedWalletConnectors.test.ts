@@ -1,14 +1,14 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { createAccountsStoreGetters } from 'features/accounts/store/getters'
-import { useAccountsStore } from 'features/accounts/store/hooks'
-import { ExternalWallet } from 'features/accounts/store/types'
-import { useOrderedWallets } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
-import { mocked } from 'test-utils/mocked'
-import { renderHook } from 'test-utils/render'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { createAccountsStoreGetters } from '~/features/accounts/store/getters'
+import { useAccountsStore } from '~/features/accounts/store/hooks'
+import { ExternalWallet } from '~/features/accounts/store/types'
+import { useOrderedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
+import { mocked } from '~/test-utils/mocked'
+import { renderHook } from '~/test-utils/render'
 
 // biome-ignore lint/suspicious/noVar: Testing variable hoisting behavior requires var
 var mockIsMobileWeb = false
@@ -22,15 +22,15 @@ vi.mock('utilities/src/platform', async () => {
   }
 })
 
-vi.mock('features/accounts/store/hooks', () => ({
+vi.mock('~/features/accounts/store/hooks', () => ({
   useAccountsStore: vi.fn(),
   useActiveAddresses: vi.fn(() => ({ evmAddress: undefined, svmAddress: undefined })),
   useActiveWallet: vi.fn(() => undefined),
   useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),
 }))
 
-vi.mock('components/Web3Provider/constants', async () => {
-  const actual = await vi.importActual('components/Web3Provider/constants')
+vi.mock('~/components/Web3Provider/constants', async () => {
+  const actual = await vi.importActual('~/components/Web3Provider/constants')
   return {
     ...actual,
     useRecentConnectorId: vi.fn(),

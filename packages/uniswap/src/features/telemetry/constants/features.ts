@@ -70,3 +70,9 @@ export enum LiquidityEventName {
   TransactionModifiedInWallet = 'Transaction Modified in Wallet',
   PriceDiscrepancyChecked = 'Price Discrepancy Checked',
 }
+
+export enum AuctionEventName {
+  AuctionWithdrawSubmitted = 'Auction Withdraw Submitted',
+  AuctionBidSubmitted = 'Auction Bid Submitted',
+  AuctionBidInputted = 'Auction Bid Inputted',
+}

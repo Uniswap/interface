@@ -1,7 +1,6 @@
 import { Link } from 'react-router'
 import { ColorTokens, Flex, GeneratedIcon, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 
 export function SettingsItem({
   Icon,
@@ -13,6 +12,7 @@ export function SettingsItem({
   count,
   hideChevron = false,
   RightIcon,
+  testID,
 }: {
   Icon: GeneratedIcon
   title: string
@@ -24,6 +24,7 @@ export function SettingsItem({
   themeProps?: { color?: string; hoverColor?: string }
   url?: string
   count?: number
+  testID?: string
 }): JSX.Element {
   const colors = useSporeColors()
   const hoverColor = themeProps?.hoverColor ?? colors.surface2.val
@@ -41,6 +42,7 @@ export function SettingsItem({
       justifyContent="space-between"
       px="$spacing12"
       py="$spacing8"
+      testID={testID}
       onPress={onPress}
     >
       <Flex row justifyContent="space-between" flexGrow={1}>
@@ -64,9 +66,7 @@ export function SettingsItem({
       {RightIcon ? (
         <RightIcon color="$neutral3" size="$icon.24" strokeWidth={iconProps?.strokeWidth ?? undefined} />
       ) : (
-        !hideChevron && (
-          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
-        )
+        !hideChevron && <RotatableChevron color="$neutral3" direction="end" size="$icon.20" />
       )}
     </TouchableArea>
   )

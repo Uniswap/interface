@@ -95,6 +95,8 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Solana
     case GraphQLApi.Chain.Soneium:
       return UniverseChainId.Soneium
+    case GraphQLApi.Chain.Xlayer:
+      return UniverseChainId.XLayer
     case GraphQLApi.Chain.AstrochainSepolia:
       return UniverseChainId.UnichainSepolia
     case GraphQLApi.Chain.Worldchain:
@@ -140,7 +142,10 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Unichain
     case GraphQLApi.Chain.Soneium.toLowerCase():
       return UniverseChainId.Soneium
+    case GraphQLApi.Chain.Xlayer.toLowerCase():
+      return UniverseChainId.XLayer
     case GraphQLApi.Chain.AstrochainSepolia.toLowerCase():
+    case 'unichain_sepolia':
       return UniverseChainId.UnichainSepolia
     case GraphQLApi.Chain.Worldchain.toLowerCase():
       return UniverseChainId.WorldChain
@@ -181,8 +186,10 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
       return GraphQLApi.Chain.Unichain.toLowerCase()
     case UniverseChainId.Soneium:
       return GraphQLApi.Chain.Soneium.toLowerCase()
+    case UniverseChainId.XLayer:
+      return GraphQLApi.Chain.Xlayer.toLowerCase()
     case UniverseChainId.UnichainSepolia:
-      return GraphQLApi.Chain.AstrochainSepolia.toLowerCase()
+      return 'unichain_sepolia'
     case UniverseChainId.WorldChain:
       return GraphQLApi.Chain.Worldchain.toLowerCase()
     case UniverseChainId.Zksync:
@@ -286,6 +293,16 @@ function getDefaultChainId({
 /** Returns all stablecoins for a given chainId. */
 export function getStablecoinsForChain(chainId: UniverseChainId): Token[] {
   return getChainInfo(chainId).tokens.stablecoins
+}
+
+/** Checks if a token address is a stablecoin on the given chain. */
+export function isStablecoinAddress(chainId: UniverseChainId, tokenAddress: string): boolean {
+  try {
+    const stablecoins = getStablecoinsForChain(chainId)
+    return stablecoins.some((stablecoin) => stablecoin.address.toLowerCase() === tokenAddress.toLowerCase())
+  } catch {
+    return false
+  }
 }
 
 /** Returns the primary stablecoin for a given chainId. */

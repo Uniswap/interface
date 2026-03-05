@@ -1,0 +1,154 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PortfolioHeader > connected user > should render header for own wallet 1`] = `
+<div>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_position-_platformweb_sticky _top-_platformweb_72px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _mt-t-space-spa94665593 _pt-t-space-spa1360334076 _zIndex-t-zIndex-he2989072 _gap-t-space-spa1360333989 _transition-gap200mseas31845"
+      data-testid="portfolio-header"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334076"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080 _justifyContent-space-betwe3241 _alignItems-center"
+        >
+          <div
+            data-compact="false"
+            data-testid="address-display"
+          >
+            Address Display Mock
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
+          >
+            <div
+              data-testid="share-button"
+            >
+              Share Button Mock
+            </div>
+            <div
+              data-testid="network-filter"
+            >
+              Network Filter Mock
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        data-testid="portfolio-tabs"
+      >
+        Portfolio Tabs Mock
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</div>
+`;
+
+exports[`PortfolioHeader > connected user > should render header with scroll position 1`] = `
+<div>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_position-_platformweb_sticky _top-_platformweb_72px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _mt-t-space-spa94665593 _pt-t-space-spa1360334076 _zIndex-t-zIndex-he2989072 _gap-t-space-spa1360333989 _transition-gap200mseas31845"
+      data-testid="portfolio-header"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334076"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080 _justifyContent-space-betwe3241 _alignItems-center"
+        >
+          <div
+            data-compact="false"
+            data-testid="address-display"
+          >
+            Address Display Mock
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
+          >
+            <div
+              data-testid="share-button"
+            >
+              Share Button Mock
+            </div>
+            <div
+              data-testid="network-filter"
+            >
+              Network Filter Mock
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        data-testid="portfolio-tabs"
+      >
+        Portfolio Tabs Mock
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</div>
+`;
+
+exports[`PortfolioHeader > external wallet view > should render header with share button for external wallet 1`] = `
+<div>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_position-_platformweb_sticky _top-_platformweb_72px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _mt-t-space-spa94665593 _pt-t-space-spa1360334076 _zIndex-t-zIndex-he2989072 _gap-t-space-spa1360333989 _transition-gap200mseas31845"
+      data-testid="portfolio-header"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334076"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080 _justifyContent-space-betwe3241 _alignItems-center"
+        >
+          <div
+            data-compact="false"
+            data-testid="address-display"
+          >
+            Address Display Mock
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593 _alignItems-center"
+          >
+            <div
+              data-testid="share-button"
+            >
+              Share Button Mock
+            </div>
+            <div
+              data-testid="network-filter"
+            >
+              Network Filter Mock
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        data-testid="portfolio-tabs"
+      >
+        Portfolio Tabs Mock
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</div>
+`;

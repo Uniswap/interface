@@ -1,5 +1,5 @@
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
-import { getCanonicalUrl, getCurrentPageFromLocation } from 'utils/urlRoutes'
+import { getCanonicalUrl, getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 describe('getCurrentPageFromLocation', () => {
   it('should return LANDING_PAGE when location pathname is "/"', () => {

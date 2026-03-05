@@ -1,10 +1,11 @@
 import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
-import { createExpectSingleTransaction } from 'playwright/anvil/transactions'
-import { expect, getTest } from 'playwright/fixtures'
-import { DEFAULT_TEST_GAS_LIMIT, stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
-import { Mocks } from 'playwright/mocks/mocks'
+import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { createExpectSingleTransaction } from '~/playwright/anvil/transactions'
+import { expect, getTest } from '~/playwright/fixtures'
+import { stubLiquidityServiceEndpoint } from '~/playwright/fixtures/liquidityService'
+import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
+import { Mocks } from '~/playwright/mocks/mocks'
 
 const test = getTest({ withAnvil: true })
 
@@ -27,13 +28,9 @@ test.describe(
         options: { blocks: 2 },
       })
 
-      await stubTradingApiEndpoint({
+      await stubLiquidityServiceEndpoint({
         page,
-        endpoint: uniswapUrls.tradingApiPaths.migrate,
-        modifyResponseData: (data) => {
-          data.migrate.gasLimit = DEFAULT_TEST_GAS_LIMIT
-          return data
-        },
+        endpoint: LiquidityService.methods.migrateV3ToV4LPPosition,
       })
       await page.route(
         `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,
@@ -59,17 +56,9 @@ test.describe(
         options: { blocks: 2 },
       })
 
-      await stubTradingApiEndpoint({
+      await stubLiquidityServiceEndpoint({
         page,
-        endpoint: uniswapUrls.tradingApiPaths.migrate,
-        modifyResponseData: (data) => {
-          try {
-            data.migrate.gasLimit = DEFAULT_TEST_GAS_LIMIT
-            return data
-          } catch {
-            return data
-          }
-        },
+        endpoint: LiquidityService.methods.migrateV3ToV4LPPosition,
       })
       await page.route(
         `${uniswapUrls.apiBaseUrlV2}/${getPosition.service.typeName}/${getPosition.name}`,

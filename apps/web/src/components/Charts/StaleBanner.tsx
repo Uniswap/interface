@@ -1,13 +1,12 @@
-import { ChartTooltip } from 'components/Charts/ChartTooltip'
-import { MissingDataBars } from 'components/Table/icons'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { ChartTooltip } from '~/components/Charts/ChartTooltip'
+import { MissingDataBars } from '~/components/Table/icons'
 
 const StaleBannerWrapper = styled(ChartTooltip, {
   borderRadius: '$rounded16',
   left: 'unset',
   top: 'unset',
-  right: '$spacing12',
   bottom: '$spacing40',
   p: '$spacing12',
   backgroundColor: '$surface4',

@@ -1,7 +1,9 @@
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SignerInfo } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { createFlashbotsRpcClient } from 'uniswap/src/features/providers/FlashbotsRpcClient'
+import { buildFlashbotsUrl, SignerInfo } from 'uniswap/src/features/providers/FlashbotsCommon'
+import { createFlashbotsTransport } from 'uniswap/src/features/providers/FlashbotsRpcClient'
+import { createObservableTransport } from 'uniswap/src/features/providers/observability/createObservableTransport'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
 import { logger } from 'utilities/src/logger/logger'
 import { createPublicClient, defineChain, http, PublicClient, walletActions } from 'viem'
@@ -35,18 +37,36 @@ export function createViemClient({
 
     let client
 
+    const observer = getRpcObserver()
+
     // Check if we should use Flashbots
     if (rpcConfig.shouldUseFlashbots && rpcConfig.flashbotsConfig) {
-      client = createFlashbotsRpcClient({
-        chain: viemChain,
+      const flashbotsUrl = buildFlashbotsUrl({
+        address: signerInfo?.address,
         refundPercent: rpcConfig.flashbotsConfig.refundPercent,
-        signerInfo,
       })
+      const baseFlashbotsTransport = createFlashbotsTransport({
+        url: flashbotsUrl,
+        signerInfo,
+        refundPercent: rpcConfig.flashbotsConfig.refundPercent,
+      })
+      client = createPublicClient({
+        chain: viemChain,
+        transport: createObservableTransport({
+          baseTransportFactory: baseFlashbotsTransport,
+          observer,
+          meta: { chainId, url: flashbotsUrl },
+        }),
+      }).extend(walletActions)
     } else {
       // Create a standard public client
       client = createPublicClient({
         chain: viemChain,
-        transport: http(rpcConfig.rpcUrl),
+        transport: createObservableTransport({
+          baseTransportFactory: http(rpcConfig.rpcUrl),
+          observer,
+          meta: { chainId, url: rpcConfig.rpcUrl },
+        }),
       }).extend(walletActions)
     }
 

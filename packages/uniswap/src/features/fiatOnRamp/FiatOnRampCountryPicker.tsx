@@ -50,7 +50,7 @@ export function FiatOnRampCountryPicker({
               />
             )}
           </Flex>
-          <RotatableChevron color="$neutral2" direction="down" width={iconSizes.icon20} />
+          <RotatableChevron color="$neutral2" direction="down" size="$icon.20" />
         </Flex>
       </TouchableArea>
     </Trace>

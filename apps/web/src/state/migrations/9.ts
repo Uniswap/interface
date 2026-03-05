@@ -1,6 +1,6 @@
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
 import { PersistState } from 'redux-persist'
-import { ListsState } from 'state/lists/types'
+import { DEFAULT_INACTIVE_LIST_URLS } from '~/constants/lists'
+import { ListsState } from '~/state/lists/types'
 
 export type PersistAppStateV9 = {
   _persist: PersistState

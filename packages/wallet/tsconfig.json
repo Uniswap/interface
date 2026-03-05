@@ -1,21 +1,24 @@
 {
   "extends": "../../config/tsconfig/app.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "env.d.ts"],
   "references": [
     {
-      "path": "../utilities"
-    },
-    {
-      "path": "../uniswap"
-    },
-    {
       "path": "../ui"
+    },
+    {
+      "path": "../sessions"
     },
     {
       "path": "../gating"
     },
     {
       "path": "../api"
+    },
+    {
+      "path": "../uniswap"
+    },
+    {
+      "path": "../utilities"
     }
   ],
   "compilerOptions": {

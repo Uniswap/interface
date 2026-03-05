@@ -1,14 +1,4 @@
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { EmptyWalletCards } from 'components/emptyWallet/EmptyWalletCards'
-import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
-import { OverviewActionTiles } from 'pages/Portfolio/Overview/ActionTiles'
-import { OVERVIEW_RIGHT_COLUMN_WIDTH } from 'pages/Portfolio/Overview/constants'
-import { useIsPortfolioZero } from 'pages/Portfolio/Overview/hooks/useIsPortfolioZero'
-import { PortfolioOverviewTables } from 'pages/Portfolio/Overview/OverviewTables'
-import { PortfolioChart } from 'pages/Portfolio/Overview/PortfolioChart'
-import { OverviewStatsTiles } from 'pages/Portfolio/Overview/StatsTiles'
-import { checkBalanceDiffWithinRange } from 'pages/Portfolio/Overview/utils/checkBalanceDiffWithinRange'
 import { memo, useMemo, useState } from 'react'
 import { Flex, Separator, styled, useMedia } from 'ui/src'
 import { useGetPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/rest/getPortfolioChart'
@@ -17,7 +7,17 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
+import { EmptyWalletCards } from '~/components/emptyWallet/EmptyWalletCards'
+import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { OverviewActionTiles } from '~/pages/Portfolio/Overview/ActionTiles'
+import { OVERVIEW_RIGHT_COLUMN_WIDTH } from '~/pages/Portfolio/Overview/constants'
+import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
+import { PortfolioOverviewTables } from '~/pages/Portfolio/Overview/OverviewTables'
+import { PortfolioChart } from '~/pages/Portfolio/Overview/PortfolioChart'
+import { OverviewStatsTiles } from '~/pages/Portfolio/Overview/StatsTiles'
+import { checkBalanceDiffWithinRange } from '~/pages/Portfolio/Overview/utils/checkBalanceDiffWithinRange'
+import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
 
 const BALANCE_PERCENT_DIFFERENCE_THRESHOLD = 2
 
@@ -39,7 +39,7 @@ const ActionsAndStatsContainer = styled(Flex, {
 export const PortfolioOverview = memo(function PortfolioOverview() {
   const media = useMedia()
   const isFullWidth = media.xl
-  const { chainId } = usePortfolioRoutes()
+  const { chainId, isExternalWallet } = usePortfolioRoutes()
   const portfolioAddresses = usePortfolioAddresses()
   const { chains: allChainIds } = useEnabledChains()
 
@@ -97,7 +97,7 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
   })
 
   return (
-    <Trace logImpression page={InterfacePageName.PortfolioOverviewPage}>
+    <Trace logImpression page={InterfacePageName.PortfolioOverviewPage} properties={{ isExternal: isExternalWallet }}>
       <Flex gap="$spacing40" mb="$spacing40">
         <Flex row gap="$spacing40" $xl={{ flexDirection: 'column' }}>
           <Trace section={SectionName.PortfolioOverviewTab} element={ElementName.PortfolioChart}>

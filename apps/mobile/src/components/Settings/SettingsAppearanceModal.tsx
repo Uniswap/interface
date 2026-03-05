@@ -5,9 +5,9 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
 import { Check, Contrast, Moon, Sun } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
+import { AppearanceSettingType, setSelectedAppearanceSettings } from 'uniswap/src/features/appearance/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import { AppearanceSettingType, setSelectedAppearanceSettings } from 'wallet/src/features/appearance/slice'
 
 export function SettingsAppearanceModal(): JSX.Element {
   const { t } = useTranslation()

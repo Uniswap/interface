@@ -1,12 +1,26 @@
-import { createAccountsStoreGetters } from 'features/accounts/store/getters'
-import type { ExternalConnector, ExternalWallet, WebAccountsData } from 'features/accounts/store/types'
 import { Account } from 'uniswap/src/features/accounts/store/types/Account'
 import { AccessPattern, ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
 import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Session'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
+import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { createAccountsStoreGetters } from '~/features/accounts/store/getters'
+import type { ExternalConnector, ExternalWallet, WebAccountsData } from '~/features/accounts/store/types'
 
 describe('Web Accounts Store Getters', () => {
+  const createMockCAIP25Session = (): CAIP25Session => ({
+    sessionId: 'mock-session-id',
+    scopes: {} as CAIP25Session['scopes'],
+    properties: {
+      expiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      walletInfo: {
+        uuid: 'mock-uuid',
+        name: 'Mock Wallet',
+        rdns: 'com.wallet.mock',
+      },
+    },
+  })
+
   const createMockEVMConnector = (
     overrides: Partial<ExternalConnector<Platform.EVM>> = {},
   ): ExternalConnector<Platform.EVM> =>
@@ -24,6 +38,7 @@ describe('Web Accounts Store Getters', () => {
           supportedChains: 'all',
           currentChain: { supportedByApp: true, currentChainId: 1 },
         },
+        caip25Info: createMockCAIP25Session(),
       },
       ...overrides,
     }) as ExternalConnector<Platform.EVM>
@@ -45,6 +60,7 @@ describe('Web Accounts Store Getters', () => {
           supportedChains: 'all',
           currentChain: { supportedByApp: true, currentChainId: 501000101 },
         },
+        caip25Info: createMockCAIP25Session(),
       },
       ...overrides,
     }) as ExternalConnector<Platform.SVM>
@@ -211,6 +227,7 @@ describe('Web Accounts Store Getters', () => {
                   supportedChains: 'all',
                   currentChain: { supportedByApp: true, currentChainId: 1 },
                 },
+                caip25Info: createMockCAIP25Session(),
               },
             }),
           },
@@ -336,6 +353,7 @@ describe('Web Accounts Store Getters', () => {
                   supportedChains: 'all',
                   currentChain: { supportedByApp: true, currentChainId: 1 },
                 },
+                caip25Info: createMockCAIP25Session(),
               },
             }),
           },

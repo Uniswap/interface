@@ -498,6 +498,7 @@ export const swapPriceFormatter: Formatter = {
 
 export const fiatTokenDetailsFormatter: Formatter = {
   rules: [
+    { exact: 0, formatter: NoDecimalsCurrency },
     {
       upperBound: 0.00000001,
       overrideValue: 0.00000001,
@@ -514,6 +515,7 @@ export const fiatTokenDetailsFormatter: Formatter = {
 
 export const fiatTokenPricesFormatter: Formatter = {
   rules: [
+    { exact: 0, formatter: NoDecimalsCurrency },
     {
       upperBound: 0.00000001,
       overrideValue: 0.00000001,
@@ -522,7 +524,8 @@ export const fiatTokenPricesFormatter: Formatter = {
     },
     { upperBound: 1, formatter: ThreeSigFigsCurrency },
     { upperBound: 1e6, formatter: TwoDecimalsCurrency },
-    { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
+    { upperBound: 1e15, formatter: ShorthandTwoDecimalsCurrency },
+    { upperBound: Infinity, formatter: '>$999T' },
   ],
   defaultFormat: TwoDecimalsCurrency,
 }

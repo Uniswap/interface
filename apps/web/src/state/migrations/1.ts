@@ -1,6 +1,6 @@
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { DEFAULT_DEADLINE_FROM_NOW } from '~/constants/misc'
+import { PreV16UserState } from '~/state/migrations/oldTypes'
 
 export type PersistAppStateV1 = {
   _persist: PersistState

@@ -1,20 +1,20 @@
-import { ErrorCallout } from 'components/ErrorCallout'
-import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
-import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { canUnwrapCurrency } from 'components/Liquidity/utils/currency'
-import { StyledPercentInput } from 'components/PercentInput'
-import {
-  DecreaseLiquidityStep,
-  useRemoveLiquidityModalContext,
-} from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
-import { useRemoveLiquidityTxContext } from 'pages/RemoveLiquidity/RemoveLiquidityTxContext'
-import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
-import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
+import { ErrorCallout } from '~/components/ErrorCallout'
+import { LiquidityModalDetailRows } from '~/components/Liquidity/LiquidityModalDetailRows'
+import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
+import { canUnwrapCurrency } from '~/components/Liquidity/utils/currency'
+import { StyledPercentInput } from '~/components/PercentInput'
+import {
+  DecreaseLiquidityStep,
+  useRemoveLiquidityModalContext,
+} from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import { useRemoveLiquidityTxContext } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
+import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
+import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from '~/pages/Swap/common/shared'
 
 const isValidPercentageInput = (value: string): boolean => {
   const numValue = Number(value)

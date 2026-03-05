@@ -1,13 +1,13 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'components/Liquidity/Create/types'
-import { defaultFeeTiers } from 'components/Liquidity/constants'
-import { FeeTierData } from 'components/Liquidity/types'
-import { BIPS_BASE } from 'constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import i18n from 'uniswap/src/i18n'
 import { PercentNumberDecimals } from 'utilities/src/format/types'
+import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from '~/components/Liquidity/Create/types'
+import { defaultFeeTiers } from '~/components/Liquidity/constants'
+import { FeeTierData } from '~/components/Liquidity/types'
+import { BIPS_BASE } from '~/constants/misc'
 
 export const MAX_FEE_TIER_DECIMALS = 4
 const MAX_FEE_TIER_VALUE = 99.9999
@@ -59,7 +59,7 @@ export function getFeeTierKey({
   return `${feeTier}-${tickSpacing}${isDynamicFee ? '-dynamic' : ''}`
 }
 
-export function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string {
+function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string {
   switch (feeAmount) {
     case FeeAmount.LOWEST:
       return i18n.t(`fee.bestForVeryStable`)

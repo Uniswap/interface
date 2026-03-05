@@ -9,6 +9,7 @@ export enum InterfaceEventName {
   EmbeddedWalletCreated = 'Embedded Wallet Created',
   ExploreBannerClicked = 'Explore Banner Clicked',
   ExploreSearchSelected = 'Explore Search Selected',
+  ExploreQueryLatency = 'Explore Query Latency',
   ExploreTokenRowClicked = 'Explore Token Row Clicked',
   ExtensionUninstallFeedback = 'Extension Uninstall Feedback',
   ExternalLinkClicked = 'External Link Click',
@@ -19,6 +20,7 @@ export enum InterfaceEventName {
   LimitedWalletSupportToastDismissed = 'Limited Wallet Support Toast Dismissed',
   LimitedWalletSupportToastLearnMoreButtonClicked = 'Limited Wallet Support Learn More Button Clicked',
   LimitedWalletSupportToastShown = 'Limited Wallet Support Toast Shown',
+  LiquidityGasEstimation = 'Liquidity Gas Estimation',
   LimitExpirySelected = 'Limit Expiry Selected',
   LimitPresetRateSelected = 'Limit Preset Rate Selected',
   LimitPriceReversed = 'Limit Price Reversed',
@@ -39,6 +41,12 @@ export enum InterfaceEventName {
   RiskChecked = 'Risk Checked',
   SendInitiated = 'Send Initiated',
   SendRecipientSelected = 'Send Recipient Selected',
+  /**
+   * @deprecated Misleading name: This event fires for ALL transaction types (swaps, approvals, wraps, sends, etc.),
+   * not just swaps. Use the `transactionType` property to filter for actual swaps.
+   * TODO: Rename to `TransactionConfirmedOnClient` or split into transaction-type-specific events
+   * to improve analytics hygiene and align with mobile/extension which use separate events per type.
+   */
   SwapConfirmedOnClient = 'Swap Confirmed on Client',
   SwapTabClicked = 'Swap Tab Clicked',
   TokenImported = 'Token Imported',

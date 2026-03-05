@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
-import { RouterPreference } from 'state/routing/types'
-import { SerializedPair, SlippageTolerance } from 'state/user/types'
+import { DEFAULT_DEADLINE_FROM_NOW } from '~/constants/misc'
+import { RouterPreference } from '~/state/routing/types'
+import { SerializedPair, SlippageTolerance } from '~/state/user/types'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -94,6 +94,7 @@ const userSlice = createSlice({
     setOriginCountry(state, { payload: country }) {
       state.originCountry = country
     },
+    resetUser: () => initialState,
   },
 })
 
@@ -105,5 +106,6 @@ export const {
   updateUserDeadline,
   updateUserSlippageTolerance,
   updateIsEmbeddedWalletBackedUp,
+  resetUser,
 } = userSlice.actions
 export default userSlice.reducer

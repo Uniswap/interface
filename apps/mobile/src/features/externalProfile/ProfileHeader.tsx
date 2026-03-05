@@ -156,7 +156,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4" px="$spacing24">
         <Flex centered backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing4">
-          <BackButton color="$neutral2" size={iconSizes.icon24} />
+          <BackButton color="$neutral2" size="$icon.24" />
         </Flex>
         <ProfileContextMenu address={address} />
       </Flex>
@@ -170,12 +170,12 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               showIconBackground
               showIconBorder
               address={address}
-              alignItems="flex-start"
               captionTextColor="$neutral3"
               captionVariant="body3"
               direction="column"
               size={HEADER_ICON_SIZE}
               variant="heading3"
+              alignItems="flex-start"
             />
             {bio ? <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} /> : null}
           </Flex>

@@ -1,41 +1,18 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import Card, { DarkGrayCard } from 'components/Card/cards'
-import { AutoColumn } from 'components/deprecated/Column'
-import Row, { AutoRow, RowBetween } from 'components/deprecated/Row'
-import { useModalState } from 'hooks/useModalState'
-import { deprecatedStyled } from 'lib/styled-components'
-import { useEffect, useMemo, useRef } from 'react'
-import { ArrowDown, Info } from 'react-feather'
+import { ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { ExternalLink } from 'theme/components/Links'
-import { ModalCloseIcon, Text, useSporeColors } from 'ui/src'
+import { Flex, ModalCloseIcon, Text } from 'ui/src'
+import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
+import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isMobileWeb } from 'utilities/src/platform'
-
-const Wrapper = deprecatedStyled.div`
-  max-height: 70vh;
-  overflow: auto;
-  padding: 0 1rem;
-`
-
-const StyledExternalCard = deprecatedStyled(Card)`
-  background-color: ${({ theme }) => theme.accent2};
-  padding: 0.5rem;
-  width: 100%;
-
-  :hover,
-  :focus,
-  :active {
-    background-color: ${({ theme }) => theme.neutral3};
-  }
-`
-
-const StyledLinkOut = deprecatedStyled(ArrowDown)`
-  transform: rotate(230deg);
-`
+import Card, { DarkGrayCard } from '~/components/Card/cards'
+import { AutoColumn } from '~/components/deprecated/Column'
+import Row, { AutoRow, RowBetween } from '~/components/deprecated/Row'
+import { useModalState } from '~/hooks/useModalState'
+import { ExternalLink } from '~/theme/components/Links'
 
 export function PrivacyPolicyModal() {
   const node = useRef<HTMLDivElement>(undefined)
@@ -65,9 +42,32 @@ export function PrivacyPolicyModal() {
   )
 }
 
+function ExternalLinkCard({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+      <Card
+        backgroundColor="$accent2"
+        width="100%"
+        cursor="pointer"
+        hoverStyle={{ opacity: 0.8 }}
+        pressStyle={{ opacity: 0.7 }}
+      >
+        <RowBetween>
+          <AutoRow gap="4px">
+            <InfoCircle size="$icon.20" color="$accent1" strokeWidth={0} />
+            <Text variant="body3" color="$accent1">
+              {children}
+            </Text>
+          </AutoRow>
+          <ArrowUpRight size="$icon.20" strokeWidth={0} color="$neutral2" />
+        </RowBetween>
+      </Card>
+    </a>
+  )
+}
+
 function PrivacyPolicy() {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const EXTERNAL_APIS = useMemo(
     () => [
       {
@@ -98,8 +98,10 @@ function PrivacyPolicy() {
   )
 
   return (
-    <Wrapper
-      draggable="true"
+    <Flex
+      maxHeight="70vh"
+      $platform-web={{ overflow: 'auto' }}
+      px="$spacing16"
       onTouchMove={(e) => {
         // prevent modal gesture handler from dismissing modal when content is scrolling
         if (isMobileWeb) {
@@ -109,57 +111,38 @@ function PrivacyPolicy() {
     >
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
-          <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/terms-of-service">
-              <RowBetween>
-                <AutoRow gap="4px">
-                  <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="accent1">
-                    {t('privacy.uniswaptos')}
-                  </ThemedText.DeprecatedMain>
-                </AutoRow>
-                <StyledLinkOut size={20} />
-              </RowBetween>
-            </ExternalLink>
-          </StyledExternalCard>
-          <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/privacy-policy/">
-              <RowBetween>
-                <AutoRow gap="4px">
-                  <Info size={20} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="accent1">
-                    {t('common.privacyPolicy')}
-                  </ThemedText.DeprecatedMain>
-                </AutoRow>
-                <StyledLinkOut size={20} />
-              </RowBetween>
-            </ExternalLink>
-          </StyledExternalCard>
+          <ExternalLinkCard href="https://uniswap.org/terms-of-service">{t('privacy.uniswaptos')}</ExternalLinkCard>
+          <ExternalLinkCard href="https://uniswap.org/privacy-policy/">{t('common.privacyPolicy')}</ExternalLinkCard>
         </AutoColumn>
-        <ThemedText.DeprecatedMain fontSize={14}>{t('privacy.thirdPartyApis')}</ThemedText.DeprecatedMain>
+        <Text variant="body3" color="$neutral2">
+          {t('privacy.thirdPartyApis')}
+        </Text>
         <AutoColumn gap="md">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
             <DarkGrayCard key={i}>
               <AutoColumn gap="sm">
                 <AutoRow gap="4px">
-                  <Info size={18} color={colors.neutral1.val} />
-                  <ThemedText.DeprecatedMain fontSize={14} color="neutral1">
+                  <InfoCircle size="$icon.18" color="$neutral1" />
+                  <Text variant="body3" color="$neutral1">
                     {name}
-                  </ThemedText.DeprecatedMain>
+                  </Text>
                 </AutoRow>
-                <ThemedText.DeprecatedMain fontSize={14}>{description}</ThemedText.DeprecatedMain>
+                <Text variant="body3" color="$neutral2">
+                  {description}
+                </Text>
               </AutoColumn>
             </DarkGrayCard>
           ))}
-          <ThemedText.DeprecatedBody fontSize={12}>
-            <Row justify="center" marginBottom="1rem">
-              <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
-                {t('common.button.learn')}
-              </ExternalLink>
-            </Row>
-          </ThemedText.DeprecatedBody>
+          <Row justify="center" marginBottom="1rem">
+            <ExternalLink
+              href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq"
+              style={{ fontSize: 12 }}
+            >
+              {t('common.button.learn')}
+            </ExternalLink>
+          </Row>
         </AutoColumn>
       </AutoColumn>
-    </Wrapper>
+    </Flex>
   )
 }

@@ -21,6 +21,11 @@ export class LocalOverrideAdapterWrapper extends LocalOverrideAdapter {
     this.refreshStatsig()
   }
 
+  removeGateOverride(name: string): void {
+    super.removeGateOverride(name)
+    this.refreshStatsig()
+  }
+
   overrideDynamicConfig(name: string, value: Record<string, unknown>): void {
     super.overrideDynamicConfig(name, value)
     this.refreshStatsig()

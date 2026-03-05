@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/react-native'
 import React from 'react'
+import { TextInput } from 'react-native'
 import { makeMutable } from 'react-native-reanimated'
 import { act } from 'react-test-renderer'
 import { AnimatedText } from 'src/components/text/AnimatedText'
@@ -53,7 +54,7 @@ describe(AnimatedText, () => {
       const textValue = makeMutable('Initial')
       const tree = renderWithProviders(<AnimatedText text={textValue} />)
 
-      expect(tree.queryByDisplayValue('Initial')).toBeTruthy()
+      expect(tree.UNSAFE_queryByType(TextInput)).toHaveAnimatedProps({ text: 'Initial' })
 
       textValue.value = 'Updated'
 
@@ -64,7 +65,7 @@ describe(AnimatedText, () => {
         tree.rerender(<AnimatedText text={textValue} />)
       })
 
-      expect(tree.queryByDisplayValue('Updated')).toBeTruthy()
+      expect(tree.UNSAFE_queryByType(TextInput)).toHaveAnimatedProps({ text: 'Updated' })
     })
   })
 })

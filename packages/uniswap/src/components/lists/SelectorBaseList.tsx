@@ -79,6 +79,7 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
         endElement={section.endElement}
         sectionKey={section.sectionKey}
         name={section.name}
+        sectionHeader={section.sectionHeader}
       />
     ),
     [],

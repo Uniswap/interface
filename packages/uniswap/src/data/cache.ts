@@ -37,8 +37,8 @@ export function setupSharedApolloCache(): InMemoryCache {
                   read(_, { args, toReference }): Reference | undefined {
                     return toReference({
                       __typename: 'Token',
-                      chain: args?.chain,
-                      address: normalizeTokenAddressForCache(args?.address),
+                      chain: args?.['chain'],
+                      address: normalizeTokenAddressForCache(args?.['address']),
                     })
                   },
                 },

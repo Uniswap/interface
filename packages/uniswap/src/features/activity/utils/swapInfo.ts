@@ -6,18 +6,6 @@ import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/util
 import { BridgeTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { NumberType } from 'utilities/src/format/types'
 
-const INTERFACE_FEE_SWITCH_TIMESTAMP = 1712772000000 // April 10th 2024 2pm EST
-
-export function hasInterfaceFees({ swapTimestampMs }: { swapTimestampMs: number }): boolean {
-  const beforeInterfaceFeeSwitch = swapTimestampMs < INTERFACE_FEE_SWITCH_TIMESTAMP
-  if (beforeInterfaceFeeSwitch) {
-    return false
-  }
-
-  // TODO (PORT-7): blocked on backend, decided to not show fees for now so hard-coded to always return false
-  return false
-}
-
 export function getFormattedSwapRatio({
   typeInfo,
   inputCurrency,

@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 
 export function useTokenControlOptions(currencies: [Maybe<Currency>, Maybe<Currency>], size: 'small' | 'large') {
   const [token0, token1] = currencies

@@ -1,13 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import StatusIcon from 'components/StatusIcon'
-import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { useAccount } from 'hooks/useAccount'
-import { useModalState } from 'hooks/useModalState'
-import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { AdaptiveWebPopoverContent, Button, Flex, Text, useShadowPropsShort } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { X } from 'ui/src/components/icons/X'
@@ -17,6 +10,13 @@ import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainD
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
+import StatusIcon from '~/components/StatusIcon'
+import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
+import { useAccount } from '~/hooks/useAccount'
+import { useModalState } from '~/hooks/useModalState'
+import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
+import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface RecentlyConnectedModalUIProps {
   isOpen: boolean
@@ -105,8 +105,8 @@ function RecentlyConnectedModalUI({
                 {displayName}
               </Text>
               {showUnitagIcon && (
-                <Flex flexShrink={0}>
-                  <Unitag size={16} />
+                <Flex flexShrink={0} pt="$spacing2">
+                  <Unitag size={22} />
                 </Flex>
               )}
               <X

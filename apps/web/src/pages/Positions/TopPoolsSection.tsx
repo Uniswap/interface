@@ -1,8 +1,8 @@
-import { LoadingRow } from 'components/Liquidity/Loader'
-import { LoadingRows } from 'components/Loader/styled'
-import { TopPoolsCard } from 'pages/Positions/TopPoolsCard'
-import { PoolStat } from 'state/explore/types'
 import { Flex, Text } from 'ui/src'
+import { LoadingRow } from '~/components/Liquidity/Loader'
+import { LoadingRows } from '~/components/Loader/styled'
+import { TopPoolsCard } from '~/pages/Positions/TopPoolsCard'
+import { PoolStat } from '~/state/explore/types'
 
 export function TopPoolsSection({ pools, title, isLoading }: { pools: PoolStat[]; title: string; isLoading: boolean }) {
   if (isLoading) {

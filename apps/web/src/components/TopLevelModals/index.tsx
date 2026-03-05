@@ -1,28 +1,26 @@
-import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import { ModalRenderer } from 'components/TopLevelModals/modalRegistry'
-import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
-import { PageType, useIsPage } from 'hooks/useIsPage'
-import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useAtomValue } from 'jotai/utils'
 import { useTranslation } from 'react-i18next'
 import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { useEvent } from 'utilities/src/react/hooks'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { ModalRenderer } from '~/components/TopLevelModals/modalRegistry'
+import useAccountRiskCheck from '~/hooks/useAccountRiskCheck'
+import { PageType, useIsPage } from '~/hooks/useIsPage'
+import { PasskeysHelpModalTypeAtom } from '~/hooks/usePasskeyAuthWithHelpModal'
 
 export default function TopLevelModals() {
   const { t } = useTranslation()
   const isLandingPage = useIsPage(PageType.LANDING)
-  const wallet = useWallet()
-  const evmAddress = wallet.evmAccount?.address
-  const svmAddress = wallet.svmAccount?.address
+  const { evmAddress, svmAddress } = useActiveAddresses()
   const { data: unitag } = useUnitagsAddressQuery({
     params: evmAddress ? { address: evmAddress } : undefined,
   })

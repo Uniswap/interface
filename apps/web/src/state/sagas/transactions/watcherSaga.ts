@@ -2,13 +2,12 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { QueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { createUniverseTransaction } from 'state/sagas/utils/transaction'
-import { PendingTransactionDetails } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { refetchQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
-
 import { createSaga } from 'uniswap/src/utils/saga'
+import { createUniverseTransaction } from '~/state/sagas/utils/transaction'
+import { PendingTransactionDetails } from '~/state/transactions/types'
 
 type WatchTransactionsCallbackParams = {
   pendingDiff: PendingTransactionDetails[]

@@ -1,18 +1,19 @@
 import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table'
-import { Table } from 'components/Table'
-import { Cell } from 'components/Table/Cell'
-import { HeaderCell } from 'components/Table/styled'
-import { ActivityAddressCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAddressCell'
-import { useActivityAddressLookup } from 'pages/Portfolio/Activity/ActivityTable/ActivityAddressLookupStore'
-import { ActivityAmountCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ActivityAmountCell'
-import { TimeCell } from 'pages/Portfolio/Activity/ActivityTable/TimeCell'
-import { TransactionTypeCell } from 'pages/Portfolio/Activity/ActivityTable/TransactionTypeCell'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useIsTouchDevice } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { Table } from '~/components/Table'
+import { Cell } from '~/components/Table/Cell'
+import { HeaderCell } from '~/components/Table/styled'
+import { ActivityAddressCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAddressCell'
+import { useActivityAddressLookup } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAddressLookupStore'
+import { ActivityAmountCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ActivityAmountCell'
+import { TimeCell } from '~/pages/Portfolio/Activity/ActivityTable/TimeCell'
+import { TransactionTypeCell } from '~/pages/Portfolio/Activity/ActivityTable/TransactionTypeCell'
+import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 
 interface ActivityTableProps {
   data: TransactionDetails[]
@@ -31,7 +32,7 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
       // Time Column
       columnHelper.accessor('addedTime', {
         header: () => (
-          <HeaderCell justifyContent="flex-start">
+          <HeaderCell testId={TestID.PortfolioActivityTableHeaderTime} justifyContent="flex-start">
             <Text variant="body3" color="$neutral2" fontWeight="500">
               {t('portfolio.activity.table.column.time')}
             </Text>
@@ -58,7 +59,7 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
       columnHelper.accessor((row) => row.typeInfo.type, {
         id: 'type',
         header: () => (
-          <HeaderCell justifyContent="flex-start">
+          <HeaderCell testId={TestID.PortfolioActivityTableHeaderType} justifyContent="flex-start">
             <Text variant="body3" color="$neutral2" fontWeight="500">
               {t('portfolio.activity.table.column.type')}
             </Text>
@@ -85,7 +86,7 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
       columnHelper.display({
         id: 'amount',
         header: () => (
-          <HeaderCell justifyContent="flex-start" minWidth="280px">
+          <HeaderCell testId={TestID.PortfolioActivityTableHeaderAmount} justifyContent="flex-start" minWidth="280px">
             <Text variant="body3" color="$neutral2" fontWeight="500">
               {t('portfolio.activity.table.column.amount')}
             </Text>
@@ -112,7 +113,7 @@ export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef
       columnHelper.display({
         id: 'address',
         header: () => (
-          <HeaderCell justifyContent="flex-start">
+          <HeaderCell testId={TestID.PortfolioActivityTableHeaderAddress} justifyContent="flex-start">
             <Text variant="body3" color="$neutral2" fontWeight="500">
               {t('portfolio.activity.table.column.address')}
             </Text>
@@ -179,6 +180,7 @@ function _ActivityTable({ data, loading = false, error = false, rowWrapper }: Ac
       compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
       defaultPinnedColumns={['addedTime']}
       maxWidth={1200}
+      headerTestId={TestID.PortfolioActivityTableHeader}
     />
   )
 }

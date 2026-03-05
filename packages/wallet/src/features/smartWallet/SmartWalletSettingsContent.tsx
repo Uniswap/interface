@@ -1,6 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
+import { useCallback, useEffect } from 'react'
 import { Flex, ScrollView, Separator, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled, RoundExclamation } from 'ui/src/components/icons'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -12,55 +10,26 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { SmartWalletEducationalModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEducationalModal'
-import { setIsAllSmartWalletNudgesDisabled } from 'wallet/src/features/behaviorHistory/slice'
 import { useSmartWalletData } from 'wallet/src/features/smartWallet/hooks/useSmartWalletData'
 import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
 import {
   SmartWalletModalsManager,
   useSmartWalletModals,
 } from 'wallet/src/features/smartWallet/SmartWalletModalsManager'
-import { SmartWalletModalState, WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
+import { SmartWalletModalState, type WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet: WalletData) => void }): JSX.Element {
-  const { t } = useTranslation()
+  const getTranslatedStatus = useTranslateSmartWalletStatus()
 
-  const isInactive = wallet.status === WalletStatus.Inactive
   const isUnavailable = wallet.status === WalletStatus.Unavailable
+  const isPending = wallet.status === WalletStatus.Pending
+  const isActive = wallet.status === WalletStatus.Active || wallet.status === WalletStatus.ActionRequired
 
   const onPressCallback = useCallback((): void => {
     onPress(wallet)
   }, [onPress, wallet])
-
-  const actionIcon = useMemo(() => {
-    if (isInactive) {
-      // need to use touchable area so it fits to the text on mobile
-      return (
-        <TouchableArea
-          justifyContent="center"
-          borderRadius="$rounded12"
-          backgroundColor="$accent2"
-          height="$spacing36"
-          px="$padding12"
-          onPress={onPressCallback}
-        >
-          <Text color="$accent1" variant="buttonLabel4">
-            {t('settings.setting.smartWallet.action.enable')}
-          </Text>
-        </TouchableArea>
-      )
-    }
-    if (isUnavailable) {
-      return (
-        <Text variant="body4" color="$neutral2">
-          {t('settings.setting.smartWallet.notEligible')}
-        </Text>
-      )
-    }
-    return <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon20} width={iconSizes.icon20} />
-  }, [isInactive, isUnavailable, onPressCallback, t])
 
   const displayName = useDisplayName(wallet.walletAddress)
 
@@ -72,8 +41,8 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
       flexDirection="row"
       gap="$spacing12"
       justifyContent="space-between"
-      cursor={isInactive ? 'default' : 'pointer'}
-      onPress={!isInactive ? onPressCallback : undefined}
+      disabled={isPending}
+      onPress={onPressCallback}
     >
       <Flex row shrink minWidth={0} alignItems="center" gap="$spacing12" opacity={isUnavailable ? 0.5 : 1}>
         <Flex>
@@ -118,15 +87,17 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
           </Text>
         </Flex>
       </Flex>
-      <Flex row alignItems="center" gap="$spacing12">
-        {actionIcon}
+      <Flex row alignItems="center" gap="$spacing8">
+        <Text variant="body3" color={isActive ? '$accent1' : '$neutral2'}>
+          {getTranslatedStatus(wallet.status)}
+        </Text>
+        <RotatableChevron color="$neutral3" direction="right" size="$icon.20" />
       </Flex>
     </TouchableArea>
   )
 }
 
 export function SmartWalletSettingsContent(): JSX.Element {
-  const dispatch = useDispatch()
   const getTranslatedStatus = useTranslateSmartWalletStatus()
   const wallets = useSmartWalletData()
   const { refreshDelegationData } = useWalletDelegationContext()
@@ -137,7 +108,7 @@ export function SmartWalletSettingsContent(): JSX.Element {
   useEffect(() => {
     refreshDelegationData().catch((error) => {
       logger.error(error, {
-        tags: { file: 'SmartWalletSettingsContent', function: 'useEffect' },
+        tags: { file: 'SmartWalletSettingsContent', function: 'refreshDelegationData' },
       })
     })
   }, [refreshDelegationData])
@@ -149,16 +120,8 @@ export function SmartWalletSettingsContent(): JSX.Element {
       [WalletStatus.Active]: () => setModalState(SmartWalletModalState.Disable),
       [WalletStatus.ActionRequired]: () => setModalState(SmartWalletModalState.ActionRequired),
       [WalletStatus.Unavailable]: () => setModalState(SmartWalletModalState.Unavailable),
-      [WalletStatus.Inactive]: (): void => {
-        dispatch(
-          setSmartWalletConsent({
-            address: wallet.walletAddress,
-            smartWalletConsent: true,
-          }),
-        )
-        setModalState(SmartWalletModalState.EnabledSuccess)
-        dispatch(setIsAllSmartWalletNudgesDisabled({ walletAddress: wallet.walletAddress, isDisabled: false }))
-      },
+      [WalletStatus.Inactive]: () => setModalState(SmartWalletModalState.Disable),
+      [WalletStatus.Pending]: (): void => {},
     }
 
     statusActionMap[wallet.status]()
@@ -203,6 +166,7 @@ export function SmartWalletSettingsContent(): JSX.Element {
           )}
           <Flex gap="$spacing16">
             {renderWalletSection(WalletStatus.Active)}
+            {renderWalletSection(WalletStatus.Pending)}
             {renderWalletSection(WalletStatus.Inactive)}
             {renderWalletSection(WalletStatus.Unavailable)}
           </Flex>

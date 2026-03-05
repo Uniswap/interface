@@ -1,11 +1,11 @@
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import * as d3 from 'd3'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import type {
   ChartActions,
   ChartState,
   Renderer,
   RenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import * as d3 from 'd3'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 
 export function createLiquidityRangeAreaRenderer({
   g,
@@ -24,15 +24,15 @@ export function createLiquidityRangeAreaRenderer({
     // Clear previous range area elements
     rangeAreaGroup.selectAll('*').remove()
 
-    const { colors, dimensions, priceToY } = context
-    const { minPrice, maxPrice, isFullRange } = getState()
+    const { colors, dimensions, tickToY } = context
+    const { minTick, maxTick, isFullRange } = getState()
 
     // Get drag behaviors
     const actions = getActions()
     const tickBasedDragBehavior = actions.createTickBasedDragBehavior()
 
     // Only draw if both prices are set
-    if (minPrice === undefined || maxPrice === undefined) {
+    if (minTick === undefined || maxTick === undefined) {
       return
     }
 
@@ -41,14 +41,14 @@ export function createLiquidityRangeAreaRenderer({
       .append('rect')
       .attr('class', `price-range-element visual-bg`)
       .attr('x', 0)
-      .attr('y', priceToY({ price: maxPrice, tickAlignment: 'top' }))
+      .attr('y', tickToY({ tick: maxTick, tickAlignment: 'top' }))
       .attr(
         'width',
         dimensions.width + CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET,
       )
       .attr(
         'height',
-        priceToY({ price: minPrice, tickAlignment: 'bottom' }) - priceToY({ price: maxPrice, tickAlignment: 'top' }),
+        tickToY({ tick: minTick, tickAlignment: 'bottom' }) - tickToY({ tick: maxTick, tickAlignment: 'top' }),
       )
       .attr('fill', colors.accent1.val)
       .attr('opacity', 0.2)
@@ -64,11 +64,11 @@ export function createLiquidityRangeAreaRenderer({
       .append('rect')
       .attr('class', `price-range-element interactive-bg`)
       .attr('x', 0) // Extend left to cover the margin area
-      .attr('y', priceToY({ price: maxPrice, tickAlignment: 'top' }))
+      .attr('y', tickToY({ tick: maxTick, tickAlignment: 'top' }))
       .attr('width', dimensions.width) // Stop before liquidity area
       .attr(
         'height',
-        priceToY({ price: minPrice, tickAlignment: 'bottom' }) - priceToY({ price: maxPrice, tickAlignment: 'top' }),
+        tickToY({ tick: minTick, tickAlignment: 'bottom' }) - tickToY({ tick: maxTick, tickAlignment: 'top' }),
       )
       .attr('fill', 'transparent') // Invisible, just for interactions
       .attr('stroke', 'none')

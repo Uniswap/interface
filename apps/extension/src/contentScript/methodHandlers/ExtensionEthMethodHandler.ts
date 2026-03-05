@@ -48,6 +48,8 @@ import { chainIdToHexadecimalString, toSupportedChainId } from 'uniswap/src/feat
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 
@@ -129,7 +131,13 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
       })?.source
 
       this.setChainIdAndMaybeEmit(message.chainId)
-      this.setProvider(new JsonRpcProvider(message.providerUrl, parseInt(message.chainId)))
+      this.setProvider(
+        new InstrumentedJsonRpcProvider({
+          url: message.providerUrl,
+          chainIdOrNetwork: parseInt(message.chainId),
+          observer: getRpcObserver(),
+        }),
+      )
       source?.postMessage({
         requestId: message.requestId,
         result: message.chainId,
@@ -289,7 +297,13 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   }): void {
     this.setConnectedAddressesAndMaybeEmit(connectedAddresses)
     this.setChainIdAndMaybeEmit(chainId)
-    this.setProvider(new JsonRpcProvider(providerUrl, parseInt(chainId)))
+    this.setProvider(
+      new InstrumentedJsonRpcProvider({
+        url: providerUrl,
+        chainIdOrNetwork: parseInt(chainId),
+        observer: getRpcObserver(),
+      }),
+    )
   }
 
   // eslint-disable-next-line complexity

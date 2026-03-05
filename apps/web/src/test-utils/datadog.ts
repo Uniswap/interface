@@ -1,4 +1,4 @@
-import type { GetTestResult } from 'playwright/fixtures'
+import type { GetTestResult } from '~/playwright/fixtures'
 
 interface DataDogPlaywright {
   /**

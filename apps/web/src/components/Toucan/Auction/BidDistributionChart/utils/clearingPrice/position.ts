@@ -1,5 +1,3 @@
-import { COORDINATE_SCALING } from 'components/Toucan/Auction/BidDistributionChart/constants'
-
 /**
  * Represents a bar's position and tick value for clearing price calculations
  */
@@ -18,6 +16,7 @@ interface FindClearingPriceXPositionParams {
   clearingPrice: number // Clearing price in decimal form
   bars: BarPosition[] // Array of bars with position and tick information
   positionTolerance?: number // Tolerance for exact position matching (default: 1)
+  priceScaleFactor?: number
 }
 
 /**
@@ -44,46 +43,60 @@ interface FindClearingPriceXPositionParams {
  * ```
  */
 export function findClearingPriceXPosition(params: FindClearingPriceXPositionParams): number | null {
-  const { clearingPrice, bars, positionTolerance = 1 } = params
-
-  // Convert clearing price to scaled coordinate for comparison
-  const clearingPriceScaled = Math.round(clearingPrice * COORDINATE_SCALING.PRICE_SCALE_FACTOR)
+  const { clearingPrice, bars } = params
 
   // Find bars surrounding the clearing price
   for (let i = 0; i < bars.length; i++) {
     const bar = bars[i]
-    const nextBar = bars[i + 1]
+    const nextBar = bars.at(i + 1)
 
     // Skip bars without column data
     if (!bar.column) {
       continue
     }
 
-    const barTimeScaled = Math.round(bar.tickValue * COORDINATE_SCALING.PRICE_SCALE_FACTOR)
-
-    // Case 1: Clearing price exactly at this bar
-    if (Math.abs(barTimeScaled - clearingPriceScaled) < positionTolerance) {
+    // Case 1: Clearing price exactly at this bar (with very small epsilon for float precision)
+    // We use a much smaller epsilon (1e-15) than standard chart tolerance because clearing price
+    // should ideally not snap to ticks unless it's truly the same value. It represents a calculated
+    // market price that can fall anywhere between ticks.
+    if (Math.abs(bar.tickValue - clearingPrice) < 1e-15) {
+      // console.log('[ToucanChart] Clearing Price Line Debug - Exact Match:', {
+      //   clearingPrice,
+      //   barTick: bar.tickValue,
+      //   diff: bar.tickValue - clearingPrice,
+      // })
       return getBarCenter(bar.column)
     }
 
     // Case 2: Clearing price between this bar and next
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!nextBar || !nextBar.column) {
       continue
     }
 
-    const nextBarTimeScaled = Math.round(nextBar.tickValue * COORDINATE_SCALING.PRICE_SCALE_FACTOR)
-
-    if (barTimeScaled <= clearingPriceScaled && clearingPriceScaled <= nextBarTimeScaled) {
+    // Check if clearing price is in the interval [bar.tickValue, nextBar.tickValue]
+    if (bar.tickValue <= clearingPrice && clearingPrice <= nextBar.tickValue) {
+      // console.log('[ToucanChart] Clearing Price Line Debug - Interpolation:', {
+      //   clearingPrice,
+      //   bar1: bar.tickValue,
+      //   bar2: nextBar.tickValue,
+      //   ratio: (clearingPrice - bar.tickValue) / (nextBar.tickValue - bar.tickValue),
+      // })
       return interpolateBarPosition({
-        clearingPriceScaled,
-        bar1: { tickValue: barTimeScaled, column: bar.column },
-        bar2: { tickValue: nextBarTimeScaled, column: nextBar.column },
+        clearingPrice,
+        bar1: bar,
+        bar2: nextBar,
       })
     }
   }
 
-  // Case 3: Position not found
+  // Log if not found
+  // console.log('[ToucanChart] Clearing Price Line Debug - Not Found:', {
+  //   clearingPrice,
+  //   barsRange: bars.length > 0 ? { min: bars[0].tickValue, max: bars[bars.length - 1].tickValue } : 'empty',
+  //   barsCount: bars.length,
+  // })
+
+  // Case 3: Position not found or outside range
   return null
 }
 
@@ -98,9 +111,9 @@ function getBarCenter(column: { left: number; right: number }): number {
  * Parameters for interpolating between two bar positions
  */
 interface InterpolateBarPositionParams {
-  clearingPriceScaled: number
-  bar1: { tickValue: number; column: { left: number; right: number } }
-  bar2: { tickValue: number; column: { left: number; right: number } }
+  clearingPrice: number
+  bar1: BarPosition
+  bar2: BarPosition
 }
 
 /**
@@ -111,30 +124,23 @@ interface InterpolateBarPositionParams {
  *
  * @param params - Interpolation parameters
  * @returns Interpolated X-coordinate in pixels
- *
- * @example
- * ```typescript
- * // Clearing price at 1.5, bar1 at 1.0, bar2 at 2.0
- * // Returns position 50% between the two bars
- * interpolateBarPosition({
- *   clearingPriceScaled: 15000,
- *   bar1: { tickValue: 10000, column: { left: 10, right: 20 } },
- *   bar2: { tickValue: 20000, column: { left: 30, right: 40 } }
- * })
- * ```
  */
 function interpolateBarPosition(params: InterpolateBarPositionParams): number {
-  const { clearingPriceScaled, bar1, bar2 } = params
+  const { clearingPrice, bar1, bar2 } = params
 
   // Guard against division by zero when bars have identical tick values
   if (bar2.tickValue === bar1.tickValue) {
-    return getBarCenter(bar1.column)
+    return bar1.column ? getBarCenter(bar1.column) : 0
   }
 
   // Calculate ratio: how far between bar1 and bar2 is the clearing price?
-  const ratio = (clearingPriceScaled - bar1.tickValue) / (bar2.tickValue - bar1.tickValue)
+  const ratio = (clearingPrice - bar1.tickValue) / (bar2.tickValue - bar1.tickValue)
 
   // Get center positions of both bars
+  if (!bar1.column || !bar2.column) {
+    return 0
+  }
+
   const bar1CenterX = getBarCenter(bar1.column)
   const bar2CenterX = getBarCenter(bar2.column)
 

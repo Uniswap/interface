@@ -1,5 +1,5 @@
-import { createLazy, createLazyFactory, isDynamicImportError, lazyWithRetry } from 'utils/lazyWithRetry'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createLazy, createLazyFactory, isDynamicImportError, lazyWithRetry } from '~/utils/lazyWithRetry'
 
 // Mock window.location.reload
 const mockReload = vi.fn()

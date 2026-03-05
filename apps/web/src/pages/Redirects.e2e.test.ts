@@ -1,4 +1,4 @@
-import { expect, getTest } from 'playwright/fixtures'
+import { expect, getTest } from '~/playwright/fixtures'
 
 const test = getTest()
 

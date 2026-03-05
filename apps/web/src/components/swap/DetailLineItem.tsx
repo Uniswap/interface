@@ -1,11 +1,11 @@
-import { LoadingRow } from 'components/Loader/styled'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import useHoverProps from 'hooks/useHoverProps'
-import { deprecatedStyled } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
-import { ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
+import { LoadingRow } from '~/components/Loader/styled'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
+import useHoverProps from '~/hooks/useHoverProps'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
 
 export type LineItemData = {
   Label: React.FC

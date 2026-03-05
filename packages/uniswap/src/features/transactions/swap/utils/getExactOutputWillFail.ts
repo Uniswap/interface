@@ -43,11 +43,15 @@ export function getExactOutputWillFail({
   const hasSolanaToken =
     Boolean(inputChainId && isSVMChain(inputChainId)) || Boolean(outputChainId && isSVMChain(outputChainId))
 
+  const isCrossChain = Boolean(inputChainId && outputChainId) && inputChainId !== outputChainId
+
   // Disable exact output for:
   // 1. FOT tokens (fee-on-transfer)
   // 2. Solana tokens (Jupiter doesn't support exact output)
-  const exactOutputWillFail = inputTokenHasSellTax || outputTokenHasBuyTax || hasSolanaToken
-  const exactOutputWouldFailIfCurrenciesSwitched = inputTokenHasBuyTax || outputTokenHasSellTax || hasSolanaToken
+  // 3. Cross-chain swaps (no exact output support)
+  const exactOutputWillFail = inputTokenHasSellTax || outputTokenHasBuyTax || hasSolanaToken || isCrossChain
+  const exactOutputWouldFailIfCurrenciesSwitched =
+    inputTokenHasBuyTax || outputTokenHasSellTax || hasSolanaToken || isCrossChain
 
   return {
     outputTokenHasBuyTax,

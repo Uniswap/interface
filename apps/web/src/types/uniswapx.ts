@@ -1,5 +1,5 @@
 import { TradingApi } from '@universe/api'
-import { OffchainOrderType } from 'state/routing/types'
+import { OffchainOrderType } from '~/state/routing/types'
 
 // Mirrors UniswapXOrderEntity type at https://github.com/Uniswap/uniswapx-service/blob/main/lib/entities/Order.ts
 interface BaseUniswapXBackendOrder {

@@ -2,8 +2,8 @@
  * Preset styles of the Rebass Text component
  */
 
-import { deprecatedStyled } from 'lib/styled-components'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 const TextWrapper = deprecatedStyled(Text).withConfig({
   shouldForwardProp: (prop) => prop !== 'color',

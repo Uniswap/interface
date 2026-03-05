@@ -4,17 +4,23 @@ import {
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  PlanTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isBridgeTypeInfo, isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
+import {
+  isBridgeTypeInfo,
+  isConfirmedSwapTypeInfo,
+  isPlanTransactionInfo,
+} from 'uniswap/src/features/transactions/types/utils'
 
 export function getAmountsFromTrade(
   typeInfo:
     | ExactInputSwapTransactionInfo
     | ExactOutputSwapTransactionInfo
     | ConfirmedSwapTransactionInfo
-    | BridgeTransactionInfo,
+    | BridgeTransactionInfo
+    | PlanTransactionInfo,
 ): { inputCurrencyAmountRaw: string; outputCurrencyAmountRaw: string } {
-  if (isConfirmedSwapTypeInfo(typeInfo) || isBridgeTypeInfo(typeInfo)) {
+  if (isConfirmedSwapTypeInfo(typeInfo) || isBridgeTypeInfo(typeInfo) || isPlanTransactionInfo(typeInfo)) {
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = typeInfo
     return { inputCurrencyAmountRaw, outputCurrencyAmountRaw }
   }

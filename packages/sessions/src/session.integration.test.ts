@@ -2,6 +2,7 @@ import { createChallengeSolverService } from '@universe/sessions/src/challenge-s
 import { createHashcashSolver } from '@universe/sessions/src/challenge-solvers/createHashcashSolver'
 import { createNoneMockSolver } from '@universe/sessions/src/challenge-solvers/createNoneMockSolver'
 import { createTurnstileMockSolver } from '@universe/sessions/src/challenge-solvers/createTurnstileMockSolver'
+import type { PerformanceTracker } from '@universe/sessions/src/performance/types'
 import { createSessionInitializationService } from '@universe/sessions/src/session-initialization/createSessionInitializationService'
 import { createSessionClient } from '@universe/sessions/src/session-repository/createSessionClient'
 import { createSessionRepository } from '@universe/sessions/src/session-repository/createSessionRepository'
@@ -17,42 +18,48 @@ import {
   createCookieJar,
   createLocalCookieTransport,
 } from '@universe/sessions/src/test-utils/createLocalCookieTransport'
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { createLocalHeaderTransport } from '@universe/sessions/src/test-utils/createLocalHeaderTransport'
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-// Skip this test in CI unless explicitly enabled
-const SESSION_INTEGRATION_ENABLE_REAL_BACKEND = process.env.SESSION_INTEGRATION_ENABLE_REAL_BACKEND === 'true'
-const BACKEND_URL = 'https://entry-gateway.backend-dev.api.uniswap.org'
+// Mock performance tracker for testing
+function createMockPerformanceTracker(): PerformanceTracker {
+  let time = 0
+  return {
+    now: (): number => {
+      time += 100
+      return time
+    },
+  }
+}
+
+const BACKEND_URL = 'https://entry-gateway.backend-staging.api.uniswap.org'
 // const BACKEND_URL = 'http://localhost:3000'
 
-describe.skipIf(!SESSION_INTEGRATION_ENABLE_REAL_BACKEND)('Real Backend Integration - Full Service Stack', () => {
+// =============================================================================
+// Web Platform Tests (Turnstile + Hashcash)
+// =============================================================================
+// Web uses Turnstile (browser CAPTCHA) first, then falls back to Hashcash
+describe('Real Backend Integration - Web (Turnstile + Hashcash)', () => {
   let sessionService: SessionService
   let sessionStorage: InMemorySessionStorage
   let cookieJar: Map<string, string>
   let challengeSolverService: ReturnType<typeof createChallengeSolverService>
 
   beforeAll(() => {
-    // Create cookie jar for browser simulation
+    sessionStorage = new InMemorySessionStorage()
     cookieJar = createCookieJar()
 
-    // Create solver map
-    // Note: Backend tries Turnstile first (which will fail with mock), then falls back to hashcash
+    // Web uses Turnstile first (which will fail with mock), then falls back to hashcash
     const solvers = new Map([
       [ChallengeType.UNSPECIFIED, createNoneMockSolver()],
       [ChallengeType.TURNSTILE, createTurnstileMockSolver()],
-      [ChallengeType.HASHCASH, createHashcashSolver()],
+      [ChallengeType.HASHCASH, createHashcashSolver({ performanceTracker: createMockPerformanceTracker() })],
     ])
 
-    // Create transport using test utility
-    const transport = createLocalCookieTransport({
-      baseUrl: BACKEND_URL,
-      cookieJar,
-    })
-
-    // Wire up production service stack
+    const transport = createLocalCookieTransport({ baseUrl: BACKEND_URL, cookieJar })
     const sessionClient = createSessionClient({ transport })
     const sessionRepository = createSessionRepository({ client: sessionClient })
 
-    sessionStorage = new InMemorySessionStorage()
     sessionService = createSessionService({
       sessionStorage,
       deviceIdService: new InMemoryDeviceIdService(),
@@ -64,75 +71,65 @@ describe.skipIf(!SESSION_INTEGRATION_ENABLE_REAL_BACKEND)('Real Backend Integrat
   })
 
   beforeEach(async () => {
-    // Clean state before each test
     await sessionService.removeSession()
     cookieJar.clear()
     await sessionStorage.clear()
   })
 
-  // Test 1: Session init and cookie storage
-  it('initializes session and stores cookie without auto-upgrade', async () => {
-    // Create service with auto-upgrade disabled
+  it('initializes session with cookie, empty response sessionId', async () => {
     const manualInitService = createSessionInitializationService({
       getSessionService: () => sessionService,
       challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
       getIsSessionUpgradeAutoEnabled: () => false,
     })
 
-    // Call initialize without automatic challenge handling
     const result = await manualInitService.initialize()
 
-    // When needChallenge is true, backend sets cookie but doesn't return sessionId in response
-    // Verify cookie was set (this is the real session ID)
+    // Web: Session ID is in the cookie, not in response body
     expect(cookieJar.has('x-session-id')).toBe(true)
-    const sessionIdFromCookie = cookieJar.get('x-session-id')
-    expect(sessionIdFromCookie).toBeTruthy()
+    expect(cookieJar.get('x-session-id')).toBeTruthy()
 
-    // The result.sessionId is empty when challenge is needed
-    expect(result.sessionId).toBe('')
-    expect(result.isNewSession).toBe(true)
+    // Web platform: sessionId is null (stored in cookie, not response body)
+    expect(result.sessionId).toBeNull()
 
-    // Session is NOT stored locally yet because backend didn't provide sessionId
-    // It will only be stored after the challenge is completed
+    // Session is NOT stored locally yet because challenge is needed
     const sessionState = await sessionService.getSessionState()
     expect(sessionState).toBeNull()
   }, 30000)
 
-  // Test 2: Turnstile is attempted first
-  it('attempts Turnstile challenge first', async () => {
-    // Init session with auto-upgrade disabled
+  it('receives Turnstile challenge first', async () => {
     const manualInitService = createSessionInitializationService({
       getSessionService: () => sessionService,
       challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
       getIsSessionUpgradeAutoEnabled: () => false,
     })
 
     await manualInitService.initialize()
 
-    // Request challenge
     const challenge = await sessionService.requestChallenge()
 
-    // Verify backend sends Turnstile first
+    // Web gets Turnstile first (browser-based CAPTCHA)
     expect(challenge.challengeType).toBe(ChallengeType.TURNSTILE)
     expect(challenge.challengeId).toBeTruthy()
   }, 30000)
 
-  // Test 3: Hashcash is used after Turnstile fails
-  it('retries with Hashcash after Turnstile fails', async () => {
-    // Init session with auto-upgrade disabled
+  it('falls back to Hashcash after Turnstile fails', async () => {
     const manualInitService = createSessionInitializationService({
       getSessionService: () => sessionService,
       challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
       getIsSessionUpgradeAutoEnabled: () => false,
     })
 
     await manualInitService.initialize()
 
-    // Request challenge (get Turnstile)
+    // Get Turnstile challenge
     const turnstileChallenge = await sessionService.requestChallenge()
     expect(turnstileChallenge.challengeType).toBe(ChallengeType.TURNSTILE)
 
-    // Solve with mock Turnstile
+    // Solve with mock Turnstile (will fail)
     const turnstileSolver = challengeSolverService.getSolver(ChallengeType.TURNSTILE)
     const turnstileSolution = await turnstileSolver?.solve({
       challengeId: turnstileChallenge.challengeId,
@@ -141,51 +138,270 @@ describe.skipIf(!SESSION_INTEGRATION_ENABLE_REAL_BACKEND)('Real Backend Integrat
     })
 
     // Submit Turnstile mock solution
-    const turnstileResult = await sessionService.upgradeSession({
+    const turnstileResult = await sessionService.verifySession({
       solution: turnstileSolution || '',
       challengeId: turnstileChallenge.challengeId,
+      challengeType: turnstileChallenge.challengeType,
     })
 
-    // Verify retry is requested
+    // Turnstile failed, retry requested
     expect(turnstileResult.retry).toBe(true)
 
-    // Request challenge again
+    // Request challenge again - now we get Hashcash
     const hashcashChallenge = await sessionService.requestChallenge()
-
-    // Verify backend now sends Hashcash
     expect(hashcashChallenge.challengeType).toBe(ChallengeType.HASHCASH)
     expect(hashcashChallenge.challengeId).toBeTruthy()
   }, 30000)
 
-  // Test 4: Hashcash solution works
-  it.fails(
-    'successfully upgrades session with Hashcash',
+  it('successfully upgrades session with Hashcash after Turnstile fails', { timeout: 60000, retry: 2 }, async () => {
+    const manualInitService = createSessionInitializationService({
+      getSessionService: () => sessionService,
+      challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
+      getIsSessionUpgradeAutoEnabled: () => false,
+    })
+
+    await manualInitService.initialize()
+
+    // Turnstile attempt (fails)
+    const turnstileChallenge = await sessionService.requestChallenge()
+    const turnstileSolver = challengeSolverService.getSolver(ChallengeType.TURNSTILE)
+    const turnstileSolution = await turnstileSolver?.solve({
+      challengeId: turnstileChallenge.challengeId,
+      challengeType: turnstileChallenge.challengeType,
+      extra: turnstileChallenge.extra,
+    })
+
+    const turnstileResult = await sessionService.verifySession({
+      solution: turnstileSolution || '',
+      challengeId: turnstileChallenge.challengeId,
+      challengeType: turnstileChallenge.challengeType,
+    })
+    expect(turnstileResult.retry).toBe(true)
+
+    // Hashcash attempt
+    const hashcashChallenge = await sessionService.requestChallenge()
+    expect(hashcashChallenge.challengeType).toBe(ChallengeType.HASHCASH)
+
+    const hashcashSolver = challengeSolverService.getSolver(ChallengeType.HASHCASH)
+    const hashcashSolution = await hashcashSolver?.solve({
+      challengeId: hashcashChallenge.challengeId,
+      challengeType: hashcashChallenge.challengeType,
+      extra: hashcashChallenge.extra,
+    })
+
+    const hashcashResult = await sessionService.verifySession({
+      solution: hashcashSolution || '',
+      challengeId: hashcashChallenge.challengeId,
+      challengeType: hashcashChallenge.challengeType,
+    })
+
+    // Success!
+    expect(hashcashResult.retry).toBe(false)
+  })
+
+  it('completes auto-upgrade flow (Turnstile fail → Hashcash success)', { timeout: 60000, retry: 2 }, async () => {
+    const autoInitService = createSessionInitializationService({
+      getSessionService: () => sessionService,
+      challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
+      getIsSessionUpgradeAutoEnabled: () => true,
+    })
+
+    const result = await autoInitService.initialize()
+
+    // Web: Session ID is in cookie, not returned by initSession when challenge is needed
+    // After challenge completion, the session is valid but sessionId in result may be empty
+    // because initSession originally returned empty sessionId
+    expect(cookieJar.has('x-session-id')).toBe(true)
+    expect(cookieJar.get('x-session-id')).toBeTruthy()
+  })
+
+  it(
+    'calls initSession on reinit - backend handles session reuse via cookie',
+    { timeout: 60000, retry: 2 },
     async () => {
-      // Init session with auto-upgrade disabled
+      const autoInitService = createSessionInitializationService({
+        getSessionService: () => sessionService,
+        challengeSolverService,
+        performanceTracker: createMockPerformanceTracker(),
+        getIsSessionUpgradeAutoEnabled: () => true,
+      })
+
+      await autoInitService.initialize()
+
+      // Cookie should be set from first init
+      expect(cookieJar.has('x-session-id')).toBe(true)
+      const originalSessionId = cookieJar.get('x-session-id')
+
+      // Simulate page refresh - call initialize again
+      // Backend receives cookie and decides to reuse session
+      const reinitService = createSessionInitializationService({
+        getSessionService: () => sessionService,
+        challengeSolverService,
+        performanceTracker: createMockPerformanceTracker(),
+        getIsSessionUpgradeAutoEnabled: () => true,
+      })
+
+      await reinitService.initialize()
+
+      // Backend should reuse session - cookie remains the same
+      expect(cookieJar.get('x-session-id')).toBe(originalSessionId)
+    },
+  )
+
+  it('fires analytics callbacks during auto-upgrade flow', { timeout: 60000, retry: 2 }, async () => {
+    const analytics = {
+      onInitStarted: vi.fn(),
+      onInitCompleted: vi.fn(),
+      onChallengeReceived: vi.fn(),
+      onVerifyCompleted: vi.fn(),
+    }
+
+    const autoInitService = createSessionInitializationService({
+      getSessionService: () => sessionService,
+      challengeSolverService,
+      performanceTracker: createMockPerformanceTracker(),
+      getIsSessionUpgradeAutoEnabled: () => true,
+      analytics,
+    })
+
+    await autoInitService.initialize()
+
+    // Verify analytics flow
+    expect(analytics.onInitStarted).toHaveBeenCalledTimes(1)
+    expect(analytics.onInitCompleted).toHaveBeenCalledWith(expect.objectContaining({ needChallenge: true }))
+    expect(analytics.onChallengeReceived).toHaveBeenCalled()
+    // Verification may be called multiple times due to retries
+    expect(analytics.onVerifyCompleted).toHaveBeenCalled()
+    // Last call should be success
+    const lastVerificationCall = analytics.onVerifyCompleted.mock.calls.at(-1)?.[0]
+    expect(lastVerificationCall?.success).toBe(true)
+  })
+
+  afterAll(async () => {
+    await sessionService.removeSession()
+    cookieJar.clear()
+    await sessionStorage.clear()
+  })
+})
+
+// =============================================================================
+// Non-Web Platform Tests (Hashcash only)
+// =============================================================================
+// iOS, Android, and Extension skip Turnstile and go straight to Hashcash
+type NonWebPlatform = 'ios' | 'android' | 'extension'
+type NonWebRequestSource = 'uniswap-ios' | 'uniswap-android' | 'uniswap-extension'
+
+interface NonWebPlatformConfig {
+  platform: NonWebPlatform
+  requestSource: NonWebRequestSource
+}
+
+const NON_WEB_PLATFORMS: NonWebPlatformConfig[] = [
+  { platform: 'ios', requestSource: 'uniswap-ios' },
+  { platform: 'android', requestSource: 'uniswap-android' },
+  { platform: 'extension', requestSource: 'uniswap-extension' },
+]
+
+describe.each(NON_WEB_PLATFORMS)(
+  'Real Backend Integration - $platform (Hashcash only)',
+  ({ platform: _platform, requestSource }) => {
+    let sessionService: SessionService
+    let sessionStorage: InMemorySessionStorage
+    let deviceIdService: InMemoryDeviceIdService
+    let uniswapIdentifierService: InMemoryUniswapIdentifierService
+    let challengeSolverService: ReturnType<typeof createChallengeSolverService>
+
+    beforeAll(() => {
+      sessionStorage = new InMemorySessionStorage()
+      deviceIdService = new InMemoryDeviceIdService()
+      uniswapIdentifierService = new InMemoryUniswapIdentifierService()
+
+      // Non-web platforms only use Hashcash (no Turnstile)
+      const solvers = new Map([
+        [ChallengeType.UNSPECIFIED, createNoneMockSolver()],
+        [ChallengeType.HASHCASH, createHashcashSolver({ performanceTracker: createMockPerformanceTracker() })],
+      ])
+
+      const transport = createLocalHeaderTransport({
+        baseUrl: BACKEND_URL,
+        requestSource,
+        getSessionId: async () => (await sessionStorage.get())?.sessionId ?? null,
+        getDeviceId: async () => deviceIdService.getDeviceId(),
+      })
+
+      const sessionClient = createSessionClient({ transport })
+      const sessionRepository = createSessionRepository({ client: sessionClient })
+
+      sessionService = createSessionService({
+        sessionStorage,
+        deviceIdService,
+        uniswapIdentifierService,
+        sessionRepository,
+      })
+
+      challengeSolverService = createChallengeSolverService({ solvers })
+    })
+
+    beforeEach(async () => {
+      await sessionService.removeSession()
+      await sessionStorage.clear()
+      await deviceIdService.removeDeviceId()
+      await uniswapIdentifierService.removeUniswapIdentifier()
+    })
+
+    it('initializes session with session ID and device ID stored locally', async () => {
       const manualInitService = createSessionInitializationService({
         getSessionService: () => sessionService,
         challengeSolverService,
+        performanceTracker: createMockPerformanceTracker(),
         getIsSessionUpgradeAutoEnabled: () => false,
       })
 
-      const initResult = await manualInitService.initialize()
+      const result = await manualInitService.initialize()
 
-      // Do Turnstile attempt (fails)
-      const turnstileChallenge = await sessionService.requestChallenge()
-      const turnstileSolver = challengeSolverService.getSolver(ChallengeType.TURNSTILE)
-      const turnstileSolution = await turnstileSolver?.solve({
-        challengeId: turnstileChallenge.challengeId,
-        challengeType: turnstileChallenge.challengeType,
-        extra: turnstileChallenge.extra,
+      // Non-web: Backend returns session ID in response, which gets stored locally
+      // sessionId is returned regardless of challenge status
+      expect(result.sessionId).toBeTruthy()
+
+      // Session IS stored locally (unlike web which uses cookies)
+      const sessionState = await sessionService.getSessionState()
+      expect(sessionState?.sessionId).toBe(result.sessionId)
+
+      // Device ID should also be returned and stored
+      const storedDeviceId = await deviceIdService.getDeviceId()
+      expect(storedDeviceId).toBeTruthy()
+    }, 30000)
+
+    it('receives Hashcash challenge directly (no Turnstile)', async () => {
+      const manualInitService = createSessionInitializationService({
+        getSessionService: () => sessionService,
+        challengeSolverService,
+        performanceTracker: createMockPerformanceTracker(),
+        getIsSessionUpgradeAutoEnabled: () => false,
       })
 
-      const turnstileResult = await sessionService.upgradeSession({
-        solution: turnstileSolution || '',
-        challengeId: turnstileChallenge.challengeId,
-      })
-      expect(turnstileResult.retry).toBe(true)
+      await manualInitService.initialize()
 
-      // Do Hashcash attempt
+      const challenge = await sessionService.requestChallenge()
+
+      // Non-web gets Hashcash directly (Turnstile is browser-only)
+      expect(challenge.challengeType).toBe(ChallengeType.HASHCASH)
+      expect(challenge.challengeId).toBeTruthy()
+    }, 30000)
+
+    it('successfully upgrades session with Hashcash', { timeout: 60000, retry: 2 }, async () => {
+      const manualInitService = createSessionInitializationService({
+        getSessionService: () => sessionService,
+        challengeSolverService,
+        performanceTracker: createMockPerformanceTracker(),
+        getIsSessionUpgradeAutoEnabled: () => false,
+      })
+
+      await manualInitService.initialize()
+
+      // Get Hashcash challenge directly
       const hashcashChallenge = await sessionService.requestChallenge()
       expect(hashcashChallenge.challengeType).toBe(ChallengeType.HASHCASH)
 
@@ -196,51 +412,69 @@ describe.skipIf(!SESSION_INTEGRATION_ENABLE_REAL_BACKEND)('Real Backend Integrat
         extra: hashcashChallenge.extra,
       })
 
-      // Submit Hashcash solution
-      const hashcashResult = await sessionService.upgradeSession({
+      const hashcashResult = await sessionService.verifySession({
         solution: hashcashSolution || '',
         challengeId: hashcashChallenge.challengeId,
+        challengeType: hashcashChallenge.challengeType,
       })
 
-      // Verify success (no retry)
+      // Success!
       expect(hashcashResult.retry).toBe(false)
+    })
 
-      // Verify session is still valid
-      const sessionState = await sessionService.getSessionState()
-      expect(sessionState?.sessionId).toBe(initResult.sessionId)
-    },
-    60000,
-  )
-
-  // Test 5: Full auto flow
-  it.fails(
-    'completes full auto-upgrade flow',
-    async () => {
-      // Create service with auto-upgrade enabled
+    it('completes auto-upgrade flow', { timeout: 60000, retry: 2 }, async () => {
       const autoInitService = createSessionInitializationService({
         getSessionService: () => sessionService,
         challengeSolverService,
+        performanceTracker: createMockPerformanceTracker(),
         getIsSessionUpgradeAutoEnabled: () => true,
       })
 
-      // Call initialize - should handle everything automatically
       const result = await autoInitService.initialize()
 
-      // Should complete successfully (Turnstile fail → Hashcash success)
       expect(result.sessionId).toBeTruthy()
-      expect(result.isNewSession).toBe(true)
 
-      // Verify cookie was set
-      expect(cookieJar.has('x-session-id')).toBe(true)
-      expect(cookieJar.get('x-session-id')).toBe(result.sessionId)
-    },
-    60000,
-  )
+      const sessionState = await sessionService.getSessionState()
+      expect(sessionState?.sessionId).toBe(result.sessionId)
+    })
 
-  afterAll(async () => {
-    // Clean up
-    await sessionService.removeSession()
-    cookieJar.clear()
-    await sessionStorage.clear()
-  })
-})
+    it(
+      'calls initSession on reinit - backend handles session reuse via X-Session-ID header',
+      { timeout: 60000, retry: 2 },
+      async () => {
+        // First: Complete auto-upgrade flow
+        const autoInitService = createSessionInitializationService({
+          getSessionService: () => sessionService,
+          challengeSolverService,
+          performanceTracker: createMockPerformanceTracker(),
+          getIsSessionUpgradeAutoEnabled: () => true,
+        })
+
+        const firstResult = await autoInitService.initialize()
+        expect(firstResult.sessionId).toBeTruthy()
+        const originalSessionId = firstResult.sessionId
+
+        // Simulate app refresh - call initialize again
+        // Backend receives X-Session-ID header and decides to reuse session
+        const reinitService = createSessionInitializationService({
+          getSessionService: () => sessionService,
+          challengeSolverService,
+          performanceTracker: createMockPerformanceTracker(),
+          getIsSessionUpgradeAutoEnabled: () => true,
+        })
+
+        const secondResult = await reinitService.initialize()
+
+        // Backend should reuse session - session ID remains the same
+        expect(secondResult.sessionId).toBe(originalSessionId)
+      },
+    )
+
+    afterAll(async () => {
+      await sessionService.removeSession()
+      await sessionStorage.clear()
+      await deviceIdService.removeDeviceId()
+      await uniswapIdentifierService.removeUniswapIdentifier()
+    })
+  },
+)

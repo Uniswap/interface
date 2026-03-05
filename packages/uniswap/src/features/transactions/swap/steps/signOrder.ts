@@ -29,7 +29,7 @@ export function createUniswapXPlanSignatureStep(
     ...step,
     ...permitData,
     type: TransactionStepType.UniswapXPlanSignature,
-    deadline: Number(permitData.values.deadline),
+    deadline: Number(permitData.values['deadline']),
   }
   return uniswapXPlanSignatureStep
 }

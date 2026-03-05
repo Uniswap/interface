@@ -91,8 +91,16 @@ export function createApiNotificationTracker(ctx: ApiNotificationTrackerContext)
     // where data source refetches before storage write completes
     pendingAcks.add(notificationId)
 
-    // Check if this is a local-only notification (client-defined, not from backend)
+    // Check notification type by prefix
     const isLocalNotification = notificationId.startsWith('local:')
+    const isSessionScopedNotification = notificationId.startsWith('local:session:')
+
+    // Session-scoped notifications only track in memory (pendingAcks), not storage.
+    // They will reset on app restart, allowing the notification to show again if
+    // the condition is still true (e.g., offline banner shows again after restart).
+    if (isSessionScopedNotification) {
+      return
+    }
 
     // Attempt to call the backend API to acknowledge the notification
     try {

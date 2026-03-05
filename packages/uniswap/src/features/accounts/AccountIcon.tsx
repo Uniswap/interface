@@ -1,6 +1,7 @@
 import { ColorTokens, Flex, FlexProps, Unicon, UniversalImage, UniversalImageResizeMode } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
+import { isWebPlatform } from 'utilities/src/platform'
 
 // Determines view only icon size in relation to Account Icon size
 const EYE_ICON_SCALING_FACTOR = 0.4
@@ -16,6 +17,14 @@ interface AccountIconProps {
   borderColor?: ColorTokens
   transition?: string
 }
+
+// We want to animate the icon only on web, as on Android the opacity is not being increased.
+const ACCOUNT_ICON_WEB_STYLING: FlexProps = isWebPlatform
+  ? {
+      animation: 'fast',
+      enterStyle: { opacity: 0 },
+    }
+  : {}
 
 export function AccountIcon({
   size,
@@ -51,12 +60,10 @@ export function AccountIcon({
       borderWidth={showBorder ? borderWidth : '$none'}
       position="relative"
       testID="account-icon"
-      width={size}
-      height={size}
       style={sizeTransitionStyle}
       {...flexProps}
     >
-      <Flex animation="fast" enterStyle={{ opacity: 0 }}>
+      <Flex {...ACCOUNT_ICON_WEB_STYLING}>
         <UniversalImage
           style={{ image: { borderRadius: size, ...sizeTransitionStyle } }}
           fallback={uniconImage}

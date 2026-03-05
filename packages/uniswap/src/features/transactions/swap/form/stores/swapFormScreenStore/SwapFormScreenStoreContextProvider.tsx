@@ -122,12 +122,14 @@ export const SwapFormScreenStoreContextProvider = ({
 
   // Chained Actions and Across only supports exact-in
   const isCrossChain = Boolean(input && output && input.chainId !== output.chainId)
-  const exactOutputDisabled = isCrossChain || exactOutputWillFail
+  const sameAssetBridgeDetected =
+    isCrossChain && !!currencies.input?.projectId && currencies.input.projectId === currencies.output?.projectId
 
   const callbacks = useSwapFormScreenCallbacks({
     exactOutputWouldFailIfCurrenciesSwitched,
     exactFieldIsInput,
     isCrossChain,
+    sameAssetBridgeDetected,
     formattedDerivedValueRef,
     inputRef,
     outputRef,
@@ -182,7 +184,7 @@ export const SwapFormScreenStoreContextProvider = ({
       isFiatMode,
       exactFieldIsInput,
       exactFieldIsOutput,
-      exactOutputDisabled,
+      exactOutputDisabled: exactOutputWillFail,
       resetSelection: callbacks.resetSelection,
       currencyAmountsUSDValue,
       exactValue,
@@ -223,7 +225,7 @@ export const SwapFormScreenStoreContextProvider = ({
       isFiatMode,
       exactFieldIsInput,
       exactFieldIsOutput,
-      exactOutputDisabled,
+      exactOutputWillFail,
       callbacks.resetSelection,
       callbacks.onFocusInput,
       callbacks.onInputSelectionChange,

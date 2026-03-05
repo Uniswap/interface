@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { GasStrategy, TradingApi } from '@universe/api'
-import { getActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
+import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
 import {
   isZeroAmount,
   parseQuoteCurrencies,

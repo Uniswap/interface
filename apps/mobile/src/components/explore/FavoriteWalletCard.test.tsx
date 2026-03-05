@@ -68,6 +68,7 @@ describe('FavoriteWalletCard', () => {
         isRefetching: false,
         isStale: false,
         isInitialLoading: false,
+        isEnabled: true,
         errorUpdateCount: 0,
         isFetched: true,
         isFetchedAfterMount: true,

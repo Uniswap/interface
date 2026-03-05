@@ -43,6 +43,7 @@ import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebu
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
+import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { getReduxPersistor } from 'wallet/src/state/persistor'
 
@@ -196,8 +197,10 @@ export default function OnboardingApp(): JSX.Element {
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
         <OnboardingNavigationProvider>
           <WalletUniswapProvider>
-            <PrimaryAppInstanceDebuggerLazy />
-            <RouterProvider router={router} />
+            <AccountsStoreContextProvider>
+              <PrimaryAppInstanceDebuggerLazy />
+              <RouterProvider router={router} />
+            </AccountsStoreContextProvider>
           </WalletUniswapProvider>
         </OnboardingNavigationProvider>
       </BaseAppContainer>

@@ -1,11 +1,5 @@
-import {
-  type FlagWarning,
-  getFlagsFromContractAddress,
-  getFlagWarning,
-} from 'components/Liquidity/utils/getFlagWarnings'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CopyHelper } from 'theme/components/CopyHelper'
 import { Button, Checkbox, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
@@ -20,6 +14,12 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
+import {
+  type FlagWarning,
+  getFlagsFromContractAddress,
+  getFlagWarning,
+} from '~/components/Liquidity/utils/getFlagWarnings'
+import { CopyHelper } from '~/theme/components/CopyHelper'
 
 function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDangerous: boolean }) {
   const { t } = useTranslation()
@@ -45,7 +45,7 @@ function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDanger
               {expandedProperties ? t('position.addingHook.hideProperties') : t('position.addingHook.viewProperties')}
             </Text>
           </Flex>
-          <RotatableChevron direction={expandedProperties ? 'up' : 'down'} color="$neutral2" width={16} height={16} />
+          <RotatableChevron direction={expandedProperties ? 'up' : 'down'} color="$neutral2" size="$icon.16" />
         </Flex>
       </TouchableArea>
       {expandedProperties && (

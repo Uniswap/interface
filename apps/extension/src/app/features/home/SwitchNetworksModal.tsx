@@ -53,13 +53,7 @@ export function SwitchNetworksModal({ onPress }: SwitchNetworksModalProps): JSX.
       <Flex px="$spacing8">
         <Flex row alignItems="center" py="$spacing4" width="100%">
           <TouchableArea onPress={handlePress}>
-            <RotatableChevron
-              color="$neutral3"
-              direction="left"
-              flexShrink={1}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            <RotatableChevron color="$neutral3" direction="left" flexShrink={1} size="$icon.16" />
           </TouchableArea>
           <Flex centered fill py="$spacing8">
             <Text color="$neutral1" variant="body3">

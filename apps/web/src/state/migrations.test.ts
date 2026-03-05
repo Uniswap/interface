@@ -1,11 +1,11 @@
 import { Store } from '@reduxjs/toolkit'
 import { persistStore } from 'redux-persist'
-import { createDefaultStore } from 'state'
-import { initialState as initialListsState } from 'state/lists/reducer'
-import { PERSIST_VERSION } from 'state/migrations'
-import { RouterPreference } from 'state/routing/types'
-import { initialState as initialUserState } from 'state/user/reducer'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
+import { createDefaultStore } from '~/state'
+import { initialState as initialListsState } from '~/state/lists/reducer'
+import { PERSIST_VERSION } from '~/state/migrations'
+import { RouterPreference } from '~/state/routing/types'
+import { initialState as initialUserState } from '~/state/user/reducer'
 
 const defaultState = {
   lists: {},
@@ -20,21 +20,6 @@ const defaultState = {
     openModal: null,
   },
   logs: {},
-  mint: {
-    independentField: 'CURRENCY_A',
-    leftRangeTypedValue: '',
-    otherTypedValue: '',
-    rightRangeTypedValue: '',
-    startPriceTypedValue: '',
-    typedValue: '',
-  },
-  mintV3: {
-    independentField: 'CURRENCY_A',
-    leftRangeTypedValue: '',
-    rightRangeTypedValue: '',
-    startPriceTypedValue: '',
-    typedValue: '',
-  },
   searchHistory: {
     results: [],
   },

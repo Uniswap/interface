@@ -113,7 +113,7 @@ describe('Wallet Accounts Store Getters', () => {
       const getters = createAccountsStoreGetters(() => state)
 
       const wallet = getters.getActiveWallet()
-      expect(wallet).toEqual(state.wallets.stored_mnemonic_wallet)
+      expect(wallet).toEqual(state.wallets['stored_mnemonic_wallet'])
     })
 
     it('should return undefined when no session exists', () => {

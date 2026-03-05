@@ -76,9 +76,11 @@ it('formats fiat estimates on token details pages correctly', () => {
 
   expect(formatNumber({ input: 1.234e-7, type: NumberType.FiatTokenDetails, locale: 'en-US' })).toBe('$0.000000123')
   expect(formatNumber({ input: 9.876e-9, type: NumberType.FiatTokenDetails, locale: 'en-US' })).toBe('<$0.00000001')
+  expect(formatNumber({ input: 0, type: NumberType.FiatTokenDetails, locale: 'en-US' })).toBe('$0')
 })
 
 it('formats fiat estimates for tokens correctly', () => {
+  expect(formatNumber({ input: 1234567000000000, type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('>$999T')
   expect(formatNumber({ input: 1234567.891, type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('$1.23M')
   expect(formatNumber({ input: 1234.5678, type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('$1,234.57')
 
@@ -88,6 +90,7 @@ it('formats fiat estimates for tokens correctly', () => {
 
   expect(formatNumber({ input: 1.234e-7, type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('$0.000000123')
   expect(formatNumber({ input: 9.876e-9, type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('<$0.00000001')
+  expect(formatNumber({ input: 0, type: NumberType.FiatTokenPrice, locale: 'en-US' })).toBe('$0')
 })
 
 it('formats fiat estimates for token stats correctly', () => {

@@ -29,7 +29,7 @@ export function FiatOnRampCtaButton({
         isLoading ? <SpinningLoader color="$white" /> : !eligible ? <InfoCircleFilled color="$neutral3" /> : undefined
       }
       iconPosition="after"
-      size={isShortMobileDevice ? 'small' : 'large'}
+      size={isShortMobileDevice ? 'medium' : 'large'}
       emphasis={isLoading ? 'secondary' : buttonAvailable ? 'primary' : 'secondary'}
       loading={isLoading}
       variant="branded"

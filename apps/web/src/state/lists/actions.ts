@@ -16,3 +16,6 @@ export const removeList = createAction<string>('lists/removeList')
 
 // versioning
 export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
+
+// reset
+export const resetLists = createAction('lists/reset')

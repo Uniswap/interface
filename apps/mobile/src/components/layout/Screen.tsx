@@ -25,7 +25,12 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
   const insets = useAppInsets() // useAppInsets uses useSafeAreaInsets internally
 
   const safeAreaStyles = useMemo(() => {
-    const style: { [key: string]: number } = {}
+    const style: {
+      paddingTop?: number
+      paddingBottom?: number
+      paddingLeft?: number
+      paddingRight?: number
+    } = {}
 
     if (noInsets) {
       return style

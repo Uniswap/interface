@@ -13,8 +13,11 @@ export const PBKDF2_PARAMS: Omit<Pbkdf2Params, 'salt'> & { hash: string } = {
 export const AES_GCM_PARAMS: AesKeyGenParams = { name: 'AES-GCM', length: 256 }
 
 // TODO: improve encoding/decoding
-export const encodeForStorage = (payload: Uint8Array): string => payload.toString()
-export const decodeFromStorage = (payload: string): Uint8Array =>
+export const encodeForStorage = (payload: BufferSource): string => {
+  const uint8Array = payload instanceof Uint8Array ? payload : new Uint8Array(payload as ArrayBuffer)
+  return uint8Array.toString()
+}
+export const decodeFromStorage = (payload: string): BufferSource =>
   new Uint8Array(payload.split(',').map((x) => Number(x)))
 
 // An encrypted secret with associated metadata required for decryption
@@ -26,20 +29,20 @@ export type SecretPayload = {
   iterations: number
   hash: string
 }
-export function generateNewSalt(): Uint8Array {
+export function generateNewSalt(): BufferSource {
   return crypto.getRandomValues(new Uint8Array(16))
 }
-export function generateNewIV(): Uint8Array {
+export function generateNewIV(): BufferSource {
   return crypto.getRandomValues(new Uint8Array(12))
 }
-export function generateNew256BitRandomBuffer(): Uint8Array {
+export function generateNew256BitRandomBuffer(): BufferSource {
   return crypto.getRandomValues(new Uint8Array(32))
 }
 
 interface EncryptParams {
   plaintext: string
   encryptionKey: CryptoKey
-  iv: Uint8Array
+  iv: BufferSource
   additionalData?: string
 }
 // encrypts and returns the cipher text
@@ -59,8 +62,8 @@ export async function encrypt({ plaintext, encryptionKey, iv, additionalData }: 
 
 interface DecryptParams {
   encryptionKey: CryptoKey
-  ciphertext: Uint8Array
-  iv: Uint8Array
+  ciphertext: BufferSource
+  iv: BufferSource
   additionalData?: string
 }
 
@@ -99,8 +102,8 @@ export async function exportKey(key: CryptoKey): Promise<string> {
   return keyBase64
 }
 
-export async function convertBytesToCryptoKey(bytes: Uint8Array): Promise<CryptoKey> {
-  return window.crypto.subtle.importKey('raw', bytes, AES_GCM_PARAMS, true, ['encrypt', 'decrypt'])
+export async function convertBytesToCryptoKey(bytes: BufferSource): Promise<CryptoKey> {
+  return window.crypto.subtle.importKey('raw', bytes, { name: 'AES-GCM' }, true, ['encrypt', 'decrypt'])
 }
 
 export async function convertBase64SeedToCryptoKey(keyBase64: string): Promise<CryptoKey> {

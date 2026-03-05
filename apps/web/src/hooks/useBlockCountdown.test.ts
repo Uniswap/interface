@@ -1,6 +1,6 @@
-import { useBlockCountdown } from 'hooks/useBlockCountdown'
-import { renderHook } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useBlockCountdown } from '~/hooks/useBlockCountdown'
+import { renderHook } from '~/test-utils/render'
 
 const mockUseBlock = vi.fn()
 
@@ -48,17 +48,17 @@ describe('useBlockCountdown', () => {
     expect(result.current).toBe(7)
   })
 
-  it('should calculate countdown for L2 chains', () => {
+  it('should calculate countdown for L2 chains (Base with 2s block time)', () => {
     const now = 1000000
     const blockTimestamp = now - 1 // 1 second ago
     vi.setSystemTime(now * 1000)
 
     mockUseBlock.mockReturnValue({ data: { timestamp: BigInt(blockTimestamp) } })
 
-    const { result } = renderHook(() => useBlockCountdown(UniverseChainId.ArbitrumOne))
+    const { result } = renderHook(() => useBlockCountdown(UniverseChainId.Base))
 
-    // With 3s block time and 1s elapsed, should have 2s remaining
-    expect(result.current).toBe(2)
+    // With 2s block time and 1s elapsed, should have 1s remaining
+    expect(result.current).toBe(1)
   })
 
   it('should cycle countdown from max when reaching zero', () => {

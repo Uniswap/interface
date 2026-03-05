@@ -15,7 +15,6 @@ import {
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Flex } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -146,7 +145,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         onClose={onClose}
       >
         <Flex alignSelf="stretch" backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing16">
-          <AccountDetails address={currRequest.account} iconSize={iconSizes.icon24} />
+          <AccountDetails address={currRequest.account} />
         </Flex>
       </WarningModal>
     )

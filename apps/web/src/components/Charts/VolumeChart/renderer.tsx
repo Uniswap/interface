@@ -3,37 +3,23 @@
  * Modifications are called out with comments.
  */
 
-import { GraphQLApi } from '@universe/api'
-import { roundRect } from 'components/Charts/utils'
-import {
-  ColumnPosition,
-  calculateColumnPositionsInPlace,
-  isStackedHistogramData,
-  positionsBox,
-} from 'components/Charts/VolumeChart/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
-  CustomData,
   CustomSeriesOptions,
   ICustomSeriesPaneRenderer,
   PaneRendererCustomData,
   PriceToCoordinateConverter,
   Time,
-  UTCTimestamp,
 } from 'lightweight-charts'
-
-// Modification: custom implementations of lw-chart's histogram data types
-export interface SingleHistogramData extends CustomData {
-  value: number
-  time: UTCTimestamp
-}
-
-export interface StackedHistogramData extends CustomData {
-  values: Record<GraphQLApi.PriceSource, number | undefined>
-  time: UTCTimestamp
-}
-
-export type CustomHistogramData = SingleHistogramData | StackedHistogramData
+import { roundRect } from '~/components/Charts/utils'
+import {
+  ColumnPosition,
+  CustomHistogramData,
+  calculateColumnPositionsInPlace,
+  isStackedHistogramData,
+  positionsBox,
+  StackedHistogramData,
+} from '~/components/Charts/VolumeChart/utils'
 
 interface BarItem {
   x: number

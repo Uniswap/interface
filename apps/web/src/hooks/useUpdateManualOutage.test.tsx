@@ -1,35 +1,29 @@
 import { ApolloError } from '@apollo/client'
 import { renderHook } from '@testing-library/react'
 import { GraphQLApi } from '@universe/api'
-import { useUpdateManualOutage } from 'hooks/useUpdateManualOutage'
-import { Provider } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
-import { ReactNode } from 'react'
-import { manualChainOutageAtom } from 'state/outage/atoms'
-import { mocked } from 'test-utils/mocked'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
+import { useManualChainOutageStore } from '~/state/outage/store'
+import { mocked } from '~/test-utils/mocked'
 
 vi.mock('utilities/src/connection/useIsOffline', () => ({
   useIsOffline: vi.fn(),
 }))
 
-// Wrapper component for Jotai Provider - creates a fresh scope for each test
-function JotaiWrapper({ children }: { children: ReactNode }) {
-  return <Provider>{children}</Provider>
-}
-
-// Helper to test hook behavior and read atom value in one render
+// Helper to test hook behavior and read store value in one render
 function useTestHook(props: Parameters<typeof useUpdateManualOutage>[0]) {
   useUpdateManualOutage(props)
-  const manualOutage = useAtomValue(manualChainOutageAtom)
+  const manualOutage = useManualChainOutageStore((s) => s.data)
   return { manualOutage }
 }
 
 describe('useUpdateManualOutage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Reset the Zustand store before each test
+    useManualChainOutageStore.getState().reset()
     // Default to online
     mocked(useIsOffline).mockReturnValue(false)
   })
@@ -40,7 +34,7 @@ describe('useUpdateManualOutage', () => {
 
   describe('Basic Behavior', () => {
     it('should not update atom when chainId is undefined', () => {
-      const { result } = renderHook(() => useTestHook({ chainId: undefined }), { wrapper: JotaiWrapper })
+      const { result } = renderHook(() => useTestHook({ chainId: undefined }))
 
       expect(result.current.manualOutage).toBeUndefined()
     })
@@ -52,25 +46,21 @@ describe('useUpdateManualOutage', () => {
         networkError: new Error('Network failure'),
       })
 
-      const { result } = renderHook(
-        () =>
-          useTestHook({
-            chainId: UniverseChainId.Mainnet,
-            errorV3: networkError,
-          }),
-        { wrapper: JotaiWrapper },
+      const { result } = renderHook(() =>
+        useTestHook({
+          chainId: UniverseChainId.Mainnet,
+          errorV3: networkError,
+        }),
       )
 
       expect(result.current.manualOutage).toBeUndefined()
     })
 
     it('should dismiss banner when no errors are present', () => {
-      const { result } = renderHook(
-        () =>
-          useTestHook({
-            chainId: UniverseChainId.Mainnet,
-          }),
-        { wrapper: JotaiWrapper },
+      const { result } = renderHook(() =>
+        useTestHook({
+          chainId: UniverseChainId.Mainnet,
+        }),
       )
 
       expect(result.current.manualOutage).toBeUndefined()
@@ -83,13 +73,11 @@ describe('useUpdateManualOutage', () => {
         networkError: new Error('Network failure'),
       })
 
-      const { result } = renderHook(
-        () =>
-          useTestHook({
-            chainId: UniverseChainId.Mainnet,
-            errorV3: networkError,
-          }),
-        { wrapper: JotaiWrapper },
+      const { result } = renderHook(() =>
+        useTestHook({
+          chainId: UniverseChainId.Mainnet,
+          errorV3: networkError,
+        }),
       )
 
       expect(result.current.manualOutage).toEqual({
@@ -102,13 +90,11 @@ describe('useUpdateManualOutage', () => {
         networkError: new Error('Network failure'),
       })
 
-      const { result } = renderHook(
-        () =>
-          useTestHook({
-            chainId: UniverseChainId.Mainnet,
-            errorV2: networkError,
-          }),
-        { wrapper: JotaiWrapper },
+      const { result } = renderHook(() =>
+        useTestHook({
+          chainId: UniverseChainId.Mainnet,
+          errorV2: networkError,
+        }),
       )
 
       expect(result.current.manualOutage).toEqual({
@@ -127,13 +113,11 @@ describe('useUpdateManualOutage', () => {
         ],
       })
 
-      const { result } = renderHook(
-        () =>
-          useTestHook({
-            chainId: UniverseChainId.Mainnet,
-            errorV3: serverError,
-          }),
-        { wrapper: JotaiWrapper },
+      const { result } = renderHook(() =>
+        useTestHook({
+          chainId: UniverseChainId.Mainnet,
+          errorV3: serverError,
+        }),
       )
 
       expect(result.current.manualOutage).toEqual({
@@ -146,13 +130,11 @@ describe('useUpdateManualOutage', () => {
         networkError: Object.assign(new Error('Bad Request'), { statusCode: 400 }),
       })
 
-      const { result } = renderHook(
-        () =>
-          useTestHook({
-            chainId: UniverseChainId.Mainnet,
-            errorV3: clientError,
-          }),
-        { wrapper: JotaiWrapper },
+      const { result } = renderHook(() =>
+        useTestHook({
+          chainId: UniverseChainId.Mainnet,
+          errorV3: clientError,
+        }),
       )
 
       expect(result.current.manualOutage).toBeUndefined()
@@ -170,13 +152,11 @@ describe('useUpdateManualOutage', () => {
         ],
       })
 
-      const { result } = renderHook(
-        () =>
-          useTestHook({
-            chainId: UniverseChainId.Mainnet,
-            errorV3: externalApiError,
-          }),
-        { wrapper: JotaiWrapper },
+      const { result } = renderHook(() =>
+        useTestHook({
+          chainId: UniverseChainId.Mainnet,
+          errorV3: externalApiError,
+        }),
       )
 
       expect(result.current.manualOutage).toEqual({
@@ -198,7 +178,7 @@ describe('useUpdateManualOutage', () => {
             chainId: UniverseChainId.Mainnet,
             errorV3,
           }),
-        { initialProps: { errorV3: networkError as ApolloError | undefined }, wrapper: JotaiWrapper },
+        { initialProps: { errorV3: networkError as ApolloError | undefined } },
       )
 
       expect(result.current.manualOutage).toEqual({
@@ -225,7 +205,7 @@ describe('useUpdateManualOutage', () => {
             chainId: UniverseChainId.Mainnet,
             errorV3: error,
           }),
-        { initialProps: { error: networkError as ApolloError | undefined }, wrapper: JotaiWrapper },
+        { initialProps: { error: networkError as ApolloError | undefined } },
       )
 
       // Should not show banner while offline
@@ -255,7 +235,7 @@ describe('useUpdateManualOutage', () => {
             errorV3,
             trigger,
           }),
-        { initialProps: { trigger: 1, errorV3: networkError as ApolloError | undefined }, wrapper: JotaiWrapper },
+        { initialProps: { trigger: 1, errorV3: networkError as ApolloError | undefined } },
       )
 
       expect(result.current.manualOutage).toEqual({

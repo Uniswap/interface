@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getUniquePositionId } from 'uniswap/src/features/visibility/utils'
-import { CurrencyId } from 'uniswap/src/types/currency'
+import { type CurrencyId } from 'uniswap/src/types/currency'
 
 export type Visibility = { isVisible: boolean }
 export type PositionKeyToVisibility = Record<string, Visibility>
@@ -60,8 +60,10 @@ export const slice = createSlice({
     ) => {
       state.activity[transactionId] = { isVisible }
     },
+    resetVisibility: () => initialVisibilityState,
   },
 })
 
-export const { setPositionVisibility, setTokenVisibility, setNftVisibility, setActivityVisibility } = slice.actions
+export const { setPositionVisibility, setTokenVisibility, setNftVisibility, setActivityVisibility, resetVisibility } =
+  slice.actions
 export const { reducer: visibilityReducer } = slice

@@ -1,15 +1,25 @@
+/**
+ * Test helpers for testing migrations run in sequence.
+ *
+ * Called by migrations.test.ts to verify migrations work correctly with realistic
+ * data that has passed through all prior migrations in the chain.
+ *
+ * For unit tests of individual migrations, see walletMigrations.test.ts.
+ */
 /* biome-ignore-all lint/suspicious/noExplicitAny: Migration test utilities require flexible typing */
 /* eslint-disable max-lines */
+/* eslint-disable max-params */
 
 import { RankingType } from '@universe/api'
+import { BigNumber } from 'ethers'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { type Account } from 'wallet/src/features/wallet/accounts/types'
 
 export function testActivatePendingAccounts(migration: (state: any) => any, prevSchema: any): void {
   // all accounts active
@@ -756,4 +766,101 @@ export function testRemovePriceAlertsEnabledFromPushNotifications(
   const result = migration(prevSchema)
   expect(result.pushNotifications.generalUpdatesEnabled).toBe(prevSchema.pushNotifications.generalUpdatesEnabled)
   expect(result.pushNotifications.priceAlertsEnabled).toBeUndefined()
+}
+
+export function testRemoveWalletIsUnlockedState(migration: (state: any) => any, prevSchema: any): void {
+  const stub = { ...prevSchema }
+  const result = migration(stub)
+
+  expect(result.wallet.isUnlocked).toBe(undefined)
+}
+
+export function testRemoveUniconV2BehaviorState(migration: (state: any) => any, prevSchema: any): void {
+  const stub = { ...prevSchema }
+  const result = migration(stub)
+
+  expect(result.behaviorHistory.hasViewedUniconV2IntroModal).toBe(undefined)
+}
+
+export function testAddRoutingFieldToTransactions(migration: (state: any) => any, prevSchema: any): void {
+  const TEST_ADDRESS = '0xTestAddress'
+  const txDetails0 = {
+    chainId: UniverseChainId.Mainnet,
+    id: '0',
+    from: '0xTestAddress',
+    options: {
+      request: {
+        from: '0x123',
+        to: '0x456',
+        value: '0x0',
+        data: '0x789',
+        nonce: 10,
+        gasPrice: BigNumber.from('10000'),
+      },
+    },
+    typeInfo: {
+      type: TransactionType.Approve,
+      tokenAddress: '0xtokenAddress',
+      spender: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
+    },
+    status: TransactionStatus.Pending,
+    addedTime: 1487076708000,
+    hash: '0x123',
+  }
+
+  const txDetails1 = {
+    ...txDetails0,
+    chainId: UniverseChainId.Optimism,
+    id: '1',
+  }
+
+  const transactions = {
+    [TEST_ADDRESS]: {
+      [UniverseChainId.Mainnet]: {
+        '0': txDetails0,
+      },
+      [UniverseChainId.Optimism]: {
+        '1': txDetails1,
+      },
+    },
+  }
+
+  const stub = { ...prevSchema, transactions }
+
+  const result = migration(stub)
+
+  expect(result.transactions[TEST_ADDRESS][UniverseChainId.Mainnet]['0'].routing).toBe('CLASSIC')
+  expect(result.transactions[TEST_ADDRESS][UniverseChainId.Optimism]['1'].routing).toBe('CLASSIC')
+}
+
+export function testDeleteBetaOnboardingState(migration: (state: any) => any, prevSchema: any): void {
+  const stub = { ...prevSchema }
+  const result = migration(stub)
+
+  expect(result.behaviorHistory.extensionBetaFeedbackState).toBe(undefined)
+}
+
+export function testDeleteExtensionOnboardingState(migration: (state: any) => any, prevSchema: any): void {
+  const stub = { ...prevSchema }
+  const result = migration(stub)
+  expect(result.behaviorHistory.extensionOnboardingState).toBe(undefined)
+}
+
+export function testDeleteDefaultFavoritesFromFavoritesState(
+  migration: (state: any) => any,
+  prevSchema: any,
+  haydenEthAddress: string,
+): void {
+  const stub = { ...prevSchema }
+  stub.favorites.watchedAddresses = [haydenEthAddress] as never
+  const result = migration(stub)
+  expect(result.favorites.watchedAddresses).toEqual([])
+}
+
+export function testAddExploreAndWelcomeBehaviorHistory(migration: (state: any) => any, prevSchema: any): void {
+  const stub = { ...prevSchema }
+  const result = migration(stub)
+
+  expect(result.behaviorHistory.hasViewedWelcomeWalletCard).toBe(false)
+  expect(result.behaviorHistory.hasUsedExplore).toBe(false)
 }

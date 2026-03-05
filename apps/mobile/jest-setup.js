@@ -115,3 +115,16 @@ jest.mock("react-native-bootsplash", () => {
 jest.mock("react-native-keyboard-controller", () =>
   require("react-native-keyboard-controller/jest"),
 );
+
+// Mock @gorhom/bottom-sheet with plain View components
+jest.mock('@gorhom/bottom-sheet', () => {
+  const reactNative = jest.requireActual('react-native')
+  const { View } = reactNative
+  return {
+    __esModule: true,
+    default: View,
+    BottomSheetModal: View,
+    BottomSheetModalProvider: View,
+    BottomSheetView: View,
+  }
+})

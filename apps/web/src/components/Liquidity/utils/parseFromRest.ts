@@ -3,21 +3,20 @@ import {
   PoolPosition,
   ProtocolVersion,
   Pair as RestPair,
-  Pool as RestPool,
   Position as RestPosition,
   Token as RestToken,
 } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
+import { PoolInformation } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
-import { DYNAMIC_FEE_DATA, FeeData } from 'components/Liquidity/Create/types'
-import { PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { logger } from 'utilities/src/logger/logger'
+import { DYNAMIC_FEE_DATA, FeeData } from '~/components/Liquidity/Create/types'
+import { PositionInfo } from '~/components/Liquidity/types'
 
 function parseV3FeeTier(feeTier: number | string | undefined): FeeData | undefined {
   const parsedFee = Number(feeTier || '')
@@ -105,33 +104,6 @@ function getSDKPoolFromPoolPosition({
   )
 }
 
-export function getV4SDKPoolFromRestPool({
-  pool,
-  token0,
-  token1,
-  hooks,
-}: {
-  pool?: RestPool
-  token0: Maybe<Currency>
-  token1: Maybe<Currency>
-  hooks: string
-}): V4Pool | undefined {
-  if (!pool || !token0 || !token1) {
-    return undefined
-  }
-
-  return new V4Pool(
-    token0,
-    token1,
-    pool.fee,
-    pool.tickSpacing,
-    hooks || ZERO_ADDRESS,
-    pool.sqrtPriceX96,
-    pool.liquidity,
-    pool.tick,
-  )
-}
-
 export function getSDKPoolFromPoolInformation({
   poolOrPair,
   token0,
@@ -205,27 +177,42 @@ export function getSDKPoolFromPoolInformation({
     )
   }
 
-  if (protocolVersion === ProtocolVersion.V3) {
-    return new V3Pool(
-      token0 as Token,
-      token1 as Token,
-      parseV3FeeTier(poolOrPair.fee)?.feeAmount ?? FeeAmount.MEDIUM,
+  try {
+    if (protocolVersion === ProtocolVersion.V3) {
+      return new V3Pool(
+        token0 as Token,
+        token1 as Token,
+        parseV3FeeTier(poolOrPair.fee)?.feeAmount ?? FeeAmount.MEDIUM,
+        poolOrPair.sqrtRatioX96 ?? '0',
+        poolOrPair.poolLiquidity ?? '0',
+        poolOrPair.currentTick ?? 0,
+      )
+    }
+
+    return new V4Pool(
+      token0,
+      token1,
+      poolOrPair.fee ?? FeeAmount.MEDIUM,
+      poolOrPair.tickSpacing ?? DEFAULT_TICK_SPACING,
+      hooks || ZERO_ADDRESS,
       poolOrPair.sqrtRatioX96 ?? '0',
       poolOrPair.poolLiquidity ?? '0',
       poolOrPair.currentTick ?? 0,
     )
+  } catch (e) {
+    logger.error(e, {
+      tags: {
+        file: 'Liquidity/utils.tsx',
+        function: 'getSDKPoolFromPoolInformation',
+      },
+      extra: {
+        poolOrPair: JSON.stringify(poolOrPair),
+      },
+    })
+    // Return undefined instead of throwing to enable retry logic with manual refetch.
+    // The UI will show an error message with a retry button.
+    return undefined
   }
-
-  return new V4Pool(
-    token0,
-    token1,
-    poolOrPair.fee ?? FeeAmount.MEDIUM,
-    poolOrPair.tickSpacing ?? DEFAULT_TICK_SPACING,
-    hooks || ZERO_ADDRESS,
-    poolOrPair.sqrtRatioX96 ?? '0',
-    poolOrPair.poolLiquidity ?? '0',
-    poolOrPair.currentTick ?? 0,
-  )
 }
 
 function parseRestToken<T extends Currency>(token: RestToken | undefined): T | undefined {

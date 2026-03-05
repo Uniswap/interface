@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade } from '~/state/routing/types'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it

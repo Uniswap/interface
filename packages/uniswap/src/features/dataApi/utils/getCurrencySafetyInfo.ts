@@ -101,7 +101,7 @@ export function getRestCurrencySafetyInfo(
   }
 }
 
-export function getRestTokenSafetyInfo(metadata?: TokenMetadata): {
+export function getRestTokenSafetyInfo(metadata?: Pick<TokenMetadata, 'spamCode' | 'safetyLevel'>): {
   isSpam: boolean
   spamCodeValue: SpamCode
   mappedSafetyLevel: GraphQLApi.SafetyLevel | undefined

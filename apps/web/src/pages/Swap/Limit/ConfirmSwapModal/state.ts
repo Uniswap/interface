@@ -1,0 +1,8 @@
+export enum ConfirmModalState {
+  REVIEWING = 0,
+  WRAPPING = 1,
+  RESETTING_TOKEN_ALLOWANCE = 2,
+  APPROVING_TOKEN = 3,
+  PERMITTING = 4,
+  PENDING_CONFIRMATION = 5,
+}

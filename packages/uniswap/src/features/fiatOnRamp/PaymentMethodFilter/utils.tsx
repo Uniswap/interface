@@ -76,7 +76,7 @@ export function useEnabledPaymentMethodFilters(quotes?: Maybe<FORQuote[]>): Paym
 
   return useMemo(() => {
     const useablePaymentMethods = quotes
-      ?.flatMap((quote) => quote.serviceProviderDetails.paymentMethods)
+      ?.flatMap((quote) => quote.serviceProviderDetails?.paymentMethods ?? [])
       .flatMap((paymentMethod) => {
         const mappedFilter = FORFiltersMap[paymentMethod]
         return mappedFilter

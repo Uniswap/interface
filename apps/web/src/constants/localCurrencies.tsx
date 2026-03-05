@@ -1,3 +1,6 @@
+import { ReactNode, Suspense } from 'react'
+import { Loader } from 'ui/src/loading/Loader'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
   ARS_ICON,
   AUD_ICON,
@@ -14,6 +17,7 @@ import {
   KRW_ICON,
   MXN_ICON,
   NGN_ICON,
+  NZD_ICON,
   PKR_ICON,
   RUB_ICON,
   SGD_ICON,
@@ -21,10 +25,7 @@ import {
   UAH_ICON,
   USD_ICON,
   VND_ICON,
-} from 'constants/localCurrencyIcons'
-import { ReactNode, Suspense } from 'react'
-import { Loader } from 'ui/src/loading/Loader'
-import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+} from '~/constants/localCurrencyIcons'
 
 export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): ReactNode {
   switch (localCurrency) {
@@ -116,6 +117,12 @@ export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): Re
       return (
         <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
           <NGN_ICON width={size} height={size} />
+        </Suspense>
+      )
+    case FiatCurrency.NewZealandDollar:
+      return (
+        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
+          <NZD_ICON width={size} height={size} />
         </Suspense>
       )
     case FiatCurrency.AustralianDollar:

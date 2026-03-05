@@ -1,10 +1,5 @@
 import { VersionedTransaction } from '@solana/web3.js'
 import { JupiterExecuteResponse, TradingApi } from '@universe/api'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import { signSolanaTransactionWithCurrentWallet } from 'components/Web3Provider/signSolanaTransaction'
-import store from 'state'
-import { getSwapTransactionInfo } from 'state/sagas/transactions/utils'
 import { call, delay, spawn } from 'typed-redux-saga'
 import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterFetchClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -23,12 +18,16 @@ import {
   TransactionOriginType,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { tryCatch } from 'utilities/src/errors'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { signSolanaTransactionWithCurrentWallet } from '~/components/Web3Provider/signSolanaTransaction'
+import store from '~/state'
+import { getSwapTransactionInfo } from '~/state/sagas/transactions/utils'
 
 type JupiterSwapParams = {
-  account: SignerMnemonicAccountDetails
+  address: string
   analytics: ExtractedBaseTradeAnalyticsProperties
   swapTxContext: ValidatedSolanaSwapTxAndGasInfo
   /** Callback to trigger after swap has been signed but before confirmation. */
@@ -75,8 +74,18 @@ function* refetchBalancesWithDelay({
   })
 }
 
-function* updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTrade; from: string }) {
-  const typeInfo = getSwapTransactionInfo(trade)
+function* updateAppState({
+  hash,
+  trade,
+  from,
+  swapStartTimestamp,
+}: {
+  hash: string
+  trade: SolanaTrade
+  from: string
+  swapStartTimestamp?: number
+}) {
+  const typeInfo = getSwapTransactionInfo({ trade, swapStartTimestamp })
 
   const transaction: SolanaTransactionDetails<InterfaceBaseTransactionDetails> = {
     from,
@@ -106,7 +115,7 @@ function* updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTra
 
 function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => Promise<VersionedTransaction>) {
   return function* jupiterSwap(params: JupiterSwapParams) {
-    const { swapTxContext, account, onSwapSigned } = params
+    const { swapTxContext, address, onSwapSigned, analytics } = params
     const { trade, transactionBase64 } = swapTxContext
     const { requestId } = trade.quote.quote
 
@@ -124,7 +133,12 @@ function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => 
       throw new JupiterExecuteError(errorMessage ?? 'Unknown Jupiter Execution Error', code)
     }
 
-    yield* call(updateAppState, { hash, trade, from: account.address })
+    yield* call(updateAppState, {
+      hash,
+      trade,
+      from: address,
+      swapStartTimestamp: analytics.swap_start_timestamp,
+    })
 
     return hash
   }

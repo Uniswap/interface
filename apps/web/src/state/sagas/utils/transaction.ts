@@ -1,10 +1,10 @@
-import type { TransactionInfo } from 'state/transactions/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type {
   TransactionDetails as UniswapTransactionDetails,
   WrapTransactionInfo as UniswapWrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { TransactionInfo } from '~/state/transactions/types'
 
 const createUniverseSwapTransaction = ({
   inputCurrencyId,
@@ -70,6 +70,10 @@ export const createUniverseTransaction = ({
     case TransactionType.Wrap:
       transaction = createUniverseWrapTransaction(info)
       break
+    case TransactionType.Plan:
+      // TODO: SWAP-442 - Handle Plan transaction
+      transaction = createUniverseTransactionFromInfo(info)
+      break
     case TransactionType.CreatePool:
     case TransactionType.CreatePair:
     case TransactionType.LiquidityIncrease:
@@ -93,6 +97,11 @@ export const createUniverseTransaction = ({
     case TransactionType.Approve:
     case TransactionType.ClaimUni:
     case TransactionType.LPIncentivesClaimRewards:
+    case TransactionType.ToucanBid:
+    case TransactionType.ToucanWithdrawBidAndClaimTokens:
+    case TransactionType.AuctionBid:
+    case TransactionType.AuctionClaimed:
+    case TransactionType.AuctionExited:
     case TransactionType.Permit2Approve:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     // NFT and other transaction types that don't need special mapping
@@ -109,6 +118,7 @@ export const createUniverseTransaction = ({
     case TransactionType.LocalOffRamp:
     case TransactionType.SendCalls:
     case TransactionType.RemoveDelegation:
+    case TransactionType.Withdraw:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     default:
       assertUnreachable(info)

@@ -1,5 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { PersistState } from 'redux-persist'
+import { createPersistState, createSafeMigration } from 'uniswap/src/state/createSafeMigration'
 import { PreV55SearchResult, PreV55SearchResultType, TokenSearchResult } from 'uniswap/src/state/oldTypes'
 
 export type PersistAppStateV15 = {
@@ -46,26 +47,35 @@ function webResultToUniswapResult(webItem: TokenSearchResultWeb): PreV55SearchRe
 /**
  * Migrate existing search history atom to shared redux state
  */
-export const migration15 = (state: PersistAppStateV15 | undefined) => {
-  if (!state) {
-    return undefined
-  }
+export const migration15 = createSafeMigration({
+  filename: '15.ts',
+  name: 'migration15',
+  migrate: (state: PersistAppStateV15 | undefined) => {
+    if (!state) {
+      return undefined
+    }
 
-  const newState: any = { ...state }
+    const newState: any = { ...state }
 
-  const recentlySearchedAssetsAtomValue = localStorage.getItem(recentSearchAtomName)
-  const webSearchHistory = JSON.parse(recentlySearchedAssetsAtomValue ?? '[]') as TokenSearchResultWeb[]
+    const recentlySearchedAssetsAtomValue = localStorage.getItem(recentSearchAtomName)
+    const webSearchHistory = JSON.parse(recentlySearchedAssetsAtomValue ?? '[]') as TokenSearchResultWeb[]
 
-  // map old search items to new search items
-  const translatedResults: PreV55SearchResult[] = webSearchHistory
-    .map(webResultToUniswapResult)
-    .filter((r): r is PreV55SearchResult => r !== null)
+    // map old search items to new search items
+    const translatedResults: PreV55SearchResult[] = webSearchHistory
+      .map(webResultToUniswapResult)
+      .filter((r): r is PreV55SearchResult => r !== null)
 
-  // set new state as this modified search history
-  newState.searchHistory = { results: translatedResults }
+    // set new state as this modified search history
+    newState.searchHistory = { results: translatedResults }
 
-  // Delete the atom value
-  localStorage.removeItem(recentSearchAtomName)
+    // Delete the atom value
+    localStorage.removeItem(recentSearchAtomName)
 
-  return { ...newState, _persist: { ...state._persist, version: 15 } }
-}
+    return { ...newState, _persist: { ...state._persist, version: 15 } }
+  },
+  onError: (state: PersistAppStateV15 | undefined) => ({
+    ...state,
+    searchHistory: { results: [] },
+    _persist: createPersistState(state, 15),
+  }),
+})

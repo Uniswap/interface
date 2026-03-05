@@ -1,14 +1,14 @@
-import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
-import { LP_INCENTIVES_CHAIN_ID, LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import LPIncentiveFeeStatTooltip from '~/components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
+import { LP_INCENTIVES_CHAIN_ID, LP_INCENTIVES_REWARD_TOKEN } from '~/components/LpIncentives/constants'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface LpIncentiveAprTooltipProps {
   currency0Info?: Maybe<CurrencyInfo>

@@ -23,14 +23,17 @@ export function BestRouteTooltip(): JSX.Element | null {
 
   const { inputAmount, outputAmount } = trade
 
+  const icon = routingProvider.icon ?? OrderRouting
+  const iconColor = routingProvider.iconColor || '$neutral1'
+
   return (
     <Tooltip.Outer>
       <Tooltip.Header
         title={{
           title: t('common.bestRoute.with', { provider: routingProvider.name }),
         }}
-        Icon={routingProvider.icon ?? OrderRouting}
-        iconColor={routingProvider.iconColor || '$neutral1'}
+        Icon={icon}
+        iconColor={iconColor}
       />
       <Tooltip.Content>
         <Tooltip.Row>
@@ -43,6 +46,7 @@ export function BestRouteTooltip(): JSX.Element | null {
       {routingProvider.getDescription && (
         <Tooltip.Description
           learnMoreUrl={uniswapUrls.helpArticleUrls.routingSettings}
+          learnMorePinkColor={false}
           text={routingProvider.getDescription(t)}
         />
       )}
@@ -70,6 +74,7 @@ export function BestRouteUniswapXTooltip(): JSX.Element {
       </Tooltip.Content>
       <Tooltip.Description
         learnMoreUrl={uniswapUrls.helpArticleUrls.uniswapXInfo}
+        learnMorePinkColor={false}
         text={t('routing.aggregateLiquidity.uniswapx')}
       />
     </Tooltip.Outer>

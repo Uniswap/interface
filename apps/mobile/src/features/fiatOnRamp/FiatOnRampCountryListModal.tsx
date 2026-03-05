@@ -12,8 +12,8 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
+import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import { FORCountry, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
@@ -39,7 +39,7 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
   const { isOffRamp } = useFiatOnRampContext()
 
   const { data, isLoading } = useFiatOnRampAggregatorCountryListQuery({
-    rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
+    rampDirection: isOffRamp ? RampDirection.OFF_RAMP : RampDirection.ON_RAMP,
   })
 
   const [searchText, setSearchText] = useState('')

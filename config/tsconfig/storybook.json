@@ -3,18 +3,18 @@
   "display": "Storybook",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
-    "lib": ["es5", "es6", "es7", "es2017", "dom"],
-    "sourceMap": true,
     "allowJs": false,
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
     "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
+    "declaration": true,
     "emitDecoratorMetadata": true,
-    "noEmit": true
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "lib": ["es5", "es6", "es7", "es2017", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "sourceMap": true,
+    "target": "es5"
   }
 }

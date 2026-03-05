@@ -1,12 +1,6 @@
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ChainLogo } from 'components/Logo/ChainLogo'
-import { useAccount } from 'hooks/useAccount'
 import { ReactNode } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { useSendContext } from 'state/send/SendContext'
-import { ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Button, Flex, Separator, styled } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
@@ -20,12 +14,18 @@ import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useG
 import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { ChainLogo } from '~/components/Logo/ChainLogo'
+import { useAccount } from '~/hooks/useAccount'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { useSendContext } from '~/state/send/SendContext'
+import { ThemedText } from '~/theme/components'
+import { maxAmountSpend } from '~/utils/maxAmountSpend'
 
 const ReviewContentContainer = styled(Flex, {
   width: '100%',
@@ -142,7 +142,11 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
               recipientData?.unitag || recipientData?.ensName ? (
                 <Flex row gap="$gap4" alignItems="center">
                   <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
-                  {recipientData.unitag && <Unitag size={18} />}
+                  {recipientData.unitag && (
+                    <Flex pt="$spacing8">
+                      <Unitag size={36} />
+                    </Flex>
+                  )}
                 </Flex>
               ) : (
                 shortenAddress({ address: recipientData?.address })

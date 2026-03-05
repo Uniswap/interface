@@ -16,11 +16,13 @@ import { useFavoriteCurrencies } from 'uniswap/src/components/TokenSelector/hook
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
+import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/tokenProjects/utils/tokenProjectToCurrencyInfos'
+import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
@@ -45,20 +47,35 @@ import { createArray, queryResolvers } from 'uniswap/src/test/utils'
 import { portfolioBalancesById } from 'uniswap/src/utils/balances'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
+// Extend vitest's expect types with jest-extended matchers
+declare module 'vitest' {
+  interface AsymmetricMatchersContaining {
+    toIncludeSameMembers<E = unknown>(members: readonly E[]): void
+  }
+}
+
 expect.extend({ toIncludeSameMembers })
 
-jest.mock('uniswap/src/features/telemetry/send')
+vi.mock('uniswap/src/features/telemetry/send')
 
-jest.mock('uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById', () => ({
-  usePortfolioBalancesForAddressById: jest.fn(),
+// Create mock functions with vi.hoisted to ensure they're available before vi.mock runs
+const { mockUsePortfolioBalancesForAddressById, mockUseTokenRankingsQuery, mockTokenRankingsStatToCurrencyInfo } =
+  vi.hoisted(() => ({
+    mockUsePortfolioBalancesForAddressById: vi.fn(),
+    mockUseTokenRankingsQuery: vi.fn(),
+    mockTokenRankingsStatToCurrencyInfo: vi.fn(),
+  }))
+
+vi.mock('uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById', () => ({
+  usePortfolioBalancesForAddressById: mockUsePortfolioBalancesForAddressById,
 }))
 
-jest.mock('uniswap/src/data/rest/tokenRankings', () => ({
-  useTokenRankingsQuery: jest.fn(),
+vi.mock('uniswap/src/data/rest/tokenRankings', () => ({
+  useTokenRankingsQuery: mockUseTokenRankingsQuery,
   CustomRankingType: {
     Trending: 'TRENDING',
   },
-  tokenRankingsStatToCurrencyInfo: jest.fn(),
+  tokenRankingsStatToCurrencyInfo: mockTokenRankingsStatToCurrencyInfo,
 }))
 
 // Helper to convert undefined to null for GraphQL compatibility
@@ -70,15 +87,6 @@ const convertUndefinedToNull = <T extends { isBridged?: boolean | null; bridgedW
     isBridged: item.isBridged ?? null,
     bridgedWithdrawalInfo: item.bridgedWithdrawalInfo ?? null,
   }))
-
-const mockPortfolioHook = jest.requireMock(
-  'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById',
-)
-const mockUsePortfolioBalancesForAddressById = mockPortfolioHook.usePortfolioBalancesForAddressById
-
-const mockTokenRankings = jest.requireMock('uniswap/src/data/rest/tokenRankings')
-const mockUseTokenRankingsQuery = mockTokenRankings.useTokenRankingsQuery
-const mockTokenRankingsStatToCurrencyInfo = mockTokenRankings.tokenRankingsStatToCurrencyInfo
 
 const eth = ethToken()
 const dai = daiToken()
@@ -116,7 +124,7 @@ function mockPortfolioBalancesHook(result: ReturnType<typeof tokenBalance>[] | E
       data: undefined,
       error: result,
       loading: false,
-      refetch: jest.fn(),
+      refetch: vi.fn(),
     }
   }
 
@@ -125,7 +133,7 @@ function mockPortfolioBalancesHook(result: ReturnType<typeof tokenBalance>[] | E
       data: undefined,
       error: undefined,
       loading: false,
-      refetch: jest.fn(),
+      refetch: vi.fn(),
     }
   }
 
@@ -137,7 +145,7 @@ function mockPortfolioBalancesHook(result: ReturnType<typeof tokenBalance>[] | E
     data: balancesById,
     error: undefined,
     loading: false,
-    refetch: jest.fn(),
+    refetch: vi.fn(),
   }
 }
 
@@ -161,7 +169,7 @@ describe(useAllCommonBaseCurrencies, () => {
     {
       test: 'returns error when fetch fails',
       input: new Error('Test'),
-      output: { error: new ApolloError({ errorMessage: 'Test' }) },
+      output: { error: expect.objectContaining({ message: 'Test', name: 'ApolloError' }) },
     },
     {
       test: 'returns all currencies when there is no currency with a bridged version on other networks',
@@ -177,7 +185,7 @@ describe(useAllCommonBaseCurrencies, () => {
 
   it.each(cases)('$test', async ({ input, output }) => {
     if (input instanceof Error) {
-      jest.spyOn(console, 'error').mockImplementation(jest.fn())
+      vi.spyOn(console, 'error').mockImplementation(vi.fn())
     }
 
     const { resolvers } = queryResolvers({
@@ -219,7 +227,7 @@ describe(useFavoriteCurrencies, () => {
     {
       test: 'returns error when fetch fails',
       input: new Error('Test'),
-      output: { error: new ApolloError({ errorMessage: 'Test' }) },
+      output: { error: expect.objectContaining({ message: 'Test', name: 'ApolloError' }) },
     },
     {
       test: 'returns favorite tokens when there is data',
@@ -230,7 +238,7 @@ describe(useFavoriteCurrencies, () => {
 
   it.each(cases)('$test', async ({ input, output }) => {
     if (input instanceof Error) {
-      jest.spyOn(console, 'error').mockImplementation(jest.fn())
+      vi.spyOn(console, 'error').mockImplementation(vi.fn())
     }
 
     const { resolvers } = queryResolvers({
@@ -539,7 +547,7 @@ describe(usePortfolioBalancesForAddressById, () => {
 
   it.each(cases)('$test', async ({ input, output }) => {
     if (input instanceof Error) {
-      jest.spyOn(console, 'error').mockImplementation(jest.fn())
+      vi.spyOn(console, 'error').mockImplementation(vi.fn())
     }
 
     mockUsePortfolioBalancesForAddressById.mockReturnValue(mockPortfolioBalancesHook(input))
@@ -573,13 +581,16 @@ describe(usePortfolioTokenOptions, () => {
 
     it.each(cases)('$test', async ({ input, output }) => {
       if (input instanceof Error) {
-        jest.spyOn(console, 'error').mockImplementation(jest.fn())
+        vi.spyOn(console, 'error').mockImplementation(vi.fn())
       }
 
       mockUsePortfolioBalancesForAddressById.mockReturnValue(mockPortfolioBalancesHook(input))
 
       const { result } = renderHook(() =>
-        usePortfolioTokenOptions({ evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null }),
+        usePortfolioTokenOptions({
+          addresses: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined },
+          chainFilter: null,
+        }),
       )
 
       await waitFor(() => {
@@ -612,14 +623,15 @@ describe(usePortfolioTokenOptions, () => {
 
     const allTokenBalances = [...shownTokenBalances, ...hiddenTokenBalances]
 
+    // Using a looser type for output to allow expect.any(Function) in test cases
     const cases: {
       test: string
       input: Parameters<typeof usePortfolioTokenOptions>[0]
-      output: ReturnType<typeof usePortfolioTokenOptions>
+      output: Omit<ReturnType<typeof usePortfolioTokenOptions>, 'refetch'> & { refetch: unknown }
     }[] = [
       {
         test: 'returns only shown tokens after data is fetched',
-        input: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null },
+        input: { addresses: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined }, chainFilter: null },
         output: {
           data: shownPortfolioBalanceTokenOptions,
           loading: false,
@@ -630,8 +642,7 @@ describe(usePortfolioTokenOptions, () => {
       {
         test: 'returns shown tokens filtered by chain',
         input: {
-          evmAddress: SAMPLE_SEED_ADDRESS_1,
-          svmAddress: undefined,
+          addresses: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined },
           chainFilter: fromGraphQLChain(usdcTokenBalance.token.chain),
         },
         output: {
@@ -643,7 +654,11 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
-        input: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null, searchFilter: 'et' },
+        input: {
+          addresses: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined },
+          chainFilter: null,
+          searchFilter: 'et',
+        },
         output: {
           data: [ethPortfolioBalanceTokenOption],
           loading: false,
@@ -653,7 +668,11 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "us" (USDC) filtered by search filter',
-        input: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined, chainFilter: null, searchFilter: 'us' },
+        input: {
+          addresses: { evmAddress: SAMPLE_SEED_ADDRESS_1, svmAddress: undefined },
+          chainFilter: null,
+          searchFilter: 'us',
+        },
         output: {
           data: [usdcPortfolioBalanceTokenOption],
           loading: false,
@@ -664,8 +683,10 @@ describe(usePortfolioTokenOptions, () => {
       {
         test: 'returns no data when there is no token that matches both chain and search filter',
         input: {
-          evmAddress: SAMPLE_SEED_ADDRESS_1,
-          svmAddress: undefined,
+          addresses: {
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
+            svmAddress: undefined,
+          },
           chainFilter: UniverseChainId.Base,
           searchFilter: 'et',
         },
@@ -751,8 +772,10 @@ describe(useTrendingTokensOptions, () => {
 
     const { result } = renderHook(() =>
       useTrendingTokensOptions({
-        evmAddress: SAMPLE_SEED_ADDRESS_1,
-        svmAddress: undefined,
+        addresses: {
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+        },
         chainFilter: UniverseChainId.ArbitrumOne,
       }),
     )
@@ -780,8 +803,10 @@ describe(useTrendingTokensOptions, () => {
 
     const { result } = renderHook(() =>
       useTrendingTokensOptions({
-        evmAddress: SAMPLE_SEED_ADDRESS_1,
-        svmAddress: undefined,
+        addresses: {
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+        },
         chainFilter: UniverseChainId.ArbitrumOne,
       }),
     )
@@ -813,8 +838,10 @@ describe(useTrendingTokensOptions, () => {
 
     const { result } = renderHook(() =>
       useTrendingTokensOptions({
-        evmAddress: SAMPLE_SEED_ADDRESS_1,
-        svmAddress: undefined,
+        addresses: {
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+        },
         chainFilter: UniverseChainId.ArbitrumOne,
       }),
     )
@@ -843,8 +870,10 @@ describe(useTrendingTokensOptions, () => {
 
     const { result } = renderHook(() =>
       useTrendingTokensOptions({
-        evmAddress: SAMPLE_SEED_ADDRESS_1,
-        svmAddress: undefined,
+        addresses: {
+          evmAddress: SAMPLE_SEED_ADDRESS_1,
+          svmAddress: undefined,
+        },
         chainFilter: UniverseChainId.ArbitrumOne,
       }),
     )
@@ -892,7 +921,7 @@ describe(useCommonTokensOptionsWithFallback, () => {
       portfolioInput: tokenBalances,
       tokenProjectsInput: new Error('Test'),
       chainFilter: null,
-      output: { data: undefined, error: new ApolloError({ errorMessage: 'Test' }) },
+      output: { data: undefined, error: expect.objectContaining({ message: 'Test', name: 'ApolloError' }) },
     },
     {
       test: 'return balances for all tokens if no chain filter is specified',
@@ -935,13 +964,12 @@ describe(useCommonTokensOptionsWithFallback, () => {
     const { result } = renderHook(
       () =>
         useCommonTokensOptionsWithFallback({
-          evmAddress: SAMPLE_SEED_ADDRESS_1,
-          svmAddress: undefined,
+          addresses: {
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
+          },
           chainFilter,
         }),
-      {
-        resolvers,
-      },
+      { resolvers },
     )
 
     await waitFor(() => {
@@ -980,7 +1008,7 @@ describe(useFavoriteTokensOptions, () => {
       portfolioInput: tokenBalances,
       tokenProjectsInput: new Error('Test'),
       chainFilter: null,
-      output: { data: undefined, error: new ApolloError({ errorMessage: 'Test' }) },
+      output: { data: undefined, error: expect.objectContaining({ message: 'Test', name: 'ApolloError' }) },
     },
     {
       test: 'returns balances for all favorite tokens in portfolios if no chain filter is specified',
@@ -1022,8 +1050,10 @@ describe(useFavoriteTokensOptions, () => {
     const { result } = renderHook(
       () =>
         useFavoriteTokensOptions({
-          evmAddress: SAMPLE_SEED_ADDRESS_1,
-          svmAddress: undefined,
+          addresses: {
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
+            svmAddress: undefined,
+          },
           chainFilter,
         }),
       {
@@ -1039,5 +1069,102 @@ describe(useFavoriteTokensOptions, () => {
         ...output,
       })
     })
+  })
+})
+
+describe(useRecentlySearchedTokens, () => {
+  it('does not crash when search history contains tokens with invalid chainIds', () => {
+    // This simulates the exact data that caused the production crash
+    const problematicSearchHistory: PreloadedState<UniswapState> = {
+      searchHistory: {
+        results: [
+          {
+            type: SearchHistoryResultType.Token,
+            chainId: 10143 as UniverseChainId, // Invalid: Monad testnet
+            address: null,
+            searchId: 'token-10143-null',
+          },
+          {
+            type: SearchHistoryResultType.Token,
+            chainId: 10143 as UniverseChainId, // Invalid: Monad testnet
+            address: '0xB5a30b0FDc5EA94A52fDc42e3E9760Cb8449Fb37',
+            searchId: 'token-10143-0xb5a30b0fdc5ea94a52fdc42e3e9760cb8449fb37',
+          },
+          {
+            type: SearchHistoryResultType.Token,
+            chainId: UniverseChainId.Mainnet, // Valid
+            address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+            searchId: 'token-1-0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+          },
+        ],
+      },
+    }
+
+    // This should not throw
+    expect(() => {
+      renderHook(() => useRecentlySearchedTokens(null), {
+        preloadedState: problematicSearchHistory,
+      })
+    }).not.toThrow()
+  })
+
+  it('filters out tokens with invalid chainIds from search history', () => {
+    const mixedSearchHistory: PreloadedState<UniswapState> = {
+      searchHistory: {
+        results: [
+          {
+            type: SearchHistoryResultType.Token,
+            chainId: 99999 as UniverseChainId, // Invalid chainId
+            address: '0xabcdef1234567890abcdef1234567890abcdef12',
+            searchId: 'token-99999-0xabcdef1234567890abcdef1234567890abcdef12',
+          },
+          {
+            type: SearchHistoryResultType.Token,
+            chainId: UniverseChainId.Mainnet, // Valid
+            address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+            searchId: 'token-1-0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
+          },
+        ],
+      },
+    }
+
+    const { result } = renderHook(() => useRecentlySearchedTokens(null), {
+      preloadedState: mixedSearchHistory,
+    })
+
+    // The hook returns an array - invalid chainIds should be filtered out
+    // so only the valid Mainnet token should be processed
+    // Note: The actual token data may be undefined since we're not mocking the currency info fetch,
+    // but the important thing is that it doesn't crash
+    expect(result.current).toBeDefined()
+    expect(Array.isArray(result.current)).toBe(true)
+  })
+
+  it('returns empty array when all tokens have invalid chainIds', () => {
+    const allInvalidSearchHistory: PreloadedState<UniswapState> = {
+      searchHistory: {
+        results: [
+          {
+            type: SearchHistoryResultType.Token,
+            chainId: 10143 as UniverseChainId, // Invalid
+            address: null,
+            searchId: 'token-10143-null',
+          },
+          {
+            type: SearchHistoryResultType.Token,
+            chainId: 99999 as UniverseChainId, // Invalid
+            address: '0xabcdef1234567890abcdef1234567890abcdef12',
+            searchId: 'token-99999-0xabcdef',
+          },
+        ],
+      },
+    }
+
+    const { result } = renderHook(() => useRecentlySearchedTokens(null), {
+      preloadedState: allInvalidSearchHistory,
+    })
+
+    // Should return empty array, not crash
+    expect(result.current).toEqual([])
   })
 })

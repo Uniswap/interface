@@ -5,8 +5,45 @@ import {
   isFiatOnRampApiError,
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
+  isValidIsoCurrencyCode,
   organizeQuotesIntoSections,
 } from 'uniswap/src/features/fiatOnRamp/utils'
+
+describe('isValidIsoCurrencyCode', () => {
+  test('returns true for valid 3-letter currency codes', () => {
+    expect(isValidIsoCurrencyCode('USD')).toBe(true)
+    expect(isValidIsoCurrencyCode('EUR')).toBe(true)
+    expect(isValidIsoCurrencyCode('GBP')).toBe(true)
+    expect(isValidIsoCurrencyCode('JPY')).toBe(true)
+  })
+
+  test('returns true for lowercase 3-letter codes', () => {
+    expect(isValidIsoCurrencyCode('usd')).toBe(true)
+  })
+
+  test('returns false for non-string values', () => {
+    expect(isValidIsoCurrencyCode(null)).toBe(false)
+    expect(isValidIsoCurrencyCode(undefined)).toBe(false)
+    expect(isValidIsoCurrencyCode(123)).toBe(false)
+    expect(isValidIsoCurrencyCode({})).toBe(false)
+    expect(isValidIsoCurrencyCode([])).toBe(false)
+  })
+
+  test('returns false for strings with wrong length', () => {
+    expect(isValidIsoCurrencyCode('')).toBe(false)
+    expect(isValidIsoCurrencyCode('US')).toBe(false)
+    expect(isValidIsoCurrencyCode('USDT')).toBe(false)
+    expect(isValidIsoCurrencyCode('United States Dollar')).toBe(false)
+  })
+
+  test('returns false for 3-character strings with non-alphabetic characters', () => {
+    expect(isValidIsoCurrencyCode('123')).toBe(false)
+    expect(isValidIsoCurrencyCode('12A')).toBe(false)
+    expect(isValidIsoCurrencyCode('U$D')).toBe(false)
+    expect(isValidIsoCurrencyCode('   ')).toBe(false)
+    expect(isValidIsoCurrencyCode('US1')).toBe(false)
+  })
+})
 
 describe('getCountryFlagSvgUrl', () => {
   test('should return the correct SVG URL for a given country code', () => {
@@ -181,7 +218,9 @@ const createMockQuote = ({
   sourceCurrencyCode: 'USD',
   destinationAmount,
   destinationCurrencyCode: 'ETH',
+  serviceProvider: 'mock-provider',
   serviceProviderDetails: {
+    serviceProvider: 'mock-provider',
     paymentMethods,
   } as unknown as FORServiceProvider,
   totalFee: 5,
@@ -319,11 +358,11 @@ describe('organizeQuotesIntoSections', () => {
 
       // First section should have the most recent quote
       expect(result.sections[0]?.data).toEqual([mostRecentQuote])
-      expect(result.sections[0]?.type).toBe(InitialQuoteSelection.MostRecent)
+      expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.MostRecent)
 
       // Second section should have other quotes
       expect(result.sections[1]?.data).toEqual([regularQuote1, regularQuote2])
-      expect(result.sections[1]?.type).toBeUndefined()
+      expect(result.sections[1]?.['type']).toBeUndefined()
     }
   })
 
@@ -342,7 +381,7 @@ describe('organizeQuotesIntoSections', () => {
 
       // Single section with all quotes and Best type
       expect(result.sections[0]?.data).toEqual(quotes)
-      expect(result.sections[0]?.type).toBe(InitialQuoteSelection.Best)
+      expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.Best)
     }
   })
 
@@ -357,7 +396,7 @@ describe('organizeQuotesIntoSections', () => {
       expect(result.initialQuote).toBe(singleQuote)
       expect(result.sections).toHaveLength(1)
       expect(result.sections[0]?.data).toEqual([singleQuote])
-      expect(result.sections[0]?.type).toBe(InitialQuoteSelection.Best)
+      expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.Best)
     }
   })
 
@@ -376,7 +415,7 @@ describe('organizeQuotesIntoSections', () => {
       expect(result.initialQuote).toBe(mostRecentQuote)
       expect(result.sections).toHaveLength(1)
       expect(result.sections[0]?.data).toEqual([mostRecentQuote])
-      expect(result.sections[0]?.type).toBe(InitialQuoteSelection.MostRecent)
+      expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.MostRecent)
     }
   })
 
@@ -395,7 +434,7 @@ describe('organizeQuotesIntoSections', () => {
       expect(result.initialQuote).toBe(mostRecentQuote)
       expect(result.sections).toHaveLength(1)
       expect(result.sections[0]?.data).toEqual([mostRecentQuote])
-      expect(result.sections[0]?.type).toBe(InitialQuoteSelection.MostRecent)
+      expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.MostRecent)
     }
   })
 
@@ -412,7 +451,7 @@ describe('organizeQuotesIntoSections', () => {
       expect(result.initialQuote).toBe(quote1) // Should be the first one when amounts are equal
       expect(result.sections).toHaveLength(1)
       expect(result.sections[0]?.data).toEqual(quotes)
-      expect(result.sections[0]?.type).toBe(InitialQuoteSelection.Best)
+      expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.Best)
     }
   })
 
@@ -437,7 +476,7 @@ describe('organizeQuotesIntoSections', () => {
       expect(result.initialQuote).toBe(mostRecentQuote1) // Should pick the first most recent
       expect(result.sections).toHaveLength(2)
       expect(result.sections[0]?.data).toEqual([mostRecentQuote1])
-      expect(result.sections[0]?.type).toBe(InitialQuoteSelection.MostRecent)
+      expect(result.sections[0]?.['type']).toBe(InitialQuoteSelection.MostRecent)
       expect(result.sections[1]?.data).toEqual([mostRecentQuote2, regularQuote])
     }
   })

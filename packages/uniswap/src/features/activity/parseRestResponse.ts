@@ -2,6 +2,7 @@ import { ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/
 import { GraphQLApi } from '@universe/api'
 import { extractOnRampTransactionDetails } from 'uniswap/src/features/activity/extract/extractFiatOnRampTransactionDetails'
 import extractRestOnChainTransactionDetails from 'uniswap/src/features/activity/extract/extractOnChainTransactionDetails'
+import extractPlanDetails from 'uniswap/src/features/activity/extract/extractPlanDetails'
 import extractRestFiatOnRampDetails from 'uniswap/src/features/activity/extract/extractRestFiatOnRampDetails'
 import extractRestUniswapXOrderDetails from 'uniswap/src/features/activity/extract/extractRestUniswapXOrderDetails'
 import extractTransactionDetails from 'uniswap/src/features/activity/extract/extractTransactionDetails'
@@ -16,11 +17,16 @@ import {
 import { CurrencyIdToVisibility, NFTKeyToVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { logger } from 'utilities/src/logger/logger'
+
+// Flag to prevent spamming logs when multiple transactions are missing the transaction field
+let hasLoggedMissingTransactionField = false
 
 export enum RestTransactionType {
   OnChain = 'onChain',
   UniswapX = 'uniswapX',
   FiatOnRamp = 'fiatOnRamp',
+  Plan = 'plan',
 }
 
 /**
@@ -80,6 +86,17 @@ export function parseRestResponseToTransactionDetails({
   tokenVisibilityOverrides?: CurrencyIdToVisibility
 }): TransactionDetails[] | undefined {
   return data.transactions.reduce((accum: TransactionDetails[], transaction) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!transaction.transaction) {
+      if (!hasLoggedMissingTransactionField) {
+        hasLoggedMissingTransactionField = true
+        logger.error(new Error('Received transaction with missing transaction field'), {
+          tags: { file: 'parseRestResponse', function: 'parseRestResponseToTransactionDetails' },
+          extra: { transaction },
+        })
+      }
+      return accum
+    }
     switch (transaction.transaction.case) {
       case RestTransactionType.OnChain: {
         const parsedTransactions = extractRestOnChainTransactionDetails(transaction.transaction.value)
@@ -104,6 +121,13 @@ export function parseRestResponseToTransactionDetails({
       }
       case RestTransactionType.FiatOnRamp: {
         const parsed = extractRestFiatOnRampDetails(transaction.transaction.value)
+        if (parsed) {
+          accum.push(parsed)
+        }
+        break
+      }
+      case RestTransactionType.Plan: {
+        const parsed = extractPlanDetails(transaction.transaction.value)
         if (parsed) {
           accum.push(parsed)
         }

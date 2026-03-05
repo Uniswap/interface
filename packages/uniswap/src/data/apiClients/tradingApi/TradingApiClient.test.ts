@@ -1,33 +1,46 @@
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  getFeatureFlag: jest.fn(),
-}))
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
+  return {
+    ...actual,
+    getFeatureFlag: vi.fn(),
+    getExperimentValue: vi.fn(),
+  }
+})
 
-jest.mock('@universe/config', () => {
-  const { getConfig } = jest.requireActual('@universe/config/src/getConfig.web')
+vi.mock('@universe/config', async () => {
+  const { getConfig } = await vi.importActual<typeof import('@universe/config/src/getConfig.web')>(
+    '@universe/config/src/getConfig.web',
+  )
   return {
     getConfig,
   }
 })
 
-const mockFetch = jest.fn()
+const mockFetch = vi.fn()
 global.fetch = mockFetch
 
 import { TradingApi } from '@universe/api'
 import { TRADING_API_PATHS } from '@universe/api/src/clients/trading/createTradingApiClient'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import {
+  EthAsErc20UniswapXProperties,
+  Experiments,
+  FeatureFlags,
+  getExperimentValue,
+  getFeatureFlag,
+} from '@universe/gating'
 import {
   checkWalletDelegation,
   getFeatureFlaggedHeaders,
   getQuoteHeaders,
   TradingApiHeaders,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import type { MockedFunction } from 'vitest'
 
 // Helper function to create a mock Response
 const createMockResponse = (data: TradingApi.WalletCheckDelegationResponseBody): Partial<Response> => ({
   ok: true,
   status: 200,
-  json: jest.fn().mockResolvedValue(data),
+  json: vi.fn().mockResolvedValue(data),
 })
 
 const mockCheckWalletDelegationWithoutBatching = mockFetch
@@ -54,7 +67,7 @@ describe('checkWalletDelegation', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('when no wallet addresses are provided', () => {
@@ -477,11 +490,13 @@ describe('checkWalletDelegation', () => {
 })
 
 describe('getFeatureFlaggedHeaders', () => {
-  const mockGetFeatureFlag = getFeatureFlag as jest.MockedFunction<typeof getFeatureFlag>
+  const mockGetFeatureFlag = getFeatureFlag as MockedFunction<typeof getFeatureFlag>
+  const mockGetExperimentValue = getExperimentValue as MockedFunction<typeof getExperimentValue>
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockGetFeatureFlag.mockReturnValue(false)
+    mockGetExperimentValue.mockReturnValue(false)
   })
 
   getAllTradingApiPaths().forEach((path) => {
@@ -512,12 +527,22 @@ describe('getFeatureFlaggedHeaders', () => {
       }
     })
 
-    it(`Endpoint: ${path} should/should not include Erc20EthEnabled header when feature flag is enabled`, () => {
-      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.EthAsErc20UniswapX)
+    it(`Endpoint: ${path} should/should not include Erc20EthEnabled header when experiment is enabled`, () => {
+      mockGetExperimentValue.mockImplementation(({ experiment, param }: { experiment: string; param: string }) => {
+        if (
+          experiment === Experiments.EthAsErc20UniswapX &&
+          param === EthAsErc20UniswapXProperties.EthAsErc20UniswapXEnabled
+        ) {
+          return true
+        }
+        return false
+      })
       const headers = getFeatureFlaggedHeaders(path)
       switch (path) {
         case TRADING_API_PATHS.quote:
         case TRADING_API_PATHS.order:
+        case TRADING_API_PATHS.plan:
+        case TRADING_API_PATHS.swap7702:
           expect(headers).toHaveProperty(TradingApiHeaders.Erc20EthEnabled, 'true')
           break
         default:

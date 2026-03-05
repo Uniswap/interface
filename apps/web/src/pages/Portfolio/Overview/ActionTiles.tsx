@@ -1,10 +1,13 @@
-import { BuyActionTile } from 'components/ActionTiles/BuyActionTile'
-import { MoreActionTile } from 'components/ActionTiles/MoreActionTile'
-import { SendActionTile } from 'components/ActionTiles/SendActionTile/SendActionTile'
-import { SwapActionTile } from 'components/ActionTiles/SwapActionTile'
-import { OVERVIEW_RIGHT_COLUMN_WIDTH } from 'pages/Portfolio/Overview/constants'
 import { memo } from 'react'
 import { Flex, styled, useMedia } from 'ui/src'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { BuyActionTile } from '~/components/ActionTiles/BuyActionTile'
+import { CopyAddressActionTile } from '~/components/ActionTiles/CopyAddressActionTile'
+import { MoreActionTile } from '~/components/ActionTiles/MoreActionTile'
+import { ReceiveActionTile } from '~/components/ActionTiles/ReceiveActionTile'
+import { SendActionTile } from '~/components/ActionTiles/SendActionTile/SendActionTile'
+import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { OVERVIEW_RIGHT_COLUMN_WIDTH } from '~/pages/Portfolio/Overview/constants'
 
 const ACTION_TILE_GAP = 12
 const ACTION_TILE_WIDTH = `calc(50% - ${ACTION_TILE_GAP / 2}px)`
@@ -40,18 +43,36 @@ const ActionTileWrapper = styled(Flex, {
 
 export const OverviewActionTiles = memo(function OverviewActionTiles() {
   const media = useMedia()
+  const { isExternalWallet, externalAddress } = usePortfolioRoutes()
   const isSingleRow = !!media.xl && !media.md
 
+  if (isExternalWallet && externalAddress) {
+    return (
+      <ActionTilesContainer singleRow={isSingleRow} testID={TestID.PortfolioActionTiles}>
+        <ActionTileWrapper singleRow={isSingleRow}>
+          <SendActionTile
+            padding="$spacing16"
+            recipient={externalAddress.address}
+            dataTestId={TestID.PortfolioActionTileSend}
+          />
+        </ActionTileWrapper>
+        <ActionTileWrapper singleRow={isSingleRow}>
+          <CopyAddressActionTile address={externalAddress.address} padding="$spacing16" />
+        </ActionTileWrapper>
+      </ActionTilesContainer>
+    )
+  }
+
   return (
-    <ActionTilesContainer singleRow={isSingleRow}>
+    <ActionTilesContainer singleRow={isSingleRow} testID={TestID.PortfolioActionTiles}>
       <ActionTileWrapper singleRow={isSingleRow}>
-        <SwapActionTile padding="$spacing16" />
+        <SendActionTile padding="$spacing16" dataTestId={TestID.PortfolioActionTileSend} />
+      </ActionTileWrapper>
+      <ActionTileWrapper singleRow={isSingleRow}>
+        <ReceiveActionTile padding="$spacing16" dataTestId={TestID.PortfolioActionTileReceive} />
       </ActionTileWrapper>
       <ActionTileWrapper singleRow={isSingleRow}>
         <BuyActionTile padding="$spacing16" />
-      </ActionTileWrapper>
-      <ActionTileWrapper singleRow={isSingleRow}>
-        <SendActionTile padding="$spacing16" />
       </ActionTileWrapper>
       <ActionTileWrapper singleRow={isSingleRow}>
         <MoreActionTile padding="$spacing16" />

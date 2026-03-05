@@ -10,45 +10,35 @@ type DisplayNameProps = {
   unitagIconSize?: IconSizeTokens | number
   textProps?: TextProps
   includeUnitagSuffix?: boolean
-  forcedWidth?: number
-  disableForcedWidth?: boolean
 } & FlexProps
 
-const platformAdjustedUnitagYPosition = isAndroid ? 3 : 1
+const platformAdjustedUnitagYPosition = isAndroid ? 4 : 2
 
 export function DisplayNameText({
   displayName,
   unitagIconSize = '$icon.24',
   textProps,
   includeUnitagSuffix,
-  forcedWidth,
-  disableForcedWidth,
   ...rest
 }: DisplayNameProps): JSX.Element {
   const isUnitag = displayName?.type === DisplayNameType.Unitag
   const name = isUnitag ? displayName.name.replaceAll(UNITAG_SUFFIX, '') : displayName?.name
 
   return (
-    <Flex row alignItems="center" {...rest} width={disableForcedWidth ? undefined : forcedWidth}>
-      <Text
-        {...textProps}
-        color={textProps?.color ?? '$neutral1'}
-        flexShrink={1}
-        numberOfLines={1}
-        whiteSpace="initial"
-      >
+    <Flex row grow {...rest}>
+      <Text {...textProps} color={textProps?.color ?? '$neutral1'} flexShrink={1} whiteSpace="initial">
         {name}
         {isUnitag && includeUnitagSuffix && (
-          <Text {...textProps} color="$neutral2" flexShrink={1} numberOfLines={1}>
+          <Text {...textProps} color="$neutral2" flexShrink={1}>
             {UNITAG_SUFFIX}
           </Text>
         )}
+        {isUnitag ? (
+          <Flex display="inline" y={platformAdjustedUnitagYPosition} pl="$spacing2">
+            <Unitag size={unitagIconSize} />
+          </Flex>
+        ) : null}
       </Text>
-      {isUnitag ? (
-        <Flex display="inline" y={platformAdjustedUnitagYPosition}>
-          <Unitag size={unitagIconSize} />
-        </Flex>
-      ) : null}
     </Flex>
   )
 }

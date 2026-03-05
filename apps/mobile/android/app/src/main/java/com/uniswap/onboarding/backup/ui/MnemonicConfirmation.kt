@@ -1,5 +1,6 @@
 package com.uniswap.onboarding.backup.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -41,20 +42,23 @@ fun MnemonicConfirmation(
     }
   }
 
-  BoxWithConstraints {
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+  ) {
     Column(
       modifier = Modifier
-        .fillMaxSize()
+        .weight(1f, fill = true)
         .verticalScroll(rememberScrollState())
     ) {
       MnemonicWordsGroup(
         words = displayedWords,
         shouldShowSmallText = shouldShowSmallText,
       )
-      Spacer(modifier = Modifier.height(UniswapTheme.spacing.spacing24))
-      MnemonicWordBank(words = wordBankList, shouldShowSmallText = shouldShowSmallText) {
-        viewModel.handleWordBankClick(it.index)
-      }
+    }
+    
+    MnemonicWordBank(words = wordBankList, shouldShowSmallText = shouldShowSmallText) {
+      viewModel.handleWordBankClick(it.index)
     }
   }
 }

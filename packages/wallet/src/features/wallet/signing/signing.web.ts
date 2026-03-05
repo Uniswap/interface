@@ -31,7 +31,7 @@ export async function signTypedDataMessage({
   // ethers computes EIP712Domain type for you, so we should not pass it in directly
   // or else ethers will get confused about which type is the primary type
   // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
-  delete parsedData.types.EIP712Domain
+  delete parsedData.types['EIP712Domain']
 
   // Mobile code does not explicitly connect to provider,
   // Web needs to connect to provider to ensure correct chain

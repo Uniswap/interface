@@ -1,11 +1,11 @@
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import * as d3 from 'd3'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import type {
   ChartState,
   Renderer,
   RenderingContext,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { getTimeFormat } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/timeUtils'
-import * as d3 from 'd3'
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { getTimeFormat } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/timeUtils'
 
 export function createTimescaleRenderer({
   g,

@@ -1,9 +1,9 @@
 // Mock dependencies
-vi.mock('pages/CreatePosition/CreateLiquidityContextProvider', () => ({
+vi.mock('~/pages/CreatePosition/CreateLiquidityContextProvider', () => ({
   useCreateLiquidityContext: vi.fn(),
 }))
 
-vi.mock('state/sagas/liquidity/liquiditySaga', () => ({
+vi.mock('~/state/sagas/liquidity/liquiditySaga', () => ({
   liquiditySaga: {
     name: 'liquiditySaga',
     wrappedSaga: vi.fn(),
@@ -23,11 +23,11 @@ vi.mock('react-router', async () => ({
   useNavigate: vi.fn(),
 }))
 
-vi.mock('hooks/useSelectChain', () => ({
+vi.mock('~/hooks/useSelectChain', () => ({
   default: vi.fn(),
 }))
 
-vi.mock('hooks/useAccount', () => ({
+vi.mock('~/hooks/useAccount', () => ({
   useAccount: vi.fn(),
 }))
 
@@ -43,26 +43,26 @@ vi.mock('utilities/src/telemetry/trace/TraceContext', () => ({
   useTrace: vi.fn(),
 }))
 
-vi.mock('hooks/Tokens', () => ({
+vi.mock('~/hooks/Tokens', () => ({
   useCurrencyInfo: vi.fn(),
 }))
 
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { useCurrencyInfo } from 'hooks/Tokens'
-import { useAccount } from 'hooks/useAccount'
-import useSelectChain from 'hooks/useSelectChain'
-import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
-import { CreatePositionModal } from 'pages/CreatePosition/CreatePositionModal'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
-import { act, fireEvent, render } from 'test-utils/render'
-import { PositionField } from 'types/position'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useCurrencyInfo } from '~/hooks/Tokens'
+import { useAccount } from '~/hooks/useAccount'
+import useSelectChain from '~/hooks/useSelectChain'
+import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { CreatePositionModal } from '~/pages/CreatePosition/CreatePositionModal'
+import { act, fireEvent, render } from '~/test-utils/render'
+import { PositionField } from '~/types/position'
 
 const mockUseCreateLiquidityContext = useCreateLiquidityContext as ReturnType<typeof vi.fn>
 const mockUseDispatch = useDispatch as ReturnType<typeof vi.fn>
@@ -134,6 +134,7 @@ describe('CreatePositionModal', () => {
     ticksAtLimit: [false, false],
     pricesAtTicks: [undefined, undefined],
     priceRangeState: { priceInverted: false },
+    currencies: { sdk: { TOKEN0: DAI, TOKEN1: USDC_MAINNET } },
     refetch: mockRefetch,
   }
 

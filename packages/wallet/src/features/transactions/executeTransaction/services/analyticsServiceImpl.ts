@@ -2,6 +2,7 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapTradeBaseProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { TransactionDetails, TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { DatadogLogMetrics, logAsMetric } from 'utilities/src/logger/datadog/datadogLogMetrics'
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 
@@ -46,6 +47,19 @@ export function createAnalyticsService(ctx: {
         ...analytics,
       }
 
+      logAsMetric({
+        fileName: 'analyticsServiceImpl',
+        functionName: 'trackSwapSubmitted',
+        metric: DatadogLogMetrics.SwapSubmitted,
+        data: {
+          txHash: transaction.hash ?? '',
+          tokenInChainId: transaction.chainId,
+          tokenInSymbol: analytics.token_in_symbol,
+          tokenInAddress: analytics.token_in_address,
+          tokenOutSymbol: analytics.token_out_symbol,
+          tokenOutAddress: analytics.token_out_address,
+        },
+      })
       trackTransactionEvent(WalletEventName.SwapSubmitted, event)
     },
   }

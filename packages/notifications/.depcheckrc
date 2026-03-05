@@ -1,0 +1,14 @@
+ignores: [
+    # Test coverage tool
+    "@vitest/coverage-v8",
+
+    # Standard ignores
+    "typescript",
+    "@typescript/native-preview",
+    "depcheck",
+
+    # Internal packages / workspaces - used in test files
+    "@universe/notifications",
+    "@universe/api",
+    "utilities",
+  ]

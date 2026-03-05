@@ -1,6 +1,7 @@
-import { ReactNode, useCallback } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, IconProps, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, type IconProps, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Box } from 'ui/src/components/icons/Box'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { SmartWallet } from 'ui/src/components/icons/SmartWallet'
 import { Wrench } from 'ui/src/components/icons/Wrench'
@@ -21,6 +22,7 @@ type SmartWalletAdvancedSettingsModalProps = {
   isTestnetEnabled?: boolean
   onTestnetModeToggled?: (isChecked: boolean) => void
   onPressSmartWallet?: () => void
+  onPressStorage?: () => void
   onClose: () => void
 }
 
@@ -31,6 +33,7 @@ export function SmartWalletAdvancedSettingsModal({
   isTestnetEnabled = false,
   onTestnetModeToggled,
   onPressSmartWallet,
+  onPressStorage,
   onClose,
 }: SmartWalletAdvancedSettingsModalProps): JSX.Element {
   const { t } = useTranslation()
@@ -39,6 +42,11 @@ export function SmartWalletAdvancedSettingsModal({
     onClose()
     onPressSmartWallet?.()
   }, [onClose, onPressSmartWallet])
+
+  const handlePressStorage = useCallback(() => {
+    onClose()
+    onPressStorage?.()
+  }, [onClose, onPressStorage])
 
   return (
     <Modal name={ModalName.SmartWalletAdvancedSettingsModal} isModalOpen={isOpen} onClose={onClose}>
@@ -63,6 +71,12 @@ export function SmartWalletAdvancedSettingsModal({
           title={t('settings.setting.wallet.testnetMode.title')}
           isHoverable={false}
           onCheckedChange={onTestnetModeToggled}
+        />
+        <AdvancedSettingsOptions
+          icon={<Box {...iconProps} size="$icon.24" />}
+          title={t('settings.setting.storage.title')}
+          isHoverable={true}
+          onPress={handlePressStorage}
         />
         <AdvancedSettingsOptions
           icon={<SmartWallet {...iconProps} size="$icon.24" />}
@@ -127,7 +141,7 @@ function AdvancedSettingsOptions({
           }}
         />
       ) : (
-        <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon24} width={iconSizes.icon24} />
+        <RotatableChevron color="$neutral3" direction="right" size="$icon.24" />
       )}
     </TouchableArea>
   )

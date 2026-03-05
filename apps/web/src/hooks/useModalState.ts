@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
-import { setCloseModal, setOpenModal } from 'state/application/reducer'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { setCloseModal, setOpenModal } from '~/state/application/reducer'
+import { useAppDispatch, useAppSelector } from '~/state/hooks'
 
 export type ModalState = {
   isOpen: boolean

@@ -5,7 +5,7 @@ import 'config/jest-presets/ui/ui-package-mocks'
 import 'react-native-gesture-handler/jestSetup';
 
 import { chrome } from 'jest-chrome'
-import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
+import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
 
 process.env.IS_UNISWAP_EXTENSION = true
 
@@ -100,7 +100,7 @@ jest.mock('wallet/src/features/focus/useIsFocused', () => {
 })
 
 const mockAppearanceSetting = AppearanceSettingType.System
-jest.mock('wallet/src/features/appearance/hooks', () => {
+jest.mock('uniswap/src/features/appearance/hooks', () => {
   return {
     useCurrentAppearanceSetting: () => mockAppearanceSetting,
     useSelectedColorScheme: () => 'light',

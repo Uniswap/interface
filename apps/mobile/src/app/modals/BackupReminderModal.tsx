@@ -18,11 +18,17 @@ import { NumberType } from 'utilities/src/format/types'
 import { setBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
-export function BackupReminderModal(): JSX.Element {
+interface BackupReminderModalProps {
+  /** Optional close handler provided by notification service renderer */
+  onClose?: () => void
+}
+
+export function BackupReminderModal({ onClose: externalOnClose }: BackupReminderModalProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const closedByButtonRef = useRef<boolean>(false)
-  const { onClose } = useReactNavigationModal()
+  const { onClose: navigationOnClose } = useReactNavigationModal()
+  const onClose = externalOnClose ?? navigationOnClose
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const activeAddress = useActiveAccountAddress()

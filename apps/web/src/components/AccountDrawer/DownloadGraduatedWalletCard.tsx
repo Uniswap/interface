@@ -1,12 +1,7 @@
-import flowerImage from 'assets/images/flower.png'
-import { downloadAppModalPageAtom, Page } from 'components/NavBar/DownloadApp/Modal'
-import { useAccount } from 'hooks/useAccount'
-import { useModalState } from 'hooks/useModalState'
 import { useUpdateAtom } from 'jotai/utils'
 import { BaseSyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'state/hooks'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
@@ -15,6 +10,11 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
+import flowerImage from '~/assets/images/flower.png'
+import { downloadAppModalPageAtom, Page } from '~/components/NavBar/DownloadApp/Modal'
+import { useAccount } from '~/hooks/useAccount'
+import { useModalState } from '~/hooks/useModalState'
+import { useAppSelector } from '~/state/hooks'
 
 // The logic for displaying the card is as follows:
 // 1. Only if the user is connected to a funded embedded wallet,

@@ -29,6 +29,23 @@ jest.mock('wallet/src/features/wallet/selectors', () => ({
   selectFinishedOnboarding: jest.fn(),
 }))
 
+// Mock the enabled chains hook
+jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
+  useEnabledChains: jest.fn(() => ({
+    chains: [1, 10, 137, 8453, 42161], // Default mainnet chains
+  })),
+}))
+
+// Mock the swap delegation provider
+jest.mock('wallet/src/features/smartWallet/WalletDelegationProvider', () => ({
+  useGetSwapDelegationInfoForActiveAccount: jest.fn(
+    () => (): { delegationInclusion: boolean; delegationAddress: undefined } => ({
+      delegationInclusion: false,
+      delegationAddress: undefined,
+    }),
+  ),
+}))
+
 const mockUseActiveReduxAccount = useActiveReduxAccount as jest.MockedFunction<typeof useActiveReduxAccount>
 const mockSelectFinishedOnboarding = selectFinishedOnboarding as jest.MockedFunction<typeof selectFinishedOnboarding>
 
@@ -155,6 +172,10 @@ describe('Wallet Accounts Store Provider', () => {
             type: ChainScopeType.MultiChain,
             supportedChains: 'all',
           },
+          caip25Info: expect.objectContaining({
+            scopes: expect.any(Object),
+            properties: expect.any(Object),
+          }),
         },
       })
     })
@@ -222,11 +243,15 @@ describe('Wallet Accounts Store Provider', () => {
         status: ConnectorStatus.Connected,
         session: {
           walletId: 'readonly_import_wallet-0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
-          currentAccountIndex: 0, // Re"readonly_import_wallet-0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"adonly accounts always use index 0
+          currentAccountIndex: 0, // Readonly accounts always use index 0
           chainScope: {
             type: ChainScopeType.MultiChain,
             supportedChains: 'all',
           },
+          caip25Info: expect.objectContaining({
+            scopes: expect.any(Object),
+            properties: expect.any(Object),
+          }),
         },
       })
     })
@@ -325,7 +350,7 @@ describe('Wallet Accounts Store Provider', () => {
       // Should have both wallets
       const wallets = result.current.getState().wallets
       expect(Object.keys(wallets)).toHaveLength(2)
-      expect(wallets.stored_mnemonic_wallet).toBeDefined()
+      expect(wallets['stored_mnemonic_wallet']).toBeDefined()
       expect(wallets['readonly_import_wallet-0xabcdefabcdefabcdefabcdefabcdefabcdefabcd']).toBeDefined()
     })
   })

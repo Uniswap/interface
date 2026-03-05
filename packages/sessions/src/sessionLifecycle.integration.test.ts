@@ -237,8 +237,9 @@ describe('Session Lifecycle Integration Tests', () => {
       async (): Promise<InitSessionResponse> => {
         return new InitSessionResponse({
           sessionId: 'device-test-session',
+          deviceId: 'new-device-123',
           needChallenge: false,
-          extra: { device_id: 'new-device-123' },
+          extra: {},
         })
       }
 

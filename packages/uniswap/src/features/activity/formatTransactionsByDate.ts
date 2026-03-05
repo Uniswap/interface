@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isChained, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export interface AllFormattedTransactions {
@@ -48,9 +48,9 @@ export function formatTransactionsByDate(
   )
 
   const pendingSorted = pending.sort((a, b) => {
-    // sort based on timestamp if a UniswapxX order is present, since pending UniswapX orders do not have a nonce.
-    if (isUniswapX(a) || isUniswapX(b)) {
-      return b.addedTime - a.addedTime
+    // If either transaction lacks a traditional nonce (UniswapX/Chained), sort by timestamp
+    if (isChained(a) || isChained(b) || isUniswapX(a) || isUniswapX(b)) {
+      return getTime(b) - getTime(a)
     }
 
     // sort based on nonce if available, highest nonce first for reverse chronological order.
@@ -97,4 +97,9 @@ export function formatTransactionsByDate(
     yesterdayTransactionList,
     priorByMonthTransactionList,
   }
+}
+
+/** Helper to get the updated time else fallback to added time. */
+function getTime(tx: TransactionDetails): number {
+  return 'updatedTime' in tx && tx.updatedTime ? tx.updatedTime : tx.addedTime
 }

@@ -1,5 +1,5 @@
-import { css } from 'lib/styled-components'
 import { FlexProps } from 'ui/src'
+import { css } from '~/lib/deprecated-styled'
 
 /** @deprecated use tamagui and ClickableTamaguiStyle instead */
 export const ClickableStyle = css`

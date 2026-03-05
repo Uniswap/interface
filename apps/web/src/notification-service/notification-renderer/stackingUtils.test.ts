@@ -4,7 +4,7 @@ import {
   MAX_STACKED_BANNERS,
   SCALE_DECREMENT,
   VERTICAL_OFFSET,
-} from 'notification-service/notification-renderer/stackingUtils'
+} from '~/notification-service/notification-renderer/stackingUtils'
 
 describe('stackingUtils', () => {
   describe('calculateStackingProps', () => {

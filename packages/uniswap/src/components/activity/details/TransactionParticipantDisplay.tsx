@@ -4,14 +4,14 @@ import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 
 export function TransactionParticipantDisplay({ address }: { address: string }): JSX.Element {
   return (
-    <Flex justifyContent="center" flexDirection="row" gap="$spacing4">
+    <Flex justifyContent="center" flexDirection="row" gap="$spacing4" cursor="pointer">
       <AddressDisplay
         hideAddressInSubtitle
         address={address}
         size={iconSizes.icon16}
         horizontalGap="$spacing6"
         variant="body3"
-        disableForcedWidth={true}
+        textHoverColor="$neutral1Hovered"
       />
     </Flex>
   )

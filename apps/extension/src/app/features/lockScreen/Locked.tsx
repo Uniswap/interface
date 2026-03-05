@@ -7,14 +7,15 @@ import { PasswordInputWithBiometrics } from 'src/app/components/PasswordInput'
 import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import { useUnlockWithBiometricCredentialMutation } from 'src/app/features/biometricUnlock/useUnlockWithBiometricCredentialMutation'
 import { useUnlockWithPassword } from 'src/app/features/lockScreen/useUnlockWithPassword'
-import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
+import { ExtensionState } from 'src/store/extensionReducer'
 import { Button, Flex, InputProps, Text } from 'ui/src'
 import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { SagaStatus, useMonitoredSagaStatus } from 'uniswap/src/utils/saga'
 import { useEvent } from 'utilities/src/react/hooks'
 import { LandingBackground } from 'wallet/src/components/landing/LandingBackground'
 import { authSagaName } from 'wallet/src/features/auth/saga'
@@ -22,7 +23,6 @@ import { AuthSagaError } from 'wallet/src/features/auth/types'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { SagaStatus } from 'wallet/src/utils/saga'
 
 function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
   const [value, setValue] = useState(defaultValue)
@@ -63,7 +63,7 @@ export function Locked(): JSX.Element {
     [onChangePasswordText],
   )
 
-  const { status, error } = useSagaStatus({ sagaName: authSagaName, resetSagaOnSuccess: false })
+  const { status, error } = useMonitoredSagaStatus<ExtensionState>(authSagaName)
 
   const unlockWithPassword = useUnlockWithPassword()
   const onPressUnlockWithPassword = useEvent(() => unlockWithPassword({ password: enteredPassword }))

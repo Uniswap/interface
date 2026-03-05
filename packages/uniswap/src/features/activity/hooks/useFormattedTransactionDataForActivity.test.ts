@@ -7,17 +7,21 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { transactionDetails, uniswapXOrderDetails } from 'uniswap/src/test/fixtures/wallet/transactions'
 import { renderHook } from 'uniswap/src/test/test-utils'
+import type { MockedFunction } from 'vitest'
 
 // Mock dependencies
-jest.mock('uniswap/src/features/dataApi/listTransactions/listTransactions')
-jest.mock('uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions')
-jest.mock('uniswap/src/features/activity/formatTransactionsByDate')
-jest.mock('uniswap/src/features/language/localizedDayjs')
-jest.mock('uniswap/src/features/transactions/selectors')
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useSelector: jest.fn(),
-}))
+vi.mock('uniswap/src/features/dataApi/listTransactions/listTransactions')
+vi.mock('uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions')
+vi.mock('uniswap/src/features/activity/formatTransactionsByDate')
+vi.mock('uniswap/src/features/language/localizedDayjs')
+vi.mock('uniswap/src/features/transactions/selectors')
+vi.mock('react-redux', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('react-redux')>()
+  return {
+    ...actual,
+    useSelector: vi.fn(),
+  }
+})
 
 import { useSelector } from 'react-redux'
 import { formatTransactionsByDate } from 'uniswap/src/features/activity/formatTransactionsByDate'
@@ -27,21 +31,21 @@ import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TEST_WALLET } from 'uniswap/src/test/fixtures/wallet/addresses'
 
-const mockUseSelector = useSelector as jest.MockedFunction<typeof useSelector>
-const mockUseCurrencyIdToVisibility = useCurrencyIdToVisibility as jest.MockedFunction<typeof useCurrencyIdToVisibility>
-const mockUseLocalizedDayjs = useLocalizedDayjs as jest.MockedFunction<typeof useLocalizedDayjs>
-const mockUseMergeLocalAndRemoteTransactions = useMergeLocalAndRemoteTransactions as jest.MockedFunction<
+const mockUseSelector = useSelector as MockedFunction<typeof useSelector>
+const mockUseCurrencyIdToVisibility = useCurrencyIdToVisibility as MockedFunction<typeof useCurrencyIdToVisibility>
+const mockUseLocalizedDayjs = useLocalizedDayjs as MockedFunction<typeof useLocalizedDayjs>
+const mockUseMergeLocalAndRemoteTransactions = useMergeLocalAndRemoteTransactions as MockedFunction<
   typeof useMergeLocalAndRemoteTransactions
 >
-const mockFormatTransactionsByDate = formatTransactionsByDate as jest.MockedFunction<typeof formatTransactionsByDate>
-const mockUseListTransactions = useListTransactions as jest.MockedFunction<typeof useListTransactions>
+const mockFormatTransactionsByDate = formatTransactionsByDate as MockedFunction<typeof formatTransactionsByDate>
+const mockUseListTransactions = useListTransactions as MockedFunction<typeof useListTransactions>
 
 describe('useFormattedTransactionDataForActivity', () => {
-  const mockRefetch = jest.fn().mockResolvedValue(undefined)
-  const mockFetchNextPage = jest.fn()
+  const mockRefetch = vi.fn().mockResolvedValue(undefined)
+  const mockFetchNextPage = vi.fn()
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
     // Default mocks
     mockUseSelector.mockReturnValue({})
@@ -297,6 +301,31 @@ describe('useFormattedTransactionDataForActivity', () => {
 
       // Should only pass mainnetSwap (limit order filtered, arbitrum filtered)
       expect(formatTransactionsByDate).toHaveBeenCalledWith([mainnetSwap], expect.anything())
+    })
+  })
+
+  describe('filterTransactionTypes', () => {
+    it('should pass filterTransactionTypes to useListTransactions', () => {
+      const { TransactionTypeFilter } = require('@uniswap/client-data-api/dist/data/v1/types_pb')
+      const filterTypes = [TransactionTypeFilter.SWAP]
+
+      renderFormattedHook({ filterTransactionTypes: filterTypes })
+
+      expect(mockUseListTransactions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filterTransactionTypes: filterTypes,
+        }),
+      )
+    })
+
+    it('should not include filterTransactionTypes when undefined', () => {
+      renderFormattedHook()
+
+      expect(mockUseListTransactions).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filterTransactionTypes: undefined,
+        }),
+      )
     })
   })
 })

@@ -1,5 +1,5 @@
-import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
-import { render } from 'test-utils/render'
+import { PoolProgressIndicator } from '~/components/PoolProgressIndicator/PoolProgressIndicator'
+import { render } from '~/test-utils/render'
 
 describe('PoolProgressIndicator', () => {
   it('should render with valid number of steps', () => {

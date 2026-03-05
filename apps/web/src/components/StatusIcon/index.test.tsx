@@ -1,8 +1,8 @@
-import StatusIcon from 'components/StatusIcon'
-import { useActiveAddresses, useActiveWallet } from 'features/accounts/store/hooks'
-import { ExternalWallet } from 'features/accounts/store/types'
-import { mocked } from 'test-utils/mocked'
-import { render } from 'test-utils/render'
+import StatusIcon from '~/components/StatusIcon'
+import { useActiveAddresses, useActiveWallet } from '~/features/accounts/store/hooks'
+import { ExternalWallet } from '~/features/accounts/store/types'
+import { mocked } from '~/test-utils/mocked'
+import { render } from '~/test-utils/render'
 
 const ACCOUNT = '0x0'
 
@@ -14,7 +14,7 @@ vi.mock('../../hooks/useSocksBalance', () => ({
   useHasSocks: () => true,
 }))
 
-vi.mock('features/accounts/store/hooks', () => ({
+vi.mock('~/features/accounts/store/hooks', () => ({
   useActiveAddresses: vi.fn(),
   useActiveWallet: vi.fn(),
   useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),

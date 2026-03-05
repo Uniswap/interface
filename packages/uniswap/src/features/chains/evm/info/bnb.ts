@@ -56,6 +56,7 @@ export const BNB_CHAIN_INFO = {
     logo: BNB_LOGO,
   },
   networkLayer: NetworkLayer.L1,
+  blockTimeMs: 3000,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },

@@ -1,9 +1,12 @@
-import { GasStrategy, TradingApi } from '@universe/api'
+import { type GasFeeResult, type GasStrategy, TradingApi } from '@universe/api'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { getPlanCompoundSlippageTolerance } from 'uniswap/src/features/transactions/swap/plan/slippage'
 import type { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
-import { ChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { type ChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 const UNUSED_CHAINED_ACTIONS_FIELDS: Pick<
   ChainedSwapTxAndGasInfo,
@@ -20,7 +23,9 @@ const UNUSED_CHAINED_ACTIONS_FIELDS: Pick<
  *
  * @returns SwapTxAndGasInfoService for Chained Action trades
  */
-export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoService<ChainedActionTrade> {
+export function createChainedActionSwapTxAndGasInfoService(ctx?: {
+  getSwapDelegationInfo?: (chainId?: UniverseChainId) => SwapDelegationInfo
+}): SwapTxAndGasInfoService<ChainedActionTrade> {
   let planId: string | undefined
   let prevQuoteHash: string | undefined
   const service: SwapTxAndGasInfoService<ChainedActionTrade> = {
@@ -68,11 +73,42 @@ export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoSe
         trade,
         gasFee,
         gasFeeEstimation: {},
-        includesDelegation: false,
+        includesDelegation: getIncludesDelegationForChainedQuote(newQuote, ctx?.getSwapDelegationInfo),
         planId,
+        slippageTolerance: getPlanCompoundSlippageTolerance(newQuote.steps),
       }
     },
   }
 
   return service
+}
+
+function getIncludesDelegationForChainedQuote(
+  quote: TradingApi.ChainedQuote,
+  getSwapDelegationInfo?: (chainId?: UniverseChainId) => SwapDelegationInfo,
+): boolean {
+  if (!getSwapDelegationInfo) {
+    return false
+  }
+
+  const chainIds = new Set<TradingApi.ChainId>()
+  for (const step of quote.steps ?? []) {
+    if (step.tokenInChainId !== undefined) {
+      chainIds.add(step.tokenInChainId)
+    }
+  }
+
+  // Fallback to top-level chain ID if steps don't specify chain IDs
+  if (chainIds.size === 0) {
+    chainIds.add(quote.tokenInChainId)
+  }
+
+  for (const apiChainId of chainIds) {
+    const universeChainId = tradingApiToUniverseChainId(apiChainId)
+    if (universeChainId && getSwapDelegationInfo(universeChainId).delegationInclusion) {
+      return true
+    }
+  }
+
+  return false
 }

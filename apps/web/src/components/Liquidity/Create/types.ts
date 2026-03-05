@@ -3,9 +3,9 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { DEFAULT_TICK_SPACING, DYNAMIC_FEE_AMOUNT } from 'uniswap/src/constants/pools'
+import { PositionField } from '~/types/position'
 
 export type FeeData = {
   isDynamic: boolean
@@ -38,11 +38,12 @@ export interface InitialPosition {
   tickLower: number
   tickUpper: number
   isOutOfRange: boolean
+  fee: FeeData
 }
 
 export interface PositionState {
   protocolVersion: ProtocolVersion
-  fee: FeeData
+  fee?: FeeData
   hook?: string
   userApprovedHook?: string // address of approved hook. If different from `hook`, user needs to reapprove the new hook
   // Initial position is provided for migration purposes.
@@ -56,7 +57,7 @@ export const DEFAULT_FEE_DATA = {
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
-  fee: DEFAULT_FEE_DATA,
+  fee: undefined,
   hook: undefined,
   userApprovedHook: undefined,
   protocolVersion: ProtocolVersion.V4,
@@ -104,7 +105,7 @@ export type CreatePositionInfo = CreateV4PositionInfo | CreateV3PositionInfo | C
 
 export interface DynamicFeeTierSpeedbumpData {
   open: boolean
-  wishFeeData: FeeData
+  wishFeeData?: FeeData
 }
 
 export type PriceDifference = {
@@ -119,8 +120,8 @@ export interface PriceRangeState {
   initialPrice: string
   isInitialPriceDirty?: boolean
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
-  minPrice?: string
-  maxPrice?: string
+  minTick?: number
+  maxTick?: number
   inputMode?: RangeAmountInputPriceMode
 }
 
@@ -131,8 +132,6 @@ type BasePriceRangeInfo = {
 
 type BasePoolPriceRangeInfo = {
   ticks: [Maybe<number>, Maybe<number>]
-  pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
-  ticksAtLimit: [boolean, boolean]
 }
 
 export type V4PriceRangeInfo = BasePriceRangeInfo &

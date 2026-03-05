@@ -1,7 +1,7 @@
-import { ActionTile, ActionTileProps } from 'components/AccountDrawer/ActionTile'
-import { Wiggle } from 'components/animations/Wiggle'
 import { Flex, GeneratedIcon } from 'ui/src'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { ActionTile, ActionTileProps } from '~/components/AccountDrawer/ActionTile'
+import { Wiggle } from '~/components/animations/Wiggle'
 
 type ActionTileWithIconAnimationProps = Omit<ActionTileProps, 'Icon'> & {
   Icon: GeneratedIcon

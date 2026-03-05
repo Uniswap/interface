@@ -1,6 +1,5 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, styled, Text } from 'ui/src'
 import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
 import { BookOpen } from 'ui/src/components/icons/BookOpen'
@@ -8,6 +7,7 @@ import { GraduationCap } from 'ui/src/components/icons/GraduationCap'
 import { PenLine } from 'ui/src/components/icons/PenLine'
 import { SpeechBubbles } from 'ui/src/components/icons/SpeechBubbles'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 const SectionLayout = styled(Flex, {
   width: '100%',
@@ -48,16 +48,18 @@ const RowContent = React.memo(function RowContent({
     >
       <Flex row gap="$gap24" alignItems="center" flex={1} $lg={{ alignItems: 'flex-start', gap: '$gap16' }}>
         <Flex flexShrink={0}>{icon}</Flex>
-        <Flex row alignItems="center" flex={1} gap="$gap16" $lg={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-          <Text
-            variant="heading2"
-            minWidth={220}
-            $xl={{ minWidth: 180 }}
-            $lg={{ flexBasis: 0 }}
-            $md={{ variant: 'heading3', lineHeight: 36 }}
-          >
+        <Flex
+          flex={1}
+          gap="$gap16"
+          alignItems="center"
+          $platform-web={{ display: 'grid', gridTemplateColumns: '220px 1fr' }}
+          $xl={{ '$platform-web': { gridTemplateColumns: '180px 1fr' } }}
+          $lg={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
+        >
+          <Text variant="heading2" $md={{ variant: 'heading3', lineHeight: 36 }}>
             {title}
           </Text>
+          {/* Apply left margin to match the description with the position of the icon */}
           <Text variant="heading3" $lg={{ ml: -48 }} $md={{ fontSize: 18, lineHeight: 24 }}>
             {description}
           </Text>

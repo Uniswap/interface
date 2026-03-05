@@ -1,16 +1,16 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   canUnwrapCurrency,
   getCurrencyForProtocol,
   getCurrencyWithOptionalUnwrap,
   getCurrencyWithWrap,
   getTokenOrZeroAddress,
-} from 'components/Liquidity/utils/currency'
-import { ETH_MAINNET } from 'test-utils/constants'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+} from '~/components/Liquidity/utils/currency'
+import { ETH_MAINNET } from '~/test-utils/constants'
 
 const nativeCurrency = nativeOnChain(UniverseChainId.Mainnet)
 const WETH = nativeOnChain(UniverseChainId.Mainnet).wrapped

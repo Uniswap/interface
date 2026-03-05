@@ -1,9 +1,4 @@
 import ms from 'ms'
-import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
-import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
-import { ProviderOption } from 'pages/Swap/Buy/ProviderOption'
-import { ContentWrapper, getOnRampInputAmount } from 'pages/Swap/Buy/shared'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
@@ -26,13 +21,17 @@ import { filterQuotesByPaymentMethod } from 'uniswap/src/features/fiatOnRamp/uti
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useIsForFiltersEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsForFiltersEnabled'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from 'utilities/src/time/timing'
-import { unwrappedToken } from 'utils/unwrappedToken'
+import { useBuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
+import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
+import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
+import { ProviderOption } from '~/pages/Swap/Buy/ProviderOption'
+import { ContentWrapper, getOnRampInputAmount } from '~/pages/Swap/Buy/shared'
+import { unwrappedToken } from '~/utils/unwrappedToken'
 
 interface ChooseProviderModal {
   isOpen: boolean
@@ -48,7 +47,6 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
   const [initialQuotesHeight, setInitialQuotesHeight] = useState<number | null>(null)
   const quotesContainerRef = useRef<HTMLDivElement>(null)
-  const isFORFiltersEnabled = useIsForFiltersEnabled()
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const unwrappedCurrency = quoteCurrency?.currencyInfo?.currency
@@ -78,10 +76,12 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     if (providers && providers.length > 0) {
       // Force selected providers when the user has arrived from an ad
       if (
-        quotes.quotes.some((q: FORQuote) => providers.includes(q.serviceProviderDetails.serviceProvider.toLowerCase()))
+        quotes.quotes.some((q: FORQuote) =>
+          providers.includes(q.serviceProviderDetails?.serviceProvider.toLowerCase() ?? ''),
+        )
       ) {
         return quotes.quotes.filter((q: FORQuote) =>
-          providers.includes(q.serviceProviderDetails.serviceProvider.toLowerCase()),
+          providers.includes(q.serviceProviderDetails?.serviceProvider.toLowerCase() ?? ''),
         )
       }
     }
@@ -93,18 +93,18 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     if (!quotes?.quotes) {
       return undefined
     }
-    return isFORFiltersEnabled ? filterQuotesByPaymentMethod(quotes.quotes, paymentMethod) : quotes.quotes
-  }, [quotes, paymentMethod, isFORFiltersEnabled])
+    return filterQuotesByPaymentMethod(quotes.quotes, paymentMethod)
+  }, [quotes, paymentMethod])
 
   // Provider modal should have a fixed height determined on pageload by number of quotes to prevent thrashing when filters are applied
   useEffect(() => {
     if (sortedQuotes && sortedQuotes.length > 0 && quotesContainerRef.current) {
       const height = quotesContainerRef.current.scrollHeight
-      if (!initialQuotesHeight || Math.abs(sortedQuotes.length - (quotes?.quotes?.length || 0)) > 2) {
+      if (!initialQuotesHeight || Math.abs(sortedQuotes.length - (quotes?.quotes.length || 0)) > 2) {
         setInitialQuotesHeight(height)
       }
     }
-  }, [sortedQuotes, initialQuotesHeight, quotes?.quotes?.length])
+  }, [sortedQuotes, initialQuotesHeight, quotes?.quotes.length])
 
   const onClose = () => {
     closeModal()
@@ -149,7 +149,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
 
   const filterRowPadding = 24
 
-  const showFilter = isFORFiltersEnabled && !!quotes?.quotes?.length
+  const showFilter = !!quotes?.quotes.length && quotes.quotes.length > 1
 
   return (
     <Flex
@@ -169,7 +169,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
         />
         <Flex row alignItems="center" justifyContent="space-between">
           <Text variant="subheading1" color="$neutral1" testID={TestID.BuyFormChooseProvider}>
-            {rampDirection === RampDirection.ONRAMP ? t('fiatOnRamp.checkout.title') : t('fiatOffRamp.checkout.title')}
+            {rampDirection === RampDirection.ON_RAMP ? t('fiatOnRamp.checkout.title') : t('fiatOffRamp.checkout.title')}
           </Text>
           <Flex row gap="$spacing12" alignItems="center" pr="$spacing2">
             <Text variant="body2" color="$neutral2">
@@ -192,7 +192,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
           quotes={quotes?.quotes}
           paymentMethod={buyFormState.paymentMethod}
           setPaymentMethod={setPaymentMethod}
-          isOffRamp={rampDirection === RampDirection.OFFRAMP}
+          isOffRamp={rampDirection === RampDirection.OFF_RAMP}
           px={filterRowPadding}
         />
         <EdgeFade side="right" width={filterRowPadding} $sm={{ right: filterRowPadding / 2 }} />
@@ -205,7 +205,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
         {sortedQuotes?.map((q: FORQuote) => {
           return (
             <ProviderOption
-              key={q.serviceProviderDetails.serviceProvider}
+              key={q.serviceProviderDetails?.serviceProvider}
               quote={q}
               selectedCountry={selectedCountry}
               quoteCurrencyCode={quoteCurrencyCode}

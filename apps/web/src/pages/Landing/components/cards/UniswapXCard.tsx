@@ -1,11 +1,11 @@
-import { CardContents } from 'pages/Landing/components/cards/CardContents'
-import { PillButton } from 'pages/Landing/components/cards/PillButton'
-import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { useTranslation } from 'react-i18next'
 import { Image } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { opacify } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { CardContents } from '~/pages/Landing/components/cards/CardContents'
+import { PillButton } from '~/pages/Landing/components/cards/PillButton'
+import ValuePropCard from '~/pages/Landing/components/cards/ValuePropCard'
 
 const primary = '#8251FB'
 
@@ -15,7 +15,6 @@ export function UniswapXCard() {
   return (
     <ValuePropCard
       href={uniswapUrls.uniswapXUrl}
-      smaller
       color={primary}
       backgroundColor={opacify(6, primary)}
       title={

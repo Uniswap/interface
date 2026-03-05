@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   cancelAnimation,
@@ -26,6 +26,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
@@ -35,31 +36,12 @@ const UNISWAP_LOGO_SCALE_LOADING = 1.2
 const UNISWAP_LOGO_SCALE_DEFAULT = 1
 const QR_CODE_SIZE = 212
 
-function useDocumentVisibility(): boolean {
-  const [isDocumentVisible, setIsDocumentVisible] = useState(!document.hidden)
-
-  const handleVisibilityChange = (): void => {
-    setIsDocumentVisible(!document.hidden)
-  }
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: handleVisibilityChange is created fresh each render but behavior stays the same
-  useEffect(() => {
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [])
-
-  return isDocumentVisible
-}
-
 export function ScanToOnboard(): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
   const { goToNextStep } = useOnboardingSteps()
-  const isDocumentVisible = useDocumentVisibility()
+  const isWindowVisible = useIsWindowVisible()
 
   const { sessionUUID, isLoadingUUID, publicKey, resetScantastic, expirationTimestamp, setExpirationTimestamp } =
     useScantasticContext()
@@ -143,12 +125,12 @@ export function ScanToOnboard(): JSX.Element {
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined
 
-    if (isDocumentVisible) {
+    if (isWindowVisible) {
       interval = setInterval(checkOTPState, ONE_SECOND_MS)
     }
 
     return () => clearInterval(interval)
-  }, [checkOTPState, isDocumentVisible])
+  }, [checkOTPState, isWindowVisible])
 
   useTimeout(resetScantastic, expirationTimestamp - Date.now())
 
@@ -226,12 +208,7 @@ export function ScanToOnboard(): JSX.Element {
                       </Text>
                     </Flex>
 
-                    <RotatableChevron
-                      color="$neutral3"
-                      direction="end"
-                      height={iconSizes.icon24}
-                      width={iconSizes.icon24}
-                    />
+                    <RotatableChevron color="$neutral3" direction="end" size="$icon.24" />
                   </Flex>
                 </Flex>
               </TouchableArea>
@@ -269,7 +246,7 @@ export function ScanToOnboard(): JSX.Element {
           >
             {errorDerivingQR ? (
               <Flex px="$spacing16" height={QR_CODE_SIZE} width={QR_CODE_SIZE}>
-                <Text color="$neutral2" m="auto" textAlign="center" variant="body3">
+                <Text color={colors.black.val} m="auto" textAlign="center" variant="body3">
                   {t('onboarding.scan.error')}
                 </Text>
               </Flex>
@@ -306,6 +283,7 @@ export function ScanToOnboard(): JSX.Element {
                     <QRCode
                       bgColor="transparent"
                       fgColor={colors.black.val}
+                      level="L"
                       size={QR_CODE_SIZE}
                       value={scantasticValue}
                     />

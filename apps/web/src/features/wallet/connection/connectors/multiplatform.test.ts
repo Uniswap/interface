@@ -1,7 +1,7 @@
-import { deduplicateWalletConnectorMeta } from 'features/wallet/connection/connectors/multiplatform'
-import type { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
-import { METAMASK_CONNECTOR } from 'test-utils/wallets/fixtures'
 import { describe, expect, it } from 'vitest'
+import { deduplicateWalletConnectorMeta } from '~/features/wallet/connection/connectors/multiplatform'
+import type { WalletConnectorMeta } from '~/features/wallet/connection/types/WalletConnectorMeta'
+import { METAMASK_CONNECTOR } from '~/test-utils/wallets/fixtures'
 
 describe('multiplatform connectors', () => {
   describe('deduplicateWalletConnectorMeta', () => {

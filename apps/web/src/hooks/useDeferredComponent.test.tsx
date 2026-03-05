@@ -1,12 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
-import { useDeferredComponent } from 'hooks/useDeferredComponent'
-import { logger } from 'utilities/src/logger/logger'
-
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    error: vi.fn(),
-  },
-}))
+import { mockLogger } from 'utilities/src/logger/mocks'
+import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 
 describe('useDeferredComponent', () => {
   const mockRequestIdleCallback = vi.fn()
@@ -103,7 +97,7 @@ describe('useDeferredComponent', () => {
     })
 
     expect(result.current).toBeNull()
-    expect(logger.error).toHaveBeenCalledWith(error, {
+    expect(mockLogger.error).toHaveBeenCalledWith(error, {
       tags: {
         file: 'useDeferredComponent.tsx',
         function: 'requestIdleCallback',

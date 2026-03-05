@@ -1,5 +1,4 @@
 import { useFocusEffect } from '@react-navigation/core'
-import { useState } from 'react'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
@@ -14,8 +13,7 @@ import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
 import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
-import { useEvent } from 'utilities/src/react/hooks'
-import { useTimeout } from 'utilities/src/time/timing'
+import { useDelayedRender } from 'utilities/src/react/useDelayedRender'
 
 export function CurrentScreen({
   settings,
@@ -69,12 +67,4 @@ function SwapReviewScreenDelayedRender({ onSubmitSwap }: { onSubmitSwap?: () => 
   const { isContentHidden } = useDelayedRender(SWAP_REVIEW_SCREEN_TRANSITION_DELAY)
 
   return <SwapReviewScreen hideContent={isContentHidden} onSubmitSwap={onSubmitSwap} />
-}
-
-function useDelayedRender(delay: number): { isContentHidden: boolean } {
-  const [isContentHidden, setIsContentHidden] = useState(true)
-  const setVisible = useEvent(() => setIsContentHidden(false))
-  useTimeout(setVisible, delay)
-
-  return { isContentHidden }
 }

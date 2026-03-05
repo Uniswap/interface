@@ -1,5 +1,5 @@
-import { setupAmplitude } from 'tracing/amplitude'
-import { isRemoteReportingEnabled } from 'utils/env'
+import { setupAmplitude } from '~/tracing/amplitude'
+import { isRemoteReportingEnabled } from '~/utils/env'
 
 if (isRemoteReportingEnabled()) {
   // Dump some metadata into the window to allow client verification.

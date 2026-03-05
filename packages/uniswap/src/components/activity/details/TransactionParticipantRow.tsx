@@ -6,13 +6,12 @@ import { Person } from 'ui/src/components/icons/Person'
 import { InfoRow } from 'uniswap/src/components/activity/details/InfoRow'
 import { TransactionParticipantDisplay } from 'uniswap/src/components/activity/details/TransactionParticipantDisplay'
 import { TransactionParticipantRowProps } from 'uniswap/src/components/activity/details/types'
-import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { isMobileApp } from 'utilities/src/platform'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export function TransactionParticipantRow({
@@ -47,15 +46,11 @@ export function TransactionParticipantRow({
       onPress: onCopyAddress,
       Icon: CopyAlt,
     },
-    ...(isMobileApp
-      ? [
-          {
-            label: t('common.view.profile'),
-            onPress: onViewProfile,
-            Icon: Person,
-          },
-        ]
-      : []),
+    {
+      label: t('common.view.profile'),
+      onPress: onViewProfile,
+      Icon: Person,
+    },
   ]
 
   return (

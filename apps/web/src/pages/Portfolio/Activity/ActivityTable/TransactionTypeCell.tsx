@@ -1,5 +1,3 @@
-import { buildActivityRowFragments } from 'pages/Portfolio/Activity/ActivityTable/registry'
-import { getTransactionTypeFilterOptions } from 'pages/Portfolio/Activity/Filters/utils'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SpinningLoader, Text } from 'ui/src'
@@ -9,6 +7,8 @@ import {
   TEMPORARY_TRANSACTION_STATUSES,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildActivityRowFragments } from '~/pages/Portfolio/Activity/ActivityTable/registry'
+import { getTransactionTypeFilterOptions } from '~/pages/Portfolio/Activity/Filters/utils'
 
 interface TransactionTypeCellProps {
   transaction: TransactionDetails

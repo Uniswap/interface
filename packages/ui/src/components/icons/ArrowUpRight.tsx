@@ -18,5 +18,4 @@ export const [ArrowUpRight, AnimatedArrowUpRight] = createIcon({
       </G>
     </Svg>
   ),
-  defaultFill: '#7D7D7D',
 })

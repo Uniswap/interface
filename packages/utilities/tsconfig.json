@@ -1,6 +1,6 @@
 {
   "extends": "../../config/tsconfig/app.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json", "env.d.ts"],
   "compilerOptions": {
     "types": ["node", "vitest/globals", "chrome"]
   },

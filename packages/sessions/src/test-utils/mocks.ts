@@ -18,9 +18,10 @@ export function createMockSessionService(overrides: Partial<SessionService> = {}
     requestChallenge: vi.fn().mockResolvedValue({
       challengeId: 'mock-challenge-456',
       challengeType: ChallengeType.TURNSTILE,
-      extra: { sitekey: 'mock-sitekey' },
+      extra: {},
+      challengeData: { case: 'turnstile', value: { siteKey: 'mock-sitekey', action: 'verify' } },
     }),
-    upgradeSession: vi.fn().mockResolvedValue({
+    verifySession: vi.fn().mockResolvedValue({
       retry: false,
     }),
     removeSession: vi.fn().mockResolvedValue(undefined),
@@ -98,9 +99,10 @@ export const TestScenarios = {
     vi.mocked(service.requestChallenge).mockResolvedValue({
       challengeId: 'challenge-333',
       challengeType,
-      extra: { sitekey: 'test-sitekey' },
+      extra: {},
+      challengeData: { case: 'turnstile', value: { siteKey: 'test-sitekey', action: 'verify' } },
     })
-    vi.mocked(service.upgradeSession).mockResolvedValue({
+    vi.mocked(service.verifySession).mockResolvedValue({
       retry: false,
     })
   },
@@ -110,7 +112,7 @@ export const TestScenarios = {
    */
   withServerRetry(service: SessionService, retriesBeforeSuccess = 1): void {
     let attemptCount = 0
-    vi.mocked(service.upgradeSession).mockImplementation(async () => {
+    vi.mocked(service.verifySession).mockImplementation(async () => {
       attemptCount++
       return {
         retry: attemptCount <= retriesBeforeSuccess,

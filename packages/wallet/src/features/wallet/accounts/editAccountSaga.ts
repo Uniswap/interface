@@ -2,13 +2,13 @@ import { all, call, put, select } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { unique } from 'utilities/src/primitives/array'
 import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { editAccount as editInStore, removeAccounts as removeAccountsInStore } from 'wallet/src/features/wallet/slice'
-import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum EditAccountAction {
   AddBackupMethod = 'AddBackupMethod',

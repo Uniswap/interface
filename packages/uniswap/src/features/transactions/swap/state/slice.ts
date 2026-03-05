@@ -23,11 +23,9 @@ const slice = createSlice({
     ) => {
       state.filteredChainIds = { ...filteredChainIds }
     },
-    resetFilteredChainIds: (state) => {
-      state.filteredChainIds = undefined
-    },
+    resetSwapSettings: () => initialSwapSettingsState,
   },
 })
 
-export const { updateFilteredChainIds } = slice.actions
+export const { updateFilteredChainIds, resetSwapSettings } = slice.actions
 export const { reducer: swapSettingsReducer } = slice

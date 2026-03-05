@@ -36,17 +36,25 @@ const AnimatedItem = styled(Flex, {
   grow: true,
 
   variants: {
-    going: ({ type, distance = 10 }: { type: AnimationType; distance?: number }) => {
+    going: ({
+      type,
+      distance = 10,
+      disableFade = false,
+    }: {
+      type: AnimationType
+      distance?: number
+      disableFade?: boolean
+    }) => {
       const { enterOffset, exitOffset } = getAnimationOffsets(type, distance)
       return {
         enterStyle: {
           ...enterOffset,
-          opacity: 0,
+          ...(disableFade ? {} : { opacity: 0 }),
         },
         exitStyle: {
           zIndex: 0,
           ...exitOffset,
-          opacity: 0,
+          ...(disableFade ? {} : { opacity: 0 }),
         },
       }
     },
@@ -60,18 +68,24 @@ export function TransitionItem({
   childKey,
   animation = 'fastHeavy',
   distance,
+  disableFade,
   children,
 }: {
   animationType?: AnimationType
   childKey?: string | number
   animation?: Omit<AnimationTransitionType, 'unset'>
   distance?: number
+  disableFade?: boolean
   children?: ReactNode
 }): JSX.Element {
   return (
-    <AnimatePresence exitBeforeEnter custom={{ going: { type: animationType, distance } }} initial={false}>
+    <AnimatePresence exitBeforeEnter custom={{ going: { type: animationType, distance, disableFade } }} initial={false}>
       {children && (
-        <AnimatedItem key={childKey ?? 'animated-item'} animation={animation} going={{ type: animationType, distance }}>
+        <AnimatedItem
+          key={childKey ?? 'animated-item'}
+          animation={animation}
+          going={{ type: animationType, distance, disableFade }}
+        >
           {children}
         </AnimatedItem>
       )}
@@ -84,6 +98,7 @@ export function AnimateTransition({
   animationType = 'fade',
   animation = 'fastHeavy',
   distance,
+  disableFade,
   children,
 }: {
   currentIndex: number
@@ -91,12 +106,17 @@ export function AnimateTransition({
   animationType?: AnimationType
   distance?: number
   animation?: Omit<AnimationTransitionType, 'unset'>
+  disableFade?: boolean
 }): JSX.Element {
   const childrenArray = Children.toArray(children)
 
   return (
-    <AnimatePresence exitBeforeEnter custom={{ going: { type: animationType, distance } }} initial={false}>
-      <AnimatedItem key={`slide-item-${currentIndex}`} animation={animation} going={{ type: animationType, distance }}>
+    <AnimatePresence exitBeforeEnter custom={{ going: { type: animationType, distance, disableFade } }} initial={false}>
+      <AnimatedItem
+        key={`slide-item-${currentIndex}`}
+        animation={animation}
+        going={{ type: animationType, distance, disableFade }}
+      >
         {childrenArray[currentIndex]}
       </AnimatedItem>
     </AnimatePresence>
@@ -107,11 +127,13 @@ export function AnimatedPager({
   currentIndex,
   animation,
   distance,
+  disableFade,
   children,
 }: {
   currentIndex: number
   animation?: Omit<AnimationTransitionType, 'unset'>
   distance?: number
+  disableFade?: boolean
   children: ReactNode
 }): JSX.Element {
   const prevIndex = usePrevious(currentIndex)
@@ -127,7 +149,13 @@ export function AnimatedPager({
     }
   }, [currentIndex, prevIndex])
   return (
-    <AnimateTransition animationType={direction} distance={distance} currentIndex={currentIndex} animation={animation}>
+    <AnimateTransition
+      animationType={direction}
+      distance={distance}
+      disableFade={disableFade}
+      currentIndex={currentIndex}
+      animation={animation}
+    >
       {children}
     </AnimateTransition>
   )

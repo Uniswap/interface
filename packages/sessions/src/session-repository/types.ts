@@ -1,6 +1,42 @@
 import { ChallengeType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 
 /**
+ * Typed challenge data for Turnstile bot detection
+ */
+interface TurnstileChallengeData {
+  siteKey: string
+  action: string
+}
+
+/**
+ * Typed challenge data for HashCash proof-of-work
+ */
+interface HashCashChallengeData {
+  difficulty: number
+  subject: string
+  algorithm: string
+  nonce: string
+  maxProofLength: number
+  verifier: string
+}
+
+/**
+ * Typed challenge data for GitHub OAuth
+ */
+interface GitHubChallengeData {
+  authorizeUrl: string
+}
+
+/**
+ * Type-safe challenge data union (mirrors proto oneof ChallengeResponse.challenge_data)
+ */
+type TypedChallengeData =
+  | { case: 'turnstile'; value: TurnstileChallengeData }
+  | { case: 'hashcash'; value: HashCashChallengeData }
+  | { case: 'github'; value: GitHubChallengeData }
+  | { case: undefined; value?: undefined }
+
+/**
  * Response from session initialization
  */
 interface InitSessionResponse {
@@ -9,57 +45,117 @@ interface InitSessionResponse {
    * - Web: undefined (in Set-Cookie header)
    * - Mobile/Extension: actual session ID string
    */
-  sessionId?: string // optional string session_id = 1
+  sessionId?: string // optional string session_id
+  deviceId?: string // string device_id
 
   /** Whether bot detection challenge is required */
-  needChallenge: boolean // bool need_challenge = 2
+  needChallenge: boolean // bool need_challenge
 
-  /** Extra information for bot detection (JSON data) */
-  extra: Record<string, string> // map<string, string> extra = 3
+  /** @deprecated Extra information for bot detection (JSON data) — kept for backwards compatibility */
+  extra: Record<string, string> // map<string, string> extra
 }
 
 /**
- * Request for a bot detection challenge
- * Empty - session identified via cookie or header
+ * Request for a challenge
+ * For bot detection: empty (server decides challenge type)
+ * For OAuth: specify challengeType
  */
-
-// biome-ignore lint/complexity/noBannedTypes: Empty per proto
-type ChallengeRequest = {}
+interface ChallengeRequest {
+  /** Challenge type to request (optional - server decides if not specified) */
+  challengeType?: ChallengeType
+  /** Email or other identifier (required for email OTP challenges) */
+  identifier?: string
+}
 
 /**
- * Bot detection challenge response
+ * Challenge response
+ * For bot detection: typed challenge data in challengeData
+ * For OAuth: authorizeUrl in challengeData (GitHub) or extra (legacy)
  */
 interface ChallengeResponse {
-  /** Unique challenge identifier */
+  /** Unique challenge identifier (used as OAuth state parameter) */
   challengeId: string // string challenge_id = 1
 
-  /** Type of challenge to use */
+  /** Type of challenge */
   challengeType: ChallengeType // ChallengeType challenge_type = 2
 
-  /** Extra data for challenge (e.g., Turnstile sitekey, HashCash params) */
-  extra: Record<string, string> // map<string, string> extra = 3
+  /** @deprecated Use challengeData instead. Kept for backwards compatibility. */
+  extra: Record<string, string> // map<string, string> extra = 3 [deprecated]
+
+  /** Type-safe challenge-specific data (replaces extra) */
+  challengeData?: TypedChallengeData
+
+  /** OAuth authorization URL extracted from challengeData or extra */
+  authorizeUrl?: string
 }
 
 /**
- * Request to upgrade session with bot detection solution
+ * Request to verify session with bot detection solution
  */
-interface UpgradeSessionRequest {
+interface VerifySessionRequest {
   /** Solution token (Turnstile token or HashCash proof) */
-  solution: string // string solution = 1
+  solution: string
 
   /** Challenge ID being solved */
-  challengeId: string // string challenge_id = 2
+  challengeId: string
 
-  /** Wallet address for additional trust (future) */
-  walletAddress?: string // string wallet_address = 3 (future addition)
+  /** Type of challenge being solved */
+  challengeType: ChallengeType
 }
 
 /**
- * Response from session upgrade attempt
+ * User information from OAuth provider
  */
-interface UpgradeSessionResponse {
+interface UserInfo {
+  name?: string
+  email?: string
+}
+
+/**
+ * Typed failure reasons from the SessionService/Verify proto.
+ * Values match the wire format: `REASON_${VerifyFailure_Reason[enum]}`.
+ *
+ * Use for exhaustive case matching in strategies and services:
+ * ```ts
+ * switch (result.failureReason) {
+ *   case VerifyFailureReason.INVALID_CHALLENGE:
+ *     return { action: 'error', message: result.failureMessage }
+ * }
+ * ```
+ */
+const VerifyFailureReason = {
+  /** Default/unknown failure */
+  UNSPECIFIED: 'REASON_UNSPECIFIED',
+  /** Bad OTP code or bot detection solution */
+  INVALID_SOLUTION: 'REASON_INVALID_SOLUTION',
+  /** OAuth provider email needs verification */
+  EMAIL_NOT_VERIFIED: 'REASON_EMAIL_NOT_VERIFIED',
+  /** Challenge ID is invalid or expired — re-initiate a challenge */
+  INVALID_CHALLENGE: 'REASON_IVALID_CHALLENGE', // backend proto typo preserved
+  /** Email is linked to a different auth provider */
+  PROVIDER_MISMATCH: 'REASON_PROVIDER_MISMATCH',
+} as const
+
+type VerifyFailureReason = (typeof VerifyFailureReason)[keyof typeof VerifyFailureReason]
+
+/**
+ * Response from session verification
+ */
+interface VerifySessionResponse {
   /** Whether to retry the challenge */
   retry: boolean // bool retry = 1
+
+  /** Seconds to wait before retry (for rate limiting, e.g., email OTP) */
+  waitSeconds?: number // from VerifyFailure.wait_seconds
+
+  /** User information from successful OAuth verification */
+  userInfo?: UserInfo // from VerifySuccess.user_info
+
+  /** Typed failure reason code — use VerifyFailureReason for matching */
+  failureReason?: VerifyFailureReason
+
+  /** Human-readable failure message from the backend */
+  failureMessage?: string
 }
 
 /**
@@ -105,6 +201,18 @@ interface IntrospectResponse {
 }
 
 /**
+ * Configuration for a challenge type (OAuth provider or bot detection)
+ * Returned by getChallengeTypes to provide client-side SDK configuration
+ */
+interface ChallengeTypeConfig {
+  /** Challenge type (e.g., GOOGLE, GITHUB, EMAIL, TURNSTILE) */
+  type: ChallengeType
+
+  /** Provider-specific configuration (e.g., clientId, scope for OAuth) */
+  config: Record<string, string>
+}
+
+/**
  * Session Service API client interface
  * Wraps the protobuf-generated client
  */
@@ -126,10 +234,10 @@ interface SessionRepository {
   challenge(request: ChallengeRequest): Promise<ChallengeResponse>
 
   /**
-   * Submit bot detection solution to upgrade session
+   * Submit bot detection solution to verify session
    * - Headers: X-Session-ID (mobile/ext) or Cookie (web)
    */
-  upgradeSession(request: UpgradeSessionRequest): Promise<UpgradeSessionResponse>
+  verifySession(request: VerifySessionRequest): Promise<VerifySessionResponse>
 
   /**
    * Delete the current session
@@ -142,6 +250,40 @@ interface SessionRepository {
    * Frontend should NOT use this - EGW internal only
    */
   introspect?(request: IntrospectRequest): Promise<IntrospectResponse>
+
+  /**
+   * Get available challenge types and their configuration
+   * Returns OAuth provider configs (e.g., Google client ID) and bot detection configs
+   */
+  getChallengeTypes(): Promise<ChallengeTypeConfig[]>
 }
 
-export type { SessionRepository }
+/**
+ * Typed failure reasons from the SessionService/Challenge proto.
+ * Values match the wire format: `REASON_${ChallengeFailure_Reason[enum]}`.
+ */
+const ChallengeFailureReason = {
+  /** Default/unknown failure */
+  UNSPECIFIED: 'REASON_UNSPECIFIED',
+  /** Session must pass bot detection first (score < 60) */
+  BOT_DETECTION_REQUIRED: 'REASON_BOT_DETECTION_REQUIRED',
+} as const
+
+type ChallengeFailureReason = (typeof ChallengeFailureReason)[keyof typeof ChallengeFailureReason]
+
+export { ChallengeFailureReason, VerifyFailureReason }
+
+export type {
+  SessionRepository,
+  ChallengeRequest,
+  ChallengeResponse,
+  ChallengeTypeConfig,
+  VerifySessionRequest,
+  VerifySessionResponse,
+  InitSessionResponse,
+  UserInfo,
+  TypedChallengeData,
+  TurnstileChallengeData,
+  HashCashChallengeData,
+  GitHubChallengeData,
+}

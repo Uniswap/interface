@@ -147,6 +147,7 @@ const config: StorybookConfig = {
         ...config?.resolve?.alias,
         'react-native$': 'react-native-web',
         'expo-blur': require.resolve('./__mocks__/expo-blur.jsx'),
+        '~': resolve(__dirname, '../src'),
       },
     }
 

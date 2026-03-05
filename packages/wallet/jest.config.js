@@ -25,6 +25,16 @@ module.exports = {
     // avoid native because wallet tests assume no .native.ts
     platforms: ['web', 'ios', 'android'],
   },
+  // Override moduleFileExtensions to NOT prioritize .web.ts for native tests
+  // This ensures wallet tests use moti animations from index.ts, not CSS from index.web.ts
+  moduleFileExtensions: [
+    'ts',
+    'tsx',
+    'js',
+    'jsx',
+    'json',
+    'node',
+  ],
   setupFiles: [
     './jest-setup.js',
   ],
@@ -33,5 +43,12 @@ module.exports = {
     ...preset.moduleNameMapper,
     '@tamagui/core': '@tamagui/core/native-test',
     '@tamagui/web': '@tamagui/core/native-test',
+    // Map theme animations to native version for tests (base index.ts uses CSS animations now)
+    'ui/src/theme/animations$': '<rootDir>/../ui/src/theme/animations/index.native.ts',
+    // Map platform-specific animation components to native versions for tests
+    'ui/src/components/factories/animated$': '<rootDir>/../ui/src/components/factories/animated.native.tsx',
+    'ui/src/components/layout/AnimatedFlex$': '<rootDir>/../ui/src/components/layout/AnimatedFlex.native.tsx',
+    'ui/src/components/layout/AnimatedScrollView$': '<rootDir>/../ui/src/components/layout/AnimatedScrollView.native.ts',
+    'ui/src/components/AnimatedFlashList/AnimatedFlashList$': '<rootDir>/../ui/src/components/AnimatedFlashList/AnimatedFlashList.native.tsx',
   },
 }

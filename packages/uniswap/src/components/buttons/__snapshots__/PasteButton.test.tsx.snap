@@ -1,323 +1,83 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SplitLogo inline renders inline button 1`] = `
-<View
-  collapsable={false}
-  focusVisibleStyle={{}}
-  forwardedRef={[Function]}
-  jestAnimatedProps={
-    {
-      "value": {},
-    }
-  }
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
-  jestInlineStyle={
-    [
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "paddingBottom": 8,
-        "paddingLeft": 8,
-        "paddingRight": 8,
-        "paddingTop": 8,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-    ]
-  }
-  onBlur={[Function]}
-  onClick={[Function]}
-  onFocus={[Function]}
-  onLayout={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
-  role="button"
-  style={
-    [
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "paddingBottom": 8,
-        "paddingLeft": 8,
-        "paddingRight": 8,
-        "paddingTop": 8,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-      {},
-    ]
-  }
->
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 4,
-        "justifyContent": "center",
-      }
-    }
+exports[`SplitLogo > inline > renders inline button 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <RNSVGSvgView
-      align="xMidYMid"
-      bbHeight={16}
-      bbWidth={16}
-      fill="none"
-      focusable={false}
-      meetOrSlice={0}
-      minX={0}
-      minY={0}
-      strokeWidth={8}
-      style={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          {
-            "color": "rgba(255, 255, 255, 0.65)",
-            "height": 16,
-            "width": 16,
-          },
-          {
-            "flex": 0,
-            "height": 16,
-            "width": 16,
-          },
-        ]
-      }
-      vbHeight={16}
-      vbWidth={16}
+    <div
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+      tabindex="0"
     >
-      <RNSVGGroup
-        color="rgba(255, 255, 255, 0.65)"
-        fill={null}
-        propList={
-          [
-            "fill",
-            "strokeWidth",
-          ]
-        }
-        strokeWidth={8}
+      <div
+        class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589 _color-accent3"
       >
-        <RNSVGPath
-          d="M13.3332 5.33333V12C13.3332 13.3333 12.6665 14 11.3332 14H4.6665C3.33317 14 2.6665 13.3333 2.6665 12V5.33333C2.6665 4.172 3.16777 3.518 4.17643 3.37134C4.2571 3.35934 4.33317 3.42599 4.33317 3.50732V3.66602C4.33317 4.87935 5.11984 5.66602 6.33317 5.66602H9.66651C10.8798 5.66602 11.6665 4.87935 11.6665 3.66602V3.50732C11.6665 3.42599 11.7432 3.35934 11.8232 3.37134C12.8319 3.518 13.3332 4.172 13.3332 5.33333ZM6.33317 4.66667H9.66651C10.3332 4.66667 10.6665 4.33333 10.6665 3.66667V3C10.6665 2.33333 10.3332 2 9.66651 2H6.33317C5.6665 2 5.33317 2.33333 5.33317 3V3.66667C5.33317 4.33333 5.6665 4.66667 6.33317 4.66667Z"
-          fill={
-            {
-              "type": 2,
-            }
-          }
-          propList={
-            [
-              "fill",
-            ]
-          }
-        />
-      </RNSVGGroup>
-    </RNSVGSvgView>
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.2}
-      style={
-        {
-          "color": "rgba(255, 255, 255, 0.65)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 17,
-          "fontWeight": "500",
-          "lineHeight": 19.549999999999997,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      Paste
-    </Text>
-  </View>
-</View>
+        <div
+          fill="none"
+          stroke-width="8"
+          style="width: 16px; height: 16px; color: rgba(255, 255, 255, 0.65);"
+          viewbox="0 0 16 16"
+        >
+          <div
+            d="M13.3332 5.33333V12C13.3332 13.3333 12.6665 14 11.3332 14H4.6665C3.33317 14 2.6665 13.3333 2.6665 12V5.33333C2.6665 4.172 3.16777 3.518 4.17643 3.37134C4.2571 3.35934 4.33317 3.42599 4.33317 3.50732V3.66602C4.33317 4.87935 5.11984 5.66602 6.33317 5.66602H9.66651C10.8798 5.66602 11.6665 4.87935 11.6665 3.66602V3.50732C11.6665 3.42599 11.7432 3.35934 11.8232 3.37134C12.8319 3.518 13.3332 4.172 13.3332 5.33333ZM6.33317 4.66667H9.66651C10.3332 4.66667 10.6665 4.33333 10.6665 3.66667V3C10.6665 2.33333 10.3332 2 9.66651 2H6.33317C5.6665 2 5.33317 2.33333 5.33317 3V3.66667C5.33317 4.33333 5.6665 4.66667 6.33317 4.66667Z"
+            fill="currentColor"
+          />
+        </div>
+        <span
+          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+          data-disable-theme="true"
+        >
+          common.button.paste
+        </span>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`SplitLogo renders without error 1`] = `
-<View
-  collapsable={false}
-  focusVisibleStyle={{}}
-  forwardedRef={[Function]}
-  jestAnimatedProps={
-    {
-      "value": {},
-    }
-  }
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
-  jestInlineStyle={
-    [
-      {
-        "backgroundColor": "rgba(255, 55, 199, 0.08)",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "paddingBottom": 8,
-        "paddingLeft": 8,
-        "paddingRight": 8,
-        "paddingTop": 8,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-    ]
-  }
-  onBlur={[Function]}
-  onClick={[Function]}
-  onFocus={[Function]}
-  onLayout={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
-  role="button"
-  style={
-    [
-      {
-        "backgroundColor": "rgba(255, 55, 199, 0.08)",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "paddingBottom": 8,
-        "paddingLeft": 8,
-        "paddingRight": 8,
-        "paddingTop": 8,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-      {},
-    ]
-  }
->
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 4,
-        "justifyContent": "center",
-      }
-    }
+exports[`SplitLogo > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    <Text
-      allowFontScaling={true}
-      maxFontSizeMultiplier={1.2}
-      style={
-        {
-          "color": "#FF37C7",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "500",
-          "lineHeight": 17.25,
-        }
-      }
-      suppressHighlighting={true}
+    <div
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+      tabindex="0"
     >
-      Paste
-    </Text>
-    <RNSVGSvgView
-      align="xMidYMid"
-      bbHeight={16}
-      bbWidth={16}
-      fill="currentColor"
-      focusable={false}
-      meetOrSlice={0}
-      minX={0}
-      minY={0}
-      strokeWidth={8}
-      style={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          {
-            "color": "#FF37C7",
-            "height": 16,
-            "width": 16,
-          },
-          {
-            "flex": 0,
-            "height": 16,
-            "width": 16,
-          },
-        ]
-      }
-      vbHeight={16}
-      vbWidth={16}
-    >
-      <RNSVGGroup
-        color="#FF37C7"
-        fill={
-          {
-            "type": 2,
-          }
-        }
-        propList={
-          [
-            "fill",
-            "strokeWidth",
-          ]
-        }
-        strokeWidth={8}
+      <div
+        class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589 _color-accent3"
       >
-        <RNSVGPath
-          d="M14 4.24666V8.56665C14 8.71332 13.9866 8.86 13.9533 9H11.2533C10.0066 9 9 10.0067 9 11.2533V13.9534C8.86 13.9867 8.7134 14 8.56673 14H4.25326C2.74659 14 2 13.2467 2 11.7467V4.24666C2 2.74666 2.74659 2 4.25326 2H11.7467C13.2534 2 14 2.74666 14 4.24666ZM10 11.2533V13.48C10.06 13.44 10.1067 13.3933 10.16 13.34L13.34 10.16C13.3933 10.1067 13.44 10.06 13.48 10H11.2533C10.5599 10 10 10.56 10 11.2533Z"
-          fill={
-            {
-              "type": 2,
-            }
-          }
-          propList={
-            [
-              "fill",
-            ]
-          }
-        />
-      </RNSVGGroup>
-    </RNSVGSvgView>
-  </View>
-</View>
+        <span
+          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+          data-disable-theme="true"
+        >
+          common.button.paste
+        </span>
+        <div
+          fill="currentColor"
+          stroke-width="8"
+          style="width: 16px; height: 16px; color: rgb(255, 55, 199);"
+          viewbox="0 0 16 16"
+        >
+          <div
+            d="M14 4.24666V8.56665C14 8.71332 13.9866 8.86 13.9533 9H11.2533C10.0066 9 9 10.0067 9 11.2533V13.9534C8.86 13.9867 8.7134 14 8.56673 14H4.25326C2.74659 14 2 13.2467 2 11.7467V4.24666C2 2.74666 2.74659 2 4.25326 2H11.7467C13.2534 2 14 2.74666 14 4.24666ZM10 11.2533V13.48C10.06 13.44 10.1067 13.3933 10.16 13.34L13.34 10.16C13.3933 10.1067 13.44 10.06 13.48 10H11.2533C10.5599 10 10 10.56 10 11.2533Z"
+            fill="currentColor"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

@@ -21,7 +21,18 @@ import {
   SwapElement,
   TextElement,
 } from 'wallet/src/components/landing/elements'
+import { AnimatedArcCircle } from 'wallet/src/components/landing/shapes/AnimatedArcCircle'
 import { UnitagWithProfilePicture } from 'wallet/src/features/unitags/UnitagWithProfilePicture'
+
+const OUTER_CIRCLE_ARCS = [
+  { startAngle: -130, endAngle: -50 }, // Upper arc
+  { startAngle: 50, endAngle: 125 }, // Lower arc
+]
+
+const INNER_CIRCLE_ARCS = [
+  { startAngle: -115, endAngle: -30 }, // Upper arc
+  { startAngle: 60, endAngle: 170 }, // Lower arc
+]
 
 export function UnitagConfirmationScreen({
   route,
@@ -78,12 +89,11 @@ export function UnitagConfirmationScreen({
               index={1}
               position="absolute"
             >
-              <Flex
-                aspectRatio={1}
-                borderColor="$surface3"
-                borderRadius="$roundedFull"
-                borderWidth="$spacing1"
-                height={boxWidth}
+              <AnimatedArcCircle
+                size={boxWidth}
+                strokeWidth={spacing.spacing1}
+                arcs={OUTER_CIRCLE_ARCS}
+                fadeEnds={true}
               />
             </AnimateInOrder>
             <AnimateInOrder
@@ -93,12 +103,11 @@ export function UnitagConfirmationScreen({
               index={2}
               position="absolute"
             >
-              <Flex
-                aspectRatio={1}
-                borderColor="$surface3"
-                borderRadius="$roundedFull"
-                borderWidth="$spacing1"
-                height={boxWidth * 0.6}
+              <AnimatedArcCircle
+                size={boxWidth * 0.6}
+                strokeWidth={spacing.spacing1}
+                arcs={INNER_CIRCLE_ARCS}
+                fadeEnds={true}
               />
             </AnimateInOrder>
             {elementsToAnimate.map(({ element, coordinates }, index) => (

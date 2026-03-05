@@ -1,10 +1,10 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { PositionInfo } from 'components/Liquidity/types'
-import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from 'test-utils/constants'
-import { render } from 'test-utils/render'
+import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from '~/test-utils/constants'
+import { render } from '~/test-utils/render'
 
-vi.mock('components/Liquidity/utils')
+vi.mock('~/components/Liquidity/utils')
 
 describe('LiquidityPositionInfo', () => {
   it('should render in range', () => {

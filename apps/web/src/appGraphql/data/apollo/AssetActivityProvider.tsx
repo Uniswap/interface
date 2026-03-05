@@ -1,14 +1,14 @@
-import { createAdaptiveRefetchContext } from 'appGraphql/data/apollo/AdaptiveRefetch'
 import { GraphQLApi } from '@universe/api'
-import { useAccount } from 'hooks/useAccount'
-import usePrevious from 'hooks/usePrevious'
 import ms from 'ms'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
-import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
+import { createAdaptiveRefetchContext } from '~/appGraphql/data/apollo/AdaptiveRefetch'
+import { useAccount } from '~/hooks/useAccount'
+import usePrevious from '~/hooks/usePrevious'
+import { useFiatOnRampTransactions } from '~/state/fiatOnRampTransactions/hooks'
 
 const { Provider: AdaptiveAssetActivityProvider } = createAdaptiveRefetchContext<GraphQLApi.ActivityWebQueryResult>()
 

@@ -1,8 +1,4 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Page } from 'components/NavBar/DownloadApp/Modal'
-import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
-import { TokenCarousel } from 'components/NavBar/DownloadApp/Modal/TokenCarousel'
-import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Image } from 'ui/src'
@@ -11,6 +7,10 @@ import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { Page } from '~/components/NavBar/DownloadApp/Modal'
+import { ModalContent } from '~/components/NavBar/DownloadApp/Modal/Content'
+import { TokenCarousel } from '~/components/NavBar/DownloadApp/Modal/TokenCarousel'
+import { DownloadWalletRow } from '~/components/WalletModal/DownloadWalletRow'
 
 function Header() {
   return (

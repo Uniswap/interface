@@ -12,7 +12,6 @@ describe('hashcash core', () => {
   // Backend example data for testing
   const backendExample: HashcashChallenge = {
     difficulty: 1,
-    expires_at: Date.now() + 60000, // Use future time for testing
     subject: 'Uniswap',
     algorithm: 'sha256',
     nonce: 'Qlquffem7d8RrL6fmveE68XK0KxcoczdiVpFrV1qeUk=',
@@ -58,22 +57,22 @@ describe('hashcash core', () => {
   })
 
   describe('computeHash', () => {
-    it('produces consistent SHA-256 hashes', () => {
+    it('produces consistent SHA-256 hashes', async () => {
       const params = {
         subject: 'test',
         nonce: 'AQIDBA==', // Base64 string
         counter: 42,
       }
 
-      const hash1 = computeHash(params)
-      const hash2 = computeHash(params)
+      const hash1 = await computeHash(params)
+      const hash2 = await computeHash(params)
 
       expect(hash1).toEqual(hash2)
       expect(hash1.length).toBe(32) // SHA-256 is 32 bytes
     })
 
-    it('works with real backend nonce', () => {
-      const hash = computeHash({
+    it('works with real backend nonce', async () => {
+      const hash = await computeHash({
         subject: backendExample.subject,
         nonce: backendExample.nonce, // Use nonce string directly
         counter: 0,
@@ -83,11 +82,11 @@ describe('hashcash core', () => {
       expect(hash.length).toBe(32)
     })
 
-    it('hashes colon-separated string format like backend', () => {
+    it('hashes colon-separated string format like backend', async () => {
       // Test that we're using the backend's expected format: "${subject}:${nonce}:${counter}"
       const nonceString = 'AQIDBA=='
 
-      const hash = computeHash({
+      const hash = await computeHash({
         subject: 'Uniswap',
         nonce: nonceString,
         counter: 123,
@@ -101,17 +100,33 @@ describe('hashcash core', () => {
       const expectedString = `Uniswap:${nonceString}:123`
       expect(expectedString).toBe('Uniswap:AQIDBA==:123')
     })
+
+    it('matches known SHA-256 test vector', async () => {
+      // computeHash("Uniswap:AQIDBA==:123") verified against @noble/hashes/webcrypto SHA-256
+      const hash = await computeHash({
+        subject: 'Uniswap',
+        nonce: 'AQIDBA==',
+        counter: 123,
+      })
+
+      const expectedHex = '222c2db479a1ff907a329fc3ff8e99b1f19f0695d938b74ccd95323b9c853510'
+      const actualHex = Array.from(hash)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('')
+
+      expect(actualHex).toBe(expectedHex)
+    })
   })
 
   describe('findProof', () => {
-    it('finds a valid proof for difficulty 1', () => {
+    it('finds a valid proof for difficulty 1', async () => {
       const challenge: HashcashChallenge = {
         ...backendExample,
         difficulty: 1,
         max_proof_length: 10000, // Increase range for testing
       }
 
-      const proof = findProof({ challenge })
+      const proof = await findProof({ challenge })
 
       expect(proof).not.toBeNull()
       if (proof) {
@@ -122,38 +137,76 @@ describe('hashcash core', () => {
       }
     })
 
-    it('respects max_proof_length limit', () => {
+    it('respects max_proof_length limit', async () => {
       const challenge: HashcashChallenge = {
         ...backendExample,
         difficulty: 20, // High difficulty unlikely to be found
         max_proof_length: 100,
       }
 
-      const proof = findProof({
+      const proof = await findProof({
         challenge,
         rangeSize: challenge.max_proof_length,
       })
 
-      // Should return null since it won't find proof in 100 attempts
-      if (proof) {
-        expect(parseInt(proof.counter)).toBeLessThan(100)
-      }
+      // Should return null since difficulty 20 (20 zero bytes) is impossible in 100 attempts
+      expect(proof).toBeNull()
     })
 
-    it('returns null for expired challenges', () => {
-      const expiredChallenge: HashcashChallenge = {
-        ...backendExample,
-        expires_at: Date.now() - 1000, // Already expired
-        difficulty: 1,
+    it('returns null when shouldStop signals cancellation', async () => {
+      let calls = 0
+      const shouldStop = (): boolean => {
+        calls++
+        // Stop after the first batch boundary check
+        return calls >= 2
       }
 
-      const proof = findProof({ challenge: expiredChallenge })
+      const challenge: HashcashChallenge = {
+        ...backendExample,
+        difficulty: 20, // High difficulty so it won't find a proof naturally
+        max_proof_length: 100_000,
+      }
+
+      const proof = await findProof({
+        challenge,
+        shouldStop,
+        batchSize: 64,
+      })
+
       expect(proof).toBeNull()
+      // shouldStop was called at least twice (once to pass, once to cancel)
+      expect(calls).toBeGreaterThanOrEqual(2)
+    })
+
+    it('finds proof with custom rangeStart', async () => {
+      // First, find a valid proof starting from 0
+      const challenge: HashcashChallenge = {
+        ...backendExample,
+        difficulty: 1,
+        max_proof_length: 10000,
+      }
+
+      const baseProof = await findProof({ challenge })
+      expect(baseProof).not.toBeNull()
+
+      if (baseProof) {
+        const knownCounter = parseInt(baseProof.counter)
+
+        // Now search again starting from that known counter
+        const proof = await findProof({
+          challenge,
+          rangeStart: knownCounter,
+          rangeSize: 1, // Only check the one counter
+        })
+
+        expect(proof).not.toBeNull()
+        expect(proof!.counter).toBe(knownCounter.toString())
+      }
     })
   })
 
   describe('verifyProof', () => {
-    it('verifies a valid proof', () => {
+    it('verifies a valid proof', async () => {
       const challenge: HashcashChallenge = {
         ...backendExample,
         difficulty: 1,
@@ -161,19 +214,19 @@ describe('hashcash core', () => {
       }
 
       // First find a proof
-      const proof = findProof({ challenge })
+      const proof = await findProof({ challenge })
       expect(proof).not.toBeNull()
 
       if (proof) {
         // Then verify it
-        const isValid = verifyProof(challenge, proof.counter)
+        const isValid = await verifyProof(challenge, proof.counter)
         expect(isValid).toBe(true)
       }
     })
 
-    it('rejects an invalid proof', () => {
+    it('rejects an invalid proof', async () => {
       // Test with non-numeric counter (always invalid)
-      expect(verifyProof(backendExample, 'not-a-number')).toBe(false)
+      expect(await verifyProof(backendExample, 'not-a-number')).toBe(false)
 
       // Test with higher difficulty where most counters are invalid
       const higherDifficultyChallenge = {
@@ -182,7 +235,7 @@ describe('hashcash core', () => {
       }
 
       // This counter is very unlikely to produce 2 zero bytes
-      const isValid = verifyProof(higherDifficultyChallenge, '12345')
+      const isValid = await verifyProof(higherDifficultyChallenge, '12345')
       expect(isValid).toBe(false)
     })
   })
@@ -204,7 +257,7 @@ describe('hashcash core', () => {
       expect(parts.length).toBe(7)
       expect(parts[0]).toBe('1') // Version
       expect(parts[1]).toBe('1') // Difficulty
-      expect(parts[2]).toMatch(/^\d{4,6}$/) // Date format (may be 4-6 digits)
+      expect(parts[2]).toMatch(/^\d{6}$/) // Date format YYMMDD (always 6 digits)
       expect(parts[3]).toBe('Uniswap') // Resource
       expect(parts[4]).toBe('') // Extension (empty)
       expect(parts[5]).toBe('123') // Counter
@@ -213,20 +266,19 @@ describe('hashcash core', () => {
   })
 
   describe('integration with backend example', () => {
-    it('completes full hashcash flow with real backend data', () => {
+    it('completes full hashcash flow with real backend data', async () => {
       const challenge: HashcashChallenge = {
         ...backendExample,
-        expires_at: Date.now() + 60000, // Ensure not expired
         max_proof_length: 10000, // Give enough range to find solution
       }
 
       // Step 1: Find proof
-      const proof = findProof({ challenge })
+      const proof = await findProof({ challenge })
       expect(proof).not.toBeNull()
 
       if (proof) {
         // Step 2: Verify the proof is valid
-        const isValid = verifyProof(challenge, proof.counter)
+        const isValid = await verifyProof(challenge, proof.counter)
         expect(isValid).toBe(true)
 
         // Step 3: Check the hash meets difficulty requirement
@@ -241,13 +293,13 @@ describe('hashcash core', () => {
       }
     })
 
-    it('handles backend difficulty vs verifier discrepancy', () => {
+    it('handles backend difficulty vs verifier discrepancy', async () => {
       // The backend example shows difficulty: 1
       // But the verifier checks: hash.slice(0,1).every(x => x === 0)
       // which actually requires the first byte to be 0 (difficulty 8)
 
       const challenge = backendExample
-      const proof = findProof({
+      const proof = await findProof({
         challenge,
         rangeSize: 10000,
       })

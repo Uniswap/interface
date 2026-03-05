@@ -1,19 +1,23 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { Table } from 'components/Table'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
-import { MAX_TOKENS_ROWS } from 'pages/Portfolio/Overview/constants'
-import { TableSectionHeader } from 'pages/Portfolio/Overview/TableSectionHeader'
-import { ViewAllButton } from 'pages/Portfolio/Overview/ViewAllButton'
-import { useNavigateToTokenDetails } from 'pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
-import { TokenData, useTransformTokenTableData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import { TokenColumns, useTokenColumns } from 'pages/Portfolio/Tokens/Table/columns/useTokenColumns'
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, TouchableArea } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { Table } from '~/components/Table'
+import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
+import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { MAX_TOKENS_ROWS } from '~/pages/Portfolio/Overview/constants'
+import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
+import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
+import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
+import { TokenData, useTransformTokenTableData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
+import { TokenColumns, useTokenColumns } from '~/pages/Portfolio/Tokens/Table/columns/useTokenColumns'
+import { PortfolioTab } from '~/pages/Portfolio/types'
+import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 
 const TOKENS_TABLE_MAX_HEIGHT = 800
 const TOKENS_TABLE_MAX_WIDTH = 1200
@@ -26,6 +30,12 @@ interface MiniTokensTableProps {
 export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, chainId }: MiniTokensTableProps) {
   const { t } = useTranslation()
   const trace = useTrace()
+  const { externalAddress, chainId: routeChainId } = usePortfolioRoutes()
+  const viewAllHref = buildPortfolioUrl({
+    tab: PortfolioTab.Tokens,
+    chainId: routeChainId,
+    externalAddress: externalAddress?.address,
+  })
 
   // Get token data with limit applied at the hook level
   const {
@@ -53,7 +63,7 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
         section: SectionName.PortfolioOverviewTab,
         ...trace,
       })
-      navigateToTokenDetails(tokenData)
+      navigateToTokenDetails(tokenData.currencyInfo?.currency)
     },
     [navigateToTokenDetails, trace],
   )
@@ -70,6 +80,7 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
         title={t('common.tokens')}
         subtitle={t('portfolio.tokens.balance.totalTokens', { count: totalCount ?? tableData.length })}
         loading={tableLoading}
+        testId={TestID.PortfolioOverviewTokensSection}
       >
         <Table
           columns={columns}
@@ -95,9 +106,10 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
         />
       </TableSectionHeader>
       <ViewAllButton
-        href="/portfolio/tokens"
+        href={viewAllHref}
         label={t('portfolio.overview.miniTokensTable.viewAllTokens')}
         elementName={ElementName.PortfolioViewAllTokens}
+        testId={TestID.PortfolioOverviewViewAllTokens}
       />
     </Flex>
   )

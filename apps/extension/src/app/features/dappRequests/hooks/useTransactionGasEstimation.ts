@@ -1,9 +1,9 @@
 import { TransactionRequest } from '@ethersproject/providers'
+import { GasFeeResult } from '@universe/api'
 import { useEffect, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { logger } from 'utilities/src/logger/logger'
 
 interface UseTransactionGasEstimationParams {

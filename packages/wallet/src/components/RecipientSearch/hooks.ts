@@ -191,35 +191,35 @@ export function useRecipients(
 
     if (validatedAddressRecipients.length && !isPatternEmpty) {
       sectionsArr.push({
-        title: t('send.recipient.section.search'),
+        title: t('send.recipient.section.search') as string,
         data: validatedAddressRecipients,
       })
     }
 
     if (recentRecipients.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.recent'),
+        title: t('send.recipient.section.recent') as string,
         data: recentRecipients,
       })
     }
 
     if (importedWallets.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.yours'),
+        title: t('send.recipient.section.yours') as string,
         data: importedWallets,
       })
     }
 
     if (viewOnlyWallets.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.viewOnly'),
+        title: t('send.recipient.section.viewOnly') as string,
         data: viewOnlyWallets,
       })
     }
 
     if (watchedWallets.size) {
       sectionsArr.push({
-        title: t('send.recipient.section.favorite'),
+        title: t('send.recipient.section.favorite') as string,
         data: Array.from(watchedWallets).map(
           (address) =>
             <SearchableRecipient>{

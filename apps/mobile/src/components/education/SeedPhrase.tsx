@@ -7,7 +7,6 @@ import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
 import { Flex, Text } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
 function Page({ text, params }: { text: ReactNode; params: OnboardingStackBaseParams }): JSX.Element {
@@ -17,8 +16,8 @@ function Page({ text, params }: { text: ReactNode; params: OnboardingStackBasePa
   const navigation = useOnboardingStackNavigation()
 
   const onDismiss = useCallback((): void => {
-    navigation.navigate(OnboardingScreens.Backup, params)
-  }, [navigation, params])
+    navigation.goBack()
+  }, [navigation])
 
   const slideChangeGesture = useMemo(
     () =>
@@ -49,7 +48,7 @@ function Page({ text, params }: { text: ReactNode; params: OnboardingStackBasePa
               {t('onboarding.tooltip.recoveryPhrase.trigger')}
             </Text>
             <GestureDetector gesture={dismissGesture}>
-              <CloseButton color="$neutral2" onPress={(): void => undefined} />
+              <CloseButton color="$neutral2" onPress={onDismiss} />
             </GestureDetector>
           </Flex>
           <Flex flex={0.2} />

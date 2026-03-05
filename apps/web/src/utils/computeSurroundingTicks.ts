@@ -1,9 +1,9 @@
-import { Ticks } from 'appGraphql/data/AllV3TicksQuery'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
 import { tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
+import { Ticks } from '~/appGraphql/data/AllV3TicksQuery'
 
 const PRICE_FIXED_DIGITS = 8
 

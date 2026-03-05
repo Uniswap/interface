@@ -1,7 +1,7 @@
-import { Flex, FlexProps, TouchableArea } from 'ui/src'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
+import { Flex, type FlexProps, TouchableArea } from 'ui/src'
+import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 import { ESTIMATED_NFT_LIST_ITEM_SIZE } from 'uniswap/src/features/nfts/constants'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
+import { type NFTItem } from 'uniswap/src/features/nfts/types'
 import { isAndroid, isWebPlatform } from 'utilities/src/platform'
 
 export type NftViewProps = {
@@ -21,7 +21,6 @@ export function NftView({ item, onPress, index, openContextMenu, hoverAnimation 
       imageDimensions={item.imageDimensions}
       limitGIFSize={ESTIMATED_NFT_LIST_ITEM_SIZE}
       placeholderContent={item.name || item.collectionName}
-      squareGridView={true}
       uri={item.imageUrl ?? ''}
       thumbnailUrl={item.thumbnailUrl ?? ''}
     />

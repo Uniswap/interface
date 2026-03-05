@@ -1,18 +1,19 @@
+import { type GasFeeResult } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/GasInfoRow'
 import { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
+import type { MockedFunction } from 'vitest'
 
 // Mock dependencies
-jest.mock('uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled', () => ({
-  usePriceUXEnabled: jest.fn(),
+vi.mock('uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled', () => ({
+  usePriceUXEnabled: vi.fn(),
 }))
 
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 
-const mockUsePriceUXEnabled = usePriceUXEnabled as jest.MockedFunction<typeof usePriceUXEnabled>
+const mockUsePriceUXEnabled = usePriceUXEnabled as MockedFunction<typeof usePriceUXEnabled>
 
 describe('GasInfoRow', () => {
   beforeEach(() => {
@@ -138,15 +139,14 @@ describe('GasInfoRow', () => {
   })
 
   describe('different chain support', () => {
-    it('should render for different chains', () => {
-      const chains = [UniverseChainId.Mainnet, UniverseChainId.ArbitrumOne, UniverseChainId.Base]
-
-      chains.forEach((chainId) => {
+    it.each([UniverseChainId.Mainnet, UniverseChainId.ArbitrumOne, UniverseChainId.Base])(
+      'should render for chain %s',
+      (chainId) => {
         const gasInfo = createGasInfo({ chainId })
         const { getByTestId } = render(<GasInfoRow gasInfo={gasInfo} />)
 
         expect(getByTestId(TestID.GasInfoRow)).toBeDefined()
-      })
-    })
+      },
+    )
   })
 })

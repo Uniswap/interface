@@ -1,7 +1,7 @@
 // biome-ignore lint/style/noRestrictedImports: GraphQL fixtures need direct Playwright imports
 import { test as base } from '@playwright/test'
 import path from 'path'
-import { Mocks } from 'playwright/mocks/mocks'
+import { Mocks } from '~/playwright/mocks/mocks'
 
 type GraphqlFixture = {
   graphql: {

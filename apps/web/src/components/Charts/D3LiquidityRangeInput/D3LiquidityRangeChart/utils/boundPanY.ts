@@ -1,32 +1,34 @@
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 
 /**
- * Calculates bounded panY to prevent liquidity bars from underflowing the viewport
+ * Calculates bounded panY to prevent scrolling beyond the tick range.
+ *
+ * The chart uses a continuous tick scale (MIN_TICK to MAX_TICK) mapped to a fixed height.
+ * When zoomed in (zoomLevel > 1), the total content height increases, allowing panning.
+ *
  * @param panY - The current pan Y position
  * @param viewportHeight - Height of the viewport
- * @param liquidityData - Array of liquidity data entries
- * @param zoomLevel - Current zoom level
+ * @param zoomLevel - Current zoom level (1 = full range visible, >1 = zoomed in)
  * @returns Bounded panY value
  */
 export function boundPanY({
   panY,
   viewportHeight,
-  liquidityData,
   zoomLevel,
 }: {
   panY: number
   viewportHeight: number
-  liquidityData: ChartEntry[]
   zoomLevel: number
 }) {
-  const totalContentHeight =
-    liquidityData.length * CHART_DIMENSIONS.LIQUIDITY_BAR_HEIGHT +
-    (liquidityData.length - 1) * CHART_DIMENSIONS.LIQUIDITY_BAR_SPACING
-  const totalContentHeightWithZoom = totalContentHeight * zoomLevel
+  // Total content height is the chart height scaled by zoom level
+  // At zoomLevel=1, content fits exactly in viewport (no panning)
+  // At zoomLevel>1, content is larger than viewport (can pan)
+  const totalContentHeight = CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT * zoomLevel
 
-  // Apply bounds: content should not go below viewport bottom or above viewport top
-  const minPanY = Math.min(0, viewportHeight - totalContentHeightWithZoom)
+  // Apply bounds:
+  // - maxPanY = 0: Top of content (MAX_TICK) aligns with top of viewport
+  // - minPanY: Bottom of content (MIN_TICK) aligns with bottom of viewport
+  const minPanY = Math.min(0, viewportHeight - totalContentHeight)
   const maxPanY = 0
 
   return Math.max(minPanY, Math.min(maxPanY, panY))

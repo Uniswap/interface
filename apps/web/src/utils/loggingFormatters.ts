@@ -1,16 +1,16 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { SwapResult } from 'hooks/useSwapCallback'
+import { SwapPriceUpdateUserResponse } from 'uniswap/src/features/telemetry/types'
+import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { SwapResult } from '~/hooks/useSwapCallback'
 import {
   formatPercentInBasisPointsNumber,
   formatToDecimal,
   getDurationUntilTimestampSeconds,
   getTokenAddress,
-} from 'lib/utils/analytics'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTradeType } from 'state/routing/utils'
-import { SwapPriceUpdateUserResponse } from 'uniswap/src/features/telemetry/types'
-import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { computeRealizedPriceImpact } from 'utils/prices'
+} from '~/lib/utils/analytics'
+import { InterfaceTrade, TradeFillType } from '~/state/routing/types'
+import { isClassicTrade, isUniswapXTradeType } from '~/state/routing/utils'
+import { computeRealizedPriceImpact } from '~/utils/prices'
 
 export function formatSwapPriceUpdatedEventProperties({
   trade,
@@ -56,8 +56,8 @@ export const formatSwapButtonClickEventProperties = ({
   fiatValueInput,
   fiatValueOutput,
 }: AnalyticsEventProps) => {
-  // trade object sometimes may be the wrapped version of user's native input currency, i.e. for limit orders.
-  // For analytics, we want to send the user's original input currency
+  // If inputCurrency is provided separately (e.g., for limit orders), use it for analytics.
+  // Otherwise use the currency from the trade object.
   const displayedInputCurrency = inputCurrency ?? trade.inputAmount.currency
 
   return {

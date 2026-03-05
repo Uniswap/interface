@@ -1,7 +1,3 @@
-import { Page } from 'components/NavBar/DownloadApp/Modal'
-import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
-import { useModalState } from 'hooks/useModalState'
-import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex } from 'ui/src'
@@ -13,6 +9,10 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
+import { Page } from '~/components/NavBar/DownloadApp/Modal'
+import { ModalContent } from '~/components/NavBar/DownloadApp/Modal/Content'
+import { useModalState } from '~/hooks/useModalState'
+import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 
 export function PasskeyGenerationModal({
   unitag,

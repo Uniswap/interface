@@ -131,6 +131,12 @@ export function mergeOnChainBalances(
         return
       }
 
+      // Skip zero-balance tokens — these are tokens the user fully swapped out of
+      if (onchainQuantity <= 0) {
+        log.debug(`Skipping new balance for ${currencyId} with zero/negative quantity`, { onchainQuantity })
+        return
+      }
+
       const newBalance = new Balance(onchainBalance)
       newBalances.push(newBalance)
     })

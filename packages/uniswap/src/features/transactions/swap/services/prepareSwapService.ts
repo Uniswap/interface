@@ -1,12 +1,15 @@
+import { TradingApi } from '@universe/api'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { prefetchPlan } from 'uniswap/src/features/transactions/swap/plan/prefetchedPlanStore'
 import type { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import type { logger } from 'utilities/src/logger/logger'
@@ -154,6 +157,8 @@ interface HandleEventActionContext {
   onConnectWallet?: (platform?: Platform) => void
   updateSwapForm: (newState: Partial<SwapFormState>) => void
   setScreen: (screen: TransactionScreen) => void
+  trade?: Trade
+  walletExecutionContext?: TradingApi.WalletExecutionContext
 }
 
 function createHandleEventAction(ctx: HandleEventActionContext): (action: ReviewAction) => void {
@@ -167,6 +172,8 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
     onConnectWallet,
     updateSwapForm,
     setScreen,
+    trade,
+    walletExecutionContext,
   } = ctx
   function handleEventAction(action: ReviewAction): void {
     switch (action.type) {
@@ -195,6 +202,9 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
       case ReviewActionType.PROCEED_TO_REVIEW:
         updateSwapForm({ txId: createTransactionId() })
         setScreen(TransactionScreen.Review)
+        if (trade) {
+          prefetchPlan(trade, walletExecutionContext)
+        }
         break
     }
   }

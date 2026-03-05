@@ -1,148 +1,82 @@
-import { MockDataSelectorModal } from 'components/Toucan/Auction/BidDistributionChart/dev/MockDataSelectorModal'
-import { BidConcentrationResult } from 'components/Toucan/Auction/BidDistributionChart/utils/bidConcentration'
-import { formatTickForDisplay } from 'components/Toucan/Auction/BidDistributionChart/utils/utils'
-import { AuctionProgressState, BidTokenInfo, DisplayMode } from 'components/Toucan/Auction/store/types'
-import { useAuctionStore, useAuctionStoreActions } from 'components/Toucan/Auction/store/useAuctionStore'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SegmentedControl, Text, TouchableArea } from 'ui/src'
-import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
-import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
-import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NumberType } from 'utilities/src/format/types'
-
-const BidDistributionChartHeaderTooltip = () => {
-  const { t } = useTranslation()
-  return (
-    <InfoTooltip
-      placement="top"
-      trigger={
-        <TouchableArea>
-          <QuestionInCircleFilled color="$neutral3" size="$icon.16" />
-        </TouchableArea>
-      }
-      text={
-        <Flex gap="$spacing4" p="$padding4">
-          <Text variant="body4" color="$neutral1">
-            {t('toucan.auction.bidConcentration.tooltip.title')}
-          </Text>
-          <Text variant="body4" color="$neutral2">
-            {t('toucan.auction.bidConcentration.tooltip.description')}
-          </Text>
-        </Flex>
-      }
-    />
-  )
-}
+import { Flex, Text, useMedia } from 'ui/src'
+import { BidDistributionChartTab } from '~/components/Toucan/Auction/AuctionChartShared'
 
 interface BidDistributionChartHeaderProps {
-  concentration: BidConcentrationResult | null
-  displayMode: DisplayMode
-  bidTokenInfo: BidTokenInfo
-  totalSupply?: string
-  auctionTokenDecimals?: number
+  activeTab: BidDistributionChartTab
+  onTabChange: (tab: BidDistributionChartTab) => void
 }
 
+interface TabConfig {
+  key: BidDistributionChartTab
+  label: string
+}
+
+const preloadClearingPriceChart = () => import('~/components/Charts/ToucanChart/clearingPrice/ClearingPriceChart')
+const preloadBidDistributionChart = () =>
+  import('~/components/Toucan/Auction/BidDistributionChart/BidDistributionChart')
+
 export const BidDistributionChartHeader = ({
-  concentration,
-  displayMode,
-  bidTokenInfo,
-  totalSupply,
-  auctionTokenDecimals = 18,
-}: BidDistributionChartHeaderProps) => {
+  activeTab,
+  onTabChange,
+}: BidDistributionChartHeaderProps): JSX.Element => {
   const { t } = useTranslation()
-  const { setDisplayMode, resetChartZoom } = useAuctionStoreActions()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-  const isZoomed = useAuctionStore((state) => state.chartZoomState.isZoomed)
-  const auctionState = useAuctionStore((state) => state.progress.state)
+  const media = useMedia()
 
-  const displayModeOptions = [
-    {
-      value: DisplayMode.VALUATION,
-      display: <Text variant="buttonLabel4">{t('toucan.displayMode.valuation')}</Text>,
-    },
-    {
-      value: DisplayMode.TOKEN_PRICE,
-      display: <Text variant="buttonLabel4">{t('toucan.displayMode.tokenPrice')}</Text>,
-    },
-  ]
+  const tabVariant = media.lg ? 'subheading1' : 'heading3'
 
-  const handleDisplayModeChange = (option: DisplayMode) => {
-    setDisplayMode(option)
-  }
+  const tabs: TabConfig[] = useMemo(
+    () => [
+      {
+        key: BidDistributionChartTab.ClearingPrice,
+        label: t('toucan.bidDistribution.tabs.clearingPriceChart'),
+      },
+      {
+        key: BidDistributionChartTab.Demand,
+        label: t('toucan.bidDistribution.tabs.demandChart'),
+      },
+      {
+        key: BidDistributionChartTab.Distribution,
+        label: t('toucan.bidDistribution.tabs.distributionChart'),
+      },
+    ],
+    [t],
+  )
 
-  // Format concentration range values with user's selected currency
-  const formatter = (amount: number): string => {
-    return convertFiatAmountFormatted(amount, NumberType.FiatTokenStats)
-  }
+  const prefetchTab = useCallback((tab: BidDistributionChartTab) => {
+    if (tab === BidDistributionChartTab.ClearingPrice) {
+      preloadClearingPriceChart()
+      return
+    }
+    preloadBidDistributionChart()
+  }, [])
 
-  const startValue = concentration
-    ? formatTickForDisplay({
-        tickValue: concentration.startTick,
-        displayMode,
-        bidTokenInfo,
-        totalSupply,
-        auctionTokenDecimals,
-        formatter,
-      })
-    : null
-
-  const endValue = concentration
-    ? formatTickForDisplay({
-        tickValue: concentration.endTick,
-        displayMode,
-        bidTokenInfo,
-        totalSupply,
-        auctionTokenDecimals,
-        formatter,
-      })
-    : null
+  // Preload the default tab (ClearingPrice) on mount
+  useEffect(() => {
+    preloadClearingPriceChart()
+  }, [])
 
   return (
-    <Flex width="100%">
-      <Flex row justifyContent="space-between">
-        <Flex row alignItems="center" gap="$spacing8">
-          <Text variant="body2" color="$neutral2">
-            {t('toucan.auction.bidConcentration')}
-          </Text>
-          <BidDistributionChartHeaderTooltip />
-          {/* TODO | Toucan: Remove mock data selector once live */}
-          <MockDataSelectorModal bidTokenInfo={bidTokenInfo} />
-          {/* Reset zoom button - only visible when chart is zoomed */}
-          {isZoomed && (
-            <TouchableArea onPress={resetChartZoom}>
-              <AnglesMaximize color="$neutral3" size="$icon.16" />
-            </TouchableArea>
-          )}
-        </Flex>
-        <SegmentedControl
-          options={displayModeOptions}
-          selectedOption={displayMode}
-          onSelectOption={handleDisplayModeChange}
-          size="xsmall"
-        />
+    <Flex width="100%" mb={-6}>
+      <Flex row gap="$spacing16" mb="$spacing12">
+        {tabs.map(({ key, label }) => {
+          const isActive = activeTab === key
+          return (
+            <Flex
+              key={key}
+              cursor="pointer"
+              onMouseEnter={() => prefetchTab(key)}
+              onFocus={() => prefetchTab(key)}
+              onPress={() => onTabChange(key)}
+            >
+              <Text variant={tabVariant} color={isActive ? '$neutral1' : '$neutral2'}>
+                {label}
+              </Text>
+            </Flex>
+          )
+        })}
       </Flex>
-      {auctionState === AuctionProgressState.NOT_STARTED ? (
-        <Flex row alignItems="center" gap="$spacing4">
-          <Text variant="heading2" color="$neutral1">
-            --
-          </Text>
-        </Flex>
-      ) : concentration && startValue && endValue ? (
-        <Flex row alignItems="center" gap="$spacing4">
-          <Text variant="heading2">{startValue}</Text>
-          <Text variant="heading2" color="$neutral3">
-            -
-          </Text>
-          <Text variant="heading2">{endValue}</Text>
-        </Flex>
-      ) : (
-        <Flex row alignItems="center" gap="$spacing4">
-          <Text variant="body2" color="$neutral3">
-            {t('toucan.auction.noConcentration')}
-          </Text>
-        </Flex>
-      )}
     </Flex>
   )
 }

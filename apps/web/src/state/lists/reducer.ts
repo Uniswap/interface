@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
-import { updateVersion } from 'state/global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList } from 'state/lists/actions'
-import { ListsState } from 'state/lists/types'
-import { Mutable } from 'types/mutable'
+import { DEFAULT_INACTIVE_LIST_URLS } from '~/constants/lists'
+import { updateVersion } from '~/state/global/actions'
+import { acceptListUpdate, addList, fetchTokenList, removeList, resetLists } from '~/state/lists/actions'
+import { ListsState } from '~/state/lists/types'
+import { Mutable } from '~/types/mutable'
 
 type ListState = ListsState['byUrl'][string]
 
@@ -127,5 +127,6 @@ export default createReducer(initialState, (builder) =>
       }
 
       state.lastInitializedDefaultListOfLists = DEFAULT_INACTIVE_LIST_URLS
-    }),
+    })
+    .addCase(resetLists, () => initialState),
 )

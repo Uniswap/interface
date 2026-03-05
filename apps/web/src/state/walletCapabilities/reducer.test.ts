@@ -1,5 +1,5 @@
 import { createStore, Store } from 'redux'
-import type { GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
+import type { GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 import reducer, {
   handleResetWalletCapabilitiesState,
   selectIsAtomicBatchingSupported,
@@ -7,8 +7,8 @@ import reducer, {
   selectNeedsToCheckCapabilities,
   setCapabilitiesByChain,
   setCapabilitiesNotSupported,
-} from 'state/walletCapabilities/reducer'
-import { GetCapabilitiesStatus, WalletCapabilitiesState } from 'state/walletCapabilities/types'
+} from '~/state/walletCapabilities/reducer'
+import { GetCapabilitiesStatus, WalletCapabilitiesState } from '~/state/walletCapabilities/types'
 
 describe('walletCapabilities reducer', () => {
   let store: Store<WalletCapabilitiesState>

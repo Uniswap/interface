@@ -1,10 +1,3 @@
-import {
-  calculate1DVolOverTvl,
-  calculateApr,
-  PoolTableSortState,
-  sortPools,
-  TablePool,
-} from 'appGraphql/data/pools/useTopPools'
 import { GraphQLApi } from '@universe/api'
 import { useCallback, useMemo, useRef } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
@@ -12,6 +5,14 @@ import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { removeDuplicatesBy } from 'utilities/src/primitives/array'
+import {
+  calculate1DVolOverTvl,
+  calculateApr,
+  PoolTableSortState,
+  sortPools,
+  TablePool,
+} from '~/appGraphql/data/pools/useTopPools'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -223,7 +224,10 @@ export function usePoolsFromTokenAddress({
         } as TablePool
       }) ?? []
 
-    const pools = sortPools([...topV4Pools, ...topV3Pools, ...topV2Pairs], sortState).slice(0, sizeRef.current)
+    const pools = sortPools(removeDuplicatesBy([...topV4Pools, ...topV3Pools, ...topV2Pairs], 'hash'), sortState).slice(
+      0,
+      sizeRef.current,
+    )
     return { loading, errorV2, errorV3, errorV4, pools, loadMore }
   }, [
     dataV2?.topV2Pairs,

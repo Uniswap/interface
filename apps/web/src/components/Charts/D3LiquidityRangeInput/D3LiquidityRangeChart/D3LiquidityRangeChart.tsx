@@ -1,22 +1,26 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { LiquidityActiveTooltips } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityActiveTooltips'
-import { CHART_DIMENSIONS } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import { useLiquidityChartInteractions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/hooks/useLiquidityChartInteractions'
-import { useResponsiveDimensions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/hooks/useResponsiveDimensions'
-import { useChartPriceState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
-import { useChartViewState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
-import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
-import { priceToY, TickAlignment } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceToY'
-import { yToPrice } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/yToPrice'
-import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
-import { PriceChartData } from 'components/Charts/PriceChart'
-import { ChartType } from 'components/Charts/utils'
-import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
-import { InitialPosition } from 'components/Liquidity/Create/types'
-import { ChartQueryResult } from 'components/Tokens/TokenDetails/ChartSection/util'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import * as d3 from 'd3'
 import { useEffect, useMemo, useRef } from 'react'
 import { Flex, useSporeColors } from 'ui/src'
+import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
+import { LiquidityActiveTooltips } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityActiveTooltips'
+import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
+import { useLiquidityChartInteractions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/hooks/useLiquidityChartInteractions'
+import { useResponsiveDimensions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/hooks/useResponsiveDimensions'
+import { useChartPriceState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
+import { useChartViewState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
+import type { LinearTickScale } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { useLiquidityChartStoreActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
+import { priceToY, TickAlignment } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceToY'
+import { tickToY } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickToY'
+import { yToTick } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/yToTick'
+import { ChartEntry } from '~/components/Charts/LiquidityRangeInput/types'
+import { PriceChartData } from '~/components/Charts/PriceChart'
+import { ChartQueryResult, ChartType } from '~/components/Charts/utils'
+import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { InitialPosition } from '~/components/Liquidity/Create/types'
 
 const D3LiquidityRangeChart = ({
   priceData,
@@ -24,12 +28,20 @@ const D3LiquidityRangeChart = ({
   quoteCurrency,
   baseCurrency,
   initialPosition,
+  currentTick,
+  tickSpacing,
+  rawTicks,
+  protocolVersion,
 }: {
   priceData: ChartQueryResult<PriceChartData, ChartType.PRICE>
   liquidityData: ChartEntry[]
-  quoteCurrency: Currency
-  baseCurrency: Currency
+  quoteCurrency: Maybe<Currency>
+  baseCurrency: Maybe<Currency>
   initialPosition?: InitialPosition
+  currentTick: number
+  tickSpacing: number
+  rawTicks: TickData[]
+  protocolVersion: ProtocolVersion
 }) => {
   const colors = useSporeColors()
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -38,18 +50,17 @@ const D3LiquidityRangeChart = ({
   const { priceRangeState } = useLiquidityUrlState()
 
   // Chart state
-  const { zoomLevel, panY, dynamicZoomMin } = useChartViewState()
-  const { minPrice, maxPrice } = useChartPriceState()
+  const { zoomLevel, panY } = useChartViewState()
+  const { minTick, maxTick } = useChartPriceState()
   const { initializeRenderers, drawAll, updateDimensions, setChartState, reset } = useLiquidityChartStoreActions()
 
   // Chart interactions
   useLiquidityChartInteractions({
     svgRef,
-    liquidityData,
     zoomLevel,
     panY,
     setChartState,
-    dynamicZoomMin,
+    tickSpacing,
   })
 
   // Responsive dimensions
@@ -58,31 +69,46 @@ const D3LiquidityRangeChart = ({
     updateDimensions(dimensions)
   }, [dimensions, updateDimensions])
 
-  // Calculate full height needed for all liquidity bars (like D3Chart2)
-  const barHeight = CHART_DIMENSIONS.LIQUIDITY_BAR_HEIGHT
-  const barSpacing = CHART_DIMENSIONS.LIQUIDITY_BAR_SPACING
-  const totalHeight = liquidityData.length * (barHeight + barSpacing)
+  // Use fixed chart height for the full tick range
+  // This ensures proper scaling across the entire tick space
+  const totalHeight = CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT
 
-  // Create tick-based scale for exact positioning of liquidity bars
-  const baseTickScale = useMemo(() => {
-    return d3
-      .scaleBand()
-      .domain(liquidityData.map((d: ChartEntry) => d.tick?.toString() ?? ''))
-      .range([totalHeight * 1 * zoomLevel, 0]) // Use zoomed total height, highest price at top, lowest at bottom
-      .paddingInner(0.05) // Small padding between bars
-  }, [liquidityData, totalHeight, zoomLevel])
-
-  const tickScale = useMemo(() => {
-    const scale = (tick: string) => {
-      const baseY = baseTickScale(tick)
-      return baseY !== undefined ? baseY + panY : 0
+  // Create linear tick scale for continuous tick-to-Y mapping
+  // Uses FULL pool tick range (MIN_TICK to MAX_TICK) aligned to tickSpacing
+  const tickScale: LinearTickScale = useMemo(() => {
+    if (liquidityData.length === 0) {
+      // Default scale when no data
+      return {
+        tickToY: () => 0,
+        yToTick: () => 0,
+        minTick: 0,
+        maxTick: 0,
+        range: [0, 0],
+      }
     }
-    // Add the scale methods
-    scale.domain = () => baseTickScale.domain()
-    scale.bandwidth = () => baseTickScale.bandwidth()
-    scale.range = () => baseTickScale.range()
-    return scale
-  }, [baseTickScale, panY])
+
+    // Use full pool tick range (aligned to tickSpacing)
+    // This ensures we visualize the entire tick space, not just where liquidity exists
+    const fullMinTick = nearestUsableTick(TickMath.MIN_TICK, tickSpacing)
+    const fullMaxTick = nearestUsableTick(TickMath.MAX_TICK, tickSpacing)
+
+    // Calculate Y range with zoom
+    const scaledHeight = totalHeight * zoomLevel
+    // Higher ticks at top (Y=0 + panY), lower ticks at bottom
+    const yTop = panY
+    const yBottom = scaledHeight + panY
+
+    // Create d3 linear scale (inverted: high tick -> low Y)
+    const d3Scale = d3.scaleLinear().domain([fullMaxTick, fullMinTick]).range([yTop, yBottom])
+
+    return {
+      tickToY: (tick: number) => d3Scale(tick),
+      yToTick: (y: number) => d3Scale.invert(y),
+      minTick: fullMinTick,
+      maxTick: fullMaxTick,
+      range: [yTop, yBottom],
+    }
+  }, [liquidityData.length, tickSpacing, totalHeight, zoomLevel, panY])
 
   // Initialize renderers when component mounts or data changes
   useEffect(() => {
@@ -104,10 +130,15 @@ const D3LiquidityRangeChart = ({
       dimensions,
       priceData: priceData.entries,
       liquidityData,
+      rawTicks,
       tickScale,
+      tickSpacing,
+      currentTick,
       priceToY: ({ price, tickAlignment }: { price: number; tickAlignment?: TickAlignment }) =>
         priceToY({ price, liquidityData, tickScale, tickAlignment }),
-      yToPrice: (y: number) => yToPrice({ y, liquidityData, tickScale }),
+      tickToY: ({ tick, tickAlignment }: { tick: number; tickAlignment?: TickAlignment }) =>
+        tickToY({ tick, tickScale, tickAlignment }),
+      yToTick: (y: number) => yToTick({ y, tickScale }),
     }
 
     // Initialize renderers with the g element and context, and separate timescale context
@@ -115,34 +146,45 @@ const D3LiquidityRangeChart = ({
 
     // Initial draw
     drawAll()
-  }, [priceData, liquidityData, colors, dimensions, tickScale, initializeRenderers, drawAll])
+  }, [
+    priceData,
+    liquidityData,
+    rawTicks,
+    colors,
+    dimensions,
+    tickScale,
+    initializeRenderers,
+    drawAll,
+    currentTick,
+    tickSpacing,
+  ])
 
   // Update renderers when state changes
-  // biome-ignore lint/correctness/useExhaustiveDependencies: minPrice and maxPrice should trigger re-renders
+  // biome-ignore lint/correctness/useExhaustiveDependencies: minTick, maxTick, zoomLevel, panY should trigger re-renders
   useEffect(() => {
     drawAll()
-  }, [minPrice, maxPrice, drawAll])
+  }, [minTick, maxTick, zoomLevel, panY, drawAll])
 
   // Reset the chart when the price data changes (currentPrice omitted), maintaining the price range from the URL
   // biome-ignore lint/correctness/useExhaustiveDependencies: priceRangeState should not trigger re-renders
   useEffect(() => {
-    let minPrice
-    let maxPrice
+    let minTick
+    let maxTick
 
     if (initialPosition) {
       return
     }
 
-    if (priceRangeState.minPrice && !isNaN(parseFloat(priceRangeState.minPrice))) {
-      minPrice = parseFloat(priceRangeState.minPrice)
+    if (priceRangeState.minTick !== undefined) {
+      minTick = priceRangeState.minTick
     }
-    if (priceRangeState.maxPrice && !isNaN(parseFloat(priceRangeState.maxPrice))) {
-      maxPrice = parseFloat(priceRangeState.maxPrice)
+    if (priceRangeState.maxTick !== undefined) {
+      maxTick = priceRangeState.maxTick
     }
 
     reset({
-      minPrice,
-      maxPrice,
+      minTick,
+      maxTick,
     })
   }, [priceData.dataHash, initialPosition, reset])
 
@@ -180,8 +222,10 @@ const D3LiquidityRangeChart = ({
         <LiquidityActiveTooltips
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
-          priceData={priceData.entries}
-          liquidityData={liquidityData}
+          currentTick={currentTick}
+          tickSpacing={tickSpacing}
+          priceInverted={priceRangeState.priceInverted ?? false}
+          protocolVersion={protocolVersion}
         />
       </Flex>
     </Flex>

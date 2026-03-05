@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { ExcludedNetworkLogos } from 'uniswap/src/components/network/ExcludedNetworkLogos'
+import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -24,7 +24,7 @@ export const ExcludedNetworkBanner = memo(function ExcludedNetworkBanner({
   return (
     <Flex grow backgroundColor="$statusCritical2" borderRadius="$rounded16" flexDirection="row" p="$spacing12">
       <Flex row alignItems="center" gap="$gap12" overflow="hidden">
-        <ExcludedNetworkLogos chainIds={chainIds} />
+        <NetworkPile chainIds={chainIds} />
         <Flex alignItems="flex-start">
           <Text color="$statusCritical" ellipsizeMode="tail" numberOfLines={1} variant="buttonLabel3">
             {titleText}

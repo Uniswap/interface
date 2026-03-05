@@ -1,7 +1,7 @@
-import { BuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
-import { mockBuyFormContext, mockServiceProvider } from 'pages/Swap/Buy/test/constants'
-import { fireEvent, render, screen } from 'test-utils/render'
+import { BuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
+import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
+import { mockBuyFormContext, mockServiceProvider } from '~/pages/Swap/Buy/test/constants'
+import { fireEvent, render, screen } from '~/test-utils/render'
 
 describe('ProviderConnectedView', () => {
   it('should render the component and call callbacks', () => {

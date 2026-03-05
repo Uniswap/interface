@@ -1,10 +1,6 @@
+import 'utilities/src/logger/mocks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import {
-  CancellationState,
-  CancelOrdersDialog,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
-import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -15,6 +11,11 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { vi } from 'vitest'
+import {
+  CancellationState,
+  CancelOrdersDialog,
+} from '~/components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
+import { render, screen } from '~/test-utils/render'
 
 const mockOrderDetails: UniswapXOrderDetails = {
   routing: TradingApi.Routing.DUTCH_V2,
@@ -40,8 +41,8 @@ const mockOrderDetails: UniswapXOrderDetails = {
   transactionOriginType: TransactionOriginType.Internal,
 }
 
-vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
-  const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/Activity/hooks')
+vi.mock('~/components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
+  const actual = await vi.importActual('~/components/AccountDrawer/MiniPortfolio/Activity/hooks')
   return {
     ...actual,
     useCancelOrdersGasEstimate: vi.fn(),
@@ -52,25 +53,11 @@ vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
   }
 })
 
-vi.mock('hooks/useTransactionGasFee', async () => {
-  const actual = await vi.importActual('hooks/useTransactionGasFee')
+vi.mock('~/hooks/useTransactionGasFee', async () => {
+  const actual = await vi.importActual('~/hooks/useTransactionGasFee')
   return {
     ...actual,
     useTransactionGasFee: vi.fn(),
-  }
-})
-
-vi.mock('utilities/src/logger/logger', async () => {
-  const actual = await vi.importActual('utilities/src/logger/logger')
-  return {
-    ...actual,
-    logger: {
-      error: vi.fn(),
-      info: vi.fn(),
-      warn: vi.fn(),
-      debug: vi.fn(),
-      setDatadogEnabled: vi.fn(),
-    },
   }
 })
 

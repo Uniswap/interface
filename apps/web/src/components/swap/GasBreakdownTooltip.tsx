@@ -1,15 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
-import { AutoColumn } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
-import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
-import { InterfaceTrade } from 'state/routing/types'
-import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
-import { ThemedText } from 'theme/components'
-import { Divider } from 'theme/components/Dividers'
-import { ExternalLink } from 'theme/components/Links'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -17,6 +8,15 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { AutoColumn } from '~/components/deprecated/Column'
+import Row from '~/components/deprecated/Row'
+import UniswapXRouterLabel, { UniswapXGradient } from '~/components/RouterLabel/UniswapXRouterLabel'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { InterfaceTrade } from '~/state/routing/types'
+import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/state/routing/utils'
+import { ThemedText } from '~/theme/components'
+import { Divider } from '~/theme/components/Dividers'
+import { ExternalLink } from '~/theme/components/Links'
 
 const Container = deprecatedStyled(AutoColumn)`
   padding: 4px;
@@ -58,7 +58,8 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 
   const swapEstimate = !isUniswapX ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
-  const wrapEstimate = isUniswapX && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
+  // Limit orders still require wrapping ETH to WETH (unlike regular UniswapX swaps which now support native ETH)
+  const wrapEstimate = isLimitTrade(trade) && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
   const showEstimateDetails = Boolean(wrapEstimate || approvalEstimate)
 
   const description = isUniswapX ? <UniswapXDescription /> : <NetworkCostDescription native={native} />

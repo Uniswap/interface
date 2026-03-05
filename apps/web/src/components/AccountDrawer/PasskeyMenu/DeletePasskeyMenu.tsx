@@ -1,20 +1,21 @@
-import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { GenericPasskeyMenuModal, PasskeyMenuModalState } from 'components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
-import StatusIcon from 'components/StatusIcon'
-import { useDisconnect } from 'hooks/useDisconnect'
-import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, Text } from 'ui/src'
 import { Trash } from 'ui/src/components/icons/Trash'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Authenticator, deleteAuthenticator, disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { NumberType } from 'utilities/src/format/types'
+import { AddressDisplay } from '~/components/AccountDetails/AddressDisplay'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { GenericPasskeyMenuModal, PasskeyMenuModalState } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
+import StatusIcon from '~/components/StatusIcon'
+import { useDisconnect } from '~/hooks/useDisconnect'
+import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
 
 export function DeletePasskeyMenu({
   show,
@@ -34,7 +35,7 @@ export function DeletePasskeyMenu({
   const { t } = useTranslation()
   const disconnect = useDisconnect()
   const accountDrawer = useAccountDrawer()
-  const evmAddress = useWallet().evmAccount?.address
+  const evmAddress = useActiveAddress(Platform.EVM)
   const { data: portfolioTotalValue } = usePortfolioTotalValue({ evmAddress, svmAddress: undefined }) // Passkey account should be EVM-only
   const { balanceUSD } = portfolioTotalValue || {}
   const { convertFiatAmountFormatted } = useLocalizationContext()

@@ -1,8 +1,3 @@
-import { CurrencyRow } from 'components/SearchModal/CurrencyList'
-import { DropdownController } from 'components/swap/SwapDetails'
-import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { HeaderContent } from 'pages/Swap/Buy/CountryListModal'
-import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { CSSProperties, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -15,6 +10,11 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyRow } from '~/components/SearchModal/CurrencyList'
+import { DropdownController } from '~/components/swap/SwapDetails'
+import { useBuyFormContext } from '~/pages/Swap/Buy/BuyFormContext'
+import { HeaderContent } from '~/pages/Swap/Buy/CountryListModal'
+import { ContentWrapper } from '~/pages/Swap/Buy/shared'
 
 const ROW_ITEM_SIZE = 56
 

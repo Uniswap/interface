@@ -1,7 +1,7 @@
-import type { AnvilClient } from 'playwright/anvil/anvil-manager'
 import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { Address } from 'viem'
 import { concat, keccak256, pad, toHex } from 'viem/utils'
+import type { AnvilClient } from '~/playwright/anvil/anvil-manager'
 export const ONE_MILLION_USDT = 1_000_000_000_000n
 
 /**

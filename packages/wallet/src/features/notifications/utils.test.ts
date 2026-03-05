@@ -70,4 +70,20 @@ describe(formSwapNotificationTitle, () => {
       }),
     ).toEqual('Failed to swap 1.00 DAI for ~1.00 USDC.')
   })
+
+  it('formats expired swap title', () => {
+    expect(
+      formSwapNotificationTitle({
+        formatter: mockFormatter,
+        txStatus: TransactionStatus.Expired,
+        inputCurrency: DAI,
+        outputCurrency: USDC,
+        inputCurrencyId: '1-DAI',
+        outputCurrencyId: '1-USDC',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        outputCurrencyAmountRaw: '1000000',
+        tradeType: TradeType.EXACT_INPUT,
+      }),
+    ).toEqual('1.00 DAI for ~1.00 USDC swap expired.')
+  })
 })

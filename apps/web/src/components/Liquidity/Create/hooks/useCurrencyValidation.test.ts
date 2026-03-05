@@ -1,18 +1,18 @@
-import { useCurrencyValidation } from 'components/Liquidity/Create/hooks/useCurrencyValidation'
-import { createCurrencyParsersWithValidation } from 'components/Liquidity/parsers/urlParsers'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useCurrencyWithLoading } from 'hooks/Tokens'
-import { renderHook } from 'test-utils/render'
 import { nativeOnChain, USDC, USDC_UNICHAIN } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useCurrencyValidation } from '~/components/Liquidity/Create/hooks/useCurrencyValidation'
+import { createCurrencyParsersWithValidation } from '~/components/Liquidity/parsers/urlParsers'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useCurrencyWithLoading } from '~/hooks/Tokens'
+import { renderHook } from '~/test-utils/render'
 
 const ETH = nativeOnChain(UniverseChainId.Mainnet)
 
-vi.mock('components/Liquidity/parsers/urlParsers', () => ({
+vi.mock('~/components/Liquidity/parsers/urlParsers', () => ({
   createCurrencyParsersWithValidation: vi.fn(),
 }))
 
-vi.mock('hooks/Tokens', () => ({
+vi.mock('~/hooks/Tokens', () => ({
   useCurrencyWithLoading: vi.fn(),
 }))
 

@@ -3,3 +3,9 @@ import { HexString } from 'utilities/src/addresses/hex'
 
 /** Generic utility type for narrowing address string type by platform; Mainly used for type enforcement of EVM 0x prefixes which simplifies interactions with some libraries. */
 export type PlatformSpecificAddress<P extends Platform> = P extends Platform.EVM ? HexString : string
+
+/** An address paired with its platform type */
+export interface PlatformAddress {
+  address: Address
+  platform: Platform
+}

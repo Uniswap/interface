@@ -20,7 +20,7 @@ describe(getFormattedCurrencyAmount, () => {
 
   it('handles error', () => {
     // invalid raw amount will throw error
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
+    vi.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(getFormattedCurrencyAmount({ currency: USDC, amount: '0.1', formatter: mockFormatter })).toEqual('')
   })
 })

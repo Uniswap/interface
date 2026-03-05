@@ -4,12 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import {
-  Language,
-  Locale,
-  mapLanguageToLocale,
-  PLATFORM_SUPPORTED_LANGUAGES,
-} from 'uniswap/src/features/language/constants'
+import { Language, Locale } from 'uniswap/src/features/language/constants'
+import { getLocale, parseLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { isWebApp } from 'utilities/src/platform'
 
@@ -18,17 +14,6 @@ export type LanguageInfo = {
   originName: string // name of language in that language
   loggingName: string // internal only name to be used in logging
   locale: Locale
-}
-
-/**
- * Helper function used get the locale from the language. They're strongly associated,
- * but they have different ISO values and are used differently. Locale is what's mainly
- * used for integrations with other libraries, while language is more internal
- * @param language target language
- * @returns associated locale
- */
-export function getLocale(language: Language): Locale {
-  return mapLanguageToLocale[language]
 }
 
 /**
@@ -298,40 +283,6 @@ export function useLocalizedStatsigLanguage(): SupportedLocale | null {
   return resources[parsedLocale]?.statsigKey ?? null
 }
 
-// Locale
-
-/**
- * Returns the supported locale read from the user agent (navigator)
- */
-export function navigatorLocale(): Locale | undefined {
-  if (!navigator.language) {
-    return undefined
-  }
-
-  const [language, region] = navigator.language.split('-')
-
-  if (region) {
-    return parseLocale(`${language}-${region.toUpperCase()}`) ?? parseLocale(language)
-  }
-
-  return parseLocale(language)
-}
-
-/**
- * Given a locale string (e.g. from user agent), return the best match for corresponding Locale enum object
- * @param maybeSupportedLocale the fuzzy locale identifier
- */
-export function parseLocale(maybeSupportedLocale: unknown): Locale | undefined {
-  if (typeof maybeSupportedLocale !== 'string') {
-    return undefined
-  }
-  const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase()
-  return PLATFORM_SUPPORTED_LANGUAGES.map((lang) => getLocale(lang)).find(
-    (locale) =>
-      locale.toLowerCase() === lowerMaybeSupportedLocale || locale.split('-')[0] === lowerMaybeSupportedLocale,
-  )
-}
-
 /**
  * Hook used to get the locale for the currently selected language in the app
  * @returns locale for the currently selected language
@@ -339,7 +290,7 @@ export function parseLocale(maybeSupportedLocale: unknown): Locale | undefined {
 export function useCurrentLocale(): Locale {
   const { useParsedQueryString } = useUrlContext()
   const parsedQueryString = useParsedQueryString()
-  const urlLocale = parseLocale(parsedQueryString.lng)
+  const urlLocale = parseLocale(parsedQueryString['lng'])
   const currentLanguage = useCurrentLanguage()
   const currentLocale = getLocale(currentLanguage)
 

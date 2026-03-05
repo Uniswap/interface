@@ -1,6 +1,5 @@
 import { ContentStyle } from '@shopify/flash-list'
 import { GqlResult, GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
@@ -14,12 +13,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
+import { NUMBER_OF_RESULTS_ALL_TAB, NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { isWebApp, isWebPlatform } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 
 function useSectionsForSearchResults({
@@ -27,14 +26,14 @@ function useSectionsForSearchResults({
   searchFilter,
   activeTab,
   shouldPrioritizePools,
+  shouldPrioritizeWallets,
 }: {
   chainFilter: UniverseChainId | null
   searchFilter: string | null
   activeTab: SearchTab
   shouldPrioritizePools: boolean
+  shouldPrioritizeWallets: boolean
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
-  const viewExternalWalletsFeatureEnabled = useFeatureFlag(FeatureFlags.ViewExternalWalletsOnWeb)
-  const walletSearchEnabledOnWeb = isWebApp && viewExternalWalletsFeatureEnabled
   const skipPoolSearchQuery =
     !isWebPlatform || !searchFilter || (activeTab !== SearchTab.Pools && activeTab !== SearchTab.All)
   const {
@@ -50,7 +49,7 @@ function useSectionsForSearchResults({
   const poolSearchOptions = usePoolSearchResultsToPoolOptions(searchResultPools ?? [])
   const poolSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Pools,
-    options: poolSearchOptions,
+    options: activeTab === SearchTab.All ? poolSearchOptions.slice(0, NUMBER_OF_RESULTS_ALL_TAB) : poolSearchOptions,
   })
 
   const {
@@ -68,14 +67,13 @@ function useSectionsForSearchResults({
     searchFilter &&
     getValidAddress({ address: searchFilter, platform: Platform.EVM }) &&
     searchResultPools?.length === 1
+  const tokenOptions = isPoolAddressSearch ? [] : (tokenSearchResults ?? []) // do not display tokens if pool address search (to avoid displaying V2 liquidity tokens in results)
   const tokenSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.Tokens,
-    options: isPoolAddressSearch ? [] : tokenSearchResults, // do not display tokens if pool address search (to avoid displaying V2 liquidity tokens in results)
+    options: activeTab === SearchTab.All ? tokenOptions.slice(0, NUMBER_OF_RESULTS_ALL_TAB) : tokenOptions,
   })
 
-  // skip wallet search queries on web unless ViewExternalWalletsOnWeb feature flag is enabled
-  const skipWalletSearchQuery =
-    (isWebApp && !walletSearchEnabledOnWeb) || (activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All)
+  const skipWalletSearchQuery = activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All
   const { wallets: walletSearchOptions, loading: walletSearchResultsLoading } = useWalletSearchResults(
     skipWalletSearchQuery ? '' : (searchFilter ?? ''),
     chainFilter,
@@ -111,10 +109,12 @@ function useSectionsForSearchResults({
     switch (activeTab) {
       case SearchTab.All:
         if (isWebPlatform) {
-          const webSections = shouldPrioritizePools
+          const tokenAndPoolSections = shouldPrioritizePools
             ? [...(poolSearchResultsSection ?? []), ...(tokenSearchResultsSection ?? [])]
             : [...(tokenSearchResultsSection ?? []), ...(poolSearchResultsSection ?? [])]
-          sections = walletSearchEnabledOnWeb ? [...webSections, ...(walletSearchResultsSection ?? [])] : webSections
+          sections = shouldPrioritizeWallets
+            ? [...(walletSearchResultsSection ?? []), ...tokenAndPoolSections]
+            : [...tokenAndPoolSections, ...(walletSearchResultsSection ?? [])]
         } else {
           sections = [
             ...(tokenSearchResultsSection ?? []),
@@ -174,9 +174,9 @@ function useSectionsForSearchResults({
     searchTokensError,
     searchTokensLoading,
     shouldPrioritizePools,
+    shouldPrioritizeWallets,
     tokenSearchResults,
     tokenSearchResultsSection,
-    walletSearchEnabledOnWeb,
     walletSearchResultsLoading,
     walletSearchResultsSection,
   ])
@@ -207,6 +207,10 @@ function _SearchModalResultsList({
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
 
+  const searchQuery = debouncedParsedSearchFilter ?? debouncedSearchFilter
+  const shouldPrioritizeWallets =
+    searchQuery?.toLowerCase().endsWith('.eth') || searchQuery?.toLowerCase().endsWith('.uni')
+
   const {
     data: sections,
     loading,
@@ -215,9 +219,10 @@ function _SearchModalResultsList({
   } = useSectionsForSearchResults({
     // turn off parsed chainFilter for pools (to avoid "eth usdc" searches filtering by eth mainnet)
     chainFilter: activeTab !== SearchTab.Pools ? (chainFilter ?? parsedChainFilter) : chainFilter,
-    searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
+    searchFilter: searchQuery,
     activeTab,
-    shouldPrioritizePools: (debouncedParsedSearchFilter ?? debouncedSearchFilter)?.includes('/') ?? false,
+    shouldPrioritizePools: searchQuery?.includes('/') ?? false,
+    shouldPrioritizeWallets: shouldPrioritizeWallets ?? false,
   })
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)

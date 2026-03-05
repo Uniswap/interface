@@ -1,11 +1,3 @@
-import { ChartTooltip } from 'components/Charts/ChartTooltip'
-import { CustomHoverMarker } from 'components/Charts/CustomHoverMarker'
-import { useApplyChartTextureEffects } from 'components/Charts/hooks/useApplyChartTextureEffects'
-import { ChartModelWithLiveDot, LiveDotRenderer } from 'components/Charts/LiveDotRenderer'
-import { StaleBanner } from 'components/Charts/StaleBanner'
-import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
-import { formatTickMarks } from 'components/Charts/utils'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import {
@@ -25,6 +17,14 @@ import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { v4 as uuidv4 } from 'uuid'
+import { ChartTooltip } from '~/components/Charts/ChartTooltip'
+import { CustomHoverMarker } from '~/components/Charts/CustomHoverMarker'
+import { useApplyChartTextureEffects } from '~/components/Charts/hooks/useApplyChartTextureEffects'
+import { ChartModelWithLiveDot, LiveDotRenderer } from '~/components/Charts/LiveDotRenderer'
+import { StaleBanner } from '~/components/Charts/StaleBanner'
+import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from '~/components/Charts/types'
+import { formatTickMarks } from '~/components/Charts/utils'
+import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
 export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 
@@ -72,6 +72,22 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   private _hoverData?: ChartHoverData<TDataType> | undefined
   private _lastTooltipWidth: number | null = null
 
+  // Store handler reference for cleanup
+  private wheelHandler = (event: WheelEvent): void => {
+    if (event.ctrlKey) {
+      event.preventDefault()
+      event.stopPropagation()
+      const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1
+      const timeScale = this.api.timeScale()
+      const visibleRange = timeScale.getVisibleLogicalRange()
+      if (visibleRange) {
+        const center = (visibleRange.from + visibleRange.to) / 2
+        const newHalfRange = ((visibleRange.to - visibleRange.from) / 2) * (1 / zoomFactor)
+        timeScale.setVisibleLogicalRange({ from: center - newHalfRange, to: center + newHalfRange })
+      }
+    }
+  }
+
   public tooltipId = `chart-tooltip-${uuidv4()}`
 
   /** Get current hover coordinates for custom marker rendering */
@@ -86,12 +102,37 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     }
   }
 
+  /** Check if chart is zoomed in (visible range is smaller than total data range) */
+  public isZoomed(): boolean {
+    const visibleRange = this.api.timeScale().getVisibleLogicalRange()
+    if (!visibleRange || this.data.length === 0) {
+      return false
+    }
+    const totalDataPoints = this.data.length
+    const visibleDataPoints = visibleRange.to - visibleRange.from
+    // Consider zoomed if showing less than 95% of data (small buffer for edge cases)
+    return visibleDataPoints < totalDataPoints * 0.95
+  }
+
+  /** Subscribe to visible range changes (for zoom detection) */
+  public subscribeToVisibleRangeChange(callback: () => void): () => void {
+    this.api.timeScale().subscribeVisibleLogicalRangeChange(callback)
+    return () => this.api.timeScale().unsubscribeVisibleLogicalRangeChange(callback)
+  }
+
   constructor(chartDiv: HTMLDivElement, params: ChartModelParams<TDataType>) {
     this.chartDiv = chartDiv
     this.onCrosshairMove = params.onCrosshairMove
     this.data = params.data
 
-    this.api = createChart(chartDiv)
+    // Disable mouse wheel to allow page scrolling; pinch handled via custom wheel listener below
+    this.api = createChart(chartDiv, {
+      handleScroll: { mouseWheel: false, pressedMouseMove: true, horzTouchDrag: true, vertTouchDrag: false },
+      handleScale: { mouseWheel: false, pinch: true, axisPressedMouseMove: false },
+    })
+
+    // Custom wheel handler: pinch-to-zoom (Ctrl+wheel) while allowing page scroll
+    chartDiv.addEventListener('wheel', this.wheelHandler, { passive: false, capture: true })
 
     this.api.subscribeCrosshairMove((param) => {
       let newHoverData: ChartHoverData<TDataType> | undefined
@@ -244,11 +285,9 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
           labelVisible: false,
         },
       },
-      // Enable scrolling vertically when onTouchMove is enabled on mobile devices (when chart is not focused)
-      handleScroll: {
-        horzTouchDrag: true,
-        vertTouchDrag: false,
-      },
+      // Disable mouse wheel to allow page scrolling; pinch handled by custom wheel listener
+      handleScroll: { mouseWheel: false, horzTouchDrag: true, vertTouchDrag: false },
+      handleScale: { mouseWheel: false, pinch: true, axisPressedMouseMove: false },
     }
 
     this.api.applyOptions({ ...defaultOptions, ...nonDefaultChartOptions })
@@ -261,6 +300,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
 
   /** Removes the injected canvas from the chartDiv. */
   public remove() {
+    this.chartDiv.removeEventListener('wheel', this.wheelHandler, { capture: true })
     this.api.remove()
   }
 }
@@ -302,6 +342,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   const [chartDivElement, setChartDivElement] = useState<TamaguiElement | null>(null)
   const [crosshairData, setCrosshairData] = useState<TDataType | undefined>(undefined)
   const [hoverCoordinates, setHoverCoordinates] = useState<{ x: number; y: number } | null>(null)
+  const [isZoomed, setIsZoomed] = useState(false)
   const format = useLocalizationContext()
   const sporeColors = useSporeColors()
   const locale = useCurrentLocale()
@@ -368,6 +409,18 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
     }
   }, [Model, chartDivElement, modelParams, setRefitChartContent])
 
+  // Track zoom state changes to hide live dot when zoomed
+  useEffect(() => {
+    if (!chartModelRef.current || !isChartModelReady) {
+      return undefined
+    }
+    const updateZoomState = (): void => {
+      setIsZoomed(chartModelRef.current?.isZoomed() ?? false)
+    }
+    updateZoomState()
+    return chartModelRef.current.subscribeToVisibleRangeChange(updateZoomState)
+  }, [isChartModelReady])
+
   // Keeps the chart up-to-date with latest data/params, without re-creating the entire chart
   useEffect(() => {
     chartModelRef.current?.updateOptions(modelParams)
@@ -431,11 +484,12 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       {showCustomHoverMarker && hoverCoordinates && chartDivElement && chartModelRef.current && (
         <CustomHoverMarker coordinates={hoverCoordinates} lineColor={colors.accent1.val} />
       )}
-      {/* Live dot indicator at the end of line charts */}
+      {/* Live dot indicator at the end of line charts - hidden when zoomed */}
       {chartDivElement && isChartModelReady && chartModelRef.current && (
         <LiveDotRenderer
           chartModel={chartModelRef.current as ChartModelWithLiveDot}
           isHovering={!!crosshairData}
+          isZoomed={isZoomed}
           chartContainer={chartDivElement as HTMLDivElement}
           overrideColor={overrideColor}
           dataKey={dataKey}

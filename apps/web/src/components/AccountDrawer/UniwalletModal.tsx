@@ -1,5 +1,3 @@
-import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
-import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
@@ -9,7 +7,9 @@ import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
-import { openDownloadApp } from 'utils/openDownloadApp'
+import MobileAppLogo from '~/assets/svg/uniswap_app_logo.svg'
+import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
+import { openDownloadApp } from '~/utils/openDownloadApp'
 
 export default function UniwalletModal() {
   const { t } = useTranslation()

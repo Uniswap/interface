@@ -1,6 +1,6 @@
-import { useBlockTimestamp } from 'hooks/useBlockTimestamp'
-import { renderHook } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useBlockTimestamp } from '~/hooks/useBlockTimestamp'
+import { renderHook } from '~/test-utils/render'
 
 const mockUseBlockNumber = vi.fn()
 const mockUseBlock = vi.fn()
@@ -118,12 +118,13 @@ describe('useBlockTimestamp', () => {
       expect(result.current).toBe(expectedTimestamp)
     })
 
-    it('should estimate timestamp for future blocks on L2', () => {
+    it('should estimate timestamp for future blocks on L2 (Arbitrum with 0.25s block time)', () => {
       const currentBlockNumber = 1000n
       const currentBlockTimestamp = 1000000n
       const futureBlockNumber = 1010
       const blockDifference = futureBlockNumber - Number(currentBlockNumber)
-      const expectedTimestamp = currentBlockTimestamp + BigInt(blockDifference * 3)
+      // Arbitrum has 250ms block time, so 0.25 seconds per block
+      const expectedTimestamp = currentBlockTimestamp + BigInt(Math.floor(blockDifference * 0.25))
 
       mockUseBlockNumber.mockReturnValue({ data: currentBlockNumber })
       mockUseBlock.mockReturnValue({ data: { timestamp: currentBlockTimestamp } })
@@ -131,6 +132,27 @@ describe('useBlockTimestamp', () => {
       const { result } = renderHook(() =>
         useBlockTimestamp({
           chainId: UniverseChainId.ArbitrumOne,
+          blockNumber: futureBlockNumber,
+        }),
+      )
+
+      expect(result.current).toBe(expectedTimestamp)
+    })
+
+    it('should estimate timestamp for future blocks on Base (2s block time)', () => {
+      const currentBlockNumber = 1000n
+      const currentBlockTimestamp = 1000000n
+      const futureBlockNumber = 1010
+      const blockDifference = futureBlockNumber - Number(currentBlockNumber)
+      // Base has 2 second block time
+      const expectedTimestamp = currentBlockTimestamp + BigInt(blockDifference * 2)
+
+      mockUseBlockNumber.mockReturnValue({ data: currentBlockNumber })
+      mockUseBlock.mockReturnValue({ data: { timestamp: currentBlockTimestamp } })
+
+      const { result } = renderHook(() =>
+        useBlockTimestamp({
+          chainId: UniverseChainId.Base,
           blockNumber: futureBlockNumber,
         }),
       )

@@ -4,20 +4,20 @@ import {
   InfiniteData,
   infiniteQueryOptions,
   queryOptions,
-  UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { transformInput, WithoutWalletAccount } from '@universe/api'
-import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { dataApiGetTransport } from 'uniswap/src/data/rest/base'
 import {
   AccountAddressesByPlatform,
   buildAccountAddressesByPlatform,
 } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import type { InfiniteQueryOptionsResult, QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 type GetListTransactionsInput<TSelectData = ListTransactionsResponse> = {
   input?: WithoutWalletAccount<PartialMessage<ListTransactionsRequest>> & {
@@ -35,7 +35,7 @@ type GetListTransactionsInfiniteInput = {
   refetchInterval?: number
 }
 
-const transactionsClient = createPromiseClient(DataApiService, uniswapGetTransport)
+const transactionsClient = createPromiseClient(DataApiService, dataApiGetTransport)
 
 const EMPTY_LIST_RESPONSE = new ListTransactionsResponse({
   transactions: [],
@@ -63,12 +63,18 @@ type GetListTransactionsQuery<TSelectData = ListTransactionsResponse> = QueryOpt
   ]
 >
 
-type GetListTransactionsInfiniteQuery = UseInfiniteQueryOptions<
+type ListTransactionsInfiniteQueryKey = readonly [
+  ReactQueryCacheKey.ListTransactions,
+  string | undefined,
+  Record<string, unknown>,
+  boolean,
+]
+
+type GetListTransactionsInfiniteQuery = InfiniteQueryOptionsResult<
   ListTransactionsResponse,
   Error,
   InfiniteData<ListTransactionsResponse>,
-  ListTransactionsResponse,
-  (Record<string, never> | undefined)[],
+  ListTransactionsInfiniteQueryKey,
   string | undefined
 >
 
@@ -78,12 +84,18 @@ export const getListTransactionsInfiniteQuery = ({
   refetchInterval,
 }: GetListTransactionsInfiniteInput): GetListTransactionsInfiniteQuery => {
   const transformedInput = transformInput(input)
+  const includePlans = getFeatureFlag(FeatureFlags.ChainedActions)
 
   const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
   const address = walletAccount?.platformAddresses[0]?.address
 
   return infiniteQueryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, address, inputWithoutAddress],
+    queryKey: [
+      ReactQueryCacheKey.ListTransactions,
+      address,
+      inputWithoutAddress as Record<string, unknown>,
+      includePlans,
+    ] as const,
     queryFn: ({ pageParam }: { pageParam?: string }) => {
       if (!transformedInput) {
         return Promise.resolve(EMPTY_LIST_RESPONSE)
@@ -92,6 +104,7 @@ export const getListTransactionsInfiniteQuery = ({
       const requestWithPageToken = {
         ...transformedInput,
         pageToken: pageParam,
+        includePlans,
       }
 
       return transactionsClient.listTransactions(requestWithPageToken)
@@ -114,7 +127,8 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
   select,
 }: GetListTransactionsInput<TSelectData>): GetListTransactionsQuery<TSelectData> => {
   const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
-  const transformedInput = transformInput(input)
+  const includePlans = getFeatureFlag(FeatureFlags.ChainedActions)
+  const transformedInput = transformInput({ ...input, includePlans })
 
   const { walletAccount: _walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
 

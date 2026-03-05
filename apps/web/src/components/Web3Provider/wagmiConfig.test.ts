@@ -1,4 +1,4 @@
-import { orderedTransportUrls } from 'components/Web3Provider/wagmiConfig'
+import { orderedTransportUrls } from '~/components/Web3Provider/wagmiConfig'
 
 // A minimal type that matches the structure returned by getChainInfo().
 type MockChain = {

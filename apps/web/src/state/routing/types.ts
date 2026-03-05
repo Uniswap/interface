@@ -20,8 +20,8 @@ import {
 } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
-import { ZERO_PERCENT } from 'constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ZERO_PERCENT } from '~/constants/misc'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -69,7 +69,6 @@ export interface GetQuoteArgs {
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   protocolPreferences?: Protocol[]
   tradeType: TradeType
-  needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
   sendPortionEnabled: boolean
   routingType: URAQuoteType

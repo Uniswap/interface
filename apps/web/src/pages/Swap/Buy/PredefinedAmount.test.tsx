@@ -1,5 +1,5 @@
-import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
-import { render, screen } from 'test-utils/render'
+import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
+import { render, screen } from '~/test-utils/render'
 
 describe('PredefinedAmount', () => {
   it.each([

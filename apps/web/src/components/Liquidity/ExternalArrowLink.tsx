@@ -1,7 +1,7 @@
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, Text } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export function ExternalArrowLink({
   href,

@@ -13,6 +13,7 @@ import {
   UniversalImageResizeMode,
   useIsDarkMode,
 } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
@@ -22,14 +23,12 @@ import { TransactionParticipantRow } from 'uniswap/src/components/activity/detai
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useNetworkFee } from 'uniswap/src/features/activity/hooks/useNetworkFee'
-import { getFormattedSwapRatio, hasInterfaceFees } from 'uniswap/src/features/activity/utils/swapInfo'
+import { getFormattedSwapRatio } from 'uniswap/src/features/activity/utils/swapInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'uniswap/src/features/language/localizedDayjs'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   BridgeTransactionInfo,
@@ -40,25 +39,25 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
 import { ExplorerDataType, getExplorerLink, openTransactionLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress, shortenHash } from 'utilities/src/addresses'
-import { NumberType } from 'utilities/src/format/types'
-
-const UNISWAP_FEE = 0.0025
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 
 export function TransactionDetailsInfoRows({
   transactionDetails,
   isShowingMore,
   pt,
+  openPlanView,
   onClose,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
   pt?: FlexProps['pt']
+  openPlanView: () => void
   onClose: () => void
 }): JSX.Element {
-  const rows = useTransactionDetailsInfoRows({ transactionDetails, isShowingMore, onClose })
+  const rows = useTransactionDetailsInfoRows({ transactionDetails, isShowingMore, onClose, openPlanView })
 
   return (
     <Flex gap="$spacing8" px="$spacing8" pt={pt}>
@@ -70,10 +69,12 @@ export function TransactionDetailsInfoRows({
 function useTransactionDetailsInfoRows({
   transactionDetails,
   isShowingMore,
+  openPlanView,
   onClose,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
+  openPlanView: () => void
   onClose: () => void
 }): JSX.Element[] {
   const { t } = useTranslation()
@@ -84,7 +85,7 @@ function useTransactionDetailsInfoRows({
 
   const defaultRows = [
     <NetworkFeeRow key="networkFee" transactionDetails={transactionDetails} />,
-    <TransactionHashRow key="transactionId" transactionDetails={transactionDetails} />,
+    <TransactionHashRow key="transactionId" transactionDetails={transactionDetails} openPlanView={openPlanView} />,
     <InfoRow key="submittedOn" label={t('transaction.submittedOn')}>
       <Text variant="body3">{dateString}</Text>
     </InfoRow>,
@@ -159,14 +160,6 @@ function useTransactionDetailsInfoRows({
     case TransactionType.Swap:
       if (isShowingMore) {
         specificRows.push(<SwapRateRow key="swapRate" typeInfo={typeInfo} />)
-        // TODO (WALL-4189): blocked on backend. This is hard-coded to always return false for now
-        if (
-          hasInterfaceFees({
-            swapTimestampMs: transactionDetails.addedTime,
-          })
-        ) {
-          specificRows.push(<UniswapFeeRow key="uniswapFee" typeInfo={typeInfo} />)
-        }
       }
       break
     case TransactionType.LiquidityIncrease:
@@ -225,16 +218,27 @@ function useTransactionDetailsInfoRows({
   return [...specificRows, ...defaultRows]
 }
 
+/**
+ * Row shown in the transaction details screen for the network fee.
+ * If gas is paid on multiple chains, the logo will be hidden.
+ * If it's a uniswapx transaction, the uniswapx UI will be shown.
+ */
 function NetworkFeeRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element {
   const { t } = useTranslation()
   const { value: networkFeeValue } = useNetworkFee(transactionDetails)
   const isLoading = networkFeeValue === '-'
 
-  const Logo = isUniswapX(transactionDetails) ? UniswapX : NetworkLogo
+  const isPlanTransaction = isPlanTransactionDetails(transactionDetails)
   const GasText = isUniswapX(transactionDetails) ? UniswapXText : Text
+  const chainIds = isPlanTransaction
+    ? [...new Set(transactionDetails.typeInfo.stepDetails.map((step) => step.chainId))]
+    : [transactionDetails.chainId]
+  const showNetworkLogo = chainIds.length === 1
+  const Logo = isUniswapX(transactionDetails) ? UniswapX : showNetworkLogo ? NetworkLogo : undefined
+
   return (
     <InfoRow key="networkFee" label={t('transaction.details.networkFee')}>
-      <Logo chainId={transactionDetails.chainId} size={iconSizes.icon16} />
+      {Logo && <Logo chainId={chainIds[0] ?? null} size={iconSizes.icon16} />}
       {isLoading ? (
         <Loader.Box height={fonts.body3.lineHeight} width={iconSizes.icon36} />
       ) : (
@@ -244,9 +248,35 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
   )
 }
 
-function TransactionHashRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element | null {
-  const { hash, chainId } = transactionDetails
+function TransactionHashRow({
+  transactionDetails,
+  openPlanView,
+}: {
+  transactionDetails: TransactionDetails
+  openPlanView: () => void
+}): JSX.Element | null {
+  const { hash, chainId, typeInfo } = transactionDetails
   const { t } = useTranslation()
+
+  const stepDetails = typeInfo.type === TransactionType.Plan ? typeInfo.stepDetails : undefined
+
+  const stepInfosLength = stepDetails?.length ?? 0
+  if (stepInfosLength > 1) {
+    return (
+      <InfoRow key="transactionId" label={t('transaction.details.transactions')}>
+        <TouchableArea
+          alignItems="center"
+          flexDirection="row"
+          gap="$spacing6"
+          justifyContent="center"
+          onPress={openPlanView}
+        >
+          <Text variant="body3">{t('transaction.details.transactions.actions', { actionCount: stepInfosLength })}</Text>
+          <RotatableChevron color="$neutral3" direction="right" size="$icon.16" />
+        </TouchableArea>
+      </InfoRow>
+    )
+  }
 
   if (!hash) {
     return null
@@ -343,40 +373,6 @@ function SwapRateRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo | BridgeT
   return (
     <InfoRow label={t('transaction.details.swapRate')}>
       <Text variant="body3">{formattedLine}</Text>
-    </InfoRow>
-  )
-}
-
-function UniswapFeeRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo }): JSX.Element {
-  const { t } = useTranslation()
-  const formatter = useLocalizationContext()
-
-  const outputCurrency = useCurrencyInfo(typeInfo.outputCurrencyId)
-  const { outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
-
-  const currencyAmount = getCurrencyAmount({
-    value: outputCurrencyAmountRaw,
-    valueType: ValueType.Raw,
-    currency: outputCurrency?.currency,
-  })
-
-  const amountExact = currencyAmount ? parseFloat(currencyAmount.toExact()) : null
-
-  // Using the equation (1 - 0.25 / 100) * (actualOutputValue + uniswapFee) = actualOutputValue
-  const approximateFee = amountExact ? (UNISWAP_FEE / (1 - UNISWAP_FEE)) * amountExact : null
-  const feeSymbol = outputCurrency?.currency.symbol ? ' ' + outputCurrency.currency.symbol : ''
-  const formattedApproximateFee = approximateFee
-    ? '~' +
-      formatter.formatNumberOrString({
-        value: approximateFee,
-        type: NumberType.TokenTx,
-      }) +
-      feeSymbol
-    : '-'
-
-  return (
-    <InfoRow label={t('transaction.details.uniswapFee', { feePercent: UNISWAP_FEE * 100 })}>
-      <Text variant="body3">{formattedApproximateFee}</Text>
     </InfoRow>
   )
 }

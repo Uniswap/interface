@@ -1,13 +1,20 @@
-import 'test-utils/tokens/mocks'
+import '~/test-utils/tokens/mocks'
 
-import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
-import { LimitContext } from 'state/limit/LimitContext'
-import { MultichainContext } from 'state/multichain/types'
-import { SwapAndLimitContext } from 'state/swap/types'
-import { act, renderWithUniswapContext, screen } from 'test-utils/render'
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddresses: vi.fn(),
+}))
+
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { LimitPriceInputPanel } from '~/components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
+import { LimitContext } from '~/state/limit/LimitContext'
+import { MultichainContext } from '~/state/multichain/types'
+import { SwapAndLimitContext } from '~/state/swap/types'
+import { act, renderWithUniswapContext, screen } from '~/test-utils/render'
+
+const mockUseActiveAddresses = useActiveAddresses as ReturnType<typeof vi.fn>
 
 const mockMultichainContextValue = {
   reset: vi.fn(),
@@ -47,6 +54,15 @@ const mockLimitContextValue = {
 }
 
 describe('LimitPriceInputPanel', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+
+    mockUseActiveAddresses.mockReturnValue({
+      evmAddress: undefined,
+      svmAddress: undefined,
+    })
+  })
+
   it('should render the component with no currencies selected', async () => {
     const onCurrencySelect = vi.fn()
     await act(async () => {

@@ -1,0 +1,15 @@
+ignores: [
+    # Dependencies that depcheck incorrectly marks as unused
+    "typescript",
+    "@typescript/native-preview",
+    "depcheck",
+
+    # Test dependencies (used by vitest config)
+    "@vitest/coverage-v8",
+
+    # Core dependencies (will be used when implementation is added)
+    "partysocket",
+
+    # Internal packages / workspaces
+    "@universe/websocket",
+  ]

@@ -8,9 +8,10 @@ import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
+import { useTradeFromExistingPlan } from 'uniswap/src/features/transactions/swap/hooks/useTradeFromExistingPlan'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getWrapType } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import type { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -94,19 +95,36 @@ export function useDerivedSwapInfo({
     // swap_7702 endpoint consumes typedData in the process encoding the swap.
     return ctx.getCanSignPermits?.(chainId) && !ctx.getSwapDelegationInfo?.(chainId).delegationAddress
   })
+  const tradeParams = useMemo(
+    () => ({
+      account,
+      amountSpecified,
+      otherCurrency,
+      tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+      customSlippageTolerance,
+      selectedProtocols,
+      sendPortionEnabled,
+      isDebouncing,
+      generatePermitAsTransaction,
+      isV4HookPoolsEnabled,
+    }),
+    [
+      account,
+      amountSpecified,
+      otherCurrency,
+      isExactIn,
+      customSlippageTolerance,
+      selectedProtocols,
+      sendPortionEnabled,
+      isDebouncing,
+      generatePermitAsTransaction,
+      isV4HookPoolsEnabled,
+    ],
+  )
 
-  const trade = useTrade({
-    account,
-    amountSpecified,
-    otherCurrency,
-    tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
-    customSlippageTolerance,
-    selectedProtocols,
-    sendPortionEnabled,
-    isDebouncing,
-    generatePermitAsTransaction,
-    isV4HookPoolsEnabled,
-  })
+  const existingPlanTrade = useTradeFromExistingPlan(tradeParams)
+  const tradeFromQuote = useTrade({ ...tradeParams, skip: !!existingPlanTrade })
+  const trade = existingPlanTrade ?? tradeFromQuote
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade
 

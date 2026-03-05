@@ -19,4 +19,6 @@ export const zIndexes = {
   // Custom value needed to properly display components
   // above modals (e.g. in the extension app)
   overlay: 100010,
+  // Toast notifications should appear above all other content
+  toast: 100020,
 }

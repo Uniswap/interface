@@ -1,10 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export const AlternateCurrencyDisplay = ({
   inputCurrency,

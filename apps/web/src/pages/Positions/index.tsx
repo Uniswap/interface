@@ -1,31 +1,11 @@
+/* eslint-disable max-lines */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
-import tokenLogo from 'assets/images/token-logo.png'
-import V4_HOOK from 'assets/images/v4Hooks.png'
-import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
-import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
-import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
-import { LpIncentiveClaimModal } from 'components/Liquidity/LPIncentives/LpIncentiveClaimModal'
-import LpIncentiveRewardsCard from 'components/Liquidity/LPIncentives/LpIncentiveRewardsCard'
-import { PositionsHeader } from 'components/Liquidity/PositionsHeader'
-import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
-import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
-import { useAccount } from 'hooks/useAccount'
-import { useInfiniteScroll } from 'hooks/useInfiniteScroll'
-import { useLpIncentives } from 'hooks/useLpIncentives'
 import { atom, useAtom } from 'jotai'
-import { TopPools } from 'pages/Positions/TopPools'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { FixedSizeList } from 'react-window'
-import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Button, Flex, Text, useMedia } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -41,11 +21,34 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
+import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
+import PROVIDE_LIQUIDITY from '~/assets/images/provideLiquidity.png'
+import tokenLogo from '~/assets/images/token-logo.png'
+import V4_HOOK from '~/assets/images/v4Hooks.png'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
+import { ExternalArrowLink } from '~/components/Liquidity/ExternalArrowLink'
+import { LiquidityPositionCard, LiquidityPositionCardLoader } from '~/components/Liquidity/LiquidityPositionCard'
+import { LpIncentiveClaimModal } from '~/components/Liquidity/LPIncentives/LpIncentiveClaimModal'
+import LpIncentiveRewardsCard from '~/components/Liquidity/LPIncentives/LpIncentiveRewardsCard'
+import { PositionsHeader } from '~/components/Liquidity/PositionsHeader'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { getPositionUrl } from '~/components/Liquidity/utils/getPositionUrl'
+import { parseRestPosition } from '~/components/Liquidity/utils/parseFromRest'
+import { useAccount } from '~/hooks/useAccount'
+import { useLpIncentives } from '~/hooks/useLpIncentives'
+import { ExpandoRow } from '~/pages/Positions/ExpandoRow'
+import { TopPools } from '~/pages/Positions/TopPools'
+import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
+import { useRequestPositionsForSavedPairs } from '~/state/user/hooks'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 // The BE limits the number of positions by chain and protocol version.
 // PAGE_SIZE=25 means the limit is at most 25 positions * x chains * y protocol versions.
 // TODO: LP-4: Improve performance by loading pageSize limit positions at a time.
 const PAGE_SIZE = 25
+// Reserve about 160px for each button
+const BUTTON_AREA_WIDTH = 160 * 2
 
 function DisconnectedWalletView() {
   const { t } = useTranslation()
@@ -82,9 +85,12 @@ function DisconnectedWalletView() {
             {connectedWithoutEVM ? t('pool.connectEthereumToView') : t('positions.welcome.connect.description')}
           </Text>
         </Flex>
-        <Flex row gap="$gap8">
+        <Flex row gap="$gap8" $md={{ flexDirection: 'column', width: '100%' }} width={BUTTON_AREA_WIDTH}>
           {!connectedWithoutEVM && (
             <Button
+              $md={{
+                py: '$spacing16',
+              }}
               variant="default"
               size="small"
               emphasis="secondary"
@@ -98,9 +104,11 @@ function DisconnectedWalletView() {
             </Button>
           )}
           <Button
+            $md={{
+              py: '$spacing16',
+            }}
             variant="default"
             size="small"
-            width={connectedWithoutEVM ? '100%' : 240}
             borderRadius="$rounded12"
             onPress={handleConnectWallet}
           >
@@ -151,8 +159,11 @@ function EmptyPositionsView() {
         <Text variant="body2" color="$neutral2" maxWidth={420}>
           {t('positions.noPositions.description')}
         </Text>
-        <Flex row gap="$gap8">
+        <Flex row gap="$gap8" $md={{ flexDirection: 'column', width: '100%' }} width={BUTTON_AREA_WIDTH}>
           <Button
+            $md={{
+              py: '$spacing16',
+            }}
             variant="default"
             size="small"
             emphasis="secondary"
@@ -165,9 +176,11 @@ function EmptyPositionsView() {
             {t('pools.explore')}
           </Button>
           <Button
+            $md={{
+              py: '$spacing16',
+            }}
             variant="default"
             size="small"
-            width={240}
             tag="a"
             href="/positions/create/v4"
             $platform-web={{

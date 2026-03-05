@@ -1,14 +1,15 @@
 /* eslint-disable import/no-unused-modules */
+
+import { PropsWithChildren, useEffect, useState } from 'react'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import {
   useActiveAddress,
   useActiveAddresses,
   useActiveConnector,
   useActiveWallet,
   useConnectionStatus,
-} from 'features/accounts/store/hooks'
-import type { ExternalConnector, ExternalWallet } from 'features/accounts/store/types'
-import { PropsWithChildren, useEffect, useState } from 'react'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+} from '~/features/accounts/store/hooks'
+import type { ExternalConnector, ExternalWallet } from '~/features/accounts/store/types'
 
 // Typing 'logAccountsStore' into the console will enable AccountsStore logging
 const DEVTOOL_TRIGGER = 'logAccountsStore'

@@ -1,18 +1,17 @@
-import {
-  MAX_ACTIVITY_ROWS,
-  MAX_LIMITS_ROWS,
-  MAX_POOLS_ROWS,
-  MAX_TOKENS_ROWS,
-  OVERVIEW_RIGHT_COLUMN_WIDTH,
-} from 'pages/Portfolio/Overview/constants'
-import { MiniActivityTable } from 'pages/Portfolio/Overview/MiniActivityTable'
-import { MiniPoolsTable } from 'pages/Portfolio/Overview/MiniPoolsTable/MiniPoolsTable'
-import { MiniTokensTable } from 'pages/Portfolio/Overview/MiniTokensTable'
-import { OpenLimitsTable } from 'pages/Portfolio/Overview/OpenLimitsTable'
 import { memo } from 'react'
 import { Flex } from 'ui/src'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  MAX_ACTIVITY_ROWS,
+  MAX_POOLS_ROWS,
+  MAX_TOKENS_ROWS,
+  OVERVIEW_RIGHT_COLUMN_WIDTH,
+} from '~/pages/Portfolio/Overview/constants'
+import { MiniActivityTable } from '~/pages/Portfolio/Overview/MiniActivityTable'
+import { MiniPoolsTable } from '~/pages/Portfolio/Overview/MiniPoolsTable/MiniPoolsTable'
+import { MiniTokensTable } from '~/pages/Portfolio/Overview/MiniTokensTable'
+import { OpenLimitsTable } from '~/pages/Portfolio/Overview/OpenLimitsTable'
 
 interface PortfolioOverviewTablesProps {
   activityData: ActivityRenderData
@@ -44,7 +43,7 @@ export const PortfolioOverviewTables = memo(function PortfolioOverviewTables({
       </Flex>
       <Flex width={OVERVIEW_RIGHT_COLUMN_WIDTH} gap="$spacing40" $xl={{ width: '100%' }}>
         {portfolioAddresses.evmAddress && (!chainId || chainId === UniverseChainId.Mainnet) && (
-          <OpenLimitsTable account={portfolioAddresses.evmAddress} maxLimits={MAX_LIMITS_ROWS} />
+          <OpenLimitsTable account={portfolioAddresses.evmAddress} />
         )}
         <MiniActivityTable maxActivities={MAX_ACTIVITY_ROWS} activityData={activityData} />
       </Flex>

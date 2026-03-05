@@ -1,6 +1,6 @@
-import { deprecatedStyled } from 'lib/styled-components'
 import { Box } from 'rebass/styled-components'
-import { Gap } from 'theme'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { Gap } from '~/theme'
 
 // TODO(WEB-1983):
 // Setting `width: 100%` by default prevents composability in complex flex layouts.

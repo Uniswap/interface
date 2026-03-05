@@ -1,13 +1,13 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { PositionInfo } from 'components/Liquidity/types'
-import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
-import { EmptyTableCell } from 'pages/Portfolio/EmptyTableCell'
 import { memo } from 'react'
 import { EM_DASH, Text } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { useLpIncentivesFormattedEarnings } from '~/hooks/useLpIncentivesFormattedEarnings'
+import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
 
 // Third column cell component - Fees in USD
 export const PoolFeesCell = memo(function PoolFeesCell({ position }: { position: PositionInfo }) {

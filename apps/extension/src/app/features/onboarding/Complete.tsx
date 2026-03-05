@@ -1,21 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { OpenSidebarButton } from 'src/app/components/buttons/OpenSidebarButton'
+import { useFinishExtensionOnboarding } from 'src/app/features/onboarding/hooks/useFinishExtensionOnboarding'
+import { useOpenSidebar } from 'src/app/features/onboarding/hooks/useOpenSidebar'
 import { MainContentWrapper } from 'src/app/features/onboarding/intro/MainContentWrapper'
 import { KeyboardKey } from 'src/app/features/onboarding/KeyboardKey'
-import { useFinishExtensionOnboarding } from 'src/app/features/onboarding/useFinishExtensionOnboarding'
 import { useOpeningKeyboardShortCut } from 'src/app/hooks/useOpeningKeyboardShortCut'
-import { getCurrentTabAndWindowId } from 'src/app/navigation/utils'
-import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
-import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
-import { openSidePanel } from 'src/background/utils/chromeSidePanelUtils'
 import { terminateStoreSynchronization } from 'src/store/storeSynchronization'
-import { Button, Flex, Image, Text } from 'ui/src'
+import { Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { RightArrow } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
-import { logger } from 'utilities/src/logger/logger'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export function Complete({
@@ -30,7 +25,7 @@ export function Complete({
   const address = getOnboardingAccountAddress()
   const existingClaim = getUnitagClaim()
   const [unitagClaimAttempted, setUnitagClaimAttempted] = useState(false)
-  const [openedSideBar, setOpenedSideBar] = useState(false)
+  const { openedSideBar, handleOpenSidebar, handleOpenWebApp } = useOpenSidebar()
 
   useEffect(() => {
     if (!tryToClaimUnitag || !address || unitagClaimAttempted) {
@@ -49,33 +44,6 @@ export function Complete({
     extensionOnboardingFlow: flow,
     skip: tryToClaimUnitag && !unitagClaimAttempted,
   })
-
-  useEffect(() => {
-    const onSidebarOpenedListener = onboardingMessageChannel.addMessageListener(
-      OnboardingMessageType.SidebarOpened,
-      (_message) => {
-        setOpenedSideBar(true)
-      },
-    )
-    return () => {
-      onboardingMessageChannel.removeMessageListener(OnboardingMessageType.SidebarOpened, onSidebarOpenedListener)
-    }
-  }, [])
-
-  const handleOpenWebApp = async (): Promise<void> => {
-    window.location.href = uniswapUrls.webInterfaceSwapUrl
-  }
-
-  const handleOpenSidebar = async (): Promise<void> => {
-    try {
-      const { tabId, windowId } = await getCurrentTabAndWindowId()
-      await openSidePanel(tabId, windowId)
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'onboarding/Complete.tsx', function: 'handleOpenSidebar' },
-      })
-    }
-  }
 
   const keys = useOpeningKeyboardShortCut(openedSideBar)
 
@@ -97,18 +65,11 @@ export function Complete({
               <KeyboardKey key={key.title} fontSize={key.fontSize} px={key.px} state={key.state} title={key.title} />
             ))}
           </Flex>
-          <Flex row alignSelf="stretch">
-            <Button
-              icon={openedSideBar ? <RightArrow /> : undefined}
-              iconPosition="after"
-              size="large"
-              variant={openedSideBar ? 'branded' : 'default'}
-              emphasis={openedSideBar ? 'primary' : 'secondary'}
-              onPress={openedSideBar ? handleOpenWebApp : handleOpenSidebar}
-            >
-              {openedSideBar ? t('onboarding.complete.go_to_uniswap') : t('onboarding.complete.button')}
-            </Button>
-          </Flex>
+          <OpenSidebarButton
+            openedSideBar={openedSideBar}
+            handleOpenSidebar={handleOpenSidebar}
+            handleOpenWebApp={handleOpenWebApp}
+          />
         </Flex>
       </Flex>
     </MainContentWrapper>

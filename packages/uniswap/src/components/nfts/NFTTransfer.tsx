@@ -1,13 +1,13 @@
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
-import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
+import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
+import { type GQLNftAsset } from 'uniswap/src/features/nfts/types'
 
 export function NFTTransfer({ asset, nftSize }: { asset: GQLNftAsset; nftSize?: number }): JSX.Element {
   return (
     <Flex centered gap="$spacing16">
       <Flex borderRadius="$rounded16" height={nftSize} overflow="hidden" width={nftSize}>
-        <NFTViewer squareGridView maxHeight={nftSize} uri={asset?.image?.url} />
+        <NFTViewer maxHeight={nftSize} uri={asset?.image?.url} />
       </Flex>
       <Flex centered row gap="$spacing8">
         <Flex borderRadius="$roundedFull" height={iconSizes.icon28} overflow="hidden" width={iconSizes.icon28}>

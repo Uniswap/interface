@@ -1,13 +1,13 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { mocked } from 'test-utils/mocked'
-import { render } from 'test-utils/render'
 import { Flex } from 'ui/src'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { mocked } from '~/test-utils/mocked'
+import { render } from '~/test-utils/render'
 
 vi.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: vi.fn(),

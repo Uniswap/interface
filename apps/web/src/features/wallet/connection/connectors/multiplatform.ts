@@ -1,5 +1,5 @@
-import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { logger } from 'utilities/src/logger/logger'
+import { WalletConnectorMeta } from '~/features/wallet/connection/types/WalletConnectorMeta'
 
 const NORMALIZATION_RULES = [
   // Convert to lowercase

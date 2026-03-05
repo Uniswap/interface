@@ -24,7 +24,7 @@ export function RoutingLabel({ trade }: { trade: Trade }): JSX.Element {
 
   if (isUniswapX(trade)) {
     return (
-      <Flex row gap="$spacing1">
+      <Flex row gap="$spacing2">
         <AnimatedUniswapX size="$icon.16" animation="simple" />
         <UniswapXText variant="body3">{t('uniswapx.label')}</UniswapXText>
       </Flex>

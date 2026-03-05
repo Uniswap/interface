@@ -1,22 +1,22 @@
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import {
-  getWalletRequiresSeparatePrompt,
-  useHasAcceptedSolanaConnectionPrompt,
-} from 'components/WalletModal/PendingWalletConnectionModal/state'
-import { useAccountsStore } from 'features/accounts/store/hooks'
-import type { ExternalConnector, ExternalWallet } from 'features/accounts/store/types'
-import {
-  useUniswapEmbeddedConnectionService,
-  useUniswapMobileConnectionService,
-} from 'features/wallet/connection/connectors/custom'
-import { useSolanaConnectionService } from 'features/wallet/connection/connectors/solana'
-import { getEVMConnectionService } from 'features/wallet/connection/connectors/wagmi'
-import type { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
-import { createMultiPlatformConnectionService } from 'features/wallet/connection/services/multiplatformConnectionService'
 import { useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import {
+  getWalletRequiresSeparatePrompt,
+  useHasAcceptedSolanaConnectionPrompt,
+} from '~/components/WalletModal/PendingWalletConnectionModal/state'
+import { useAccountsStore } from '~/features/accounts/store/hooks'
+import type { ExternalConnector, ExternalWallet } from '~/features/accounts/store/types'
+import {
+  useUniswapEmbeddedConnectionService,
+  useUniswapMobileConnectionService,
+} from '~/features/wallet/connection/connectors/custom'
+import { useSolanaConnectionService } from '~/features/wallet/connection/connectors/solana'
+import { getEVMConnectionService } from '~/features/wallet/connection/connectors/wagmi'
+import type { ConnectionService } from '~/features/wallet/connection/services/IConnectionService'
+import { createMultiPlatformConnectionService } from '~/features/wallet/connection/services/multiplatformConnectionService'
 
 type GetConnectionServiceFn = (params: { wallet: ExternalWallet; individualPlatform?: Platform }) => ConnectionService
 

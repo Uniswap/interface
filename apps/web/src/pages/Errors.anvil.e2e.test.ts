@@ -1,137 +1,57 @@
-import { rejectNextTransaction } from 'components/Web3Provider/rejectableConnector'
-import { expect, getTest } from 'playwright/fixtures'
-import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
-import { type HexString } from 'utilities/src/addresses/hex'
+import { rejectNextTransaction } from '~/components/Web3Provider/rejectableConnector'
+import { expect, getTest } from '~/playwright/fixtures'
+import { HAYDEN_ADDRESS, TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
 
 const test = getTest({ withAnvil: true })
 
-test.describe('Errors', () => {
-  test('wallet rejection', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
+test.describe(
+  'Errors',
+  {
+    tag: '@team:apps-infra',
+    annotation: [
+      { type: 'DD_TAGS[team]', description: 'apps-infra' },
+      { type: 'DD_TAGS[test.type]', description: 'web-e2e' },
+    ],
+  },
+  () => {
+    test('wallet rejection', async ({ page, anvil }) => {
+      await page.goto('/send')
 
-    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
+      const nonceBefore = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
 
-    const nonceBefore = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
+      // Fill in amount to send
+      await page.getByTestId(TestID.SendFormAmountInput).click()
+      await page.getByTestId(TestID.SendFormAmountInput).fill('10')
 
-    // Enter amount to swap
-    await page.getByTestId(TestID.AmountInputOut).fill('1')
+      // Fill in recipient address
+      const recipientInput = page.getByPlaceholder(/address or ens/i)
+      await recipientInput.click()
+      await recipientInput.fill(HAYDEN_ADDRESS)
+      await page.getByText('hayden.eth').click()
 
-    // Wait for input value to be populated
-    await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
+      // Wait for send button to be enabled
+      const sendButton = page.getByRole('button', { name: /^send$/i })
+      await expect(sendButton).toBeEnabled()
+      await sendButton.click()
 
-    // Submit transaction
-    await page.getByTestId(TestID.ReviewSwap).click()
+      // Click Continue on the new address confirmation modal
+      await page.getByRole('button', { name: /continue/i }).click()
 
-    // Set rejection flag before clicking Swap
-    await rejectNextTransaction(page)
+      // Wait for review modal to appear
+      await expect(page.getByTestId(TestID.SendReviewModal)).toBeVisible()
 
-    await page.getByTestId(TestID.Swap).click()
+      // Set rejection flag before confirming send
+      await rejectNextTransaction(page)
 
-    await anvil.mine({ blocks: 1 })
-    const nonceAfter = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
+      // Confirm send (this should be rejected)
+      await page.getByRole('button', { name: /confirm send/i }).click()
 
-    // Verify transaction was rejected - nonce should not have changed
-    expect(nonceAfter).toBe(nonceBefore)
-  })
+      await anvil.mine({ blocks: 1 })
+      const nonceAfter = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
 
-  test.skip('transaction past deadline', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-    await stubTradingApiEndpoint({
-      page,
-      endpoint: uniswapUrls.tradingApiPaths.quote,
-      modifyRequestData: (data) => ({
-        ...data,
-        protocols: ['V2', 'V3'],
-      }),
+      // Verify transaction was rejected - nonce should not have changed
+      expect(nonceAfter).toBe(nonceBefore)
     })
-
-    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
-
-    // Enter amount to swap
-    await page.getByTestId(TestID.AmountInputOut).fill('1')
-
-    // Wait for input value to be populated
-    await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
-
-    // Submit transaction
-    await page.getByTestId(TestID.ReviewSwap).click()
-    await page.getByTestId(TestID.Swap).click()
-
-    // Get the hash of the transaction in the mempool
-    let hash: HexString | undefined
-    const startTime = performance.now()
-    const timeoutMs = 5000
-    while (!hash) {
-      if (performance.now() - startTime > timeoutMs) {
-        throw new Error('Timeout: Transaction hash not found within 5 seconds')
-      }
-
-      const poolContent = await anvil.getTxpoolContent()
-      const currentTransaction = Object.entries(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        poolContent.pending[normalizeAddress(TEST_WALLET_ADDRESS, AddressStringFormat.Lowercase) as HexString] ?? {},
-      )[0]
-
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      hash = currentTransaction[1]?.hash
-    }
-
-    await anvil.dropTransaction({
-      hash: hash as HexString,
-    })
-    await anvil.mine({
-      blocks: 1,
-    })
-
-    // Verify failure state by checking the button text
-    await expect(page.getByText('Swap failed')).toBeVisible()
-  })
-
-  test('slippage failure', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
-
-    const originalEthBalance = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
-
-    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
-
-    await page.getByTestId(TestID.SwapSettings).click()
-    await page
-      .locator('div')
-      .filter({ hasText: /^5.50$/ })
-      .getByRole('textbox')
-      .fill('.01')
-
-    await page.getByTestId(TestID.SwapSettings).click()
-
-    await page.waitForTimeout(1000)
-
-    await page.getByTestId(TestID.AmountInputIn).fill('1')
-    await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue(/.+/)
-    await page.getByTestId(TestID.ReviewSwap).click()
-    await page.getByTestId(TestID.Swap).click()
-
-    await page.waitForTimeout(1000)
-
-    await page.getByTestId(TestID.AmountInputIn).fill('1')
-    await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue(/.+/)
-    await page.getByTestId(TestID.ReviewSwap).click()
-    await page.getByTestId(TestID.Swap).click()
-
-    // mine both transaction
-    await anvil.mine({
-      blocks: 1,
-    })
-
-    // Only one swap should succeed
-    await expect(page.getByText('Swapped')).toBeVisible()
-    const balance = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
-    expect(balance > originalEthBalance - 200000000000000000000n)
-  })
-})
+  },
+)

@@ -1,4 +1,11 @@
-import { arraysAreEqual, bubbleToTop, differenceWith, next, unique } from 'utilities/src/primitives/array'
+import {
+  arraysAreEqual,
+  bubbleToTop,
+  differenceWith,
+  next,
+  removeDuplicatesBy,
+  unique,
+} from 'utilities/src/primitives/array'
 
 describe('unique', () => {
   it('should return unique elements from an array using the default uniqueness check', () => {
@@ -70,5 +77,58 @@ describe('arraysAreEqual', () => {
   })
   it('should return true for equal arrays', () => {
     expect(arraysAreEqual([1, 1], [1, 1])).toBe(true)
+  })
+})
+
+describe('removeDuplicatesBy', () => {
+  it('should remove duplicates based on a key', () => {
+    const array = [
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' },
+      { id: 1, name: 'Charlie' },
+    ]
+    const result = removeDuplicatesBy(array, 'id')
+    expect(result).toEqual([
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' },
+    ])
+  })
+
+  it('should keep the first occurrence of each duplicate', () => {
+    const array = [
+      { id: 1, name: 'Alice' },
+      { id: 1, name: 'Charlie' },
+      { id: 2, name: 'Bob' },
+    ]
+    const result = removeDuplicatesBy(array, 'id')
+    expect(result).toEqual([
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' },
+    ])
+  })
+
+  it('should return the original array if there are no duplicates', () => {
+    const array = [
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' },
+    ]
+    const result = removeDuplicatesBy(array, 'id')
+    expect(result).toEqual(array)
+  })
+
+  it('should return an empty array if the input array is empty', () => {
+    const array: { id: number; name: string }[] = []
+    const result = removeDuplicatesBy(array, 'id')
+    expect(result).toEqual([])
+  })
+
+  it('should handle arrays with all duplicates', () => {
+    const array = [
+      { id: 1, name: 'Alice' },
+      { id: 1, name: 'Charlie' },
+      { id: 1, name: 'Dave' },
+    ]
+    const result = removeDuplicatesBy(array, 'id')
+    expect(result).toEqual([{ id: 1, name: 'Alice' }])
   })
 })

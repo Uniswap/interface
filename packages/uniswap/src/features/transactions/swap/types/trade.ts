@@ -28,6 +28,7 @@ import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getPlanCompoundSlippageTolerance } from 'uniswap/src/features/transactions/swap/plan/slippage'
 import { BlockingTradeError } from 'uniswap/src/features/transactions/swap/types/BlockingTradeError'
 import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
@@ -862,7 +863,7 @@ export class ChainedActionTrade {
     quote,
     currencyIn,
     currencyOut,
-  }: { quote: ChainedQuoteResponse; currencyIn: Currency; currencyOut: Currency; slippageTolerance?: number }) {
+  }: { quote: ChainedQuoteResponse; currencyIn: Currency; currencyOut: Currency }) {
     this.quote = quote
 
     const inputAmount = getCurrencyAmount({
@@ -883,9 +884,20 @@ export class ChainedActionTrade {
     this.outputAmount = outputAmount
     this.executionPrice = new Price(currencyIn, currencyOut, inputAmount.quotient, outputAmount.quotient)
 
-    this.slippageTolerance = this.quote.quote.slippage ?? 0
+    const compoundSlippage = getPlanCompoundSlippageTolerance(this.quote.quote.steps)
+    this.slippageTolerance = compoundSlippage ?? 0
+
+    // `ChainedActionTrade` only supports EXACT_INPUT trades, so `maxAmountIn` is always the input amount.
     this.maxAmountIn = inputAmount
-    this.minAmountOut = outputAmount
+
+    // Apply slippage to minAmountOut - user should receive at least this amount
+    if (this.slippageTolerance > 0) {
+      const slippagePercent = new Percent(Math.round(this.slippageTolerance * 100), 10_000)
+      const slippageAmount = outputAmount.multiply(slippagePercent)
+      this.minAmountOut = outputAmount.subtract(slippageAmount)
+    } else {
+      this.minAmountOut = outputAmount
+    }
   }
 
   public get quoteOutputAmount(): CurrencyAmount<Currency> {

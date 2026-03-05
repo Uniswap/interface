@@ -4,6 +4,7 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 
 export enum PopupType {
   Transaction = 'transaction',
+  Plan = 'plan',
   Order = 'order',
   FailedSwitchNetwork = 'failedSwitchNetwork',
   SwitchNetwork = 'switchNetwork',
@@ -29,6 +30,10 @@ export type PopupContent =
   | {
       type: PopupType.Transaction
       hash: string
+    }
+  | {
+      type: PopupType.Plan
+      planId: string
     }
   | {
       type: PopupType.Order

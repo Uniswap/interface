@@ -1,0 +1,92 @@
+diff --git a/dist/components/dialog/search.js b/dist/components/dialog/search.js
+index 8566aa65c2c9131f836be985d13ad7f6137d471f..3f747dd320e4d73e63bfc48eadffcc23211ab61f 100644
+--- a/dist/components/dialog/search.js
++++ b/dist/components/dialog/search.js
+@@ -6,12 +6,19 @@ import { useRouter } from "fumadocs-core/framework";
+ import { cn } from "@fumadocs/ui/cn";
+ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+ import { ChevronRight, Hash, Search } from "lucide-react";
+-import { Fragment as Fragment$1, createContext, use, useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
++import { Fragment as Fragment$1, createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import { cva } from "class-variance-authority";
+ import { useOnChange } from "fumadocs-core/utils/use-on-change";
+ import scrollIntoView from "scroll-into-view-if-needed";
+ import { Dialog, DialogContent, DialogOverlay, DialogTitle } from "@radix-ui/react-dialog";
+ 
++// Shim for useEffectEvent (React 19.2+ feature, not available in 19.0.x)
++function useEffectEvent(callback) {
++	const callbackRef = useRef(callback);
++	callbackRef.current = callback;
++	return useCallback((...args) => callbackRef.current(...args), []);
++}
++
+ //#region src/components/dialog/search.tsx
+ const Context = createContext(null);
+ const ListContext = createContext(null);
+diff --git a/dist/components/ui/tabs.js b/dist/components/ui/tabs.js
+index 2a3b1ce4c4e9dc0afedb77bec1b0ad35a10cdc19..29618767c6ff69b7f9cc49b6217c303631e51c1a 100644
+--- a/dist/components/ui/tabs.js
++++ b/dist/components/ui/tabs.js
+@@ -1,10 +1,17 @@
+ 'use client';
+ 
+ import { jsx } from "react/jsx-runtime";
+-import { createContext, use, useEffectEvent, useLayoutEffect, useMemo, useRef, useState } from "react";
++import { createContext, use, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+ import * as Primitive from "@radix-ui/react-tabs";
+ import { mergeRefs } from "@fumadocs/ui/merge-refs";
+ 
++// Shim for useEffectEvent (React 19.2+ feature, not available in 19.0.x)
++function useEffectEvent(callback) {
++	const callbackRef = useRef(callback);
++	callbackRef.current = callback;
++	return useCallback((...args) => callbackRef.current(...args), []);
++}
++
+ //#region src/components/ui/tabs.tsx
+ const listeners = /* @__PURE__ */ new Map();
+ const TabsContext = createContext(null);
+diff --git a/dist/layouts/docs/page/client.js b/dist/layouts/docs/page/client.js
+index 373d27a46434a464fb471bb77d3bf9912b2b5b87..ba9c1ac3141517363202412e0494993b669c0f6a 100644
+--- a/dist/layouts/docs/page/client.js
++++ b/dist/layouts/docs/page/client.js
+@@ -10,9 +10,16 @@ import { usePathname } from "fumadocs-core/framework";
+ import { cn } from "@fumadocs/ui/cn";
+ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+-import { Fragment as Fragment$1, createContext, use, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
++import { Fragment as Fragment$1, createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import { getBreadcrumbItemsFromPath } from "fumadocs-core/breadcrumb";
+ import { isActive } from "@fumadocs/ui/urls";
++
++// Shim for useEffectEvent (React 19.2+ feature, not available in 19.0.x)
++function useEffectEvent(callback) {
++	const callbackRef = useRef(callback);
++	callbackRef.current = callback;
++	return useCallback((...args) => callbackRef.current(...args), []);
++}
+ import { useActiveAnchor } from "fumadocs-core/toc";
+ import { useFooterItems } from "@fumadocs/ui/hooks/use-footer-items";
+ 
+diff --git a/dist/layouts/notebook/page/client.js b/dist/layouts/notebook/page/client.js
+index 584b44093284b70371057a546d714626e0d93396..7374523a8a9b5ea3a060116b445e96fa9b39b7ba 100644
+--- a/dist/layouts/notebook/page/client.js
++++ b/dist/layouts/notebook/page/client.js
+@@ -10,9 +10,16 @@ import { usePathname } from "fumadocs-core/framework";
+ import { cn } from "@fumadocs/ui/cn";
+ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+-import { Fragment as Fragment$1, createContext, use, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
++import { Fragment as Fragment$1, createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import { getBreadcrumbItemsFromPath } from "fumadocs-core/breadcrumb";
+ import { isActive } from "@fumadocs/ui/urls";
++
++// Shim for useEffectEvent (React 19.2+ feature, not available in 19.0.x)
++function useEffectEvent(callback) {
++	const callbackRef = useRef(callback);
++	callbackRef.current = callback;
++	return useCallback((...args) => callbackRef.current(...args), []);
++}
+ import { useActiveAnchor } from "fumadocs-core/toc";
+ import { useFooterItems } from "@fumadocs/ui/hooks/use-footer-items";
+ 

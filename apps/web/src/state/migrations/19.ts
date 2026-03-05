@@ -1,5 +1,5 @@
-import { PersistState } from 'redux-persist'
-import { Language, Locale, mapLocaleToLanguage } from 'uniswap/src/features/language/constants'
+import { type PersistState } from 'redux-persist'
+import { type Language, Locale, mapLocaleToLanguage } from 'uniswap/src/features/language/constants'
 
 export type PersistAppStateV19 = {
   _persist: PersistState
@@ -30,7 +30,7 @@ export const migration19 = (state: PersistAppStateV19 | undefined) => {
 
   // migrate old language if an equivalent exists
   const oldLocale = state.user?.userLocale
-  if (oldLocale) {
+  if (oldLocale && newState.userSettings) {
     const oldLocaleTranslated = Object.keys(oldToNew).includes(oldLocale)
       ? oldToNew[oldLocale as 'zh-CN' | 'zh-TW']
       : (oldLocale as Locale)
@@ -40,7 +40,7 @@ export const migration19 = (state: PersistAppStateV19 | undefined) => {
   }
 
   // remove old locale state
-  delete newState.user.userLocale
+  delete newState.user?.userLocale
 
   return { ...newState, _persist: { ...state._persist, version: 19 } }
 }

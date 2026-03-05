@@ -1,9 +1,8 @@
-import { AdaptiveDropdown, SharedDropdownProps } from 'components/Dropdowns/AdaptiveDropdown'
-import FilterButton from 'components/Dropdowns/FilterButton'
 import { useMemo } from 'react'
 import { Flex, FlexProps, styled, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { iconSizes } from 'ui/src/theme/iconSizes'
+import { AdaptiveDropdown, SharedDropdownProps } from '~/components/Dropdowns/AdaptiveDropdown'
+import FilterButton from '~/components/Dropdowns/FilterButton'
 
 export const InternalMenuItem = styled(Text, {
   display: 'flex',
@@ -61,13 +60,7 @@ export function Dropdown({
         <Flex row justifyContent="space-between" alignItems="center" gap="$gap8" width="100%">
           {typeof menuLabel === 'string' ? <Text>{menuLabel}</Text> : menuLabel}
           {!hideChevron && (
-            <RotatableChevron
-              animation="200ms"
-              color="$neutral2"
-              direction={isOpen ? 'up' : 'down'}
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
-            />
+            <RotatableChevron animation="200ms" color="$neutral2" direction={isOpen ? 'up' : 'down'} size="$icon.20" />
           )}
         </Flex>
       </FilterButton>

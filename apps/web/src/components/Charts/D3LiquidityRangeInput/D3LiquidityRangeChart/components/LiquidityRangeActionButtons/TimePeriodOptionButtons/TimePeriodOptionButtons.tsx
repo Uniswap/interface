@@ -1,9 +1,9 @@
 import { GraphQLApi } from '@universe/api'
-import { useChartPriceState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
-import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SegmentedControl, SegmentedControlOption, Text } from 'ui/src'
+import { useChartPriceState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/priceSelectors'
+import { useLiquidityChartStoreActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 
 export function TimePeriodOptionButtons() {
   const { t } = useTranslation()

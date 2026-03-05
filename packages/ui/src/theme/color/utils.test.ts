@@ -1,15 +1,19 @@
 import { opacifyRaw } from 'ui/src/theme'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    error: vi.fn(),
+const { mockLogger } = vi.hoisted(() => ({
+  mockLogger: {
+    debug: vi.fn(),
+    info: vi.fn(),
     warn: vi.fn(),
+    error: vi.fn(),
+    setDatadogEnabled: vi.fn(),
   },
 }))
 
-// Import the mocked logger to make assertions
-import { logger } from 'utilities/src/logger/logger'
+vi.mock('utilities/src/logger/logger', () => ({
+  logger: mockLogger,
+}))
 
 describe(opacifyRaw, () => {
   beforeEach(() => {
@@ -53,7 +57,7 @@ describe(opacifyRaw, () => {
     ${33.111111} | ${'rgba(255, 255, 255, 0.5)'} | ${'Error: provided color rgba(255, 255, 255, 0.5) is neither a hex nor an rgb color'}
   `('should throw an error when (amount=$amount, color=$color)', async ({ amount, color, expectedError }) => {
     opacifyRaw(amount, color)
-    expect(logger.warn).toHaveBeenCalledWith(
+    expect(mockLogger.warn).toHaveBeenCalledWith(
       'color/utils',
       'opacifyRaw',
       `Error opacifying color ${color} with opacity ${amount}: ${expectedError}`,

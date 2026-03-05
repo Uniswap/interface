@@ -1,16 +1,18 @@
 import { CellContext, flexRender, RowData } from '@tanstack/react-table'
-import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from 'components/Table/constants'
-import { ErrorModal } from 'components/Table/ErrorBox'
-import { CellContainer, DataRow, NoDataFoundTableRow } from 'components/Table/styled'
-import { TableRow } from 'components/Table/TableRow'
-import { useTableSize } from 'components/Table/TableSizeProvider'
-import { TableBodyProps } from 'components/Table/types'
-import { getColumnSizingStyles } from 'components/Table/utils'
 import { forwardRef, useMemo } from 'react'
-import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
+import { Trans, useTranslation } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
+import { WifiError } from 'ui/src/components/icons/WifiError'
 import { breakpoints } from 'ui/src/theme'
+import { useIsOffline } from 'utilities/src/connection/useIsOffline'
+import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from '~/components/Table/constants'
+import { ErrorModal } from '~/components/Table/ErrorBox'
+import { CellContainer, DataRow, NoDataFoundTableRow } from '~/components/Table/styled'
+import { TableRow } from '~/components/Table/TableRow'
+import { useTableSize } from '~/components/Table/TableSizeProvider'
+import { TableBodyProps } from '~/components/Table/types'
+import { getColumnSizingStyles } from '~/components/Table/utils'
+import { ThemedText } from '~/theme/components'
 
 function TableBodyInner<T extends RowData>(
   {
@@ -22,11 +24,14 @@ function TableBodyInner<T extends RowData>(
     loadingRowsCount = 20,
     rowHeight: propRowHeight,
     compactRowHeight: propCompactRowHeight,
+    hasPinnedColumns = false,
   }: TableBodyProps<T>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const rows = table.getRowModel().rows
   const { width: tableWidth } = useTableSize()
+  const isOffline = useIsOffline()
+  const { t } = useTranslation()
   const skeletonRowHeight = useMemo(
     () =>
       tableWidth <= breakpoints.lg
@@ -35,10 +40,23 @@ function TableBodyInner<T extends RowData>(
     [tableWidth, propRowHeight, propCompactRowHeight],
   )
 
+  if (isOffline) {
+    return (
+      <NoDataFoundTableRow py="$spacing20">
+        <Flex row centered justifyContent="center" gap="$gap8" py="$spacing4">
+          <WifiError color="$neutral2" size="$icon.20" />
+          <Text color="$neutral2" variant="subheading1">
+            {t('explore.networkError')}
+          </Text>
+        </Flex>
+      </NoDataFoundTableRow>
+    )
+  }
+
   if (loading || error) {
     return (
       <>
-        <Flex>
+        <Flex gap={!hasPinnedColumns && v2 ? '$spacing2' : undefined}>
           {Array.from({ length: loadingRowsCount }, (_, rowIndex) => (
             <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
               {table.getAllColumns().map((column, columnIndex) => (
@@ -73,7 +91,7 @@ function TableBodyInner<T extends RowData>(
   }
 
   return (
-    <Flex ref={ref} position="relative">
+    <Flex ref={ref} position="relative" gap={!hasPinnedColumns ? '$spacing2' : undefined}>
       {rows.map((row) => (
         <TableRow<T>
           key={row.id}

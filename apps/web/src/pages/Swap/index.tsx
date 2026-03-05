@@ -1,27 +1,9 @@
-import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import type { Currency } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { SwapBottomCard } from 'components/SwapBottomCard'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { PageWrapper } from 'components/swap/styled'
-import { useAccount } from 'hooks/useAccount'
-import { useDeferredComponent } from 'hooks/useDeferredComponent'
-import { PageType, useIsPage } from 'hooks/useIsPage'
-import { useModalState } from 'hooks/useModalState'
-import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
-import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
-import { TDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
-import { MultichainContextProvider } from 'state/multichain/MultichainContext'
-import { useSwapHandlers } from 'state/sagas/transactions/useSwapHandlers'
-import { useInitialCurrencyState } from 'state/swap/hooks'
-import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
-import type { CurrencyState } from 'state/swap/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import type { SegmentedControlOption } from 'ui/src'
 import { Flex, SegmentedControl, styled, Text, Tooltip } from 'ui/src'
 import type { AppTFunction } from 'ui/src/i18n/types'
@@ -52,7 +34,26 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isMobileWeb } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
-import { isIFramed } from 'utils/isIFramed'
+import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { SwapBottomCard } from '~/components/SwapBottomCard'
+import { SwitchLocaleLink } from '~/components/SwitchLocaleLink'
+import { PageWrapper } from '~/components/swap/styled'
+import { useAccount } from '~/hooks/useAccount'
+import { useDeferredComponent } from '~/hooks/useDeferredComponent'
+import { PageType, useIsPage } from '~/hooks/useIsPage'
+import { useModalState } from '~/hooks/useModalState'
+import { ReturnToAuctionBanner } from '~/pages/Swap/ReturnToAuctionBanner'
+import { useResetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useWebSwapSettings } from '~/pages/Swap/settings/useWebSwapSettings'
+import { TDPContext } from '~/pages/TokenDetails/context/TDPContext'
+import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
+import { useSwapHandlers } from '~/state/sagas/transactions/useSwapHandlers'
+import { useInitialCurrencyState } from '~/state/swap/hooks'
+import { SwapAndLimitContextProvider } from '~/state/swap/SwapContext'
+import type { CurrencyState } from '~/state/swap/types'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
+import { isIFramed } from '~/utils/isIFramed'
 
 export default function SwapPage() {
   const navigate = useNavigate()
@@ -95,6 +96,7 @@ export default function SwapPage() {
           />
         </WebFORNudgeProvider>
       </PageWrapper>
+      <ReturnToAuctionBanner />
       {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
   )
@@ -261,12 +263,12 @@ function UniversalSwapFlow({
   const swapHandlers = useSwapHandlers()
 
   const LimitFormWrapper = useDeferredComponent(() =>
-    import('pages/Swap/Limit/LimitForm').then((module) => ({
+    import('~/pages/Swap/Limit/LimitForm').then((module) => ({
       default: module.LimitFormWrapper,
     })),
   )
   const BuyForm = useDeferredComponent(() =>
-    import('pages/Swap/Buy/BuyForm').then((module) => ({
+    import('~/pages/Swap/Buy/BuyForm').then((module) => ({
       default: module.BuyForm,
     })),
   )
@@ -299,28 +301,22 @@ function UniversalSwapFlow({
     [navigate, syncTabToUrl, setCurrentTab],
   )
 
-  const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
-    return SWAP_TABS.filter((tab) => {
-      if (tab === SwapTab.Sell && !isFiatOffRampEnabled) {
-        return false
-      }
-
-      return true
-    }).map((tab) => ({
+    return SWAP_TABS.map((tab) => ({
       value: tab,
+      // Use href for proper link semantics when syncing to URL (SEO, accessibility, right-click menu)
+      href: syncTabToUrl ? `/${tab}` : undefined,
       display: (
         <Text
           variant="buttonLabel3"
           hoverStyle={{ color: '$neutral1' }}
           color={currentTab === tab ? '$neutral1' : '$neutral2'}
-          tag="h1"
         >
           {TAB_TYPE_TO_LABEL[tab](t)}
         </Text>
       ),
     }))
-  }, [t, currentTab, isFiatOffRampEnabled])
+  }, [t, currentTab, syncTabToUrl])
 
   const swapSettings = useWebSwapSettings()
   const resetDisableOneClickSwap = useResetOverrideOneClickSwapFlag()
@@ -364,14 +360,14 @@ function UniversalSwapFlow({
       {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
       {currentTab === SwapTab.Buy && BuyForm && (
         <BuyForm
-          rampDirection={RampDirection.ONRAMP}
+          rampDirection={RampDirection.ON_RAMP}
           disabled={disableTokenInputs}
           initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
       )}
       {currentTab === SwapTab.Sell && BuyForm && (
         <BuyForm
-          rampDirection={RampDirection.OFFRAMP}
+          rampDirection={RampDirection.OFF_RAMP}
           disabled={disableTokenInputs}
           initialCurrency={tdpCurrency ?? prefilledState?.output}
         />

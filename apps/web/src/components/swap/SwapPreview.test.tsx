@@ -1,6 +1,6 @@
-import 'test-utils/tokens/mocks'
+import '~/test-utils/tokens/mocks'
 
-import { SwapPreview } from 'components/swap/SwapPreview'
+import { SwapPreview } from '~/components/swap/SwapPreview'
 import {
   ETH_MAINNET,
   PREVIEW_EXACT_IN_TRADE,
@@ -10,10 +10,18 @@ import {
   TEST_TOKEN_2,
   TEST_TRADE_EXACT_INPUT,
   TEST_TRADE_EXACT_OUTPUT,
-} from 'test-utils/constants'
-import { render, screen } from 'test-utils/render'
+} from '~/test-utils/constants'
+import { render, screen } from '~/test-utils/render'
 
 describe('SwapPreview.tsx', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'info').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
       <SwapPreview trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />,

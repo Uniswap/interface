@@ -1,4 +1,3 @@
-import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans } from 'react-i18next'
 import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
@@ -6,6 +5,7 @@ import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
+import { ConnectingViewWrapper } from '~/pages/Swap/Buy/shared'
 
 interface ProviderConnectionErrorProps {
   onBack: () => void

@@ -4,7 +4,7 @@ expect.extend(matchers)
 
 import Cache, { Data } from 'functions/utils/cache'
 import { getRequest } from 'functions/utils/getRequest'
-import { mocked } from 'src/test-utils/mocked'
+import { mocked } from '~/test-utils/mocked'
 
 vi.mock('functions/utils/cache', () => ({
   default: {

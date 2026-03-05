@@ -1,24 +1,31 @@
-import { useActiveAddresses } from 'features/accounts/store/hooks'
 import { useMemo } from 'react'
+import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 
-// This is the address used for the disconnected demo view.  It is only used in the disconnected state for the portfolio page.
+// This is the address used for the disconnected demo view. It is only used in the disconnected state for the portfolio page.
 const DEMO_WALLET_ADDRESS = '0x8796207d877194d97a2c360c041f13887896FC79'
 
-export function usePortfolioAddresses(): { evmAddress: Address | undefined; svmAddress: Address | undefined } {
-  const { evmAddress, svmAddress } = useActiveAddresses()
+/**
+ * Returns portfolio addresses with demo wallet fallback for disconnected state.
+ * Use useResolvedAddresses if you don't want the demo wallet fallback.
+ */
+export function usePortfolioAddresses(): {
+  evmAddress: Address | undefined
+  svmAddress: Address | undefined
+  isExternalWallet: boolean
+} {
+  const resolved = useResolvedAddresses()
 
   return useMemo(() => {
-    // if there are no connected addresses, return the demo address
-    if (!evmAddress && !svmAddress) {
-      return {
-        evmAddress: DEMO_WALLET_ADDRESS,
-        svmAddress: undefined,
-      }
+    // If we have resolved addresses (external or connected), return them
+    if (resolved.evmAddress || resolved.svmAddress) {
+      return resolved
     }
 
+    // If not connected and not viewing external wallet, return demo address
     return {
-      evmAddress,
-      svmAddress,
+      evmAddress: DEMO_WALLET_ADDRESS,
+      svmAddress: undefined,
+      isExternalWallet: false,
     }
-  }, [evmAddress, svmAddress])
+  }, [resolved])
 }

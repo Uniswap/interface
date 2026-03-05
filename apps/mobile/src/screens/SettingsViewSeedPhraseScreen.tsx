@@ -9,20 +9,19 @@ import { Text } from 'ui/src'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsViewSeedPhrase>
 
-export function SettingsViewSeedPhraseScreen({
-  navigation,
-  route: {
-    params: { address, walletNeedsRestore },
-  },
-}: Props): JSX.Element {
+export function SettingsViewSeedPhraseScreen({ navigation, route }: Props): JSX.Element {
   const { t } = useTranslation()
+  const { address: addressParam, walletNeedsRestore } = route.params ?? {}
+  // Use provided address or fall back to active signer account
+  const activeSignerAccount = useActiveSignerAccount()
+  const address = addressParam ?? activeSignerAccount?.address
 
   const accounts = useAccounts()
-  const account = accounts[address]
+  const account = address ? accounts[address] : undefined
   const mnemonicId = account?.type === AccountType.SignerMnemonic ? account.mnemonicId : undefined
 
   const navigateBack = (): void => {

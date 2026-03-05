@@ -83,7 +83,7 @@ const BackupListItem = ({
               {displayName?.name}
             </Text>
             {isUnitag && (
-              <Flex alignSelf="center" pl="$spacing4">
+              <Flex alignSelf="center" pl="$spacing4" pt="$spacing1">
                 <Unitag size="$icon.24" />
               </Flex>
             )}
@@ -93,7 +93,7 @@ const BackupListItem = ({
           </Text>
         </Flex>
         <Flex>
-          <RotatableChevron color="$neutral2" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
+          <RotatableChevron color="$neutral2" direction="end" size="$icon.20" />
         </Flex>
       </Flex>
     </TouchableArea>

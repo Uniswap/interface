@@ -1,27 +1,27 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { Container } from 'components/Liquidity/Create/Container'
-import { EditSelectTokensStep } from 'components/Liquidity/Create/EditStep'
-import { SelectPriceRangeStep } from 'components/Liquidity/Create/RangeSelectionStep'
-import { SelectTokensStep } from 'components/Liquidity/Create/SelectTokenStep'
-import { PositionFlowStep } from 'components/Liquidity/Create/types'
-import { DepositStep } from 'components/Liquidity/Deposit'
-import {
-  PoolProgressIndicator,
-  PoolProgressIndicatorHeader,
-  SIDEBAR_WIDTH,
-} from 'components/PoolProgressIndicator/PoolProgressIndicator'
-import {
-  DEFAULT_PRICE_RANGE_STATE,
-  useCreateLiquidityContext,
-} from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { Dispatch, SetStateAction, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex, HeightAnimator, Text, useMedia } from 'ui/src'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
+import { Container } from '~/components/Liquidity/Create/Container'
+import { EditSelectTokensStep } from '~/components/Liquidity/Create/EditStep'
+import { SelectPriceRangeStep } from '~/components/Liquidity/Create/RangeSelectionStep'
+import { SelectTokensStep } from '~/components/Liquidity/Create/SelectTokenStep'
+import { PositionFlowStep } from '~/components/Liquidity/Create/types'
+import { DepositStep } from '~/components/Liquidity/Deposit'
+import {
+  PoolProgressIndicator,
+  PoolProgressIndicatorHeader,
+  SIDEBAR_WIDTH,
+} from '~/components/PoolProgressIndicator/PoolProgressIndicator'
+import {
+  DEFAULT_PRICE_RANGE_STATE,
+  useCreateLiquidityContext,
+} from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 const WIDTH = {
   positionCard: 720,

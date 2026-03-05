@@ -1,7 +1,7 @@
-import { BorderedAlertTriangle } from 'components/Icons/BorderedAlertTriangle'
 import { Flex, Image } from 'ui/src'
 import { WalletAlert } from 'ui/src/components/icons/WalletAlert'
-import { normalizeBase64Image } from 'utils/images'
+import { BorderedAlertTriangle } from '~/components/Icons/BorderedAlertTriangle'
+import { normalizeBase64Image } from '~/utils/images'
 
 type WalletBadgeProps = {
   iconSize?: string

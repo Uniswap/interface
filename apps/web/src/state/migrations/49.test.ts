@@ -1,4 +1,4 @@
-import { migration49 } from 'state/migrations/49'
+import { migration49 } from '~/state/migrations/49'
 
 describe('migration49', () => {
   it('should remove localWebTransactions from state', () => {

@@ -7,6 +7,7 @@ import { exploreNavigationRef, navigationRef } from 'src/app/navigation/navigati
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
+import { useAdvancedSettingsMenuState } from 'src/features/settings/hooks/useAdvancedSettingsMenuState'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
@@ -14,7 +15,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import {
   useFiatOnRampAggregatorCountryListQuery,
   useFiatOnRampAggregatorGetCountryQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
+} from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -52,6 +53,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToTokenDetails = useNavigateToTokenDetails()
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
   const navigateToExternalProfile = useNavigateToExternalProfile()
+  const navigateToAdvancedSettings = useNavigateToAdvancedSettings()
 
   return (
     <WalletNavigationProvider
@@ -68,6 +70,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToPoolDetails={noop} // no pool details screen on mobile
+      navigateToAdvancedSettings={navigateToAdvancedSettings}
     >
       {children}
     </WalletNavigationProvider>
@@ -342,7 +345,7 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
 
   const { data: countryResult } = useFiatOnRampAggregatorGetCountryQuery()
   const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery({
-    rampDirection: RampDirection.ONRAMP,
+    rampDirection: RampDirection.ON_RAMP,
   })
   const forAggregatorEnabled = countryOptionsResult?.supportedCountries.some(
     (c) => c.countryCode === countryResult?.countryCode,
@@ -394,4 +397,15 @@ function useNavigateToExternalProfile(): (args: NavigateToExternalProfileArgs) =
     },
     [appNavigation],
   )
+}
+
+function useNavigateToAdvancedSettings(): () => void {
+  const navigation = useAppStackNavigation()
+  const advancedSettingsState = useAdvancedSettingsMenuState()
+
+  return useCallback((): void => {
+    closeKeyboardBeforeCallback(() => {
+      navigation.navigate(ModalName.SmartWalletAdvancedSettingsModal, advancedSettingsState)
+    })
+  }, [navigation, advancedSettingsState])
 }

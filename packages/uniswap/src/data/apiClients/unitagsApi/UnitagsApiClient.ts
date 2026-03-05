@@ -10,7 +10,8 @@ import { getIsSessionServiceEnabled } from '@universe/gating'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const UnitagsApiFetchClient = createFetchClient({
-  baseUrl: getConfig().unitagsApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
+  baseUrl:
+    getConfig().unitagsApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.Unitags, postfix: 'v2/unitags' }),
   getSessionService: () =>
     provideSessionService({ getBaseUrl: () => uniswapUrls.apiBaseUrlV2, getIsSessionServiceEnabled }),
 })

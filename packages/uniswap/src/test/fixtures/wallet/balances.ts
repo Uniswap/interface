@@ -55,7 +55,8 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
     // This field is normally calculated dynamically. We cannot mock it in the
     // fixture returned by the mocked resolver as it is ignored and replaced
     // by randomly generated Amount mock. As a result, we expect any number here.
-    relativeChange24: expect.any(Number),
+    // Cast to unknown as number since vitest's expect.any returns AsymmetricMatcher
+    relativeChange24: expect.any(Number) as unknown as number,
     currencyInfo: {
       currency,
       currencyId: currencyId(currency),

@@ -6,14 +6,35 @@ import { PaymentMethodItem } from 'uniswap/src/features/fiatOnRamp/PaymentMethod
 import { FORFilters } from 'uniswap/src/features/fiatOnRamp/types'
 import { render } from 'uniswap/src/test/test-utils'
 
-jest.mock('utilities/src/platform', () => ({
-  isAndroid: jest.fn(),
-  isIOS: jest.fn(),
-  isWebAndroid: jest.fn(),
-  isWebIOS: jest.fn(),
+// Use vi.hoisted to create mock functions that can be controlled in tests
+const { mockIsAndroid, mockIsIOS, mockIsWebAndroid, mockIsWebIOS } = vi.hoisted(() => ({
+  mockIsAndroid: vi.fn().mockReturnValue(false),
+  mockIsIOS: vi.fn().mockReturnValue(false),
+  mockIsWebAndroid: vi.fn().mockReturnValue(false),
+  mockIsWebIOS: vi.fn().mockReturnValue(false),
 }))
 
-jest.mock('react-i18next', () => ({
+vi.mock('utilities/src/platform', () => ({
+  isAndroid: mockIsAndroid,
+  isIOS: mockIsIOS,
+  isWebAndroid: mockIsWebAndroid,
+  isWebIOS: mockIsWebIOS,
+  isWebPlatform: true,
+  isMobileWeb: false,
+  isTouchable: false,
+  isHoverable: true,
+  isChrome: true,
+  isSafari: false,
+  isMobileWebSafari: false,
+  isMobileWebAndroid: false,
+  isBrowser: true,
+  isExtensionApp: false,
+  isMobileApp: false,
+  isWebApp: true,
+  isWebAppDesktop: true,
+}))
+
+vi.mock('react-i18next', () => ({
   useTranslation: (): { t: (key: string) => string } => ({
     t: (key: string): string => {
       const translations: Record<string, string> = {
@@ -32,17 +53,16 @@ jest.mock('react-i18next', () => ({
 describe('PaymentMethodFilter', () => {
   const defaultProps = {
     paymentMethod: undefined,
-    setPaymentMethod: jest.fn(),
+    setPaymentMethod: vi.fn(),
     isOffRamp: false,
   }
 
   describe('Mobile Implementation', () => {
     beforeEach(() => {
-      const { isAndroid, isIOS, isWebAndroid, isWebIOS } = require('utilities/src/platform')
-      isAndroid.mockReturnValue(true)
-      isIOS.mockReturnValue(false)
-      isWebAndroid.mockReturnValue(false)
-      isWebIOS.mockReturnValue(false)
+      mockIsAndroid.mockReturnValue(true)
+      mockIsIOS.mockReturnValue(false)
+      mockIsWebAndroid.mockReturnValue(false)
+      mockIsWebIOS.mockReturnValue(false)
     })
 
     it('renders mobile implementation correctly', () => {
@@ -60,9 +80,8 @@ describe('PaymentMethodFilter', () => {
     })
 
     it('renders with iOS supported payment methods', () => {
-      const { isAndroid, isIOS } = require('utilities/src/platform')
-      isAndroid.mockReturnValue(false)
-      isIOS.mockReturnValue(true)
+      mockIsAndroid.mockReturnValue(false)
+      mockIsIOS.mockReturnValue(true)
 
       const tree = render(<MobilePaymentMethodFilter {...defaultProps} />)
       expect(tree).toMatchSnapshot()
@@ -71,11 +90,10 @@ describe('PaymentMethodFilter', () => {
 
   describe('Web Implementation', () => {
     beforeEach(() => {
-      const { isAndroid, isIOS, isWebAndroid, isWebIOS } = require('utilities/src/platform')
-      isAndroid.mockReturnValue(false)
-      isIOS.mockReturnValue(false)
-      isWebAndroid.mockReturnValue(false)
-      isWebIOS.mockReturnValue(false)
+      mockIsAndroid.mockReturnValue(false)
+      mockIsIOS.mockReturnValue(false)
+      mockIsWebAndroid.mockReturnValue(false)
+      mockIsWebIOS.mockReturnValue(false)
     })
 
     it('renders web implementation correctly', () => {
@@ -103,18 +121,16 @@ describe('PaymentMethodFilter', () => {
     })
 
     it('renders with iOS supported payment methods', () => {
-      const { isWebAndroid, isWebIOS } = require('utilities/src/platform')
-      isWebAndroid.mockReturnValue(false)
-      isWebIOS.mockReturnValue(true)
+      mockIsWebAndroid.mockReturnValue(false)
+      mockIsWebIOS.mockReturnValue(true)
 
       const tree = render(<WebPaymentMethodFilter {...defaultProps} />)
       expect(tree).toMatchSnapshot()
     })
 
     it('renders with Android supported payment methods', () => {
-      const { isWebAndroid, isWebIOS } = require('utilities/src/platform')
-      isWebAndroid.mockReturnValue(true)
-      isWebIOS.mockReturnValue(false)
+      mockIsWebAndroid.mockReturnValue(true)
+      mockIsWebIOS.mockReturnValue(false)
 
       const tree = render(<WebPaymentMethodFilter {...defaultProps} />)
       expect(tree).toMatchSnapshot()
@@ -128,7 +144,7 @@ describe('PaymentMethodFilter', () => {
         icon: Bank,
         label: 'Bank',
         isSelected: true,
-        onPress: jest.fn(),
+        onPress: vi.fn(),
       }
       const tree = render(<PaymentMethodItem {...props} />)
       expect(tree).toMatchSnapshot()
@@ -140,7 +156,7 @@ describe('PaymentMethodFilter', () => {
         icon: Buy,
         label: 'Debit',
         isSelected: false,
-        onPress: jest.fn(),
+        onPress: vi.fn(),
       }
       const tree = render(<PaymentMethodItem {...props} />)
       expect(tree).toMatchSnapshot()

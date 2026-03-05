@@ -1,4 +1,5 @@
 {
+  "tags": ["scope:biome-config", "type:tooling"],
   "targets": {
     "prepare": {
       "command": "bun ./scripts/generate.js && biome check --write",

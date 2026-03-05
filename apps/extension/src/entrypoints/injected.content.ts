@@ -307,6 +307,7 @@ export default defineContentScript({
       ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
       : ['https://*/*'],
   runAt: 'document_start',
+  allFrames: true,
   main() {
     makeInjected()
   },

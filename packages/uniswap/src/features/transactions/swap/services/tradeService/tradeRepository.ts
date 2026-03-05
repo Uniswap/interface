@@ -28,10 +28,9 @@ export function createTradeRepository(ctx: {
 }): TradeRepository {
   return {
     fetchQuote: async ({ isUSDQuote, ...params }): Promise<DiscriminatedQuoteResponse> => {
-      logSwapQuoteFetch({ chainId: params.tokenInChainId, isUSDQuote })
+      logSwapQuoteFetch({ chainId: params.tokenInChainId, isUSDQuote, quoteSource: 'trading_api' })
 
-      // Skip latency logging for USD quotes
-      const startTime = ctx.logger && !isUSDQuote ? Date.now() : undefined
+      const startTime = ctx.logger ? Date.now() : undefined
 
       const result = await ctx.fetchQuote(params)
 
@@ -48,15 +47,25 @@ export function createTradeRepository(ctx: {
         })
       }
 
-      // Log latency when not a USD quote
       if (startTime && ctx.logger) {
-        // keep the log name details the same for historical reasons
-        ctx.logger.info('useTrade', 'useTrade', 'Quote Latency', {
-          quoteLatency: Date.now() - startTime,
-          chainIdIn: params.tokenInChainId,
-          chainIdOut: params.tokenOutChainId,
-          isBridging: isBridging(params.tokenInChainId, params.tokenOutChainId),
-        })
+        const quoteLatency = Date.now() - startTime
+
+        if (isUSDQuote) {
+          ctx.logger.info('tradeRepository', 'fetchQuote', 'USD Quote Latency', {
+            quoteLatency,
+            chainIdIn: params.tokenInChainId,
+            chainIdOut: params.tokenOutChainId,
+            isUSDQuote: true,
+          })
+        } else {
+          // keep the log name details the same for historical reasons
+          ctx.logger.info('useTrade', 'useTrade', 'Quote Latency', {
+            quoteLatency,
+            chainIdIn: params.tokenInChainId,
+            chainIdOut: params.tokenOutChainId,
+            isBridging: isBridging(params.tokenInChainId, params.tokenOutChainId),
+          })
+        }
       }
 
       return result
@@ -70,8 +79,10 @@ export function createTradeRepository(ctx: {
 
       // log latency for indicative quotes
       if (startTime && ctx.logger) {
+        const quoteLatency = Date.now() - startTime
+
         ctx.logger.info('tradeRepository', 'fetchIndicativeQuote', 'Indicative Quote Latency', {
-          quoteLatency: Date.now() - startTime,
+          quoteLatency,
           chainIdIn: params.tokenInChainId,
           chainIdOut: params.tokenOutChainId,
           isBridging: isBridging(params.tokenInChainId, params.tokenOutChainId),

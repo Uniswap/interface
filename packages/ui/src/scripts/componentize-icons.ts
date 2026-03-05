@@ -89,7 +89,7 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   // SVG to its children
   // biome-ignore lint/style/noNonNullAssertion: SVG element is guaranteed to exist after cheerio parsing
   const svgAttribs = $('svg')[0]!.attribs
-  delete svgAttribs.xmlns
+  delete svgAttribs['xmlns']
   const attribsOfInterest: Record<string, any> = {}
 
   Object.keys(svgAttribs).forEach((key) => {

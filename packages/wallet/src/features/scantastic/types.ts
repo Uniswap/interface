@@ -1,24 +1,26 @@
 import { z } from 'zod'
 
 export const ScantasticParamsSchema = z.object({
-  uuid: z.string({ required_error: 'UUID is required' }).uuid('Invalid UUID'),
+  uuid: z
+    // issue.input === undefined is the documented v4 pattern — see https://zod.dev/error-customization
+    .string({ error: (issue) => (issue.input === undefined ? 'UUID is required' : 'Invalid UUID') })
+    .uuid('Invalid UUID'),
   publicKey: z.object(
     {
       alg: z.literal('RSA-OAEP-256', {
-        required_error: 'Algorithm is required',
-        invalid_type_error: 'Invalid algorithm',
+        error: (issue) => (issue.input === undefined ? 'Algorithm is required' : 'Invalid algorithm'),
       }),
       kty: z.literal('RSA', {
-        required_error: 'Key type is required',
-        invalid_type_error: 'Invalid key type',
+        error: (issue) => (issue.input === undefined ? 'Key type is required' : 'Invalid key type'),
       }),
-      n: z.string({ required_error: 'Modulus is required' }).min(1, 'Modulus is required'),
+      n: z
+        .string({ error: (issue) => (issue.input === undefined ? 'Modulus is required' : 'Invalid modulus') })
+        .min(1, 'Modulus is required'),
       e: z.literal('AQAB', {
-        required_error: 'Public exponent is required',
-        invalid_type_error: 'Invalid public exponent',
+        error: (issue) => (issue.input === undefined ? 'Public exponent is required' : 'Invalid public exponent'),
       }),
     },
-    { required_error: 'Public key is required' },
+    { error: (issue) => (issue.input === undefined ? 'Public key is required' : 'Invalid public key') },
   ),
   vendor: z.string().nullish(),
   model: z.string().nullish(),

@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ProposalTypes, SessionTypes } from '@walletconnect/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
-import { DappRequestInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { type ProposalTypes, type SessionTypes } from '@walletconnect/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EthMethod, type EthSignMethod } from 'uniswap/src/features/dappRequests/types'
+import { type DappRequestInfo, type EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { Call, Capability, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
+import { type Call, type Capability, type DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 
 export type WalletConnectPendingSession = {
   id: string
@@ -180,6 +180,7 @@ const slice = createSlice({
     setHasPendingSessionError: (state, action: PayloadAction<boolean | undefined>) => {
       state.hasPendingSessionError = action.payload
     },
+    resetWalletConnect: () => initialWalletConnectState,
   },
 })
 
@@ -193,5 +194,6 @@ export const {
   removeRequest,
   setDidOpenFromDeepLink,
   setHasPendingSessionError,
+  resetWalletConnect,
 } = slice.actions
 export const { reducer: walletConnectReducer } = slice

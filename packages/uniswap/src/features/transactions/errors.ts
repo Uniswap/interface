@@ -1,5 +1,5 @@
 import { datadogRum } from '@datadog/browser-rum'
-import { FetchError } from '@universe/api'
+import { FetchError, is401Error } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
@@ -21,6 +21,7 @@ export class UnexpectedTransactionStateError extends TransactionError {
 /** Thrown when a transaction step fails for an unknown reason. */
 export class TransactionStepFailedError extends TransactionError {
   step: TransactionStep
+  stepIndex?: number
   isBackendRejection: boolean
   originalError?: Error
 
@@ -28,22 +29,28 @@ export class TransactionStepFailedError extends TransactionError {
   originalErrorString?: string // originalErrorStringified error may get cut off by size limits; this acts as minimal backup
   stepStringified?: string
 
+  isPlanStep?: boolean
+
   constructor({
     message,
     step,
     isBackendRejection = false,
     originalError,
+    isPlanStep = false,
   }: {
     message: string
-    step: TransactionStep
+    step: TransactionStep & { stepIndex?: number }
     isBackendRejection?: boolean
     originalError?: Error
+    isPlanStep?: boolean
   }) {
     super(message, { cause: originalError })
     this.name = 'TransactionStepFailedError'
     this.step = step
+    this.stepIndex = step.stepIndex
     this.isBackendRejection = isBackendRejection
     this.originalError = originalError
+    this.isPlanStep = isPlanStep
 
     try {
       this.originalErrorString = originalError?.toString()
@@ -114,6 +121,20 @@ export class HandledTransactionInterrupt extends TransactionError {
   }
 }
 
+function isSessionError(error: Error): boolean {
+  let e: unknown | undefined = error
+
+  while (e && !(e instanceof FetchError)) {
+    if (e instanceof TransactionStepFailedError) {
+      e = e.originalError
+    } else if (e instanceof Error) {
+      e = e.cause
+    }
+  }
+
+  return is401Error(e)
+}
+
 export function getErrorContent(
   t: AppTFunction,
   error: Error,
@@ -123,6 +144,13 @@ export function getErrorContent(
   message: string
   supportArticleURL?: string
 } {
+  if (isSessionError(error)) {
+    return {
+      title: t('common.session.fail.title'),
+      message: isWebApp ? t('common.session.fail.browser') : t('common.session.fail'),
+    }
+  }
+
   if (error instanceof TransactionStepFailedError) {
     return getStepSpecificErrorContent(t, error)
   }
@@ -209,16 +237,29 @@ function getStepSpecificErrorContent(
     case TransactionStepType.SwapTransactionAsync:
       return {
         title: t('common.swap.failed'),
-        message: t('swap.fail.message'),
+        message: error.isPlanStep ? t('swap.fail.message.plan') : t('swap.fail.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
-    case TransactionStepType.SwapTransactionBatched:
+    case TransactionStepType.SwapTransactionBatched: {
+      // Only show batched-specific retry UI if the first step failed;
+      // Handles scenarios where plan cannot disable one-click swap beyond first step.
+      const shouldDisableOneClickSwap = !error.stepIndex || error.stepIndex === 0
+
+      if (shouldDisableOneClickSwap) {
+        return {
+          title: t('swap.fail.batched.title'),
+          buttonText: t('swap.fail.batched.retry'),
+          message: t('swap.fail.batched'),
+          supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
+        }
+      }
+      // Fall through to generic swap error
       return {
-        title: t('swap.fail.batched.title'),
-        buttonText: t('swap.fail.batched.retry'),
-        message: t('swap.fail.batched'),
+        title: t('common.swap.failed'),
+        message: error.isPlanStep ? t('swap.fail.message.plan') : t('swap.fail.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
+    }
     case TransactionStepType.UniswapXSignature:
     case TransactionStepType.UniswapXPlanSignature:
       if (error.isBackendRejection) {

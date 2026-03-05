@@ -1,7 +1,7 @@
-import Loader from 'components/Icons/LoadingSpinner'
-import { RouteDefinition, routes, useRouterConfig } from 'pages/RouteDefinitions'
 import { lazy, memo, Suspense } from 'react'
 import { Route, Routes } from 'react-router'
+import Loader from '~/components/Icons/LoadingSpinner'
+import { RouteDefinition, routes, useRouterConfig } from '~/pages/RouteDefinitions'
 
 // The Chrome is always loaded, but is lazy-loaded because it is not needed without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.

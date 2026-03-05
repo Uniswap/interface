@@ -1,14 +1,14 @@
-import { Wiggle } from 'components/animations/Wiggle'
-import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, FlexProps, Text, TextProps, TouchableArea } from 'ui/src'
 import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
-import { RightArrow } from 'ui/src/components/icons/RightArrow'
+import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb, isWebAndroid, isWebIOS } from 'utilities/src/platform'
+import { Wiggle } from '~/components/animations/Wiggle'
+import { GooglePlayStoreLogo } from '~/components/Icons/GooglePlayStoreLogo'
 
 export function DownloadWalletRow({
   onPress,
@@ -82,7 +82,7 @@ export function DownloadWalletRow({
             </Anchor>
           </Trace>
         )}
-        <RightArrow size={iconSize} color="$neutral1" />
+        <ArrowRight size="$icon.20" color="$neutral1" />
       </Flex>
     </TouchableArea>
   )

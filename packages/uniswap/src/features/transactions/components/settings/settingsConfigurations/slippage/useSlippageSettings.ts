@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
-import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
+import { useShakeAnimation } from 'ui/src/animations'
 import { PlusMinusButtonType } from 'ui/src/components/buttons/PlusMinusButton'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
@@ -70,13 +69,7 @@ export function useSlippageSettings(params?: SlippageSettingsProps): {
   // Make input text the warning color if user is setting custom slippage higher than auto slippage value or 0
   const showSlippageWarning = parsedInputSlippageTolerance > autoSlippageTolerance
 
-  const inputShakeX = useSharedValue(0)
-  const inputAnimatedStyle = useAnimatedStyle(
-    () => ({
-      transform: [{ translateX: inputShakeX.value }],
-    }),
-    [inputShakeX],
-  )
+  const { shakeStyle: inputAnimatedStyle, triggerShakeAnimation: triggerInputShake } = useShakeAnimation()
 
   const onPressAutoSlippage = (): void => {
     setAutoSlippageEnabled(true)
@@ -142,7 +135,7 @@ export function useSlippageSettings(params?: SlippageSettingsProps): {
        * without the input shaking (ex. typing 0.x shouldn't shake after typing char)
        */
       if (isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
-        inputShakeX.value = errorShakeAnimation(inputShakeX)
+        triggerInputShake()
         return
       }
 
@@ -152,7 +145,7 @@ export function useSlippageSettings(params?: SlippageSettingsProps): {
         setCustomSlippageTolerance(parsedValue)
       }
     },
-    [updateInputWarning, saveOnBlur, setCustomSlippageTolerance],
+    [updateInputWarning, saveOnBlur, setCustomSlippageTolerance, triggerInputShake],
   )
 
   const onFocusSlippageInput = useCallback((): void => {

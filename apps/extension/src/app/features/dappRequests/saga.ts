@@ -1,10 +1,10 @@
 /* eslint-disable max-lines */
-import { Provider } from '@ethersproject/providers'
+import { type Provider } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { createSearchParams } from 'react-router'
 import { changeChain } from 'src/app/features/dapp/changeChain'
-import { DappInfo, dappStore } from 'src/app/features/dapp/store'
+import { type DappInfo, dappStore } from 'src/app/features/dapp/store'
 import { getActiveSignerConnectedAccount } from 'src/app/features/dapp/utils'
 import {
   addRequest,
@@ -20,22 +20,22 @@ import type {
 } from 'src/app/features/dappRequests/shared'
 import { dappRequestActions, selectIsRequestConfirming } from 'src/app/features/dappRequests/slice'
 import {
-  BaseSendTransactionRequest,
-  ChangeChainRequest,
-  ErrorResponse,
-  GetCallsStatusRequest,
-  GetCallsStatusResponse,
-  GetCapabilitiesRequest,
-  ParsedCall,
-  SendCallsRequest,
-  SendCallsResponse,
-  SendTransactionResponse,
-  SignMessageRequest,
-  SignMessageResponse,
-  SignTypedDataRequest,
-  SignTypedDataResponse,
-  UniswapOpenSidebarRequest,
-  UniswapOpenSidebarResponse,
+  type BaseSendTransactionRequest,
+  type ChangeChainRequest,
+  type ErrorResponse,
+  type GetCallsStatusRequest,
+  type GetCallsStatusResponse,
+  type GetCapabilitiesRequest,
+  type ParsedCall,
+  type SendCallsRequest,
+  type SendCallsResponse,
+  type SendTransactionResponse,
+  type SignMessageRequest,
+  type SignMessageResponse,
+  type SignTypedDataRequest,
+  type SignTypedDataResponse,
+  type UniswapOpenSidebarRequest,
+  type UniswapOpenSidebarResponse,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { isWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
@@ -50,22 +50,24 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
+import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   TransactionOriginType,
   TransactionType,
-  TransactionTypeInfo,
+  type TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
 import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
 import { generateBatchId, getCapabilitiesResponse } from 'wallet/src/features/batchedTransactions/utils'
-import { Call } from 'wallet/src/features/dappRequests/types'
+import { type Call } from 'wallet/src/features/dappRequests/types'
 import {
-  ExecuteTransactionParams,
+  type ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
-import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import { type SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -149,12 +151,13 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
 
   const isConnectedToDapp = dappInfo && dappInfo.connectedAccounts.length > 0
+  const isAccountRequestRequest = ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type)
 
   if (!isConnectedToDapp) {
     if (requestParams.dappRequest.type === DappRequestType.GetChainId) {
       // Allows for eth_chainId for unconnected dapps to advance connection steps
       yield* put(confirmRequestNoDappInfo(requestParams))
-    } else if (!ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type)) {
+    } else if (!isAccountRequestRequest) {
       // Otherwise, only allows for accounts requests to be handled until connection is confirmed
       // TODO(EXT-359): show a warning when the active account is different.
       const response: DappRequestRejectParams = {
@@ -294,16 +297,31 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     }
   }
 
+  // Track connection requests when they arrive, before approval
+  const connectRequestAnalyticsProperties = {
+    dappUrl,
+    chainId: dappInfo?.lastChainId,
+    activeConnectedAddress: dappInfo?.activeConnectedAddress,
+    connectedAddresses: dappInfo?.connectedAccounts.map((account) => account.address) ?? [],
+  }
+  if (isAccountRequestRequest) {
+    sendAnalyticsEvent(ExtensionEventName.DappConnectRequest, connectRequestAnalyticsProperties)
+  }
+
   const shouldAutoConfirmRequest =
     dappInfo &&
     isConnectedToDapp &&
-    (ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type) ||
+    (isAccountRequestRequest ||
       ACCOUNT_INFO_TYPES.includes(requestParams.dappRequest.type) ||
       requestParams.dappRequest.type === DappRequestType.RevokePermissions ||
       requestParams.dappRequest.type === DappRequestType.GetCallsStatus ||
       requestParams.dappRequest.type === DappRequestType.GetCapabilities)
 
   if (shouldAutoConfirmRequest) {
+    if (isAccountRequestRequest) {
+      // Track that a connection was established, even if it's auto-approved
+      sendAnalyticsEvent(ExtensionEventName.DappConnect, connectRequestAnalyticsProperties)
+    }
     yield* call(handleConfirmRequestWithDappInfo, { ...requestParams, dappInfo })
   } else {
     yield* put(

@@ -91,6 +91,7 @@ export function TokenBalanceItemContextMenu({
   copyAddressToClipboard,
   onPressToken: onPressToken,
   disableNotifications,
+  recipient,
 }: PropsWithChildren<TokenBalanceItemContextMenuProps>): JSX.Element {
   const menuActions = useTokenContextMenuOptions({
     excludedActions,
@@ -103,6 +104,7 @@ export function TokenBalanceItemContextMenu({
     copyAddressToClipboard,
     closeMenu: () => {},
     disableNotifications,
+    recipient,
   })
 
   const { longPressGesture, handlePress } = useLongPressGesture({

@@ -1,5 +1,5 @@
-import { formatTokenAmount } from 'components/Liquidity/LPIncentives/utils/formatTokenAmount'
 import { describe, expect, it } from 'vitest'
+import { formatTokenAmount } from '~/components/Liquidity/LPIncentives/utils/formatTokenAmount'
 
 describe('formatTokenAmount', () => {
   it('formats a token amount with decimals, truncating to 3 decimal places', () => {

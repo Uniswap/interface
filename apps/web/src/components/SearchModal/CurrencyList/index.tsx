@@ -1,11 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { MenuItem } from 'components/SearchModal/styled'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useTokenBalances } from 'hooks/useTokenBalances'
 import { CSSProperties } from 'react'
-import { TokenFromList } from 'state/lists/tokenFromList'
-import { ThemedText } from 'theme/components'
 import { Flex, styled, Text, TextStyle } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
@@ -16,7 +10,13 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { currencyKey } from 'utils/currencyKey'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { MenuItem } from '~/components/SearchModal/styled'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useTokenBalances } from '~/hooks/useTokenBalances'
+import { TokenFromList } from '~/state/lists/tokenFromList'
+import { ThemedText } from '~/theme/components'
+import { currencyKey } from '~/utils/currencyKey'
 
 function currencyListRowKey(data: Currency): string {
   return currencyKey(data)
@@ -121,7 +121,7 @@ export function CurrencyRow({
   const isBlockedToken = warningSeverity === WarningSeverity.Blocked
   const blockedTokenOpacity = '0.6'
 
-  const { balanceMap } = useTokenBalances({ cacheOnly: true })
+  const { balanceMap } = useTokenBalances({ cacheFirst: true })
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const { usdValue, balance: cachedBalance } = balanceMap[currencyKey(currency)] ?? {}
   const tokenBalance = balance ? balance.toExact() : cachedBalance
@@ -142,54 +142,68 @@ export function CurrencyRow({
         text={<ThemedText.Caption textAlign="center">{tooltip}</ThemedText.Caption>}
         size={TooltipSize.ExtraSmall}
       >
-        <MenuItem
+        {/* biome-ignore lint/correctness/noRestrictedElements: Wrapper needs DOM props (onKeyDown, onClick, tabIndex) for a11y; MenuItem is Tamagui Flex and doesn't type them */}
+        <div
+          role="button"
           tabIndex={0}
           className={`token-item-${key}`}
-          onKeyDown={(e) => (e.key === 'Enter' ? onSelect(warningSeverity === WarningSeverity.None) : null)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onSelect(warningSeverity === WarningSeverity.None)
+            }
+          }}
           onClick={() => onSelect(warningSeverity === WarningSeverity.None)}
-          selected={otherSelected || isSelected}
-          dim={isBlockedToken}
-          disabled={disabled}
-          style={{ outline: 'none' }}
+          style={{ outline: 'none', display: 'contents' }}
         >
-          <CurrencyLogo currency={currency} size={36} style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} />
-          <Flex style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="$spacing2">
-            <Flex row alignItems="center" gap="$spacing4">
-              <CurrencyName variant="body2">{currency.name}</CurrencyName>
-              <WarningIcon severity={warningSeverity} size="$icon.16" ml="$spacing4" />
-            </Flex>
-            <Flex row alignItems="center" gap="$spacing8">
-              <Text variant="body4" ml="0px" color="$neutral2">
-                {currency.symbol}
-              </Text>
-              {showAddress && currency.isToken && (
-                <Text variant="body4" color="$neutral3">
-                  {shortenAddress({ address: currency.address })}
+          <MenuItem
+            onPress={() => onSelect(warningSeverity === WarningSeverity.None)}
+            selected={otherSelected || isSelected}
+            dim={isBlockedToken}
+            disabled={disabled}
+          >
+            <CurrencyLogo
+              currency={currency}
+              size={36}
+              style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
+            />
+            <Flex style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="$spacing2">
+              <Flex row alignItems="center" gap="$spacing4">
+                <CurrencyName variant="body2">{currency.name}</CurrencyName>
+                <WarningIcon severity={warningSeverity} size="$icon.16" ml="$spacing4" />
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing8">
+                <Text variant="body4" ml="0px" color="$neutral2">
+                  {currency.symbol}
                 </Text>
-              )}
+                {showAddress && currency.isToken && (
+                  <Text variant="body4" color="$neutral3">
+                    {shortenAddress({ address: currency.address })}
+                  </Text>
+                )}
+              </Flex>
             </Flex>
-          </Flex>
-          <Flex>
-            <Flex row alignSelf="flex-end">
-              <TokenTags currency={currency} />
+            <Flex>
+              <Flex row alignSelf="flex-end">
+                <TokenTags currency={currency} />
+              </Flex>
             </Flex>
-          </Flex>
-          <Flex alignSelf="center" justifyContent="flex-end">
-            {showUsdValue && usdValue ? (
-              <StyledBalanceText variant="body4" color="$neutral1">
-                {convertFiatAmountFormatted(usdValue, NumberType.FiatStandard)}
-              </StyledBalanceText>
-            ) : null}
-            {showCurrencyAmount && tokenBalance ? (
-              <StyledBalanceText variant="body4" color="$neutral2">
-                {formatNumberOrString({
-                  value: tokenBalance,
-                  type: NumberType.TokenNonTx,
-                })}
-              </StyledBalanceText>
-            ) : null}
-          </Flex>
-        </MenuItem>
+            <Flex alignSelf="center" justifyContent="flex-end">
+              {showUsdValue && usdValue ? (
+                <StyledBalanceText variant="body4" color="$neutral1">
+                  {convertFiatAmountFormatted(usdValue, NumberType.FiatStandard)}
+                </StyledBalanceText>
+              ) : null}
+              {showCurrencyAmount && tokenBalance ? (
+                <StyledBalanceText variant="body4" color="$neutral2">
+                  {formatNumberOrString({
+                    value: tokenBalance,
+                    type: NumberType.TokenNonTx,
+                  })}
+                </StyledBalanceText>
+              ) : null}
+            </Flex>
+          </MenuItem>
+        </div>
       </Wrapper>
     </Trace>
   )

@@ -1,5 +1,7 @@
 import { StatsigClient } from '@statsig/react-bindings'
+import { getConfig } from '@universe/config'
 import { LocalOverrideAdapterWrapper } from '@universe/gating/src/LocalOverrideAdapterWrapper'
+import { isTestEnv } from 'utilities/src/environment/env'
 
 export {
   StatsigClient,
@@ -20,24 +22,26 @@ export {
   useStatsigUser,
 } from '@statsig/react-bindings'
 
-// Use statsigApiKey from environment variables directly to avoid node dependency errors in cloudflare deploys
-// Which happens when importing uniswap/src/config in this file
-// A dummy key is used in test env b/c the wallet/mobile tests use this file instead of the statsig.native file
-const statsigApiKey =
-  process.env.NODE_ENV === 'test'
-    ? 'dummy-test-key'
-    : (process.env.REACT_APP_STATSIG_API_KEY ?? process.env.STATSIG_API_KEY)
-
-if (!statsigApiKey) {
-  throw new Error('STATSIG_API_KEY is not set')
-}
-
 let localOverrideAdapter: LocalOverrideAdapterWrapper | undefined
 
-export const getOverrideAdapter = (): LocalOverrideAdapterWrapper => {
+function getStatsigApiKeyOrThrow(): string {
+  // A dummy key is used in test env b/c the wallet/mobile tests use this file instead of the statsig.native file
+  const statsigApiKey = isTestEnv() ? 'dummy-test-key' : getConfig().statsigApiKey
+
+  if (!statsigApiKey) {
+    throw new Error('STATSIG_API_KEY is not set')
+  }
+
+  return statsigApiKey
+}
+
+export function getOverrideAdapter(): LocalOverrideAdapterWrapper {
   if (!localOverrideAdapter) {
-    localOverrideAdapter = new LocalOverrideAdapterWrapper(statsigApiKey)
+    localOverrideAdapter = new LocalOverrideAdapterWrapper(getStatsigApiKeyOrThrow())
   }
   return localOverrideAdapter
 }
-export const getStatsigClient = (): StatsigClient => StatsigClient.instance(statsigApiKey)
+
+export function getStatsigClient(): StatsigClient {
+  return StatsigClient.instance(getStatsigApiKeyOrThrow())
+}

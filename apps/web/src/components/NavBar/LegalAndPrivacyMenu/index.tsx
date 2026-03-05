@@ -1,27 +1,32 @@
-import Expand from 'components/Expand'
-import { PrivacyOptions } from 'components/Icons/PrivacyOptions'
-import { useModalState } from 'hooks/useModalState'
-import { useCallback } from 'react'
+import { Fragment, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Anchor, AnchorProps, Flex, Text } from 'ui/src'
+import { Anchor, AnchorProps, Flex, Text, TouchableArea } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isMobileWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import Expand from '~/components/Expand'
+import { PrivacyOptions } from '~/components/Icons/PrivacyOptions'
+import { useModalState } from '~/hooks/useModalState'
+
+const MobileTouchableArea = isMobileWeb ? TouchableArea : Fragment
 
 const MenuLink = ({ children, ...rest }: AnchorProps) => (
   <Anchor textDecorationLine="none" cursor="pointer" group {...rest}>
-    <Text
-      color="$neutral2"
-      $group-hover={{ color: '$accent1' }}
-      transition="all 0.1s ease-in-out"
-      variant="body4"
-      display="flex"
-      alignItems="center"
-      gap="$gap4"
-    >
-      {children}
-    </Text>
+    <MobileTouchableArea>
+      <Text
+        color="$neutral2"
+        $group-hover={{ color: '$accent1' }}
+        transition="all 0.1s ease-in-out"
+        variant="body4"
+        display="flex"
+        alignItems="center"
+        gap="$gap4"
+      >
+        {children}
+      </Text>
+    </MobileTouchableArea>
   </Anchor>
 )
 
@@ -42,16 +47,16 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
     <Expand
       isOpen={isOpen}
       onToggle={toggleIsOpen}
-      iconSize="icon16"
+      iconSize="$icon.16"
       button={
         <Text color="$neutral2" variant="body4" pr={spacing.spacing4}>
           {t('common.legalAndPrivacy')}
         </Text>
       }
-      paddingTop="4px"
+      paddingTop="8px"
       width="100%"
     >
-      <Flex gap="$gap4">
+      <Flex gap="$gap8">
         <MenuLink onPress={handleOnMenuPress(openPrivacyChoices)}>
           <PrivacyOptions /> {t('common.privacyChoices')}
         </MenuLink>

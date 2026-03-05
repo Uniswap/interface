@@ -27,13 +27,11 @@ export function DappWalletLineItem({ activeAccountAddress }: { activeAccountAddr
         }
       >
         <AddressDisplay
-          disableForcedWidth
           hideAddressInSubtitle
           address={activeAccountAddress}
           horizontalGap="$spacing4"
           size={16}
           variant={variant}
-          flexGrow={false}
         />
       </ContentRow>
     </Flex>

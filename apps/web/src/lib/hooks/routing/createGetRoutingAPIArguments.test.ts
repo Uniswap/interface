@@ -1,8 +1,8 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { CurrencyAmount, Ether, Token, TradeType } from '@uniswap/sdk-core'
-import { createGetRoutingAPIArguments, validateRoutingAPIInput } from 'lib/hooks/routing/createGetRoutingAPIArguments'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from 'state/routing/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { createGetRoutingAPIArguments, validateRoutingAPIInput } from '~/lib/hooks/routing/createGetRoutingAPIArguments'
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from '~/state/routing/types'
 
 describe('createGetRoutingAPIArguments', () => {
   // Minimal fixtures
@@ -140,17 +140,6 @@ describe('createGetRoutingAPIArguments', () => {
       context: { canUseUniswapX: true, isPriorityOrdersEnabled: false, isDutchV3Enabled: false },
       input: { ...defaultInput, routerPreference: INTERNAL_ROUTER_PREFERENCE_PRICE },
       expected: { sendPortionEnabled: false },
-    },
-    {
-      name: 'sets needsWrapIfUniswapX for native tokens',
-      context: { canUseUniswapX: true, isPriorityOrdersEnabled: false, isDutchV3Enabled: false },
-      input: {
-        ...defaultInput,
-        tokenIn: ETH,
-        tokenOut: USDC,
-        amount: CurrencyAmount.fromRawAmount(ETH, '1000000000000000000'),
-      },
-      expected: { needsWrapIfUniswapX: true },
     },
     {
       name: 'correctly handles protocol preferences',

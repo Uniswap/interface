@@ -1,4 +1,4 @@
-import { useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useTokenBalancesQuery } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 
 /**
  * Retrieves cached token balances, avoiding new fetches to reduce backend load.

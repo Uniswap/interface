@@ -1,4 +1,23 @@
-import { CustomHistogramData, StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
+/**
+ * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/stacked-bars-series/renderer.ts
+ * Modifications are called out with comments.
+ */
+
+import { GraphQLApi } from '@universe/api'
+import { CustomData, UTCTimestamp } from 'lightweight-charts'
+
+// Modification: custom implementations of lw-chart's histogram data types
+export interface SingleHistogramData extends CustomData {
+  value: number
+  time: UTCTimestamp
+}
+
+export interface StackedHistogramData extends CustomData {
+  values: Record<GraphQLApi.PriceSource, number | undefined>
+  time: UTCTimestamp
+}
+
+export type CustomHistogramData = SingleHistogramData | StackedHistogramData
 
 export function isStackedHistogramData(data: CustomHistogramData): data is StackedHistogramData {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

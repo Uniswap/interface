@@ -5,6 +5,7 @@ import { Unichain } from 'ui/src/components/icons/Unichain'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { UniswapXGeneric } from 'ui/src/components/icons/UniswapXGeneric'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export interface MenuItem {
   label: string
@@ -14,6 +15,7 @@ export interface MenuItem {
   closeMenu?: () => void
   icon?: React.ReactNode
   body?: string
+  elementName: ElementName
 }
 
 export interface MenuSection {
@@ -52,48 +54,72 @@ export const useMenuContent = (args?: {
             href: uniswapUrls.downloadWalletUrl,
             icon: MENU_ICONS.wallet,
             body: t('nav.products.wallet'),
+            elementName: ElementName.NavbarCompanyMenuWallet,
           },
           {
             label: t('common.uniswapX'),
             href: uniswapUrls.uniswapXUrl,
             icon: MENU_ICONS.uniswapX,
             body: t('nav.products.uniswapX'),
+            elementName: ElementName.NavbarCompanyMenuUniswapX,
           },
           {
             label: t('landing.api'),
             href: uniswapUrls.tradingApiDocsUrl,
             icon: MENU_ICONS.tradingApi,
             body: t('nav.products.tradingApi'),
+            elementName: ElementName.NavbarCompanyMenuTradingApi,
           },
           {
             label: t('common.unichain'),
             href: uniswapUrls.unichainUrl,
             icon: MENU_ICONS.unichain,
             body: t('nav.products.unichain'),
+            elementName: ElementName.NavbarCompanyMenuUnichain,
           },
         ],
       },
       [MenuSectionTitle.Protocol]: {
         title: t('common.protocol'),
         items: [
-          { label: t('common.vote'), href: uniswapUrls.voteUrl },
-          { label: t('common.governance'), href: uniswapUrls.governanceUrl },
-          { label: t('common.developers'), href: uniswapUrls.developersUrl },
+          { label: t('common.vote'), href: uniswapUrls.voteUrl, elementName: ElementName.NavbarCompanyMenuVote },
+          {
+            label: t('common.governance'),
+            href: uniswapUrls.governanceUrl,
+            elementName: ElementName.NavbarCompanyMenuGovernance,
+          },
+          {
+            label: t('common.developers'),
+            href: uniswapUrls.developersUrl,
+            elementName: ElementName.NavbarCompanyMenuDevelopers,
+          },
         ],
       },
       [MenuSectionTitle.Company]: {
         title: t('common.company'),
         items: [
-          { label: t('common.about'), href: uniswapUrls.aboutUrl },
-          { label: t('common.careers'), href: uniswapUrls.careersUrl },
-          { label: t('common.blog'), href: uniswapUrls.blogUrl },
+          { label: t('common.about'), href: uniswapUrls.aboutUrl, elementName: ElementName.NavbarCompanyMenuAbout },
+          {
+            label: t('common.careers'),
+            href: uniswapUrls.careersUrl,
+            elementName: ElementName.NavbarCompanyMenuCareers,
+          },
+          { label: t('common.blog'), href: uniswapUrls.blogUrl, elementName: ElementName.NavbarCompanyMenuBlog },
         ],
       },
       [MenuSectionTitle.NeedHelp]: {
         title: t('common.needHelp'),
         items: [
-          { label: t('common.helpCenter'), href: uniswapUrls.helpCenterUrl },
-          { label: t('common.contactUs.button'), href: uniswapUrls.helpRequestUrl },
+          {
+            label: t('common.helpCenter'),
+            href: uniswapUrls.helpCenterUrl,
+            elementName: ElementName.NavbarCompanyMenuHelpCenter,
+          },
+          {
+            label: t('common.contactUs.button'),
+            href: uniswapUrls.helpRequestUrl,
+            elementName: ElementName.NavbarCompanyMenuContactUs,
+          },
         ],
       },
     }

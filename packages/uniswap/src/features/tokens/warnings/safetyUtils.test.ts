@@ -17,7 +17,7 @@ import {
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { logger } from 'utilities/src/logger/logger'
 
-jest.mock('react-i18next', () => ({
+vi.mock('react-i18next', () => ({
   useTranslation: (): { t: (str: string) => string } => {
     return {
       t: (str: string): string => str,
@@ -438,7 +438,7 @@ describe('useModalHeaderText', () => {
   })
 
   it('logs error when tokenSymbol1 provided without plural treatment', () => {
-    const mockLogger = jest.spyOn(logger, 'error')
+    const mockLogger = vi.spyOn(logger, 'error')
     useModalHeaderText({
       tokenProtectionWarning: TokenProtectionWarning.FotLow,
       tokenSymbol0: 'ABC',

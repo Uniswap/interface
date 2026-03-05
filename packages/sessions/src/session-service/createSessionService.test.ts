@@ -60,7 +60,7 @@ describe('createSessionService', () => {
         extra: {},
       }),
       challenge: vi.fn(),
-      upgradeSession: vi.fn(),
+      verifySession: vi.fn(),
       deleteSession: vi.fn(),
     }
 
@@ -311,12 +311,14 @@ describe('createSessionService', () => {
       // Second initialization should replace
       repository.initSession = async (): Promise<{
         sessionId?: string
+        deviceId?: string
         needChallenge: boolean
         extra: Record<string, string>
       }> => ({
         sessionId: 'new-session-789',
+        deviceId: 'test-device-id',
         needChallenge: false,
-        extra: { device_id: 'test-device-id' },
+        extra: {},
       })
 
       await service.initSession()

@@ -1,13 +1,16 @@
-import Navbar from 'components/NavBar/index'
-import { MobileAppPromoBanner, useMobileAppPromoBannerEligible } from 'components/TopLevelBanners/MobileAppPromoBanner'
-import { UkBanner, useRenderUkBanner } from 'components/TopLevelBanners/UkBanner'
-import { useRenderUniswapWrapped2025Banner } from 'components/TopLevelBanners/UniswapWrapped2025Banner'
-import { PageType, useIsPage } from 'hooks/useIsPage'
-import { useScroll } from 'hooks/useScroll'
-import { GRID_AREAS } from 'pages/App/utils/shared'
 import { memo } from 'react'
 import { Flex } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
+import Navbar from '~/components/NavBar/index'
+import {
+  MobileAppPromoBanner,
+  useMobileAppPromoBannerEligible,
+} from '~/components/TopLevelBanners/MobileAppPromoBanner'
+import { UkBanner, useRenderUkBanner } from '~/components/TopLevelBanners/UkBanner'
+import { useRenderUniswapWrapped2025Banner } from '~/components/TopLevelBanners/UniswapWrapped2025Banner'
+import { PageType, useIsPage } from '~/hooks/useIsPage'
+import { useScroll } from '~/hooks/useScroll'
+import { GRID_AREAS } from '~/pages/App/utils/shared'
 
 export const Header = memo(function Header() {
   const { isScrolledDown } = useScroll()

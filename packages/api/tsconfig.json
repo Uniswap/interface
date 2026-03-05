@@ -11,13 +11,16 @@
   ],
   "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"],
   "compilerOptions": {
-    "noEmit": false,
     "emitDeclarationOnly": true,
-    "types": ["chrome", "node"],
-    "baseUrl": ".",
+    "noEmit": false,
     "paths": {
-      "@universe/api/*": ["./src/*"]
-    }
+      "@universe/api/*": ["./src/*"],
+      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb": [
+        "../../node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb",
+        "./stubs/privy-service-pb"
+      ]
+    },
+    "types": ["chrome", "node"]
   },
   "types": ["vitest/globals"],
   "references": [

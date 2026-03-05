@@ -2,7 +2,7 @@ import { type PropsWithChildren, type ReactNode, useContext, useState } from 're
 import { useTranslation } from 'react-i18next'
 import type { ColorValue } from 'react-native'
 import { Button, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
-import type { ButtonEmphasis, ButtonProps } from 'ui/src/components/buttons/Button/types'
+import type { ButtonEmphasis, ButtonProps, ButtonVariant } from 'ui/src/components/buttons/Button/types'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ShieldMagnifyingGlass } from 'ui/src/components/icons/ShieldMagnifyingGlass'
 import { X } from 'ui/src/components/icons/X'
@@ -48,6 +48,7 @@ type WarningModalContentProps = {
   buttonSize?: ButtonProps['size']
   showCloseButton?: boolean
   acknowledgeButtonEmphasis?: ButtonEmphasis
+  acknowledgeButtonVariant?: ButtonVariant
   closeHeaderComponent?: ReactNode
 } & FlexProps
 
@@ -164,6 +165,7 @@ export function WarningModalContent({
   buttonSize: passedButtonSize,
   showCloseButton = false,
   acknowledgeButtonEmphasis = 'primary',
+  acknowledgeButtonVariant = 'default',
   closeHeaderComponent,
   sendReport,
   ...props
@@ -241,6 +243,7 @@ export function WarningModalContent({
             <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
               <Button
                 size={buttonSize}
+                variant={acknowledgeButtonVariant}
                 emphasis={acknowledgeButtonEmphasis}
                 testID={TestID.Confirm}
                 onPress={onAcknowledge}

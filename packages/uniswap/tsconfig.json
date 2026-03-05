@@ -1,6 +1,6 @@
 {
   "extends": "../../config/tsconfig/app.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.mts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.mts", "env.d.ts"],
   "references": [
     {
       "path": "../utilities"
@@ -9,16 +9,35 @@
       "path": "../ui"
     },
     {
-      "path": "../api"
+      "path": "../prices"
+    },
+    {
+      "path": "../notifications"
+    },
+    {
+      "path": "../gating"
     },
     {
       "path": "../config"
     },
     {
-      "path": "../gating"
+      "path": "../api"
+    },
+    {
+      "path": "../../config/vitest-presets"
     }
   ],
   "compilerOptions": {
-    "types": ["chrome", "jest"]
+    "types": ["chrome", "vitest/globals"],
+    "paths": {
+      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb": [
+        "../../node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb",
+        "../api/stubs/privy-service-pb"
+      ],
+      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect": [
+        "../../node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect",
+        "../api/stubs/privy-service-connect"
+      ]
+    }
   }
 }

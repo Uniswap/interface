@@ -2,7 +2,7 @@
 
 set -e
 
-REQUIRED_XCODE_VERSION="16.4"
+REQUIRED_XCODE_VERSION="$(cat "$(dirname "$0")/../../../.xcode-version" | tr -d '\n')"
 UPDATE_REPOS=false
 
 while [[ $# -gt 0 ]]; do

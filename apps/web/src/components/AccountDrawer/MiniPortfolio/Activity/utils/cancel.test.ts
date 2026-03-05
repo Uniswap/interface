@@ -1,11 +1,5 @@
+import 'utilities/src/logger/mocks'
 import { TradingApi } from '@universe/api'
-import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
-import { useAccount } from 'hooks/useAccount'
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
-import { useFetchLimitOrders } from 'hooks/useFetchLimitOrders'
-import useSelectChain from 'hooks/useSelectChain'
-import { renderHook } from 'test-utils/render'
-import { createMockUniswapXOrder } from 'test-utils/transactions/fixtures'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   cancelMultipleUniswapXOrders,
@@ -17,19 +11,20 @@ import { validateOrdersForCancellation } from 'uniswap/src/features/transactions
 import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { createPermit2ContractForChain } from 'uniswap/src/features/transactions/utils/permit2'
 import { vi } from 'vitest'
+import { useCancelMultipleOrdersCallback } from '~/components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
+import { useAccount } from '~/hooks/useAccount'
+import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
+import { useFetchLimitOrders } from '~/hooks/useFetchLimitOrders'
+import useSelectChain from '~/hooks/useSelectChain'
+import { renderHook } from '~/test-utils/render'
+import { createMockUniswapXOrder } from '~/test-utils/transactions/fixtures'
 
-vi.mock('hooks/useAccount')
-vi.mock('hooks/useEthersProvider')
-vi.mock('hooks/useSelectChain')
-vi.mock('hooks/useFetchLimitOrders')
+vi.mock('~/hooks/useAccount')
+vi.mock('~/hooks/useEthersProvider')
+vi.mock('~/hooks/useSelectChain')
+vi.mock('~/hooks/useFetchLimitOrders')
 vi.mock('uniswap/src/features/transactions/cancel/validation')
 vi.mock('uniswap/src/features/transactions/utils/permit2')
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: {
-    warn: vi.fn(),
-    error: vi.fn(),
-  },
-}))
 
 vi.mock('uniswap/src/features/transactions/cancel/cancelMultipleOrders', () => ({
   cancelMultipleUniswapXOrders: vi.fn(),
@@ -39,8 +34,8 @@ vi.mock('uniswap/src/features/transactions/cancel/cancelMultipleOrders', () => (
   fetchLimitOrdersEncodedOrderData: vi.fn(),
 }))
 
-vi.mock('state/hooks', async () => {
-  const actual = await vi.importActual<typeof import('state/hooks')>('state/hooks')
+vi.mock('~/state/hooks', async () => {
+  const actual = await vi.importActual<typeof import('~/state/hooks')>('~/state/hooks')
   return {
     ...actual,
     useAppDispatch: () => vi.fn(),

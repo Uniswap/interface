@@ -7,6 +7,7 @@ node_modules
 
 # testing
 coverage
+test-results/
 
 # utility script output
 scripts/dist
@@ -16,6 +17,9 @@ tools/uniswap-nx/dist
 .next/
 out/
 build
+
+# React Router
+.react-router/
 
 # misc
 .DS_Store
@@ -43,7 +47,9 @@ yarn-error.log*
 .yarn/versions
 .yarn/install-state.gz
 
+# typescript
 dist/out-tsc/*
+tsconfig.tsbuildinfo
 
 # Locale backup/generated files
 packages/uniswap/src/i18n/locales/source/*_old.json
@@ -66,6 +72,9 @@ packages/uniswap/src/i18n/locales/source/*_old.json
 # Expo
 .expo/
 
+# Watchman
+.watchman-cookie-*
+
 # auto-generated test ids
 apps/mobile/.maestro/scripts/testIds.js
 
@@ -75,6 +84,7 @@ CLAUDE.local.md
 .claude/settings.local.json
 .claude/local/
 **/*/.claude/user/*
+**/*/.claude/local/
 
 # cursor
 .cursor/mcp.json
@@ -90,3 +100,6 @@ CLAUDE.local.md
 
 # Spec Workflow MCP
 .spec-workflow/
+
+# temporary files
+/tmp/

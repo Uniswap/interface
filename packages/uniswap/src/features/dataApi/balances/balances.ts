@@ -49,8 +49,8 @@ export function usePortfolioBalances({
   GraphQLApi.PortfolioBalancesQueryVariables
 >): PortfolioDataResult {
   return usePortfolioData({
-    evmAddress: evmAddress || '',
-    svmAddress: svmAddress || '',
+    evmAddress,
+    svmAddress,
     chainIds,
     ...queryOptions,
     skip: !(evmAddress ?? svmAddress) || queryOptions.skip,

@@ -33,9 +33,11 @@ node_modules
 .DS_Store
 
 # Ignore CI/CD artifacts
-.github
 .circleci
 
 # Ignore documentation
 docs
 *.md
+
+# Experimental/prototype labs (excluded from CI)
+labs/**

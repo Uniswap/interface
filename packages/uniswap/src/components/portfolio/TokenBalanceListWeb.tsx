@@ -19,7 +19,7 @@ import {
 import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 type TokenBalanceListProps = {

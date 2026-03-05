@@ -1,13 +1,13 @@
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
-import { createExpectSingleTransaction } from 'playwright/anvil/transactions'
-import { expect, getTest } from 'playwright/fixtures'
-import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
-import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { assume0xAddress } from 'utils/wagmi'
 import { parseEther } from 'viem'
+import { createExpectSingleTransaction } from '~/playwright/anvil/transactions'
+import { expect, getTest } from '~/playwright/fixtures'
+import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
+import { TEST_WALLET_ADDRESS } from '~/playwright/fixtures/wallets'
+import { assume0xAddress } from '~/utils/wagmi'
 
 const test = getTest({ withAnvil: true })
 

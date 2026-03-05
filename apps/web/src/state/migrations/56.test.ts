@@ -1,4 +1,4 @@
-import { migration56 } from 'state/migrations/56'
+import { migration56 } from '~/state/migrations/56'
 
 const previousState = {
   _persist: {

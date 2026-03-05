@@ -1,13 +1,13 @@
-import { usePoolData } from 'appGraphql/data/pools/usePoolData'
-import PoolDetails from 'pages/PoolDetails'
 import React from 'react'
 import { useParams } from 'react-router'
-import store from 'state'
-import { mocked } from 'test-utils/mocked'
-import { validParams, validPoolDataResponse } from 'test-utils/pools/fixtures'
-import { act, render, waitFor } from 'test-utils/render'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { usePoolData } from '~/appGraphql/data/pools/usePoolData'
+import PoolDetails from '~/pages/PoolDetails'
+import store from '~/state'
+import { mocked } from '~/test-utils/mocked'
+import { validParams, validPoolDataResponse } from '~/test-utils/pools/fixtures'
+import { act, render, waitFor } from '~/test-utils/render'
 
 // eslint-disable-next-line import/no-unused-modules, jest/no-export
 export const mockNavigate = vi.fn()
@@ -22,23 +22,23 @@ vi.mock('react-router', async () => {
   }
 })
 
-vi.mock('appGraphql/data/pools/usePoolData', async () => {
-  const actual = await vi.importActual('appGraphql/data/pools/usePoolData')
+vi.mock('~/appGraphql/data/pools/usePoolData', async () => {
+  const actual = await vi.importActual('~/appGraphql/data/pools/usePoolData')
   return {
     ...actual,
     usePoolData: vi.fn(),
   }
 })
 
-vi.mock('hooks/useColor', async () => {
-  const actual = await vi.importActual('hooks/useColor')
+vi.mock('~/hooks/useColor', async () => {
+  const actual = await vi.importActual('~/hooks/useColor')
   return {
     ...actual,
     useColor: vi.fn().mockReturnValue('#FFFFFF'),
   }
 })
 
-vi.mock('pages/Swap', () => ({
+vi.mock('~/pages/Swap', () => ({
   default: () => React.createElement(React.Fragment),
 }))
 

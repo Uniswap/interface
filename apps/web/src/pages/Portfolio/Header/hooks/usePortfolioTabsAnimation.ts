@@ -1,7 +1,7 @@
-import { usePortfolioTabs } from 'pages/Portfolio/Header/hooks/usePortfolioTabs'
 import { type AnimationType } from 'ui/src/animations'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import { usePortfolioTabs } from '~/pages/Portfolio/Header/hooks/usePortfolioTabs'
+import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 export function usePortfolioTabsAnimation(pathname: string): AnimationType {
   const portfolioTabs = usePortfolioTabs()

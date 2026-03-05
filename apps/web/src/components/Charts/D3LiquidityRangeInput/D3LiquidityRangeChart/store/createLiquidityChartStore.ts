@@ -1,15 +1,20 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
-import { CHART_BEHAVIOR } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import { createDragActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/dragActions'
-import { createPriceActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/priceActions'
-import { createRenderActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/renderActions'
-import { createViewActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/viewActions'
-import { ChartState, ChartStoreState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
-import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
-import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
+import { createDragActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/dragActions'
+import { createPriceActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/priceActions'
+import { createRenderActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/renderActions'
+import { createViewActions } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/viewActions'
+import {
+  ChartState,
+  ChartStoreState,
+} from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { ChartEntry } from '~/components/Charts/LiquidityRangeInput/types'
+import { RangeAmountInputPriceMode } from '~/components/Liquidity/Create/types'
+import { getDisplayPriceFromTick } from '~/utils/getTickToPrice'
 
 // Organized initial state by domain
 const INITIAL_VIEW_STATE = {
@@ -17,7 +22,6 @@ const INITIAL_VIEW_STATE = {
     height: 0,
     width: 0,
   },
-  dynamicZoomMin: CHART_BEHAVIOR.ZOOM_MIN,
   initialViewSet: false,
   inputMode: RangeAmountInputPriceMode.PRICE,
   panY: 0,
@@ -26,8 +30,6 @@ const INITIAL_VIEW_STATE = {
 
 const INITIAL_PRICE_STATE = {
   isFullRange: false,
-  maxPrice: undefined,
-  minPrice: undefined,
   panY: 0,
   selectedHistoryDuration: GraphQLApi.HistoryDuration.Month,
   selectedPriceStrategy: undefined,
@@ -51,32 +53,45 @@ export type ChartStore = UseBoundStore<StoreApi<ChartStoreState>>
 
 export const createLiquidityChartStore = ({
   inputMode,
-  minPrice,
-  maxPrice,
+  minTick,
+  maxTick,
+  tickSpacing,
+  baseCurrency,
+  quoteCurrency,
+  priceInverted,
+  protocolVersion,
   isFullRange,
   selectedHistoryDuration,
+  onChartError,
   onInputModeChange,
-  onMinPriceChange,
-  onMaxPriceChange,
+  onMinTickChange,
+  onMaxTickChange,
   onTimePeriodChange,
   setIsFullRange,
 }: {
   inputMode?: RangeAmountInputPriceMode
-  minPrice?: number
-  maxPrice?: number
+  minTick?: number
+  maxTick?: number
+  tickSpacing: number
+  baseCurrency: Maybe<Currency>
+  quoteCurrency: Maybe<Currency>
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
   isFullRange?: boolean
   selectedHistoryDuration?: GraphQLApi.HistoryDuration
+  onChartError: (error: string) => void
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
-  onMinPriceChange: (price?: number) => void
-  onMaxPriceChange: (price?: number) => void
+  onMinTickChange: (tick?: number) => void
+  onMaxTickChange: (tick?: number) => void
   onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }) => {
   // Group callbacks for action creators
   const callbacks = {
+    onChartError,
     onInputModeChange,
-    onMinPriceChange,
-    onMaxPriceChange,
+    onMinTickChange,
+    onMaxTickChange,
     onTimePeriodChange,
   }
 
@@ -90,8 +105,27 @@ export const createLiquidityChartStore = ({
         const renderActions = createRenderActions(set, get)
 
         return {
-          minPrice,
-          maxPrice,
+          minTick,
+          maxTick,
+          minPrice: getDisplayPriceFromTick({
+            tick: minTick,
+            baseCurrency,
+            quoteCurrency,
+            priceInverted,
+            protocolVersion,
+          }),
+          maxPrice: getDisplayPriceFromTick({
+            tick: maxTick,
+            baseCurrency,
+            quoteCurrency,
+            priceInverted,
+            protocolVersion,
+          }),
+          baseCurrency,
+          quoteCurrency,
+          priceInverted,
+          protocolVersion,
+          tickSpacing,
           // Price state (with overrides from props)
           isFullRange: isFullRange ?? INITIAL_PRICE_STATE.isFullRange,
           selectedHistoryDuration: selectedHistoryDuration ?? INITIAL_PRICE_STATE.selectedHistoryDuration,
@@ -124,6 +158,9 @@ export const createLiquidityChartStore = ({
           actions: {
             setChartState: (newState: Partial<ChartState>) => {
               set((state) => ({ ...state, ...newState }))
+            },
+            setChartError: (error: string) => {
+              callbacks.onChartError(error)
             },
 
             // Core actions that stay in main file
@@ -176,6 +213,46 @@ export const createLiquidityChartStore = ({
     (state) => state.isFullRange,
     (isFullRange) => {
       setIsFullRange(isFullRange)
+    },
+  )
+
+  // Set minPrice and maxPrice from minTick and maxTick
+  store.subscribe(
+    (state) => state.minTick,
+    (minTick) => {
+      if (minTick === undefined) {
+        return
+      }
+      const { baseCurrency, quoteCurrency, priceInverted, protocolVersion } = store.getState()
+
+      const price = getDisplayPriceFromTick({
+        tick: minTick,
+        baseCurrency,
+        quoteCurrency,
+        priceInverted,
+        protocolVersion,
+      })
+      // @ts-expect-error: minPrice can be set here
+      store.getState().actions.setChartState({ minPrice: price })
+    },
+  )
+  store.subscribe(
+    (state) => state.maxTick,
+    (maxTick) => {
+      if (maxTick === undefined) {
+        return
+      }
+      const { baseCurrency, quoteCurrency, priceInverted, protocolVersion } = store.getState()
+
+      const price = getDisplayPriceFromTick({
+        tick: maxTick,
+        baseCurrency,
+        quoteCurrency,
+        priceInverted,
+        protocolVersion,
+      })
+      // @ts-expect-error: maxPrice can be set here
+      store.getState().actions.setChartState({ maxPrice: price })
     },
   )
 

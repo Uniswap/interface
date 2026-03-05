@@ -1,7 +1,7 @@
-import { LiquidityChartStoreContext } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
 import { useContext } from 'react'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/react/shallow'
+import { LiquidityChartStoreContext } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
 
 function useLiquidityChartStore() {
   const store = useContext(LiquidityChartStoreContext)
@@ -21,6 +21,8 @@ export const useChartPriceState = () => {
       isFullRange: s.isFullRange,
       maxPrice: s.maxPrice,
       minPrice: s.minPrice,
+      minTick: s.minTick,
+      maxTick: s.maxTick,
       selectedHistoryDuration: s.selectedHistoryDuration,
       selectedPriceStrategy: s.selectedPriceStrategy,
       inputMode: s.inputMode,

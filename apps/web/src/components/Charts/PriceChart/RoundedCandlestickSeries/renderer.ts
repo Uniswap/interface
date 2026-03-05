@@ -1,10 +1,7 @@
 /**
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/rounded-candle-series/renderer.ts
  */
-import { RoundedCandleSeriesOptions } from 'components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
-import { roundRect } from 'components/Charts/utils'
-import { positionsLine } from 'components/Charts/VolumeChart/CrosshairHighlightPrimitive'
-import { positionsBox } from 'components/Charts/VolumeChart/utils'
+
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CandlestickData,
@@ -15,6 +12,10 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
+import { RoundedCandleSeriesOptions } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
+import { roundRect } from '~/components/Charts/utils'
+import { positionsLine } from '~/components/Charts/VolumeChart/CrosshairHighlightPrimitive'
+import { positionsBox } from '~/components/Charts/VolumeChart/utils'
 
 interface BarItem {
   openY: number

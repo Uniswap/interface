@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Flex, IconButton, styled, Text } from 'ui/src'
+import { Button, Flex, IconButton, styled, Text, useIsDarkMode } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
 
@@ -10,7 +10,6 @@ const ICON_SIZE = 40
 
 const BannerContainer = styled(Flex, {
   borderRadius: '$rounded16',
-  width: BANNER_WIDTH,
   minHeight: BANNER_HEIGHT,
   shadowColor: '$shadowColor',
   shadowOffset: { width: 0, height: 4 },
@@ -21,7 +20,16 @@ const BannerContainer = styled(Flex, {
   backgroundColor: '$surface1',
   borderWidth: 1,
   borderColor: '$surface3',
-  cursor: 'pointer',
+  variants: {
+    clickable: {
+      true: {
+        cursor: 'pointer',
+      },
+      false: {
+        cursor: 'default',
+      },
+    },
+  } as const,
 })
 
 const GradientBackground = styled(Flex, {
@@ -68,14 +76,30 @@ function BannerXButton({ handleClose }: { handleClose: () => void }): JSX.Elemen
   )
 }
 
+export interface BannerTemplateButton {
+  text: string
+  onPress: () => void
+  isPrimary?: boolean
+}
+
 interface BannerTemplateProps {
   backgroundImageUrl?: string
+  /** Optional dark mode variant for backgroundImageUrl. Falls back to backgroundImageUrl if not provided. */
+  darkModeBackgroundImageUrl?: string
+  /** Pre-rendered icon element. When provided, takes priority over iconUrl. */
+  icon?: ReactNode
   iconUrl?: string
+  /** Optional dark mode variant for iconUrl. Falls back to iconUrl if not provided. */
+  darkModeIconUrl?: string
   title: string
   subtitle?: string
   onClose: () => void
   onPress?: () => void
   children?: ReactNode
+  /** Override the default banner width. Use '100%' for full-width. */
+  width?: number | string
+  /** Optional button to display below the content */
+  button?: BannerTemplateButton
 }
 
 /**
@@ -94,25 +118,39 @@ interface BannerTemplateProps {
  */
 export function BannerTemplate({
   backgroundImageUrl,
+  darkModeBackgroundImageUrl,
+  icon,
   iconUrl,
+  darkModeIconUrl,
   title,
   subtitle,
   onClose,
   onPress,
   children,
+  width,
+  button,
 }: BannerTemplateProps): JSX.Element {
+  const isDarkMode = useIsDarkMode()
+  const effectiveBackgroundUrl =
+    isDarkMode && darkModeBackgroundImageUrl ? darkModeBackgroundImageUrl : backgroundImageUrl
+  const effectiveIconUrl = isDarkMode && darkModeIconUrl ? darkModeIconUrl : iconUrl
+
   return (
-    <BannerContainer pointerEvents="auto" onPress={onPress}>
+    <BannerContainer pointerEvents="auto" width={width ?? BANNER_WIDTH} clickable={!!onPress} onPress={onPress}>
       <BannerXButton handleClose={onClose} />
 
-      {backgroundImageUrl && <GradientBackground backgroundImage={`url(${backgroundImageUrl})`} />}
+      {effectiveBackgroundUrl && <GradientBackground backgroundImage={`url(${effectiveBackgroundUrl})`} />}
 
       <ContentWrapper>
         <Flex gap="$spacing8">
-          {iconUrl ? (
-            <IconContainer backgroundImage={`url(${iconUrl})`} />
+          {icon ? (
+            <Flex centered width={ICON_SIZE} height={ICON_SIZE}>
+              {icon}
+            </Flex>
+          ) : effectiveIconUrl ? (
+            <IconContainer backgroundImage={`url(${effectiveIconUrl})`} />
           ) : (
-            <Flex width={ICON_SIZE} height={ICON_SIZE} backgroundColor="transparent" /> // placeholder icon
+            <Flex width={ICON_SIZE} height={ICON_SIZE} backgroundColor="transparent" />
           )}
 
           {children || (
@@ -128,6 +166,22 @@ export function BannerTemplate({
             </Flex>
           )}
         </Flex>
+
+        {button && (
+          <Flex marginTop="$spacing12">
+            <Button
+              size="medium"
+              emphasis={button.isPrimary ? 'primary' : 'secondary'}
+              minHeight="$spacing36"
+              onPress={(e) => {
+                e.stopPropagation()
+                button.onPress()
+              }}
+            >
+              {button.text}
+            </Button>
+          </Flex>
+        )}
       </ContentWrapper>
     </BannerContainer>
   )

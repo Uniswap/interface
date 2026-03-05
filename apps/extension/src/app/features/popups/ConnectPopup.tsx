@@ -156,13 +156,7 @@ export function ConnectPopupContent({
                       {getChainLabel(lastChainId)}
                     </Text>
                   </Flex>
-                  <RotatableChevron
-                    color="$neutral3"
-                    direction="right"
-                    flexShrink={1}
-                    height={iconSizes.icon24}
-                    width={iconSizes.icon24}
-                  />
+                  <RotatableChevron color="$neutral3" direction="right" flexShrink={1} size="$icon.24" />
                 </Flex>
               </TouchableArea>
             )}

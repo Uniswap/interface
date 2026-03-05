@@ -12,6 +12,8 @@ interface NftListHeaderProps {
   count: number
   onSearchValueChange: (value: string) => void
   SearchInputComponent?: React.ComponentType<SearchInputProps>
+  searchInputTestId?: string
+  headerTestId?: string
 }
 
 function DefaultSearchInput({ value, onChangeText, placeholder, width }: SearchInputProps): JSX.Element {
@@ -61,6 +63,8 @@ export function NftListHeader({
   count,
   onSearchValueChange,
   SearchInputComponent = DefaultSearchInput,
+  searchInputTestId,
+  headerTestId,
 }: NftListHeaderProps): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
@@ -87,6 +91,7 @@ export function NftListHeader({
       alignItems="flex-end"
       justifyContent="space-between"
       $md={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$spacing24' }}
+      data-testid={headerTestId}
     >
       <Flex group row alignItems="center" gap="$spacing8">
         <Text variant="body2" color="$neutral2" textWrap="nowrap">
@@ -98,6 +103,7 @@ export function NftListHeader({
         value={search}
         placeholder={placeholder}
         width={searchWidth}
+        dataTestId={searchInputTestId}
         onChangeText={handleChangeText}
       />
     </Flex>

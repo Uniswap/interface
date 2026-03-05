@@ -1,4 +1,5 @@
 {
+  "tags": ["scope:extension", "type:app"],
   "targets": {
     "build": {
       "executor": "nx:noop",
@@ -23,17 +24,12 @@
       }
     },
     "check:circular": {
-      "command": "concurrently \"../../scripts/check-circular-imports.sh ./src/entrypoints/sidepanel/main.tsx 0\" \"../../scripts/check-circular-imports.sh ./src/entrypoints/onboarding/main.tsx 0\" \"../../scripts/check-circular-imports.sh ./src/entrypoints/unitagClaim/main.tsx 0\"",
+      "command": "bunx madge --circular ./src/entrypoints/sidepanel/main.tsx ./src/entrypoints/onboarding/main.tsx ./src/entrypoints/unitagClaim/main.tsx",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
-    "check:deps:usage": {
-      "command": "depcheck",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
+    "check:deps:usage": {},
     "clean": {
       "command": "wxt clean",
       "options": {
@@ -90,7 +86,15 @@
       "command": "wxt prepare",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/wxt.config.ts",
+        "{projectRoot}/config/**",
+        "{projectRoot}/src/entrypoints/**/*",
+        "{projectRoot}/package.json"
+      ],
+      "outputs": ["{projectRoot}/.wxt/types", "{projectRoot}/.wxt/tsconfig.json", "{projectRoot}/.wxt/wxt.d.ts"]
     },
     "snapshots": {
       "command": "jest -u",
@@ -141,6 +145,7 @@
       }
     },
     "typecheck": {},
+    "typecheck:tsgo": {},
     "zip": {
       "command": "wxt zip",
       "options": {
@@ -192,6 +197,26 @@
     "e2e:ui": {
       "command": "nx playwright:ui extension",
       "dependsOn": ["build:e2e"]
+    },
+    "validate:build": {
+      "command": "bunx tsx scripts/validateBuildOutput.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["build:wxt"]
+    },
+    "validate:build:dev": {
+      "command": "bunx tsx scripts/validateBuildOutput.ts --dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "validate:build:prod": {
+      "command": "bunx tsx scripts/validateBuildOutput.ts --prod",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["build:wxt"]
     }
   }
 }

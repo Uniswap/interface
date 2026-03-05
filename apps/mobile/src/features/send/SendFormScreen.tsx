@@ -29,8 +29,8 @@ import { CompatibleAddressModal } from 'uniswap/src/features/transactions/modals
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
+import { useActiveAddresses } from 'wallet/src/features/accounts/store/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function useGoToReviewScreen(): () => void {
   const { updateSendForm } = useSendContext()
@@ -162,7 +162,7 @@ function SendFormContent({
 
   const goToReviewScreen = useGoToReviewScreen()
 
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const addresses = useActiveAddresses()
 
   const { selectingCurrencyField, onSelectCurrency, updateSendForm } = useSendContext()
 
@@ -217,8 +217,8 @@ function SendFormContent({
           onAcknowledge={onAcknowledgeCompatibleAddressWarning}
         />
       )}
-
-      <TouchableWithoutFeedback>
+      {/* Do not remove `accessible`, this allows maestro to view components within this */}
+      <TouchableWithoutFeedback accessible={false}>
         <Flex fill>
           <Animated.View style={{ position: 'absolute', height: '100%', width: '100%' }}>
             <SendTokenForm />
@@ -228,7 +228,7 @@ function SendFormContent({
       {!!selectingCurrencyField && (
         <TokenSelectorModal
           isModalOpen
-          evmAddress={activeAccountAddress}
+          addresses={addresses}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           variation={TokenSelectorVariation.BalancesOnly}

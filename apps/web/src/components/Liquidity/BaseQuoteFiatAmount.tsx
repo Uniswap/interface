@@ -1,9 +1,9 @@
 import { Currency, Price } from '@uniswap/sdk-core'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Text, TextProps } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
+import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
 
 export function BaseQuoteFiatAmount({
   price,
@@ -30,7 +30,7 @@ export function BaseQuoteFiatAmount({
     <Text>
       <Text variant={variant ?? 'body3'} color="$neutral1">
         {condenseConversion
-          ? `${formatNumberOrString({ value: price.toSignificant(), type: NumberType.TokenTx })} ${base.symbol}/${quote.symbol}`
+          ? `${formatNumberOrString({ value: price.toSignificant(), type: NumberType.TokenTx })} ${quote.symbol}/${base.symbol}`
           : `${formatNumberOrString({ value: price.toSignificant(), type: NumberType.TokenTx })} ${quote.symbol} = 1 ${base.symbol}`}
       </Text>{' '}
       <Text variant={variant ?? 'body3'} color="$neutral2">

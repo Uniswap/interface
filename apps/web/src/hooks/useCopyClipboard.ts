@@ -1,12 +1,20 @@
-import copy from 'copy-to-clipboard'
 import { useCallback, useEffect, useState } from 'react'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
+import { logger } from 'utilities/src/logger/logger'
 
 export default function useCopyClipboard(timeout = 500): [boolean, (toCopy: string) => void] {
   const [isCopied, setIsCopied] = useState(false)
 
   const staticCopy = useCallback((text: string) => {
-    const didCopy = copy(text)
-    setIsCopied(didCopy)
+    setClipboard(text)
+      .then(() => {
+        setIsCopied(true)
+      })
+      .catch((error) => {
+        logger.error(error, {
+          tags: { file: 'useCopyClipboard', function: 'staticCopy' },
+        })
+      })
   }, [])
 
   useEffect(() => {

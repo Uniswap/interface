@@ -1,6 +1,6 @@
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade } from '~/state/routing/types'
 
 export function useMaxAmountIn(trade: InterfaceTrade | undefined, allowedSlippage: Percent) {
   return useMemo(() => {

@@ -1,6 +1,6 @@
-import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { css, deprecatedStyled, keyframes } from 'lib/styled-components'
 import { useRef } from 'react'
+import { useUnmountingAnimation } from '~/hooks/useUnmountingAnimation'
+import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
 const fadeIn = keyframes`
   from { opacity: 0;}

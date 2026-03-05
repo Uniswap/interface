@@ -37,6 +37,8 @@ export function LPTransactionStepRow({
 
   const title = {
     [StepStatus.Preview]: t('common.confirmWallet'),
+    [StepStatus.Failed]: t('common.failed'),
+    [StepStatus.Replaced]: t('common.failed'),
     [StepStatus.Active]: t('common.confirmWallet'),
     [StepStatus.InProgress]: t('common.transactionPending'),
     [StepStatus.Complete]: t('common.confirmWallet'),
@@ -47,8 +49,8 @@ export function LPTransactionStepRow({
       title={title}
       icon={<LPIcon />}
       learnMore={{
-        url: uniswapUrls.helpArticleUrls.howToSwapTokens,
-        text: t('common.learnMoreSwap'),
+        url: uniswapUrls.helpArticleUrls.providingLiquidityVersions,
+        text: t('common.learnMoreLiquidity'),
       }}
       status={status}
       currentStepIndex={currentStepIndex}

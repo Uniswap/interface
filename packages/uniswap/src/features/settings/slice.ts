@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
-import { DEFAULT_DEVICE_ACCESS_TIMEOUT, DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
+import { DEFAULT_DEVICE_ACCESS_TIMEOUT, type DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
 import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
-import { isWebApp } from 'utilities/src/platform'
+import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
@@ -20,7 +20,7 @@ export interface UserSettingsState {
 }
 
 export const initialUserSettingsState: UserSettingsState = {
-  currentLanguage: isWebApp ? getCurrentLanguageFromNavigator() : Language.English,
+  currentLanguage: isWebApp || isExtensionApp ? getCurrentLanguageFromNavigator() : Language.English,
   currentCurrency: FiatCurrency.UnitedStatesDollar,
   hideSmallBalances: true,
   hideSpamTokens: true,
@@ -62,7 +62,7 @@ const slice = createSlice({
     setDeviceAccessTimeout: (state, { payload }: PayloadAction<DeviceAccessTimeout>) => {
       state.deviceAccessTimeout = payload
     },
-    resetSettings: () => initialUserSettingsState,
+    resetUserSettings: () => initialUserSettingsState,
   },
 })
 
@@ -75,6 +75,7 @@ export const {
   setIsTestnetModeEnabled,
   setHapticsEnabled,
   setDeviceAccessTimeout,
+  resetUserSettings,
 } = slice.actions
 
 export const userSettingsReducer = slice.reducer

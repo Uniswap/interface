@@ -1,7 +1,7 @@
-import { isIFramed } from 'utils/isIFramed'
+import { isIFramed } from '~/utils/isIFramed'
 
 const dispatchMock = vi.fn()
-vi.mock('state/hooks', () => ({
+vi.mock('~/state/hooks', () => ({
   useAppDispatch: () => dispatchMock,
 }))
 

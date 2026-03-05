@@ -1,112 +1,116 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`EdgeFade Mobile Implementation renders mobile implementation correctly with left side 1`] = `
-<View
-  pointerEvents="none"
-  style={
-    {
-      "bottom": 0,
-      "flexDirection": "column",
-      "left": 0,
-      "overflow": "hidden",
-      "position": "absolute",
-      "top": 0,
-      "zIndex": 1,
-    }
-  }
->
-  ExpoLinearGradient
-</View>
+exports[`EdgeFade > Mobile Implementation > renders mobile implementation correctly with left side 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_LinearGradient _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _bottom-0px _pointerEvents-none _zIndex-1 _left-0px"
+      data-disable-theme="true"
+    >
+      <div
+        class="css-view-175oi2r"
+        style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; z-index: 0;"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`EdgeFade Mobile Implementation renders mobile implementation correctly with right side 1`] = `
-<View
-  pointerEvents="none"
-  style={
-    {
-      "bottom": 0,
-      "flexDirection": "column",
-      "overflow": "hidden",
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
-      "zIndex": 1,
-    }
-  }
->
-  ExpoLinearGradient
-</View>
+exports[`EdgeFade > Mobile Implementation > renders mobile implementation correctly with right side 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_LinearGradient _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _bottom-0px _pointerEvents-none _zIndex-1 _right-0px"
+      data-disable-theme="true"
+    >
+      <div
+        class="css-view-175oi2r"
+        style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; z-index: 0;"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`EdgeFade Mobile Implementation renders with additional flex props 1`] = `
-<View
-  pointerEvents="none"
-  style={
-    {
-      "bottom": 0,
-      "flexDirection": "column",
-      "left": 0,
-      "overflow": "hidden",
-      "position": "absolute",
-      "top": 0,
-      "width": 24,
-      "zIndex": 1,
-    }
-  }
->
-  ExpoLinearGradient
-</View>
+exports[`EdgeFade > Mobile Implementation > renders with additional flex props 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="is_LinearGradient _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _bottom-0px _pointerEvents-none _zIndex-1 _left-0px _width-24px"
+      data-disable-theme="true"
+    >
+      <div
+        class="css-view-175oi2r"
+        style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px; z-index: 0;"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`EdgeFade Web Implementation renders web implementation correctly with left side 1`] = `
-<View
-  pointerEvents="none"
-  style={
-    {
-      "background": "linear-gradient(90deg, #131313e6 0%, #13131300 100%)",
-      "bottom": 0,
-      "flexDirection": "column",
-      "left": 0,
-      "position": "absolute",
-      "top": 0,
-      "zIndex": 1,
-    }
-  }
-/>
+exports[`EdgeFade > Web Implementation > renders web implementation correctly with left side 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _bottom-0px _pointerEvents-none _zIndex-1 _left-0px"
+    />
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`EdgeFade Web Implementation renders web implementation correctly with right side 1`] = `
-<View
-  pointerEvents="none"
-  style={
-    {
-      "background": "linear-gradient(270deg, #131313e6 0%, #13131300 100%)",
-      "bottom": 0,
-      "flexDirection": "column",
-      "position": "absolute",
-      "right": 0,
-      "top": 0,
-      "zIndex": 1,
-    }
-  }
-/>
+exports[`EdgeFade > Web Implementation > renders web implementation correctly with right side 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _bottom-0px _pointerEvents-none _zIndex-1 _right-0px"
+    />
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;
 
-exports[`EdgeFade Web Implementation renders with additional flex props 1`] = `
-<View
-  pointerEvents="none"
-  style={
-    {
-      "background": "linear-gradient(90deg, #131313e6 0%, #13131300 100%)",
-      "bottom": 0,
-      "flexDirection": "column",
-      "left": 0,
-      "position": "absolute",
-      "top": 0,
-      "width": 24,
-      "zIndex": 1,
-    }
-  }
-  testID="web-edge-fade"
-/>
+exports[`EdgeFade > Web Implementation > renders with additional flex props 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _bottom-0px _pointerEvents-none _zIndex-1 _left-0px _width-24px"
+      data-testid="web-edge-fade"
+    />
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

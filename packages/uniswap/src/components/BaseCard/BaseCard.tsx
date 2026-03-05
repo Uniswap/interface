@@ -61,7 +61,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
           </Flex>
           {subtitle ? typeof subtitle === 'string' ? <Text variant="subheading1">{subtitle}</Text> : subtitle : null}
         </Flex>
-        <RotatableChevron color="$neutral2" direction="end" height={20} />
+        <RotatableChevron color="$neutral2" direction="end" size="$icon.20" />
       </Flex>
     </TouchableArea>
   )
@@ -71,7 +71,9 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
 type EmptyStateProps = {
   additionalButtonLabel?: string
   buttonLabel?: string
+  buttonDataTestId?: string
   description: string | null
+  dataTestId?: string
   onPress?: () => void
   onPressAdditional?: () => void
   title?: string
@@ -81,14 +83,16 @@ type EmptyStateProps = {
 function EmptyState({
   additionalButtonLabel,
   buttonLabel,
+  buttonDataTestId,
   description,
+  dataTestId,
   onPress,
   onPressAdditional,
   title,
   icon,
 }: EmptyStateProps): JSX.Element {
   return (
-    <Flex centered gap="$spacing16" width="100%">
+    <Flex centered gap="$spacing16" width="100%" data-testid={dataTestId}>
       <Flex centered gap="$spacing8">
         {icon}
         <Flex centered gap="$spacing8" mt="$spacing8">
@@ -106,7 +110,7 @@ function EmptyState({
       </Flex>
       <Flex row gap="$spacing16">
         {buttonLabel && (
-          <TouchableArea onPress={onPress}>
+          <TouchableArea data-testid={buttonDataTestId} onPress={onPress}>
             <Text color="$accent1" textAlign="center" variant="buttonLabel2">
               {buttonLabel}
             </Text>

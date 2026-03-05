@@ -1,12 +1,9 @@
 {
+  "tags": ["scope:wallet", "type:lib"],
   "targets": {
-    "check:deps:usage": {
-      "command": "depcheck",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
+    "check:deps:usage": {},
     "typecheck": {},
+    "typecheck:tsgo": {},
     "lint:biome": {},
     "lint:biome:fix": {},
     "lint:eslint": {},

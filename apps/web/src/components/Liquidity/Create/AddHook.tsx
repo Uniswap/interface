@@ -1,8 +1,4 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { AdvancedButton } from 'components/Liquidity/Create/AdvancedButton'
-import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
-import { HookModal } from 'components/Liquidity/HookModal'
-import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IconButton, styled, Text, TouchableArea } from 'ui/src'
@@ -17,6 +13,10 @@ import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useOnClickOutside, usePrevious } from 'utilities/src/react/hooks'
 import { getAddress } from 'viem'
+import { AdvancedButton } from '~/components/Liquidity/Create/AdvancedButton'
+import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { HookModal } from '~/components/Liquidity/HookModal'
+import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
 const MenuFlyout = styled(Flex, {
   animation: 'fastHeavy',

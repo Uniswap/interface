@@ -1,23 +1,24 @@
-import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import type { To } from 'react-router'
 import { Link } from 'react-router'
-import { ClickableStyle } from 'theme/components/styles'
 import { Flex, styled, Text } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-const InternalLinkMenuItem = deprecatedStyled(Link)`
-  ${ClickableStyle}
+const InternalLinkMenuItem = styled(Link, {
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  py: '$spacing12',
+  justifyContent: 'space-between',
+  color: '$neutral1',
+  ...ClickableTamaguiStyle,
 
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 12px 0;
-  justify-content: space-between;
-  text-decoration: none;
-  color: ${({ theme }) => theme.neutral1};
-`
+  '$platform-web': {
+    textDecoration: 'none',
+  },
+})
 
 export const MenuColumn = styled(Flex, {
   $md: {

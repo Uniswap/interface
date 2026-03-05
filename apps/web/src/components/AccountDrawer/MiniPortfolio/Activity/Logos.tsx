@@ -1,35 +1,16 @@
-import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import { css, deprecatedStyled } from 'lib/styled-components'
-import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
-import { useSporeColors } from 'ui/src'
+import { Flex, styled, useSporeColors } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { FadePresence, FadePresenceAnimationType } from '~/theme/components/FadePresence'
 
-export const LogoContainer = deprecatedStyled.div`
-  height: 64px;
-  width: 64px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  border-radius: 50%;
-  overflow: visible;
-`
-
-const LoadingIndicator = deprecatedStyled(LoaderV3)`
-  stroke: ${({ theme }) => theme.neutral3};
-  fill: ${({ theme }) => theme.neutral3};
-  width: calc(100% + 8px);
-  height: calc(100% + 8px);
-  top: -4px;
-  left: -4px;
-  position: absolute;
-`
-
-export function LoadingIndicatorOverlay() {
-  return (
-    <FadePresence>
-      <LoadingIndicator />
-    </FadePresence>
-  )
-}
+const LOGO_SIZE = iconSizes.icon64
+export const LogoContainer = styled(Flex, {
+  height: LOGO_SIZE,
+  width: LOGO_SIZE,
+  position: 'relative',
+  justifyContent: 'center',
+  borderRadius: '$roundedFull',
+  overflow: 'visible',
+})
 
 export function ConfirmedIcon({ className }: { className?: string }) {
   const colors = useSporeColors()
@@ -74,16 +55,3 @@ export function SubmittedIcon({ className }: { className?: string }) {
     </FadePresence>
   )
 }
-
-const IconCss = css`
-  height: 64px;
-  width: 64px;
-`
-
-export const AnimatedEntranceConfirmationIcon = deprecatedStyled(ConfirmedIcon)`
-  ${IconCss}
-`
-
-export const AnimatedEntranceSubmittedIcon = deprecatedStyled(SubmittedIcon)`
-  ${IconCss}
-`

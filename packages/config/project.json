@@ -3,14 +3,16 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/config/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["scope:config", "type:lib"],
   "targets": {
     "typecheck": {},
+    "typecheck:tsgo": {},
     "lint:biome": {},
     "lint:biome:fix": {},
     "lint:eslint": {},
     "lint:eslint:fix": {},
     "lint": {},
-    "lint:fix": {}
+    "lint:fix": {},
+    "check:deps:usage": {}
   }
 }

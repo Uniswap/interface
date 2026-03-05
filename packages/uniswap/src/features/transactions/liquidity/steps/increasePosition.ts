@@ -1,5 +1,13 @@
-import { TradingApi } from '@universe/api'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import {
+  CreateLPPositionRequest,
+  IncreaseLPPositionRequest,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
+import {
+  V2CreateLPPosition,
+  V3CreateLPPosition,
+  V4CreateLPPosition,
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { LiquidityServiceClient } from 'uniswap/src/data/apiClients/liquidityService/LiquidityServiceClient'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -43,7 +51,8 @@ export function createIncreasePositionStep(
 }
 
 export function createCreatePositionAsyncStep(
-  createPositionRequestArgs: TradingApi.CreateLPPositionRequest | undefined,
+  createPositionRequestArgs: CreateLPPositionRequest | undefined,
+  delegatedAddress?: string | null,
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
@@ -55,11 +64,47 @@ export function createCreatePositionAsyncStep(
       }
 
       try {
-        const { create, sqrtRatioX96 } = await TradingApiClient.createLpPosition({
-          ...createPositionRequestArgs,
-          signature,
-          simulateTransaction: true,
-        })
+        const { createLpPosition } = createPositionRequestArgs
+        let updatedCreateLpPosition
+
+        if (createLpPosition.case === 'v4CreateLpPosition') {
+          updatedCreateLpPosition = {
+            case: 'v4CreateLpPosition' as const,
+            value: new V4CreateLPPosition({
+              ...createLpPosition.value,
+              signature,
+              simulateTransaction: true,
+            }),
+          }
+        } else if (createLpPosition.case === 'v3CreateLpPosition') {
+          updatedCreateLpPosition = {
+            case: 'v3CreateLpPosition' as const,
+            value: new V3CreateLPPosition({
+              ...createLpPosition.value,
+              signature,
+              simulateTransaction: true,
+            }),
+          }
+        } else if (createLpPosition.case === 'v2CreateLpPosition') {
+          // V2 does not support signatures, only simulate flag
+          updatedCreateLpPosition = {
+            case: 'v2CreateLpPosition' as const,
+            value: new V2CreateLPPosition({
+              ...createLpPosition.value,
+              simulateTransaction: true,
+            }),
+          }
+        } else {
+          updatedCreateLpPosition = createLpPosition
+        }
+
+        const result = await LiquidityServiceClient.createLpPosition(
+          new CreateLPPositionRequest({
+            createLpPosition: updatedCreateLpPosition,
+          }),
+        )
+        const create = result.create
+        const sqrtRatioX96 = result.sqrtRatioX96
 
         return { txRequest: validateTransactionRequest(create), sqrtRatioX96 }
       } catch (e) {
@@ -69,6 +114,10 @@ export function createCreatePositionAsyncStep(
             tags: {
               file: 'increasePosition',
               function: 'createCreatePositionAsyncStep',
+            },
+            extra: {
+              canBatchTransactions: false, // if in this step then the tx was not batched
+              delegatedAddress: delegatedAddress ?? null,
             },
           })
 
@@ -85,7 +134,8 @@ export function createCreatePositionAsyncStep(
 }
 
 export function createIncreasePositionAsyncStep(
-  increasePositionRequestArgs: TradingApi.IncreaseLPPositionRequest | undefined,
+  increasePositionRequestArgs: IncreaseLPPositionRequest | undefined,
+  delegatedAddress?: string | null,
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
@@ -97,11 +147,26 @@ export function createIncreasePositionAsyncStep(
       }
 
       try {
-        const { increase, sqrtRatioX96 } = await TradingApiClient.increaseLpPosition({
-          ...increasePositionRequestArgs,
-          signature,
-          simulateTransaction: true,
-        })
+        const { increaseLpPosition } = increasePositionRequestArgs
+        const updatedIncreaseLpPosition =
+          increaseLpPosition.case === 'v4IncreaseLpPosition'
+            ? {
+                case: 'v4IncreaseLpPosition' as const,
+                value: { ...increaseLpPosition.value, signature, simulateTransaction: true },
+              }
+            : increaseLpPosition.case === 'v3IncreaseLpPosition'
+              ? {
+                  case: 'v3IncreaseLpPosition' as const,
+                  value: { ...increaseLpPosition.value, signature, simulateTransaction: true },
+                }
+              : increaseLpPosition
+        const result = await LiquidityServiceClient.increaseLpPosition(
+          new IncreaseLPPositionRequest({
+            increaseLpPosition: updatedIncreaseLpPosition,
+          }),
+        )
+        const increase = result.increase
+        const sqrtRatioX96 = result.sqrtRatioX96
 
         return { txRequest: validateTransactionRequest(increase), sqrtRatioX96 }
       } catch (e) {
@@ -111,6 +176,10 @@ export function createIncreasePositionAsyncStep(
             tags: {
               file: 'generateTransactionSteps',
               function: 'createIncreasePositionAsyncStep',
+            },
+            extra: {
+              canBatchTransactions: false, // if in this step then the tx was not batched
+              delegatedAddress: delegatedAddress ?? null,
             },
           })
           sendAnalyticsEvent(InterfaceEventName.IncreaseLiquidityFailed, {

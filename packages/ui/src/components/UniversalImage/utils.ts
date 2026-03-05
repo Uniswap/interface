@@ -52,13 +52,25 @@ function freezeSvgAnimations(svg: string): string {
   return svg.replace(/<animate /g, '<group ')
 }
 
+function isAbortError(error: unknown): boolean {
+  return (
+    (error instanceof DOMException && error.name === 'AbortError') ||
+    (error instanceof Error && (error.name === 'AbortError' || error.message.includes('aborted')))
+  )
+}
+
 export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
   const fetchSvgData = useCallback(
     async (signal?: AbortSignal): Promise<SvgData | undefined> => {
       try {
         return await fetchSVG({ uri, autoplay, signal })
       } catch (error) {
-        logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
+        // AbortErrors are expected when components unmount or queries are cancelled - don't alert
+        if (isAbortError(error)) {
+          logger.debug('UniversalImage/utils', 'useSvgData', 'SVG fetch aborted', { uri })
+          return undefined
+        }
+        logger.warn('UniversalImage/utils', 'useSvgData', 'Failed to fetch SVG', { error, uri })
         return undefined
       }
     },
@@ -66,7 +78,7 @@ export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
   )
 
   const { data } = useQuery({
-    queryKey: [ReactQueryCacheKey.RemoteSvg, uri],
+    queryKey: [ReactQueryCacheKey.UniversalImageSvg, uri],
     queryFn: ({ signal }) => fetchSvgData(signal),
   })
 

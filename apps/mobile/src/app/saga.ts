@@ -60,6 +60,6 @@ export function* rootMobileSaga(): SagaIterator {
 
   // Start monitored sagas
   for (const m of Object.values(monitoredSagas)) {
-    yield* spawn(m.wrappedSaga)
+    yield* spawn(m['wrappedSaga'])
   }
 }

@@ -1,4 +1,5 @@
 //! tamagui-ignore
+// tamagui-ignore
 /* eslint-disable complexity */
 import { forwardRef, memo, useCallback } from 'react'
 import { Flex, TouchableArea, useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
@@ -16,7 +17,6 @@ import { CurrencyInputPanelValue } from 'uniswap/src/components/CurrencyInputPan
 import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isExtensionApp, isMobileWeb, isWebAppDesktop } from 'utilities/src/platform'
 
@@ -50,10 +50,19 @@ export const CurrencyInputPanel = memo(
         headerLabel,
         transactionType,
         customPanelStyle,
-        maxValuationPresets,
-        onSetMaxValuation,
+        hidePresets,
+        onBlur,
+        panelAccessory,
+        disablePressAnimation,
+        fontSizeOptions,
+        fiatValueVariant,
+        inputRowPaddingVertical,
+        panelAccessoryPaddingTop = '$spacing24',
+        inputRowMinHeight,
+        inputSuffix,
+        allowOverflow,
       } = props
-      const account = useWallet().evmAccount
+
       const isShortMobileDevice = useIsShortMobileDevice()
 
       const display = useIndicativeQuoteTextDisplay(props)
@@ -66,8 +75,8 @@ export const CurrencyInputPanel = memo(
       const showInsufficientBalanceWarning =
         !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-      const showMaxButton = showMaxButtonOnly && !isOutput && account
-      const showPercentagePresetOptions = !showMaxButtonOnly && currencyField === CurrencyField.INPUT
+      const showMaxButton = showMaxButtonOnly && !isOutput && !hidePresets
+      const showPercentagePresetOptions = !showMaxButtonOnly && !hidePresets && currencyField === CurrencyField.INPUT
 
       const isDesktop = isWebAppDesktop || isExtensionApp
 
@@ -107,6 +116,7 @@ export const CurrencyInputPanel = memo(
       return (
         <TouchableArea
           group
+          scaleTo={disablePressAnimation ? 1 : undefined}
           disabledStyle={{
             cursor: 'default',
           }}
@@ -114,7 +124,7 @@ export const CurrencyInputPanel = memo(
         >
           <Flex
             {...customPanelStyle}
-            overflow="hidden"
+            overflow={allowOverflow ? 'visible' : 'hidden'}
             px="$spacing16"
             py={isShortMobileDevice ? '$spacing8' : '$spacing16'}
           >
@@ -125,6 +135,7 @@ export const CurrencyInputPanel = memo(
               currencyAmount={currencyAmount}
               currencyInfo={currencyInfo}
               showDefaultTokenOptions={showDefaultTokenOptions}
+              hidePresets={hidePresets}
               onSetPresetValue={handleSetPresetValue}
             />
             <CurrencyInputPanelInput
@@ -147,39 +158,46 @@ export const CurrencyInputPanel = memo(
               indicativeQuoteTextDisplay={display}
               showInsufficientBalanceWarning={showInsufficientBalanceWarning}
               showDefaultTokenOptions={showDefaultTokenOptions}
-              maxValuationPresets={maxValuationPresets}
+              fontSizeOptions={fontSizeOptions}
+              inputRowPaddingVertical={inputRowPaddingVertical}
+              minHeight={inputRowMinHeight}
+              inputSuffix={inputSuffix}
+              hidePresets={hidePresets}
               onPressIn={onPressIn}
               onSelectionChange={selectionChange}
               onSetExactAmount={onSetExactAmount}
               onShowTokenSelector={onShowTokenSelector}
               onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
-              onSetMaxValuation={onSetMaxValuation}
+              onBlur={onBlur}
             />
             <Flex
               row
               alignItems="center"
-              gap="$spacing8"
               mb={showPercentagePresetsOnBottom ? '$spacing6' : undefined}
               // maintain layout when balance is hidden
-              {...(!currencyInfo && { opacity: 0, pointerEvents: 'none' })}
+              opacity={currencyInfo ? 1 : 0}
+              pointerEvents={currencyInfo ? 'auto' : 'none'}
             >
               {showPercentagePresetsOnBottom && currencyBalance && !currencyAmount ? (
                 <Flex position="absolute">
                   <AmountInputPresets hoverLtr presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
                 </Flex>
               ) : (
-                <CurrencyInputPanelValue
-                  disabled={disabled}
-                  value={value}
-                  usdValue={usdValue}
-                  isFiatMode={isFiatMode}
-                  priceDifferencePercentage={priceDifferencePercentage}
-                  currencyInfo={currencyInfo}
-                  currencyAmount={currencyAmount}
-                  currencyField={currencyField}
-                  onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
-                  onToggleIsFiatMode={onToggleIsFiatMode}
-                />
+                <Flex row flex={1} justifyContent="space-between" alignItems="center">
+                  <CurrencyInputPanelValue
+                    disabled={disabled}
+                    value={value}
+                    usdValue={usdValue}
+                    isFiatMode={isFiatMode}
+                    priceDifferencePercentage={priceDifferencePercentage}
+                    currencyInfo={currencyInfo}
+                    currencyAmount={currencyAmount}
+                    currencyField={currencyField}
+                    fiatValueVariant={fiatValueVariant}
+                    onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
+                    onToggleIsFiatMode={onToggleIsFiatMode}
+                  />
+                </Flex>
               )}
               {currencyInfo && (
                 <Flex row centered ml="auto" gap="$spacing4" justifyContent="flex-end">
@@ -188,7 +206,7 @@ export const CurrencyInputPanel = memo(
                     currencyBalance={currencyBalance}
                     currencyInfo={currencyInfo}
                     showInsufficientBalanceWarning={showInsufficientBalanceWarning}
-                    hideBalance={!!maxValuationPresets}
+                    hideBalance={!!hidePresets}
                   />
                   {/* Max button */}
                   {showMaxButton && onSetPresetValue && (
@@ -207,6 +225,7 @@ export const CurrencyInputPanel = memo(
                 </Flex>
               )}
             </Flex>
+            {panelAccessory ? <Flex mt={panelAccessoryPaddingTop}>{panelAccessory}</Flex> : null}
           </Flex>
         </TouchableArea>
       )

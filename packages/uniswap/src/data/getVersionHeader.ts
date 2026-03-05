@@ -1,10 +1,5 @@
-import { isExtensionApp } from 'utilities/src/platform'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export const getVersionHeader = (): string => {
-  if (isExtensionApp) {
-    return process.env.VERSION ?? ''
-  } else {
-    // unimplemented for interface
-    return ''
-  }
+  throw new PlatformSplitStubError('getVersionHeader')
 }

@@ -1,17 +1,17 @@
 import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
-import { assume0xAddress } from 'utils/wagmi'
 import { useReadContracts } from 'wagmi'
+import { assume0xAddress } from '~/utils/wagmi'
 
-export enum PairState {
+enum PairState {
   LOADING = 0,
   NOT_EXISTS = 1,
   EXISTS = 2,
   INVALID = 3,
 }
 
-export function useV2Pairs(currencies: [Maybe<Currency>, Maybe<Currency>][]): [PairState, Pair | null][] {
+function useV2Pairs(currencies: [Maybe<Currency>, Maybe<Currency>][]): [PairState, Pair | null][] {
   const chainId = currencies[0]?.[0]?.chainId
   const tokens = useMemo(
     () => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]),

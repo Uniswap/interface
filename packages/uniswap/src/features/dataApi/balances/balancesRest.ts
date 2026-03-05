@@ -68,7 +68,7 @@ export function usePortfolioData({
     const byId: Record<CurrencyId, PortfolioBalance> = {}
 
     portfolioData.portfolio.balances.forEach((balance) => {
-      const portfolioBalance = convertRestBalanceToPortfolioBalance(balance, evmAddress)
+      const portfolioBalance = convertRestBalanceToPortfolioBalance(balance, evmAddress ?? svmAddress)
       if (portfolioBalance) {
         byId[portfolioBalance.currencyInfo.currencyId] = portfolioBalance
       }
@@ -157,7 +157,7 @@ export function convertRestBalanceToPortfolioBalance(
   address?: Address,
 ): PortfolioBalance | undefined {
   const { token, amount, pricePercentChange1d, valueUsd, isHidden } = balance
-  if (!token || !amount) {
+  if (!token || !amount || !(amount.amount > 0)) {
     return undefined
   }
 

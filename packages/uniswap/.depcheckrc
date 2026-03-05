@@ -4,9 +4,12 @@ ignores: [
     "@typechain/ethers-v5",
     "jest-presets",
     "depcheck",
+    "typescript",
+    "@typescript/native-preview",
     "get-graphql-schema",
     "typechain",
-    'tamagui',
+    "tamagui",
+    "@shopify/react-native-skia",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     "uniswap",

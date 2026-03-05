@@ -6,8 +6,15 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { cancelTransaction, replaceTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
-import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { CancelableStepInfo } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
+import {
+  cancelPlanStep,
+  cancelTransaction,
+  replaceTransaction,
+  transactionActions,
+} from 'uniswap/src/features/transactions/slice'
+import { waitForPlanUpdateOrFinalizedState } from 'uniswap/src/features/transactions/swap/plan/planPollingUtils'
+import { isBridge, isChained, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionDetails,
   OnChainTransactionDetails,
@@ -15,9 +22,10 @@ import {
   TransactionDetails,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
+import { isFinalizedTx, isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
+import { cancelPlanStep as cancelPlanStepSaga } from 'wallet/src/features/transactions/cancelPlanStepSaga'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import { processTransactionReceipt } from 'wallet/src/features/transactions/utils'
@@ -96,6 +104,10 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     return undefined
   }
 
+  if (isPlanTransactionDetails(transaction)) {
+    return yield* call(waitForPlanUpdateOrFinalizedState, transaction)
+  }
+
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
   if (!hash) {
     logger.error(new Error('Watching for tx with no hash'), {
@@ -116,33 +128,29 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  const tradingApiPollingFlagEnabled = getStatsigClient().checkGate(
-    getFeatureFlagName(FeatureFlags.TradingApiSwapConfirmation),
-  )
-  // Bridge transactions need to wait for the send part to be confirmed
-  const tradingApiPollingEnabled = tradingApiPollingFlagEnabled && !isBridge(transaction)
-  if (tradingApiPollingEnabled) {
-    // Trading API returns status but not receipt/networkFee, so update the transaction with the these after the transaction is confirmed
-    yield* spawn(updateTransactionWithReceipt, { ...transaction, hash }, provider)
-    status = yield* call(waitForTransactionStatus, { ...transaction, hash })
+  // Bridge transactions need to wait for the send part to be confirmed via ethers, then wait for bridging status from BE
+  if (isBridge(transaction)) {
+    if (transaction.sendConfirmed) {
+      status = yield* call(waitForBridgingStatus, transaction)
+      return { ...transaction, status }
+    }
 
-    return { ...transaction, status, hash }
+    const ethersReceipt = yield* call(waitForReceiptWithSmartPolling, { hash, provider, transaction })
+
+    const updatedTransaction = processTransactionReceipt({
+      ethersReceipt,
+      transaction: { ...transaction, status, hash },
+    })
+
+    return updatedTransaction
   }
 
-  // If the send part was already confirmed, we need to wait for the bridging status from BE
-  if (isBridge(transaction) && transaction.sendConfirmed) {
-    status = yield* call(waitForBridgingStatus, transaction)
-    return { ...transaction, status }
-  }
+  // For non-bridge transactions, use Trading API polling
+  // Trading API returns status but not receipt/networkFee, so update the transaction with these after the transaction is confirmed
+  yield* spawn(updateTransactionWithReceipt, { ...transaction, hash }, provider)
+  status = yield* call(waitForTransactionStatus, { ...transaction, hash })
 
-  const ethersReceipt = yield* call(waitForReceiptWithSmartPolling, { hash, provider, transaction })
-
-  const updatedTransaction = processTransactionReceipt({
-    ethersReceipt,
-    transaction: { ...transaction, status, hash },
-  })
-
-  return updatedTransaction
+  return { ...transaction, status, hash }
 }
 
 /**
@@ -196,6 +204,8 @@ function* handleTimeout({
 }) {
   if (
     isUniswapX(transaction) ||
+    // TODO: SWAP-440/SWAP-441 - Handle Plan transaction timeout
+    isChained(transaction) ||
     !transaction.options.timeoutTimestampMs ||
     !TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)
   ) {
@@ -244,6 +254,26 @@ function* waitForReplacement(chainId: UniverseChainId, id: string) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
     if (payload.chainId === chainId && payload.id === id) {
       return payload
+    }
+  }
+}
+
+/**
+ * Waits for a plan step cancellation action for the given plan ID.
+ * Returns the cancellation payload when received.
+ */
+function* waitForPlanStepCancellation(planId: string) {
+  while (true) {
+    const { payload } = yield* take<ReturnType<typeof cancelPlanStep>>(cancelPlanStep.type)
+    if (payload.planId === planId) {
+      return payload as {
+        chainId: UniverseChainId
+        id: string
+        address: string
+        cancelRequest: providers.TransactionRequest
+        planId: string
+        cancelableStepInfo: CancelableStepInfo
+      }
     }
   }
 }
@@ -315,11 +345,59 @@ export function* watchTransaction({
 }): Generator<unknown> {
   const { chainId, id, hash } = transaction
 
-  logger.debug('watchOnChainTransactionSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
+  logger.debug('watchOnChainTransactionSaga', 'watchTransaction', 'Watching for updates for tx:', { hash, id })
   const provider = yield* call(getProvider, chainId)
   const options = isUniswapX(transaction) ? undefined : transaction.options
   const timeoutTask = yield* fork(handleTimeout, { transaction, apolloClient, provider })
   const listenForAppBackgrounded = options && !options.appBackgroundedWhilePending
+
+  // Handle plan transactions with cancellation support
+  if (isChained(transaction)) {
+    if (!isPlanTransactionDetails(transaction)) {
+      // This should never happen, but the typeguard is needed keep TS happy
+      logger.error(new Error('Invalid plan transaction'), {
+        tags: {
+          file: 'watchOnChainTransactionSaga',
+          function: 'watchTransaction',
+        },
+        extra: { transaction },
+      })
+      return
+    }
+
+    const planTransaction = transaction
+    const { planId } = planTransaction.typeInfo
+
+    const { updatedTransaction, cancelPlanStepRequest } = yield* race({
+      // waitForPlanUpdateOrFinalizedState is called inside waitForRemoteUpdate for plans
+      updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
+      cancelPlanStepRequest: call(waitForPlanStepCancellation, planId),
+    })
+
+    if (timeoutTask.isRunning()) {
+      yield* cancel(timeoutTask)
+    }
+
+    if (cancelPlanStepRequest) {
+      // Execute plan step cancellation
+      yield* call(cancelPlanStepSaga, {
+        planTransaction,
+        cancelRequest: cancelPlanStepRequest.cancelRequest,
+        cancelableStepInfo: cancelPlanStepRequest.cancelableStepInfo,
+      })
+      return
+    }
+
+    if (updatedTransaction) {
+      if (isFinalizedTx(updatedTransaction)) {
+        yield* call(finalizeTransaction, { transaction: updatedTransaction, apolloClient })
+        return
+      } else {
+        yield* put(transactionActions.updateTransaction(updatedTransaction))
+      }
+    }
+    return
+  }
 
   const { updatedTransaction, cancelTx, replace, invalidated, appBackgrounded } = yield* race({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),

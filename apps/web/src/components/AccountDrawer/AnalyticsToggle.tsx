@@ -1,8 +1,8 @@
-import { SettingsToggle } from 'components/AccountDrawer/SettingsToggle'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 // biome-ignore lint/style/noRestrictedImports: Direct analytics import needed for toggling analytics settings
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
+import { SettingsToggle } from '~/components/AccountDrawer/SettingsToggle'
 
 export function AnalyticsToggle() {
   const [allowAnalytics, setAllowAnalytics] = useState<boolean | null>(null)

@@ -1,18 +1,17 @@
-import { getTokenDetailsURL } from 'appGraphql/data/util'
-import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
+import { Currency } from '@uniswap/sdk-core'
 import { useNavigate } from 'react-router'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useEvent } from 'utilities/src/react/hooks'
+import { getTokenDetailsURL } from '~/appGraphql/data/util'
 
-export function useNavigateToTokenDetails(): (tokenData: TokenData) => void {
+export function useNavigateToTokenDetails(): (currency: Maybe<Currency>) => void {
   const navigate = useNavigate()
 
-  return useEvent((tokenData: TokenData) => {
-    if (!tokenData.currencyInfo) {
+  return useEvent((currency: Maybe<Currency>) => {
+    if (!currency) {
       return
     }
 
-    const { currency } = tokenData.currencyInfo
     const url = getTokenDetailsURL({
       address: currency.isNative ? null : currency.address,
       chain: toGraphQLChain(currency.chainId),

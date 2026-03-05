@@ -1,0 +1,77 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`] = `
+<div>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mb-t-space-spa94665593"
+    >
+      <div
+        class="is_TouchableArea  t_group_true"
+        role="button"
+        style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; outline-color: rgba(0, 0, 0, 0); opacity: 1; pointer-events: auto; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing12); justify-content: space-between; align-items: center; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transform: scale(1); transition: 100ms;"
+        tabindex="0"
+      >
+        <div
+          class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa1360334080 _width-10037 _color-accent3"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665593"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 18 18"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M8.99984 0.666748C4.39734 0.666748 0.666504 4.39758 0.666504 9.00008C0.666504 13.6026 4.39734 17.3334 8.99984 17.3334C13.6023 17.3334 17.3332 13.6026 17.3332 9.00008C17.3332 4.39758 13.6023 0.666748 8.99984 0.666748ZM11.9415 11.9418C11.8199 12.0634 11.6598 12.1251 11.4998 12.1251C11.3398 12.1251 11.1798 12.0643 11.0581 11.9418L8.55815 9.44177C8.44065 9.32427 8.37484 9.16508 8.37484 9.00008V4.83341C8.37484 4.48841 8.65484 4.20841 8.99984 4.20841C9.34484 4.20841 9.62484 4.48841 9.62484 4.83341V8.74088L11.9415 11.0576C12.1857 11.3026 12.1857 11.6976 11.9415 11.9418Z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            >
+              <span
+                class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-20px _fontWeight-f-weight-me3083741"
+                data-disable-theme="true"
+              >
+                1 open limit
+              </span>
+            </div>
+          </div>
+          <svg
+            fill="none"
+            stroke-width="2"
+            style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63); transform: rotateZ(270deg);"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 5V19"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+            <path
+              d="M19 12L12 19L5 12"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</div>
+`;

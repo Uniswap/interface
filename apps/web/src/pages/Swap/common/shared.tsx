@@ -1,7 +1,7 @@
-import Row from 'components/deprecated/Row'
-import { Input, InputProps } from 'components/NumericalInput'
-import { css, deprecatedStyled } from 'lib/styled-components'
 import { useLayoutEffect, useState } from 'react'
+import Row from '~/components/deprecated/Row'
+import { Input, InputProps } from '~/components/NumericalInput'
+import { css, deprecatedStyled } from '~/lib/deprecated-styled'
 
 export const NumericalInputFontStyle = css<{ $fontSize?: number }>`
   text-align: left;
@@ -17,10 +17,10 @@ export const NumericalInputWrapper = deprecatedStyled(Row)`
 `
 
 export const StyledNumericalInput = deprecatedStyled(Input)<
-  { $width?: number; $hasPrefix?: boolean; $fontSize?: number } & InputProps
+  { $width?: number; $hasPrefix?: boolean; $fontSize?: number; $prefixWidth?: number } & InputProps
 >`
   max-height: 84px;
-  max-width: ${({ $hasPrefix }) => ($hasPrefix ? 'calc(100% - 43px)' : '100%')};
+  max-width: ${({ $hasPrefix, $prefixWidth }) => ($hasPrefix ? `calc(100% - ${$prefixWidth ?? 43}px)` : '100%')};
   width: ${({ $width }) => `${$width ?? 43}px`}; // this value is from the size of a 0 which is the default value
   font-size: ${({ $fontSize }) => `${$fontSize ?? 70}px`};
   ${NumericalInputFontStyle}

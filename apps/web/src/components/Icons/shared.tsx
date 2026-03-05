@@ -1,4 +1,4 @@
-import { css, deprecatedStyled, keyframes } from 'lib/styled-components'
+import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
 const rotateAnimation = keyframes`
   from {

@@ -1,11 +1,5 @@
 import { Web3Provider as EthersWeb3Provider, ExternalProvider } from '@ethersproject/providers'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
-import { RPC_PROVIDERS } from 'constants/providers'
-import { useActiveAddresses, useActiveWallet, useConnectionStatus } from 'features/accounts/store/hooks'
-import { useAccount } from 'hooks/useAccount'
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
-import usePrevious from 'hooks/usePrevious'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router'
@@ -22,10 +16,16 @@ import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
-import { getWalletMeta, WalletType } from 'utils/walletMeta'
 // biome-ignore lint/style/noRestrictedImports: direct wagmi hooks needed so we can access user's chainId even if unsupported chain
 import { useAccount as useAccountWagmi } from 'wagmi'
+import { recentConnectorIdAtom } from '~/components/Web3Provider/constants'
+import { RPC_PROVIDERS } from '~/constants/providers'
+import { useActiveAddresses, useActiveWallet, useConnectionStatus } from '~/features/accounts/store/hooks'
+import { useAccount } from '~/hooks/useAccount'
+import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
+import usePrevious from '~/hooks/usePrevious'
+import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
+import { getWalletMeta, WalletType } from '~/utils/walletMeta'
 
 /** A component to run hooks under the WebAccountsStore contexts. */
 export function WebAccountsStoreUpdater() {

@@ -279,6 +279,72 @@ describe('createApiNotificationTracker', () => {
     })
   })
 
+  describe('local notifications', () => {
+    it('skips API call for local: prefixed notifications but persists to storage', async () => {
+      const mockApiClient = createMockApiClient()
+      const mockStorage = createMockStorage()
+
+      const tracker = createApiNotificationTracker({
+        notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
+        storage: mockStorage,
+      })
+
+      await tracker.track('local:backup_reminder', mockMetadata)
+
+      // API should NOT be called for local notifications
+      expect(mockApiClient.ackNotification).not.toHaveBeenCalled()
+
+      // Storage should still be updated (persists across sessions)
+      expect(mockStorage.add).toHaveBeenCalledWith('local:backup_reminder', {
+        timestamp: mockMetadata.timestamp,
+      })
+    })
+
+    it('skips both API and storage for local:session: prefixed notifications (memory-only)', async () => {
+      const mockApiClient = createMockApiClient()
+      const mockStorage = createMockStorage()
+
+      const tracker = createApiNotificationTracker({
+        notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
+        storage: mockStorage,
+      })
+
+      await tracker.track('local:session:offline', mockMetadata)
+
+      // API should NOT be called
+      expect(mockApiClient.ackNotification).not.toHaveBeenCalled()
+
+      // Storage should NOT be updated (session-scoped = memory only)
+      expect(mockStorage.add).not.toHaveBeenCalled()
+    })
+
+    it('marks session-scoped notification as processed via pendingAcks', async () => {
+      const mockApiClient = createMockApiClient()
+      const mockStorage = createMockStorage()
+      mockStorage.has.mockResolvedValue(false) // Not in storage
+
+      const tracker = createApiNotificationTracker({
+        notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
+        storage: mockStorage,
+      })
+
+      // Initially not processed
+      expect(await tracker.isProcessed('local:session:offline')).toBe(false)
+
+      // Track it (memory-only)
+      await tracker.track('local:session:offline', mockMetadata)
+
+      // Now processed (via pendingAcks in-memory set)
+      expect(await tracker.isProcessed('local:session:offline')).toBe(true)
+
+      // But storage was NOT written to
+      expect(mockStorage.add).not.toHaveBeenCalled()
+    })
+  })
+
   describe('integration scenarios', () => {
     it('prevents race condition: isProcessed returns true immediately after track is called', async () => {
       const mockApiClient = createMockApiClient()

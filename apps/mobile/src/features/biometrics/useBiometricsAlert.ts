@@ -1,4 +1,4 @@
-import { TFunction } from 'i18next/typescript/t'
+import type { TFunction } from 'i18next'
 import { Alert } from 'react-native'
 import { openSettings } from 'react-native-permissions'
 import { enroll } from 'src/features/biometrics/biometrics-utils'

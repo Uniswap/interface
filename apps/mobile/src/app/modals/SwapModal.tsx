@@ -8,8 +8,8 @@ import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricApp
 import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
+import { clearNotificationsByType } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
@@ -17,22 +17,21 @@ import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/fo
 import { logger } from 'utilities/src/logger/logger'
 import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwapFlow'
 import { invalidateAndRefetchWalletDelegationQueries } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function SwapModal({ route }: AppStackScreenProp<typeof ModalName.Swap>): JSX.Element {
   const appDispatch = useDispatch()
   const initialState = route.params
   const { hapticFeedback } = useHapticFeedback()
 
-  const signerMnemonicAccounts = useSignerAccounts()
-  const chains = useEnabledChains()
-  const accountAddresses = signerMnemonicAccounts.map((account) => account.address)
-
   const { onClose: onCloseModal } = useReactNavigationModal()
 
-  // Clear all notification toasts when the swap modal closes
+  // Clear network change notification toasts when the swap modal closes
   const onClose = useCallback(() => {
-    appDispatch(clearNotificationQueue())
+    appDispatch(
+      clearNotificationsByType({
+        types: [AppNotificationType.NetworkChanged, AppNotificationType.NetworkChangedBridge],
+      }),
+    )
     onCloseModal()
   }, [appDispatch, onCloseModal])
 
@@ -40,10 +39,10 @@ export function SwapModal({ route }: AppStackScreenProp<typeof ModalName.Swap>):
   useEffect(() => {
     const timestamp = Date.now()
     appDispatch(updateSwapStartTimestamp({ timestamp }))
-    invalidateAndRefetchWalletDelegationQueries({ accountAddresses, chainIds: chains.chains }).catch((error) =>
+    invalidateAndRefetchWalletDelegationQueries().catch((error) =>
       logger.debug('SwapModal', 'useEffect', 'Failed to invalidate and refetch wallet delegation queries', error),
     )
-  }, [appDispatch, accountAddresses, chains.chains])
+  }, [appDispatch])
 
   const { openWalletRestoreModal, walletRestoreType } = useWalletRestore()
 

@@ -26,6 +26,7 @@ export enum UniverseChainId {
   Unichain = UniswapSDKChainId.UNICHAIN,
   UnichainSepolia = UniswapSDKChainId.UNICHAIN_SEPOLIA,
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
+  XLayer = UniswapSDKChainId.XLAYER,
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
   Solana = 501000101,
@@ -128,6 +129,7 @@ export interface UniverseChainInfo extends WagmiChain {
   }
   readonly statusPage?: string
   readonly subblockTimeMs?: number // in milliseconds, used for subblock balance checks
+  readonly blockTimeMs?: number // average block time in milliseconds, used for block timestamp estimation
   readonly supportsV4: boolean
   readonly supportsNFTs: boolean
   readonly urlParam: string

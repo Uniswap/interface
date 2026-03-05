@@ -1,23 +1,13 @@
+import type { FlexProps } from 'ui/src'
 import { styled, Text } from 'ui/src'
 
-const FilterButton = styled(Text, {
-  display: 'flex',
-  flexDirection: 'row',
-  height: '100%',
-  color: '$neutral1',
+export const baseActionButtonStyles = {
   backgroundColor: '$surface1',
   m: 0,
-  p: '$spacing2',
-  pr: 6,
-  pl: 14,
   borderRadius: '$rounded12',
-  fontSize: '$medium',
-  lineHeight: 24,
-  fontWeight: '$book',
   borderWidth: 1,
   borderStyle: 'solid',
   borderColor: '$surface3',
-  whiteSpace: 'nowrap',
   flexShrink: 0,
   hoverStyle: {
     cursor: 'pointer',
@@ -26,6 +16,21 @@ const FilterButton = styled(Text, {
   focusStyle: {
     backgroundColor: '$surface2',
   },
+} satisfies FlexProps
+
+const FilterButton = styled(Text, {
+  ...baseActionButtonStyles,
+  display: 'flex',
+  flexDirection: 'row',
+  height: '100%',
+  color: '$neutral1',
+  p: '$spacing2',
+  pr: 6,
+  pl: 14,
+  fontSize: '$medium',
+  lineHeight: 24,
+  fontWeight: '$book',
+  whiteSpace: 'nowrap',
   variants: {
     active: {
       true: {

@@ -92,8 +92,8 @@ export function LongMarkdownText(props: LongMarkdownTextProps): JSX.Element {
           <Markdown
             style={{
               ...markdownStyle,
-              body: { ...markdownStyle.body, height: 'auto' },
-              paragraph: { ...markdownStyle.paragraph, lineHeight: fonts[variant].lineHeight },
+              body: { ...markdownStyle['body'], height: 'auto' },
+              paragraph: { ...markdownStyle['paragraph'], lineHeight: fonts[variant].lineHeight },
             }}
             {...{ children: '.' }}
           />

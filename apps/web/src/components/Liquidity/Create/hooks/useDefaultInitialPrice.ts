@@ -1,9 +1,9 @@
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
+import { PositionField } from '~/types/position'
 
 export function useDefaultInitialPrice({
   currencies,

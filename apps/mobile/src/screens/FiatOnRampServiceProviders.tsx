@@ -22,13 +22,12 @@ import { filterQuotesByPaymentMethod } from 'uniswap/src/features/fiatOnRamp/uti
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useIsForFiltersEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsForFiltersEnabled'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 
-const key = (item: FORQuote): string => item.serviceProviderDetails.serviceProvider
+const key = (item: FORQuote): string => item.serviceProviderDetails?.serviceProvider ?? ''
 
 function Footer(): JSX.Element {
   const { t } = useTranslation()
@@ -57,7 +56,6 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     countryState,
     externalTransactionIdSuffix,
   } = useFiatOnRampContext()
-  const isFORFiltersEnabled = useIsForFiltersEnabled()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   // Reset payment method when screen gains focus
@@ -94,7 +92,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
             cryptoCurrency: quoteCurrency.currencyInfo.currencyId,
             externalTransactionId: externalTransactionIdSuffix,
             fiatCurrency: baseCurrencyInfo.symbol,
-            serviceProvider: item.serviceProviderDetails.serviceProvider,
+            serviceProvider: item.serviceProviderDetails?.serviceProvider ?? '',
             paymentMethodFilter: paymentMethod,
           },
         )
@@ -121,7 +119,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
       <HandleBar backgroundColor="none" />
       <Flex height="100%" gap="$spacing20">
         <Flex px="$spacing24" gap="$gap12" alignItems="flex-start">
-          <BackButton size={iconSizes.icon24} />
+          <BackButton size="$icon.24" />
           <Flex row alignItems="center" justifyContent="space-between" width="100%">
             <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="heading3">
               {isOffRamp ? t('fiatOffRamp.checkout.title') : t('fiatOnRamp.checkout.title')}
@@ -136,7 +134,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
             </Flex>
           </Flex>
         </Flex>
-        {isFORFiltersEnabled && !!quotesSections?.length && (
+        {!!quotesSections?.length && quotesSections.length > 1 && (
           <Flex>
             <EdgeFade side="left" width={24} />
             <PaymentMethodFilter

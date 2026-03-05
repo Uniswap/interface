@@ -1,10 +1,10 @@
-import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'lib/styled-components'
 import { PropsWithChildren, useMemo } from 'react'
-import { darkTheme, lightTheme, ThemeColors } from 'theme/colors'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
-import { getAccent2, getNeutralContrast } from 'theme/utils'
 import { breakpoints } from 'ui/src/theme'
+import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
+import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from '~/lib/deprecated-styled'
+import { darkTheme, lightTheme, ThemeColors } from '~/theme/colors'
+import { darkDeprecatedTheme, lightDeprecatedTheme } from '~/theme/deprecatedColors'
+import { getAccent2, getNeutralContrast } from '~/theme/utils'
 
 const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
@@ -13,7 +13,7 @@ const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
-const MAX_CONTENT_WIDTH_PX = 1200
+export const MAX_CONTENT_WIDTH_PX = 1200
 
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
   MEDIA_WIDTHS,
@@ -136,7 +136,7 @@ function applyOverriddenColors(defaultColors: ThemeColors, overriddenColors?: Pa
 }
 
 export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildren<Partial<ThemeColors>>) {
-  const darkMode = useIsDarkMode()
+  const darkMode = useSelectedColorScheme() === 'dark'
   // biome-ignore lint/correctness/useExhaustiveDependencies: Only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
 

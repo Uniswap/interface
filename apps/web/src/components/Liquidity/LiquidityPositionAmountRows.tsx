@@ -1,15 +1,15 @@
-import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { getChainUrlParam } from 'utils/chainParams'
+import { getTokenDetailsURL } from '~/appGraphql/data/util'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { getChainUrlParam } from '~/utils/chainParams'
 
 type AmountRow = {
   currencyInfo: CurrencyInfo

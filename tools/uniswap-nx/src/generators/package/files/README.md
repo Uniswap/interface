@@ -1,3 +1,0 @@
-# @universe/<%= name %>
-
-// TODO

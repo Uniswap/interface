@@ -95,6 +95,7 @@ export type FiatOnRampStackParamList = {
 }
 
 export type SettingsStackParamList = {
+  [MobileScreens.DebugScreens]: undefined
   [MobileScreens.Dev]: undefined
   [MobileScreens.Settings]: undefined
   [MobileScreens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParams
@@ -106,7 +107,8 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsNotifications]: undefined
   [MobileScreens.SettingsPrivacy]: undefined
   [MobileScreens.SettingsSmartWallet]: undefined
-  [MobileScreens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
+  [MobileScreens.SettingsStorage]: undefined
+  [MobileScreens.SettingsViewSeedPhrase]: { address?: Address; walletNeedsRestore?: boolean } | undefined
   [MobileScreens.SettingsWallet]: { address: Address }
   [MobileScreens.SettingsWalletEdit]: { address: Address }
   [MobileScreens.SettingsWalletManageConnection]: { address: Address }
@@ -162,6 +164,8 @@ export type OnboardingStackParamList = {
 
 export type AppStackParamList = {
   [MobileScreens.Activity]: undefined
+  [MobileScreens.HashcashBenchmark]: undefined
+  [MobileScreens.SessionsDebug]: undefined
   [MobileScreens.Education]: {
     type: EducationContentType
   } & OnboardingStackBaseParams
@@ -183,6 +187,7 @@ export type AppStackParamList = {
   [ModalName.Swap]: TransactionState | undefined
   [ModalName.Explore]: ExploreModalState | undefined
   [ModalName.NotificationsOSSettings]: undefined
+  [ModalName.FiatOnRampAction]: { entry: 'onramp' | 'offramp' }
   [ModalName.FundWallet]: undefined
   [ModalName.KoreaCexTransferInfoModal]: undefined
   [ModalName.ExchangeTransferModal]: { initialState: { serviceProvider: FORServiceProvider } }

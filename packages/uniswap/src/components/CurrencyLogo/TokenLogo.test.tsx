@@ -1,14 +1,14 @@
+// This test expects the invalid image URLs to fail to load, so
+// we silence the error logs to keep the test output clean.
+import 'utilities/src/logger/mocks'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { render } from 'uniswap/src/test/test-utils'
 
-// This test expects the invalid image URLs to fail to load, so
-// we silence the error logs to keep the test output clean.
-jest.mock('utilities/src/logger/logger')
-
-jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
-  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
-}))
+vi.mock('ui/src/components/UniversalImage/internal/PlainImage', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('ui/src/components/UniversalImage/internal/PlainImage.web')>()
+  return { ...actual }
+})
 
 describe('TokenLogo', () => {
   it('renders without error', () => {
@@ -50,9 +50,21 @@ describe('TokenLogo', () => {
       expect(fallbackText).toBeTruthy()
     })
 
-    it('renders image for an absolute path (local file)', () => {
+    it('renders image with a bare path url (treated as local uri)', () => {
       const { queryByTestId } = render(
         <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />,
+      )
+
+      const tokenRemoteSvg = queryByTestId('svg-token-image')
+      const tokenImage = queryByTestId('img-token-image')
+
+      expect(tokenRemoteSvg).toBeFalsy()
+      expect(tokenImage).toBeTruthy()
+    })
+
+    it('renders image for an absolute path (local file)', () => {
+      const { queryByTestId } = render(
+        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="file://test-file" />,
       )
 
       const tokenRemoteSvg = queryByTestId('svg-token-image')

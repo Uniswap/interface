@@ -10,6 +10,7 @@ import { remoteTxStatusToLocalTxStatus } from 'uniswap/src/features/activity/uti
 import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import type {
   TransactionDetails,
   TransactionListQueryResponse,
@@ -101,6 +102,7 @@ export default function extractTransactionDetails(
           tokenAddress: transaction.details.networkFee.tokenAddress ?? DEFAULT_NATIVE_ADDRESS_LEGACY,
           // Use the tokenChain from the networkFee response instead of the transaction's main chain
           chainId: fromGraphQLChain(transaction.details.networkFee.tokenChain) ?? chainId,
+          valueType: ValueType.Exact,
         }
       : undefined
 

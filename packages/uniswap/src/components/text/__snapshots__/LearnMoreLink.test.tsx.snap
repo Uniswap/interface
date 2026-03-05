@@ -1,57 +1,29 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LearnMoreLink renders without error 1`] = `
-<View
-  onBlur={[Function]}
-  onClick={[Function]}
-  onFocus={[Function]}
-  onLayout={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
-  role="button"
-  style={
-    {
-      "backgroundColor": "transparent",
-      "borderBottomLeftRadius": 0,
-      "borderBottomRightRadius": 0,
-      "borderTopLeftRadius": 0,
-      "borderTopRightRadius": 0,
-      "flexDirection": "column",
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
-    }
-  }
-  tabIndex={-1}
->
-  <Text
-    allowFontScaling={true}
-    href="https://example.com"
-    maxFontSizeMultiplier={1.2}
-    onBlur={[Function]}
-    onFocus={[Function]}
-    role="link"
-    style={
-      {
-        "color": "#FF37C7",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
-        "fontWeight": "500",
-        "lineHeight": 19.549999999999997,
-        "textDecorationColor": "rgba(0,0,0,0)",
-        "textDecorationLine": "none",
-      }
-    }
-    suppressHighlighting={true}
-    target="_blank"
+exports[`LearnMoreLink > renders without error 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
   >
-    Learn more
-  </Text>
-</View>
+    <div
+      class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
+      role="button"
+      tabindex="-1"
+    >
+      <a
+        class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none"
+        data-disable-theme="true"
+        href="https://example.com"
+        role="link"
+        target="_blank"
+      >
+        Learn more
+      </a>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
 `;

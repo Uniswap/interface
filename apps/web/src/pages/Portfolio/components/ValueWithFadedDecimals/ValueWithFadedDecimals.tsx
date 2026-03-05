@@ -1,5 +1,5 @@
-import { useParseCurrencyAmountParts } from 'pages/Portfolio/components/ValueWithFadedDecimals/parseCurrencyAmountParts'
 import { EM_DASH, Text, TextProps } from 'ui/src'
+import { useParseCurrencyAmountParts } from '~/pages/Portfolio/components/ValueWithFadedDecimals/parseCurrencyAmountParts'
 
 type ValueWithFadedDecimalsProps = {
   value: string

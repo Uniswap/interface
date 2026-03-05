@@ -1,11 +1,11 @@
 import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react'
 import type { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { ShakeAnimation } from 'ui/src/animations/hooks/useShakeAnimation'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { FontSizeOptions } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
-import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
 import {
   MIN_INPUT_FONT_SIZE,
@@ -18,10 +18,8 @@ import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/Sel
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { NumberType } from 'utilities/src/format/types'
 import { isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 
 type CurrencyInputPanelInputProps = {
@@ -30,6 +28,9 @@ type CurrencyInputPanelInputProps = {
   showDefaultTokenOptions: boolean
   indicativeQuoteTextDisplay: PanelTextDisplay
   onPressDisabledWithShakeAnimation: () => void
+  fontSizeOptions?: Partial<FontSizeOptions>
+  inputRowPaddingVertical?: FlexProps['py']
+  minHeight?: FlexProps['minHeight']
 } & Pick<
   CurrencyInputPanelProps,
   | 'autoFocus'
@@ -51,8 +52,9 @@ type CurrencyInputPanelInputProps = {
   | 'disabled'
   | 'onPressDisabled'
   | 'tokenColor'
-  | 'maxValuationPresets'
-  | 'onSetMaxValuation'
+  | 'onBlur'
+  | 'inputSuffix'
+  | 'hidePresets'
 >
 
 export const CurrencyInputPanelInput = memo(
@@ -77,13 +79,16 @@ export const CurrencyInputPanelInput = memo(
         showInsufficientBalanceWarning,
         showDefaultTokenOptions,
         indicativeQuoteTextDisplay,
-        maxValuationPresets,
-        onSetMaxValuation,
+        onBlur,
+        fontSizeOptions,
+        inputRowPaddingVertical = '$spacing8',
+        minHeight = MIN_INPUT_FONT_SIZE + spacing.spacing36,
+        inputSuffix,
+        hidePresets,
       } = props
 
       const colors = useSporeColors()
       const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
-      const { formatNumberOrString } = useLocalizationContext()
 
       const { value, color } = indicativeQuoteTextDisplay
 
@@ -106,7 +111,7 @@ export const CurrencyInputPanelInput = memo(
         resetSelection,
       })
 
-      const inputFontSize = useCurrencyInputFontSize({ value, focus })
+      const inputFontSize = useCurrencyInputFontSize({ value, focus, options: fontSizeOptions })
 
       const onSelectionChange = useCallback(
         ({
@@ -117,22 +122,6 @@ export const CurrencyInputPanelInput = memo(
         [selectionChange],
       )
 
-      const renderPreset = useCallback(
-        (preset: number) => (
-          <Button
-            fill={false}
-            emphasis="tertiary"
-            variant="default"
-            size="xxsmall"
-            py="$spacing6"
-            onPress={() => onSetMaxValuation?.(preset)}
-          >
-            {formatNumberOrString({ value: preset, type: NumberType.TokenNonTx })}
-          </Button>
-        ),
-        [onSetMaxValuation, formatNumberOrString],
-      )
-
       const refetchAnimationStyle = useRefetchAnimationStyle(props)
 
       return (
@@ -140,8 +129,8 @@ export const CurrencyInputPanelInput = memo(
           row
           alignItems="center"
           justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
-          py="$spacing8"
-          minHeight={MIN_INPUT_FONT_SIZE + spacing.spacing36}
+          py={inputRowPaddingVertical}
+          minHeight={minHeight}
           style={shakeStyle}
         >
           {isFiatMode && (
@@ -166,7 +155,7 @@ export const CurrencyInputPanelInput = memo(
             onLayout={inputFontSize.onLayout}
           >
             {currencyInfo ? (
-              <Flex grow flexShrink={isWebPlatform ? 1 : 0}>
+              <Flex row flexShrink={isWebPlatform ? 1 : 0}>
                 {disabled && (
                   // Invisible TouchableArea overlay to capture onPress events and trigger the shake animation when the input is disabled
                   <TouchableArea
@@ -176,6 +165,7 @@ export const CurrencyInputPanelInput = memo(
                 )}
                 <AmountInput
                   ref={inputRef}
+                  adjustWidthToContent={!!inputSuffix}
                   autoFocus={autoFocus ?? focus}
                   backgroundColor="$transparent"
                   borderWidth="$none"
@@ -206,7 +196,19 @@ export const CurrencyInputPanelInput = memo(
                   onChangeText={onSetExactAmount}
                   onPressIn={onPressIn}
                   onSelectionChange={onSelectionChange}
+                  onBlur={onBlur}
                 />
+                {inputSuffix && (
+                  <Text
+                    allowFontScaling
+                    color="$neutral2"
+                    fontSize={inputFontSize.fontSize}
+                    lineHeight={inputFontSize.lineHeight}
+                    ml="$spacing4"
+                  >
+                    {inputSuffix}
+                  </Text>
+                )}
               </Flex>
             ) : showDefaultTokenOptions && !isWebAppDesktop ? (
               <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
@@ -223,9 +225,7 @@ export const CurrencyInputPanelInput = memo(
               </TouchableArea>
             )}
           </AnimatedFlex>
-          {maxValuationPresets && onSetMaxValuation ? (
-            <AmountInputPresets presets={maxValuationPresets} renderPreset={renderPreset} />
-          ) : (
+          {!hidePresets && (
             <Flex row alignItems="center">
               <SelectTokenButton
                 selectedCurrencyInfo={currencyInfo}

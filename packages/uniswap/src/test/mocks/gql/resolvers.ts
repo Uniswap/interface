@@ -8,8 +8,8 @@ export const defaultResolvers: GraphQLApi.Resolvers = {
     tokenProjects: (parent, args, context, info) => [
       tokenProject({
         priceHistory: priceHistory({
-          duration: info.variableValues.duration
-            ? (info.variableValues.duration as GraphQLApi.HistoryDuration)
+          duration: info.variableValues['duration']
+            ? (info.variableValues['duration'] as GraphQLApi.HistoryDuration)
             : GraphQLApi.HistoryDuration.Day,
         }),
       }),

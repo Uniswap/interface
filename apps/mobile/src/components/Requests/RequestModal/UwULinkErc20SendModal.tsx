@@ -1,18 +1,18 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
+import { type GasFeeResult } from '@universe/api'
 import { formatUnits } from 'ethers/lib/utils'
 import { useTranslation } from 'react-i18next'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
-import { UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, SpinningLoader, Text, useIsDarkMode } from 'ui/src'
+import { type UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex, SpinningLoader, Text, UniversalImage, useIsDarkMode } from 'ui/src'
+import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
-import { RemoteImage } from 'uniswap/src/components/nfts/images/RemoteImage'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { type CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -124,7 +124,10 @@ function UwULinkErc20SendModalContent({
   return (
     <Flex centered gap="$spacing12" justifyContent="space-between">
       {recipientLogoUrl ? (
-        <RemoteImage height={50} uri={recipientLogoUrl} width={200} />
+        <UniversalImage
+          uri={recipientLogoUrl}
+          size={{ height: 50, width: 200, resizeMode: UniversalImageResizeMode.Contain }}
+        />
       ) : (
         <Text variant="subheading1">{request.recipient.name}</Text>
       )}

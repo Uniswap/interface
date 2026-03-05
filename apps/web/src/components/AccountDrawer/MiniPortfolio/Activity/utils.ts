@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { GraphQLApi, TradingApi } from '@universe/api'
-import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { parseUnits } from 'ethers/lib/utils'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
@@ -10,6 +9,7 @@ import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
+import { Activity, ActivityMap } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 
 interface ActivityGroup {
   title: string
@@ -100,10 +100,10 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
  */
 export function getActivityNonce(activity: Activity): BigNumber | undefined {
   if (
+    // sometime the nonce is being sent in as null value
+    // when creating a limit order (should be undefined or BigNumberish)
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     activity.options?.request?.nonce !== undefined &&
-    // TODO(PORT-338): determine why nonce is being sent in as null value
-    // when creating a limit order (should be undefined or BigNumberish)
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     activity.options.request.nonce !== null
   ) {

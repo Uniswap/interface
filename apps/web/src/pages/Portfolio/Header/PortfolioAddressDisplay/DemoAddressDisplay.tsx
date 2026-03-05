@@ -1,15 +1,16 @@
-import { ReactComponent as Unicon } from 'assets/svg/Emblem/default.svg'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ReactComponent as Unicon } from '~/assets/svg/demo-wallet-emblem.svg'
 
-export default function DemoAddressDisplay() {
+export function DemoAddressDisplay() {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
   return (
-    <Flex row alignItems="center" gap="$spacing12">
+    <Flex row alignItems="center" gap="$spacing12" testID={TestID.DemoWalletDisplay}>
       <Flex
         borderRadius="$roundedFull"
         backgroundColor="$accent2"
@@ -28,7 +29,7 @@ export default function DemoAddressDisplay() {
             <Eye color="$neutral2" size="$icon.16" />
           </Flex>
         </Tooltip.Trigger>
-        <Tooltip.Content ml="$spacing8">
+        <Tooltip.Content ml="$spacing8" zIndex={zIndexes.overlay}>
           <Text variant="body4">{t('portfolio.disconnected.demoWallet.description')}</Text>
         </Tooltip.Content>
       </Tooltip>

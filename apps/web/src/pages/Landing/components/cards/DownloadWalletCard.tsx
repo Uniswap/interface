@@ -1,13 +1,12 @@
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { PillButton } from 'pages/Landing/components/cards/PillButton'
-import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
-import { Wallet } from 'pages/Landing/components/Icons'
 import { Trans, useTranslation } from 'react-i18next'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Star } from 'ui/src/components/icons/Star'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { PillButton } from '~/pages/Landing/components/cards/PillButton'
+import ValuePropCard from '~/pages/Landing/components/cards/ValuePropCard'
+import { Wallet } from '~/pages/Landing/components/Icons'
 
 export function DownloadWalletCard() {
   const theme = useSporeColors()

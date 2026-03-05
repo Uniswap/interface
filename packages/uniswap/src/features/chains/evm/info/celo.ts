@@ -38,7 +38,7 @@ export const CELO_CHAIN_INFO = {
   docs: 'https://docs.celo.org/',
   elementName: ElementName.ChainCelo,
   explorer: {
-    name: 'Celoscan',
+    name: 'CeloScan',
     url: 'https://celoscan.io/',
     apiURL: 'https://api.celoscan.io',
   },
@@ -54,6 +54,7 @@ export const CELO_CHAIN_INFO = {
     logo: CELO_LOGO,
   },
   networkLayer: NetworkLayer.L1,
+  blockTimeMs: 5000,
   pendingTransactionsRetryOptions: undefined,
   tokens,
   statusPage: undefined,

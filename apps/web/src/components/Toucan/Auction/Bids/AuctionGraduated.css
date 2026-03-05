@@ -1,0 +1,34 @@
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(10px, -8px); }
+  50% { transform: translate(-5px, 5px); }
+  75% { transform: translate(8px, 3px); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-8px, 10px); }
+  50% { transform: translate(12px, -5px); }
+  75% { transform: translate(-6px, -8px); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(6px, 8px); }
+  50% { transform: translate(-10px, -6px); }
+  75% { transform: translate(4px, 10px); }
+}
+
+@keyframes float4 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-12px, -5px); }
+  50% { transform: translate(8px, 8px); }
+  75% { transform: translate(-4px, 6px); }
+}
+
+@keyframes float5 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(10px, 6px); }
+  50% { transform: translate(-6px, -10px); }
+  75% { transform: translate(12px, -4px); }
+}

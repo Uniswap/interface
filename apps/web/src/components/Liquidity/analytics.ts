@@ -38,6 +38,7 @@ export function getLPBaseAnalyticsProperties({
     ...trace,
     label: [currency0.symbol, currency1.symbol].join('/'),
     type: ProtocolVersion[version],
+    protocol_version: version,
     fee_tier: (typeof fee === 'string' ? parseInt(fee) : fee) ?? FeeAmount.MEDIUM,
     tick_spacing: tickSpacing,
     tick_lower: tickLower,

@@ -1,5 +1,4 @@
-import { COORDINATE_SCALING } from 'components/Toucan/Auction/BidDistributionChart/constants'
-import { findClearingPriceXPosition } from 'components/Toucan/Auction/BidDistributionChart/utils/clearingPrice/position'
+import { findClearingPriceXPosition } from '~/components/Toucan/Auction/BidDistributionChart/utils/clearingPrice/position'
 
 describe('findClearingPriceXPosition', () => {
   describe('exact position match', () => {
@@ -17,33 +16,34 @@ describe('findClearingPriceXPosition', () => {
       expect(result).toBe(15) // (10 + 20) / 2
     })
 
-    it('returns bar center when clearing price is within tolerance of bar', () => {
+    it('returns null when clearing price is close but not exactly equal (no snapping)', () => {
       const bars = [{ tickValue: 1.0, column: { left: 10, right: 20 } }]
 
-      // Clearing price very close to 1.0 (within default tolerance of 1 scaled unit)
-      const scaleFactor = COORDINATE_SCALING.PRICE_SCALE_FACTOR
-      const almostOne = (scaleFactor - 0.5) / scaleFactor
+      // Clearing price very close to 1.0, but not exactly equal
+      const almostOne = 0.99995
 
       const result = findClearingPriceXPosition({
         clearingPrice: almostOne,
         bars,
       })
 
-      expect(result).toBe(15) // Should match despite slight difference
+      // With a single bar, and without snapping-to-ticks, we can't determine a position
+      // unless the clearing price exactly equals the bar's tick value.
+      expect(result).toBeNull()
     })
 
-    it('uses custom position tolerance when provided', () => {
+    it('ignores tolerance params (clearing price does not snap)', () => {
       const bars = [{ tickValue: 1.0, column: { left: 10, right: 20 } }]
 
-      // With larger tolerance, should match
+      // Even with a larger tolerance param, we should not snap to the bar unless values are exactly equal.
       const result1 = findClearingPriceXPosition({
         clearingPrice: 1.01,
         bars,
         positionTolerance: 150, // Increased tolerance
       })
-      expect(result1).toBe(15)
+      expect(result1).toBeNull()
 
-      // With stricter tolerance, should not match
+      // With a stricter tolerance param, behavior is the same (no snapping).
       const result2 = findClearingPriceXPosition({
         clearingPrice: 1.01,
         bars,
@@ -229,9 +229,24 @@ describe('findClearingPriceXPosition', () => {
         bars,
       })
 
-      // Note: Scale factor (10000) causes rounding. 0.00015 * 10000 = 1.5 → rounds to 2
-      // This matches bar1 (0.0001 * 10000 = 1), so returns bar1 center
-      expect(result).toBe(15)
+      // Clearing price is halfway between the two bars, so position is halfway between their centers.
+      expect(result).toBeCloseTo(25, 12)
+    })
+
+    it('supports custom price scale factor for high-precision ticks', () => {
+      const bars = [
+        { tickValue: 0.0000001, column: { left: 10, right: 20 } },
+        { tickValue: 0.0000002, column: { left: 30, right: 40 } },
+      ]
+
+      const result = findClearingPriceXPosition({
+        clearingPrice: 0.00000015,
+        bars,
+        priceScaleFactor: 10000000, // Higher precision to avoid rounding collisions
+      })
+
+      // We don't scale+round for clearing price positioning; this still interpolates between bars.
+      expect(result).toBeCloseTo(25, 12)
     })
 
     it('handles large tick values', () => {
@@ -270,7 +285,7 @@ describe('findClearingPriceXPosition', () => {
       // Bar centers: 35 and 50
       // Ratio: (1.6 - 1.5) / (1.75 - 1.5) = 0.1 / 0.25 = 0.4
       // Result: 35 + 0.4 * (50 - 35) = 41
-      expect(result).toBe(41)
+      expect(result).toBeCloseTo(41, 12)
     })
 
     it('handles bars with varying widths', () => {

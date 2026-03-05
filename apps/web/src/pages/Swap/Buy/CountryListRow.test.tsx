@@ -1,6 +1,6 @@
-import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
-import { US } from 'test-utils/constants'
-import { act, render, screen } from 'test-utils/render'
+import { CountryListRow } from '~/pages/Swap/Buy/CountryListRow'
+import { US } from '~/test-utils/constants'
+import { act, render, screen } from '~/test-utils/render'
 
 describe('CountryListRow', () => {
   it('should render', () => {

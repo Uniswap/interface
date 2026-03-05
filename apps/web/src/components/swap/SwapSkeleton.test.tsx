@@ -1,5 +1,5 @@
-import { SwapSkeleton } from 'components/swap/SwapSkeleton'
-import { render } from 'test-utils/render'
+import { SwapSkeleton } from '~/components/swap/SwapSkeleton'
+import { render } from '~/test-utils/render'
 
 describe('SwapSkeleton.tsx', () => {
   it('renders a skeleton', () => {

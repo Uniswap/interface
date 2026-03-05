@@ -113,13 +113,13 @@ function* watchWalletConnectEvents() {
     try {
       const event = yield* take(wcChannel)
       if (event.type === 'session_proposal') {
-        yield* call(handleSessionProposal, event.proposal)
+        yield* call(handleSessionProposal, event['proposal'])
       } else if (event.type === 'session_request') {
-        yield* call(handleSessionRequest, event.request)
+        yield* call(handleSessionRequest, event['request'])
       } else if (event.type === 'session_authenticate') {
-        yield* call(handleSessionAuthenticate, event.authenticate)
+        yield* call(handleSessionAuthenticate, event['authenticate'])
       } else if (event.type === 'session_delete') {
-        yield* call(handleSessionDelete, event.session)
+        yield* call(handleSessionDelete, event['session'])
       }
     } catch (error) {
       logger.error(error, {
@@ -578,7 +578,7 @@ function* monitorAccountChanges() {
     const allSessions = yield* select(selectAllSessions)
 
     for (const session of Object.values(allSessions)) {
-      const accounts = session.namespaces.eip155?.accounts
+      const accounts = session.namespaces['eip155']?.accounts
 
       // Update all sessions if new active account is included in the session namespacess
       const isNewAccountApprovedInNamespace = accounts?.some((eip155String) => {
@@ -595,7 +595,7 @@ function* monitorAccountChanges() {
       }
 
       // Update WC sessions across all supported chains with the new active account
-      const chains = session.namespaces.eip155?.chains ?? []
+      const chains = session.namespaces['eip155']?.chains ?? []
       yield* call(function* () {
         for (const chainId of chains) {
           yield* call([wcWeb3Wallet, wcWeb3Wallet.emitSessionEvent], {

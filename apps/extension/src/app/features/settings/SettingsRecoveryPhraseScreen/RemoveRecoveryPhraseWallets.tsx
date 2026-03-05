@@ -102,13 +102,7 @@ function AssociatedAccountRow({
       py="$spacing12"
     >
       <Flex shrink>
-        <AddressDisplay
-          disableForcedWidth
-          address={address}
-          captionVariant="body3"
-          size={iconSizes.icon36}
-          variant="body2"
-        />
+        <AddressDisplay address={address} captionVariant="body3" size={iconSizes.icon36} variant="body2" />
       </Flex>
       <Flex flexGrow={0} pl="$padding8">
         <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">

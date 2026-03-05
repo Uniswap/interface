@@ -6,25 +6,39 @@ import {
 import { selectIsTestnetModeEnabled, selectWalletHideSpamTokensSetting } from 'uniswap/src/features/settings/selectors'
 
 import { renderHook } from 'uniswap/src/test/test-utils'
+import type { Mock } from 'vitest'
 
-const UserAgentMock = jest.requireMock('utilities/src/platform')
-jest.mock('utilities/src/platform', () => ({
-  ...jest.requireActual('utilities/src/platform'),
+// Use vi.hoisted to create mutable mock state that can be changed between tests
+const { mockIsMobileApp } = vi.hoisted(() => ({
+  mockIsMobileApp: { value: false },
 }))
 
-jest.mock('@universe/gating', () => ({
-  ...jest.requireActual('@universe/gating'),
-  useFeatureFlag: jest.fn(),
+vi.mock('utilities/src/platform', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('utilities/src/platform')>()
+  return {
+    ...actual,
+    get isMobileApp(): boolean {
+      return mockIsMobileApp.value
+    },
+  }
+})
+
+vi.mock('@universe/gating', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/gating')>()
+  return {
+    ...actual,
+    useFeatureFlag: vi.fn(),
+  }
+})
+
+vi.mock('uniswap/src/features/settings/selectors', () => ({
+  selectIsTestnetModeEnabled: vi.fn(),
+  selectWalletHideSmallBalancesSetting: vi.fn(),
+  selectWalletHideSpamTokensSetting: vi.fn(),
 }))
 
-jest.mock('uniswap/src/features/settings/selectors', () => ({
-  selectIsTestnetModeEnabled: jest.fn(),
-  selectWalletHideSmallBalancesSetting: jest.fn(),
-  selectWalletHideSpamTokensSetting: jest.fn(),
-}))
-
-const mockedSelectWalletHideSpamTokensSetting = selectWalletHideSpamTokensSetting as jest.Mock
-const mockedSelectIsTestnetModeEnabled = selectIsTestnetModeEnabled as jest.Mock
+const mockedSelectWalletHideSpamTokensSetting = selectWalletHideSpamTokensSetting as Mock
+const mockedSelectIsTestnetModeEnabled = selectIsTestnetModeEnabled as Mock
 
 describe('useHideSpamTokensSetting', () => {
   it('should return true when hideSpamTokens is true', () => {
@@ -45,11 +59,11 @@ describe('useHideSpamTokensSetting', () => {
 
   describe('useTestnetModeBannerHeight', () => {
     beforeEach(() => {
-      UserAgentMock.isMobileApp = false
+      mockIsMobileApp.value = false
     })
 
     it('should return TESTNET_MODE_BANNER_HEIGHT when isTestnetModeEnabled is true and isMobileApp is true', () => {
-      UserAgentMock.isMobileApp = true
+      mockIsMobileApp.value = true
       mockedSelectIsTestnetModeEnabled.mockReturnValue(true)
       const { result } = renderHook(() => useTestnetModeBannerHeight())
 

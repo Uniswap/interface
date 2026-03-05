@@ -5,10 +5,10 @@ import { changeChain } from 'src/app/features/dapp/changeChain'
 import { dappStore } from 'src/app/features/dapp/store'
 import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import {
-  ChangeChainRequest,
-  DappRequest,
-  GetCapabilitiesRequest,
-  RevokePermissionsRequest,
+  type ChangeChainRequest,
+  type DappRequest,
+  type GetCapabilitiesRequest,
+  type RevokePermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
 import { focusOrCreateDappRequestWindow } from 'src/app/navigation/utils'
@@ -16,13 +16,13 @@ import {
   contentScriptToBackgroundMessageChannel,
   contentScriptUtilityMessageChannel,
   createBackgroundToSidePanelMessagePort,
-  DappBackgroundPortChannel,
+  type DappBackgroundPortChannel,
   dappResponseMessageChannel,
 } from 'src/background/messagePassing/messageChannels'
 import {
   BackgroundToSidePanelRequestType,
   ContentScriptUtilityMessageType,
-  DappRequestMessage,
+  type DappRequestMessage,
 } from 'src/background/messagePassing/types/requests'
 import { checkAreMigrationsPending, readReduxStateFromStorage } from 'src/background/utils/persistedStateUtils'
 import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
@@ -30,7 +30,7 @@ import { getEnabledChains, hexadecimalStringToInt, toSupportedChainId } from 'un
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
+import { type WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCapabilitiesResponse } from 'wallet/src/features/batchedTransactions/utils'
@@ -145,6 +145,7 @@ export function initMessageBridge(): void {
             senderTabInfo: {
               id: sender.tab.id,
               url: sender.tab.url,
+              frameUrl: getFrameUrl(sender),
               favIconUrl: sender.tab.favIconUrl,
             },
           })
@@ -172,8 +173,8 @@ export function initMessageBridge(): void {
     ContentScriptUtilityMessageType.AnalyticsLog,
     async (message) => {
       const properties: WindowEthereumRequestProperties = {
-        method: message.tags.method ?? '',
-        dappUrl: message.tags.dappUrl ?? '',
+        method: message.tags['method'] ?? '',
+        dappUrl: message.tags['dappUrl'] ?? '',
       }
       const eventName = message.message
       switch (eventName) {
@@ -374,6 +375,7 @@ async function handleRequestAsync({
   const senderTabInfo: SenderTabInfo = {
     id: sender.tab.id,
     url: sender.tab.url,
+    frameUrl: getFrameUrl(sender),
     favIconUrl: sender.tab.favIconUrl,
   }
 
@@ -522,4 +524,30 @@ function queueMessageForPanel({
   }
 
   windowIdToPendingRequestsMap.get(windowIdString)?.push(queuedMessage)
+}
+
+/**
+ * Gets the frame URL from the message sender if the request is from an iframe with a different origin than the top-level page
+ * @param sender - The message sender
+ * @returns The frame URL if applicable, undefined otherwise
+ */
+function getFrameUrl(sender: chrome.runtime.MessageSender): string | undefined {
+  if (!sender.tab?.url || !sender.url) {
+    return undefined
+  }
+
+  try {
+    const tabOrigin = new URL(sender.tab.url).origin
+    const senderOrigin = new URL(sender.url).origin
+    const isFrame = tabOrigin !== senderOrigin
+    return isFrame ? sender.url : undefined
+  } catch (error) {
+    logger.error(error, {
+      tags: {
+        file: 'backgroundDappRequests.ts',
+        function: 'getFrameUrl',
+      },
+    })
+    return undefined
+  }
 }

@@ -16,7 +16,7 @@ export type SettingsDropdownProps = {
 }
 
 const MAX_DROPDOWN_HEIGHT = 220
-const MAX_DROPDOWN_WIDTH = 200
+const MAX_DROPDOWN_WIDTH = 250
 
 export function SettingsDropdown({ selected, items, disableDropdown, onSelect }: SettingsDropdownProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
@@ -38,12 +38,7 @@ export function SettingsDropdown({ selected, items, disableDropdown, onSelect }:
             <Text color="$neutral1" variant="buttonLabel4">
               {selected}
             </Text>
-            <RotatableChevron
-              color="$neutral1"
-              direction={isOpen ? 'up' : 'down'}
-              height={iconSizes.icon16}
-              width={iconSizes.icon20}
-            />
+            <RotatableChevron color="$neutral1" direction={isOpen ? 'up' : 'down'} size="$icon.16" />
           </Flex>
         </Popover.Trigger>
         <Popover.Content zIndex={zIndexes.popover} backgroundColor="$transparent" enableRemoveScroll={true}>

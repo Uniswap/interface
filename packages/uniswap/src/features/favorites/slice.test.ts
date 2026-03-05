@@ -10,7 +10,7 @@ describe(favoritesReducer, () => {
   let store: Store<FavoritesState>
 
   beforeAll(() => {
-    jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined)
   })
 
   beforeEach(() => {

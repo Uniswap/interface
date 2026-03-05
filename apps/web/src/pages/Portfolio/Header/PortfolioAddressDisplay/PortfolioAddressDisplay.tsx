@@ -1,9 +1,13 @@
-import useIsConnected from 'pages/Portfolio/Header/hooks/useIsConnected'
-import ConnectedAddressDisplay from 'pages/Portfolio/Header/PortfolioAddressDisplay/ConnectedAddressDisplay'
-import DemoAddressDisplay from 'pages/Portfolio/Header/PortfolioAddressDisplay/DemoAddressDisplay'
+import { ConnectedAddressDisplay } from '~/pages/Portfolio/Header/PortfolioAddressDisplay/ConnectedAddressDisplay'
+import { DemoAddressDisplay } from '~/pages/Portfolio/Header/PortfolioAddressDisplay/DemoAddressDisplay'
+import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 
-export default function PortfolioAddressDisplay(): JSX.Element {
-  const isConnected = useIsConnected()
+export function PortfolioAddressDisplay({ isCompact }: { isCompact: boolean }): JSX.Element {
+  const showDemoView = useShowDemoView()
 
-  return isConnected ? <ConnectedAddressDisplay /> : <DemoAddressDisplay />
+  if (showDemoView) {
+    return <DemoAddressDisplay />
+  }
+
+  return <ConnectedAddressDisplay isCompact={isCompact} />
 }

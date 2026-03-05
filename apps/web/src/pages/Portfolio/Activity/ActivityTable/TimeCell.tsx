@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react'
 import { Flex, Text, TextProps } from 'ui/src'
 import { useFormattedTimeForActivity } from 'uniswap/src/components/activity/hooks/useFormattedTime'
 import { FORMAT_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
+import { GroupHoverTransition } from '~/components/GroupHoverTransition'
 
 const FORMAT_DATE_WITH_WEEKDAY = 'ddd MMM D, YYYY'
 const CELL_HEIGHT = 36
@@ -25,16 +26,10 @@ function _TimeCell({ timestamp, showFullDateOnHover = false, textAlign = 'left' 
   }, [timestamp, localizedDayjs])
 
   return (
-    <Flex position="relative" width="100%" overflow="hidden" height={CELL_HEIGHT}>
-      <Flex
-        position="absolute"
-        justifyContent="center"
-        transition={showFullDateOnHover ? 'all 0.1s ease-in-out' : undefined}
-        flexDirection="column"
-        y={0}
-        $group-hover={showFullDateOnHover ? { y: -CELL_HEIGHT } : undefined}
-        width="100%"
-      >
+    <GroupHoverTransition
+      showTransition={showFullDateOnHover}
+      height={CELL_HEIGHT}
+      defaultContent={
         <Flex
           height={CELL_HEIGHT}
           justifyContent="center"
@@ -44,15 +39,15 @@ function _TimeCell({ timestamp, showFullDateOnHover = false, textAlign = 'left' 
             {formattedTime}
           </Text>
         </Flex>
-        {showFullDateOnHover && (
-          <Flex height={CELL_HEIGHT} justifyContent="center" alignItems="center">
-            <Text variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
-              {dateLine} {timeLine}
-            </Text>
-          </Flex>
-        )}
-      </Flex>
-    </Flex>
+      }
+      hoverContent={
+        <Flex height={CELL_HEIGHT} justifyContent="center" alignItems="center">
+          <Text variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
+            {dateLine} {timeLine}
+          </Text>
+        </Flex>
+      }
+    />
   )
 }
 

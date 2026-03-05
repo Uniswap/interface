@@ -31,6 +31,7 @@ import {
   USDC_SONEIUM,
   USDC_UNICHAIN,
   USDC_WORLD_CHAIN,
+  USDC_XLAYER,
   USDC_ZKSYNC,
   USDC_ZORA,
   USDT,
@@ -39,6 +40,7 @@ import {
   USDT_BSC,
   USDT_OPTIMISM,
   USDT_POLYGON,
+  USDT0_XLAYER,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
@@ -146,6 +148,13 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(UniverseChainId.Soneium),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Soneium] as Token,
     USDC_SONEIUM,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.XLayer]: [
+    nativeOnChain(UniverseChainId.XLayer),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.XLayer] as Token,
+    USDC_XLAYER,
+    USDT0_XLAYER,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Solana]: [nativeOnChain(UniverseChainId.Solana), USDC_SOLANA].map(buildPartialCurrencyInfo),

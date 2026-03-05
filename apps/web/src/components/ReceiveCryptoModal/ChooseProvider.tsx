@@ -1,12 +1,4 @@
-import { AccountOption } from 'components/ReceiveCryptoModal/AccountOption'
-import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
-import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
-import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
-import { useActiveAddresses } from 'features/accounts/store/hooks'
-import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
-import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { useTranslation } from 'react-i18next'
-import { CopyToClipboard } from 'theme/components/CopyHelper'
 import { Flex, GeneratedIcon, IconButton, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
@@ -14,6 +6,14 @@ import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/u
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { AccountOption } from '~/components/ReceiveCryptoModal/AccountOption'
+import { ProviderOption } from '~/components/ReceiveCryptoModal/ProviderOption'
+import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
+import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
+import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
+import { CopyToClipboard } from '~/theme/components/CopyHelper'
 
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />

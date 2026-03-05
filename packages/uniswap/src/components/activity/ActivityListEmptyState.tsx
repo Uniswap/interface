@@ -12,6 +12,8 @@ interface ActivityListEmptyStateProps {
   description?: string | null
   buttonLabel?: string
   onPress?: () => void
+  dataTestId?: string
+  buttonDataTestId?: string
 }
 
 export function ActivityListEmptyState({
@@ -20,6 +22,8 @@ export function ActivityListEmptyState({
   description,
   buttonLabel,
   onPress,
+  dataTestId,
+  buttonDataTestId,
 }: ActivityListEmptyStateProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -27,7 +31,9 @@ export function ActivityListEmptyState({
     <Flex centered pt="$spacing48" px="$spacing36" style={containerStyle}>
       <BaseCard.EmptyState
         buttonLabel={buttonLabel ?? (isExtensionApp ? t('activity.list.none.button') : undefined)}
+        buttonDataTestId={buttonDataTestId}
         description={description === undefined ? t('activity.list.none.description.default') : description}
+        dataTestId={dataTestId}
         icon={<NoTransactions color="$neutral3" size="$icon.100" />}
         title={title ?? t('activity.list.none.title')}
         onPress={onPress}

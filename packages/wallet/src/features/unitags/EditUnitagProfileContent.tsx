@@ -1,5 +1,5 @@
 import { ProfileMetadata } from '@universe/api'
-import { useEffect, useMemo, useState } from 'react'
+import { type ComponentType, type PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
@@ -48,6 +48,10 @@ import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 const PADDING_WIDTH = isExtensionApp ? '$none' : '$spacing16'
 
+function DefaultButtonWrapper({ children }: PropsWithChildren): JSX.Element {
+  return <>{children}</>
+}
+
 function isProfileMetadataEdited({
   loading,
   updatedMetadata,
@@ -82,12 +86,14 @@ export function EditUnitagProfileContent({
   entryPoint,
   onNavigate,
   onButtonClick,
+  SaveButtonWrapper: ButtonWrapper = DefaultButtonWrapper,
 }: {
   address: string
   unitag: string
   entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet | UnitagScreens.EditProfile
   onNavigate?: () => void
   onButtonClick?: () => void
+  SaveButtonWrapper?: ComponentType<PropsWithChildren>
 }): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount(address)
@@ -341,7 +347,12 @@ export function EditUnitagProfileContent({
                 onPress={avatarSelectionHandler}
               >
                 <Flex backgroundColor="$surface1" borderRadius="$roundedFull">
-                  <UnitagProfilePicture address={address} size={iconSizes.icon70} unitagAvatarUri={avatarImageUri} />
+                  <UnitagProfilePicture
+                    forcePassedAvatarUri={avatarImageUri === undefined && unitagMetadata?.avatar !== undefined}
+                    address={address}
+                    size={iconSizes.icon70}
+                    unitagAvatarUri={avatarImageUri}
+                  />
                 </Flex>
                 <Flex
                   backgroundColor="$surface1"
@@ -421,18 +432,20 @@ export function EditUnitagProfileContent({
           </Flex>
         </Flex>
       </ScrollView>
-      <Button
-        loading={isSaving}
-        isDisabled={!profileMetadataEdited}
-        mt="$spacing12"
-        mx={isExtensionApp ? undefined : '$spacing24'}
-        size="large"
-        variant="branded"
-        fill={false}
-        onPress={onPressSaveChanges}
-      >
-        {t('common.button.save')}
-      </Button>
+      <ButtonWrapper>
+        <Button
+          loading={isSaving}
+          isDisabled={!profileMetadataEdited}
+          mt="$spacing12"
+          mx={isExtensionApp ? undefined : '$spacing24'}
+          size="large"
+          variant="branded"
+          fill={false}
+          onPress={onPressSaveChanges}
+        >
+          {t('common.button.save')}
+        </Button>
+      </ButtonWrapper>
       {showAvatarModal && (
         <ChoosePhotoOptionsModal
           address={address}

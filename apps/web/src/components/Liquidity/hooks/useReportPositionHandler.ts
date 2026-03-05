@@ -1,13 +1,13 @@
-import { PositionInfo } from 'components/Liquidity/types'
-import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { useAppDispatch } from 'state/hooks'
 import { submitPoolSpamReport } from 'uniswap/src/features/reporting/reports'
 import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { useEvent } from 'utilities/src/react/hooks'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { useAppDispatch } from '~/state/hooks'
 
 export function useReportPositionHandler({
   position,

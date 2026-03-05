@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto'
+import fs from 'fs'
 import path from 'path'
 import { loadEnv, transformWithEsbuild } from 'vite'
 import commonjs from 'vite-plugin-commonjs'
@@ -14,12 +16,66 @@ const icons = {
   128: 'assets/icon128.png',
 }
 
+function getPublicAssetsVariant(): 'prod' | 'beta' | 'dev' | 'local' {
+  if (process.env.NODE_ENV === 'development') {
+    return 'local'
+  }
+  if (process.env.BUILD_ENV === 'dev') {
+    return 'dev'
+  }
+  if (process.env.BUILD_ENV === 'beta') {
+    return 'beta'
+  }
+  return 'prod'
+}
+
+const publicAssetsVariant = getPublicAssetsVariant()
+
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.64.0'
+const BASE_VERSION = '1.67.1'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
+
+/**
+ * Vite's optimizeDeps cache hash doesn't include `define` values, so changing env vars
+ * (which are injected via `define` as `process.env.X` replacements) won't invalidate the
+ * pre-bundled deps cache. This compares a hash of the resolved env defines against a stored
+ * hash and forces a re-bundle only when env values actually changed.
+ */
+function shouldInvalidateOptimizeDepsForEnv({
+  defines,
+  cacheDir,
+}: {
+  defines: Record<string, unknown>
+  cacheDir: string
+}): boolean {
+  const hash = createHash('md5').update(JSON.stringify(defines)).digest('hex').slice(0, 16)
+  const hashFile = path.join(cacheDir, '.env-defines-hash')
+
+  try {
+    if (fs.existsSync(hashFile)) {
+      const stored = fs.readFileSync(hashFile, 'utf-8').trim()
+      if (stored === hash) {
+        return false
+      }
+    }
+  } catch {
+    return true
+  }
+
+  try {
+    if (!fs.existsSync(cacheDir)) {
+      fs.mkdirSync(cacheDir, { recursive: true })
+    }
+    fs.writeFileSync(hashFile, hash)
+  } catch {
+    return true
+  }
+
+  return true
+}
 
 // eslint-disable-next-line import/no-unused-modules
 export default defineConfig({
@@ -38,6 +94,43 @@ export default defineConfig({
   // Enable React support
   modules: ['@wxt-dev/module-react'],
 
+  hooks: {
+    // Hook for dynamic asset copying based on build variant.
+    // All assets in `src/publicAssetsByEnv/<variant>` will be copied to `assets/<name>` at build time.
+    'build:publicAssets': (_wxt, files) => {
+      const envDir = path.resolve(import.meta.dirname, 'src/publicAssetsByEnv', publicAssetsVariant)
+      const entries = fs.readdirSync(envDir)
+      for (const entry of entries) {
+        const absoluteSrc = path.resolve(envDir, entry)
+        if (fs.statSync(absoluteSrc).isFile()) {
+          files.push({
+            relativeDest: `assets/${entry}`,
+            absoluteSrc,
+          })
+        }
+      }
+    },
+    // Validate build output after dev builds complete
+    'build:done': async (wxt) => {
+      // Only validate in development mode (dev server)
+      if (wxt.config.mode !== 'development') {
+        return
+      }
+      const { execSync } = await import('node:child_process')
+      try {
+        // Run script directly to avoid Nx dependsOn chain that would trigger a full rebuild
+        execSync('bunx tsx scripts/validateBuildOutput.ts --dev', {
+          cwd: wxt.config.root,
+          stdio: 'inherit',
+        })
+      } catch {
+        // biome-ignore lint/suspicious/noConsole: CLI output for build validation
+        console.error('Build validation failed!')
+        process.exit(1)
+      }
+    },
+  },
+
   // Dynamic manifest generation
   manifest: (env) => {
     // BUILD_ENV logic: no build_env for dev command, otherwise use vite build mode
@@ -45,7 +138,13 @@ export default defineConfig({
     const BUILD_ENV = isDevelopment ? undefined : process.env.BUILD_ENV
 
     // Extension name postfix
-    const EXTENSION_NAME_POSTFIX = BUILD_ENV === 'dev' ? 'DEV' : BUILD_ENV === 'beta' ? 'BETA' : ''
+    const EXTENSION_NAME_POSTFIX = isDevelopment
+      ? 'LOCAL'
+      : BUILD_ENV === 'dev'
+        ? 'DEV'
+        : BUILD_ENV === 'beta'
+          ? 'BETA'
+          : ''
 
     // Name logic: some builds don't have names (when postfix is empty)
     const name = EXTENSION_NAME_POSTFIX ? `${BASE_NAME} ${EXTENSION_NAME_POSTFIX}` : BASE_NAME
@@ -133,6 +232,22 @@ export default defineConfig({
       Object.entries(envVars).map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
     )
 
+    const defines = {
+      __DEV__: !isProduction,
+      global: 'globalThis',
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
+      'process.env.VERSION': JSON.stringify(EXTENSION_VERSION),
+      'process.env.IS_STATIC': '""',
+      'process.env.EXPO_OS': '"web"',
+      ...envDefines,
+      'process.env.REACT_APP_IS_UNISWAP_INTERFACE': '"false"',
+      'process.env.IS_UNISWAP_EXTENSION': '"true"',
+    }
+
+    const cacheDir = path.resolve(__dirname, 'node_modules/.vite')
+    const forceOptimize = shouldInvalidateOptimizeDepsForEnv({ defines, cacheDir })
+
     // External package aliases from web config
     const overrides = {
       buffer: 'buffer',
@@ -147,18 +262,7 @@ export default defineConfig({
     }
 
     return {
-      define: {
-        __DEV__: !isProduction,
-        global: 'globalThis',
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
-        'process.env.VERSION': JSON.stringify(EXTENSION_VERSION),
-        'process.env.IS_STATIC': '""',
-        'process.env.EXPO_OS': '"web"',
-        ...envDefines,
-        'process.env.REACT_APP_IS_UNISWAP_INTERFACE': '"false"',
-        'process.env.IS_UNISWAP_EXTENSION': '"true"',
-      },
+      define: defines,
 
       resolve: {
         extensions: ['.web.tsx', '.web.ts', '.web.js', '.tsx', '.ts', '.js'],
@@ -269,6 +373,7 @@ export default defineConfig({
       ].filter(Boolean),
 
       optimizeDeps: {
+        force: forceOptimize,
         entries: [],
         // noDiscovery: true,
         include: [
@@ -304,7 +409,7 @@ export default defineConfig({
           'elliptic',
           'bn.js',
         ],
-        exclude: ['expo-clipboard'],
+        exclude: ['expo-clipboard', 'vite-plugin-node-polyfills'],
         rollupOptions: {
           resolve: {
             extensions: ['.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],

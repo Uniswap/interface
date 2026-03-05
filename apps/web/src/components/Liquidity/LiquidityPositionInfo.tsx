@@ -1,18 +1,9 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
-import {
-  LiquidityPositionStatusIndicator,
-  LiquidityPositionStatusIndicatorLoader,
-} from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { TextLoader } from 'components/Liquidity/Loader'
-import { PositionInfo } from 'components/Liquidity/types'
-import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Circle, Flex, Text, useMedia } from 'ui/src'
-import { RightArrow } from 'ui/src/components/icons/RightArrow'
+import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -20,7 +11,16 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
-import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
+import { LiquidityPositionInfoBadges } from '~/components/Liquidity/LiquidityPositionInfoBadges'
+import {
+  LiquidityPositionStatusIndicator,
+  LiquidityPositionStatusIndicatorLoader,
+} from '~/components/Liquidity/LiquidityPositionStatusIndicator'
+import { TextLoader } from '~/components/Liquidity/Loader'
+import { PositionInfo } from '~/components/Liquidity/types'
+import { LpIncentivesAprDisplay } from '~/components/LpIncentives/LpIncentivesAprDisplay'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 interface LiquidityPositionInfoProps {
   positionInfo: PositionInfo
@@ -130,7 +130,7 @@ export function LiquidityPositionInfo({
                 isMigrateToV4ButtonVisible
                   ? {
                       label: t('pool.migrateToV4'),
-                      iconAfter: <RightArrow />,
+                      iconAfter: <ArrowRight color="current" />,
                       onPress: () => navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`),
                     }
                   : undefined

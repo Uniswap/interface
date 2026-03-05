@@ -34,6 +34,10 @@ module.exports = {
     // Platform specific restricted imports
     '@typescript-eslint/no-restricted-imports': ['error', restrictedImports],
 
+    // Disable dot-notation to allow TypeScript's noPropertyAccessFromIndexSignature
+    'dot-notation': 'off',
+    '@typescript-eslint/dot-notation': 'off',
+
     // Complexity Rules
     'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
     'max-nested-callbacks': ['error', 3],

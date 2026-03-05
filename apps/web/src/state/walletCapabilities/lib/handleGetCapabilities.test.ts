@@ -1,26 +1,20 @@
 import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core/experimental'
+import 'utilities/src/logger/mocks'
+import { getLogger } from 'utilities/src/logger/logger'
+import type { Mock } from 'vitest'
 import {
   handleGetCapabilities,
   isAtomicBatchingSupportedByChainId,
-} from 'state/walletCapabilities/lib/handleGetCapabilities'
-import { GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
-import { getLogger } from 'utilities/src/logger/logger'
-import type { Mock } from 'vitest'
+} from '~/state/walletCapabilities/lib/handleGetCapabilities'
+import { GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 
 // Mock dependencies
 vi.mock('@wagmi/core/experimental', () => ({
   getCapabilities: vi.fn(),
 }))
 
-vi.mock('components/Web3Provider/wagmiConfig', () => ({
+vi.mock('~/components/Web3Provider/wagmiConfig', () => ({
   wagmiConfig: {},
-}))
-
-vi.mock('utilities/src/logger/logger', () => ({
-  getLogger: vi.fn(() => ({
-    error: vi.fn(),
-    warn: vi.fn(),
-  })),
 }))
 
 describe('walletCapabilities', () => {
@@ -44,7 +38,9 @@ describe('walletCapabilities', () => {
     it('returns null for invalid response', async () => {
       // Make sure the logger is properly mocked before the test
       const mockLoggerWarn = vi.fn()
-      ;(getLogger as Mock).mockReturnValue({ error: vi.fn(), warn: mockLoggerWarn })
+      vi.mocked(getLogger).mockReturnValue({ error: vi.fn(), warn: mockLoggerWarn } as unknown as ReturnType<
+        typeof getLogger
+      >)
 
       // Invalid mock response (missing 0x prefix)
       ;(wagmi_getCapabilities as Mock).mockResolvedValue({ asdada: { atomic: { status: 'supported' } } })
@@ -63,7 +59,9 @@ describe('walletCapabilities', () => {
     it('returns null on error', async () => {
       // Make sure the logger is properly mocked before the test
       const mockLoggerWarn = vi.fn()
-      ;(getLogger as Mock).mockReturnValue({ error: vi.fn(), warn: mockLoggerWarn })
+      vi.mocked(getLogger).mockReturnValue({ error: vi.fn(), warn: mockLoggerWarn } as unknown as ReturnType<
+        typeof getLogger
+      >)
       ;(wagmi_getCapabilities as Mock).mockRejectedValue(new Error('API error'))
 
       expect(await handleGetCapabilities()).toBeNull()

@@ -10,11 +10,10 @@ import { TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/typ
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 
 export function useTokenSectionsForEmptySearch({
-  evmAddress,
-  svmAddress,
+  addresses,
   chainFilter,
 }: Omit<TokenSectionsHookProps, 'oppositeSelectedToken'>): GqlResult<OnchainItemSection<TokenOption>[]> {
-  const { data: trendingTokenOptions, loading } = useTrendingTokensOptions({ evmAddress, svmAddress, chainFilter })
+  const { data: trendingTokenOptions, loading } = useTrendingTokensOptions({ addresses, chainFilter })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 

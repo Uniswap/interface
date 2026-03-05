@@ -24,12 +24,40 @@ import {
   parseReceivingAssets,
   parseSendingAssets,
   parseTransactionSections,
+  roundToDecimals,
   UNLIMITED_APPROVAL_AMOUNT,
 } from 'wallet/src/features/dappRequests/utils/blockaidUtils'
 
 const TEST_CHAIN_ID = UniverseChainId.Mainnet
 
 describe('blockaidUtils', () => {
+  describe('roundToDecimals', () => {
+    it('should round to 6 decimal places', () => {
+      expect(roundToDecimals('123.123456789')).toBe('123.123457')
+    })
+
+    it('should handle exact zero', () => {
+      expect(roundToDecimals(0)).toBe('0')
+      expect(roundToDecimals('0')).toBe('0')
+    })
+
+    it('should preserve non-zero values that would round to zero in decimal notation', () => {
+      expect(roundToDecimals('0.0000001')).toBe('0.0000001')
+      expect(roundToDecimals(0.0000001)).toBe('0.0000001')
+      expect(roundToDecimals('0.00000001')).toBe('0.00000001')
+      expect(roundToDecimals(1e-10)).toBe('0.0000000001')
+    })
+
+    it('should pass through NaN values as original string', () => {
+      expect(roundToDecimals('not a number')).toBe('not a number')
+    })
+
+    it('should remove trailing zeros', () => {
+      expect(roundToDecimals('1.500000')).toBe('1.5')
+      expect(roundToDecimals('2.000000')).toBe('2')
+    })
+  })
+
   describe('getRiskLevelFromClassification', () => {
     it('should return None for undefined classification', () => {
       expect(getRiskLevelFromClassification(undefined)).toBe(TransactionRiskLevel.None)
@@ -162,6 +190,29 @@ describe('blockaidUtils', () => {
       const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
 
       expect(result).toBeNull()
+    })
+
+    it('should preserve very small native token amounts instead of rounding to zero', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'NATIVE',
+            symbol: 'ETH',
+            name: 'Ethereum',
+            chain_id: 1,
+          },
+          out: [
+            {
+              value: '0.0000001',
+              usd_price: '0.0000289',
+            },
+          ],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+      expect(result?.assets[0]?.amount).not.toBe('0')
     })
 
     it('should round amounts to 6 decimal places', () => {

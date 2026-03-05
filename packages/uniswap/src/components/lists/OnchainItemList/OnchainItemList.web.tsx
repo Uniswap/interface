@@ -86,6 +86,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
             sectionKey: section.sectionKey,
             rightElement: section.rightElement,
             endElement: section.endElement,
+            sectionHeader: section.sectionHeader,
           },
           key: section.sectionKey,
           renderSectionHeader,
@@ -245,6 +246,9 @@ export function OnchainItemList<T extends OnchainItemListOption>({
           if (!sections.length) {
             return <Fragment />
           }
+
+          // Prevent overfitting the list, resulting in showing double scroll bar
+          const correctedHeight = height - 1
           return (
             <Flex position="relative">
               <Flex position="absolute" top={0} width="100%" zIndex={zIndexes.sticky}>
@@ -255,7 +259,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
               <List
                 ref={ref}
                 outerRef={listOuterRef}
-                height={height}
+                height={correctedHeight}
                 itemCount={items.length}
                 itemData={items}
                 itemSize={getRowHeight}

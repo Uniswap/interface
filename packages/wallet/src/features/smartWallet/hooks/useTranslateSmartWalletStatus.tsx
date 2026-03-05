@@ -16,6 +16,8 @@ export function useTranslateSmartWalletStatus(): (status: WalletStatus) => strin
           return t('settings.setting.smartWallet.status.unavailable')
         case WalletStatus.ActionRequired:
           return t('settings.setting.smartWallet.status.actionRequired')
+        case WalletStatus.Pending:
+          return t('common.pending')
         default:
           return status
       }

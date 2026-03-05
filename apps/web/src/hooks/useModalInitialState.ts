@@ -1,5 +1,5 @@
-import { OpenModalParams } from 'state/application/reducer'
-import { useAppSelector } from 'state/hooks'
+import { OpenModalParams } from '~/state/application/reducer'
+import { useAppSelector } from '~/state/hooks'
 
 type ExtractModalInitialState<T extends OpenModalParams['name']> = Extract<OpenModalParams, { name: T }>['initialState']
 

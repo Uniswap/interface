@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import type { SVGProps } from 'constants/icons/types'
+import type { SVGProps } from '~/constants/icons/types'
 
 const MXN_ICON = (props: SVGProps) => {
   return (

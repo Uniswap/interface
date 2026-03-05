@@ -1,9 +1,11 @@
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
@@ -12,18 +14,30 @@ import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFo
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useDebouncedGasInfo'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
+/*
+ * ╔═══════════════════════════════════════════════════════════════════════════╗
+ * ║                                                                           ║
+ * ║                                                                           ║
+ * ║   W A R N I N G                                                           ║
+ * ║                                                                           ║
+ * ║   Be very careful when modifying this component and make sure you've      ║
+ * ║   tested your changes with every possible combination of warnings and     ║
+ * ║   mobile device sizes.                                                    ║
+ * ║                                                                           ║
+ * ║                                                                           ║
+ * ╚═══════════════════════════════════════════════════════════════════════════╝
+ */
 export function GasAndWarningRows(): JSX.Element {
-  const isShort = useMedia().short
   const isShortMobileDevice = useIsShortMobileDevice()
+  const isShort = useMedia().short
 
-  const account = useWallet().evmAccount
+  const evmAddress = useActiveAddress(Platform.EVM)
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const { isBlocked } = useIsBlocked(account?.address)
+  const { isBlocked } = useIsBlocked(evmAddress)
 
   const { formScreenWarning, insufficientGasFundsWarning, warnings } = useParsedSwapWarnings()
   const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked
@@ -46,6 +60,36 @@ export function GasAndWarningRows(): JSX.Element {
     setShowWarningModal(true)
   }, [formScreenWarning?.warning.message])
 
+  // Count visible content rows to adjust spacing dynamically.
+  // When 3+ rows are visible, we use minimal spacing to fit within available space
+  // and prevent overflow into the preset buttons.
+  const visibleRowCount = useMemo(() => {
+    let count = 1 // TradeInfoRow always renders
+    if (isBlocked) {
+      count += 1
+    }
+    if (showFormWarning) {
+      count += 1
+    }
+    if (insufficientNativeTokenWarning) {
+      count += 1
+    }
+    return count
+  }, [isBlocked, showFormWarning, insufficientNativeTokenWarning])
+
+  // Calculate gap based on device size and number of visible rows.
+  // Use minimal spacing when 3+ rows are visible to prevent overflow.
+  const gap = useMemo(() => {
+    const hasMultipleWarnings = visibleRowCount >= 3
+    if (isShortMobileDevice) {
+      return '$spacing2'
+    }
+    if (isShort || hasMultipleWarnings) {
+      return '$spacing8'
+    }
+    return '$spacing16'
+  }, [isShortMobileDevice, isShort, visibleRowCount])
+
   return (
     <>
       {formScreenWarning && (
@@ -60,7 +104,7 @@ export function GasAndWarningRows(): JSX.Element {
         Do not add any margins directly to this container, as this component is used in 2 different places.
         Adjust the margin in the parent component instead.
       */}
-      <Flex gap={isShortMobileDevice ? '$spacing2' : isShort ? '$spacing8' : '$spacing16'}>
+      <Flex gap={gap}>
         {isBlocked && (
           // TODO: review design of this warning.
           <BlockedAddressWarning

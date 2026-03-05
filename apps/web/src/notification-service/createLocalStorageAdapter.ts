@@ -4,6 +4,19 @@ import { z } from 'zod'
 
 const NOTIFICATION_STORAGE_KEY = 'uniswap_notifications_processed'
 
+/**
+ * Prefix for session-scoped notifications.
+ * These are stored in sessionStorage instead of localStorage.
+ */
+const SESSION_PREFIX = 'local:session:'
+
+/**
+ * Checks if a notification ID should use session storage.
+ */
+function isSessionNotification(notificationId: string): boolean {
+  return notificationId.startsWith(SESSION_PREFIX)
+}
+
 const NotificationStorageSchema = z.record(
   z.string(),
   z.object({
@@ -53,11 +66,36 @@ function parseNotificationStorage(functionName: string): NotificationStorage {
 export function createLocalStorageAdapter(): NonNullable<ApiNotificationTrackerContext['storage']> {
   return {
     has: async (notificationId: string): Promise<boolean> => {
+      // Session notifications use sessionStorage
+      if (isSessionNotification(notificationId)) {
+        try {
+          return typeof sessionStorage !== 'undefined' && sessionStorage.getItem(notificationId) === 'true'
+        } catch {
+          return false
+        }
+      }
+
+      // Regular notifications use localStorage
       const processedIds = parseNotificationStorage('isProcessed')
       return notificationId in processedIds
     },
 
     add: async (notificationId: string, metadata?: { timestamp: number }): Promise<void> => {
+      // Session notifications use sessionStorage
+      if (isSessionNotification(notificationId)) {
+        try {
+          if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.setItem(notificationId, 'true')
+          }
+        } catch (error) {
+          getLogger().error(error, {
+            tags: { file: 'createLocalStorageAdapter', function: 'add:session' },
+          })
+        }
+        return
+      }
+
+      // Regular notifications use localStorage
       try {
         const processedIds = parseNotificationStorage('track')
         processedIds[notificationId] = { timestamp: metadata?.timestamp ?? Date.now() }

@@ -5,6 +5,9 @@ import { GasEstimate, GraphQLApi, TradingApi } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { SwapRouting } from 'uniswap/src/features/telemetry/types'
+import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
 
 export type ChainIdToTxIdToDetails = Partial<
@@ -14,7 +17,10 @@ export type ChainIdToTxIdToDetails = Partial<
 // Basic identifying info for a transaction
 export interface TransactionId {
   chainId: UniverseChainId
-  // For FOR transactions, this is the externalSessionId
+  /**
+   * For FOR transactions, this is the externalSessionId
+   * For plan transactions, this is the planId
+   */
   id: string
 }
 
@@ -40,11 +46,19 @@ export interface TransactionDetailsCore extends TransactionId {
   typeInfo: TransactionTypeInfo
   status: TransactionStatus
   addedTime: number
-  // Note: hash is mandatory for classic transactions and undefined for unfilled UniswapX orders
-  // It may also become optional for classic if we start tracking txs before they're actually sent
+  /**
+   * Note:
+   * - Classic: hash is mandatory for classic transactions. It may also become optional for classic
+   * if we start tracking txs before they're actually sent
+   * - UniswapX: For UniswapX orders hash may be undefined for non-successful transactions,
+   * as the uniswapx backend does not provide hashes for cancelled, failed, or expired orders.
+   * - Plan: Hash is undefined for plan itself, but is defined for each step in the plan.
+   */
   hash?: string
-  // Includes nonce and confirmed time used by all platforms. Wallets also needs to store receipt
-  // data for EIP-5792 batch transaction tracking
+  /**
+   * Includes nonce and confirmed time used by all platforms. Wallets also needs to store receipt
+   * data for EIP-5792 batch transaction tracking
+   */
   receipt?: TransactionReceipt
   networkFee?: TransactionNetworkFee
   /** Block number for polling optimization */
@@ -79,6 +93,7 @@ export type TransactionNetworkFee = {
   tokenSymbol: string
   tokenAddress: string
   chainId: UniverseChainId
+  valueType: ValueType
 }
 
 // Transaction type extensions that can be combined with any base type
@@ -101,7 +116,7 @@ export interface UniswapXOrderExtension {
   encodedOrder?: string
 
   // The Unix timestamp when the UniswapX order expires and can no longer be filled
-  // TODO(PORT-344): Unify `expiry` field with wallet
+  // TODO(CONS-344): Unify `expiry` field with wallet
   expiry?: number
 }
 
@@ -128,6 +143,17 @@ export interface BridgeTransactionExtension {
   sendConfirmed?: boolean
 }
 
+export interface PlanTransactionExtension {
+  routing: TradingApi.Routing.CHAINED
+  options: TransactionOptions
+  updatedTime: number
+}
+
+export interface WrapUnwrapTransactionExtension {
+  routing: TradingApi.Routing.WRAP | TradingApi.Routing.UNWRAP
+  options: TransactionOptions
+}
+
 // Transaction types using intersection types for flexibility
 export type UniswapXOrderDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = TBase &
   UniswapXOrderExtension
@@ -141,29 +167,44 @@ export type SolanaTransactionDetails<TBase extends TransactionDetailsCore = Wall
 export type BridgeTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = TBase &
   BridgeTransactionExtension
 
+export type PlanTransactionDetails<
+  /**
+   * Used to type the typeInfo field of the PlanTransactionDetails by default without breaking the generic
+   * TransactionTypeInfo used in the TransactionDetails
+   * */
+  TTypeInfo extends TransactionTypeInfo = PlanTransactionInfo,
+  TBase extends TransactionDetailsCore = WalletBaseTransactionDetails,
+> = TBase & PlanTransactionExtension & { typeInfo: TTypeInfo }
+
+export type WrapUnwrapTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> = TBase &
+  WrapUnwrapTransactionExtension
+
 // Generic union types
 export type OnChainTransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> =
   | ClassicTransactionDetails<TBase>
   | BridgeTransactionDetails<TBase>
   | SolanaTransactionDetails<TBase>
+  | WrapUnwrapTransactionDetails<TBase>
 
 export type TransactionDetails<TBase extends TransactionDetailsCore = WalletBaseTransactionDetails> =
   | UniswapXOrderDetails<TBase>
   | OnChainTransactionDetails<TBase>
   | SolanaTransactionDetails<TBase>
+  | PlanTransactionDetails<TransactionTypeInfo, TBase>
 
 export enum TransactionStatus {
   Canceled = 'cancelled',
   Cancelling = 'cancelling',
-  FailedCancel = 'failedCancel',
-  Success = 'confirmed',
+  Expired = 'expired',
   Failed = 'failed',
+  FailedCancel = 'failedCancel',
+  AwaitingAction = 'awaitingAction',
+  InsufficientFunds = 'insufficientFunds',
   Pending = 'pending',
   Replacing = 'replacing',
-  Expired = 'expired',
-  InsufficientFunds = 'insufficientFunds',
+  Success = 'confirmed',
+  Queued = 'queued',
   Unknown = 'unknown',
-  // May want more granular options here later like InMemPool
 }
 
 export enum QueuedOrderStatus {
@@ -193,17 +234,25 @@ export const FINAL_STATUSES = [
 ] as const
 export type FinalizedTransactionStatus = (typeof FINAL_STATUSES)[number]
 
-export type FinalizedTransactionDetails = TransactionDetails &
-  (
-    | {
-        status: TransactionStatus.Success
-        hash: string
-      }
-    | {
-        status: Exclude<FinalizedTransactionStatus, TransactionStatus.Success>
-        hash?: string // Hash may be undefined for non-successful transactions, as the uniswapx backend does not provide hashes for cancelled, failed, or expired orders.
-      }
-  )
+/** Finalized state for a plan which will not have a hash. */
+export type FinalizedPlanTXDetails = PlanTransactionDetails & {
+  status: FinalizedTransactionStatus
+  hash?: TransactionDetailsCore['hash']
+}
+
+export type FinalizedTransactionDetails =
+  | (TransactionDetails &
+      (
+        | {
+            status: TransactionStatus.Success
+            hash: NonNullable<TransactionDetailsCore['hash']>
+          }
+        | {
+            status: Exclude<FinalizedTransactionStatus, TransactionStatus.Success>
+            hash?: TransactionDetailsCore['hash']
+          }
+      ))
+  | FinalizedPlanTXDetails
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
@@ -265,6 +314,7 @@ export enum TransactionType {
   // All asset types
   Send = 'send',
   Receive = 'receive',
+  Withdraw = 'withdraw',
 
   // Fiat onramp
   FiatPurchaseDeprecated = 'fiat-purchase', // Deprecated, still here for use in migrations.
@@ -296,10 +346,19 @@ export enum TransactionType {
   ClaimUni = 'claim-uni',
   CreatePosition = 'create-position',
   LPIncentivesClaimRewards = 'lp-incentives-claim-rewards',
+  ToucanBid = 'toucan-bid',
+  ToucanWithdrawBidAndClaimTokens = 'toucan-withdraw-bid-and-claim-tokens',
   UniswapXOrder = 'uniswapx-order',
+
+  AuctionBid = 'auction-bid',
+  AuctionClaimed = 'auction-claimed',
+  AuctionExited = 'auction-exited',
 
   // Smart Wallet
   RemoveDelegation = 'remove-delegation',
+
+  // Plan
+  Plan = 'plan',
 }
 
 export interface BaseTransactionInfo {
@@ -342,7 +401,24 @@ export interface RemoveDelegationTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
 }
 
-export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
+export type PlanSwapTransactionInfoFields = {
+  /** True if this is the final step in a multi-step flow (e.g., Plan) */
+  isFinalStep?: boolean
+  /** Chained action plan identifier */
+  planId?: string
+  /** Zero-based step index within the plan */
+  stepIndex?: number
+  /** Total number of steps in the plan */
+  totalSteps?: number
+  /** Total number of non-error steps in the plan, excluding error/retry steps */
+  totalNonErrorSteps?: number
+  /** Type of step (TransactionStepType enum value) */
+  stepType?: string
+  /** Per-step routing type for plan steps */
+  stepRouting?: SwapRouting
+}
+
+export interface BaseSwapTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields {
   type: TransactionType.Swap
   tradeType?: TradeType
   inputCurrencyId: string
@@ -362,13 +438,11 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
    * */
   isUniswapXOrder?: boolean
 
-  // True if this is the final step in a multi-step flow (e.g., chained actions)
-  isFinalStep?: boolean
-  // Timestamp when the swap flow started (from Redux timing.swap.startTimestamp)
+  /** Timestamp when the swap flow started (from Redux timing.swap.startTimestamp) */
   swapStartTimestamp?: number
 }
 
-export interface BridgeTransactionInfo extends BaseTransactionInfo {
+export interface BridgeTransactionInfo extends BaseTransactionInfo, PlanSwapTransactionInfoFields {
   type: TransactionType.Bridge
   inputCurrencyId: string
   inputCurrencyAmountRaw: string
@@ -378,9 +452,7 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo {
   gasUseEstimate?: string
   routingDappInfo?: DappInfoTransactionDetails
   depositConfirmed?: boolean // interface only
-  // True if this is the final step in a multi-step flow (e.g., chained actions)
-  isFinalStep?: boolean
-  // Timestamp when the swap flow started (from Redux timing.swap.startTimestamp)
+  /** Timestamp when the swap flow started (from Redux timing.swap.startTimestamp) */
   swapStartTimestamp?: number
 }
 
@@ -434,6 +506,14 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo
+  dappInfo?: DappInfoTransactionDetails
+}
+
+export interface WithdrawTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Withdraw
+  assetType: AssetType.Currency
+  tokenAddress: string
+  currencyAmountRaw?: string
   dappInfo?: DappInfoTransactionDetails
 }
 
@@ -571,6 +651,79 @@ export interface LpIncentivesClaimTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
 }
 
+export interface ToucanBidTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.ToucanBid
+  /**
+   * Raw bid token amount committed with the bid (denominated in bid token units)
+   */
+  amountRaw: string
+  /**
+   * Snapped Q96 max price submitted with the bid
+   */
+  maxPriceQ96: string
+  /**
+   * Address of the auction contract handling the bid
+   */
+  auctionContractAddress: string
+  /**
+   * Address of the bid token (zero address when bidding with native token)
+   */
+  bidTokenAddress: string
+  /**
+   * Identifier returned from the Toucan auction service
+   */
+  requestId: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
+export interface ToucanWithdrawBidAndClaimTokensTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.ToucanWithdrawBidAndClaimTokens
+  /**
+   * Address of the auction contract from which bid tokens are withdrawn and auction tokens are claimed
+   */
+  auctionContractAddress: string
+  /**
+   * Address of the auction token being claimed (optional)
+   */
+  auctionTokenAddress?: string
+  /**
+   * Raw amount of auction tokens claimed (optional)
+   */
+  auctionTokenAmountRaw?: string
+  /**
+   * Address of the bid token being withdrawn (optional)
+   */
+  bidTokenAddress?: string
+  /**
+   * Raw amount of bid tokens withdrawn (optional)
+   */
+  bidTokenAmountRaw?: string
+}
+
+export interface AuctionBidTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.AuctionBid
+  auctionContractAddress: string
+  bidTokenAddress: string
+  amountRaw: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
+export interface AuctionClaimedTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.AuctionClaimed
+  auctionContractAddress: string
+  tokenAddress: string
+  amountRaw: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
+export interface AuctionExitedTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.AuctionExited
+  auctionContractAddress: string
+  tokenAddress: string
+  amountRaw: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
 export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionInfo {
   type: TransactionType.MigrateLiquidityV2ToV3
   baseCurrencyId: string
@@ -578,9 +731,24 @@ export interface MigrateV2LiquidityToV3TransactionInfo extends BaseTransactionIn
   isFork: boolean
 }
 
+export interface PlanTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Plan
+  planId: string
+  planStatus: TradingApi.PlanStatus | undefined
+  stepDetails: TransactionDetails[]
+  tokenOutChainId: UniverseChainId
+  inputCurrencyId: CurrencyId
+  outputCurrencyId: CurrencyId
+  inputCurrencyAmountRaw: string
+  outputCurrencyAmountRaw: string
+  tradeType: TradeType.EXACT_INPUT
+  transactionHashes?: string[]
+}
+
 export type TransactionTypeInfo =
   | ApproveTransactionInfo
   | Permit2ApproveTransactionInfo
+  | PlanTransactionInfo
   | BridgeTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
@@ -588,6 +756,7 @@ export type TransactionTypeInfo =
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
+  | WithdrawTransactionInfo
   | NFTTradeTransactionInfo
   | NFTApproveTransactionInfo
   | NFTMintTransactionInfo
@@ -609,6 +778,11 @@ export type TransactionTypeInfo =
   | MigrateV2LiquidityToV3TransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
   | LpIncentivesClaimTransactionInfo
+  | ToucanBidTransactionInfo
+  | ToucanWithdrawBidAndClaimTokensTransactionInfo
+  | AuctionBidTransactionInfo
+  | AuctionClaimedTransactionInfo
+  | AuctionExitedTransactionInfo
 
 /**
  * Typeguard to check if a `TransactionTypeInfo` has a specific attribute.
@@ -634,6 +808,19 @@ export function extractTransactionTypeInfoAttribute<K extends AllKeysOf<Transact
     return (typeInfo as Record<K, unknown>)[attribute] as ExtractPropertyType<TransactionTypeInfo, K>
   }
   return undefined
+}
+
+/** Extracts all plan-related fields from a TransactionTypeInfo union, if they exist */
+export function extractPlanFieldsFromTypeInfo(typeInfo: TransactionTypeInfo): PlanSwapTransactionInfoFields {
+  return {
+    planId: extractTransactionTypeInfoAttribute(typeInfo, 'planId'),
+    stepIndex: extractTransactionTypeInfoAttribute(typeInfo, 'stepIndex'),
+    totalSteps: extractTransactionTypeInfoAttribute(typeInfo, 'totalSteps'),
+    totalNonErrorSteps: extractTransactionTypeInfoAttribute(typeInfo, 'totalNonErrorSteps'),
+    stepType: extractTransactionTypeInfoAttribute(typeInfo, 'stepType'),
+    stepRouting: extractTransactionTypeInfoAttribute(typeInfo, 'stepRouting'),
+    isFinalStep: extractTransactionTypeInfoAttribute(typeInfo, 'isFinalStep'),
+  }
 }
 
 export enum TransactionDetailsType {

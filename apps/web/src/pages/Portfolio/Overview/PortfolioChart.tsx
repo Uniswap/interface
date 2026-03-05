@@ -1,8 +1,5 @@
 import { ChartPeriod, GetPortfolioChartResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { GraphQLApi } from '@universe/api'
-import { ChartSkeleton } from 'components/Charts/LoadingState'
-import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
-import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +16,11 @@ import {
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
+import { ChartSkeleton } from '~/components/Charts/LoadingState'
+import { PriceChart, PriceChartData } from '~/components/Charts/PriceChart'
+import { ChartType, PriceChartType } from '~/components/Charts/utils'
 
 const ChartContainer = styled(Flex, {
   width: '100%',
@@ -64,6 +65,13 @@ function convertPortfolioChartDataToPriceChartData(
       close: value,
     }
   })
+}
+
+const periodLabelToTestIdSuffix: Record<number, string> = {
+  [ChartPeriod.DAY]: '1d',
+  [ChartPeriod.WEEK]: '1w',
+  [ChartPeriod.MONTH]: '1m',
+  [ChartPeriod.YEAR]: '1y',
 }
 
 interface PortfolioChartProps {
@@ -117,9 +125,11 @@ export function PortfolioChart({
     return options.map(([period, label]) => ({
       value: String(period),
       display: (
-        <Text variant="buttonLabel4" color={period === selectedPeriod ? undefined : '$neutral2'}>
-          {label}
-        </Text>
+        <Flex data-testid={`${TestID.PortfolioChartPeriodPrefix}${periodLabelToTestIdSuffix[period]}`}>
+          <Text variant="buttonLabel4" color={period === selectedPeriod ? undefined : '$neutral2'}>
+            {label}
+          </Text>
+        </Flex>
       ),
     }))
   }, [selectedPeriod, t])
@@ -165,7 +175,7 @@ export function PortfolioChart({
   }, [locale, appFiatCurrencyInfo.code])
 
   return (
-    <Flex gap="$spacing16" grow shrink>
+    <Flex gap="$spacing16" grow shrink testID={TestID.PortfolioTotalBalance}>
       {error ? (
         <ChartContainer centered grow shrink>
           <ChartSkeleton
@@ -179,7 +189,11 @@ export function PortfolioChart({
           <ChartSkeleton type={ChartType.PRICE} height={CHART_HEIGHT} />
         </ChartContainer>
       ) : isPortfolioZero || isChartEmpty ? (
-        <Flex height={UNFUNDED_CHART_SKELETON_HEIGHT} position="relative">
+        <Flex
+          height={UNFUNDED_CHART_SKELETON_HEIGHT}
+          position="relative"
+          data-testid={TestID.PortfolioOverviewEmptyBalance}
+        >
           <Text variant="heading1" color="$neutral3">
             {convertFiatAmountFormatted(0, NumberType.PortfolioBalance)}
           </Text>

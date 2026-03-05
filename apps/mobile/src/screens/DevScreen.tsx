@@ -17,7 +17,7 @@ import {
 } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { logger } from 'utilities/src/logger/logger'
 import { UniconSampleSheet } from 'wallet/src/components/DevelopmentOnly/UniconSampleSheet'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'

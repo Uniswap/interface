@@ -1,11 +1,7 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Dropdown } from 'components/Dropdowns/Dropdown'
-import { lpStatusConfig } from 'components/Liquidity/constants'
-import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, LabeledCheckbox, Text, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -13,6 +9,10 @@ import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCi
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Dropdown } from '~/components/Dropdowns/Dropdown'
+import { lpStatusConfig } from '~/components/Liquidity/constants'
+import { getProtocolStatusLabel, getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 const StyledDropdownButton = {
   borderRadius: '$rounded16',
@@ -163,7 +163,7 @@ export function PositionsHeader({
                     p="$padding8"
                     {...ClickableTamaguiStyle}
                   >
-                    <RotatableChevron direction="down" height={20} width={20} color="$surface1" />
+                    <RotatableChevron direction="down" size="$icon.20" color="$surface1" />
                   </Flex>
                 }
                 buttonStyle={{

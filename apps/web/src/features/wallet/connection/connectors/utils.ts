@@ -1,4 +1,4 @@
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 /** Phantom will throw an error with this message if dapp attempts to connect when the wallet is pointed at a single platform / (private key import). */
 const PHANTOM_SINGLE_PLATFORM_MESSAGE = 'Requested resource not available'

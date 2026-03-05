@@ -1,15 +1,25 @@
-vi.mock('hooks/Tokens')
+vi.mock('~/hooks/Tokens')
 
-import { useCurrencyInfo } from 'hooks/Tokens'
-import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
-import { MultichainContext } from 'state/multichain/types'
-import { SendContext, SendContextType } from 'state/send/SendContext'
-import { SwapAndLimitContext } from 'state/swap/types'
-import { DAI_INFO } from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
-import { act, renderWithUniswapContext, screen } from 'test-utils/render'
+// Mock only what's needed for tests to pass
+vi.mock('uniswap/src/features/accounts/store/hooks', () => {
+  return {
+    useActiveAddresses: () => ({
+      evmAddress: undefined,
+      svmAddress: undefined,
+    }),
+  }
+})
+
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { useCurrencyInfo } from '~/hooks/Tokens'
+import SendCurrencyInputForm from '~/pages/Swap/Send/SendCurrencyInputForm'
+import { MultichainContext } from '~/state/multichain/types'
+import { SendContext, SendContextType } from '~/state/send/SendContext'
+import { SwapAndLimitContext } from '~/state/swap/types'
+import { DAI_INFO } from '~/test-utils/constants'
+import { mocked } from '~/test-utils/mocked'
+import { act, renderWithUniswapContext, screen } from '~/test-utils/render'
 
 const mockMultichainContextValue = {
   reset: vi.fn(),

@@ -1,9 +1,8 @@
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -14,12 +13,12 @@ import {
   ExecuteSwapParams,
   SwapHandlers,
 } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
-import { getEVMTxRequest, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { getEVMTxRequest, isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { toStringish } from 'uniswap/src/utils/number'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { executeSwapActions } from 'wallet/src/features/transactions/swap/configuredSagas'
+import { useAccountsStore, useActiveAddress } from 'wallet/src/features/accounts/store/hooks'
+import { executePlanActions, executeSwapActions } from 'wallet/src/features/transactions/swap/configuredSagas'
 import { useSwapSigning } from 'wallet/src/features/transactions/swap/hooks/useSwapSigning'
 
 /**
@@ -30,10 +29,12 @@ export function useSwapHandlers(): SwapHandlers {
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const trace = useTrace()
+  const evmAddress = useActiveAddress(Platform.EVM)
 
-  const { data: portfolioData } = usePortfolioTotalValue({
-    evmAddress: useWallet().evmAccount?.address,
-    fetchPolicy: 'cache-first',
+  const { data: portfolioData } = usePortfolioTotalValue({ evmAddress, fetchPolicy: 'cache-first' })
+
+  const caip25Info = useAccountsStore((state) => {
+    return state.getActiveConnector(Platform.EVM).session?.caip25Info
   })
 
   const signing = useSwapSigning()
@@ -44,7 +45,7 @@ export function useSwapHandlers(): SwapHandlers {
       signing.markExecutionCalled()
 
       const {
-        account: executeAccount,
+        address,
         swapTxContext,
         currencyInAmountUSD,
         currencyOutAmountUSD,
@@ -54,6 +55,7 @@ export function useSwapHandlers(): SwapHandlers {
         onSuccess,
         onFailure,
         onPending,
+        onClearForm,
         txId,
         isFiatInputMode,
         setCurrentStep,
@@ -62,7 +64,7 @@ export function useSwapHandlers(): SwapHandlers {
 
       const { trade, gasFee } = swapTxContext
       const txRequest = getEVMTxRequest(swapTxContext)
-      const isSmartWalletTransaction = txRequest?.to === executeAccount.address
+      const isSmartWalletTransaction = txRequest?.to === address
 
       const analytics = getBaseTradeAnalyticsProperties({
         formatter,
@@ -78,29 +80,28 @@ export function useSwapHandlers(): SwapHandlers {
         swapStartTimestamp,
       })
 
-      // Get the best available signed transaction
-      const preSignedTransaction = await signing.getValidSignedTransaction(swapTxContext)
-
       // Clear signing state after getting the transaction
       signing.clearSigningState()
 
-      const accountMeta: AccountMeta = { ...executeAccount, type: executeAccount.accountType }
-
-      // Dispatch the execute swap saga
-      dispatch(
-        executeSwapActions.trigger({
-          swapTxContext,
-          txId,
-          account: accountMeta,
-          analytics,
-          onSuccess,
-          onFailure,
-          onPending,
-          preSignedTransaction,
-          setCurrentStep,
-          setSteps,
-        }),
-      )
+      const commonParams = {
+        swapTxContext,
+        caip25Info,
+        txId,
+        address,
+        analytics,
+        onSuccess,
+        onFailure,
+        onPending,
+        setCurrentStep,
+        setSteps,
+        onClearForm,
+      }
+      if (isChained(swapTxContext)) {
+        dispatch(executePlanActions.trigger(commonParams))
+      } else {
+        const preSignedTransaction = await signing.getValidSignedTransaction(swapTxContext)
+        dispatch(executeSwapActions.trigger({ ...commonParams, preSignedTransaction }))
+      }
 
       // Send analytics event similar to useSwapCallback
       const blockNumber = getClassicQuoteFromResponse(trade.quote)?.blockNumber?.toString()
@@ -119,7 +120,7 @@ export function useSwapHandlers(): SwapHandlers {
       // Reset swap start timestamp
       dispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [dispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace, signing],
+    [dispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace, signing, caip25Info],
   )
 
   return useMemo(

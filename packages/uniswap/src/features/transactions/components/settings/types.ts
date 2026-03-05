@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import type { FeatureFlags } from '@universe/gating'
 import type { AppTFunction } from 'ui/src/i18n/types'
 import type { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -14,6 +15,8 @@ export type TransactionSettingConfig = {
   Description?: React.FunctionComponent
   /** Array of platforms where this setting is applicable. */
   applicablePlatforms: Platform[]
+  /** If defined, hide this setting if the trade routing matches an array item. */
+  inapplicableTradeRouting?: TradingApi.Routing[]
   /** The UI that is displayed on the right side of a settings row, e.g. a Switch. If `Screen` is also defined, pressing `Control` will navigate to the screen. */
   Control: React.FunctionComponent
   /** The UI that will render if `Control` is pressed. */

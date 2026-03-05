@@ -1,26 +1,24 @@
 import { GraphQLApi } from '@universe/api'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
 import { useEffect } from 'react'
-import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
-import { removeFiatOnRampTransaction, updateFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
-import {
-  backendStatusToFiatOnRampStatus,
-  FiatOnRampTransactionStatus,
-  FiatOnRampTransactionType,
-} from 'state/fiatOnRampTransactions/types'
-import { statusToTransactionInfoStatus } from 'state/fiatOnRampTransactions/utils'
-import { useAppDispatch } from 'state/hooks'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ForApiClient } from 'uniswap/src/data/apiClients/forApi/ForApiClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
-import { FORTransactionRequest } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import useInterval from '~/lib/hooks/useInterval'
+import { useFiatOnRampTransactions } from '~/state/fiatOnRampTransactions/hooks'
+import { removeFiatOnRampTransaction, updateFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/reducer'
+import {
+  backendStatusToFiatOnRampStatus,
+  FiatOnRampTransactionStatus,
+  FiatOnRampTransactionType,
+} from '~/state/fiatOnRampTransactions/types'
+import { statusToTransactionInfoStatus } from '~/state/fiatOnRampTransactions/utils'
+import { useAppDispatch } from '~/state/hooks'
 
 export default function Updater(): null {
   const transactions = useFiatOnRampTransactions()
@@ -34,17 +32,11 @@ export default function Updater(): null {
   useInterval(() => {
     Object.values(transactions).forEach(async (transaction) => {
       if (!transaction.forceFetched && transaction.type === FiatOnRampTransactionType.BUY) {
-        const requestParams: FORTransactionRequest = {
+        const data = await ForApiClient.getTransaction({
           sessionId: transaction.externalSessionId,
           forceFetch: true,
-        }
-        const result = await fetch(`${uniswapUrls.forApiUrl}/Transaction`, {
-          headers: FOR_API_HEADERS,
-          method: 'POST',
-          body: JSON.stringify(requestParams),
         })
-        const data = await result.json()
-        if (data?.transaction) {
+        if (data.transaction) {
           dispatch(updateFiatOnRampTransaction({ ...transaction, forceFetched: true }))
           sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransactionUpdated, {
             status: FiatOnRampTransactionStatus.PENDING,
@@ -70,17 +62,11 @@ export default function Updater(): null {
         transaction.type === FiatOnRampTransactionType.SELL &&
         (!transaction.forceFetched || transaction.status === FiatOnRampTransactionStatus.PENDING)
       ) {
-        const requestParams: FORTransactionRequest = {
+        const data = await ForApiClient.getTransaction({
           sessionId: transaction.externalSessionId,
           forceFetch: true,
-        }
-        const result = await fetch(`${uniswapUrls.forApiUrl}/Transaction`, {
-          headers: FOR_API_HEADERS,
-          method: 'POST',
-          body: JSON.stringify(requestParams),
         })
-        const data = await result.json()
-        if (data?.transaction) {
+        if (data.transaction) {
           if (!transaction.original) {
             dispatch(
               updateFiatOnRampTransaction({
@@ -93,8 +79,8 @@ export default function Updater(): null {
             const newStatus = statusToTransactionInfoStatus(data.transaction.status)
             if (transaction.status !== newStatus) {
               const currencyId = buildCurrencyId(
-                Number(data.transaction.cryptoDetails.chainId) as UniverseChainId,
-                data.transaction.tokenAddress,
+                Number(data.transaction.cryptoDetails?.chainId) as UniverseChainId,
+                data.transaction.destinationContractAddress,
               )
 
               const popupKey = `forTransaction-${transaction.externalSessionId}`

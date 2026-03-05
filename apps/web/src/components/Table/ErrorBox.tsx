@@ -33,10 +33,10 @@ export const ErrorModal = ({ header, subtitle }: { header: React.ReactNode; subt
       <ChartBarCrossedWithBackground />
     </Flex>
     <Flex maxWidth={200}>
-      <Text variant="subheading1" color="$neutral1">
+      <Text variant="subheading2" color="$neutral1">
         {header}
       </Text>
-      <Text variant="body2" color="$neutral2">
+      <Text variant="body3" color="$neutral2">
         {subtitle}
       </Text>
     </Flex>

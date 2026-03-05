@@ -21,6 +21,15 @@ export function useScroll({ enabled = true }: { enabled?: boolean } = {}) {
     }
 
     const updateScrollState = () => {
+      // When a modal opens, ScrollLock sets body.position = 'fixed' which causes
+      // window.scrollY to become 0. In this case, we should preserve the last known
+      // scroll state to prevent the header from incorrectly becoming transparent.
+      const isScrollLocked = document.body.style.position === 'fixed'
+      if (isScrollLocked) {
+        rafIdRef.current = null
+        return
+      }
+
       const scrollY = window.scrollY
       const { previousScrollPosition } = scrollDataRef.current
 

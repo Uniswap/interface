@@ -1,6 +1,6 @@
 import { Flex } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeInfoRow'
@@ -8,12 +8,10 @@ import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
 export function GasAndWarningRows(): JSX.Element {
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
-  const wallet = useWallet()
-  const address = isSVMChain(chainId) ? wallet.svmAccount?.address : wallet.evmAccount?.address
+  const address = useActiveAddress(chainId)
 
   const { isBlocked } = useIsBlocked(address)
 

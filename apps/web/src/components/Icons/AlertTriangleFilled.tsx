@@ -1,5 +1,5 @@
-import { StyledSVG } from 'components/Icons/shared'
 import { useSporeColors } from 'ui/src'
+import { StyledSVG } from '~/components/Icons/shared'
 
 export default function AlertTriangleFilled({ size = '16px', ...rest }: { size?: string; [k: string]: any }) {
   const colors = useSporeColors()

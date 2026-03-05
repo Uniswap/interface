@@ -1,11 +1,11 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { CardContents } from 'pages/Landing/components/cards/CardContents'
-import { PillButton } from 'pages/Landing/components/cards/PillButton'
-import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { useTranslation } from 'react-i18next'
 import { LayerGroup } from 'ui/src/components/icons/LayerGroup'
 import { opacify } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { CardContents } from '~/pages/Landing/components/cards/CardContents'
+import { PillButton } from '~/pages/Landing/components/cards/PillButton'
+import ValuePropCard from '~/pages/Landing/components/cards/ValuePropCard'
 
 const primary = '#FF4D00'
 
@@ -15,7 +15,6 @@ export function TradingApiCard() {
 
   return (
     <ValuePropCard
-      smaller
       backgroundColor={opacify(4, primary)}
       $theme-dark={{
         backgroundColor: opacify(12, primary),

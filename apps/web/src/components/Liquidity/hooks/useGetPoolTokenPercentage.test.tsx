@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
-import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks/useGetPoolTokenPercentage'
 import JSBI from 'jsbi'
-import { renderHook } from 'test-utils/render'
+import { useGetPoolTokenPercentage } from '~/components/Liquidity/hooks/useGetPoolTokenPercentage'
+import { renderHook } from '~/test-utils/render'
 
 describe('useGetPoolTokenPercentage', () => {
   it('returns undefined if positionInfo is undefined', () => {

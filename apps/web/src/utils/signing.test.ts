@@ -1,6 +1,6 @@
 import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { Mutable } from 'types/mutable'
-import { signTypedData } from 'utils/signing'
+import { Mutable } from '~/types/mutable'
+import { signTypedData } from '~/utils/signing'
 
 describe('signing', () => {
   describe('signTypedData', () => {
