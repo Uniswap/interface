@@ -1,3 +1,4 @@
+import { getRetryLink } from 'appGraphql/data/apollo/retryLink'
 import { ApolloClient, from, HttpLink } from '@apollo/client'
 import { setupSharedApolloCache } from 'uniswap/src/data/cache'
 import { getDatadogApolloLink } from 'utilities/src/logger/datadog/datadogLink'

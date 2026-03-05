@@ -1,0 +1,5 @@
+// same as tsconfig.json but without references which caused performance issues with typescript-eslint
+{
+  "extends": "./tsconfig.json",
+  "references": []
+}

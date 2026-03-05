@@ -216,6 +216,12 @@ export function validateTransactionRequest(
   return undefined
 }
 
+export function validateTransactionRequestTypeGuard(
+  request?: providers.TransactionRequest | null,
+): request is ValidatedTransactionRequest {
+  return !!request?.to && !!request.chainId
+}
+
 export function validateTransactionRequests(
   requests?: providers.TransactionRequest[] | null,
 ): PopulatedTransactionRequestArray | undefined {

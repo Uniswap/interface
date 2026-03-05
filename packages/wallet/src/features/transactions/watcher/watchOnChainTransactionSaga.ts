@@ -1,4 +1,5 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { FeatureFlags, getFeatureFlagName, getStatsigClient } from '@universe/gating'
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { call, cancel, delay, fork, put, race, spawn, take } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

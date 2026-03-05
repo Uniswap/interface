@@ -1,5 +1,4 @@
 import { Language } from 'uniswap/src/features/language/constants'
-import { migration58 } from '~/state/migrations/58'
 
 const previousState = {
   _persist: {

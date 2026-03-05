@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { cloneElement, memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'

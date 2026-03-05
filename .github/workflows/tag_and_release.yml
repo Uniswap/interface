@@ -3,7 +3,10 @@ on:
   push:
     branches:
       - 'main'
-
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
 jobs:
   deploy-to-prod:
     runs-on: ubuntu-latest
@@ -44,11 +47,27 @@ jobs:
           custom_tag: ${{ steps.version.outputs.content }}
           tag_prefix: ""
 
-      - name: 🪽 Release
-        uses: actions/create-release@c9ba6969f07ed90fae07e2e66100dd03f9b1a50e
+      - name: 🪽 Create release
+      
+        on:
+          push:
+          tags:
+            - v*
+
+          permissions:
+          contents: write
+
+      jobs:
+          release:
+          name: Release pushed tag
+          runs-on: ubuntu-24.04
+          steps:
+            - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.github-tag-action.outputs.new_tag }}
-          release_name: Release ${{ steps.github-tag-action.outputs.new_tag }}
-          body: ${{ steps.release-notes.outputs.content }}
+          tag: ${{ github.ref_name }}
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --generate-notes

@@ -30,6 +30,13 @@ const makeEmptyVisibilityState = (): VisibilityState => ({
   activity: {},
 })
 
+const makeEmptyVisibilityState = (): VisibilityState => ({
+  positions: {},
+  tokens: {},
+  nfts: {},
+  activity: {},
+})
+
 describe('visibility slice', () => {
   beforeEach(() => {
     vi.clearAllMocks()

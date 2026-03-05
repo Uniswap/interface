@@ -53,7 +53,7 @@ export default function ValuePropCard(props: ValuePropCardProps) {
       {...rest}
     >
       <Flex
-        width="100%"
+        width="150%"
         flex={1}
         gap={8}
         p="$spacing48"
