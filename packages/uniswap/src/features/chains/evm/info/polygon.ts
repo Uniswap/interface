@@ -62,7 +62,8 @@ export const POLYGON_CHAIN_INFO = {
   rpcUrls: {
     [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Polygon)] },
     [RPCType.PublicAlt]: { http: ['https://polygon-rpc.com/'] },
-    [RPCType.Default]: { http: ['https://polygon-rpc.com/'] },
+    [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Polygon)] },
+    [RPCType.Fallback]: { http: ['https://polygon-rpc.com/'] },
     [RPCType.Interface]: { http: [`https://polygon-mainnet.infura.io/v3/${config.infuraKey}`] },
   },
   tokens,
