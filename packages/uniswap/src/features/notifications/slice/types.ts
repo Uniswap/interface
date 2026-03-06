@@ -2,7 +2,11 @@ import { TradeType } from '@uniswap/sdk-core'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FinalizedTransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  FinalizedTransactionStatus,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 
@@ -57,7 +61,7 @@ export interface WalletConnectNotification extends AppNotificationBase {
 export interface TransactionNotificationBase extends AppNotificationBase {
   type: AppNotificationType.Transaction
   txType: TransactionType
-  txStatus: FinalizedTransactionStatus
+  txStatus: FinalizedTransactionStatus | TransactionStatus.AwaitingAction
   txId: string
   chainId: UniverseChainId
   tokenAddress?: string

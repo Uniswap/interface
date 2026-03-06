@@ -199,23 +199,23 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
     const { hash, data, nonce } = yield* call(submitTransaction, params)
     transaction = createTransaction(hash)
 
+    // For plans, individual tx state and validation is handled by that backend
     if (!planId) {
       yield* put(addTransaction(transaction))
-    }
-
-    if (step.txRequest.data !== data && onModification) {
-      yield* call(onModification, { hash, data, nonce })
+      if (step.txRequest.data !== data && onModification) {
+        yield* call(onModification, { hash, data, nonce })
+      }
     }
   } else {
     const hash = yield* call(submitTransactionAsync, params)
     transaction = createTransaction(hash)
 
+    // For plans, individual tx state and validation is handled by that backend
     if (!planId) {
       yield* put(addTransaction(transaction))
-    }
-
-    if (onModification) {
-      yield* spawn(handleOnModificationAsync, { onModification, hash, step })
+      if (onModification) {
+        yield* spawn(handleOnModificationAsync, { onModification, hash, step })
+      }
     }
   }
 
@@ -659,6 +659,17 @@ export function* sendToast(appNotification: AppNotification, planId: string): Sa
   yield* call(() => {
     switch (appNotification.type) {
       case AppNotificationType.SwapPending: {
+        popupRegistry.addPopup(
+          {
+            type: PopupType.Plan,
+            planId,
+          },
+          planId,
+          DEFAULT_TXN_DISMISS_MS,
+        )
+        break
+      }
+      case AppNotificationType.Transaction: {
         popupRegistry.addPopup(
           {
             type: PopupType.Plan,

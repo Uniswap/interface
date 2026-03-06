@@ -104,12 +104,13 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   const formattedSortTime = useFormattedTimeForActivity(sortTime)
 
   const statusIconFill = colors.surface1.get()
+  const showWarningIcon = status === TransactionStatus.Failed || status === TransactionStatus.AwaitingAction
 
   const rightBlock = useMemo(
     () =>
       isCancel ? (
         <SlashCircle color="$statusCritical" fill={statusIconFill} fillOpacity={1} size={TXN_STATUS_ICON_SIZE} />
-      ) : status === TransactionStatus.Failed ? (
+      ) : showWarningIcon ? (
         <Flex grow alignItems="flex-end" justifyContent="space-between">
           <AlertTriangleFilled color="$statusWarning" fill={colors.statusWarning.val} size={TXN_STATUS_ICON_SIZE} />
         </Flex>
@@ -118,7 +119,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
           {formattedSortTime}
         </Text>
       ),
-    [isCancel, status, statusIconFill, formattedSortTime, colors],
+    [isCancel, showWarningIcon, statusIconFill, formattedSortTime, colors],
   )
 
   return (

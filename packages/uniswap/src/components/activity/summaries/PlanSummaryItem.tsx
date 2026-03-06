@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react'
-import { useOnRetrySwap } from 'uniswap/src/components/activity/hooks/useOnRetrySwap'
 import { TransactionSummaryLayout } from 'uniswap/src/components/activity/summaries/TransactionSummaryLayout'
 import type { SummaryItemProps } from 'uniswap/src/components/activity/types'
 import { TXN_HISTORY_ICON_SIZE } from 'uniswap/src/components/activity/utils'
@@ -21,7 +20,6 @@ import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
  */
 function _PlanSummaryItem({
   transaction,
-  swapCallbacks,
   index,
   isExternalProfile,
 }: SummaryItemProps & {
@@ -34,7 +32,6 @@ function _PlanSummaryItem({
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
   const formatter = useLocalizationContext()
-  const onRetry = useOnRetrySwap(transaction, swapCallbacks)
 
   const caption = useMemo(() => {
     if (!inputCurrencyInfo || !outputCurrencyInfo) {
@@ -82,6 +79,7 @@ function _PlanSummaryItem({
     [inputCurrencyInfo, outputCurrencyInfo, transaction.chainId, status],
   )
 
+  // TODO(SWAP-2133): Add onRetry prop to support retrying plan transactions in-line.
   return (
     <TransactionSummaryLayout
       caption={caption}
@@ -89,7 +87,6 @@ function _PlanSummaryItem({
       index={index}
       transaction={transaction}
       isExternalProfile={isExternalProfile}
-      onRetry={onRetry}
     />
   )
 }

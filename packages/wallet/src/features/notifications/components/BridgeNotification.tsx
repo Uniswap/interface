@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CrossChainIcon, SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
@@ -64,6 +65,8 @@ export function CrossChainNotification({
     formatter,
   })
 
+  const showWarningIcon = txStatus === TransactionStatus.AwaitingAction
+
   const contentOverride = (
     <Flex grow row gap="$spacing12" alignItems="center" width="100%">
       <Flex centered>
@@ -75,7 +78,7 @@ export function CrossChainNotification({
           customIcon={<CrossChainIcon status={txStatus} />}
         />
       </Flex>
-      <Flex gap="$spacing4">
+      <Flex shrink gap="$spacing4">
         <Text color="$neutral2" variant="body3">
           {title}
         </Text>
@@ -88,6 +91,11 @@ export function CrossChainNotification({
           formattedOutputTokenAmount={formattedOutputTokenAmount}
         />
       </Flex>
+      {showWarningIcon && (
+        <Flex ml="auto">
+          <AlertTriangleFilled color="$statusWarning" size="$icon.20" />
+        </Flex>
+      )}
     </Flex>
   )
 

@@ -89,7 +89,7 @@ function SwapReviewContent(): JSX.Element | null {
   const { trade } = acceptedDerivedSwapInfo?.trade ?? {}
   const isChainedAction = Boolean(trade && isChained({ routing: trade.routing }))
 
-  const showInterfaceReviewSteps = useShowInterfaceReviewSteps()
+  const showInterfaceReviewSteps = useShowInterfaceReviewSteps() && !newTradeRequiresAcceptance
 
   const { onPrev } = useSwapOnPrevious()
 

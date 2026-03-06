@@ -9,6 +9,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { HandleUniswapXPlanSignatureStepParams } from 'uniswap/src/features/transactions/steps/types'
 import { plan } from 'uniswap/src/features/transactions/swap/plan/planSaga'
+import { PlanPriceChangeInterrupt } from 'uniswap/src/features/transactions/swap/plan/types'
 import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
@@ -130,7 +131,8 @@ function* executeChainedPlan(params: ExecutePlanParams, dependencies: Transactio
     },
     *sendToast(appNotification): SagaGenerator<void> {
       switch (appNotification.type) {
-        case AppNotificationType.SwapPending: {
+        case AppNotificationType.SwapPending:
+        case AppNotificationType.Transaction: {
           yield* put(pushNotification(appNotification))
           break
         }
@@ -141,10 +143,13 @@ function* executeChainedPlan(params: ExecutePlanParams, dependencies: Transactio
       }
     },
     getDisplayableError: ({ error }: { error: Error }) => {
-      dependencies.logger.error(error, {
-        tags: { file: 'executeSwapSaga', function: 'getDisplayableError' },
-        extra: { error },
-      })
+      // UI gracefully handles price changes, so we don't need to display an error
+      if (error instanceof PlanPriceChangeInterrupt) {
+        return undefined
+      }
+
+      dependencies.logger.error(error, { tags: { file: 'executeSwapSaga', function: 'getDisplayableError' } })
+
       return new Error(error.message)
     },
   })

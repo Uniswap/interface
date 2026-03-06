@@ -1,5 +1,6 @@
-import { Flex, Text } from 'ui/src'
-import { ArrowDown, InfoCircle } from 'ui/src/components/icons'
+import { useTranslation } from 'react-i18next'
+import { Flex, styled, Text } from 'ui/src'
+import { AlertTriangleFilled, ArrowDown, InfoCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import {
   TwoTokenDetails,
@@ -9,6 +10,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useIntermediaryPlanState } from 'uniswap/src/features/transactions/swap/plan/intermediaryState/useIntermediaryPlanState'
 import { useIntermediaryPlanStateDescriptor } from 'uniswap/src/features/transactions/swap/plan/intermediaryState/useIntermediaryPlanStateDescriptor'
+import { useIsPriceChangeInterrupted } from 'uniswap/src/features/transactions/swap/plan/intermediaryState/useIsPriceChangeInterrupted'
 import { PlanTransactionInfo, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
@@ -64,6 +66,17 @@ export function PlanTransactionDetails({
   )
 }
 
+const IntermediaryStateCardContainer = styled(Flex, {
+  row: true,
+  justifyContent: 'space-between',
+  backgroundColor: '$surface2',
+  borderRadius: '$rounded12',
+  p: '$spacing12',
+  mx: '$spacing4',
+  alignItems: 'center',
+  gap: '$spacing12',
+})
+
 /**
  * In the case that the plan is interrupted and the user is left with an intermediary token,
  * we display a card with the intermediary token and amount.
@@ -84,6 +97,40 @@ const IntermediaryStateCard = ({
   typeInfo: PlanTransactionInfo
   status: TransactionStatus
 }): JSX.Element | null => {
+  const isPriceChangeInterrupted = useIsPriceChangeInterrupted(typeInfo.planId)
+
+  if (isPriceChangeInterrupted) {
+    return <PriceChangeInterruptedCard />
+  }
+
+  return <IntermediaryTokenStateCard typeInfo={typeInfo} status={status} />
+}
+
+function PriceChangeInterruptedCard(): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <IntermediaryStateCardContainer alignItems="flex-start" justifyContent="flex-start">
+      <AlertTriangleFilled color="$statusWarning" size="$icon.18" />
+      <Flex>
+        <Text color="$statusWarning" variant="body3">
+          {t('transaction.status.plan.priceChange.title')}
+        </Text>
+        <Text flexWrap="wrap" flexShrink={1} color="$neutral2" variant="body4">
+          {t('transaction.status.plan.priceChange.description')}
+        </Text>
+      </Flex>
+    </IntermediaryStateCardContainer>
+  )
+}
+
+function IntermediaryTokenStateCard({
+  typeInfo,
+  status,
+}: {
+  typeInfo: PlanTransactionInfo
+  status: TransactionStatus
+}): JSX.Element | null {
   const intermediaryState = useIntermediaryPlanState({ typeInfo, status })
   const descriptor = useIntermediaryPlanStateDescriptor({ intermediaryState, status })
 
@@ -94,16 +141,7 @@ const IntermediaryStateCard = ({
   }
 
   return (
-    <Flex
-      row
-      justifyContent="space-between"
-      backgroundColor="$surface2"
-      borderRadius="$rounded12"
-      p="$spacing12"
-      mx="$spacing4"
-      alignItems="center"
-      gap="$spacing12"
-    >
+    <IntermediaryStateCardContainer>
       <Flex row gap="$spacing12" alignItems="center" flexShrink={1}>
         <InfoCircle color="$neutral3" size="$icon.16" />
         <Text flexWrap="wrap" flexShrink={1} color="$neutral1" variant="body3">
@@ -113,6 +151,6 @@ const IntermediaryStateCard = ({
       <Flex>
         <CurrencyLogo hideNetworkLogo currencyInfo={intermediaryCurrencyInfo} size={iconSizes.icon24} />
       </Flex>
-    </Flex>
+    </IntermediaryStateCardContainer>
   )
 }

@@ -26,6 +26,8 @@ export interface ActivePlanState {
   resumePlanSwapFormState?: Partial<SwapFormState>
   /** Plan IDs that have been requested for cancellation */
   cancelledPlanIds: Set<string>
+  /** Plan IDs that were interrupted due to a price change (>1% movement) */
+  priceChangeInterruptedPlanIds: Set<string>
   /**
    * The planId currently holding the execution lock, or null if no saga is executing.
    * Prevents `ActivePlanUpdater` polling from overwriting plan calldata mid-execution.
@@ -33,6 +35,8 @@ export interface ActivePlanState {
    * allows concurrent plan sagas — a boolean would let one saga's unlock clear another's lock.
    */
   executionLockPlanId: string | null
+  /** Promise that resolves when the current in-flight ActivePlanUpdater refresh settles. Null when idle. */
+  pendingRefreshPromise: Promise<void> | null
   actions: {
     /** Reset the active plan */
     resetActivePlan: () => void
@@ -50,10 +54,22 @@ export interface ActivePlanState {
     isPlanCancelled: (planId: string) => boolean
     /** Clear a cancelled plan from tracking (after finalization) */
     clearCancelledPlan: (planId: string) => void
+    /** Mark a plan as interrupted due to a price change */
+    markPlanPriceChangeInterrupted: (planId: string) => void
+    /** Clear the price-change-interrupted flag for a plan */
+    clearPriceChangeInterrupted: (planId: string) => void
     /** Claim the execution lock for a specific planId */
     lockPlanForExecution: (planId: string) => void
     /** Release the execution lock only if the given planId still holds it */
     unlockPlanForExecution: (planId: string) => void
+    /** Set the pending refresh promise (called by ActivePlanUpdater when a fetch starts). */
+    setPendingRefreshPromise: (promise: Promise<void>) => void
+    /** Clear the pending refresh promise (called by ActivePlanUpdater when a fetch settles). */
+    clearPendingRefreshPromise: () => void
+    /** Waits for any ongoing fetch of activePlan to finish, and then returns the activePlan.
+     *  Resolves to undefined if there is no active plan, or the latest refresh fails.
+     *  Used for execution logic that cannot use data that will become stale. */
+    getOrAwaitLatestActivePlan: () => Promise<ActivePlanData | undefined>
   }
 }
 
@@ -64,7 +80,9 @@ export const activePlanStore = createStore<ActivePlanState>()(
         activePlan: undefined,
         backgroundedPlans: {},
         cancelledPlanIds: new Set<string>(),
+        priceChangeInterruptedPlanIds: new Set<string>(),
         executionLockPlanId: null,
+        pendingRefreshPromise: null,
         actions: {
           resetActivePlan(): void {
             // Does not clear executionLockPlanId — the saga's `finally` block
@@ -132,6 +150,16 @@ export const activePlanStore = createStore<ActivePlanState>()(
             newSet.delete(planId)
             set({ cancelledPlanIds: newSet })
           },
+          markPlanPriceChangeInterrupted(planId: string): void {
+            const { priceChangeInterruptedPlanIds } = get()
+            set({ priceChangeInterruptedPlanIds: new Set([...priceChangeInterruptedPlanIds, planId]) })
+          },
+          clearPriceChangeInterrupted(planId: string): void {
+            const { priceChangeInterruptedPlanIds } = get()
+            const newSet = new Set([...priceChangeInterruptedPlanIds])
+            newSet.delete(planId)
+            set({ priceChangeInterruptedPlanIds: newSet })
+          },
           lockPlanForExecution(planId: string): void {
             set({ executionLockPlanId: planId })
           },
@@ -139,6 +167,25 @@ export const activePlanStore = createStore<ActivePlanState>()(
             if (get().executionLockPlanId === planId) {
               set({ executionLockPlanId: null })
             }
+          },
+          setPendingRefreshPromise(promise: Promise<void>): void {
+            set({ pendingRefreshPromise: promise })
+          },
+          clearPendingRefreshPromise(): void {
+            set({ pendingRefreshPromise: null })
+          },
+          async getOrAwaitLatestActivePlan(): Promise<ActivePlanData | undefined> {
+            const { pendingRefreshPromise } = get()
+
+            if (pendingRefreshPromise) {
+              try {
+                await pendingRefreshPromise
+              } catch {
+                // Refresh failed — fall through and return current state
+              }
+            }
+
+            return get().activePlan
           },
         },
       }

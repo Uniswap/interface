@@ -49,6 +49,7 @@ export function useResumePlanMutation({
         },
         resumePlanSwapFormState: createSwapFormStateFromPlanResponse(planResponse, inputCurrencyAmount),
       })
+      activePlanStore.getState().actions.clearPriceChangeInterrupted(planId)
       updateGlobalPlanState({ activePlan: transformed, originalResponse: planResponse })
 
       if (assetDetails) {

@@ -22,6 +22,7 @@ describe('activePlanStore — execution lock', () => {
       backgroundedPlans: {},
       cancelledPlanIds: new Set(),
       executionLockPlanId: null,
+      pendingRefreshPromise: null,
     })
   })
 
@@ -86,6 +87,75 @@ describe('activePlanStore — execution lock', () => {
       // Saga's finally block releases the lock
       activePlanStore.getState().actions.unlockPlanForExecution('plan-A')
       expect(activePlanStore.getState().executionLockPlanId).toBeNull()
+    })
+  })
+
+  describe('getOrAwaitLatestActivePlan', () => {
+    it('returns activePlan immediately when no refresh is in-flight', async () => {
+      const mockPlan = createMockActivePlan('plan-A')
+      activePlanStore.getState().actions.setActivePlan(mockPlan)
+
+      const result = await activePlanStore.getState().actions.getOrAwaitLatestActivePlan()
+      expect(result).toEqual(mockPlan)
+    })
+
+    it('returns undefined when no active plan and no refresh in-flight', async () => {
+      const result = await activePlanStore.getState().actions.getOrAwaitLatestActivePlan()
+      expect(result).toBeUndefined()
+    })
+
+    it('waits for pendingRefreshPromise before returning activePlan', async () => {
+      let resolveRefresh!: () => void
+      const refreshPromise = new Promise<void>((r) => {
+        resolveRefresh = r
+      })
+      activePlanStore.getState().actions.setPendingRefreshPromise(refreshPromise)
+
+      let resolved = false
+      const resultPromise = activePlanStore
+        .getState()
+        .actions.getOrAwaitLatestActivePlan()
+        .then((result) => {
+          resolved = true
+          return result
+        })
+
+      // Should not have resolved yet — still waiting on the refresh
+      await Promise.resolve()
+      expect(resolved).toBe(false)
+
+      // Simulate ActivePlanUpdater writing fresh data + resolving the deferred
+      const freshPlan = createMockActivePlan('plan-fresh')
+      activePlanStore.getState().actions.setActivePlan(freshPlan)
+      resolveRefresh()
+
+      const result = await resultPromise
+      expect(resolved).toBe(true)
+      expect(result).toEqual(freshPlan)
+    })
+
+    it('returns current activePlan if pendingRefreshPromise rejects', async () => {
+      const stalePlan = createMockActivePlan('plan-stale')
+      activePlanStore.getState().actions.setActivePlan(stalePlan)
+
+      const refreshPromise = Promise.reject(new Error('fetch failed'))
+      activePlanStore.getState().actions.setPendingRefreshPromise(refreshPromise)
+
+      const result = await activePlanStore.getState().actions.getOrAwaitLatestActivePlan()
+      expect(result).toEqual(stalePlan)
+    })
+  })
+
+  describe('setPendingRefreshPromise / clearPendingRefreshPromise', () => {
+    it('sets and clears the pending refresh promise', () => {
+      expect(activePlanStore.getState().pendingRefreshPromise).toBeNull()
+
+      const promise = new Promise<void>(() => {})
+      activePlanStore.getState().actions.setPendingRefreshPromise(promise)
+      expect(activePlanStore.getState().pendingRefreshPromise).toBe(promise)
+
+      activePlanStore.getState().actions.clearPendingRefreshPromise()
+      expect(activePlanStore.getState().pendingRefreshPromise).toBeNull()
     })
   })
 

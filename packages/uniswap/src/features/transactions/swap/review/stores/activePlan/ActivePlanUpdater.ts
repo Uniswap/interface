@@ -105,6 +105,23 @@ export function ActivePlanUpdater(): null {
   }, [activePlanQuery.data, updateActivePlan])
 
   useEffect(() => {
+    if (activePlanQuery.isFetching) {
+      // Create a deferred that resolves when this fetch settles
+      let resolve: () => void
+      const promise = new Promise<void>((r) => {
+        resolve = r
+      })
+      activePlanStore.getState().actions.setPendingRefreshPromise(promise)
+      // Resolve when fetching stops (effect cleanup)
+      return () => {
+        resolve()
+        activePlanStore.getState().actions.clearPendingRefreshPromise()
+      }
+    }
+    return undefined
+  }, [activePlanQuery.isFetching])
+
+  useEffect(() => {
     if (previousScreen === TransactionScreen.Review && currentScreen !== TransactionScreen.Review) {
       if (isSubmitting && activePlanId) {
         activePlanStore.getState().actions.backgroundPlan(activePlanId)
