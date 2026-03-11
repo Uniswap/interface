@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Separator, Text } from 'ui/src'
@@ -16,7 +17,7 @@ import { transitions } from '~/theme/styles'
 export function OtherWalletsModal() {
   const showMoonpayText = useShowMoonpayText()
   const setMenu = useSetMenu()
-
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const wallets = useOrderedWallets({ showSecondaryConnectors: true })
   const recentConnectorId = useRecentConnectorId()
 
@@ -55,16 +56,19 @@ export function OtherWalletsModal() {
             data-testid="option-grid"
           >
             {/* If uniswap mobile was the last used connector it will be show on the primary window */}
-            {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID && (
-              <>
-                <UniswapMobileWalletConnectorOption />
-                {wallets.length > 0 && <Separator />}
-              </>
-            )}
+            {/* If Embedded Wallet is enabled, it will be shown on the primary window */}
+            {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
+              !isEmbeddedWalletEnabled && (
+                <>
+                  <UniswapMobileWalletConnectorOption />
+                  {wallets.length > 0 && <Separator />}
+                </>
+              )}
             {wallets.map((wallet, index) => (
               <React.Fragment key={wallet.name}>
                 <WalletConnectorOption wallet={wallet} />
-                {index < wallets.length - 1 && <Separator />}
+                {index < wallets.length - 1 &&
+                  (isEmbeddedWalletEnabled ? <Flex height={2} backgroundColor="$surface1" /> : <Separator />)}
               </React.Fragment>
             ))}
           </Flex>

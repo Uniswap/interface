@@ -34,6 +34,7 @@ import { LocalizationContextProvider } from 'uniswap/src/features/language/Local
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n, { changeLanguage } from 'uniswap/src/i18n'
+import { getLogger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { StatsigUserIdentifiersUpdater } from 'wallet/src/features/gating/StatsigUserIdentifiersUpdater'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
@@ -67,6 +68,7 @@ const provideSessionInitializationService = (): SessionInitializationService => 
               ),
           }),
         onSolveCompleted: onHashcashSolveCompleted,
+        getLogger,
       }),
     )
   } else {
@@ -84,6 +86,7 @@ const provideSessionInitializationService = (): SessionInitializationService => 
     }),
     performanceTracker,
     getIsSessionUpgradeAutoEnabled,
+    getLogger,
     analytics: sessionInitAnalytics,
   })
 }

@@ -3,9 +3,9 @@ export function isAuctionCompleted({
   blockNumber,
 }: {
   endBlock?: string
-  blockNumber: bigint | undefined
+  blockNumber: bigint | null | undefined
 }): boolean {
-  if (!endBlock || blockNumber === undefined) {
+  if (!endBlock || blockNumber === undefined || blockNumber === null) {
     return false
   }
 

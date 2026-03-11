@@ -11,7 +11,6 @@ import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
@@ -54,7 +53,6 @@ function _NFTCard(props: NftCardProps): JSX.Element {
   const { t } = useTranslation()
   const { isExternalWallet } = usePortfolioAddresses()
   const activeAddresses = useActiveAddresses()
-  const { defaultChainId } = useEnabledChains()
 
   const nftUniqueId = useMemo(
     () => getNFTAssetKey(props.item.contractAddress ?? '', props.item.tokenId ?? ''),
@@ -121,13 +119,12 @@ function _NFTCard(props: NftCardProps): JSX.Element {
     if (!openseaUrl && chainId && props.item.contractAddress && props.item.tokenId) {
       return getNftExplorerLink({
         chainId,
-        fallbackChainId: defaultChainId,
         contractAddress: props.item.contractAddress,
         tokenId: props.item.tokenId,
       })
     }
     return null
-  }, [openseaUrl, chainId, props.item.contractAddress, props.item.tokenId, defaultChainId])
+  }, [openseaUrl, chainId, props.item.contractAddress, props.item.tokenId])
 
   const onCopySuccess = useCallback(() => {
     popupRegistry.addPopup(

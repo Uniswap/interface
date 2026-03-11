@@ -67,7 +67,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
               class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _justifyContent-center _flexGrow-1 _mr-t-space-non101 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
             >
               <span
-                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
                 data-disable-theme="true"
               >
                  
@@ -183,7 +183,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _flexGrow-1 _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
                       >
                         <span
-                          class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
+                          class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _fontWeight-f-weight-bo3548 _lineHeight-24px _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
                           data-disable-theme="true"
                           data-testid="address-display/name/undefined"
                         />
@@ -203,7 +203,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                           class="_color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_transparent _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
                         >
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
                             data-disable-theme="true"
                           >
                             0x​9EB67f...D9A2Ca
@@ -301,7 +301,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         </svg>
                       </div>
                       <span
-                        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
                         data-disable-theme="true"
                       >
                         Add wallet
@@ -421,7 +421,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
             class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _justifyContent-center _flexGrow-1 _mr-t-space-non101 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
           >
             <span
-              class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+              class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
               data-disable-theme="true"
             >
                
@@ -537,7 +537,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _flexGrow-1 _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
                     >
                       <span
-                        class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
+                        class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _fontWeight-f-weight-bo3548 _lineHeight-24px _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
                         data-disable-theme="true"
                         data-testid="address-display/name/undefined"
                       />
@@ -557,7 +557,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         class="_color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_transparent _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
                       >
                         <span
-                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
                           data-disable-theme="true"
                         >
                           0x​9EB67f...D9A2Ca
@@ -655,7 +655,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       </svg>
                     </div>
                     <span
-                      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
                       data-disable-theme="true"
                     >
                       Add wallet

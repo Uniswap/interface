@@ -37,7 +37,6 @@ import { noop } from 'utilities/src/react/noop'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from '~/components/SwapBottomCard'
-import { SwitchLocaleLink } from '~/components/SwitchLocaleLink'
 import { PageWrapper } from '~/components/swap/styled'
 import { useAccount } from '~/hooks/useAccount'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
@@ -97,7 +96,6 @@ export default function SwapPage() {
         </WebFORNudgeProvider>
       </PageWrapper>
       <ReturnToAuctionBanner />
-      {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
   )
 }

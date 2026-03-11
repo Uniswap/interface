@@ -39,14 +39,6 @@ export function getCurrentPageFromLocation(locationPathname: string): InterfaceP
       return InterfacePageName.PoolPage
     case locationPathname.startsWith('/tokens'):
       return InterfacePageName.TokensPage
-    case locationPathname.startsWith('/nfts/profile'):
-      return InterfacePageName.NftProfilePage
-    case locationPathname.startsWith('/nfts/asset'):
-      return InterfacePageName.NftDetailsPage
-    case locationPathname.startsWith('/nfts/collection'):
-      return InterfacePageName.NftCollectionPage
-    case locationPathname.startsWith('/nfts'):
-      return InterfacePageName.NftExplorePage
     case locationPathname.startsWith(CHROME_EXTENSION_UNINSTALL_URL_PATH):
       return InterfacePageName.ExtensionUninstall
     default:

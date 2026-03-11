@@ -394,8 +394,6 @@ export enum OnboardingCardLoggingName {
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
   EnablePushNotifications = 'enable_push_notifications',
-  BridgedAsset = 'bridged_asset',
-
   NoAppFeesAnnouncement = 'no_app_fees_announcement',
 
   Unknown = 'unknown',
@@ -1086,7 +1084,6 @@ export type UniverseEventProperties = {
   [SwapEventName.SwapTokensReversed]: undefined
   [UniswapEventName.TooltipOpened]: ITraceContext & {
     tooltip_name: string
-    is_price_ux_enabled: boolean
   }
   [UniswapEventName.DelegationDetected]: {
     chainId: number

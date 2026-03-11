@@ -8,6 +8,6 @@
 import { useTokenPriceHooks } from 'uniswap/src/features/prices/TokenPriceContext'
 import type { CurrencyId } from 'uniswap/src/types/currency'
 
-export function useTokenSpotPrice(currencyId: CurrencyId): number | undefined {
+export function useTokenSpotPrice(currencyId: CurrencyId | undefined): number | undefined {
   return useTokenPriceHooks().useTokenSpotPrice(currencyId)
 }

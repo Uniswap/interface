@@ -81,7 +81,7 @@ export default function PortfolioActivity() {
   const rowWrapper = useEvent((row: Row<TransactionDetails>, content: JSX.Element) => {
     const transaction = row.original
     return (
-      <TouchableArea onPress={() => handleTransactionClick(transaction)} cursor="pointer">
+      <TouchableArea onPress={() => handleTransactionClick(transaction)} cursor="pointer" pressStyle={{ scale: 1 }}>
         {content}
       </TouchableArea>
     )

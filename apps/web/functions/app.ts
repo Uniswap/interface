@@ -28,8 +28,8 @@ export const ENTRY_GATEWAY_URLS = {
 // (platform prefix "interface", service prefix "gating")
 const STATSIG_PROXY_TARGET = 'https://gating.interface.gateway.uniswap.org'
 export const WEBSOCKET_URLS = {
-  development: 'https://websockets.backend-prod.api.uniswap.org',
-  staging: 'https://websockets.backend-prod.api.uniswap.org',
+  development: 'https://websockets.backend-staging.api.uniswap.org',
+  staging: 'https://websockets.backend-staging.api.uniswap.org',
   production: 'https://websockets.backend-prod.api.uniswap.org',
 } as const
 

@@ -90,7 +90,7 @@
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
     "@uniswap/router-sdk": "2.3.2",
-    "@uniswap/sdk-core": "7.10.1",
+    "@uniswap/sdk-core": "7.11.0",
     "@uniswap/v2-sdk": "4.17.0",
     "@wxt-dev/browser": "0.1.4",
     "@xmldom/xmldom": "0.7.7",

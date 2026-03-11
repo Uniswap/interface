@@ -79,7 +79,7 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                         />
                       </svg>
                       <span
-                        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
+                        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315"
                         data-disable-theme="true"
                       >
                         Get help
@@ -132,13 +132,13 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665593 _alignItems-center"
                 >
                   <span
-                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
                     data-disable-theme="true"
                   >
                     Is this a wallet address?
                   </span>
                   <span
-                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _textAlign-center"
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _textAlign-center"
                     data-disable-theme="true"
                   >
                     You’re about to send tokens to a special type of address - a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.

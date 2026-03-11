@@ -33,7 +33,6 @@ export const mockUniswapContext = {
   navigateToTokenDetails: createMockFn(),
   navigateToExternalProfile: createMockFn(),
   navigateToNftDetails: createMockFn(),
-  navigateToNftCollection: createMockFn(),
   navigateToPoolDetails: createMockFn(),
   handleShareToken: createMockFn(),
   navigateToAdvancedSettings: createMockFn(),

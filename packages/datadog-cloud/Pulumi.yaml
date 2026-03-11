@@ -1,0 +1,6 @@
+name: datadog-cloud-universe
+runtime:
+  name: nodejs
+  options:
+    packagemanager: bun
+description: Datadog monitors for Universe services

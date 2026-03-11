@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom, useAtom } from 'jotai'
 import { forwardRef, RefObject, useCallback, useEffect, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -71,9 +70,6 @@ const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }
 ) {
   const { t } = useTranslation()
 
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const isLogIn = isEmbeddedWalletEnabled
-
   return (
     <Button
       fill={false}
@@ -85,7 +81,7 @@ const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }
       ref={ref}
       onPress={onPress}
     >
-      {isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
+      {t('common.connect.button')}
     </Button>
   )
 })

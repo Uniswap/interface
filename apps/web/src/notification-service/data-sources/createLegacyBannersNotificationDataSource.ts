@@ -16,7 +16,6 @@ import {
   type NotificationTracker,
 } from '@universe/notifications'
 import {
-  BRIDGED_ASSETS_V2_WEB_BANNER,
   NO_FEES_ICON,
   NO_UNISWAP_INTERFACE_FEES_BANNER_DARK,
   NO_UNISWAP_INTERFACE_FEES_BANNER_LIGHT,
@@ -180,12 +179,6 @@ async function fetchNotifications(isDarkMode: boolean): Promise<InAppNotificatio
   const solanaNotifications = await checkSolanaPromo(isDarkMode)
   notifications.push(...solanaNotifications)
 
-  // Priority 3: BridgingPopularTokensBanner
-  const bridgingNotification = await checkBridgingBanner()
-  if (bridgingNotification) {
-    notifications.push(bridgingNotification)
-  }
-
   return notifications
 }
 
@@ -217,20 +210,6 @@ async function checkSolanaPromo(isDarkMode: boolean): Promise<InAppNotification[
 
   // Processor will identify modal as chained due to POPUP action
   return [createSolanaPromoBanner(isDarkMode), createSolanaPromoModal()]
-}
-
-/**
- * Check if BridgingPopularTokens banner should be shown based on feature flag.
- * The processor will filter based on tracked state.
- */
-async function checkBridgingBanner(): Promise<InAppNotification | null> {
-  const isEnabled = getFeatureFlag(FeatureFlags.BridgedAssetsBannerV2)
-
-  if (!isEnabled) {
-    return null
-  }
-
-  return createBridgingBanner()
 }
 
 /**
@@ -308,33 +287,6 @@ function createSolanaPromoModal(): InAppNotification {
           }),
         }),
       ],
-    }),
-  })
-}
-
-/**
- * Create BridgingPopularTokensBanner notification
- */
-function createBridgingBanner(): InAppNotification {
-  return new Notification({
-    id: BRIDGING_BANNER_ID,
-    content: new Content({
-      version: NotificationVersion.V0,
-      style: ContentStyle.LOWER_LEFT_BANNER,
-      title: i18n.t('onboarding.home.intro.bridgedAssets.title'),
-      subtitle: i18n.t('bridgingPopularTokens.banner.description'),
-      background: new Background({
-        backgroundType: BackgroundType.IMAGE,
-        link: BRIDGED_ASSETS_V2_WEB_BANNER,
-        backgroundOnClick: new OnClick({
-          onClick: [OnClickAction.EXTERNAL_LINK, OnClickAction.DISMISS, OnClickAction.ACK],
-          onClickLink: '/swap?outputChain=unichain',
-        }),
-      }),
-      onDismissClick: new OnClick({
-        onClick: [OnClickAction.DISMISS, OnClickAction.ACK],
-      }),
-      buttons: [],
     }),
   })
 }

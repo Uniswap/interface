@@ -8,6 +8,7 @@ import { Flex, Text, useMedia } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -30,8 +31,8 @@ import { getChainIdFromChainUrlParam } from '~/utils/chainParams'
 
 interface TokenTableValue {
   index: number
+  token: TokenStat
   tokenDescription: ReactElement
-  price: string
   percentChange1hr: ReactElement
   percentChange1d: ReactElement
   fdv: string
@@ -40,6 +41,18 @@ interface TokenTableValue {
   link: string
   /** Used for pre-loading TDP with logo to extract color from */
   linkState: { preloadedLogoSrc?: string }
+}
+
+function LivePriceCell({ token }: { token?: TokenStat }) {
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const chainId = token ? fromGraphQLChain(token.chain) : undefined
+  const currencyId = chainId && token?.address ? buildCurrencyId(chainId, token.address) : undefined
+  const livePrice = useTokenSpotPrice(currencyId)
+
+  const price = livePrice ?? token?.price?.value
+  const formatted = price ? convertFiatAmountFormatted(price, NumberType.FiatTokenPrice) : '-'
+
+  return <TableText>{formatted}</TableText>
 }
 
 export function TokenTable({
@@ -88,8 +101,8 @@ export function TokenTable({
 
         return {
           index: tokenSortIndex,
+          token,
           tokenDescription: <TokenDescription token={unwrappedToken} />,
-          price: parseAmount(token.price?.value, NumberType.FiatTokenPrice),
           testId: `${TestID.TokenTableRowPrefix}${unwrappedToken.address}`,
           percentChange1hr: (
             <Flex row gap="$gap4" alignItems="center">
@@ -186,7 +199,7 @@ export function TokenTable({
           </Cell>
         ),
       }),
-      columnHelper.accessor((row) => row.price, {
+      columnHelper.accessor((row) => row.token, {
         id: 'price',
         maxSize: 140,
         header: () => (
@@ -198,12 +211,9 @@ export function TokenTable({
             />
           </HeaderCell>
         ),
-        cell: (price) => (
+        cell: (tokenCell) => (
           <Cell loading={showLoadingSkeleton} testId={TestID.PriceCell} justifyContent="flex-end">
-            <TableText>
-              {/* A simple 0 price indicates the price is not currently available from the api */}
-              {price.getValue?.()}
-            </TableText>
+            <LivePriceCell token={tokenCell.getValue?.()} />
           </Cell>
         ),
       }),

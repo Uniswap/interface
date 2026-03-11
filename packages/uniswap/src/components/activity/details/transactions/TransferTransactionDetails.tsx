@@ -53,7 +53,7 @@ export function TransferTransactionDetails({
       onClose={onClose}
     />
   ) : (
-    <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+    <NftTransactionDetails typeInfo={typeInfo} />
   )
 }
 

@@ -71,7 +71,7 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
             </svg>
           </div>
           <span
-            class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _textAlign-left"
+            class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _textAlign-left"
             data-disable-theme="true"
           >
             Search tokens, pools, and wallets

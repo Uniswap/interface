@@ -48,7 +48,8 @@
       "**/*.jsonc",
       "!.vscode/settings.json",
       "!.vscode/extensions.json",
-      "!tools/uniswap-nx/src/generators"
+      "!tools/uniswap-nx/src/generators",
+      "!**/.vercel/**"
     ],
     "experimentalScannerIgnores": [
       "*.tsbuildinfo",

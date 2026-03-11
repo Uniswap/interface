@@ -63,6 +63,11 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
     onClose()
   }, [onChangeText, onClose])
 
+  const onResetFilters = useCallback(() => {
+    onChangeChainFilter(null)
+    setActiveTab(SearchTab.All)
+  }, [onChangeChainFilter])
+
   const { chains: enabledChains } = useEnabledChains()
 
   // Tamagui Dialog/Sheets should remove background scroll by default but does not work to disable ArrowUp/Down key scrolling
@@ -149,6 +154,7 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
               searchFilter={searchFilter}
               activeTab={activeTab}
               onSelect={onSelect}
+              onResetFilters={onResetFilters}
               renderedInModal={false}
             />
           ) : (

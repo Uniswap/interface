@@ -2,6 +2,7 @@ import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -94,8 +95,12 @@ export function StatsSection(props: StatsSectionProps) {
   // Construct currencyId for shared hooks
   const currencyIdValue = useMemo(() => currencyId(currency), [currency])
 
+  // Live price from centralized provider (feature-flag aware via TokenPriceContext)
+  const spotPrice = useTokenSpotPrice(currencyIdValue)
+
   // Use shared hook for unified data fetching (CoinGecko-first strategy)
-  const { marketCap, fdv, high52w, low52w } = useTokenMarketStats(currencyIdValue)
+  // spotPrice override ensures 52w bounds adjust against live WebSocket prices
+  const { marketCap, fdv, high52w, low52w } = useTokenMarketStats(currencyIdValue, spotPrice)
 
   // Volume and TVL come from tokenQueryData to avoid fragment timing issues
   // These are already loaded with the main TokenWebQuery

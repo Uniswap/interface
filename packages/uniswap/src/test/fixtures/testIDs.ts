@@ -205,7 +205,6 @@ export const TestID = {
   ScantasticDevice: 'scantastic-device',
   ScantasticBrowser: 'scantastic-browser',
   SearchEtherscanItem: 'search-etherscan-item',
-  SearchNFTCollectionItem: 'search-nft-collection-item',
   SearchTokenItem: 'search-token-item',
   SearchTokensAndWallets: 'search-tokens-and-wallets',
   SectionHeaderPrefix: 'section-header-',

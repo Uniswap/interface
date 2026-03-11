@@ -4,8 +4,6 @@ import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/Indicative
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SlippageInfo } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/SlippageInfo'
-import { AutoSlippageBadge } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/MaxSlippageTooltip'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
@@ -20,7 +18,6 @@ export function MaxSlippageRow({
   autoSlippageTolerance,
   customSlippageTolerance,
 }: MaxSlippageRowProps): JSX.Element {
-  const priceUxEnabled = usePriceUXEnabled()
   const { t } = useTranslation()
 
   const formatter = useLocalizationContext()
@@ -54,22 +51,18 @@ export function MaxSlippageRow({
       >
         <Flex row shrink alignItems="center" gap="$spacing4">
           <Text color="$neutral2" numberOfLines={3} variant="body3">
-            {priceUxEnabled ? t('settings.maxSlippage') : t('swap.details.slippage')}
+            {t('swap.details.slippage')}
           </Text>
         </Flex>
       </SlippageInfo>
       <IndicativeLoadingWrapper loading={showLoadingState}>
         <Flex centered row gap="$spacing8">
           {!customSlippageTolerance ? (
-            priceUxEnabled ? (
-              <AutoSlippageBadge />
-            ) : (
-              <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" px="$spacing8" py="$spacing2">
-                <Text color="$neutral1" variant="buttonLabel4">
-                  {t('swap.settings.slippage.control.auto')}
-                </Text>
-              </Flex>
-            )
+            <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" height={20} px="$spacing8">
+              <Text color="$neutral1" variant="buttonLabel4" lineHeight={16}>
+                {t('swap.settings.slippage.control.auto')}
+              </Text>
+            </Flex>
           ) : null}
           <Text color={showSlippageWarning ? '$statusWarning' : '$neutral1'} variant="body3">
             {acceptedTrade.slippageTolerance === 0 ? t('common.none') : formatPercent(acceptedTrade.slippageTolerance)}

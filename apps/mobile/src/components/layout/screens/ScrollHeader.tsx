@@ -26,8 +26,7 @@ type ScrollHeaderProps = {
  * Fixed header that will fade in on scroll. Define values in parent, to be used by some
  * relevant list component.
  *
- * Used to achieve functionality of HeaderScrollScreen, but can be used in any context. One
- * example is using a scrolled above a full screen view like NFTCollectionScreen.
+ * Used to achieve functionality of HeaderScrollScreen, but can be used in any context.
  */
 export function ScrollHeader({
   listRef,

@@ -6,7 +6,6 @@ import {
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
-import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RoutingInfo'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
@@ -82,8 +81,6 @@ export function ExpandableRows(): JSX.Element | null {
             ) : undefined
           }
         >
-          {/* Price impact row is hidden if a price impact warning is already being shown in the expando toggle row. */}
-          <PriceImpactRow derivedSwapInfo={derivedSwapInfo} hide={showPriceImpactWarning} />
           {trade.trade.routing !== TradingApi.Routing.BRIDGE && (
             <MaxSlippageRow
               acceptedDerivedSwapInfo={derivedSwapInfo}

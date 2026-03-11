@@ -1,11 +1,10 @@
 import { ContentStyle } from '@shopify/flash-list'
-import { GqlResult, GraphQLApi } from '@universe/api'
-import { memo, useCallback, useMemo } from 'react'
+import { GqlResult } from '@universe/api'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
 import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
-import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
+import { NetworkError, NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
@@ -13,13 +12,15 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { NUMBER_OF_RESULTS_ALL_TAB, NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
+import { NUMBER_OF_RESULTS_ALL_TAB } from 'uniswap/src/features/search/SearchModal/constants'
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { isWebPlatform } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
+import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
 
 function useSectionsForSearchResults({
   chainFilter,
@@ -83,25 +84,10 @@ function useSectionsForSearchResults({
     options: walletSearchOptions,
   })
 
-  const skipNftSearchQuery = isWebPlatform || (activeTab !== SearchTab.NFTCollections && activeTab !== SearchTab.All)
-  const {
-    data: nftSearchResultsData,
-    loading: searchNftResultsLoading,
-    error: searchNftResultsError,
-    refetch: refetchSearchNftResults,
-  } = GraphQLApi.useCollectionSearchQuery({ variables: { query: searchFilter ?? '' }, skip: skipNftSearchQuery })
-  const nftCollectionOptions = useNftSearchResultsToNftCollectionOptions(nftSearchResultsData, chainFilter)
-  const nftCollectionSearchResultsSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.NFTCollections,
-    options:
-      activeTab === SearchTab.All ? nftCollectionOptions.slice(0, NUMBER_OF_RESULTS_SHORT) : nftCollectionOptions,
-  })
-
   const refetchAll = useCallback(async () => {
     refetchSearchTokens?.()
     refetchSearchPools?.()
-    await refetchSearchNftResults()
-  }, [refetchSearchNftResults, refetchSearchPools, refetchSearchTokens])
+  }, [refetchSearchPools, refetchSearchTokens])
 
   // eslint-disable-next-line complexity
   return useMemo((): GqlResult<OnchainItemSection<SearchModalOption>[]> => {
@@ -116,11 +102,7 @@ function useSectionsForSearchResults({
             ? [...(walletSearchResultsSection ?? []), ...tokenAndPoolSections]
             : [...tokenAndPoolSections, ...(walletSearchResultsSection ?? [])]
         } else {
-          sections = [
-            ...(tokenSearchResultsSection ?? []),
-            ...(walletSearchResultsSection ?? []),
-            ...(nftCollectionSearchResultsSection ?? []),
-          ]
+          sections = [...(tokenSearchResultsSection ?? []), ...(walletSearchResultsSection ?? [])]
         }
         return {
           data: !searchTokensLoading ? sections : [],
@@ -149,25 +131,20 @@ function useSectionsForSearchResults({
           refetch: noop,
         }
       default:
-      case SearchTab.NFTCollections:
         return {
-          data: nftCollectionSearchResultsSection ?? [],
-          loading: searchNftResultsLoading,
-          error: searchNftResultsError || undefined,
-          refetch: refetchSearchNftResults,
+          data: [],
+          loading: false,
+          error: undefined,
+          refetch: noop,
         }
     }
   }, [
     activeTab,
-    nftCollectionSearchResultsSection,
     poolSearchOptions.length,
     poolSearchResultsSection,
     refetchAll,
-    refetchSearchNftResults,
     refetchSearchPools,
     refetchSearchTokens,
-    searchNftResultsError,
-    searchNftResultsLoading,
     searchPoolsError,
     searchPoolsLoading,
     searchResultPools?.length,
@@ -190,6 +167,7 @@ interface SearchModalResultsListProps {
   debouncedParsedSearchFilter: string | null
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
+  onResetFilters?: () => void
   renderedInModal: boolean
   contentContainerStyle?: ContentStyle
 }
@@ -202,10 +180,12 @@ function _SearchModalResultsList({
   debouncedParsedSearchFilter,
   activeTab,
   onSelect,
+  onResetFilters,
   renderedInModal,
   contentContainerStyle,
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
+  const isOffline = useIsOffline()
 
   const searchQuery = debouncedParsedSearchFilter ?? debouncedSearchFilter
   const shouldPrioritizeWallets =
@@ -227,19 +207,39 @@ function _SearchModalResultsList({
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
 
-  const emptyElement = useMemo(
-    () => (debouncedSearchFilter ? <NoResultsFound searchFilter={debouncedSearchFilter} /> : undefined),
-    [debouncedSearchFilter],
-  )
+  const hasData = Boolean(sections?.length)
+  const isOfflineWithNoData = isOffline && !hasData
+  const hasActiveFilters = chainFilter !== null || activeTab !== SearchTab.All
+
+  const prevIsOffline = usePreviousWithLayoutEffect(isOffline)
+  const hasReconnected = prevIsOffline && !isOffline
+  useEffect(() => {
+    if (hasReconnected) {
+      refetch?.()
+    }
+  }, [hasReconnected, refetch])
+
+  const emptyElement = useMemo(() => {
+    if (isOfflineWithNoData) {
+      return <NetworkError />
+    }
+
+    return debouncedSearchFilter ? (
+      <NoResultsFound
+        searchFilter={debouncedSearchFilter}
+        onResetPressed={hasActiveFilters ? onResetFilters : undefined}
+      />
+    ) : undefined
+  }, [debouncedSearchFilter, isOfflineWithNoData, hasActiveFilters, onResetFilters])
 
   return (
     <SearchModalList
       emptyElement={emptyElement}
       errorText={t('token.selector.search.error')}
-      hasError={Boolean(error)}
-      loading={userIsTyping || loading}
+      hasError={!isOffline && Boolean(error)}
+      loading={!isOffline && (userIsTyping || loading)}
       refetch={refetch}
-      sections={sections}
+      sections={isOfflineWithNoData ? [] : sections}
       searchFilters={{
         query: debouncedParsedSearchFilter ?? debouncedSearchFilter ?? undefined,
         searchChainFilter: chainFilter,

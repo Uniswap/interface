@@ -9,7 +9,6 @@ export enum OnchainItemListOptionType {
   WalletByAddress = 'WalletByAddress',
   ENSAddress = 'ENSAddress',
   Unitag = 'Unitag',
-  NFTCollection = 'NFTCollection',
 }
 
 export interface BaseOption {
@@ -55,16 +54,8 @@ export interface UnitagOption extends BaseOption {
   unitag: string
 }
 
-export interface NFTCollectionOption extends BaseOption {
-  type: OnchainItemListOptionType.NFTCollection
-  chainId: UniverseChainId
-  address: Address
-  name: string
-  imageUrl: string | null
-  isVerified: boolean
-}
 // Union of item types for different list use cases
-export type MobileExploreSearchModalOption = TokenOption | WalletOption | NFTCollectionOption
+export type MobileExploreSearchModalOption = TokenOption | WalletOption
 export type WebSearchModalOption = TokenOption | PoolOption | WalletOption
 export type SearchModalOption = MobileExploreSearchModalOption | WebSearchModalOption
 

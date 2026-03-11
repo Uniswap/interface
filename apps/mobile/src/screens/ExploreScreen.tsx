@@ -119,6 +119,10 @@ export function ExploreScreen(): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
     useFilterCallbacks(chainId ?? null, ModalName.Search)
 
+  const onResetChainFilter = useEvent(() => {
+    onChangeChainFilter(null)
+  })
+
   const onSearchChangeText = useEvent((newSearchFilter: string): void => {
     onChangeText(newSearchFilter)
     // Keep the state of the search input after changing theme
@@ -187,6 +191,7 @@ export function ExploreScreen(): JSX.Element {
           parsedSearchQuery={parsedSearchFilter}
           chainFilter={chainFilter}
           parsedChainFilter={parsedChainFilter}
+          onResetChainFilter={onResetChainFilter}
         />
       ) : isSheetReady && canRenderList ? (
         <ExploreSections

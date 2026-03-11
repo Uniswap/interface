@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { cloudflare } from '@cloudflare/vite-plugin'
 import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
@@ -202,6 +203,8 @@ export default defineConfig(({ mode }) => {
     'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('vite'),
     // Enable Tamagui's global z-index stacking to fix modal stacking issues
     'process.env.TAMAGUI_STACK_Z_INDEX_GLOBAL': JSON.stringify('true'),
+    // So getConfig().isVercelEnvironment is true in the client on Vercel; enables direct staging WS URL to match EGW
+    ...(isVercelDeploy ? { 'process.env.VERCEL': JSON.stringify(process.env.VERCEL ?? '0') } : {}),
     ...envDefines,
   }
 
@@ -435,7 +438,7 @@ export default defineConfig(({ mode }) => {
         '@visx/responsive',
       ],
       // Libraries that shouldn't be pre-bundled
-      exclude: ['expo-clipboard', '@connectrpc/connect'],
+      exclude: ['expo-clipboard', '@connectrpc/connect', '@uniswap/client-liquidity'],
       esbuildOptions: {
         resolveExtensions: ['.web-app.js', '.web-app.ts', '.web-app.tsx', '.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],
         loader: {

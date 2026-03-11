@@ -14,15 +14,16 @@ import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/
 import { NetworkBalanceSheetContent } from 'src/screens/TokenDetailsScreen/NetworkBalanceSheetContent'
 import { useNetworkBalanceSheet } from 'src/screens/TokenDetailsScreen/useNetworkBalanceSheet'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
-import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
+import { ArrowDownCircle, ArrowUpCircle, Bank, QrCode, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useTokenBasicInfoPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { TokenList } from 'uniswap/src/features/dataApi/types'
+import { type PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -32,6 +33,10 @@ import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/curr
 import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+
+function getHighestBalanceEntry(balances: PortfolioBalance[]): PortfolioBalance {
+  return balances.reduce((best, current) => ((current.balanceUSD ?? 0) > (best.balanceUSD ?? 0) ? current : best))
+}
 
 export const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButtonsWrapper(): JSX.Element | null {
   const { t } = useTranslation()
@@ -80,10 +85,21 @@ export const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActio
     hasMultiChainBalances,
     isNetworkSheetOpen,
     openSellSheet,
-    openSendSheet,
     onCloseNetworkSheet,
     onSelectNetwork,
   } = useNetworkBalanceSheet({ currencyId, chainId })
+
+  // For multichain UX: resolve the chain with the highest balance (computed once, used by multiple handlers)
+  const highestBalanceEntry = useMemo(() => {
+    if (!isMultichainTokenUx || !allChainBalances.length) {
+      return null
+    }
+    return getHighestBalanceEntry(allChainBalances)
+  }, [isMultichainTokenUx, allChainBalances])
+
+  const highestBalanceCurrencyId = highestBalanceEntry?.currencyInfo.currencyId ?? currencyId
+
+  const { currency: highestBalanceFiatCurrency } = useIsSupportedFiatOnRampCurrency(highestBalanceCurrencyId)
 
   const onPressSwap = useEvent((currencyField: CurrencyField) => {
     if (isBlocked) {
@@ -105,8 +121,10 @@ export const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActio
   })
 
   const onPressSend = useEvent(() => {
-    if (isMultichainTokenUx && hasMultiChainBalances) {
-      openSendSheet()
+    if (highestBalanceEntry) {
+      const { currency } = highestBalanceEntry.currencyInfo
+      const currencyAddress = currency.isToken ? currency.address : getNativeAddress(currency.chainId)
+      navigateToSend({ currencyAddress, chainId: currency.chainId })
     } else {
       navigateToSend({ currencyAddress: address, chainId })
     }
@@ -127,6 +145,14 @@ export const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActio
     } else {
       onPressSwap(CurrencyField.INPUT)
     }
+  })
+
+  const onPressBuyWithCash = useEvent(() => {
+    navigateToFiatOnRamp({ prefilledCurrency: highestBalanceFiatCurrency ?? fiatOnRampCurrency })
+  })
+
+  const onPressSellForCash = useEvent(() => {
+    navigateToFiatOnRamp({ prefilledCurrency: highestBalanceFiatCurrency ?? fiatOnRampCurrency, isOfframp: true })
   })
 
   const bridgedWithdrawalInfo = currencyInfo?.bridgedWithdrawalInfo
@@ -195,7 +221,6 @@ export const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActio
     onPressBuyFiatOnRamp,
   ])
 
-  // Secondary actions only (Send, Receive, Withdraw) — trade actions are handled by the primary CTAs
   const multichainActionMenuOptions: MenuOptionItem[] = useMemo(() => {
     const actions: MenuOptionItem[] = []
 
@@ -203,7 +228,15 @@ export const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActio
       actions.push({ label: t('common.button.send'), Icon: SendRoundedAirplane, onPress: onPressSend })
     }
 
-    actions.push({ label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive })
+    actions.push({ label: t('common.button.receive'), Icon: QrCode, onPress: navigateToReceive })
+
+    if (highestBalanceFiatCurrency || fiatOnRampCurrency) {
+      actions.push({ label: t('fiatOnRamp.action.buyWithCash'), Icon: Bank, onPress: onPressBuyWithCash })
+    }
+
+    if (hasTokenBalance && (highestBalanceFiatCurrency || fiatOnRampCurrency)) {
+      actions.push({ label: t('fiatOnRamp.action.sellForCash'), Icon: ArrowUpCircle, onPress: onPressSellForCash })
+    }
 
     if (bridgedWithdrawalInfo && hasTokenBalance) {
       actions.push({
@@ -217,7 +250,18 @@ export const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActio
     }
 
     return actions
-  }, [t, hasTokenBalance, bridgedWithdrawalInfo, onPressSend, navigateToReceive, onPressWithdraw])
+  }, [
+    t,
+    hasTokenBalance,
+    bridgedWithdrawalInfo,
+    highestBalanceFiatCurrency,
+    fiatOnRampCurrency,
+    onPressSend,
+    navigateToReceive,
+    onPressBuyWithCash,
+    onPressSellForCash,
+    onPressWithdraw,
+  ])
 
   const hideActionButtons =
     !isScreenNavigationReady ||

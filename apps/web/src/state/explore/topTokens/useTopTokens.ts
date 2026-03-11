@@ -1,37 +1,31 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TokenSortMethod } from '~/components/Tokens/constants'
+import { getEffectiveTopTokensOptions, type UseTopTokensOptions } from '~/state/explore/topTokens/types'
 import { useBackendSortedTopTokens } from '~/state/explore/topTokens/useBackendSortedTopTokens'
 import { useTopTokensLegacy } from '~/state/explore/topTokens/useTopTokensLegacy'
 import { useExploreBackendSortingEnabled } from '~/state/explore/useExploreBackendSortingEnabled'
 import { useExploreQueryLatencyTracking } from '~/state/explore/useExploreQueryLatencyTracking'
-
-type UseTopTokensSortOptions = {
-  sortMethod: TokenSortMethod
-  sortAscending: boolean
-}
 
 /**
  * Hook that returns top tokens data.
  * Uses the new ListTopTokens endpoint with backend sorting when ExplorePaginationImprovements is enabled,
  * otherwise falls back to the legacy ExploreContext implementation.
  * @param chainId - Optional chain ID to filter tokens
- * @param sortOptions - Sort method and direction. Pass from TokenTableSortStore on Explore table, or fixed values e.g. on TDP carousel.
+ * @param options - Optional flat options: sortMethod, sortAscending, filterString, filterTimePeriod (from TokenTableSortStore on Explore; when provided, used instead of Explore filter store). Callers should pass a stable reference (e.g. memoized) to avoid unnecessary refetches.
  */
-export function useTopTokens(chainId: UniverseChainId | undefined, sortOptions?: UseTopTokensSortOptions) {
+export function useTopTokens(chainId: UniverseChainId | undefined, options?: UseTopTokensOptions) {
   const isExploreBackendSortingEnabled = useExploreBackendSortingEnabled()
+  const effectiveOptions = getEffectiveTopTokensOptions(options)
 
   // Legacy uses ExploreContext - skip processing when new endpoint is enabled
   const legacyResult = useTopTokensLegacy({
     enabled: !isExploreBackendSortingEnabled,
-    sortMethod: sortOptions?.sortMethod ?? TokenSortMethod.VOLUME,
-    sortAscending: sortOptions?.sortAscending ?? false,
+    options: effectiveOptions,
   })
   // Only fetch from new endpoint when feature flag is enabled
   const backendSortedResult = useBackendSortedTopTokens({
     chainId,
     enabled: isExploreBackendSortingEnabled,
-    sortMethod: sortOptions?.sortMethod ?? TokenSortMethod.VOLUME,
-    sortAscending: sortOptions?.sortAscending ?? false,
+    options: effectiveOptions,
   })
 
   const result = isExploreBackendSortingEnabled

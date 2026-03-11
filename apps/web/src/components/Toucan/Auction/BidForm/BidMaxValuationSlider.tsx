@@ -412,7 +412,7 @@ function BidMaxValuationSliderComponent({
               </Flex>
             </Tooltip.Trigger>
             {fiatFdvDisplay && (
-              <Tooltip.Content zIndex={zIndexes.tooltip} p="$spacing10">
+              <Tooltip.Content zIndex={zIndexes.tooltip} p="$spacing12">
                 <Text variant="body4" color="$neutral1" whiteSpace="nowrap">
                   {fiatFdvDisplay}
                 </Text>

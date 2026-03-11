@@ -6,11 +6,10 @@ import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { SparklineMap } from '~/appGraphql/data/types'
 import { PricePoint, TimePeriod, unwrapToken } from '~/appGraphql/data/util'
-import { TokenSortMethod } from '~/components/Tokens/constants'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
 import { ExploreContext } from '~/state/explore'
 import { EXPLORE_API_PAGE_SIZE } from '~/state/explore/constants'
+import { UseTopTokensOptions, type UseTopTokensSortOptions } from '~/state/explore/topTokens/types'
 import { TokenSortMethods } from '~/state/explore/topTokens/utils/sortTokens'
 import { TokenStat } from '~/state/explore/types'
 import { getChainIdFromChainUrlParam } from '~/utils/chainParams'
@@ -61,13 +60,13 @@ function convertTokenStatsToTokenStat(tokenStats: TokenStats, duration: TimePeri
 
 function useSortedTokens({
   tokens,
-  sortMethod,
-  sortAscending,
+  sortOptions,
 }: {
   tokens: TokenStat[] | undefined
-  sortMethod: TokenSortMethod
-  sortAscending: boolean
+  sortOptions: UseTopTokensSortOptions
 }): TokenStat[] | undefined {
+  const { sortMethod, sortAscending } = sortOptions
+
   return useMemo(() => {
     if (!tokens) {
       return undefined
@@ -78,9 +77,7 @@ function useSortedTokens({
   }, [tokens, sortMethod, sortAscending])
 }
 
-function useFilteredTokens(tokens: TokenStat[] | undefined) {
-  const filterString = useExploreTablesFilterStore((s) => s.filterString)
-
+function useFilteredTokens(tokens: TokenStat[] | undefined, filterString: string) {
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
   return useMemo(() => {
@@ -108,20 +105,12 @@ function useFilteredTokens(tokens: TokenStat[] | undefined) {
 
 /**
  * Legacy hook that uses ExploreContext with client-side sorting/filtering.
+ * Filter state is passed in; caller (useTopTokens) reads from store when needed.
  * @param enabled - Whether to process the data (default: true). When false, skips processing and returns empty results.
- * @param sortMethod - Current sort column (caller manages state)
- * @param sortAscending - Current sort direction (caller manages state)
+ * @param options - Resolved sort and filter options (caller provides via getEffectiveTopTokensOptions).
  */
-export function useTopTokensLegacy({
-  enabled,
-  sortMethod,
-  sortAscending,
-}: {
-  enabled: boolean
-  sortMethod: TokenSortMethod
-  sortAscending: boolean
-}) {
-  const duration = useExploreTablesFilterStore((s) => s.timePeriod)
+export function useTopTokensLegacy({ enabled, options }: { enabled: boolean; options: Required<UseTopTokensOptions> }) {
+  const { filterString, filterTimePeriod: duration, sortMethod, sortAscending } = options
   const {
     exploreStats: { data, isLoading, error: isError },
   } = useContext(ExploreContext)
@@ -133,7 +122,11 @@ export function useTopTokensLegacy({
     return data?.stats?.tokenStats.map((tokenStat: TokenStats) => convertTokenStatsToTokenStat(tokenStat, duration))
   }, [enabled, data?.stats?.tokenStats, duration])
 
-  const sortedTokenStats = useSortedTokens({ tokens: tokenStats, sortMethod, sortAscending })
+  const sortedTokenStats = useSortedTokens({
+    tokens: tokenStats,
+    sortOptions: { sortMethod, sortAscending },
+  })
+  const filteredTokens = useFilteredTokens(sortedTokenStats, filterString)?.slice(0, EXPLORE_API_PAGE_SIZE)
   const tokenSortRank = useMemo(
     () =>
       // eslint-disable-next-line max-params
@@ -149,7 +142,6 @@ export function useTopTokensLegacy({
       }, {}) ?? {},
     [sortedTokenStats],
   )
-  const filteredTokens = useFilteredTokens(sortedTokenStats)?.slice(0, EXPLORE_API_PAGE_SIZE)
   const sparklines = useMemo(() => {
     const unwrappedTokens = filteredTokens?.map((tokenStat) => {
       const chainId = getChainIdFromChainUrlParam(tokenStat.chain.toLowerCase())

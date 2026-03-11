@@ -1,11 +1,10 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { BlurView } from 'expo-blur'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
-import { SPLASH_SCREEN_IMAGE_SIZE, SplashScreen } from 'src/features/appLoading/SplashScreen'
+import { SPLASH_SCREEN_IMAGE_SIZE } from 'src/features/appLoading/SplashScreen'
 import { useBiometricsAlert } from 'src/features/biometrics/useBiometricsAlert'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
@@ -46,7 +45,6 @@ const useBiometricAuth = (): (() => Promise<void>) => {
 
 export const LockScreenModal = memo(function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible } = useLockScreenState()
-  const isBlurredLockScreenEnabled = useFeatureFlag(FeatureFlags.BlurredLockScreen)
   const onPress = useBiometricAuth()
 
   if (!isLockScreenVisible) {
@@ -58,30 +56,9 @@ export const LockScreenModal = memo(function LockScreenModal(): JSX.Element | nu
   return (
     <FullScreenFader>
       <TouchableArea activeOpacity={1} style={flexStyles.fill} onPress={onPress}>
-        {isBlurredLockScreenEnabled ? (
-          <BlurredLockScreen />
-        ) : (
-          // fallback to splash screen with unlock button
-          <LegacySplashLockScreen />
-        )}
+        <BlurredLockScreen />
       </TouchableArea>
     </FullScreenFader>
-  )
-})
-
-const LegacySplashLockScreen = memo(function LegacySplashLockScreen(): JSX.Element {
-  const { manualRetryRequired } = useLockScreenState()
-  const bottomInset = useBottomInset()
-
-  return (
-    <>
-      <SplashScreen />
-      {manualRetryRequired && (
-        <Flex position="absolute" top={0} left={0} right={0} bottom={0} justifyContent="flex-end" pb={bottomInset}>
-          <UnlockButton />
-        </Flex>
-      )}
-    </>
   )
 })
 

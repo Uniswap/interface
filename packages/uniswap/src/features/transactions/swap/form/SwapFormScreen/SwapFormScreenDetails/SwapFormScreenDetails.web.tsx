@@ -5,10 +5,8 @@ import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/for
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 
 export function SwapFormScreenDetails(): JSX.Element {
-  const isPriceUXEnabled = usePriceUXEnabled()
   const { tokenColor, showFooter } = useSwapFormScreenStore((state) => ({
     tokenColor: state.tokenColor,
     showFooter: state.showFooter,
@@ -32,7 +30,7 @@ export function SwapFormScreenDetails(): JSX.Element {
           </Flex>
           <SwapFormScreenFooter />
         </Flex>
-        {showFooter && !isPriceUXEnabled ? <ExpandableRows /> : null}
+        {showFooter ? <ExpandableRows /> : null}
       </Accordion.Item>
     </Accordion>
   )

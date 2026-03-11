@@ -22,9 +22,10 @@ import type { CurrencyId } from 'uniswap/src/types/currency'
  *
  * Prefers per-chain subgraph data, falls back to aggregated CoinGecko data
  */
-export function useTokenSpotPrice(currencyId: CurrencyId): number | undefined {
-  const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data.market
-  const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data.project?.markets
+export function useTokenSpotPrice(currencyId: CurrencyId | undefined): number | undefined {
+  const id = currencyId ?? ''
+  const tokenMarket = useTokenMarketPartsFragment({ currencyId: id }).data.market
+  const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId: id }).data.project?.markets
 
   return useMemo(() => {
     return tokenMarket?.price?.value ?? projectMarkets?.[0]?.price?.value
@@ -56,12 +57,12 @@ export interface TokenMarketStats {
   low52w: number | undefined
 }
 
-export function useTokenMarketStats(currencyId: CurrencyId): TokenMarketStats {
+export function useTokenMarketStats(currencyId: CurrencyId, currentPriceOverride?: number): TokenMarketStats {
   const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data.market
   const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data.project?.markets
 
   return useMemo(() => {
-    const currentPrice = projectMarkets?.[0]?.price?.value ?? tokenMarket?.price?.value
+    const currentPrice = currentPriceOverride ?? projectMarkets?.[0]?.price?.value ?? tokenMarket?.price?.value
     const marketCap = projectMarkets?.[0]?.marketCap?.value ?? undefined
     const fdv = projectMarkets?.[0]?.fullyDilutedValuation?.value ?? undefined
     const volume = tokenMarket?.volume?.value ?? undefined
@@ -81,6 +82,7 @@ export function useTokenMarketStats(currencyId: CurrencyId): TokenMarketStats {
       low52w,
     }
   }, [
+    currentPriceOverride,
     projectMarkets?.[0]?.price?.value,
     projectMarkets?.[0]?.marketCap?.value,
     projectMarkets?.[0]?.fullyDilutedValuation?.value,

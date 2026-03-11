@@ -1,7 +1,5 @@
 export enum GQLQueries {
   Nfts = 'Nfts',
-  NFTItemScreen = 'NFTItemScreen',
-  NftCollectionScreen = 'NftCollectionScreen',
   NftsTab = 'NftsTab',
   PortfolioBalances = 'PortfolioBalances',
   SelectWalletScreen = 'SelectWalletScreen',

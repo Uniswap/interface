@@ -111,7 +111,9 @@ function useDropdownOptions({
     const showMigrateV3Option =
       isV3Position && isOpenLiquidityPosition && !isV4UnsupportedChain(liquidityPosition.chainId)
 
-    if (!isV2Position && isOpenLiquidityPosition) {
+    const hasFees = liquidityPosition.fee0Amount?.greaterThan(0) || liquidityPosition.fee1Amount?.greaterThan(0)
+
+    if (!isV2Position && isOpenLiquidityPosition && hasFees) {
       options.push({
         onPress: () => {
           dispatch(

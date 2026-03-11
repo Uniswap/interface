@@ -102,7 +102,7 @@ import { isTestEnv } from 'utilities/src/environment/env'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadog/datadogEvents'
-import { logger } from 'utilities/src/logger/logger'
+import { getLogger, logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
@@ -178,6 +178,7 @@ const provideSessionInitializationService = (): SessionInitializationService => 
       createHashcashSolver({
         performanceTracker,
         getWorkerChannel: () => createHashcashWorkerChannel(),
+        getLogger,
       }),
     )
   } else {
@@ -189,12 +190,15 @@ const provideSessionInitializationService = (): SessionInitializationService => 
       provideSessionService({
         getBaseUrl: getEntryGatewayUrl,
         getIsSessionServiceEnabled,
+        getLogger,
       }),
     challengeSolverService: createChallengeSolverService({
       solvers,
+      getLogger,
     }),
     performanceTracker,
     getIsSessionUpgradeAutoEnabled,
+    getLogger,
   })
 }
 

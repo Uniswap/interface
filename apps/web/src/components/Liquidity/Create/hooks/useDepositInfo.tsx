@@ -174,6 +174,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
 
   return useMemo(
     () => ({
+      currencyMaxAmounts: { [PositionField.TOKEN0]: token0MaxAmount, [PositionField.TOKEN1]: token1MaxAmount },
       currencyBalances: { [PositionField.TOKEN0]: token0Balance, [PositionField.TOKEN1]: token1Balance },
       formattedAmounts: { [exactField]: exactAmounts[exactField], [dependentField]: dependentAmount?.toExact() },
       currencyAmounts: { [exactField]: independentAmount, [dependentField]: dependentAmount },
@@ -181,6 +182,8 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       error,
     }),
     [
+      token0MaxAmount,
+      token1MaxAmount,
       token0Balance,
       token1Balance,
       exactField,

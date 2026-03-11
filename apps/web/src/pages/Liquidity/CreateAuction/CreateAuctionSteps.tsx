@@ -1,5 +1,4 @@
 import { AnimatePresence, Flex, HeightAnimator } from 'ui/src'
-import { Container } from '~/components/Liquidity/Create/Container'
 import { useCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { AddTokenInfoStep } from '~/pages/Liquidity/CreateAuction/steps/AddTokenInfoStep'
 import { ConfigureAuctionStep } from '~/pages/Liquidity/CreateAuction/steps/ConfigureAuctionStep'
@@ -11,7 +10,7 @@ export function CreateAuctionSteps() {
   const step = useCreateAuctionStore((state) => state.step)
 
   return (
-    <Container>
+    <Flex width="100%" overflow="hidden">
       <HeightAnimator animation="200ms">
         <AnimatePresence>
           {step === CreateAuctionStep.ADD_TOKEN_INFO && (
@@ -42,6 +41,6 @@ export function CreateAuctionSteps() {
           )}
         </AnimatePresence>
       </HeightAnimator>
-    </Container>
+    </Flex>
   )
 }

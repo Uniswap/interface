@@ -137,7 +137,7 @@ export const MiniActivityTable = memo(function MiniActivityTable({
     (row: Row<TransactionDetails>, content: JSX.Element) => {
       const transaction = row.original
       return (
-        <TouchableArea onPress={() => handleTransactionClick(transaction)} cursor="pointer">
+        <TouchableArea onPress={() => handleTransactionClick(transaction)} cursor="pointer" pressStyle={{ scale: 1 }}>
           {content}
         </TouchableArea>
       )

@@ -5,7 +5,6 @@ import { memo, useState } from 'react'
 import { Flex, styled, TouchableArea } from 'ui/src'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { iconSizes } from 'ui/src/theme'
-import { NFTCollectionOptionItem } from 'uniswap/src/components/lists/items/nfts/NFTCollectionOptionItem'
 import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
 import {
   PoolContextMenuAction,
@@ -129,8 +128,7 @@ export const SearchModalList = memo(function _SearchModalList({
   renderedInModal,
   contentContainerStyle,
 }: SearchModalListProps): JSX.Element {
-  const { navigateToTokenDetails, navigateToExternalProfile, navigateToNftCollection, navigateToPoolDetails } =
-    useUniswapContext()
+  const { navigateToTokenDetails, navigateToExternalProfile, navigateToPoolDetails } = useUniswapContext()
   const { registerSearchItem } = useAddToSearchHistory()
 
   const [focusedRowIndex, setFocusedRowIndex] = useState<number | undefined>()
@@ -275,29 +273,6 @@ export const SearchModalList = memo(function _SearchModalList({
             }}
           />
         )
-      case OnchainItemListOptionType.NFTCollection:
-        return (
-          <NFTCollectionOptionItem
-            collectionOption={item}
-            onPress={() => {
-              const { address, chainId } = item
-
-              navigateToNftCollection({ collectionAddress: address, chainId })
-
-              registerSearchItem(item)
-
-              sendSearchOptionItemClickedAnalytics({
-                item,
-                section,
-                sectionIndex: index,
-                rowIndex,
-                searchFilters,
-              })
-
-              onSelect?.()
-            }}
-          />
-        )
     }
   }
 
@@ -335,7 +310,5 @@ function key(item: SearchModalOption): string {
       return `ens-${item.address}`
     case OnchainItemListOptionType.Unitag:
       return `unitag-${item.address}`
-    case OnchainItemListOptionType.NFTCollection:
-      return `nft-${item.chainId}-${item.address}`
   }
 }

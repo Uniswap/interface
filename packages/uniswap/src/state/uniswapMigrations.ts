@@ -151,7 +151,7 @@ export const migrateSearchHistory = createSafeMigration({
           case PreV55SearchResultType.NFTCollection:
             // NFTCollection: 3 → 2
             return {
-              type: SearchHistoryResultType.NFTCollection,
+              type: 2,
               chainId: result.chainId,
               address: result.address,
               name: result.name,

@@ -1,5 +1,4 @@
 export { PortalProvider } from '@tamagui/portal'
-export { RemoveScroll } from '@tamagui/remove-scroll'
 export type {
   Adapt,
   AnchorProps,
@@ -87,6 +86,7 @@ export * from './components/OverKeyboardContent/OverKeyboardContent'
 export { AdaptiveWebPopoverContent } from './components/popover/AdaptiveWebPopoverContent'
 export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'
 export { RefreshButton } from './components/RefreshButton/RefreshButton'
+export * from './components/RemoveScroll/RemoveScroll'
 export * from './components/radio/Radio'
 export * from './components/SegmentedControl/SegmentedControl'
 export { ClickableWithinGesture } from './components/swipeablecards/ClickableWithinGesture'

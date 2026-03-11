@@ -250,6 +250,7 @@ export default function FeatureFlagModal(): JSX.Element {
               flag={FeatureFlags.LiquidityBatchedTransactions}
               label="Enable Batched Transactions for LP flow"
             />
+            <FeatureFlagOption flag={FeatureFlags.LpDynamicNativeSlippage} label="Enable Dynamic Native Slippage" />
             <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Toucan">
@@ -284,10 +285,6 @@ export default function FeatureFlagModal(): JSX.Element {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Portfolio">
             <FeatureFlagOption flag={FeatureFlags.PortfolioDefiTab} label="Enable Portfolio DeFi Tab" />
-            <FeatureFlagOption
-              flag={FeatureFlags.PortfolioTokensAllocationChart}
-              label="Enable Portfolio Tokens Allocation Chart"
-            />
             <FeatureFlagOption flag={FeatureFlags.ProfitLoss} label="Enable Profit/Loss" />
             <FeatureFlagOption flag={FeatureFlags.SelfReportSpamNFTs} label="Report spam NFTs" />
           </FeatureFlagGroup>
@@ -295,7 +292,6 @@ export default function FeatureFlagModal(): JSX.Element {
             <FeatureFlagOption flag={FeatureFlags.TDPTokenCarousel} label="Enable TDP Token Carousel" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Misc">
-            <FeatureFlagOption flag={FeatureFlags.BridgedAssetsBannerV2} label="Enable V2 Bridged Assets Banner" />
             <FeatureFlagOption flag={FeatureFlags.UniswapWrapped2025} label="Enable Uniswap Wrapped 2025" />
             <FeatureFlagOption flag={FeatureFlags.UnificationCopy} label="Enable Unification Copy" />
           </FeatureFlagGroup>

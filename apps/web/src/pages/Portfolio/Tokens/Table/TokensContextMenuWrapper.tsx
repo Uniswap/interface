@@ -31,16 +31,12 @@ export function TokensContextMenuWrapper({
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
 
-  const portfolioBalance: PortfolioBalance | undefined = useMemo(() => {
-    if (!tokenData.currencyInfo) {
-      return undefined
-    }
-
+  const portfolioBalance: PortfolioBalance = useMemo(() => {
     return {
       id: tokenData.id,
       cacheId: tokenData.id,
-      quantity: tokenData.balance.value,
-      balanceUSD: tokenData.value,
+      quantity: tokenData.quantity,
+      balanceUSD: tokenData.totalValue,
       currencyInfo: tokenData.currencyInfo,
       relativeChange24: tokenData.change1d,
       isHidden: tokenData.isHidden ?? false,
@@ -48,14 +44,14 @@ export function TokensContextMenuWrapper({
   }, [
     tokenData.currencyInfo,
     tokenData.id,
-    tokenData.balance.value,
+    tokenData.quantity,
     tokenData.change1d,
-    tokenData.value,
+    tokenData.totalValue,
     tokenData.isHidden,
   ])
 
   const openReportTokenModal = useEvent((currency: Currency) => {
-    setModalProps({ source: 'portfolio', currency, isMarkedSpam: portfolioBalance?.currencyInfo.isSpam })
+    setModalProps({ source: 'portfolio', currency, isMarkedSpam: portfolioBalance.currencyInfo.isSpam })
     openModal()
   })
 
@@ -74,9 +70,7 @@ export function TokensContextMenuWrapper({
   const navigateToTokenDetails = useNavigateToTokenDetails()
 
   const openReportTokenModalForCurrency = useCallback(() => {
-    if (portfolioBalance) {
-      openReportTokenModal(portfolioBalance.currencyInfo.currency)
-    }
+    openReportTokenModal(portfolioBalance.currencyInfo.currency)
   }, [portfolioBalance, openReportTokenModal])
 
   // When viewing external wallet, exclude hide and report options from context menu
@@ -87,8 +81,8 @@ export function TokensContextMenuWrapper({
     return undefined
   }, [isExternalWallet])
 
-  // Context menu not available in demo view or when no portfolio balance
-  if (!portfolioBalance || showDemoView) {
+  // Context menu not available in demo view
+  if (showDemoView) {
     return children
   }
 
@@ -99,7 +93,7 @@ export function TokensContextMenuWrapper({
       excludedActions={excludedActions}
       openReportTokenModal={openReportTokenModalForCurrency}
       copyAddressToClipboard={copyAddressToClipboard}
-      onPressToken={() => navigateToTokenDetails(tokenData.currencyInfo?.currency)}
+      onPressToken={() => navigateToTokenDetails(tokenData.currencyInfo.currency)}
       disableNotifications={true}
       recipient={isExternalWallet ? externalAddress?.address : undefined}
     >

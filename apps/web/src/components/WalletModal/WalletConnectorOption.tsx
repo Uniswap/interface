@@ -5,9 +5,10 @@ import { BINANCE_WALLET_ICON, UNISWAP_LOGO } from 'ui/src/assets'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
+import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { WalletFilled } from 'ui/src/components/icons/WalletFilled'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, opacify } from 'ui/src/theme'
 import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -82,7 +83,19 @@ function getIcon({
   if (wallet.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return <EmbeddedWalletIcon />
   } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
-    return <UniswapMobileIcon iconSize={iconSize} />
+    return isEmbeddedWalletEnabled ? (
+      <Flex
+        p="$spacing4"
+        backgroundColor="$accent2"
+        borderRadius="$rounded8"
+        borderWidth={1}
+        borderColor={opacify(20, themeColors.accent1.val)}
+      >
+        <UniswapLogo size={iconSize - 10} color="$accent1" />
+      </Flex>
+    ) : (
+      <UniswapMobileIcon iconSize={iconSize} />
+    )
   } else if (wallet.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
     return <BinanceWalletIcon iconSize={iconSize} />
   } else {
@@ -134,9 +147,11 @@ function RightSideDetail({
 export function WalletConnectorOption({
   wallet,
   connectOnPlatform = 'any',
+  rightSideDetail,
 }: {
   wallet: ExternalWallet
   connectOnPlatform?: Platform | 'any'
+  rightSideDetail?: JSX.Element | null
 }) {
   const { t } = useTranslation()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
@@ -172,7 +187,9 @@ export function WalletConnectorOption({
       icon={icon}
       text={text}
       rightSideDetail={
-        <RightSideDetail isPendingConnection={isPendingConnection} isRecent={isRecent} detected={isDetected} />
+        rightSideDetail || (
+          <RightSideDetail isPendingConnection={isPendingConnection} isRecent={isRecent} detected={isDetected} />
+        )
       }
       onPress={handleConnect}
       isPendingConnection={isPendingConnection}
@@ -231,14 +248,14 @@ function WalletConnectorOptionBase({
       element={ElementName.WalletTypeOption}
     >
       <Flex
-        backgroundColor={isEmbeddedWalletEnabled ? 'transparent' : '$surface2'}
+        backgroundColor="$surface2"
         row
         alignItems="center"
         width="100%"
         justifyContent="space-between"
         position="relative"
         px="$spacing12"
-        py="$spacing18"
+        py={isEmbeddedWalletEnabled ? '$spacing12' : '$spacing18'}
         cursor={isDisabled ? 'auto' : 'pointer'}
         hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface1Hovered' }}
         opacity={isDisabled && !isPendingConnection ? 0.5 : 1}

@@ -11,17 +11,17 @@ exports[`TokenDescription > no description or social buttons shown when not avai
       data-testid="token-details-about-section"
     >
       <h3
-        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
         data-disable-theme="true"
       >
         About
       </h3>
       <span
-        class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
+        class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-24px _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
         data-disable-theme="true"
       >
         <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
           data-disable-theme="true"
         >
           No token information available
@@ -55,7 +55,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
             />
           </svg>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             Etherscan
@@ -91,7 +91,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
             </div>
           </div>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             0xA0b8...eB48
@@ -117,17 +117,17 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
       data-testid="token-details-about-section"
     >
       <h3
-        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
         data-disable-theme="true"
       >
         About
       </h3>
       <span
-        class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
+        class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-24px _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
         data-disable-theme="true"
       >
         <h2
-          class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-normal"
+          class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _whiteSpace-normal"
           data-disable-theme="true"
         >
           <span
@@ -144,7 +144,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
           tabindex="0"
         >
           <span
-            class="font_button _color-_grouptrue-hover_accent3Hove112785 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-t-space-spa94665593 _color-accent3 _fontFamily-f-family _wordWrap-break-word _display-inline _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _textWrap-nowrap"
+            class="font_button _color-_grouptrue-hover_accent3Hove112785 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-t-space-spa94665593 _color-accent3 _fontFamily-f-family _wordWrap-break-word _display-inline _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _textWrap-nowrap"
             data-disable-theme="true"
           >
             Show more
@@ -175,7 +175,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
             />
           </svg>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             Website
@@ -200,7 +200,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
             />
           </svg>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             Twitter
@@ -230,7 +230,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
             />
           </svg>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             Etherscan
@@ -266,7 +266,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
             </div>
           </div>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             0xA0b8...eB48
@@ -292,17 +292,17 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
       data-testid="token-details-about-section"
     >
       <h3
-        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
         data-disable-theme="true"
       >
         About
       </h3>
       <span
-        class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
+        class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-24px _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
         data-disable-theme="true"
       >
         <h2
-          class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-normal"
+          class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _whiteSpace-normal"
           data-disable-theme="true"
         >
           <span
@@ -319,7 +319,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
           tabindex="0"
         >
           <span
-            class="font_button _color-_grouptrue-hover_accent3Hove112785 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-t-space-spa94665593 _color-accent3 _fontFamily-f-family _wordWrap-break-word _display-inline _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _textWrap-nowrap"
+            class="font_button _color-_grouptrue-hover_accent3Hove112785 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-t-space-spa94665593 _color-accent3 _fontFamily-f-family _wordWrap-break-word _display-inline _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _textWrap-nowrap"
             data-disable-theme="true"
           >
             Show more
@@ -350,7 +350,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
             />
           </svg>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             Website
@@ -375,7 +375,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
             />
           </svg>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             Twitter
@@ -405,7 +405,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
             />
           </svg>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             Etherscan
@@ -441,7 +441,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
             </div>
           </div>
           <span
-            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             0xA0b8...eB48

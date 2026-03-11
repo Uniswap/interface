@@ -129,6 +129,7 @@ const provideSessionInitService = () => {
             },
           }),
         onSolveCompleted: onHashcashSolveCompleted,
+        getLogger,
       }),
     )
   } else {

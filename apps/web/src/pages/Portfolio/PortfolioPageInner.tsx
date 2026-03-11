@@ -29,18 +29,15 @@ export function PortfolioPageInner({ scrollY, isBannerVisible, mb }: PortfolioPa
       {showDemoView && <PortfolioConnectWalletBanner />}
       {showDemoView && <ConnectWalletFixedBottomButton shouldShow={!isBannerVisible} />}
 
+      <PortfolioHeader scrollY={scrollY} />
+
+      {/* Animated Content Area - All routes show same content, filtered by chain */}
       {!showDemoView ? (
         <>
-          <PortfolioHeader scrollY={scrollY} />
-
-          {/* Animated Content Area - All routes show same content, filtered by chain */}
           <PortfolioContent />
         </>
       ) : (
         <>
-          <PortfolioHeader />
-
-          {/* Animated Content Area - All routes show same content, filtered by chain */}
           <Flex cursor="not-allowed">
             <PortfolioContent disabled />
           </Flex>

@@ -41,6 +41,7 @@ import { validatePermit, validateTransactionRequest } from 'uniswap/src/features
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useDepositInfo } from '~/components/Liquidity/Create/hooks/useDepositInfo'
+import { useDynamicNativeSlippage } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
 import { useCreatePositionDependentAmountFallback } from '~/components/Liquidity/hooks/useDependentAmountFallback'
 import { generateLiquidityServiceCreateCalldataQueryParams } from '~/components/Liquidity/utils/generateLiquidityServiceCreateCalldata'
 import { getCheckLPApprovalRequestParams } from '~/components/Liquidity/utils/getCheckLPApprovalRequestParams'
@@ -204,6 +205,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
   }, [TOKEN0, TOKEN1, exactField, ticks, poolOrPair, depositState, evmAddress, protocolVersion, invalidRange])
 
   const {
+    currencyMaxAmounts,
     currencyAmounts,
     error: inputError,
     formattedAmounts,
@@ -216,6 +218,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     customSlippageTolerance: s.customSlippageTolerance,
   }))
   const isLiquidityBatchedTransactionsEnabled = useFeatureFlag(FeatureFlags.LiquidityBatchedTransactions)
+  const isLpDynamicNativeSlippageEnabled = useFeatureFlag(FeatureFlags.LpDynamicNativeSlippage)
   const canBatchTransactions =
     (useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(poolOrPair?.chainId)) ?? false) &&
     poolOrPair?.chainId !== UniverseChainId.Monad &&
@@ -266,6 +269,18 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
   const gasFeeToken0PermitUSD = useUSDCurrencyAmountOfGasFee(poolOrPair?.chainId, approvalCalldata?.gasFeeToken0Permit)
   const gasFeeToken1PermitUSD = useUSDCurrencyAmountOfGasFee(poolOrPair?.chainId, approvalCalldata?.gasFeeToken1Permit)
 
+  const nativeTokenBalance = useMemo(() => {
+    if (!isLpDynamicNativeSlippageEnabled || protocolVersion !== ProtocolVersion.V4) {
+      return undefined
+    }
+    // Only set native token balance if the token0 is the native token
+    // other tokens (CELO) are not treated as native tokens
+    if (currencyMaxAmounts?.TOKEN0?.currency.isNative) {
+      return currencyMaxAmounts.TOKEN0.quotient.toString()
+    }
+    return undefined
+  }, [isLpDynamicNativeSlippageEnabled, protocolVersion, currencyMaxAmounts])
+
   const createCalldataQueryParams = useMemo(() => {
     return generateLiquidityServiceCreateCalldataQueryParams({
       address: evmAddress,
@@ -278,8 +293,9 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       poolOrPair,
       currencyAmounts,
       independentField: depositState.exactField,
-      slippageTolerance: customSlippageTolerance,
+      slippageTolerance: nativeTokenBalance ? undefined : customSlippageTolerance,
       customDeadline,
+      nativeTokenBalance,
     })
   }, [
     evmAddress,
@@ -294,6 +310,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     currencies.display,
     protocolVersion,
     customDeadline,
+    nativeTokenBalance,
   ])
 
   const isUserCommittedToCreate =
@@ -422,6 +439,12 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     canBatchTransactions,
     delegatedAddress,
   ])
+
+  useDynamicNativeSlippage({
+    isEnabled: isLpDynamicNativeSlippageEnabled,
+    nativeTokenBalance,
+    createCalldata,
+  })
 
   const value = useMemo(
     (): CreatePositionTxContextType => ({

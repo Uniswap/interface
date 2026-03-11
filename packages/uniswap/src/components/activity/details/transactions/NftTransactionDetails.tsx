@@ -1,8 +1,5 @@
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { Flex, Text } from 'ui/src'
 import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
@@ -10,76 +7,31 @@ import {
   NFTTradeTransactionInfo,
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
-  TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isWebPlatform } from 'utilities/src/platform'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
 export function NftTransactionDetails({
-  transactionDetails,
   typeInfo,
-  onClose,
 }: {
-  transactionDetails: TransactionDetails
   typeInfo:
     | ReceiveTokenTransactionInfo
     | SendTokenTransactionInfo
     | NFTTradeTransactionInfo
     | NFTMintTransactionInfo
     | NFTApproveTransactionInfo
-  onClose: () => void
 }): JSX.Element {
   if (!typeInfo.nftSummaryInfo) {
     return <></>
   }
 
-  return (
-    <NftTransactionContent
-      chainId={transactionDetails.chainId}
-      nftSummaryInfo={typeInfo.nftSummaryInfo}
-      onClose={onClose}
-    />
-  )
+  return <NftTransactionContent nftSummaryInfo={typeInfo.nftSummaryInfo} />
 }
 
-export function NftTransactionContent({
-  chainId,
-  nftSummaryInfo,
-  onClose,
-}: {
-  chainId: UniverseChainId
-  nftSummaryInfo: NFTSummaryInfo
-  onClose: () => void
-}): JSX.Element {
-  const { navigateToNftCollection, navigateToNftDetails } = useUniswapContext()
-
-  const onPressNft = (): void => {
-    navigateToNftDetails({
-      contractAddress: nftSummaryInfo.address,
-      tokenId: nftSummaryInfo.tokenId,
-      chainId,
-      fallbackChainId: chainId,
-    })
-    onClose()
-  }
-
-  const onPressCollection = (): void => {
-    // Collection should not be clickable on L2s
-    if (chainId === UniverseChainId.Mainnet) {
-      navigateToNftCollection({ collectionAddress: nftSummaryInfo.address, chainId })
-      onClose()
-    }
-  }
-
-  const disableOnPressNftItem = isWebPlatform
-  const disableOnPressNftCollection = isWebPlatform || chainId !== UniverseChainId.Mainnet
-
+export function NftTransactionContent({ nftSummaryInfo }: { nftSummaryInfo: NFTSummaryInfo }): JSX.Element {
   return (
     <Flex borderRadius="$rounded20" overflow="hidden">
-      <TouchableArea cursor="default" disabled={disableOnPressNftItem} onPress={onPressNft}>
-        <NFTViewer maxHeight={MAX_NFT_IMAGE_HEIGHT} uri={nftSummaryInfo.imageURL} />
-      </TouchableArea>
+      <NFTViewer maxHeight={MAX_NFT_IMAGE_HEIGHT} uri={nftSummaryInfo.imageURL} />
       <Flex
         borderBottomLeftRadius="$rounded20"
         borderBottomRightRadius="$rounded20"
@@ -89,14 +41,11 @@ export function NftTransactionContent({
         p="$spacing12"
       >
         <Text variant="subheading2">{nftSummaryInfo.name}</Text>
-        <TouchableArea cursor="default" disabled={disableOnPressNftCollection} onPress={onPressCollection}>
-          <Flex row pr="$spacing12">
-            <Text color="$neutral2" numberOfLines={1} variant="body3">
-              {nftSummaryInfo.collectionName}
-            </Text>
-            {!disableOnPressNftCollection && <RotatableChevron color="$neutral2" direction="right" size="$icon.16" />}
-          </Flex>
-        </TouchableArea>
+        <Flex row pr="$spacing12">
+          <Text color="$neutral2" numberOfLines={1} variant="body3">
+            {nftSummaryInfo.collectionName}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   )

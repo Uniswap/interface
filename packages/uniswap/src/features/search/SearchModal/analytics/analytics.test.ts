@@ -1,6 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
 import {
-  NFTCollectionOption,
   OnchainItemListOptionType,
   TokenOption,
   UnitagOption,
@@ -54,15 +53,6 @@ const MOCK_TOKEN2: TokenOption = {
   },
   quantity: null,
   balanceUSD: undefined,
-}
-
-const MOCK_NFT: NFTCollectionOption = {
-  type: OnchainItemListOptionType.NFTCollection,
-  chainId: 1,
-  address: '0x789',
-  name: 'Test Collection',
-  imageUrl: 'https://example.com/nft.png',
-  isVerified: true,
 }
 
 describe('sendSearchOptionItemClickedAnalytics', () => {
@@ -187,42 +177,6 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       name: 'test-unitag.uni.eth',
       domain: '.uni.eth',
       searchTabFilter: SearchTab.Wallets,
-    })
-  })
-
-  it('sends nft analytics event', () => {
-    mockPlatformState.isMobileApp = true
-    const mockSection: OnchainItemSection<NFTCollectionOption> = {
-      sectionKey: OnchainItemSectionName.NFTCollections,
-      data: [MOCK_NFT],
-    }
-    const mockSearchFilters: SearchFilterContext = {
-      query: 'test',
-      searchChainFilter: null,
-      searchTabFilter: SearchTab.NFTCollections,
-    }
-
-    sendSearchOptionItemClickedAnalytics({
-      item: MOCK_NFT,
-      section: mockSection,
-      rowIndex: 1,
-      sectionIndex: 0,
-      searchFilters: mockSearchFilters,
-    })
-
-    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
-      category: OnchainItemSectionName.NFTCollections,
-      isHistory: false,
-      position: 1,
-      sectionPosition: 1,
-      suggestionCount: 1,
-      query: 'test',
-      name: 'Test Collection',
-      chain: 1,
-      address: '0x789',
-      type: 'collection',
-      searchChainFilter: null,
-      searchTabFilter: SearchTab.NFTCollections,
     })
   })
 })

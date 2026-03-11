@@ -26,6 +26,7 @@ exports[`ContextMenu > renders without error 1`] = `
         </div>
       </div>
     </div>
+    <div />
     <div
       style="display: contents;"
     />

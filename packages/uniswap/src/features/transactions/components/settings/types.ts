@@ -37,6 +37,7 @@ export interface TransactionSettingsState {
   selectedProtocols: FrontendSupportedProtocol[]
   slippageWarningModalSeen: boolean
   isV4HookPoolsEnabled: boolean
+  isSlippageDirty: boolean
 }
 
 export type TransactionSettings = TransactionSettingsState & { autoSlippageTolerance?: number }

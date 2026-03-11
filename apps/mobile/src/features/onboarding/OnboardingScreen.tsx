@@ -7,6 +7,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { HeaderSkipButton, renderHeaderBackButton } from 'src/app/navigation/components'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { Screen, SHORT_SCREEN_HEADER_HEIGHT_RATIO } from 'src/components/layout/Screen'
+import { useRegionalizedLineHeight } from 'src/components/text/useRegionalizedLineHeight'
 import { Flex, GeneratedIcon, SpaceTokens, Text, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
@@ -64,6 +65,8 @@ export function OnboardingScreen({
     }, [navigation, disableGoBack, onSkip]),
   )
 
+  const titleLineHeight = useRegionalizedLineHeight()
+
   return (
     <Screen
       $short={{ pt: headerHeight * SHORT_SCREEN_HEADER_HEIGHT_RATIO }}
@@ -93,7 +96,13 @@ export function OnboardingScreen({
               </Flex>
             )}
             {title && (
-              <Text allowFontScaling={false} pt={paddingTop} textAlign="center" variant="subheading1">
+              <Text
+                allowFontScaling={false}
+                pt={paddingTop}
+                textAlign="center"
+                variant="subheading1"
+                lineHeight={titleLineHeight}
+              >
                 {title}
               </Text>
             )}

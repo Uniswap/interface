@@ -51,7 +51,7 @@ export function MarketPriceImpactWarningModal({
     <WarningInfo
       infoButton={
         <TouchableArea onPress={async () => await openUri({ uri: link })}>
-          <Text color="$accent1" variant={isWebPlatform ? 'body4' : 'buttonLabel2'}>
+          <Text color="$neutral1" variant={isWebPlatform ? 'body4' : 'buttonLabel2'}>
             {t('common.button.learn')}
           </Text>
         </TouchableArea>

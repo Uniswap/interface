@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+
 import { NetworkStatus } from '@apollo/client'
 import { QueryHookOptions } from '@apollo/client/react/types/types'
 import { GqlResult, GraphQLApi, SpamCode } from '@universe/api'
@@ -7,21 +9,32 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePortfolioData } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import type {
+  PortfolioDataResult,
+  PortfolioDataResultMultichain,
+} from 'uniswap/src/features/dataApi/balances/balancesRest'
+
+export type { PortfolioDataResult } from 'uniswap/src/features/dataApi/balances/balancesRest'
+
+import { usePortfolioData, usePortfolioDataMultichain } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { sortBalancesByName } from 'uniswap/src/features/dataApi/balances/utils'
-import { BaseResult, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { BaseResult, PortfolioBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
-export type PortfolioDataResult = BaseResult<Record<CurrencyId, PortfolioBalance>>
 export type PortfolioTotalValueResult = BaseResult<PortfolioTotalValue>
 
 export type SortedPortfolioBalances = {
   balances: PortfolioBalance[]
   hiddenBalances: PortfolioBalance[]
+}
+
+export type SortedPortfolioBalancesMultichain = {
+  balances: PortfolioMultichainBalance[]
+  hiddenBalances: PortfolioMultichainBalance[]
 }
 
 export type PortfolioTotalValue = {
@@ -33,7 +46,7 @@ export type PortfolioTotalValue = {
 export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: PortfolioBalance) => void
 
 /**
- * Hook that returns portfolio data using REST API
+ * Hook that returns portfolio data using REST API (Record<CurrencyId, PortfolioBalance>).
  */
 export function usePortfolioBalances({
   evmAddress,
@@ -56,13 +69,44 @@ export function usePortfolioBalances({
     skip: !(evmAddress ?? svmAddress) || queryOptions.skip,
   })
 }
+
+/**
+ * Hook that returns portfolio data using REST API in multichain format (Record<CurrencyId, PortfolioMultichainBalance>).
+ * When requestMultichainFromBackend is false (default): legacy data, transformed to multichain shape on client.
+ * When true: multichain data from backend (mock, already in shape).
+ */
+export function usePortfolioBalancesMultichain({
+  evmAddress,
+  svmAddress,
+  chainIds,
+  requestMultichainFromBackend,
+  ...queryOptions
+}: {
+  evmAddress?: Address
+  svmAddress?: Address
+  chainIds?: UniverseChainId[]
+  /** When true, request multichain from backend. Default false. */
+  requestMultichainFromBackend?: boolean
+} & QueryHookOptions<
+  GraphQLApi.PortfolioBalancesQuery,
+  GraphQLApi.PortfolioBalancesQueryVariables
+>): PortfolioDataResultMultichain {
+  return usePortfolioDataMultichain({
+    evmAddress,
+    svmAddress,
+    chainIds,
+    requestMultichainFromBackend,
+    ...queryOptions,
+    skip: !(evmAddress ?? svmAddress) || queryOptions.skip,
+  })
+}
 /**
  * Returns all balances indexed by checksummed currencyId for a given address
  * @param address
  * @param queryOptions.pollInterval optional `PollingInterval` representing polling frequency.
  *  If undefined, will query once and not poll.
  * NOTE:
- *  on TokenDetails, useBalances relies rely on usePortfolioBalances but don't need polling versions of it.
+ *  on TokenDetails, useBalances relies on usePortfolioBalances but don't need polling versions of it.
  *  Including polling was causing multiple polling intervals to be kicked off with usePortfolioBalances.
  *  Same with on Token Selector's TokenSearchResultList, since the home screen has a usePortfolioBalances polling hook,
  *  we don't need to duplicate the polling interval when token selector is open
@@ -150,13 +194,19 @@ export function useHighestBalanceNativeCurrencyId({
 }): CurrencyId {
   const { data } = useSortedPortfolioBalances({ evmAddress, svmAddress })
   const { defaultChainId } = useEnabledChains()
-  const highestBalance = data?.balances.find(
-    (balance) =>
-      balance.currencyInfo.currency.isNative && (!chainId || balance.currencyInfo.currency.chainId === chainId),
-  )?.currencyInfo.currencyId
+  const currencyIdFromBalance = ((): CurrencyId | undefined => {
+    const balances = data?.balances ?? []
+    for (const balance of balances) {
+      const currencyInfo = balance.currencyInfo
+      if (currencyInfo.currency.isNative && (!chainId || currencyInfo.currency.chainId === chainId)) {
+        return currencyInfo.currencyId
+      }
+    }
+    return undefined
+  })()
 
-  if (highestBalance) {
-    return highestBalance
+  if (currencyIdFromBalance) {
+    return currencyIdFromBalance
   }
 
   // If no highest balance is found, return native address for the given chainId or defaultChainId
@@ -217,6 +267,67 @@ function shouldHideBalance({
   }
 }
 
+function shouldHideMultichainBalance({
+  balance,
+  isTestnetModeEnabled,
+  currencyIdToTokenVisibility,
+}: {
+  balance: PortfolioMultichainBalance
+  isTestnetModeEnabled: boolean
+  currencyIdToTokenVisibility: ReturnType<typeof useCurrencyIdToVisibility>
+}): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const firstToken = balance.tokens?.[0]
+  if (!firstToken) {
+    return true
+  }
+  if (isTestnetModeEnabled) {
+    if ((firstToken.currencyInfo.spamCode || SpamCode.LOW) >= SpamCode.HIGH) {
+      return true
+    }
+    return false
+  }
+  const tokenVisibility = currencyIdToTokenVisibility[firstToken.currencyInfo.currencyId]
+  if (firstToken.currencyInfo.currency.isNative) {
+    if ((tokenVisibility?.isVisible || !tokenVisibility) && !balance.isHidden) {
+      return false
+    }
+    return true
+  }
+  if (tokenVisibility?.isVisible === false) {
+    return true
+  }
+  if (tokenVisibility?.isVisible === true) {
+    return false
+  }
+  return !!balance.isHidden
+}
+
+/**
+ * Sorts multichain balances by totalValueUsd desc, then by name.
+ * Uses optional chaining on tokens/name to guard against malformed API data.
+ */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition -- defensive checks for malformed API data */
+function sortMultichainBalances(
+  balances: PortfolioMultichainBalance[],
+  isTestnetModeEnabled: boolean,
+): PortfolioMultichainBalance[] {
+  const safeName = (b: PortfolioMultichainBalance): string => b.name ?? ''
+  if (isTestnetModeEnabled) {
+    const nativeBalances = balances.filter((b) => b.tokens[0] && b.tokens[0].currencyInfo.currency.isNative)
+    const nonNative = balances.filter((b) => b.tokens[0] && !b.tokens[0].currencyInfo.currency.isNative)
+    const sortedNative = [...nativeBalances].sort((a, b) => (b.tokens[0]?.quantity ?? 0) - (a.tokens[0]?.quantity ?? 0))
+    const sortedNonNative = [...nonNative].sort((a, b) => safeName(a).localeCompare(safeName(b)))
+    return [...sortedNative, ...sortedNonNative]
+  }
+  const withValue = balances.filter((b) => b.totalValueUsd != null && b.totalValueUsd > 0)
+  const withoutValue = balances.filter((b) => !b.totalValueUsd || b.totalValueUsd === 0)
+  return [
+    ...withValue.sort((a, b) => (b.totalValueUsd ?? 0) - (a.totalValueUsd ?? 0)),
+    ...withoutValue.sort((a, b) => safeName(a).localeCompare(safeName(b))),
+  ]
+}
+
 /**
  * Custom hook to group Token Balances fetched from API to shown and hidden.
  *
@@ -273,33 +384,30 @@ export function useTokenBalancesGroupedByVisibility({
   }, [balancesById, currencyIdToTokenVisibility, isTestnetModeEnabled])
 }
 
-type SortedPortfolioBalancesResult = GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus }
+type SortedPortfolioBalancesResultBase = {
+  networkStatus: NetworkStatus
+}
+export type SortedPortfolioBalancesResult = GqlResult<SortedPortfolioBalances> & SortedPortfolioBalancesResultBase
+export type SortedPortfolioBalancesResultMultichain = GqlResult<SortedPortfolioBalancesMultichain> &
+  SortedPortfolioBalancesResultBase
 
-/**
- * Returns portfolio balances for a given address sorted by USD value.
- *
- * @param address to get portfolio balances for
- * @param pollInterval optional polling interval for auto refresh.
- *    If undefined, query will run only once.
- * @param onCompleted callback
- * @returns SortedPortfolioBalances object with `balances` and `hiddenBalances`
- */
-export function useSortedPortfolioBalances({
-  evmAddress,
-  svmAddress,
-  pollInterval,
-  onCompleted,
-  chainIds,
-}: {
+type UseSortedPortfolioBalancesOptions = {
   evmAddress?: Address
   svmAddress?: Address
   pollInterval?: PollingInterval
   onCompleted?: () => void
   chainIds?: UniverseChainId[]
-}): SortedPortfolioBalancesResult {
+  /** When true, request multichain from backend. Default false. */
+  requestMultichainFromBackend?: boolean
+}
+
+/**
+ * Returns portfolio balances for a given address sorted by USD value.
+ */
+export function useSortedPortfolioBalances(options: UseSortedPortfolioBalancesOptions): SortedPortfolioBalancesResult {
+  const { evmAddress, svmAddress, pollInterval, onCompleted, chainIds } = options
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  // Fetch all balances including small balances and spam tokens because we want to return those in separate arrays
   const {
     data: balancesById,
     loading,
@@ -314,20 +422,113 @@ export function useSortedPortfolioBalances({
     chainIds,
   })
 
-  const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({ balancesById })
+  const currencyIdArray = useMemo(() => {
+    return balancesById ? Object.keys(balancesById) : []
+  }, [balancesById])
+  const currencyIdToTokenVisibility = useCurrencyIdToVisibility(currencyIdArray)
 
-  return useMemo(
-    () => ({
-      data: {
-        balances: sortPortfolioBalances({ balances: shownTokens || [], isTestnetModeEnabled }),
-        hiddenBalances: sortPortfolioBalances({ balances: hiddenTokens || [], isTestnetModeEnabled }),
+  const data = useMemo((): SortedPortfolioBalances | undefined => {
+    if (!balancesById) {
+      return { balances: [], hiddenBalances: [] }
+    }
+    const { shown, hidden } = Object.values(balancesById).reduce<{
+      shown: PortfolioBalance[]
+      hidden: PortfolioBalance[]
+    }>(
+      (acc, balance) => {
+        const isBalanceHidden = shouldHideBalance({
+          balance,
+          isTestnetModeEnabled,
+          currencyIdToTokenVisibility,
+        })
+        if (isBalanceHidden) {
+          acc.hidden.push(balance)
+        } else {
+          acc.shown.push(balance)
+        }
+        return acc
       },
-      loading,
-      networkStatus,
-      refetch,
-    }),
-    [shownTokens, hiddenTokens, isTestnetModeEnabled, loading, networkStatus, refetch],
-  )
+      { shown: [], hidden: [] },
+    )
+    return {
+      balances: sortPortfolioBalances({ balances: shown, isTestnetModeEnabled }),
+      hiddenBalances: sortPortfolioBalances({ balances: hidden, isTestnetModeEnabled }),
+    }
+  }, [balancesById, isTestnetModeEnabled, currencyIdToTokenVisibility])
+
+  return {
+    data,
+    loading,
+    networkStatus,
+    refetch,
+  }
+}
+
+/**
+ * Returns portfolio balances for a given address sorted by USD value in multichain format.
+ */
+export function useSortedPortfolioBalancesMultichain(
+  options: UseSortedPortfolioBalancesOptions,
+): SortedPortfolioBalancesResultMultichain {
+  const { evmAddress, svmAddress, pollInterval, onCompleted, chainIds, requestMultichainFromBackend } = options
+  const { isTestnetModeEnabled } = useEnabledChains()
+
+  const {
+    data: balancesById,
+    loading,
+    networkStatus,
+    refetch,
+  } = usePortfolioBalancesMultichain({
+    evmAddress,
+    svmAddress,
+    pollInterval,
+    onCompleted,
+    fetchPolicy: 'cache-and-network',
+    chainIds,
+    requestMultichainFromBackend,
+  })
+
+  const currencyIdArray = useMemo(() => {
+    return balancesById ? Object.keys(balancesById) : []
+  }, [balancesById])
+  const currencyIdToTokenVisibility = useCurrencyIdToVisibility(currencyIdArray)
+
+  const data = useMemo((): SortedPortfolioBalancesMultichain | undefined => {
+    if (!balancesById) {
+      return { balances: [], hiddenBalances: [] }
+    }
+    const multichainList = Object.values(balancesById)
+    const { shown, hidden } = multichainList.reduce<{
+      shown: PortfolioMultichainBalance[]
+      hidden: PortfolioMultichainBalance[]
+    }>(
+      (acc, balance) => {
+        const isHidden = shouldHideMultichainBalance({
+          balance,
+          isTestnetModeEnabled,
+          currencyIdToTokenVisibility,
+        })
+        if (isHidden) {
+          acc.hidden.push(balance)
+        } else {
+          acc.shown.push(balance)
+        }
+        return acc
+      },
+      { shown: [], hidden: [] },
+    )
+    return {
+      balances: sortMultichainBalances(shown, isTestnetModeEnabled),
+      hiddenBalances: sortMultichainBalances(hidden, isTestnetModeEnabled),
+    }
+  }, [balancesById, isTestnetModeEnabled, currencyIdToTokenVisibility])
+
+  return {
+    data,
+    loading,
+    networkStatus,
+    refetch,
+  }
 }
 
 /**

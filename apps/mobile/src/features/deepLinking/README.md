@@ -18,30 +18,6 @@ Most screen-based deep links require a valid `userAddress` parameter since the w
 
 These links allow sharing specific content from the Uniswap web app that opens directly in the mobile app if the app is installed.
 
-### NFT Item Share Links
-
-Mainnet only. Opens a specific NFT item page.
-
-Format: `https://app.uniswap.org/nfts/asset/{contractAddress}/{tokenId}`
-
-Example:
-
-```url
-https://app.uniswap.org/nfts/asset/0xbd3531da5cf5857e7cfaa92426877b022e612cf8/1
-```
-
-### NFT Collection Share Links
-
-Mainnet only. Opens an NFT collection page.
-
-Format: `https://app.uniswap.org/nfts/collection/{contractAddress}`
-
-Example:
-
-```url
-https://app.uniswap.org/nfts/collection/0xbd3531da5cf5857e7cfaa92426877b022e612cf8
-```
-
 ### Token Share Links
 
 Opens a token details page. Supports both `/tokens/` and `/explore/tokens/` paths.
@@ -75,12 +51,12 @@ https://app.uniswap.org/explore/tokens/unichain?metric=volume
 
 Opens a wallet profile page. If the address matches an imported wallet, it switches to that account. Otherwise, it opens the external profile view.
 
-Format: `https://app.uniswap.org/address/{walletAddress}`
+Format: `https://app.uniswap.org/portfolio/{walletAddress}`
 
 Example:
 
 ```url
-https://app.uniswap.org/address/0x1234567890123456789012345678901234567890
+https://app.uniswap.org/portfolio/0x1234567890123456789012345678901234567890
 ```
 
 ### Swap Links

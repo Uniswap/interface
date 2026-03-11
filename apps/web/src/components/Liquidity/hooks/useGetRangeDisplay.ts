@@ -70,8 +70,8 @@ export function useGetRangeDisplay({
 }): {
   minPrice: string
   maxPrice: string
-  tokenASymbol?: string
-  tokenBSymbol?: string
+  tokenASymbol: string
+  tokenBSymbol: string
   isFullRange?: boolean
 } {
   const { priceLower, priceUpper, base, quote } = calculateInvertedValues({
@@ -91,8 +91,8 @@ export function useGetRangeDisplay({
     atLimit: isTickAtLimit,
     direction: Bound.UPPER,
   })
-  const tokenASymbol = quote?.symbol
-  const tokenBSymbol = base?.symbol
+  const tokenASymbol = quote?.symbol ?? '-'
+  const tokenBSymbol = base?.symbol ?? '-'
 
   return {
     minPrice,

@@ -6,15 +6,9 @@ import type { ButtonEmphasis, ButtonVariantProps } from 'ui/src/components/butto
 import { getMaybeHexOrRGBColor } from 'ui/src/components/buttons/Button/utils/getMaybeHexOrRGBColor'
 import { getContrastPassingTextColor } from 'ui/src/utils/colors'
 
-function createSizeVariant({
-  fontSize,
-  fontWeight,
-  lineHeightValue,
-}: {
-  fontSize: string
-  fontWeight: string
-  lineHeightValue: string | number
-}) {
+type TamaguiTextProps = GetProps<typeof Text>
+
+function createSizeVariant({ fontSize, fontWeight, lineHeight }: TamaguiTextProps) {
   return (
     _size: NonNullable<ButtonVariantProps['size']>,
     context: { props: Record<string, unknown> },
@@ -32,7 +26,7 @@ function createSizeVariant({
 
     return {
       ...baseStyles,
-      lineHeight: lineHeightValue,
+      lineHeight,
     }
   }
 }
@@ -94,11 +88,11 @@ const CustomButtonTextStyled = styled(Text, {
     // these are taken from Figma and mapped to the values in fonts.ts > buttonFont
     // https://github.com/Uniswap/universe/blob/main/packages/ui/src/theme/fonts.ts
     size: {
-      xxsmall: createSizeVariant({ fontSize: '$micro', fontWeight: '$medium', lineHeightValue: lineHeights.xxsmall }),
-      xsmall: createSizeVariant({ fontSize: '$micro', fontWeight: '$medium', lineHeightValue: lineHeights.xsmall }),
-      small: createSizeVariant({ fontSize: '$small', fontWeight: '$medium', lineHeightValue: lineHeights.small }),
-      medium: createSizeVariant({ fontSize: '$medium', fontWeight: '$medium', lineHeightValue: lineHeights.medium }),
-      large: createSizeVariant({ fontSize: '$large', fontWeight: '$medium', lineHeightValue: lineHeights.large }),
+      xxsmall: createSizeVariant({ fontSize: '$micro', fontWeight: '$medium', lineHeight: lineHeights.xxsmall }),
+      xsmall: createSizeVariant({ fontSize: '$micro', fontWeight: '$medium', lineHeight: lineHeights.xsmall }),
+      small: createSizeVariant({ fontSize: '$small', fontWeight: '$medium', lineHeight: lineHeights.small }),
+      medium: createSizeVariant({ fontSize: '$medium', fontWeight: '$medium', lineHeight: lineHeights.medium }),
+      large: createSizeVariant({ fontSize: '$large', fontWeight: '$medium', lineHeight: lineHeights.large }),
     },
   } as const,
 })

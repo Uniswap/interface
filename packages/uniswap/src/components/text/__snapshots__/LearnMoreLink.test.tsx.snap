@@ -12,7 +12,7 @@ exports[`LearnMoreLink > renders without error 1`] = `
       tabindex="-1"
     >
       <a
-        class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _outlineStyle-none"
+        class="font_button _color-0focus-accent1Hove112785 _textDecorationColor-0focus-accent1Hove112785 _textDecorationLine-0focus-underline _textDecorationDistance-0focus-1px _color-_groupitem-focusVisible_accent1Hove112785 _textDecorationColor-_groupitem-focusVisible_accent1Hove112785 _textDecorationLine-_groupitem-focusVisible_underline _textDecorationDistance-_groupitem-focusVisible_1px _color-_groupitem-hover_accent1Hove112785 _textUnderlinePosition-_platformweb_from-font _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textDecorationLine-none _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _outlineStyle-none"
         data-disable-theme="true"
         href="https://example.com"
         role="link"

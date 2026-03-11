@@ -27,6 +27,7 @@ import { ErrorCallout } from '~/components/ErrorCallout'
 import { BaseQuoteFiatAmount } from '~/components/Liquidity/BaseQuoteFiatAmount'
 import { PoolOutOfSyncError } from '~/components/Liquidity/Create/PoolOutOfSyncError'
 import { LiquidityPositionInfoBadges } from '~/components/Liquidity/LiquidityPositionInfoBadges'
+import { LowLPSlippageWarning } from '~/components/Liquidity/LowLPSlippageWarning'
 import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
 import { getTicksAtLimit } from '~/components/Liquidity/utils/priceRangeInfo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
@@ -211,15 +212,16 @@ export function ReviewModal({
     <Modal name={modalName} padding="$none" onClose={onClose} isDismissible isModalOpen={isOpen}>
       <Flex px="$spacing8" pt="$spacing12" pb="$spacing8" gap="$spacing24">
         <Flex px="$spacing12">
-          <GetHelpHeader
-            title={
-              <Text variant="subheading2" color="$neutral2">
-                {headerTitle}
-              </Text>
-            }
-            closeDataTestId={TestID.LiquidityModalHeaderClose}
-            closeModal={() => onClose()}
-          />
+          <Flex row justifyContent="space-between" alignItems="center" width="100%">
+            <Text variant="subheading2" color="$neutral2">
+              {headerTitle}
+            </Text>
+            <GetHelpHeader
+              width="auto"
+              closeDataTestId={TestID.LiquidityModalHeaderClose}
+              closeModal={() => onClose()}
+            />
+          </Flex>
           <Flex py="$spacing12" gap="$spacing12" mt="$spacing16">
             <Flex row alignItems="center" justifyContent="space-between">
               <Flex>
@@ -307,6 +309,9 @@ export function ReviewModal({
             </Flex>
           )}
           <Flex gap="$spacing12">
+            <LowLPSlippageWarning
+              isNativePool={Boolean(currencies.display.TOKEN0?.isNative || currencies.display.TOKEN1?.isNative)}
+            />
             <ErrorCallout errorMessage={transactionError} onPress={refetch} />
             <PoolOutOfSyncError />
           </Flex>

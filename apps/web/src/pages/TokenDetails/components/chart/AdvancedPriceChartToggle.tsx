@@ -32,7 +32,7 @@ export function AdvancedPriceChartToggle({
         <MouseoverTooltip
           text={t('token.chart.candlestick.unavailable')}
           placement="bottom"
-          style={{ alignContent: 'center' }}
+          style={{ alignContent: 'center', flex: 1 }}
         />
       ) : undefined,
     },

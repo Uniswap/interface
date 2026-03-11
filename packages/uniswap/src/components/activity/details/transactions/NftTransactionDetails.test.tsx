@@ -49,9 +49,7 @@ describe('NftTransactionDetails Component', () => {
   it('renders NftTransactionDetails without error', () => {
     const onClose = vi.fn()
 
-    const tree = render(
-      <NftTransactionDetails transactionDetails={mockTransaction} typeInfo={nftTypeInfo} onClose={onClose} />,
-    )
+    const tree = render(<NftTransactionDetails typeInfo={nftTypeInfo} />)
 
     expect(tree).toMatchSnapshot()
   })

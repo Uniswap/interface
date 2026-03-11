@@ -11,9 +11,9 @@ import { SparklineMap } from '~/appGraphql/data/types'
 import { PricePoint, TimePeriod, unwrapToken } from '~/appGraphql/data/util'
 import { TokenSortMethod } from '~/components/Tokens/constants'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
 import { EXPLORE_API_PAGE_SIZE } from '~/state/explore/constants'
 import { useInfiniteLoadMore } from '~/state/explore/hooks/useInfiniteLoadMore'
+import { UseTopTokensOptions } from '~/state/explore/topTokens/types'
 import { getVolumeForTimePeriod } from '~/state/explore/topTokens/utils/getVolumeForTimePeriod'
 import { sortTokens } from '~/state/explore/topTokens/utils/sortTokens'
 import { TokenStat } from '~/state/explore/types'
@@ -122,22 +122,18 @@ function buildSparklines(tokens: TokenStat[]): SparklineMap {
 /**
  * Hook that fetches and processes tokens from the backend with sorting/filtering.
  * Handles pagination, client-side price sorting, and search filtering.
+ * Filter state is passed in; caller (useTopTokens) reads from store when needed.
  */
 function useTokenData({
   chainId,
   enabled,
-  sortMethod,
-  sortAscending,
+  options,
 }: {
   chainId: UniverseChainId | undefined
   enabled: boolean
-  sortMethod: TokenSortMethod
-  sortAscending: boolean
+  options: Required<UseTopTokensOptions>
 }) {
-  const { filterString, timePeriod } = useExploreTablesFilterStore((s) => ({
-    filterString: s.filterString,
-    timePeriod: s.timePeriod,
-  }))
+  const { sortMethod, sortAscending, filterString, filterTimePeriod } = options
   const enabledChains = useEnabledChains()
   const isPriceSorting = sortMethod === TokenSortMethod.PRICE
 
@@ -146,7 +142,7 @@ function useTokenData({
   const orderBy = isPriceSorting
     ? undefined
     : sortMethod === TokenSortMethod.VOLUME
-      ? timePeriodToVolumeOrderBy[timePeriod]
+      ? timePeriodToVolumeOrderBy[filterTimePeriod]
       : tokenSortMethodToOrderBy[sortMethod]
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery(
@@ -168,7 +164,7 @@ function useTokenData({
 
   // Convert and optionally sort (price sorting is client-side only)
   const tokenStats = useMemo(() => {
-    const converted = allTokens?.map((token) => convertDataApiTokenToTokenStat(token, timePeriod))
+    const converted = allTokens?.map((token) => convertDataApiTokenToTokenStat(token, filterTimePeriod))
     if (!converted) {
       return undefined
     }
@@ -176,7 +172,7 @@ function useTokenData({
       return sortTokens({ tokens: converted, sortMethod: TokenSortMethod.PRICE, sortAscending })
     }
     return converted
-  }, [allTokens, isPriceSorting, sortAscending, timePeriod])
+  }, [allTokens, isPriceSorting, sortAscending, filterTimePeriod])
 
   // Apply search filter
   const filteredTokens = useMemo(
@@ -196,27 +192,24 @@ function useTokenData({
 
 /**
  * Hook that uses the new ListTopTokens endpoint with backend filtering/sorting.
+ * Filter state is passed in; caller (useTopTokens) reads from store when needed.
  * @param chainId - Optional chain ID to filter tokens
  * @param enabled - Whether the query should be enabled (default: true)
- * @param sortMethod - Current sort column (caller manages state)
- * @param sortAscending - Current sort direction (caller manages state)
+ * @param options - Resolved flat options (sortMethod, sortAscending, filterString, filterTimePeriod).
  */
 export function useBackendSortedTopTokens({
   chainId,
   enabled,
-  sortMethod,
-  sortAscending,
+  options,
 }: {
   chainId: UniverseChainId | undefined
   enabled: boolean
-  sortMethod: TokenSortMethod
-  sortAscending: boolean
+  options: Required<UseTopTokensOptions>
 }) {
   const { filteredTokens, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useTokenData({
     chainId,
     enabled,
-    sortMethod,
-    sortAscending,
+    options,
   })
 
   const tokenSortRank = useMemo(() => buildTokenSortRank(filteredTokens ?? []), [filteredTokens])

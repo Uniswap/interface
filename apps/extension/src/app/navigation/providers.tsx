@@ -78,9 +78,6 @@ function SharedExtensionNavigationProvider({
   const navigateToReceive = useNavigateToReceive()
   const navigateToSend = useNavigateToSend()
   const navigateToTokenDetails = useNavigateToTokenDetails()
-  const navigateToNftCollection = useCallback(() => {
-    // no-op until we have proper NFT collection
-  }, [])
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
   const navigateToExternalProfile = useCallback(({ address }: NavigateToExternalProfileArgs) => {
     focusOrCreateUniswapInterfaceTab({ url: getPortfolioUrl(address) })
@@ -96,7 +93,6 @@ function SharedExtensionNavigationProvider({
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
-      navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
       navigateToPoolDetails={navigateToPoolDetails}
       navigateToReceive={navigateToReceive}

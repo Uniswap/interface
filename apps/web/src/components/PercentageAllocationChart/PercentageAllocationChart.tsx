@@ -212,8 +212,8 @@ export function PercentageAllocationChart({
                   backgroundColor={isHovered ? item.color : '$surface3'}
                   {...item.style}
                   minWidth={minBarWidth}
-                  onHoverIn={() => setHoveredItem(item.id)}
-                  onHoverOut={() => setHoveredItem(null)}
+                  onMouseEnter={() => setHoveredItem(item.id)}
+                  onMouseLeave={() => setHoveredItem(null)}
                 />
               )
             })}

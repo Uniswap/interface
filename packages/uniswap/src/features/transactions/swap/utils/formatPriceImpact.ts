@@ -5,6 +5,6 @@ export function formatPriceImpact(
   priceImpact: Percent,
   formatPercent: LocalizationContextState['formatPercent'],
 ): string | undefined {
-  const positiveImpactPrefix = priceImpact.lessThan(0) ? '+' : ''
-  return `${positiveImpactPrefix}${formatPercent(priceImpact.multiply(-1).toFixed(3))}`
+  const absImpact = priceImpact.lessThan(0) ? priceImpact.multiply(-1) : priceImpact
+  return formatPercent(absImpact.toFixed(3))
 }

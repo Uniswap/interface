@@ -54,6 +54,7 @@ import { useNavigate } from 'react-router'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
+import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useCurrencyInfo } from '~/hooks/Tokens'
@@ -86,7 +87,7 @@ describe('CreatePositionModal', () => {
   const createMockCurrencyAmount = (currency = DAI, amount = '1000000000000000000') =>
     CurrencyAmount.fromRawAmount(currency, amount)
 
-  const defaultProps: React.ComponentProps<typeof CreatePositionModal> = {
+  const defaultProps: React.ComponentProps<typeof Container> = {
     formattedAmounts: {
       [PositionField.TOKEN0]: '1.0',
       [PositionField.TOKEN1]: '1000.0',
@@ -134,8 +135,16 @@ describe('CreatePositionModal', () => {
     ticksAtLimit: [false, false],
     pricesAtTicks: [undefined, undefined],
     priceRangeState: { priceInverted: false },
-    currencies: { sdk: { TOKEN0: DAI, TOKEN1: USDC_MAINNET } },
+    currencies: { display: { TOKEN0: DAI, TOKEN1: USDC_MAINNET }, sdk: { TOKEN0: DAI, TOKEN1: USDC_MAINNET } },
     refetch: mockRefetch,
+  }
+
+  const Container = (props: React.ComponentProps<typeof CreatePositionModal>) => {
+    return (
+      <LPTransactionSettingsStoreContextProvider>
+        <CreatePositionModal {...props} />
+      </LPTransactionSettingsStoreContextProvider>
+    )
   }
 
   beforeEach(() => {
@@ -172,7 +181,7 @@ describe('CreatePositionModal', () => {
         protocolVersion: ProtocolVersion.V3,
       } as any)
 
-      const { container } = render(<CreatePositionModal {...defaultProps} />)
+      const { container } = render(<Container {...defaultProps} />)
 
       expect(container).toBeTruthy()
     })
@@ -183,7 +192,7 @@ describe('CreatePositionModal', () => {
         protocolVersion: ProtocolVersion.V2,
       } as any)
 
-      const { container } = render(<CreatePositionModal {...defaultProps} />)
+      const { container } = render(<Container {...defaultProps} />)
 
       expect(container).toBeTruthy()
     })
@@ -192,7 +201,7 @@ describe('CreatePositionModal', () => {
   describe('button states', () => {
     it('should disable Create button when txInfo.action is missing', () => {
       const { getByRole } = render(
-        <CreatePositionModal
+        <Container
           {...defaultProps}
           txInfo={
             {
@@ -208,7 +217,7 @@ describe('CreatePositionModal', () => {
     })
 
     it('should enable Create button when txInfo.action exists', () => {
-      const { getByRole } = render(<CreatePositionModal {...defaultProps} />)
+      const { getByRole } = render(<Container {...defaultProps} />)
 
       const createButton = getByRole('button', { name: /Create/i })
       expect(createButton).not.toHaveAttribute('aria-disabled', 'true')
@@ -217,7 +226,7 @@ describe('CreatePositionModal', () => {
 
   describe('currency display', () => {
     it('should display token symbols and amounts', () => {
-      const { queryAllByText } = render(<CreatePositionModal {...defaultProps} />)
+      const { queryAllByText } = render(<Container {...defaultProps} />)
 
       expect(queryAllByText('DAI').length).toBeGreaterThan(0)
       expect(queryAllByText('USDC').length).toBeGreaterThan(0)
@@ -226,7 +235,7 @@ describe('CreatePositionModal', () => {
     })
 
     it('should display network cost', () => {
-      const { getByText } = render(<CreatePositionModal {...defaultProps} />)
+      const { getByText } = render(<Container {...defaultProps} />)
 
       expect(getByText('Network cost')).toBeInTheDocument()
     })
@@ -234,20 +243,20 @@ describe('CreatePositionModal', () => {
 
   describe('error display', () => {
     it('should display ErrorCallout when transactionError is a string', () => {
-      const { getByText } = render(<CreatePositionModal {...defaultProps} transactionError="Custom error message" />)
+      const { getByText } = render(<Container {...defaultProps} transactionError="Custom error message" />)
 
       expect(getByText('Something went wrong')).toBeInTheDocument()
       expect(getByText(/Custom error message/)).toBeInTheDocument()
     })
 
     it('should display ErrorCallout when transactionError is true', () => {
-      const { getByText } = render(<CreatePositionModal {...defaultProps} transactionError={true} />)
+      const { getByText } = render(<Container {...defaultProps} transactionError={true} />)
 
       expect(getByText('Something went wrong')).toBeInTheDocument()
     })
 
     it('should not display ErrorCallout when transactionError is false', () => {
-      const { queryByText } = render(<CreatePositionModal {...defaultProps} transactionError={false} />)
+      const { queryByText } = render(<Container {...defaultProps} transactionError={false} />)
 
       expect(queryByText('Something went wrong')).not.toBeInTheDocument()
     })
@@ -255,7 +264,7 @@ describe('CreatePositionModal', () => {
 
   describe('error clearing', () => {
     it('should clear error when Create button is clicked', () => {
-      const { getByRole } = render(<CreatePositionModal {...defaultProps} transactionError="Error message" />)
+      const { getByRole } = render(<Container {...defaultProps} transactionError="Error message" />)
 
       const createButton = getByRole('button', { name: /Create/i })
 
@@ -268,7 +277,7 @@ describe('CreatePositionModal', () => {
     })
 
     it('should clear error on second click even if first click failed', () => {
-      const { getByRole, rerender } = render(<CreatePositionModal {...defaultProps} transactionError="Error message" />)
+      const { getByRole, rerender } = render(<Container {...defaultProps} transactionError="Error message" />)
 
       // First click
       act(() => {
@@ -279,7 +288,7 @@ describe('CreatePositionModal', () => {
       mockSetTransactionError.mockClear()
 
       // Simulate error persisting (like in e2e test)
-      rerender(<CreatePositionModal {...defaultProps} transactionError="Error message" />)
+      rerender(<Container {...defaultProps} transactionError="Error message" />)
 
       // Second click should also clear error
       act(() => {
@@ -292,7 +301,7 @@ describe('CreatePositionModal', () => {
 
   describe('retry functionality', () => {
     it('should call refetch when ErrorCallout retry is clicked', () => {
-      const { getByText } = render(<CreatePositionModal {...defaultProps} transactionError="Error message" />)
+      const { getByText } = render(<Container {...defaultProps} transactionError="Error message" />)
       const retryButton = getByText('Try again')
       act(() => {
         fireEvent.click(retryButton)
@@ -303,7 +312,7 @@ describe('CreatePositionModal', () => {
 
   describe('passkey authentication', () => {
     it('should render Create button when not authenticated with passkey', () => {
-      const { getByRole } = render(<CreatePositionModal {...defaultProps} />)
+      const { getByRole } = render(<Container {...defaultProps} />)
 
       const button = getByRole('button', { name: /Create/i })
       expect(button).toBeInTheDocument()
@@ -316,7 +325,7 @@ describe('CreatePositionModal', () => {
         needsPasskeySignin: false,
       })
 
-      const { getByRole } = render(<CreatePositionModal {...defaultProps} />)
+      const { getByRole } = render(<Container {...defaultProps} />)
 
       const button = getByRole('button')
       expect(button).toBeInTheDocument()
@@ -328,7 +337,7 @@ describe('CreatePositionModal', () => {
         currentTransactionStep: { step: 'create' },
       } as any)
 
-      const { getByRole } = render(<CreatePositionModal {...defaultProps} />)
+      const { getByRole } = render(<Container {...defaultProps} />)
 
       const button = getByRole('button')
       expect(button).toBeInTheDocument()

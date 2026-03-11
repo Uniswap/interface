@@ -5,7 +5,7 @@ import { ValueWithFadedDecimals } from '~/pages/Portfolio/components/ValueWithFa
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 
-export const Value = memo(function Value({ value }: { value: TokenData['value'] }) {
+export const Value = memo(function Value({ value }: { value: TokenData['totalValue'] }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const formattedValue = useMemo(() => {

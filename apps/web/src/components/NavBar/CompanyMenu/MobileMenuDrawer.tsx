@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Accordion, AnimateTransition, Flex, Separator, Square, Text } from 'ui/src'
@@ -53,7 +52,6 @@ function MenuSection({
 export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: () => void }) {
   const [openSections, setOpenSections] = useState<string[]>()
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
-  const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
   const dropdownRef = useRef<HTMLDivElement>(null)
   // biome-ignore lint/correctness/useExhaustiveDependencies: +setSettingsView, +dropdownRef
   const changeView = useCallback(
@@ -151,11 +149,9 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                   ))}
                 </MenuSection>
               ))}
-              {isConversionTrackingEnabled && (
-                <Flex paddingBottom="$padding8">
-                  <LegalAndPrivacyMenu closeMenu={closeMenu} />
-                </Flex>
-              )}
+              <Flex paddingBottom="$padding8">
+                <LegalAndPrivacyMenu closeMenu={closeMenu} />
+              </Flex>
               <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
                 <HelpModal showOnXL />
                 <Flex gap="$spacing16">

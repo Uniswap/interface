@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -146,7 +145,6 @@ function ProductSection({ items }: { items: MenuItem[] }) {
 
 export function MenuDropdown({ close }: { close?: () => void }) {
   const { t } = useTranslation()
-  const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
   const menuContent = useMenuContent({
     keys: [MenuSectionTitle.Protocol, MenuSectionTitle.Company],
   })
@@ -192,11 +190,9 @@ export function MenuDropdown({ close }: { close?: () => void }) {
             alignItems="center"
             $xl={{ flexDirection: 'column', gap: '$spacing16', alignItems: 'flex-start' }}
           >
-            {isConversionTrackingEnabled && (
-              <Flex flex={1} width="100%">
-                <LegalAndPrivacyMenu closeMenu={close} />
-              </Flex>
-            )}
+            <Flex flex={1} width="100%">
+              <LegalAndPrivacyMenu closeMenu={close} />
+            </Flex>
             <Flex row alignSelf="flex-end" alignItems="center" justifyContent="space-between" $xl={{ width: '100%' }}>
               <Flex display="none" $xl={{ display: 'flex' }}>
                 <HelpModal showOnXL />

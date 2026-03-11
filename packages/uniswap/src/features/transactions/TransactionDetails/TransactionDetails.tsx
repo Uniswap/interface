@@ -13,7 +13,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
 import { EstimatedSwapTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isBridge, isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -28,7 +27,6 @@ import type {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { UserReceiveAmount } from 'uniswap/src/features/transactions/TransactionDetails/UserReceiveAmount'
 import { isWebApp } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {
@@ -56,10 +54,10 @@ interface TransactionDetailsProps {
   estimatedSwapTime?: number | undefined
   AccountDetails?: JSX.Element
   RoutingInfo?: JSX.Element
+  CollapsedInfoRow?: JSX.Element
   RateInfo?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   txSimulationErrors?: TradingApi.TransactionFailureReason[]
-  amountUserWillReceive?: CurrencyAmount<Currency>
   includesDelegation?: boolean
 }
 
@@ -91,13 +89,12 @@ export function TransactionDetails({
   AccountDetails,
   estimatedSwapTime,
   RoutingInfo,
+  CollapsedInfoRow,
   RateInfo,
-  amountUserWillReceive,
   includesDelegation,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
-  const priceUXEnabled = usePriceUXEnabled()
 
   const onPressToggleShowChildren = (): void => {
     if (!showChildren) {
@@ -137,13 +134,6 @@ export function TransactionDetails({
       ) : null}
       <Flex gap="$spacing16">
         <Flex gap="$spacing8" px="$spacing8">
-          {showChildren && priceUXEnabled ? (
-            <AnimatePresence>
-              <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
-                {children}
-              </Flex>
-            </AnimatePresence>
-          ) : null}
           {showChildren ? RateInfo : null}
           {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
           <EstimatedSwapTime showIfLongerThanCutoff={true} timeMs={estimatedSwapTime} />
@@ -159,19 +149,17 @@ export function TransactionDetails({
             includesDelegation={includesDelegation}
             showNetworkLogo={showNetworkLogo}
           />
+          {!showChildren && CollapsedInfoRow}
           {(isSwap || isChainedTrade) && RoutingInfo}
           {AccountDetails}
           {!isChainedTrade && <ExpectedSpeed chainId={chainId} />}
-          {showChildren && !priceUXEnabled ? (
+          {showChildren ? (
             <AnimatePresence>
               <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
                 {children}
               </Flex>
             </AnimatePresence>
           ) : null}
-          {amountUserWillReceive && outputCurrency && priceUXEnabled && (
-            <UserReceiveAmount amountUserWillReceive={amountUserWillReceive} outputCurrency={outputCurrency} />
-          )}
         </Flex>
         {setTokenWarningChecked && tokenWarningProps && (
           <SwapReviewTokenWarningCard

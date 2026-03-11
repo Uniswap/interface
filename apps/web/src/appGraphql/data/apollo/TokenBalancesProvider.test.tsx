@@ -46,11 +46,6 @@ describe('TokenBalancesProvider', () => {
     mocked(useAccount).mockReturnValue({ address: '0xaddress1', chainId: 1 } as any)
   })
 
-  it('TokenBalancesProvider should not fetch balances without calls to useOnAssetActivitySubscription', async () => {
-    render(<Flex />)
-    await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(0), { timeout: 3500 })
-  })
-
   describe('useTokenBalancesQuery', () => {
     it('should only refetch balances when stale', async () => {
       const { rerender, unmount } = renderHook(() => useTokenBalancesQuery())

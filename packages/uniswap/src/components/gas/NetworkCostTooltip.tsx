@@ -30,7 +30,7 @@ export function NetworkCostTooltip({
         title={{ title: t('common.chain.networkCost', { chain: getChainInfo(chainId).name }) }}
         logo={<NetworkLogo chainId={chainId} size={16} />}
       />
-      <Tooltip.Description learnMorePinkColor={false} learnMoreUrl={learnMoreUrl} text={text} />
+      <Tooltip.Description learnMoreUrl={learnMoreUrl} text={text} />
     </Tooltip.Outer>
   )
 }
@@ -69,11 +69,7 @@ export function NetworkCostTooltipUniswapX({
         )}
       </Tooltip.Content>
       <Tooltip.Separator />
-      <Tooltip.Description
-        learnMorePinkColor={false}
-        learnMoreUrl={uniswapUrls.helpArticleUrls.uniswapXInfo}
-        text={t('uniswapX.cost')}
-      />
+      <Tooltip.Description learnMoreUrl={uniswapUrls.helpArticleUrls.uniswapXInfo} text={t('uniswapX.cost')} />
     </Tooltip.Outer>
   )
 }

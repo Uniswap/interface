@@ -116,11 +116,6 @@ export function useSectionsForNoQuerySearch({
           data: [...(recentSearchSection ?? []), ...(favoriteWalletsSection ?? [])],
           loading: false,
         }
-      case SearchTab.NFTCollections:
-        return {
-          data: [...(recentSearchSection ?? [])],
-          loading: false,
-        }
       default:
       case SearchTab.All:
         if (isWebPlatform) {

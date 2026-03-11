@@ -1,41 +1,61 @@
+import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { normalizeToken, usePrice } from '@universe/prices'
 import { useMemo } from 'react'
 import type { PollingInterval } from 'uniswap/src/constants/misc'
 import { getPrimaryStablecoin, isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { isPriceServiceSupportedChain } from 'uniswap/src/features/prices/isPriceServiceSupportedChain'
+import { useUSDCPrice as useUSDCPriceLegacy } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
+import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { logger } from 'utilities/src/logger/logger'
 
 export function useUSDCPriceCentralized(
   currency?: Currency,
-  _pollInterval?: PollingInterval,
+  pollInterval?: PollingInterval,
 ): { price: Price<Currency, Currency> | undefined; isLoading: boolean } {
   const { chainId, address } = currency ? normalizeToken(currency) : { chainId: undefined, address: undefined }
-  const livePrice = usePrice({ chainId, address })
 
-  return useMemo(() => {
+  const isSupported = chainId !== undefined && isPriceServiceSupportedChain(chainId)
+
+  // Centralized: no-ops when !isSupported (usePrice skips via enabled=false)
+  const livePrice = usePrice({
+    chainId: isSupported ? chainId : undefined,
+    address: isSupported ? address : undefined,
+  })
+
+  // Legacy fallback: pass undefined currency to skip useTrade when centralized is active
+  const legacyResult = useUSDCPriceLegacy(isSupported ? undefined : currency, pollInterval)
+
+  const centralizedResult = useMemo(() => {
     if (!currency || !isUniverseChainId(chainId) || livePrice === undefined) {
       return { price: undefined, isLoading: false }
     }
 
-    const stablecoin = getPrimaryStablecoin(chainId)
-
-    const baseAmount = getCurrencyAmount({ value: '1', valueType: ValueType.Exact, currency })
-    const quoteAmount = getCurrencyAmount({
-      value: livePrice.toString(),
-      valueType: ValueType.Exact,
-      currency: stablecoin,
-    })
-
-    if (!baseAmount || !quoteAmount) {
+    try {
+      const stablecoin = getPrimaryStablecoin(chainId)
+      // Parse human-readable amounts: 1 unit of token, and livePrice (USD per token) in stablecoin.
+      // Truncate price to stablecoin decimals so parseUnits doesn't throw (e.g. USDC has 6 decimals).
+      const priceString = truncateToMaxDecimals({
+        value: convertScientificNotationToNumber(livePrice.toString()),
+        maxDecimals: stablecoin.decimals,
+      })
+      const baseAmount = CurrencyAmount.fromRawAmount(currency, parseUnits('1', currency.decimals).toString())
+      const quoteAmount = CurrencyAmount.fromRawAmount(
+        stablecoin,
+        parseUnits(priceString, stablecoin.decimals).toString(),
+      )
+      return {
+        price: new Price({ baseAmount, quoteAmount }),
+        isLoading: false,
+      }
+    } catch (error) {
+      logger.debug('useUSDCPriceCentralized', 'centralizedResult', 'parse price failed', { error, livePrice })
       return { price: undefined, isLoading: false }
     }
-
-    return {
-      price: new Price({ baseAmount, quoteAmount }),
-      isLoading: false,
-    }
   }, [currency, chainId, livePrice])
+
+  return isSupported ? centralizedResult : legacyResult
 }
 
 export function useUSDCValueCentralized(

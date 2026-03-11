@@ -12,7 +12,7 @@ exports[`renders UnitagName with a name 1`] = `
       style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-self: center; opacity: 0; align-items: center; transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
     >
       <span
-        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-12px _lineHeight-40px _fontWeight-400"
+        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-12px _fontWeight-400 _lineHeight-40px"
         data-disable-theme="true"
       >
         testing
@@ -48,7 +48,7 @@ exports[`renders UnitagName without a name 1`] = `
       style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-self: center; opacity: 0; align-items: center; transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
     >
       <span
-        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-12px _lineHeight-40px _fontWeight-400"
+        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-12px _fontWeight-400 _lineHeight-40px"
         data-disable-theme="true"
       />
       <div

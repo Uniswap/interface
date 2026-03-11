@@ -10,7 +10,7 @@ import { useSyncStatsigUserIdentifiers } from 'uniswap/src/features/gating/useSy
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
+import { Metric, onCLS, onFCP, onINP, onLCP } from 'web-vitals'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useAppSelector } from '~/state/hooks'
 import { useRouterPreference } from '~/state/user/hooks'
@@ -73,10 +73,10 @@ export function UserPropertyUpdater() {
       (metric: string) =>
       ({ delta }: Metric) =>
         sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
-    getCLS(sendWebVital('cumulative_layout_shift'))
-    getFCP(sendWebVital('first_contentful_paint_ms'))
-    getFID(sendWebVital('first_input_delay_ms'))
-    getLCP(sendWebVital('largest_contentful_paint_ms'))
+    onCLS(sendWebVital('cumulative_layout_shift'))
+    onFCP(sendWebVital('first_contentful_paint_ms'))
+    onINP(sendWebVital('interaction_to_next_paint_ms'))
+    onLCP(sendWebVital('largest_contentful_paint_ms'))
   }, [])
 
   useEffect(() => {

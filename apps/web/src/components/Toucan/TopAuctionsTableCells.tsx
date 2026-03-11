@@ -6,7 +6,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { OrderDirection } from '~/appGraphql/data/util'
 import { ClickableHeaderRow, EllipsisText, HeaderArrow, HeaderSortText } from '~/components/Table/styled'
 import { getAuctionMetadata } from '~/components/Toucan/Config/config'
-import type { AuctionWithCurrencyInfo } from '~/state/explore/topAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 
 /**
  * Sort fields for auction table
@@ -51,7 +51,7 @@ export function AuctionTableHeader({
   )
 }
 
-export function TokenNameCell({ auction }: { auction: AuctionWithCurrencyInfo }) {
+export function TokenNameCell({ auction }: { auction: EnrichedAuction }) {
   // Check for logo override from config
   const logoOverride =
     auction.auction?.chainId && auction.auction.tokenAddress
@@ -62,18 +62,18 @@ export function TokenNameCell({ auction }: { auction: AuctionWithCurrencyInfo })
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start">
       <Flex pr="$spacing4">
         <TokenLogo
-          url={logoOverride ?? auction.currencyInfo?.logoUrl}
+          url={logoOverride ?? auction.logoUrl}
           size={24}
           chainId={auction.auction?.chainId}
-          symbol={auction.currencyInfo?.currency.symbol}
-          name={auction.currencyInfo?.currency.name}
+          symbol={auction.auction?.tokenSymbol}
+          name={auction.auction?.tokenName}
         />
       </Flex>
       <EllipsisText>
-        {auction.currencyInfo?.currency.name ?? auction.auction?.tokenSymbol ?? auction.auction?.tokenAddress ?? '—'}
+        {auction.auction?.tokenName ?? auction.auction?.tokenSymbol ?? auction.auction?.tokenAddress ?? '—'}
       </EllipsisText>
       <EllipsisText $platform-web={{ minWidth: 'fit-content' }} $lg={{ display: 'none' }} color="$neutral2">
-        {auction.currencyInfo?.currency.symbol ?? auction.auction?.tokenSymbol}
+        {auction.auction?.tokenSymbol}
       </EllipsisText>
       {auction.verified && <CheckmarkCircle size="$icon.16" color="$accent1" />}
     </Flex>

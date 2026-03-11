@@ -17,8 +17,6 @@ export enum OnchainItemSectionName {
   TrendingPools = 'trendingPools',
   Wallets = 'wallets',
   FavoriteWallets = 'favoriteWallets',
-  NFTCollections = 'nftCollections',
-  PopularNFTCollections = 'popularNFTCollections',
 }
 
 export type OnchainItemSection<T extends OnchainItemListOption> = {

@@ -1,16 +1,15 @@
-import { Currency } from '@uniswap/sdk-core'
 import { doesTokenMatchSearchTerm } from 'uniswap/src/utils/search/doesTokenMatchSearchTerm'
+import type { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 
 /**
  * Filters tokens based on search criteria (name, symbol, address, chain name).
- * This is a pure utility function for client-side filtering.
+ * Supports multichain TokenData shape (top-level currencyInfo).
  *
  * @param tokens - Array of tokens to filter
  * @param searchTerm - Search term to match against
- * @param enabledChains - Array of enabled chain IDs to search within
  * @returns Filtered array of tokens that match the search criteria
  */
-export function filterTokensBySearch<T extends { currencyInfo: { currencyId: string; currency: Currency } | null }>({
+export function filterTokensBySearch<T extends Pick<TokenData, 'currencyInfo'>>({
   tokens,
   searchTerm,
 }: {
@@ -22,7 +21,5 @@ export function filterTokensBySearch<T extends { currencyInfo: { currencyId: str
     return tokens
   }
 
-  return tokens?.filter((token) => {
-    return doesTokenMatchSearchTerm(token, trimmedSearchTerm)
-  })
+  return tokens?.filter((token) => doesTokenMatchSearchTerm({ currencyInfo: token.currencyInfo }, trimmedSearchTerm))
 }

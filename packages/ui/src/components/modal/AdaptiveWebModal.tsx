@@ -1,4 +1,3 @@
-import { RemoveScroll } from '@tamagui/remove-scroll'
 import { type PropsWithChildren, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import type { DimensionValue } from 'react-native'
 import {
@@ -14,6 +13,7 @@ import {
 } from 'tamagui'
 import { type CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Flex, type FlexProps } from 'ui/src/components/layout'
+import { RemoveScroll } from 'ui/src/components/RemoveScroll/RemoveScroll'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
@@ -136,6 +136,7 @@ export function WebBottomSheet({
         snapPointsMode={snapPointsMode}
         // Must be spread because setting snapPoints to undefined still changes behavior
         {...(snapPoints && { snapPoints })}
+        zIndex={rest.zIndex ?? zIndexes.modal}
         onOpenChange={handleClose}
       >
         <Sheet.Frame
@@ -176,6 +177,7 @@ export function WebBottomSheet({
           </Flex>
         </Sheet.Frame>
         <Sheet.Overlay
+          zIndex={zIndexes.modalBackdrop}
           animation="lazy"
           backgroundColor="$scrim"
           enterStyle={{ opacity: 0 }}
@@ -210,6 +212,7 @@ type ModalProps = GetProps<typeof View> &
     snapPoints?: GetProps<typeof Sheet>['snapPoints']
     overlayOpacity?: number
     borderColor?: string
+    zIndex?: number
   }>
 
 /**

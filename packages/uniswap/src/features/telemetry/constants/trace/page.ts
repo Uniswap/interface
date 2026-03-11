@@ -12,7 +12,6 @@ export enum InterfacePageName {
   MigrateV2 = 'migrate-v2-page',
   MigrateV2Pair = 'migrate-v2-pair-page',
   MigrateV3 = 'migrate-v3-page',
-  NftCollectionPage = 'nft-collection-page',
   NftDetailsPage = 'nft-details-page',
   NftExplorePage = 'nft-explore-page',
   NftProfilePage = 'nft-profile-page',

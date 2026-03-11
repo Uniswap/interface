@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { ButtonVariant } from 'ui/src'
 import { AnimatePresence, Button, Flex, useIsShortMobileDevice } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import type { AppTFunction } from 'ui/src/i18n/types'
@@ -74,6 +75,13 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
     return undefined
   }, [renderBiometricsIcon, passkeyAuthStatus?.isSignedInWithPasskey, passkeyAuthStatus?.isSessionAuthenticated])
 
+  const warningVariant: ButtonVariant | undefined =
+    warning?.severity === WarningSeverity.High
+      ? 'critical'
+      : warning?.severity === WarningSeverity.Medium
+        ? 'warning'
+        : undefined
+
   switch (true) {
     case indicative: {
       return (
@@ -103,10 +111,10 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
         </Button>
       )
     }
-    case warning?.severity === WarningSeverity.High: {
+    case Boolean(warningVariant): {
       return (
         <Button
-          variant="critical"
+          variant={warningVariant}
           emphasis="primary"
           isDisabled={disabled}
           icon={icon}
@@ -260,7 +268,8 @@ const getSwapAction = ({
     }
     return SwapAction.ContinuePlan
   }
-  if (warning?.severity === WarningSeverity.High) {
+
+  if (warning?.severity === WarningSeverity.High || warning?.severity === WarningSeverity.Medium) {
     return SwapAction.SwapAnyway
   }
 

@@ -22,6 +22,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
+import ALLOWLISTED_HOOKS from '~/assets/images/allowlistedHooks.jpg'
 import PROVIDE_LIQUIDITY from '~/assets/images/provideLiquidity.png'
 import tokenLogo from '~/assets/images/token-logo.png'
 import V4_HOOK from '~/assets/images/v4Hooks.png'
@@ -129,6 +130,12 @@ function DisconnectedWalletView() {
             img={V4_HOOK}
             text={t('liquidity.hooks')}
             link={uniswapUrls.helpArticleUrls.v4HooksInfo}
+          />
+          <LearnMoreTile
+            width="100%"
+            img={ALLOWLISTED_HOOKS}
+            text={t('liquidity.hooks.allowlisted')}
+            link={uniswapUrls.helpArticleUrls.allowlistedHooks}
           />
         </Flex>
       </Flex>
@@ -541,6 +548,11 @@ export default function Pool() {
                   img={V4_HOOK}
                   text={t('liquidity.hooks')}
                   link={uniswapUrls.helpArticleUrls.v4HooksInfo}
+                />
+                <LearnMoreTile
+                  img={ALLOWLISTED_HOOKS}
+                  text={t('liquidity.hooks.allowlisted')}
+                  link={uniswapUrls.helpArticleUrls.allowlistedHooks}
                 />
               </Flex>
               <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>

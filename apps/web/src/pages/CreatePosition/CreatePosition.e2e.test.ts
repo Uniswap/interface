@@ -1,4 +1,3 @@
-import { FeatureFlags } from '@universe/gating'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
@@ -12,9 +11,6 @@ const test = getTest()
 
 const buildUrl = createTestUrlBuilder({
   basePath: '/positions/create',
-  defaultFeatureFlags: {
-    [FeatureFlags.PriceRangeInputV2]: true,
-  },
 })
 
 const WETH_ADDRESS = WETH.address

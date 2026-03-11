@@ -226,7 +226,7 @@ describe('migrateSearchHistory', () => {
       },
       // NFT collection should have new type value (3 → 2)
       {
-        type: SearchHistoryResultType.NFTCollection, // 2
+        type: 2,
         chainId: 1,
         address: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
         name: 'Pudgy Penguins',

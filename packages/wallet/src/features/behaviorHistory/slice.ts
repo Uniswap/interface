@@ -76,12 +76,6 @@ const slice = createSlice({
     setBackupReminderLastSeenTs: (state, action: PayloadAction<number | undefined>) => {
       state.backupReminderLastSeenTs = action.payload
     },
-    setHasViewedBridgedAssetsCard: (state, action: PayloadAction<boolean>) => {
-      state.hasViewedBridgedAssetsCard = action.payload
-    },
-    setHasViewedBridgedAssetsV2Card: (state, action: PayloadAction<boolean>) => {
-      state.hasViewedBridgedAssetsV2Card = action.payload
-    },
     setHasViewedOffRampTooltip: (state, action: PayloadAction<boolean>) => {
       state.hasViewedOffRampTooltip = action.payload
     },
@@ -177,8 +171,6 @@ export const {
   setHasViewedDappRequestBridgingBanner,
   resetWalletBehaviorHistory,
   setHasViewedNotificationsCard,
-  setHasViewedBridgedAssetsCard,
-  setHasViewedBridgedAssetsV2Card,
   setHasDismissedSmartWalletHomeScreenNudge,
   setHasCopiedPrivateKeys,
   setHasShown5792Nudge,

@@ -9,6 +9,7 @@ import { ErrorCallout } from '~/components/ErrorCallout'
 import { useDefaultInitialPrice } from '~/components/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { DepositInputForm } from '~/components/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from '~/components/Liquidity/hooks/useDependentAmountFallback'
+import { LowLPSlippageWarning } from '~/components/Liquidity/LowLPSlippageWarning'
 import { getPriceDifference } from '~/components/Liquidity/utils/getPriceDifference'
 import { getFieldsDisabled, isInvalidRange } from '~/components/Liquidity/utils/priceRangeInfo'
 import { useAccount } from '~/hooks/useAccount'
@@ -177,6 +178,9 @@ export const DepositStep = () => {
         deposit1Disabled={updatedDeposit1Disabled}
         amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
         amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
+      />
+      <LowLPSlippageWarning
+        isNativePool={Boolean(currencies.display.TOKEN0?.isNative || currencies.display.TOKEN1?.isNative)}
       />
       <Flex row>
         {account.isConnected ? (

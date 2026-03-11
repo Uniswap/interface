@@ -1,0 +1,10 @@
+# Note: disablePaging/disableSlack are set in both ESC (esc/dev-portal.yaml) and here.
+# Stack config overrides ESC. To enable paging, remove from both places.
+environment:
+  - datadog-cloud-universe/dev-portal
+config:
+  datadog-cloud-universe:environment: prod
+  datadog-cloud-universe:tagFilter: "(unienv:prod OR env:prod)"
+  datadog-cloud-universe:incidentWebhook: "@webhook-Incident-io"
+  datadog-cloud-universe:disablePaging: "true"
+  datadog-cloud-universe:disableSlack: "true"

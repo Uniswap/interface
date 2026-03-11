@@ -11,7 +11,6 @@ import { Opensea } from 'ui/src/components/icons/Opensea'
 import { type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { DataServiceApiClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainExplorerName } from 'uniswap/src/features/chains/utils'
@@ -53,7 +52,6 @@ export function useNFTContextMenuItems({
 }: NFTMenuParams): MenuOptionItem[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { defaultChainId } = useEnabledChains()
   const navigateToNftExplorerLink = useNavigateToNftExplorerLink()
   const isSelfReportSpamNFTEnabled = useFeatureFlag(FeatureFlags.SelfReportSpamNFTs)
   const { evmAccount } = useWallet()
@@ -184,9 +182,9 @@ export function useNFTContextMenuItems({
 
   const openExplorerLink = useCallback(async () => {
     if (chainId && contractAddress && tokenId) {
-      navigateToNftExplorerLink({ chainId, contractAddress, tokenId, fallbackChainId: defaultChainId })
+      navigateToNftExplorerLink({ chainId, contractAddress, tokenId })
     }
-  }, [chainId, contractAddress, tokenId, navigateToNftExplorerLink, defaultChainId])
+  }, [chainId, contractAddress, tokenId, navigateToNftExplorerLink])
 
   const ExplorerLogo = useBlockExplorerLogo(chainId)
 

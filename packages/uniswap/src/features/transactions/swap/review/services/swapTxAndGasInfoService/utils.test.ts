@@ -3,7 +3,7 @@ import type { ClassicQuoteResponse, GasFeeResult } from '@universe/api'
 import { FeeType, TradingApi } from '@universe/api'
 import type { providers } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
+import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
 import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
 import { UnknownSimulationError } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
@@ -133,6 +133,7 @@ describe('createPrepareSwapRequestParams', () => {
       selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
       slippageWarningModalSeen: false,
       isV4HookPoolsEnabled: false,
+      isSlippageDirty: false,
     }
     const alreadyApproved = true
 

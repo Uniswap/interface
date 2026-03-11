@@ -40,12 +40,6 @@ export enum NumberType {
   // portfolio balance
   PortfolioBalance = 'portfolio-balance',
 
-  // nft floor price denominated in a token (e.g, ETH)
-  NFTTokenFloorPrice = 'nft-token-floor-price',
-
-  // nft collection stats like number of items, holder, and sales
-  NFTCollectionStats = 'nft-collection-stats',
-
   Percentage = 'percentage',
   PercentageOneDecimal = 'percentage-one-decimal',
   PercentageThreeDecimals = 'percentage-three-decimals',

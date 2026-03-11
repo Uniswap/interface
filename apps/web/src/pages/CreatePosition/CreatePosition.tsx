@@ -102,6 +102,7 @@ const Toolbar = () => {
   const { t } = useTranslation()
   const {
     isNativeTokenAOnly,
+    currencies,
     positionState,
     setPositionState,
     setStep,
@@ -210,6 +211,7 @@ const Toolbar = () => {
             settings={[Slippage, Deadline]}
             iconColor="$neutral1"
             iconSize="$icon.16"
+            isNativePool={Boolean(currencies.display.TOKEN0?.isNative || currencies.display.TOKEN1?.isNative)}
           />
         </Flex>
       </ToolbarContainer>

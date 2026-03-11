@@ -1,6 +1,6 @@
 import { Accordion, Flex, Text } from 'ui/src'
-import { DoubleChevronInverted } from 'ui/src/components/icons'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
@@ -12,7 +12,6 @@ import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapForm
 import { TradeWarning } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeWarning'
 import { useDebouncedTrade } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/useDebouncedTrade'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isMobileApp, isWebApp } from 'utilities/src/platform'
 
@@ -23,7 +22,6 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
   const debouncedTrade = useDebouncedTrade()
   const { text: warningTextColor } = getAlertColor(warning?.severity)
   const { isTestnetModeEnabled } = useEnabledChains()
-  const priceUXEnabled = usePriceUXEnabled()
 
   const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
   const derivedSwapInfo = useSwapFormStoreDerivedSwapInfo((s) => s)
@@ -32,7 +30,7 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
     return null
   }
 
-  if (isMobileApp || priceUXEnabled) {
+  if (isMobileApp) {
     return <GasInfoRow gasInfo={gasInfo} />
   }
 
@@ -79,7 +77,7 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
             <Flex row gap="$spacing4" alignItems="center">
               <GasInfoRow gasInfo={gasInfo} hidden={open} />
               <Flex rotate={open ? '180deg' : '0deg'} animation="quick" transition="ease-in-out">
-                <DoubleChevronInverted size="$icon.20" color="$neutral2" />
+                <AnglesMaximize size="$icon.20" color="$neutral2" />
               </Flex>
             </Flex>
           )}

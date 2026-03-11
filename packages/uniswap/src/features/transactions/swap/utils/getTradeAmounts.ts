@@ -9,10 +9,7 @@ type TradeAmounts = {
   outputCurrencyAmount: Maybe<CurrencyAmount<Currency>>
 }
 
-export function getTradeAmounts(
-  acceptedDerivedSwapInfo?: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>,
-  priceUXEnabled = false,
-): TradeAmounts {
+export function getTradeAmounts(acceptedDerivedSwapInfo?: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>): TradeAmounts {
   if (!acceptedDerivedSwapInfo) {
     return { inputCurrencyAmount: undefined, outputCurrencyAmount: undefined }
   }
@@ -37,11 +34,7 @@ export function getTradeAmounts(
   // On review screen, always show values directly from trade object, to match exactly what is submitted on chain
   // For wraps, we have no trade object so use values from form state
   const inputCurrencyAmount = isWrap ? wrapInputCurrencyAmount : displayTrade?.inputAmount
-  const outputCurrencyAmount = isWrap
-    ? wrapOutputCurrencyAmount
-    : priceUXEnabled
-      ? displayTrade?.quoteOutputAmount
-      : displayTrade?.outputAmount
+  const outputCurrencyAmount = isWrap ? wrapOutputCurrencyAmount : displayTrade?.outputAmount
 
   return {
     inputCurrencyAmount,

@@ -4,7 +4,7 @@ import {
   computeCompletedAuctionMarketFdvUsd,
   computeProjectedFdvTableValue,
 } from '~/components/Toucan/utils/computeProjectedFdv'
-import type { AuctionWithCurrencyInfo } from '~/state/explore/topAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 
 function createAuctionWithCurrencyInfo({
   tokenTotalSupply = '2500000',
@@ -12,39 +12,39 @@ function createAuctionWithCurrencyInfo({
   clearingPrice = Q96.toString(),
   floorPrice = '0',
   auctionTokenDecimals,
+  currencyTokenDecimals = 6, // USDC has 6 decimals
+  currencyPriceUsd,
+  isCompleted = false,
 }: {
   tokenTotalSupply?: string
   totalSupply?: string
   clearingPrice?: string
   floorPrice?: string
   auctionTokenDecimals?: number
-}): AuctionWithCurrencyInfo {
+  currencyTokenDecimals?: number
+  currencyPriceUsd?: string
+  isCompleted?: boolean
+}): EnrichedAuction {
   return {
     auction: {
       tokenTotalSupply,
       totalSupply,
       clearingPrice,
       floorPrice,
+      tokenDecimals: auctionTokenDecimals,
+      tokenSymbol: 'AUCT',
+      currencyTokenDecimals,
+      currencyTokenSymbol: 'USDC',
+      currencyPriceUsd,
     },
-    currencyInfo:
-      auctionTokenDecimals === undefined
-        ? undefined
-        : ({
-            currency: {
-              decimals: auctionTokenDecimals,
-              symbol: 'AUCT',
-            },
-          } as Maybe<CurrencyInfo>),
     verified: false,
-  } as unknown as AuctionWithCurrencyInfo
+    timeRemaining: {
+      isCompleted,
+      startBlockTimestamp: undefined,
+      endBlockTimestamp: undefined,
+    },
+  } as unknown as EnrichedAuction
 }
-
-const bidTokenCurrencyInfo = {
-  currency: {
-    decimals: 6,
-    symbol: 'USDC',
-  },
-} as Maybe<CurrencyInfo>
 
 describe('computeProjectedFdvTableValue', () => {
   it('uses auction token market price for completed auctions even without bid token currency info', () => {
@@ -52,11 +52,9 @@ describe('computeProjectedFdvTableValue', () => {
       auction: createAuctionWithCurrencyInfo({
         tokenTotalSupply: '2000000000000000000',
         auctionTokenDecimals: 18,
+        isCompleted: true,
       }),
-      bidTokenCurrencyInfo: undefined,
-      bidTokenUsdPrice: undefined,
       auctionTokenUsdPrice: 3.5,
-      isCompleted: true,
     })
 
     expect(result.raw).toBe(0n)
@@ -69,11 +67,9 @@ describe('computeProjectedFdvTableValue', () => {
       auction: createAuctionWithCurrencyInfo({
         tokenTotalSupply: '2000000000000000000',
         auctionTokenDecimals: 18,
+        isCompleted: true,
       }),
-      bidTokenCurrencyInfo,
-      bidTokenUsdPrice: 1,
       auctionTokenUsdPrice: 3.5,
-      isCompleted: true,
     })
 
     expect(result.raw).toBe(0n)
@@ -86,11 +82,9 @@ describe('computeProjectedFdvTableValue', () => {
       auction: createAuctionWithCurrencyInfo({
         tokenTotalSupply: '2000000000000000000',
         auctionTokenDecimals: undefined,
+        isCompleted: true,
       }),
-      bidTokenCurrencyInfo,
-      bidTokenUsdPrice: 1,
       auctionTokenUsdPrice: 3.5,
-      isCompleted: true,
     })
 
     expect(result).toEqual({
@@ -106,10 +100,9 @@ describe('computeProjectedFdvTableValue', () => {
         tokenTotalSupply: '2500000',
         clearingPrice: Q96.toString(),
         auctionTokenDecimals: 18,
+        currencyPriceUsd: '2',
+        isCompleted: true,
       }),
-      bidTokenCurrencyInfo,
-      bidTokenUsdPrice: 2,
-      isCompleted: true,
     })
 
     expect(result.raw).toBe(2500000n)
@@ -123,11 +116,10 @@ describe('computeProjectedFdvTableValue', () => {
         tokenTotalSupply: '2500000',
         clearingPrice: Q96.toString(),
         auctionTokenDecimals: 18,
+        currencyPriceUsd: '2',
+        isCompleted: false,
       }),
-      bidTokenCurrencyInfo,
-      bidTokenUsdPrice: 2,
       auctionTokenUsdPrice: 999,
-      isCompleted: false,
     })
 
     expect(result.raw).toBe(2500000n)
@@ -140,11 +132,9 @@ describe('computeProjectedFdvTableValue', () => {
       auction: createAuctionWithCurrencyInfo({
         tokenTotalSupply: '2000000000000000000',
         auctionTokenDecimals: 18,
+        isCompleted: true,
       }),
-      bidTokenCurrencyInfo,
-      bidTokenUsdPrice: 2,
       auctionTokenUsdPrice: 0,
-      isCompleted: true,
     })
 
     expect(result.raw).toBe(0n)

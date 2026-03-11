@@ -143,4 +143,21 @@ describe('useGetRangeDisplay', () => {
     expect(result.current.minPrice).toBe('100')
     expect(result.current.maxPrice).toBe('200')
   })
+
+  it('returns hyphens for missing quote and base currencies', () => {
+    useIsTickAtLimitMock.mockReturnValue({ [Bound.LOWER]: false, [Bound.UPPER]: false })
+    const { result } = renderHook(() =>
+      useGetRangeDisplay({
+        priceOrdering: {},
+        pricesInverted: false,
+        tickSpacing: 1,
+        tickLower: 10,
+        tickUpper: 20,
+      }),
+    )
+    expect(result.current.minPrice).toBe('-')
+    expect(result.current.maxPrice).toBe('-')
+    expect(result.current.tokenASymbol).toBe('-')
+    expect(result.current.tokenBSymbol).toBe('-')
+  })
 })

@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { Anchor, Flex, FlexProps, styled, Text, TextProps, View } from 'ui/src'
+import { Anchor, Flex, FlexProps, styled, Text, TextProps } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { ArrowUp } from 'ui/src/components/icons/ArrowUp'
 import { breakpoints, IconSizeTokens, zIndexes } from 'ui/src/theme'
@@ -72,28 +72,72 @@ export const TableBodyContainer = styled(Flex, {
         borderTopWidth: '$none',
       },
     },
+    hasHiddenRows: {
+      true: {
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderBottomWidth: 0,
+      },
+    },
   },
 })
 
-export const LoadingIndicatorContainer = styled(Flex, {
-  row: true,
-  alignItems: 'center',
-  justifyContent: 'center',
-  mt: -48,
-  zIndex: zIndexes.sticky,
+export const HiddenTableScrollContainer = styled(Flex, {
+  width: '100%',
+  position: 'relative',
+  className: 'scrollbar-hidden',
+  justifyContent: 'flex-start',
+  borderStyle: 'solid',
   '$platform-web': {
-    position: 'sticky',
+    overscrollBehaviorX: 'none',
+    overflowX: 'auto',
+    overflowY: 'visible', // Critical: allows sticky to work
+  },
+  variants: {
+    v2: {
+      true: {
+        borderBottomRightRadius: '$rounded12',
+        borderBottomLeftRadius: '$rounded12',
+        borderWidth: 0,
+      },
+      false: {
+        borderBottomRightRadius: '$rounded20',
+        borderBottomLeftRadius: '$rounded20',
+        borderColor: '$surface3',
+        borderWidth: 1,
+        borderTopWidth: 0,
+      },
+    },
   },
 })
 
-export const LoadingIndicator = styled(Flex, {
+export const TableSeparatorRow = styled(Flex, {
+  centered: true,
   row: true,
-  backgroundColor: '$accent2Solid',
-  borderRadius: '$rounded8',
-  width: 'fit-content',
-  p: '$padding8',
-  gap: '$gap8',
-  height: 34,
+  gap: '$spacing12',
+  py: '$spacing8',
+  px: '$spacing16',
+  borderStyle: 'solid',
+  width: '100%',
+  variants: {
+    v2: {
+      true: {
+        borderWidth: 0,
+      },
+      false: {
+        borderColor: '$surface3',
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
+      },
+    },
+    isExpanded: {
+      false: {
+        borderBottomWidth: 1,
+      },
+    },
+  } as const,
 })
 
 const TableRow = styled(Flex, {
@@ -128,22 +172,16 @@ export const DataRow = styled(TableRow, {
         hoverStyle: { backgroundColor: '$surface1Hovered' },
       },
     },
+    dimmed: {
+      true: {
+        opacity: 0.6,
+      },
+    },
   },
 })
 
 export const NoDataFoundTableRow = styled(TableRow, {
   justifyContent: 'center',
-})
-
-export const TableScrollMask = styled(View, {
-  position: 'absolute',
-  zIndex: zIndexes.default,
-  top: 0,
-  bottom: 0,
-  right: 1,
-  width: 20,
-  pointerEvents: 'none',
-  background: `linear-gradient(to right, transparent, var(--surface1))`,
 })
 
 export const HeaderRow = styled(TableRow, {

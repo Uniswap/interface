@@ -35,16 +35,6 @@ export function useAddToSearchHistory(): {
           }),
         )
         break
-      case OnchainItemListOptionType.NFTCollection:
-        dispatch(
-          addToSearchHistory({
-            searchResult: {
-              ...item,
-              type: SearchHistoryResultType.NFTCollection,
-            },
-          }),
-        )
-        break
     }
   }
 

@@ -11,8 +11,6 @@ export enum MobileScreens {
   ConnectionsDappListModal = 'connections-dapp-list-modal',
   Explore = 'Explore',
   Home = 'Home',
-  NFTItem = 'NFTItem',
-  NFTCollection = 'NFTCollection',
   OnboardingStack = 'OnboardingStack',
   UnitagStack = 'UnitagStack',
   Settings = 'Settings',

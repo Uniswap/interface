@@ -20,7 +20,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
 
 .c1 {
   font-weight: 535;
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19, 19, 19, 0.35);
 }
 
 <body>
@@ -68,7 +68,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
             <span
               class="t_unmounted font_body  t_unmounted"
               data-disable-theme="true"
-              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; line-height: var(--f-lineHeight-medium); font-weight: var(--f-weight-book); display: flex; flex-direction: column; min-width: 150px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; z-index: 970; border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); padding: 0px 0px 0px 0px; width: 100%; max-height: calc(100vh - 88px); overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; top: calc(100% + 10px); opacity: 0; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-medium); display: flex; flex-direction: column; min-width: 150px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; z-index: 970; border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); padding: 0px 0px 0px 0px; width: 100%; max-height: calc(100vh - 88px); overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; top: calc(100% + 10px); opacity: 0; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _height-10037"
@@ -77,7 +77,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; width: 100%; flex-grow: 1; transform: translateX(0px); transition: all 100ms ease-in-out;"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _pb-t-space-pad1331704900 _flexGrow-1 _gap-t-space-gap1573"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704925 _pb-t-space-pad1331704925 _pl-t-space-pad1331704925 _flexGrow-1 _gap-t-space-gap1573"
                     data-testid="wallet-modal"
                   >
                     <span
@@ -97,7 +97,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _width-10037"
                       >
                         <span
-                          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
                           data-disable-theme="true"
                         >
                           Connect a wallet
@@ -141,13 +141,13 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                                 >
                                   <span
-                                    class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                    class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _whiteSpace-nowrap"
                                     data-disable-theme="true"
                                   >
                                     Get Uniswap Wallet
                                   </span>
                                   <span
-                                    class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                    class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _whiteSpace-nowrap"
                                     data-disable-theme="true"
                                   >
                                     Available on iOS, Android, and Chrome
@@ -180,13 +180,13 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                               >
                                 <span
-                                  class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                  class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _whiteSpace-nowrap"
                                   data-disable-theme="true"
                                 >
                                   Uniswap Mobile
                                 </span>
                                 <span
-                                  class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                  class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _whiteSpace-nowrap"
                                   data-disable-theme="true"
                                 >
                                   Scan QR code to connect
@@ -207,7 +207,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _mr-18px _ml-18px"
                         >
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _whiteSpace-nowrap"
                             data-disable-theme="true"
                           >
                             Other wallets
@@ -255,7 +255,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                 style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(19, 19, 19, 0.08);"
                               />
                               <span
-                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
                                 data-disable-theme="true"
                               >
                                 Coinbase Wallet
@@ -287,7 +287,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                 />
                               </div>
                               <span
-                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
                                 data-disable-theme="true"
                               >
                                 Binance Wallet
@@ -303,7 +303,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
                         >
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _textAlign-center"
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _textAlign-center"
                             data-disable-theme="true"
                           >
                             By connecting a wallet, you agree to Uniswap Labs’ 
@@ -339,14 +339,14 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
           style="width: 100%;"
         >
           <span
-            class="font_body _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-inline-flex _justifyContent-center _alignItems-center _position-relative _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _textAlign-left _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+            class="font_body _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _display-inline-flex _justifyContent-center _alignItems-center _position-relative _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _textAlign-left _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
             data-disable-theme="true"
           >
             <span
               class="t_unmounted font_body  t_unmounted"
               data-disable-theme="true"
               data-testid="account-drawer"
-              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; line-height: var(--f-lineHeight-medium); font-weight: var(--f-weight-book); display: flex; flex-direction: column; min-width: 150px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; z-index: 970; border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); padding: 0px 0px 0px 0px; width: 100%; max-height: calc(100vh - 88px); overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; top: calc(100% + 10px); opacity: 0; position: relative; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: var(--f-family); word-wrap: break-word; font-size: 16px; font-weight: var(--f-weight-book); line-height: var(--f-lineHeight-medium); display: flex; flex-direction: column; min-width: 150px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; z-index: 970; border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); padding: 0px 0px 0px 0px; width: 100%; max-height: calc(100vh - 88px); overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; top: calc(100% + 10px); opacity: 0; position: relative; transform: translateY(-20px); transition: all 120ms cubic-bezier(0.17, 0.67, 0.45, 1);"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _height-10037"
@@ -355,7 +355,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; width: 100%; flex-grow: 1; transform: translateX(0px); transition: all 100ms ease-in-out;"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _pb-t-space-pad1331704900 _flexGrow-1 _gap-t-space-gap1573"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704925 _pb-t-space-pad1331704925 _pl-t-space-pad1331704925 _flexGrow-1 _gap-t-space-gap1573"
                     data-testid="wallet-modal"
                   >
                     <span
@@ -375,7 +375,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _width-10037"
                       >
                         <span
-                          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
                           data-disable-theme="true"
                         >
                           Connect a wallet
@@ -419,13 +419,13 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                                 >
                                   <span
-                                    class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                    class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _whiteSpace-nowrap"
                                     data-disable-theme="true"
                                   >
                                     Get Uniswap Wallet
                                   </span>
                                   <span
-                                    class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                    class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _whiteSpace-nowrap"
                                     data-disable-theme="true"
                                   >
                                     Available on iOS, Android, and Chrome
@@ -458,13 +458,13 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                               >
                                 <span
-                                  class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                  class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _whiteSpace-nowrap"
                                   data-disable-theme="true"
                                 >
                                   Uniswap Mobile
                                 </span>
                                 <span
-                                  class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                  class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _whiteSpace-nowrap"
                                   data-disable-theme="true"
                                 >
                                   Scan QR code to connect
@@ -485,7 +485,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _mr-18px _ml-18px"
                         >
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _whiteSpace-nowrap"
                             data-disable-theme="true"
                           >
                             Other wallets
@@ -533,7 +533,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                 style="width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(19, 19, 19, 0.08);"
                               />
                               <span
-                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
                                 data-disable-theme="true"
                               >
                                 Coinbase Wallet
@@ -565,7 +565,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                                 />
                               </div>
                               <span
-                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
                                 data-disable-theme="true"
                               >
                                 Binance Wallet
@@ -581,7 +581,7 @@ exports[`AccountDrawer tests > AccountDrawer default styles 1`] = `
                           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
                         >
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _textAlign-center"
+                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _textAlign-center"
                             data-disable-theme="true"
                           >
                             By connecting a wallet, you agree to Uniswap Labs’ 

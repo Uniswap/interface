@@ -45,11 +45,13 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
   parsedSearchQuery,
   chainFilter,
   parsedChainFilter,
+  onResetChainFilter,
 }: {
   searchQuery: string
   parsedSearchQuery: string | null
   chainFilter: UniverseChainId | null
   parsedChainFilter: UniverseChainId | null
+  onResetChainFilter?: () => void
 }): JSX.Element {
   const debouncedSearchQuery = useDebounce(searchQuery)
   const debouncedParsedSearchQuery = useDebounce(parsedSearchQuery)
@@ -71,12 +73,15 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
           return t('common.pools')
         case SearchTab.Wallets:
           return t('explore.search.section.wallets')
-        case SearchTab.NFTCollections:
-          return t('common.nfts')
       }
     },
     [t],
   )
+
+  const onResetFilters = useCallback(() => {
+    setActiveTab(SearchTab.All)
+    onResetChainFilter?.()
+  }, [onResetChainFilter])
 
   const contentContainerStyle = useMemo(
     () => ({
@@ -109,6 +114,7 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
             activeTab={activeTab}
             renderedInModal={!isBottomTabsEnabled}
             contentContainerStyle={contentContainerStyle}
+            onResetFilters={onResetFilters}
           />
         ) : (
           <SearchModalNoQueryList

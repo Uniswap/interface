@@ -32,7 +32,7 @@ export function TransactionDetailsContent({
       case TransactionType.NFTApprove:
       case TransactionType.NFTMint:
       case TransactionType.NFTTrade:
-        return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+        return <NftTransactionDetails typeInfo={typeInfo} />
       case TransactionType.Receive:
       case TransactionType.Send:
         return (

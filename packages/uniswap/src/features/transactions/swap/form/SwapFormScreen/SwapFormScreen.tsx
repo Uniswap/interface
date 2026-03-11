@@ -20,10 +20,7 @@ import { SwapFormHeader } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenDetails'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/SwapTokenSelector'
 import { SwitchCurrenciesButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwitchCurrenciesButton'
-import { YouReceiveDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/YouReceiveDetails/YouReceiveDetails'
 import { SwapFormScreenStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/SwapFormScreenStoreContextProvider'
-import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -84,13 +81,6 @@ export function SwapFormScreen({
 }
 
 function SwapFormContent(): JSX.Element {
-  const { trade, isCrossChain } = useSwapFormScreenStore((state) => ({
-    trade: state.trade,
-    isCrossChain: state.isCrossChain,
-  }))
-
-  const priceUXEnabled = usePriceUXEnabled()
-
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
       <Flex gap="$spacing4" animation="quick" exitStyle={EXIT_STYLE} grow={isExtensionApp}>
@@ -101,14 +91,6 @@ function SwapFormContent(): JSX.Element {
         </Flex>
 
         <Flex>
-          {priceUXEnabled && (
-            <YouReceiveDetails
-              isIndicative={Boolean(trade.indicativeTrade && !trade.trade)}
-              isLoadingIndicative={trade.isIndicativeLoading}
-              isLoading={Boolean(trade.isFetching)}
-              isBridge={isCrossChain}
-            />
-          )}
           <SwapFormScreenDetails />
         </Flex>
       </Flex>

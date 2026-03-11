@@ -14,7 +14,6 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { TradingApi } from '@universe/api'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { DYNAMIC_FEE_DATA, PositionState } from '~/components/Liquidity/Create/types'
 import { getTokenOrZeroAddress, validateCurrencyInput } from '~/components/Liquidity/utils/currency'
@@ -31,6 +30,7 @@ interface BaseValidatedInput {
   simulateTransaction: boolean
   token0Address: string
   token1Address: string
+  nativeTokenBalance?: string
 }
 
 type ValidatedCreateInput =
@@ -57,7 +57,7 @@ interface RawCreatePositionInput {
   protocolVersion: ProtocolVersion
   creatingPoolOrPair: boolean | undefined
   address?: string
-  approvalCalldata?: CheckApprovalLPResponse | TradingApi.CheckApprovalLPResponse
+  approvalCalldata?: CheckApprovalLPResponse
   positionState: PositionState
   ticks: [Maybe<number>, Maybe<number>]
   poolOrPair: V3Pool | V4Pool | Pair | undefined
@@ -66,6 +66,7 @@ interface RawCreatePositionInput {
   independentField: PositionField
   slippageTolerance?: number
   customDeadline?: number
+  nativeTokenBalance?: string
 }
 
 function validatePoolInput({
@@ -138,6 +139,7 @@ function validateCreatePositionInput(input: RawCreatePositionInput): ValidatedCr
     independentField,
     slippageTolerance,
     customDeadline,
+    nativeTokenBalance,
   } = input
 
   const deadline = getTradeSettingsDeadline(customDeadline)
@@ -171,7 +173,7 @@ function validateCreatePositionInput(input: RawCreatePositionInput): ValidatedCr
   const dependentAmount = currencyAmounts[dependentField]
 
   const simulateTransaction = !(
-    permitData ||
+    permitData?.value ||
     token0PermitTransaction ||
     token1PermitTransaction ||
     token0Approval ||
@@ -190,6 +192,7 @@ function validateCreatePositionInput(input: RawCreatePositionInput): ValidatedCr
     simulateTransaction,
     token0Address: getTokenOrZeroAddress(displayCurrencies.TOKEN0),
     token1Address: getTokenOrZeroAddress(displayCurrencies.TOKEN1),
+    nativeTokenBalance,
   }
 
   if (protocolVersion === ProtocolVersion.V2) {
@@ -286,6 +289,7 @@ function buildV4CreateRequest(
         initialPrice: input.initialPrice,
         slippageTolerance: input.slippageTolerance,
         deadline: input.deadline,
+        nativeTokenBalance: input.nativeTokenBalance,
         position: {
           tickLower: input.tickLower,
           tickUpper: input.tickUpper,
@@ -315,6 +319,7 @@ export function generateLiquidityServiceCreateCalldataQueryParams({
   independentField,
   slippageTolerance,
   customDeadline,
+  nativeTokenBalance,
 }: RawCreatePositionInput): CreateLPPositionRequest | undefined {
   const validated = validateCreatePositionInput({
     protocolVersion,
@@ -329,6 +334,7 @@ export function generateLiquidityServiceCreateCalldataQueryParams({
     independentField,
     slippageTolerance,
     customDeadline,
+    nativeTokenBalance,
   })
 
   if (!validated) {

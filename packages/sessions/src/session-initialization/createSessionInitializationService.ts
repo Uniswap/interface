@@ -61,22 +61,23 @@ function createSessionInitializationService(ctx: {
   /** Analytics callbacks for tracking session initialization lifecycle */
   analytics?: SessionInitAnalytics
 }): SessionInitializationService {
+  const log = ctx.getLogger?.()
+
   async function handleChallengeFlow(attemptCount = 0, flowStartTime?: number): Promise<void> {
     const startTime = flowStartTime ?? ctx.performanceTracker.now()
     const maxRetries = ctx.maxChallengeRetries ?? 3
 
     const challenge = await ctx.getSessionService().requestChallenge()
 
-    ctx.getLogger?.().debug('createSessionInitializationService', 'handleChallengeFlow', 'Requesting challenge', {
+    log?.debug('createSessionInitializationService', 'handleChallengeFlow', 'Requesting challenge', {
       challenge,
     })
 
     // Report challenge received (only on first attempt)
     if (attemptCount === 0) {
-      ctx.analytics?.onChallengeReceived?.({
-        challengeType: String(challenge.challengeType),
-        challengeId: challenge.challengeId,
-      })
+      const data = { challengeType: String(challenge.challengeType), challengeId: challenge.challengeId }
+      ctx.analytics?.onChallengeReceived?.(data)
+      log?.info('sessions', 'challengeReceived', 'Challenge received', data)
     }
 
     // get our solver for the challenge type
@@ -99,20 +100,16 @@ function createSessionInitializationService(ctx: {
         challengeData: challenge.challengeData,
       })
     } catch (solverError) {
-      ctx
-        .getLogger?.()
-        .warn(
-          'createSessionInitializationService',
-          'handleChallengeFlow',
-          'Solver failed, submitting placeholder solution to trigger fallback',
-          { error: solverError, challengeType: challenge.challengeType },
-        )
+      log?.warn(
+        'createSessionInitializationService',
+        'handleChallengeFlow',
+        'Solver failed, submitting placeholder solution to trigger fallback',
+        { error: solverError, challengeType: challenge.challengeType },
+      )
       solution = 'solver-failed'
     }
 
-    ctx
-      .getLogger?.()
-      .debug('createSessionInitializationService', 'handleChallengeFlow', 'Solved challenge', { solution })
+    log?.debug('createSessionInitializationService', 'handleChallengeFlow', 'Solved challenge', { solution })
 
     // Verify session with the solution
     const result = await ctx.getSessionService().verifySession({
@@ -121,22 +118,17 @@ function createSessionInitializationService(ctx: {
       challengeType: challenge.challengeType,
     })
 
-    if (!result.retry) {
-      // Verification was successful
-      ctx.analytics?.onVerifyCompleted?.({
-        success: true,
-        attemptNumber: attemptCount + 1,
-        totalDurationMs: ctx.performanceTracker.now() - startTime,
-      })
-      return
-    }
-
-    // Report retry (verification failed but will retry)
-    ctx.analytics?.onVerifyCompleted?.({
-      success: false,
+    const verifyData = {
+      success: !result.retry,
       attemptNumber: attemptCount + 1,
       totalDurationMs: ctx.performanceTracker.now() - startTime,
-    })
+    }
+    ctx.analytics?.onVerifyCompleted?.(verifyData)
+    log?.info('sessions', 'verifyCompleted', 'Verify completed', verifyData)
+
+    if (!result.retry) {
+      return
+    }
 
     // Handle server retry request
     if (attemptCount >= maxRetries) {
@@ -157,22 +149,21 @@ function createSessionInitializationService(ctx: {
       needChallenge = options.needChallenge
       sessionId = undefined
 
-      ctx.analytics?.onInitCompleted?.({
-        needChallenge,
-        durationMs: 0,
-      })
+      const data = { needChallenge, durationMs: 0 }
+      ctx.analytics?.onInitCompleted?.(data)
+      log?.info('sessions', 'initCompleted', 'Session init completed', data)
     } else {
       // Discover from backend
       ctx.analytics?.onInitStarted?.()
+      log?.info('sessions', 'initStarted', 'Session init started')
 
       const initResponse = await ctx.getSessionService().initSession()
       needChallenge = initResponse.needChallenge
       sessionId = initResponse.sessionId
 
-      ctx.analytics?.onInitCompleted?.({
-        needChallenge,
-        durationMs: ctx.performanceTracker.now() - initStartTime,
-      })
+      const data = { needChallenge, durationMs: ctx.performanceTracker.now() - initStartTime }
+      ctx.analytics?.onInitCompleted?.(data)
+      log?.info('sessions', 'initCompleted', 'Session init completed', data)
     }
 
     // Handle challenge if required and enabled

@@ -32,7 +32,7 @@ export interface TokenPriceHooks {
     isLoading: boolean
   }
 
-  useTokenSpotPrice: (currencyId: CurrencyId) => number | undefined
+  useTokenSpotPrice: (currencyId: CurrencyId | undefined) => number | undefined
 }
 
 const LEGACY_HOOKS: TokenPriceHooks = {

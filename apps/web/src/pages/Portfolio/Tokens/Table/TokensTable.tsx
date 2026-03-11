@@ -12,6 +12,8 @@ import { PortfolioExpandoRow } from '~/pages/Portfolio/components/PortfolioExpan
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokensTableInner } from '~/pages/Portfolio/Tokens/Table/TokensTableInner'
 
+const TOKENS_TABLE_MAX_HEIGHT = 700
+
 interface TokensTableProps {
   visible: TokenData[]
   hidden: TokenData[]
@@ -45,7 +47,12 @@ export function TokensTable({ visible, hidden, loading, refetching, error }: Tok
     // - DO NOT remove this outer ScrollSync wrapper without updating the Table components
     <ScrollSync horizontal vertical={false}>
       <Flex gap="$spacing16">
-        <TokensTableInner tokenData={visible} loading={tableLoading} error={error} />
+        <TokensTableInner
+          tokenData={visible}
+          loading={tableLoading}
+          error={error}
+          maxHeight={TOKENS_TABLE_MAX_HEIGHT}
+        />
         {hidden.length > 0 && (
           <>
             <PortfolioExpandoRow
@@ -61,6 +68,7 @@ export function TokensTable({ visible, hidden, loading, refetching, error }: Tok
                 hideHeader
                 loading={tableLoading}
                 error={error}
+                maxHeight={TOKENS_TABLE_MAX_HEIGHT}
               />
             )}
           </>

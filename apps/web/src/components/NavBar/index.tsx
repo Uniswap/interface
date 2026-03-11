@@ -75,7 +75,6 @@ export default function Navbar() {
           {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
           {!isConnected && <PreferenceMenu />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
-          {isEmbeddedWalletEnabled && !isConnected && <NewUserCTAButton />}
           <Web3Status />
         </Right>
       </UnpositionedFlex>

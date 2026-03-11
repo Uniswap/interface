@@ -98,7 +98,7 @@
         <data
           android:scheme="https"
           android:host="app.uniswap.org"
-          android:pathPrefix="/address/" />
+          android:pathPrefix="/portfolio/" />
 
         <data
           android:scheme="https"

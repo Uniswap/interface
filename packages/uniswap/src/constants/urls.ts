@@ -120,6 +120,7 @@ export const uniswapUrls = {
     routingSettings: createHelpArticleUrl('27362707722637'),
     uniswapVersionsInfo: createHelpArticleUrl('7425482965517-Uniswap-v2-v3-and-v4'),
     v4HooksInfo: createHelpArticleUrl('30998263256717'),
+    allowlistedHooks: createHelpArticleUrl('41305283155597'),
     subgraphDowntime: createHelpArticleUrl('23952001935373-Subgraph-downtime'),
     walletSecurityMeasures: createHelpArticleUrl('28278904584077-Uniswap-Wallet-Security-Measures'),
     whatIsPrivateKey: createHelpArticleUrl('11306371824653-What-is-a-private-key'),
@@ -235,9 +236,7 @@ export const uniswapUrls = {
   webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,
   webInterfaceTokensUrl: `${UNISWAP_WEB_URL}/explore/tokens`,
   webInterfacePoolsUrl: `${UNISWAP_WEB_URL}/explore/pools`,
-  webInterfaceAddressUrl: `${UNISWAP_WEB_URL}/address`,
-  webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
-  webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
+  webInterfacePortfolioUrl: `${UNISWAP_WEB_URL}/portfolio`,
   webInterfaceBuyUrl: `${UNISWAP_WEB_URL}/buy`,
 
   // Feedback Links

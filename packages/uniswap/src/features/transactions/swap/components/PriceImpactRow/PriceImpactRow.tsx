@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { MarketPriceImpactWarningModal } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/MarketPriceImpactWarning'
 import { usePriceImpact } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/usePriceImpact'
@@ -22,7 +23,7 @@ export function PriceImpactRow({
 
   const trade = derivedSwapInfo.trade.trade
 
-  if (hide || !trade || isBridge(trade) || !formattedPriceImpact) {
+  if (hide || !trade || isBridge(trade) || !formattedPriceImpact || !priceImpactWarning) {
     return null
   }
 
@@ -35,7 +36,8 @@ export function PriceImpactRow({
           </Text>
         </Flex>
       </MarketPriceImpactWarningModal>
-      <Flex row shrink justifyContent="flex-end">
+      <Flex row centered shrink gap="$spacing6" justifyContent="flex-end">
+        <AlertTriangleFilled color={priceImpactWarningColor} size="$icon.16" />
         <Text adjustsFontSizeToFit color={priceImpactWarningColor} variant="body3">
           {formattedPriceImpact}
         </Text>

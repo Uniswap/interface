@@ -264,9 +264,3 @@ query ActivityWeb($account: String!, $chains: [Chain!]!, $onRampTransactionIDs: 
     }
   }
 }
-
-subscription OnAssetActivity($subscriptionId: ID!, $account: String!) {
-  onAssetActivity(subscriptionId: $subscriptionId, addresses: [$account]) {
-    ...AssetActivityParts
-  }
-}

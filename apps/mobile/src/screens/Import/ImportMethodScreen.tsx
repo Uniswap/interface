@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
+import { useRegionalizedLineHeight } from 'src/components/text/useRegionalizedLineHeight'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
 import {
@@ -109,6 +110,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
     importOptions = importOptions.filter((option) => option.name !== ElementName.OnboardingPasskey)
   }
 
+  const regionalizedLineHeight = useRegionalizedLineHeight()
+
   return (
     <OnboardingScreen
       Icon={WalletFilled}
@@ -144,8 +147,10 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
           <Flex row alignItems="center" gap="$spacing8">
             <Eye color="$accent1" size="$icon.20" />
             <Text
+              numberOfLines={1}
               color="$accent1"
               variant="buttonLabel1"
+              lineHeight={regionalizedLineHeight}
               onPress={(): Promise<void> => handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)}
             >
               {t('account.wallet.button.watch')}

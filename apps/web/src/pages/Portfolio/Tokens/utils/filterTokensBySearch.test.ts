@@ -1,4 +1,5 @@
-import { Currency } from '@uniswap/sdk-core'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { filterTokensBySearch } from '~/pages/Portfolio/Tokens/utils/filterTokensBySearch'
 import { TEST_TOKEN_1 } from '~/test-utils/constants'
 
@@ -11,18 +12,17 @@ import { doesTokenMatchSearchTerm } from 'uniswap/src/utils/search/doesTokenMatc
 
 const mockDoesTokenMatchSearchTerm = vi.mocked(doesTokenMatchSearchTerm)
 
-// Test data factory functions using test tokens
-const createMockCurrencyInfo = (
-  overrides: Partial<{ currencyId: string; currency: Currency }> = {},
-): { currencyId: string; currency: Currency } => ({
+const createMockCurrencyInfo = (overrides: Partial<CurrencyInfo> = {}): CurrencyInfo => ({
   currencyId: 'TEST',
-  currency: TEST_TOKEN_1, // Default to TEST_TOKEN_1
+  currency: TEST_TOKEN_1,
+  logoUrl: undefined,
   ...overrides,
 })
 
+/** Creates a token that satisfies Pick<TokenData, 'currencyInfo'> for filterTokensBySearch. */
 const createMockTokenWithInfo = (
-  overrides: Partial<{ currencyInfo: { currencyId: string; currency: Currency } | null }> = {},
-): { currencyInfo: { currencyId: string; currency: Currency } | null } => ({
+  overrides: Partial<Pick<TokenData, 'currencyInfo'>> = {},
+): Pick<TokenData, 'currencyInfo'> => ({
   currencyInfo: createMockCurrencyInfo(),
   ...overrides,
 })
@@ -126,9 +126,9 @@ describe('filterTokensBySearch', () => {
 
       expect(result).toEqual([token1, token3])
       expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledTimes(3)
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(token1, 'test')
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(token2, 'test')
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(token3, 'test')
+      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith({ currencyInfo: token1.currencyInfo }, 'test')
+      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith({ currencyInfo: token2.currencyInfo }, 'test')
+      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith({ currencyInfo: token3.currencyInfo }, 'test')
     })
 
     it('should return empty array when no tokens match', () => {
@@ -169,7 +169,7 @@ describe('filterTokensBySearch', () => {
       const token = createMockTokenWithInfo({
         currencyInfo: createMockCurrencyInfo({
           currencyId: 'ABC',
-          currency: TEST_TOKEN_1, // Use TEST_TOKEN_1 (symbol: 'ABC', name: 'Abc')
+          currency: TEST_TOKEN_1,
         }),
       })
 
@@ -181,23 +181,7 @@ describe('filterTokensBySearch', () => {
       })
 
       expect(result).toEqual([token])
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(token, 'abc')
-    })
-
-    it('should work with tokens that have null currencyInfo', () => {
-      const token = createMockTokenWithInfo({
-        currencyInfo: null,
-      })
-
-      mockDoesTokenMatchSearchTerm.mockReturnValue(false)
-
-      const result = filterTokensBySearch({
-        tokens: [token],
-        searchTerm: 'test',
-      })
-
-      expect(result).toEqual([])
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(token, 'test')
+      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith({ currencyInfo: token.currencyInfo }, 'abc')
     })
   })
 
@@ -236,7 +220,7 @@ describe('filterTokensBySearch', () => {
       })
 
       expect(result).toEqual([token])
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(token, 'test@#$%^&*()')
+      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith({ currencyInfo: token.currencyInfo }, 'test@#$%^&*()')
     })
 
     it('should handle very long search terms', () => {
@@ -250,19 +234,16 @@ describe('filterTokensBySearch', () => {
       })
 
       expect(result).toEqual([])
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(token, longSearchTerm)
+      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith({ currencyInfo: token.currencyInfo }, longSearchTerm)
     })
   })
 
   describe('type safety', () => {
     it('should work with generic token types', () => {
-      interface ExtendedToken {
-        currencyInfo: { currencyId: string; currency: Currency } | null
-        customProperty: string
-      }
+      type ExtendedToken = Pick<TokenData, 'currencyInfo'> & { customProperty: string }
 
       const extendedToken: ExtendedToken = {
-        currencyInfo: createMockCurrencyInfo(),
+        ...createMockTokenWithInfo(),
         customProperty: 'test',
       }
 
@@ -274,7 +255,7 @@ describe('filterTokensBySearch', () => {
       })
 
       expect(result).toEqual([extendedToken])
-      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith(extendedToken, 'test')
+      expect(mockDoesTokenMatchSearchTerm).toHaveBeenCalledWith({ currencyInfo: extendedToken.currencyInfo }, 'test')
     })
   })
 })

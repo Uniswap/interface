@@ -1113,13 +1113,10 @@ type Query {
   searchTokens(searchQuery: String!, chains: [Chain!], tokenSearchV2Enabled: Boolean): [Token]
   portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], fungibleIds: [String!], valueModifiers: [PortfolioValueModifier!]): [Portfolio]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
-  topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int): NftAssetConnection
-  nftCollections(chain: Chain, filter: NftCollectionsFilterInput, after: String, first: Int): NftCollectionConnection
   nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int, chains: [Chain!]): NftBalanceConnection
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
-  nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
   transactionNotification(chain: Chain!, address: String!, transactionHash: String!, isBridging: Boolean): TransactionNotification
 }
 

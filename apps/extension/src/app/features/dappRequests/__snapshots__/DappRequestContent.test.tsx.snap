@@ -20,7 +20,7 @@ exports[`DappRequestContent - Stale Request Rendering should match snapshot for 
             data-testid="dapp-icon-placeholder"
           >
             <span
-              class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-00C3A035 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+              class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-00C3A035 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
               data-disable-theme="true"
             >
               E
@@ -28,7 +28,7 @@ exports[`DappRequestContent - Stale Request Rendering should match snapshot for 
           </div>
         </div>
         <span
-          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
           data-disable-theme="true"
         >
           Transaction request
@@ -49,7 +49,7 @@ exports[`DappRequestContent - Stale Request Rendering should match snapshot for 
                 class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _justifyContent-flex-start _color-accent3"
               >
                 <span
-                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
+                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315"
                   data-disable-theme="true"
                   style="color: rgb(255, 55, 199);"
                 >
@@ -124,7 +124,7 @@ exports[`DappRequestContent - Stale Request Rendering should match snapshot for 
             data-testid="dapp-icon-placeholder"
           >
             <span
-              class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-00C3A035 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+              class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-00C3A035 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
               data-disable-theme="true"
             >
               E
@@ -132,7 +132,7 @@ exports[`DappRequestContent - Stale Request Rendering should match snapshot for 
           </div>
         </div>
         <span
-          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1262266530"
           data-disable-theme="true"
         >
           Transaction request
@@ -153,7 +153,7 @@ exports[`DappRequestContent - Stale Request Rendering should match snapshot for 
                 class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _justifyContent-flex-start _color-accent3"
               >
                 <span
-                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
+                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _fontSize-f-size-micr111 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1263414315"
                   data-disable-theme="true"
                   style="color: rgb(255, 55, 199);"
                 >
@@ -191,7 +191,7 @@ exports[`DappRequestContent - Stale Request Rendering should match snapshot for 
           </svg>
         </div>
         <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
           data-disable-theme="true"
         >
           This request has expired due to inactivity. Please try submitting again

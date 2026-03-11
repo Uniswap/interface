@@ -11,7 +11,6 @@ import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -41,8 +40,7 @@ export function TransactionAmountsReview({
     trade: { trade, indicativeTrade },
   } = acceptedDerivedSwapInfo
   const displayTrade = trade ?? indicativeTrade
-  const priceUXEnabled = usePriceUXEnabled()
-  const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo, priceUXEnabled)
+  const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo)
 
   // This should never happen. It's just to keep TS happy.
   if (!inputCurrencyAmount || !outputCurrencyAmount) {

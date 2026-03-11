@@ -1,5 +1,4 @@
 import { ConnectError } from '@connectrpc/connect'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { parse } from 'qs'
@@ -37,9 +36,6 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
     ConversionLead[],
     Dispatch<SetStateAction<ConversionLead[]>>,
   ]
-  const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
-  const isTwitterConversionTrackingEnabled = useFeatureFlag(FeatureFlags.TwitterConversionTracking)
-  const isGoogleConversionTrackingEnabled = useFeatureFlag(FeatureFlags.GoogleConversionTracking)
   const conversionProxy = useConversionProxy()
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: -conversionProxy.mutateAsync
@@ -52,16 +48,7 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
       // - No corresponding lead
       // - Wallet not connected
       // - Tracking has already been fired for a given event
-      // - Conversion tracking is not enabled
-      // - Google or Twitter conversion tracking is not enabled
-      if (
-        !lead ||
-        !accountAddress ||
-        lead.executedEvents.includes(eventId) ||
-        !isConversionTrackingEnabled ||
-        (platformIdType === PlatformIdType.Google && !isGoogleConversionTrackingEnabled) ||
-        (platformIdType === PlatformIdType.Twitter && !isTwitterConversionTrackingEnabled)
-      ) {
+      if (!lead || !accountAddress || lead.executedEvents.includes(eventId)) {
         return
       }
 
@@ -104,14 +91,7 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
       }
     },
     // TODO: Investigate why conversionProxy as a dependency causes a rendering loop
-    [
-      accountAddress,
-      conversionLeads,
-      isConversionTrackingEnabled,
-      isGoogleConversionTrackingEnabled,
-      isTwitterConversionTrackingEnabled,
-      setConversionLeads,
-    ],
+    [accountAddress, conversionLeads, setConversionLeads],
   )
 
   const trackConversions = useCallback(
@@ -120,10 +100,6 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
   )
 
   const initConversionTracking = useCallback(() => {
-    if (!isConversionTrackingEnabled) {
-      return
-    }
-
     const now = new Date().getTime()
     const newLeads: ConversionLead[] = []
 
@@ -165,7 +141,7 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
 
       setConversionLeads([...activeLeads, ...newLeads])
     }
-  }, [conversionLeads, isConversionTrackingEnabled, queryParams, setConversionLeads])
+  }, [conversionLeads, queryParams, setConversionLeads])
 
   return { trackConversions, initConversionTracking }
 }

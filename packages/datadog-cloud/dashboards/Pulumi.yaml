@@ -1,0 +1,6 @@
+name: datadog-dashboards-universe
+runtime:
+  name: nodejs
+  options:
+    packagemanager: bun
+description: Datadog dashboards for Universe services

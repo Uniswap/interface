@@ -20,7 +20,7 @@ export function useUpdateTokenColor(): void {
   const { tokenColor, tokenColorLoading } = useSrcColor({
     src: logoUrl,
     currencyName: tokenName,
-    backgroundColor: colors.surface2.val,
+    backgroundColor: colors.surface3.val,
   })
 
   useLayoutEffect(() => {

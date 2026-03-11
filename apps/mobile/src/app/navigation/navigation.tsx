@@ -87,8 +87,6 @@ import { RestoreMethodScreen } from 'src/screens/Import/RestoreMethodScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
-import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
-import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupPasswordConfirmScreen } from 'src/screens/Onboarding/CloudBackupPasswordConfirmScreen'
 import { CloudBackupPasswordCreateScreen } from 'src/screens/Onboarding/CloudBackupPasswordCreateScreen'
@@ -391,8 +389,6 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={UnitagStackNavigator} name={MobileScreens.UnitagStack} />
       <AppStack.Screen component={ExternalProfileScreen} name={MobileScreens.ExternalProfile} />
       <AppStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
-      <AppStack.Screen component={NFTItemScreen} name={MobileScreens.NFTItem} />
-      <AppStack.Screen component={NFTCollectionScreen} name={MobileScreens.NFTCollection} />
       <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />
       <AppStack.Screen component={ViewPrivateKeysScreen} name={MobileScreens.ViewPrivateKeys} />

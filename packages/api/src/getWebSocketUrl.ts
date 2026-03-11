@@ -4,14 +4,17 @@ import { Environment, getCurrentEnv } from 'utilities/src/environment/getCurrent
 
 /**
  * Returns the appropriate WebSocket URL based on the current environment.
- * When the entry gateway proxy is enabled, returns the BFF proxy path so the
- * Cloudflare Worker or Vercel edge function can forward the connection with
- * correct cookies/origin.
+ * When the entry gateway proxy is enabled (and not on Vercel), returns the BFF
+ * proxy path so the Cloudflare Worker can forward the connection with correct
+ * cookies/origin. On Vercel, WebSocket proxying is not supported (neither via
+ * serverless/edge functions nor external rewrites), so we return the direct
+ * backend URL — the WS connection will fail (no session cookies cross-origin)
+ * and the REST fallback (RestPriceBatcher via /entry-gateway) handles pricing.
  */
 export function getWebSocketUrl(): string {
   const config = getConfig()
 
-  if (config.enableEntryGatewayProxy) {
+  if (config.enableEntryGatewayProxy && !config.isVercelEnvironment) {
     return '/ws'
   }
 

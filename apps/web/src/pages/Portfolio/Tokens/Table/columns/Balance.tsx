@@ -1,25 +1,43 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useMemo } from 'react'
+import { Text, TextProps } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { EllipsisText } from '~/components/Table/styled'
 import { ValueWithFadedDecimals } from '~/pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
-import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
+import type { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 
-export const Balance = memo(function Balance({ balance }: { balance: TokenData['balance'] }) {
+export const Balance = memo(function Balance({
+  color,
+  balance,
+}: {
+  balance: Pick<TokenData, 'quantity' | 'symbol'>
+  color?: TextProps['color']
+}) {
+  const isMultichainUX = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const { formatNumberOrString } = useLocalizationContext()
 
   const formattedBalance = useMemo(() => {
-    return formatNumberOrString({ value: balance.value, type: NumberType.TokenNonTx })
-  }, [balance.value, formatNumberOrString])
+    return formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })
+  }, [balance.quantity, formatNumberOrString])
 
-  if (!balance.value && balance.value !== 0) {
+  if (!balance.quantity && balance.quantity !== 0) {
     return <EmptyTableCell />
   }
 
+  const textColor = color ?? '$neutral1'
+
   return (
-    <EllipsisText textAlign="right" variant="body3">
-      <ValueWithFadedDecimals value={formattedBalance} /> {balance.symbol}
+    <EllipsisText textAlign="right" variant="body3" color={textColor}>
+      {isMultichainUX ? (
+        <Text variant="body3" color={textColor}>
+          {formattedBalance}
+        </Text>
+      ) : (
+        <ValueWithFadedDecimals value={formattedBalance} />
+      )}{' '}
+      {balance.symbol}
     </EllipsisText>
   )
 })

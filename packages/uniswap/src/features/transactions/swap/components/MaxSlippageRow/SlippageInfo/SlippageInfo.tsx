@@ -9,11 +9,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SlippageInfoCaption } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/SlippageInfoCaption'
 import type { SlippageInfoProps } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/types'
-import { MaxSlippageTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/MaxSlippageTooltip'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
-import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
-import { NumberType } from 'utilities/src/format/types'
 import { isMobileApp } from 'utilities/src/platform'
 
 export function SlippageInfo({
@@ -24,19 +19,11 @@ export function SlippageInfo({
 }: SlippageInfoProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const priceUxEnabled = usePriceUXEnabled()
 
   // Avoid showing min out / max in UI when on an indicative quote.
   if (trade.indicative) {
     return <>{children}</>
   }
-
-  const formattedMinimumAmount = `${formatCurrencyAmount({
-    amount: trade.minAmountOut,
-    locale: 'en-US',
-    type: NumberType.TokenTx,
-    placeholder: '-',
-  })} ${trade.outputAmount.currency.symbol}`
 
   const captionContent = (
     <SlippageInfoCaption
@@ -48,7 +35,9 @@ export function SlippageInfo({
 
   return (
     <WarningInfo
-      infoButton={isMobileApp ? <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} /> : null}
+      infoButton={
+        isMobileApp ? <LearnMoreLink textColor="$neutral1" url={uniswapUrls.helpArticleUrls.swapSlippage} /> : null
+      }
       modalProps={{
         backgroundIconColor: colors.surface2.get(),
         captionComponent: captionContent,
@@ -60,17 +49,8 @@ export function SlippageInfo({
         zIndex: zIndexes.popover,
       }}
       tooltipProps={{
-        text: priceUxEnabled ? (
-          <MaxSlippageTooltip
-            receivedAmount={formattedMinimumAmount}
-            minimumAmount={formattedMinimumAmount}
-            autoSlippageEnabled={!isCustomSlippage}
-            currentSlippageTolerance={formattedMinimumAmount}
-          />
-        ) : (
-          captionContent
-        ),
-        maxWidth: priceUxEnabled ? 300 : 272,
+        text: captionContent,
+        maxWidth: 272,
         placement: 'top',
       }}
       analyticsTitle="Max Slippage"

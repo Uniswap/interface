@@ -79,22 +79,33 @@ function getInjectedConnectors({
   wallets: WalletWithInjectedStatus[]
   isEmbeddedWalletEnabled: boolean
 }): WalletWithInjectedStatus[] {
-  return wallets.filter((wallet) => {
-    if (
-      wallet.id === CONNECTION_PROVIDER_IDS.COINBASE_RDNS ||
-      wallet.name === CONNECTION_PROVIDER_NAMES.COINBASE_SOLANA_WALLET_ADAPTER
-    ) {
-      // Special-case: Ignore coinbase eip6963-injected connector and coinbase solana wallet adapter; CB is selected separately / not treated as an injector since it can always be accessed via the CB SDK connector.
-      return false
-    } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && !isEmbeddedWalletEnabled) {
-      // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately. This logic is updated with Embedded Wallet support where the Uniswap Extension is displayed with other connectors
-      return false
-    } else if (wallet.id === CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID) {
-      // Porto is also surfacing from the injected connectors list, but we don't want to show it in the wallet modal as a detected wallet
-      return false
-    }
-    return wallet.injected
-  })
+  return wallets
+    .filter((wallet) => {
+      if (
+        wallet.id === CONNECTION_PROVIDER_IDS.COINBASE_RDNS ||
+        wallet.name === CONNECTION_PROVIDER_NAMES.COINBASE_SOLANA_WALLET_ADAPTER
+      ) {
+        // Special-case: Ignore coinbase eip6963-injected connector and coinbase solana wallet adapter; CB is selected separately / not treated as an injector since it can always be accessed via the CB SDK connector.
+        return false
+      } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && !isEmbeddedWalletEnabled) {
+        // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately. This logic is updated with Embedded Wallet support where the Uniswap Extension is displayed with other connectors
+        return false
+      } else if (wallet.id === CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID) {
+        // Porto is also surfacing from the injected connectors list, but we don't want to show it in the wallet modal as a detected wallet
+        return false
+      }
+      return wallet.injected
+    })
+    .sort((a, b) => {
+      // prioritize uniswap extension over other injected connectors
+      if (a.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) {
+        return -1
+      } else if (b.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) {
+        return 1
+      } else {
+        return 0
+      }
+    })
 }
 
 function useSortByRecent(recentConnectorId: string | undefined) {
@@ -139,19 +150,15 @@ function shouldShowOnlyInjectedConnector(injectedWallets: ExternalWallet[]): boo
 
 function buildSecondaryConnectorsList({
   isMobileWeb,
-  isEmbeddedWalletEnabled,
   walletConnectWallet,
   coinbaseSdkWallet,
-  embeddedWalletWallet,
   binanceWalletWallet,
   portoWalletWallet,
   recentConnectorId,
 }: {
   isMobileWeb: boolean
-  isEmbeddedWalletEnabled: boolean
   walletConnectWallet?: ExternalWallet
   coinbaseSdkWallet?: ExternalWallet
-  embeddedWalletWallet?: ExternalWallet
   binanceWalletWallet?: ExternalWallet
   portoWalletWallet?: ExternalWallet
   recentConnectorId?: string
@@ -159,7 +166,6 @@ function buildSecondaryConnectorsList({
   const orderedWallets: ExternalWallet[] = []
 
   if (isMobileWeb) {
-    isEmbeddedWalletEnabled && embeddedWalletWallet && orderedWallets.push(embeddedWalletWallet)
     walletConnectWallet && orderedWallets.push(walletConnectWallet)
     coinbaseSdkWallet && orderedWallets.push(coinbaseSdkWallet)
     binanceWalletWallet && orderedWallets.push(binanceWalletWallet)
@@ -180,7 +186,6 @@ function buildPrimaryConnectorsList({
   isEmbeddedWalletEnabled,
   walletConnectWallet,
   coinbaseSdkWallet,
-  embeddedWalletWallet,
   binanceWalletWallet,
   portoWalletWallet,
   recentConnectorId,
@@ -189,7 +194,6 @@ function buildPrimaryConnectorsList({
   isEmbeddedWalletEnabled: boolean
   walletConnectWallet?: ExternalWallet
   coinbaseSdkWallet?: ExternalWallet
-  embeddedWalletWallet?: ExternalWallet // only undefined if embedded wallet is disabled
   binanceWalletWallet?: ExternalWallet // undefined if using injected connector from binance browser
   portoWalletWallet?: ExternalWallet
   recentConnectorId?: string
@@ -197,11 +201,9 @@ function buildPrimaryConnectorsList({
   const orderedWallets: ExternalWallet[] = []
 
   orderedWallets.push(...injectedWallets)
-  // If embedded wallet is enabled, add it to the top of the list
+  // If embedded wallet is enabled, only add non-injected wallet if it was recently used (last-used position 2)
   // Else we don't care about the primary/secondary split so show mobile connectors
-  if (isEmbeddedWalletEnabled && embeddedWalletWallet) {
-    orderedWallets.push(embeddedWalletWallet)
-    // If used recently, still add mobile wallets to primary
+  if (isEmbeddedWalletEnabled) {
     if (recentConnectorId === CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID) {
       coinbaseSdkWallet && orderedWallets.push(coinbaseSdkWallet)
     } else if (recentConnectorId === CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID) {
@@ -250,9 +252,6 @@ export function useOrderedWallets({
       isEmbeddedWalletEnabled,
     })
     const isBinanceBrowser = isBinanceWalletBrowser(wallets)
-    const embeddedWalletWallet = isEmbeddedWalletEnabled
-      ? getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID)
-      : undefined
     const coinbaseSdkWallet = getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID)
     const walletConnectWallet = getWalletWithId(wallets, CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
     const binanceWalletWallet = isBinanceBrowser
@@ -287,10 +286,8 @@ export function useOrderedWallets({
     if (showSecondaryConnectors) {
       orderedWallets = buildSecondaryConnectorsList({
         isMobileWeb,
-        isEmbeddedWalletEnabled,
         walletConnectWallet,
         coinbaseSdkWallet,
-        embeddedWalletWallet,
         binanceWalletWallet,
         portoWalletWallet,
         recentConnectorId,
@@ -301,7 +298,6 @@ export function useOrderedWallets({
         isEmbeddedWalletEnabled,
         walletConnectWallet,
         coinbaseSdkWallet,
-        embeddedWalletWallet,
         binanceWalletWallet,
         portoWalletWallet,
         recentConnectorId,

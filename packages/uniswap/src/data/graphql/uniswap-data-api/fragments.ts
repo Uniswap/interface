@@ -14,14 +14,15 @@ function currencyIdToGraphQLTokenVariables(currencyId: string): {
   chain: string
 } {
   const chainId = currencyIdToChain(currencyId)
-  const address = currencyIdToGraphQLAddress(currencyId)
 
   if (!chainId) {
-    throw new Error(`Unable to find chainId for currencyId: ${currencyId}`)
+    // Return variables that won't match any cache entry. Fragment hooks
+    // return empty data on cache miss — no throw needed.
+    return { address: null, chain: '' }
   }
 
   return {
-    address,
+    address: currencyIdToGraphQLAddress(currencyId),
     chain: toGraphQLChain(chainId),
   }
 }

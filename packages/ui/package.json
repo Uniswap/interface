@@ -34,6 +34,7 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-svg": "15.13.0",
     "react-native-webview": "13.13.5",
+    "react-remove-scroll": "2.7.2",
     "tamagui": "1.136.1",
     "utilities": "workspace:^",
     "uuid": "9.0.0",

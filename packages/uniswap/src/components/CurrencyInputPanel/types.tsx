@@ -43,7 +43,6 @@ export type CurrencyInputPanelProps = {
   onBlur?: TextInputProps['onBlur']
   resetSelection?: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
   tokenColor?: string
-  priceDifferencePercentage?: number
   customPanelStyle?: FlexProps
   /** Hide all preset buttons (both standard percentage presets and max button) */
   hidePresets?: boolean

@@ -78,7 +78,6 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
     navigateToReceive,
     navigateToExternalProfile,
     navigateToPoolDetails,
-    navigateToNftCollection,
     handleShareToken,
     navigateToAdvancedSettings,
   } = useWalletNavigation()
@@ -131,7 +130,6 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToNftDetails={navigateToNftDetails}
-      navigateToNftCollection={navigateToNftCollection}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
       navigateToAdvancedSettings={navigateToAdvancedSettings}

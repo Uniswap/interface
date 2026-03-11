@@ -27,6 +27,7 @@ export interface DepositInfo {
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
   currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
+  currencyMaxAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   error?: ReactNode
 }
 

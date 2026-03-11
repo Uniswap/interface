@@ -199,7 +199,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
     const { hash, data, nonce } = yield* call(submitTransaction, params)
     transaction = createTransaction(hash)
 
-    // For plans, individual tx state and validation is handled by that backend
+    // For plans, individual tx state and validation is handled by the backend
     if (!planId) {
       yield* put(addTransaction(transaction))
       if (step.txRequest.data !== data && onModification) {
@@ -210,7 +210,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
     const hash = yield* call(submitTransactionAsync, params)
     transaction = createTransaction(hash)
 
-    // For plans, individual tx state and validation is handled by that backend
+    // For plans, individual tx state and validation is handled by the backend
     if (!planId) {
       yield* put(addTransaction(transaction))
       if (onModification) {

@@ -8,20 +8,13 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { Flex, useIsDarkMode } from 'ui/src'
-import {
-  BRIDGED_ASSETS_CARD_BANNER,
-  BRIDGED_ASSETS_V2_CARD_BANNER_DARK,
-  BRIDGED_ASSETS_V2_CARD_BANNER_LIGHT,
-  PUSH_NOTIFICATIONS_CARD_BANNER,
-} from 'ui/src/assets'
+import { Flex } from 'ui/src'
+import { PUSH_NOTIFICATIONS_CARD_BANNER } from 'ui/src/assets'
 import { Buy } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import {
@@ -32,17 +25,8 @@ import {
 } from 'wallet/src/components/introCards/IntroCard'
 import { INTRO_CARD_MIN_HEIGHT, IntroCardStack } from 'wallet/src/components/introCards/IntroCardStack'
 import { useSharedIntroCards } from 'wallet/src/components/introCards/useSharedIntroCards'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import {
-  selectHasViewedBridgedAssetsCard,
-  selectHasViewedBridgedAssetsV2Card,
-  selectHasViewedNotificationsCard,
-} from 'wallet/src/features/behaviorHistory/selectors'
-import {
-  setHasViewedBridgedAssetsCard,
-  setHasViewedBridgedAssetsV2Card,
-  setHasViewedNotificationsCard,
-} from 'wallet/src/features/behaviorHistory/slice'
+import { selectHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/selectors'
+import { setHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type OnboardingIntroCardStackProps = {
@@ -56,7 +40,6 @@ export function OnboardingIntroCardStack({
   onCardsChange,
 }: OnboardingIntroCardStackProps): JSX.Element | null {
   const { t } = useTranslation()
-  const isDarkMode = useIsDarkMode()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
   const address = activeAccount.address
@@ -69,15 +52,6 @@ export function OnboardingIntroCardStack({
     notificationOnboardingCardEnabled &&
     notificationPermissionsEnabled === NotificationPermission.Disabled &&
     !hasViewedNotificationsCard
-
-  const hasViewedBridgedAssetCard = useSelector(selectHasViewedBridgedAssetsCard)
-  const shouldShowBridgedAssetCard = useFeatureFlag(FeatureFlags.BridgedAssetsBanner) && !hasViewedBridgedAssetCard
-
-  const hasViewedBridgedAssetsV2Card = useSelector(selectHasViewedBridgedAssetsV2Card)
-  const shouldShowBridgedAssetsV2Card =
-    useFeatureFlag(FeatureFlags.BridgedAssetsBannerV2) && !hasViewedBridgedAssetsV2Card
-
-  const { navigateToSwapFlow } = useWalletNavigation()
 
   const navigateToUnitagClaim = useCallback(() => {
     navigate(MobileScreens.UnitagStack, {
@@ -105,10 +79,6 @@ export function OnboardingIntroCardStack({
       },
     })
   }, [])
-
-  const navigateToBridgedAssetSwap = useCallback((): void => {
-    navigateToSwapFlow({ openTokenSelector: CurrencyField.OUTPUT, inputChainId: UniverseChainId.Unichain })
-  }, [navigateToSwapFlow])
 
   const { cards: sharedCards } = useSharedIntroCards({
     navigateToUnitagClaim,
@@ -168,59 +138,8 @@ export function OnboardingIntroCardStack({
       })
     }
 
-    if (shouldShowBridgedAssetsV2Card) {
-      output.push({
-        loggingName: OnboardingCardLoggingName.BridgedAsset,
-        graphic: {
-          type: IntroCardGraphicType.Image,
-          image: isDarkMode ? BRIDGED_ASSETS_V2_CARD_BANNER_DARK : BRIDGED_ASSETS_V2_CARD_BANNER_LIGHT,
-        },
-        title: t('onboarding.home.intro.bridgedAssets.title'),
-        description: t('onboarding.home.intro.bridgedAssets.description.v2'),
-        cardType: CardType.Dismissible,
-        onPress: () => {
-          navigateToBridgedAssetSwap()
-          dispatch(setHasViewedBridgedAssetsV2Card(true))
-        },
-        onClose: () => {
-          dispatch(setHasViewedBridgedAssetsV2Card(true))
-        },
-      })
-    }
-
-    if (shouldShowBridgedAssetCard) {
-      output.push({
-        loggingName: OnboardingCardLoggingName.BridgedAsset,
-        graphic: {
-          type: IntroCardGraphicType.Image,
-          image: BRIDGED_ASSETS_CARD_BANNER,
-        },
-        title: t('onboarding.home.intro.bridgedAssets.title'),
-        description: t('onboarding.home.intro.bridgedAssets.description'),
-        cardType: CardType.Dismissible,
-        onPress: () => {
-          navigateToBridgedAssetSwap()
-          dispatch(setHasViewedBridgedAssetsCard(true))
-        },
-        onClose: () => {
-          dispatch(setHasViewedBridgedAssetsCard(true))
-        },
-      })
-    }
-
     return output
-  }, [
-    showEmptyWalletState,
-    isSignerAccount,
-    sharedCards,
-    t,
-    isDarkMode,
-    dispatch,
-    navigateToBridgedAssetSwap,
-    shouldShowBridgedAssetCard,
-    shouldShowBridgedAssetsV2Card,
-    showEnableNotificationsCard,
-  ])
+  }, [showEmptyWalletState, isSignerAccount, sharedCards, t, dispatch, showEnableNotificationsCard])
 
   useEffect(() => {
     onCardsChange?.(cards.length > 0)

@@ -6,7 +6,7 @@ export function PortfolioAddressDisplay({ isCompact }: { isCompact: boolean }): 
   const showDemoView = useShowDemoView()
 
   if (showDemoView) {
-    return <DemoAddressDisplay />
+    return <DemoAddressDisplay isCompact={isCompact} />
   }
 
   return <ConnectedAddressDisplay isCompact={isCompact} />

@@ -48,7 +48,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
   const [search, setSearch] = useState('')
   const { chains: enabledChains } = useEnabledChains()
   const { chainId: urlChainId, isExternalWallet } = usePortfolioRoutes()
-  const isPortfolioTokensAllocationChartEnabled = useFeatureFlag(FeatureFlags.PortfolioTokensAllocationChart)
+  const isMultichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 
   // Parse search query to extract chain filter and search term
   const { chainFilter, searchTerm } = useMemo(() => {
@@ -138,7 +138,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
 
           {hasTokens || loading ? (
             <>
-              {isPortfolioTokensAllocationChartEnabled && (
+              {isMultichainTokenUxEnabled && (
                 <Trace section={SectionName.PortfolioTokensTab} element={ElementName.TokensAllocationChart}>
                   <TokensAllocationChart tokenData={tokenData || []} />
                 </Trace>

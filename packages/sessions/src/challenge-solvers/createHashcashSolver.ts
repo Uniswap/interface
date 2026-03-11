@@ -2,6 +2,7 @@ import { findProof, type HashcashChallenge } from '@universe/sessions/src/challe
 import type { HashcashWorkerChannelFactory } from '@universe/sessions/src/challenge-solvers/hashcash/worker/types'
 import type { ChallengeData, ChallengeSolver } from '@universe/sessions/src/challenge-solvers/types'
 import type { PerformanceTracker } from '@universe/sessions/src/performance/types'
+import type { Logger } from 'utilities/src/logger/logger'
 import { z } from 'zod'
 
 /** Error type for analytics classification */
@@ -78,6 +79,10 @@ interface CreateHashcashSolverContext {
    * Callback for analytics when solve completes (success or failure)
    */
   onSolveCompleted?: (data: HashcashSolveAnalytics) => void
+  /**
+   * Optional logger for operational observability (Datadog).
+   */
+  getLogger?: () => Logger
 }
 
 // Zod schema for hashcash challenge validation
@@ -217,25 +222,35 @@ function createHashcashSolver(ctx: CreateHashcashSolverContext): ChallengeSolver
       }
 
       // Report success
-      ctx.onSolveCompleted?.({
+      const data: HashcashSolveAnalytics = {
         durationMs: ctx.performanceTracker.now() - startTime,
         success: true,
         difficulty,
         iterationCount: proof.attempts,
         usedWorker,
-      })
+      }
+      ctx.onSolveCompleted?.(data)
+      ctx.getLogger?.().info('sessions', 'hashcashSolved', 'Hashcash solve completed', data)
 
       // Return the solution in the format expected by backend: "${subject}:${nonce}:${counter}"
       return `${challenge.subject}:${challenge.nonce}:${proof.counter}`
     } catch (error) {
       // Report failure
-      ctx.onSolveCompleted?.({
+      const data: HashcashSolveAnalytics = {
         durationMs: ctx.performanceTracker.now() - startTime,
         success: false,
         errorType: classifyError(error),
         errorMessage: error instanceof Error ? error.message : String(error),
         difficulty,
         usedWorker,
+      }
+      ctx.onSolveCompleted?.(data)
+      ctx.getLogger?.().warn('sessions', 'hashcashSolved', 'Hashcash solve failed', data)
+      ctx.getLogger?.().error(error, {
+        tags: {
+          file: 'createHashcashSolver.ts',
+          function: 'solve',
+        },
       })
       throw error
     }

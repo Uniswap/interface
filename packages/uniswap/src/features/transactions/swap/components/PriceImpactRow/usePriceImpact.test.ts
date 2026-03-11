@@ -58,7 +58,7 @@ describe('usePriceImpact', () => {
 
     const { result } = renderHook(() => usePriceImpact({ derivedSwapInfo: swapInfo }))
 
-    expect(result.current.formattedPriceImpact).toEqual('+0.32%')
+    expect(result.current.formattedPriceImpact).toEqual('0.32%')
   })
 
   it('should return classic trade price impact directly', () => {
@@ -69,7 +69,7 @@ describe('usePriceImpact', () => {
 
     const { result } = renderHook(() => usePriceImpact({ derivedSwapInfo: swapInfo }))
 
-    expect(result.current.formattedPriceImpact).toEqual('-5.00%')
+    expect(result.current.formattedPriceImpact).toEqual('5%')
   })
 
   it('should handle negative price impact formatting', () => {
@@ -88,6 +88,6 @@ describe('usePriceImpact', () => {
 
     const { result } = renderHook(() => usePriceImpact({ derivedSwapInfo: swapInfo }))
 
-    expect(result.current.formattedPriceImpact).toEqual('-2.99%')
+    expect(result.current.formattedPriceImpact).toEqual('2.99%')
   })
 })

@@ -112,13 +112,7 @@ const resolvers: Resolvers = {
 
 ###### Combining fixtures
 
-Fixtures can be used to override fields in other fixtures as shown in the example below.
-
-```tsx
-const collection = nftCollection({
-  nftContracts: [nftContract({ chain: Chain.Ethereum })],
-});
-```
+Fixtures can be used to override fields in other fixtures
 
 ### 2.2. Mocking GraphQL query resolvers
 

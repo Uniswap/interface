@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Ether, Token } from '@uniswap/sdk-core'
 import type { TokenIdentifier } from '@universe/prices'
 import {
   createPriceKey,
@@ -47,6 +47,15 @@ describe('tokenIdentifier utilities', () => {
       expect(result).toEqual({
         chainId: 1,
         address: WETH_ADDRESS.toLowerCase(),
+      })
+    })
+
+    it('normalizes native currency to zero address', () => {
+      const eth = Ether.onChain(1)
+      const result = normalizeToken(eth)
+      expect(result).toEqual({
+        chainId: 1,
+        address: '0x0000000000000000000000000000000000000000',
       })
     })
 

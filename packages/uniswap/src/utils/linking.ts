@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
-import { UNISWAP_WEB_URL, uniswapUrls } from 'uniswap/src/constants/urls'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
@@ -169,18 +169,15 @@ export function getExplorerLink({
 
 export function getNftExplorerLink({
   chainId,
-  fallbackChainId,
   contractAddress,
   tokenId,
 }: {
-  chainId?: UniverseChainId
-  fallbackChainId: UniverseChainId
+  chainId: UniverseChainId
   contractAddress: string
   tokenId: string
 }): string {
-  const targetChainId = chainId ?? fallbackChainId
   return getExplorerLink({
-    chainId: targetChainId,
+    chainId,
     data: `${contractAddress}/${tokenId}`,
     type: ExplorerDataType.NFT,
   })
@@ -265,12 +262,8 @@ export async function openOfframpPendingSupportLink(): Promise<void> {
   return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
 }
 
-export function getProfileUrl(walletAddress: string): string {
-  return `${uniswapUrls.webInterfaceAddressUrl}/${walletAddress}`
-}
-
 export function getPortfolioUrl(walletAddress: string): string {
-  return `${UNISWAP_WEB_URL}/portfolio/${walletAddress}`
+  return `${uniswapUrls.webInterfacePortfolioUrl}/${walletAddress}`
 }
 
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'

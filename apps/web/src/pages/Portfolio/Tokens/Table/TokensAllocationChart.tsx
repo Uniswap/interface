@@ -1,29 +1,73 @@
 import { useMemo } from 'react'
+import { useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   PercentageAllocationChart,
   PercentageAllocationItem,
 } from '~/components/PercentageAllocationChart/PercentageAllocationChart'
+import { useSrcColor } from '~/hooks/useColor'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 
-interface TokenBreakdown {
-  currencyInfo: CurrencyInfo | null
-  percentage: number
-  color: string
+const MAX_TOKENS_FOR_EXTRACTED_COLOR = 15
+
+type TokenBreakdown = TokenData & { percentage: number; color: string }
+
+/** Returns extracted token colors for visible tokens; uses gray when not yet available. */
+function useExtractedTokenColors(tokenData: TokenData[]): string[] {
+  const colors = useSporeColors()
+  const gray = colors.neutral3.val
+
+  const results = Array.from({ length: MAX_TOKENS_FOR_EXTRACTED_COLOR }, (_, i) =>
+    // biome-ignore lint/correctness/useHookAtTopLevel: fixed-length loop, same 15 hook calls every render
+    useSrcColor({
+      src: tokenData[i]?.currencyInfo?.logoUrl ?? undefined,
+      currencyName: tokenData[i]?.currencyInfo?.currency?.name,
+    }),
+  )
+
+  // Snapshot with value-based deps so reference is stable when colors/loading unchanged
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally depend on primitive key so snapshot is stable for downstream memo
+  const resultsSnapshot = useMemo(
+    () => results.map((r) => ({ tokenColor: r.tokenColor, tokenColorLoading: r.tokenColorLoading })),
+    [gray, results.map((r) => `${r.tokenColor ?? ''}-${r.tokenColorLoading}`).join('|')],
+  )
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: value-based deps (length + snapshot) so returned array is stable and portfolioBreakdown memo can cache
+  return useMemo(
+    () =>
+      tokenData.map((_, i) => {
+        if (i >= MAX_TOKENS_FOR_EXTRACTED_COLOR) {
+          return gray
+        }
+        const { tokenColor, tokenColorLoading } = resultsSnapshot[i]
+        if (tokenColorLoading || tokenColor == null) {
+          return gray
+        }
+        return tokenColor
+      }),
+    [gray, tokenData.length, resultsSnapshot],
+  )
 }
 
 // Generate portfolio breakdown from tokens data
-function generatePortfolioBreakdown(tokens: TokenData[], totalValue: number): TokenBreakdown[] {
+function generatePortfolioBreakdown({
+  tokens,
+  totalValue,
+  tokenColors,
+}: {
+  tokens: TokenData[]
+  totalValue: number
+  tokenColors: string[]
+}): TokenBreakdown[] {
   // Calculate percentages for all tokens (individual network instances)
   const allTokens = tokens.map((token, index) => {
-    const tokenValue = token.value
+    const tokenValue = token.totalValue
 
     return {
       ...token,
       percentage: Number.parseFloat(((tokenValue / totalValue) * 100).toFixed(3)),
-      color: getTokenColor(index),
+      color: tokenColors[index],
     }
   })
 
@@ -39,36 +83,23 @@ function generatePortfolioBreakdown(tokens: TokenData[], totalValue: number): To
   return allTokens
 }
 
-function getTokenColor(index: number): string {
-  const colors = [
-    '#10B981', // Green
-    '#3B82F6', // Blue
-    '#8B5CF6', // Purple
-    '#F59E0B', // Amber
-    '#EF4444', // Red
-    '#06B6D4', // Cyan
-    '#84CC16', // Lime
-    '#F97316', // Orange
-  ]
-  return colors[index % colors.length]
-}
-
 export function TokensAllocationChart({ tokenData }: { tokenData: TokenData[] }): JSX.Element {
+  const tokenColors = useExtractedTokenColors(tokenData)
   const totalPortfolioValue = useMemo(() => {
-    return tokenData.reduce((sum, token) => sum + token.value, 0)
+    return tokenData.reduce((sum, token) => sum + token.totalValue, 0)
   }, [tokenData])
 
-  const portfolioBreakdown = generatePortfolioBreakdown(tokenData, totalPortfolioValue)
+  const portfolioBreakdown = useMemo(
+    () => generatePortfolioBreakdown({ tokens: tokenData, totalValue: totalPortfolioValue, tokenColors }),
+    [tokenData, totalPortfolioValue, tokenColors],
+  )
 
-  // Convert portfolio breakdown to generic chart items
   const chartItems: PercentageAllocationItem[] = useMemo(() => {
-    return portfolioBreakdown.map((token, i) => {
-      const label = token.currencyInfo?.currency.symbol || 'Unknown'
-      const id = token.currencyInfo?.currencyId || `token-${i}`
+    return portfolioBreakdown.map((token) => {
+      const label = token.symbol || 'Unknown'
+      const id = token.currencyInfo.currencyId
 
-      const icon = token.currencyInfo ? (
-        <NetworkLogo key={id} chainId={token.currencyInfo.currency.chainId} size={iconSizes.icon12} />
-      ) : undefined
+      const icon = <NetworkLogo key={id} chainId={token.currencyInfo.currency.chainId} size={iconSizes.icon12} />
 
       return {
         id,

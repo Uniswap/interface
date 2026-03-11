@@ -7,110 +7,137 @@ import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
 import { isWebPlatform } from 'utilities/src/platform'
 
+type TamaguiTextProps = GetProps<typeof TamaguiText>
+
+// When the user's language is set to Vietnamese, some strings are truncated because the line height
+// doesn't account for Vietnamese diacritical marks that extend beyond standard character bounds.
+// Setting lineHeight param to 'unset' skips the line height to prevent truncation.
+function createTextVariant({ fontFamily, fontSize, fontWeight, lineHeight, maxFontSizeMultiplier }: TamaguiTextProps) {
+  return (_variant: string, context: { props: Record<string, unknown> }): Record<string, unknown> => {
+    const baseStyles = {
+      fontFamily,
+      fontSize,
+      fontWeight,
+      maxFontSizeMultiplier,
+    }
+
+    const lineHeightValue = context.props['lineHeight']
+
+    if (lineHeightValue !== 'unset') {
+      return {
+        ...baseStyles,
+        lineHeight,
+      }
+    }
+
+    return baseStyles
+  }
+}
+
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
   wordWrap: 'break-word',
 
   variants: {
     variant: {
-      heading1: {
+      heading1: createTextVariant({
         fontFamily: '$heading',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading1.maxFontSizeMultiplier,
-      },
-      heading2: {
+      }),
+      heading2: createTextVariant({
         fontFamily: '$heading',
         fontSize: '$medium',
         lineHeight: '$medium',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading2.maxFontSizeMultiplier,
-      },
-      heading3: {
+      }),
+      heading3: createTextVariant({
         fontFamily: '$heading',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading3.maxFontSizeMultiplier,
-      },
-      subheading1: {
+      }),
+      subheading1: createTextVariant({
         fontFamily: '$subHeading',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.subheading1.maxFontSizeMultiplier,
-      },
-      subheading2: {
+      }),
+      subheading2: createTextVariant({
         fontFamily: '$subHeading',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.subheading2.maxFontSizeMultiplier,
-      },
-      body1: {
+      }),
+      body1: createTextVariant({
         fontFamily: '$body',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body1.maxFontSizeMultiplier,
-      },
-      body2: {
+      }),
+      body2: createTextVariant({
         fontFamily: '$body',
         fontSize: '$medium',
         lineHeight: '$medium',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body2.maxFontSizeMultiplier,
-      },
-      body3: {
+      }),
+      body3: createTextVariant({
         fontFamily: '$body',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body3.maxFontSizeMultiplier,
-      },
-      body4: {
+      }),
+      body4: createTextVariant({
         fontFamily: '$body',
         fontSize: '$micro',
         lineHeight: '$micro',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body4.maxFontSizeMultiplier,
-      },
-      buttonLabel1: {
+      }),
+      buttonLabel1: createTextVariant({
         fontFamily: '$button',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel1.maxFontSizeMultiplier,
-      },
-      buttonLabel2: {
+      }),
+      buttonLabel2: createTextVariant({
         fontFamily: '$button',
         fontSize: '$medium',
         lineHeight: '$medium',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel2.maxFontSizeMultiplier,
-      },
-      buttonLabel3: {
+      }),
+      buttonLabel3: createTextVariant({
         fontFamily: '$button',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel3.maxFontSizeMultiplier,
-      },
-      buttonLabel4: {
+      }),
+      buttonLabel4: createTextVariant({
         fontFamily: '$button',
         fontSize: '$micro',
         lineHeight: '$micro',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel4.maxFontSizeMultiplier,
-      },
-      monospace: {
+      }),
+      monospace: createTextVariant({
         fontFamily: '$monospace',
         fontSize: fonts.monospace.fontSize,
         lineHeight: fonts.monospace.lineHeight,
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.monospace.maxFontSizeMultiplier,
-      },
+      }),
     },
   } as const,
 

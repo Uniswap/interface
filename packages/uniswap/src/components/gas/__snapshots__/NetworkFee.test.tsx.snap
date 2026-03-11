@@ -16,7 +16,7 @@ exports[`NetworkFee > renders a NetworkFee in a loading state 1`] = `
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
         >
           <span
-            class="font_body _display--webkit-box _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _WebkitLineClamp-3 _WebkitBoxOrient-vertical _overflowX-hidden _overflowY-hidden _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            class="font_body _display--webkit-box _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _WebkitLineClamp-3 _WebkitBoxOrient-vertical _overflowX-hidden _overflowY-hidden _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             transaction.networkCost.label
@@ -92,7 +92,7 @@ exports[`NetworkFee > renders a NetworkFee in an error state 1`] = `
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
         >
           <span
-            class="font_body _display--webkit-box _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _WebkitLineClamp-3 _WebkitBoxOrient-vertical _overflowX-hidden _overflowY-hidden _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            class="font_body _display--webkit-box _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _WebkitLineClamp-3 _WebkitBoxOrient-vertical _overflowX-hidden _overflowY-hidden _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             transaction.networkCost.label
@@ -148,7 +148,7 @@ exports[`NetworkFee > renders a NetworkFee in an error state 1`] = `
             </div>
           </div>
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             common.text.notAvailable
@@ -179,7 +179,7 @@ exports[`NetworkFee > renders a NetworkFee normally 1`] = `
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
         >
           <span
-            class="font_body _display--webkit-box _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _WebkitLineClamp-3 _WebkitBoxOrient-vertical _overflowX-hidden _overflowY-hidden _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            class="font_body _display--webkit-box _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _flexShrink-1 _WebkitLineClamp-3 _WebkitBoxOrient-vertical _overflowX-hidden _overflowY-hidden _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             transaction.networkCost.label
@@ -235,7 +235,7 @@ exports[`NetworkFee > renders a NetworkFee normally 1`] = `
             </div>
           </div>
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
             data-disable-theme="true"
           >
             $1

@@ -111,7 +111,7 @@
     "@uniswap/client-explore": "0.0.17",
     "@uniswap/client-notification-service": "0.0.11",
     "@uniswap/ethers-rs-mobile": "0.0.5",
-    "@uniswap/sdk-core": "7.10.1",
+    "@uniswap/sdk-core": "7.11.0",
     "@universe/api": "workspace:^",
     "@universe/gating": "workspace:^",
     "@universe/hashcash-native": "workspace:^",

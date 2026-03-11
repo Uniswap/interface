@@ -1,10 +1,9 @@
-import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   approximateNumberFromRaw,
   computeFdvBidTokenRaw,
   formatCompactFromRaw,
 } from '~/components/Toucan/Auction/utils/fixedPointFdv'
-import type { AuctionWithCurrencyInfo } from '~/state/explore/topAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 
 export interface ProjectedFdvTableValue {
   raw: bigint // Raw FDV in bid token for computation
@@ -44,24 +43,20 @@ export function computeCompletedAuctionMarketFdvUsd({
  */
 export function computeProjectedFdvTableValue({
   auction,
-  bidTokenCurrencyInfo,
-  bidTokenUsdPrice,
   auctionTokenUsdPrice,
-  isCompleted,
 }: {
-  auction: AuctionWithCurrencyInfo
-  bidTokenCurrencyInfo: Maybe<CurrencyInfo>
-  bidTokenUsdPrice: number | undefined
+  auction: EnrichedAuction
   /** USD price of the auction token from market data */
   auctionTokenUsdPrice?: number
-  /** Whether this auction has ended */
-  isCompleted?: boolean
 }): ProjectedFdvTableValue {
   const fallback: ProjectedFdvTableValue = {
     raw: 0n,
     usd: undefined,
     formattedBidToken: '—',
   }
+
+  const bidTokenDecimals = auction.auction?.currencyTokenDecimals
+  const bidTokenSymbol = auction.auction?.currencyTokenSymbol
 
   try {
     if (!auction.auction) {
@@ -75,12 +70,13 @@ export function computeProjectedFdvTableValue({
     }
 
     // For completed auctions, prefer the actual market price over clearing price
-    if (isCompleted && auctionTokenUsdPrice !== undefined) {
+    if (auction.timeRemaining.isCompleted && auctionTokenUsdPrice !== undefined) {
       const usd = computeCompletedAuctionMarketFdvUsd({
         totalSupplyRaw: totalSupply,
-        auctionTokenDecimals: auction.currencyInfo?.currency.decimals,
+        auctionTokenDecimals: auction.auction.tokenDecimals,
         auctionTokenUsdPrice,
       })
+
       if (usd === undefined) {
         return fallback
       }
@@ -93,7 +89,7 @@ export function computeProjectedFdvTableValue({
     }
 
     // For active auctions (or completed without market price), use clearing price
-    if (!bidTokenCurrencyInfo) {
+    if (!bidTokenDecimals || !bidTokenSymbol) {
       return fallback
     }
 
@@ -106,23 +102,23 @@ export function computeProjectedFdvTableValue({
     // Compute raw FDV in bid token units
     const raw = computeFdvBidTokenRaw({
       priceQ96,
-      bidTokenDecimals: bidTokenCurrencyInfo.currency.decimals,
+      bidTokenDecimals,
       totalSupplyRaw: totalSupply,
-      auctionTokenDecimals: auction.currencyInfo?.currency.decimals,
+      auctionTokenDecimals: auction.auction.tokenDecimals,
     })
 
     // Convert to USD
     const usd =
-      bidTokenUsdPrice !== undefined
-        ? approximateNumberFromRaw({ raw, decimals: bidTokenCurrencyInfo.currency.decimals }) * bidTokenUsdPrice
+      auction.auction.currencyPriceUsd !== undefined
+        ? approximateNumberFromRaw({ raw, decimals: bidTokenDecimals }) * Number(auction.auction.currencyPriceUsd)
         : undefined
 
     // Format bid token value
     const formattedAmount = formatCompactFromRaw({
       raw,
-      decimals: bidTokenCurrencyInfo.currency.decimals,
+      decimals: bidTokenDecimals,
     })
-    const formattedBidToken = `${formattedAmount} ${bidTokenCurrencyInfo.currency.symbol}`
+    const formattedBidToken = `${formattedAmount} ${bidTokenSymbol}`
 
     return {
       raw,

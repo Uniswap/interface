@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, styled, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, styled, Text, useIsDarkMode } from 'ui/src'
+import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import { ChartTooltip } from '~/components/Charts/ChartTooltip'
-import { MissingDataBars } from '~/components/Table/icons'
 
 const StaleBannerWrapper = styled(ChartTooltip, {
   borderRadius: '$rounded16',
@@ -14,7 +14,6 @@ const StaleBannerWrapper = styled(ChartTooltip, {
 })
 
 export function StaleBanner() {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const isDarkTheme = useIsDarkMode()
 
@@ -22,7 +21,7 @@ export function StaleBanner() {
   return (
     <StaleBannerWrapper data-testid="chart-stale-banner" borderWidth={isDarkTheme ? 0 : '$borderWidth1'}>
       <Flex row gap="$gap8">
-        <MissingDataBars color={colors.neutral1.val} />
+        <ChartBarCrossed color="$neutral1" size="$icon.16" />
         <Text variant="body3" color="$neutral1">
           {t('common.dataOutdated')}
         </Text>

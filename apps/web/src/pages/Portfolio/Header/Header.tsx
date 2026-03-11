@@ -8,11 +8,11 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
+import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioAddressDisplay } from '~/pages/Portfolio/Header/PortfolioAddressDisplay/PortfolioAddressDisplay'
 import { SharePortfolioButton } from '~/pages/Portfolio/Header/SharePortfolioButton'
 import { PortfolioTabs } from '~/pages/Portfolio/Header/Tabs'
-import { useShouldHeaderBeCompact } from '~/pages/Portfolio/Header/useShouldHeaderBeCompact'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
@@ -46,7 +46,7 @@ export function PortfolioHeader({ scrollY }: PortfolioHeaderProps) {
   const { tab, chainId: currentChainId, externalAddress, isExternalWallet } = usePortfolioRoutes()
   const activeAddresses = useActiveAddresses()
   const showDemoView = useShowDemoView()
-  const isCompact = useShouldHeaderBeCompact(scrollY)
+  const isCompact = useScrollCompact({ scrollY })
   const headerHeight = useAppHeaderHeight()
   const buttonSize = media.md || isCompact ? 'small' : 'medium'
 

@@ -9,12 +9,13 @@ import {
   calculateMaxZoom,
   calculateRangeViewport,
 } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/rangeViewportUtils'
-import { snapTickToSpacing } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
 import { getCandlestickPriceBounds } from '~/components/Charts/PriceChart/utils'
 import { RangeAmountInputPriceMode } from '~/components/Liquidity/Create/types'
+import { tryParseV4Tick } from '~/components/Liquidity/utils/priceRangeInfo'
 
 interface ViewActionCallbacks {
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
+  onChartError: (error: string) => void
 }
 
 export const createViewActions = ({
@@ -91,9 +92,9 @@ export const createViewActions = ({
 
   reset: (params?: { animate?: boolean; minTick?: number | null; maxTick?: number | null }) => {
     const { animate = true, minTick: providedMinTick, maxTick: providedMaxTick } = params ?? {}
-    const { actions, isFullRange, renderingContext } = get()
+    const { actions, isFullRange, renderingContext, baseCurrency, quoteCurrency } = get()
 
-    if (!renderingContext) {
+    if (!renderingContext || !baseCurrency || !quoteCurrency) {
       return
     }
 
@@ -130,23 +131,30 @@ export const createViewActions = ({
     const minVisiblePrice = currentPrice - viewportRange / 2
     const maxVisiblePrice = currentPrice + viewportRange / 2
 
-    // Take 20%-80% of the viewport range (middle 60%)
     const visibleRange = maxVisiblePrice - minVisiblePrice
 
-    // Calculate and store the default 20%-80% range
+    // Take the 20%-80% of the viewport range (middle 60%) as the default range
     const calculatedDefaultMinPrice = minVisiblePrice + visibleRange * 0.2
     const calculatedDefaultMaxPrice = minVisiblePrice + visibleRange * 0.8
 
-    // Convert price ratios to tick offsets from currentTick
-    // This handles token decimals correctly because: tick_offset = log(price_ratio) / log(1.0001)
-    const minPriceRatio = calculatedDefaultMinPrice / currentPrice
-    const maxPriceRatio = calculatedDefaultMaxPrice / currentPrice
-    const minTickOffset = Math.round(Math.log(minPriceRatio) / Math.log(1.0001))
-    const maxTickOffset = Math.round(Math.log(maxPriceRatio) / Math.log(1.0001))
+    // Convert display prices to ticks using the SDK
+    const defaultMinTick = tryParseV4Tick({
+      baseToken: baseCurrency,
+      quoteToken: quoteCurrency,
+      value: String(Math.max(calculatedDefaultMinPrice, 0)),
+      tickSpacing,
+    })
+    const defaultMaxTick = tryParseV4Tick({
+      baseToken: baseCurrency,
+      quoteToken: quoteCurrency,
+      value: String(Math.max(calculatedDefaultMaxPrice, 0)),
+      tickSpacing,
+    })
 
-    // Apply offsets to currentTick and snap to tickSpacing
-    const defaultMinTick = snapTickToSpacing(currentTick + minTickOffset, tickSpacing)
-    const defaultMaxTick = snapTickToSpacing(currentTick + maxTickOffset, tickSpacing)
+    if (defaultMinTick === undefined || defaultMaxTick === undefined) {
+      callbacks.onChartError('Failed to calculate default ticks')
+      return
+    }
 
     // Store default ticks in state
     set((state) => ({

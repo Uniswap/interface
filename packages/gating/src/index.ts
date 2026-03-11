@@ -14,6 +14,7 @@ export {
   AllowedV4WethHookAddressesConfigKey,
   BlockedAsyncSubmissionChainIdsConfigKey,
   ChainsConfigKey,
+  CreateAuctionConfigKey,
   DatadogIgnoredErrorsConfigKey,
   DatadogSessionSampleRateKey,
   DynamicConfigs,
@@ -40,7 +41,6 @@ export {
   LayerProperties,
   Layers,
   NativeTokenPercentageBufferProperties,
-  PriceUxUpdateProperties,
   PrivateRpcProperties,
   UnichainFlashblocksProperties,
 } from '@universe/gating/src/experiments'

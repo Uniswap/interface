@@ -4,22 +4,8 @@ import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapForm
 import { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
-import type { MockedFunction } from 'vitest'
-
-// Mock dependencies
-vi.mock('uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled', () => ({
-  usePriceUXEnabled: vi.fn(),
-}))
-
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-
-const mockUsePriceUXEnabled = usePriceUXEnabled as MockedFunction<typeof usePriceUXEnabled>
 
 describe('GasInfoRow', () => {
-  beforeEach(() => {
-    mockUsePriceUXEnabled.mockReturnValue(false)
-  })
-
   const createGasFeeResult = (overrides: Partial<GasFeeResult> = {}): GasFeeResult => ({
     value: '1000000000000000',
     isLoading: false,
@@ -119,9 +105,7 @@ describe('GasInfoRow', () => {
       expect(queryAllByText('Free').length).toBeGreaterThan(0)
     })
 
-    it('should display UniswapX savings with priceUX enabled', () => {
-      mockUsePriceUXEnabled.mockReturnValue(true)
-
+    it('should display UniswapX savings', () => {
       const gasInfo = createGasInfo({
         fiatPriceFormatted: 'Free',
         uniswapXGasFeeInfo: {

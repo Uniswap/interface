@@ -6,7 +6,6 @@ import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { isWebPlatform } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -36,8 +35,6 @@ export function WarningInfo({
   const trace = useTrace()
   const hasHoverBeenTracked = useRef<boolean>(false)
 
-  const isPriceUXEnabled = usePriceUXEnabled()
-
   const [showModal, setShowModal] = useState(false)
 
   const handleTooltipOpenChange = useCallback(
@@ -58,10 +55,9 @@ export function WarningInfo({
       sendAnalyticsEvent(UniswapEventName.TooltipOpened, {
         ...trace,
         tooltip_name: analyticsTitle,
-        is_price_ux_enabled: isPriceUXEnabled,
       })
     },
-    [trace, analyticsTitle, isPriceUXEnabled],
+    [trace, analyticsTitle],
   )
 
   if (isWebPlatform) {

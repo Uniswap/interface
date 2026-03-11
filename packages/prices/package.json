@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@tanstack/react-query": "5.90.20",
-    "@uniswap/sdk-core": "7.10.1",
+    "@uniswap/sdk-core": "7.11.0",
     "@universe/api": "workspace:^",
     "@universe/websocket": "workspace:^",
     "utilities": "workspace:^"

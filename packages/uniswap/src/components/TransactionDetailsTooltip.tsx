@@ -108,15 +108,7 @@ const LineItemValue = ({
   )
 }
 
-const Description = ({
-  text,
-  learnMoreUrl,
-  learnMorePinkColor = true,
-}: {
-  text: string
-  learnMoreUrl?: string
-  learnMorePinkColor?: boolean
-}): JSX.Element => {
+const Description = ({ text, learnMoreUrl }: { text: string; learnMoreUrl?: string }): JSX.Element => {
   const { t } = useTranslation()
 
   return (
@@ -126,7 +118,7 @@ const Description = ({
       </Text>
       {learnMoreUrl && (
         <Anchor href={learnMoreUrl} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
-          <Text variant="buttonLabel4" color={learnMorePinkColor ? '$accent1' : '$neutral1'}>
+          <Text variant="buttonLabel4" color="$neutral1">
             {t('common.button.learn')}
           </Text>
         </Anchor>

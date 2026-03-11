@@ -239,6 +239,176 @@ describe('SubscriptionManager', () => {
       ])
     })
 
+    it('does not unsubscribe when other callback-less subscribers remain', async () => {
+      const { manager, handler } = createTestManager()
+      manager.setConnectionId('conn-123')
+
+      const unsub1 = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+      const unsub2 = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+
+      await flushMicrotasks()
+
+      unsub1()
+
+      await flushMicrotasks()
+
+      // Second subscriber still active — should NOT unsubscribe
+      expect(handler.unsubscribeBatch).not.toHaveBeenCalled()
+      expect(handler.unsubscribe).not.toHaveBeenCalled()
+
+      // Subscription should still be tracked
+      expect(manager.hasActiveSubscriptions()).toBe(true)
+      expect(manager.getActiveSubscriptions()[0]?.subscriberCount).toBe(1)
+    })
+
+    it('unsubscribes when last callback-less subscriber leaves', async () => {
+      const { manager, handler } = createTestManager()
+      manager.setConnectionId('conn-123')
+
+      const unsub1 = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+      const unsub2 = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+
+      await flushMicrotasks()
+
+      unsub1()
+      unsub2()
+
+      await flushMicrotasks()
+
+      expect(handler.unsubscribeBatch).toHaveBeenCalledWith('conn-123', [{ channel: 'prices', id: 'token-1' }])
+      expect(manager.hasActiveSubscriptions()).toBe(false)
+    })
+
+    it('tracks mixed callback and callback-less subscribers correctly', async () => {
+      const { manager, handler } = createTestManager()
+      manager.setConnectionId('conn-123')
+
+      const callback = vi.fn()
+      const unsubWithCallback = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+        callback,
+      })
+      const unsubWithout = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+
+      await flushMicrotasks()
+
+      // Removing callback-less subscriber should keep subscription alive
+      unsubWithout()
+      await flushMicrotasks()
+      expect(handler.unsubscribeBatch).not.toHaveBeenCalled()
+      expect(manager.getActiveSubscriptions()[0]?.subscriberCount).toBe(1)
+
+      // Dispatch should still reach the remaining callback
+      manager.dispatch('prices:token-1', { data: 'update' })
+      expect(callback).toHaveBeenCalledWith({ data: 'update' })
+
+      // Removing last subscriber should trigger unsubscribe
+      unsubWithCallback()
+      await flushMicrotasks()
+      expect(handler.unsubscribeBatch).toHaveBeenCalledTimes(1)
+    })
+
+    it('double-invoking unsubscribe does not decrement subscriberCount twice', async () => {
+      const { manager, handler } = createTestManager()
+      manager.setConnectionId('conn-123')
+
+      const callbackA = vi.fn()
+      const callbackB = vi.fn()
+
+      const unsubA = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+        callback: callbackA,
+      })
+      manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+        callback: callbackB,
+      })
+
+      await flushMicrotasks()
+
+      // Call unsubA twice — second call should be a no-op
+      unsubA()
+      unsubA()
+
+      await flushMicrotasks()
+
+      // Subscription should still be active for B
+      expect(handler.unsubscribeBatch).not.toHaveBeenCalled()
+      expect(manager.hasActiveSubscriptions()).toBe(true)
+      expect(manager.getActiveSubscriptions()[0]?.subscriberCount).toBe(1)
+
+      // B should still receive messages
+      manager.dispatch('prices:token-1', { data: 'update' })
+      expect(callbackA).not.toHaveBeenCalled()
+      expect(callbackB).toHaveBeenCalledWith({ data: 'update' })
+    })
+
+    it('subscribe → unsubscribe → resubscribe in same microtask still sends subscribe (React Strict Mode)', async () => {
+      const { manager, handler } = createTestManager()
+      manager.setConnectionId('conn-123')
+
+      // Simulates React Strict Mode: effect runs, cleanup runs, effect re-runs
+      const unsub1 = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+      unsub1() // Strict Mode cleanup
+      manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+
+      await flushMicrotasks()
+
+      // The subscribe MUST reach the server — entry is still active
+      expect(handler.subscribeBatch).toHaveBeenCalledWith('conn-123', [{ channel: 'prices', id: 'token-1' }])
+      expect(handler.unsubscribeBatch).not.toHaveBeenCalled()
+    })
+
+    it('unsubscribe → resubscribe in same microtask cancels both API calls (page navigation)', async () => {
+      const { manager, handler } = createTestManager()
+      manager.setConnectionId('conn-123')
+
+      // Initial subscribe + flush — server now knows about this subscription
+      const unsub = manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+      await flushMicrotasks()
+      handler.subscribeBatch.mockClear()
+
+      // Simulates navigation: old page unmounts, new page mounts same token
+      unsub()
+      manager.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-1' },
+      })
+
+      await flushMicrotasks()
+
+      // No API calls — server subscription is still valid
+      expect(handler.subscribeBatch).not.toHaveBeenCalled()
+      expect(handler.unsubscribeBatch).not.toHaveBeenCalled()
+    })
+
     it('subscribe + immediate unsubscribe in same microtask produces net-zero API calls', async () => {
       const { manager, handler } = createTestManager()
       manager.setConnectionId('conn-123')
@@ -433,6 +603,20 @@ describe('SubscriptionManager', () => {
         params: { channel: 'events', id: 'event-1' },
         subscriberCount: 1,
       })
+    })
+
+    it('counts callback-less subscribers in subscriberCount', () => {
+      const { manager } = createTestManager()
+      manager.setConnectionId('conn-123')
+
+      manager.subscribe({ channel: 'prices', params: { channel: 'prices', id: 'token-1' } })
+      manager.subscribe({ channel: 'prices', params: { channel: 'prices', id: 'token-1' } })
+      manager.subscribe({ channel: 'prices', params: { channel: 'prices', id: 'token-1' }, callback: vi.fn() })
+
+      const subscriptions = manager.getActiveSubscriptions()
+
+      expect(subscriptions).toHaveLength(1)
+      expect(subscriptions[0]?.subscriberCount).toBe(3)
     })
   })
 

@@ -75,7 +75,7 @@ export function SlippageInfoCaption({
           : t('swap.settings.slippage.output.message')}{' '}
         {isWebPlatform && (
           <Flex display="inline-flex">
-            <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} textVariant="body4" />
+            <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} textVariant="body4" textColor="$neutral1" />
           </Flex>
         )}
       </Text>

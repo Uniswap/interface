@@ -24,7 +24,9 @@ function TableBodyInner<T extends RowData>(
     loadingRowsCount = 20,
     rowHeight: propRowHeight,
     compactRowHeight: propCompactRowHeight,
+    subRowHeight: propSubRowHeight,
     hasPinnedColumns = false,
+    dimmed,
   }: TableBodyProps<T>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -100,6 +102,9 @@ function TableBodyInner<T extends RowData>(
           rowWrapper={rowWrapper}
           rowHeight={propRowHeight}
           compactRowHeight={propCompactRowHeight}
+          subRowHeight={propSubRowHeight}
+          isExpanded={row.getCanExpand() ? row.getIsExpanded() : undefined}
+          dimmed={dimmed}
         />
       ))}
     </Flex>

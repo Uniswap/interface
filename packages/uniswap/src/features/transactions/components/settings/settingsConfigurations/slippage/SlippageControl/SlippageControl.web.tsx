@@ -6,7 +6,7 @@ import type { SlippageControlProps } from 'uniswap/src/features/transactions/com
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 
-const INPUT_MIN_WIDTH = 44
+const INPUT_MIN_WIDTH = 14
 
 export function SlippageControl(props: SlippageControlProps): JSX.Element {
   const { t } = useTranslation()
@@ -42,7 +42,7 @@ export function SlippageControl(props: SlippageControlProps): JSX.Element {
   }
 
   const backgroundColor = isEditingSlippage ? '$surface2' : '$surface1'
-  const inputValue = autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance
+  const inputValue = autoSlippageEnabled ? autoSlippageTolerance.toString() : inputSlippageTolerance
   const parsedInputValue = parseFloat(inputValue)
 
   const inputValueTextColor = useMemo(

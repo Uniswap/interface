@@ -103,9 +103,9 @@ export function SharePortfolioButton({
         toggleOpen={setIsOpen}
         menuLabel={
           <Flex testID={TestID.PortfolioShareButton} row alignItems="center" gap="$gap8">
-            <ShareArrow size={iconSize} color="$neutral1" />
+            <ShareArrow size={iconSize} color="$neutral1" transition={transition} />
             {showLabel && (
-              <Text variant={textVariant} color="$neutral1">
+              <Text variant={textVariant} color="$neutral1" transition={transition}>
                 {t('common.button.share')}
               </Text>
             )}
@@ -120,7 +120,6 @@ export function SharePortfolioButton({
         }}
         dropdownStyle={{ minWidth: 220 }}
         alignRight
-        transition={transition}
       >
         {/* Multi-wallet: show copy link for each wallet with chain icon */}
         {hasMultipleConnectedWallets ? (

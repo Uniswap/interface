@@ -73,6 +73,7 @@ export function createWebSocketClient<TParams, TMessage>(
   const connectionCallbacks = new Set<(connectionId: string) => void>()
   let wasConnected = false
   let sessionRefreshTimer: ReturnType<typeof setInterval> | null = null
+  let disconnectTimer: ReturnType<typeof setTimeout> | null = null
 
   function startSessionRefreshTimer(): void {
     stopSessionRefreshTimer()
@@ -96,10 +97,21 @@ export function createWebSocketClient<TParams, TMessage>(
     createKey: createSubscriptionKey,
     onError: (error) => onError?.(error),
     onSubscriptionCountChange: (count): void => {
-      if (count > 0 && !socket) {
-        connect()
+      if (count > 0) {
+        // Cancel any pending disconnect — new subscriptions arrived
+        if (disconnectTimer !== null) {
+          clearTimeout(disconnectTimer)
+          disconnectTimer = null
+        }
+        if (!socket) {
+          connect()
+        }
       } else if (count === 0 && socket) {
-        disconnect()
+        // Debounce disconnect to bridge React cleanup→setup gaps during navigation
+        disconnectTimer = setTimeout(() => {
+          disconnectTimer = null
+          disconnect()
+        }, 2000)
       }
     },
   })
@@ -208,6 +220,13 @@ export function createWebSocketClient<TParams, TMessage>(
   }
 
   function disconnect(): void {
+    // Clear pending debounce timer first to prevent the timeout callback
+    // from re-entering disconnect() after we've already torn down.
+    const pendingTimer = disconnectTimer
+    disconnectTimer = null
+    if (pendingTimer !== null) {
+      clearTimeout(pendingTimer)
+    }
     if (socket) {
       stopSessionRefreshTimer()
       const s = socket

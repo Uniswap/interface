@@ -7,38 +7,40 @@ import { iconSizes, opacifyRaw } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { useAuctionTimeRemaining } from '~/components/Toucan/Auction/hooks/useAuctionTimeRemaining'
+import { formatCompactFromRaw } from '~/components/Toucan/Auction/utils/fixedPointFdv'
 import { getAuctionMetadata } from '~/components/Toucan/Config/config'
-import type { CommittedVolumeTableValue } from '~/components/Toucan/utils/computeCommittedVolume'
-import type { ProjectedFdvTableValue } from '~/components/Toucan/utils/computeProjectedFdv'
+import { computeProjectedFdvTableValue } from '~/components/Toucan/utils/computeProjectedFdv'
 import { createDottedBackgroundStyles } from '~/components/Toucan/utils/createDottedBackgroundStyles'
 import { useSrcColor } from '~/hooks/useColor'
-import type { AuctionWithCurrencyInfo } from '~/state/explore/topAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 import { getChainUrlParam } from '~/utils/chainParams'
 
 const DOT_OPACITY = 10
 const TOKEN_BACKGROUND_OPACITY = 8
 
-interface AuctionChipProps {
-  auction: AuctionWithCurrencyInfo
-  projectedFdv: ProjectedFdvTableValue
-  committedVolume: CommittedVolumeTableValue
-}
-
-export function AuctionChip({ auction, projectedFdv, committedVolume }: AuctionChipProps) {
+export function AuctionChip({
+  auction,
+  auctionTokenUsdPrice,
+}: {
+  auction: EnrichedAuction
+  auctionTokenUsdPrice?: number
+}) {
   const navigate = useNavigate()
   const colors = useSporeColors()
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const chainId = auction.auction?.chainId
-  const address = auction.auction?.address
   const tokenAddress = auction.auction?.tokenAddress
-  const auctionTokenSymbol = auction.auction?.tokenSymbol
-  const logoOverride = chainId && tokenAddress ? getAuctionMetadata({ chainId, tokenAddress })?.logoUrl : undefined
+  const tokenName = auction.auction?.tokenName
+  const tokenSymbol = auction.auction?.tokenSymbol
 
-  const tokenName = auction.currencyInfo?.currency.name || auctionTokenSymbol || tokenAddress
-  const tokenSymbol = auction.currencyInfo?.currency.symbol || auctionTokenSymbol
-  const logoUrl = logoOverride ?? auction.currencyInfo?.logoUrl
+  const projectedFdv = computeProjectedFdvTableValue({ auction, auctionTokenUsdPrice })
+
+  const address = auction.auction?.address
+  const logoOverride = chainId && tokenAddress ? getAuctionMetadata({ chainId, tokenAddress })?.logoUrl : undefined
+  const logoUrl = logoOverride ?? auction.logoUrl
 
   // Color extraction logic
   const { tokenColor, tokenColorLoading } = useSrcColor({
@@ -65,6 +67,12 @@ export function AuctionChip({ auction, projectedFdv, committedVolume }: AuctionC
 
   // Use locked color for styles (fallback to neutral3 while loading)
   const effectiveTokenColor = lockedTokenColorRef.current ?? tokenColor ?? colors.neutral3.val
+
+  // Calculate time remaining and progress
+  const { durationString, progressPercentage } = useAuctionTimeRemaining({
+    startBlockTimestamp: auction.timeRemaining.startBlockTimestamp,
+    endBlockTimestamp: auction.timeRemaining.endBlockTimestamp,
+  })
 
   // Create dotted background pattern using token color
   const { dottedBackgroundStyle } = useMemo(
@@ -140,7 +148,7 @@ export function AuctionChip({ auction, projectedFdv, committedVolume }: AuctionC
       <Flex flexDirection="row" gap="$spacing12" alignItems="stretch">
         <Flex flexDirection="column" gap="$gap4" flex={1}>
           <Text variant="body4" color="$neutral2">
-            {t('toucan.auction.projectedFdv')}
+            {t('stats.fdv')}
           </Text>
           <Text variant="body3" color="$neutral1" numberOfLines={1}>
             {projectedFdv.usd !== undefined
@@ -156,12 +164,50 @@ export function AuctionChip({ auction, projectedFdv, committedVolume }: AuctionC
             {t('toucan.auction.committedVolume')}
           </Text>
           <Text variant="body3" color="$neutral1" numberOfLines={1}>
-            {committedVolume.usd !== undefined
-              ? convertFiatAmountFormatted(committedVolume.usd, NumberType.FiatTokenStats)
-              : committedVolume.formattedBidToken}
+            {auction.auction.totalBidVolumeUsd !== undefined
+              ? convertFiatAmountFormatted(auction.auction.totalBidVolumeUsd, NumberType.FiatTokenStats)
+              : auction.auction.totalBidVolume && auction.auction.currencyTokenDecimals
+                ? formatCompactFromRaw({
+                    raw: BigInt(auction.auction.totalBidVolume),
+                    decimals: auction.auction.currencyTokenDecimals,
+                  })
+                : undefined}
           </Text>
         </Flex>
       </Flex>
+
+      {/* Time remaining progress bar with overlaid text */}
+      {durationString && (
+        <Flex position="relative" width="100%" height="8px">
+          {/* Background track and progress fill */}
+          <Flex width="100%" height="100%" backgroundColor="$surface3" borderRadius="$roundedFull" overflow="hidden">
+            {/* Filled progress using token color */}
+            <Flex
+              width={`${Math.min(100, Math.max(0, progressPercentage))}%`}
+              height="100%"
+              backgroundColor={effectiveTokenColor}
+            />
+          </Flex>
+
+          {/* Overlaid duration text (at progress point, with edge protection) */}
+          <Flex
+            position="absolute"
+            top="50%"
+            left={`${Math.min(100, Math.max(0, progressPercentage))}%`}
+            backgroundColor="$scrim"
+            borderRadius="$rounded4"
+            padding="$spacing4"
+            style={{
+              transform: `translate(-${progressPercentage}%, -50%)`,
+              backdropFilter: 'blur(2px)',
+            }}
+          >
+            <Text variant="body4" color="$white" whiteSpace="nowrap">
+              {durationString}
+            </Text>
+          </Flex>
+        </Flex>
+      )}
     </TouchableArea>
   )
 }

@@ -37,10 +37,12 @@ export function useTDPPriceChartData({
   variables,
   skip,
   priceChartType,
+  currentPriceOverride,
 }: {
   variables: TDPChartQueryVariables
   skip: boolean
   priceChartType: PriceChartType
+  currentPriceOverride?: number
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
 
@@ -99,7 +101,8 @@ export function useTDPPriceChartData({
 
     // CRITICAL: Always use per-chain price from subgraph for multi-chain tokens
     // This ensures USDC on Ethereum shows Ethereum price, not aggregated price
-    const currentPrice = subgraphPrice?.value ?? coinGeckoAggregatedPrice
+    // When centralized prices are enabled, the override provides live WebSocket prices
+    const currentPrice = currentPriceOverride ?? subgraphPrice?.value ?? coinGeckoAggregatedPrice
 
     let entries =
       (ohlc
@@ -199,6 +202,7 @@ export function useTDPPriceChartData({
     const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.PRICE, duration: variables.duration })
     return { chartType: ChartType.PRICE, entries, loading, dataQuality, disableCandlestickUI: fallback }
   }, [
+    currentPriceOverride,
     subgraphData?.token?.market,
     coinGeckoData?.tokenProjects?.[0],
     fallback,

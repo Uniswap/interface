@@ -4,6 +4,7 @@ export interface SubscriptionEntry<TParams, TMessage> {
   channel: string
   params: TParams
   callbacks: Set<(message: TMessage) => void>
+  subscriberCount: number
 }
 
 export interface SubscriptionManagerOptions<TParams> {

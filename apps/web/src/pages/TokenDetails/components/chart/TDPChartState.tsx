@@ -1,5 +1,8 @@
 import { GraphQLApi } from '@universe/api'
 import { useMemo, useState } from 'react'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { StackedLineData } from '~/components/Charts/StackedLineChart'
@@ -44,7 +47,21 @@ export function useCreateTDPChartState(
 
   const variables = { address: tokenDBAddress, chain: currencyChainName, duration: toHistoryDuration(timePeriod) }
 
-  const priceQuery = useTDPPriceChartData({ variables, skip: chartType !== ChartType.PRICE, priceChartType })
+  const chainId = useMemo(() => fromGraphQLChain(currencyChainName), [currencyChainName])
+  const currencyId = useMemo(() => {
+    if (!tokenDBAddress) {
+      return undefined
+    }
+    return chainId ? buildCurrencyId(chainId, tokenDBAddress) : undefined
+  }, [chainId, tokenDBAddress])
+  const currentPriceOverride = useTokenSpotPrice(currencyId)
+
+  const priceQuery = useTDPPriceChartData({
+    variables,
+    skip: chartType !== ChartType.PRICE,
+    priceChartType,
+    currentPriceOverride,
+  })
   const volumeQuery = useTDPVolumeChartData(variables, chartType !== ChartType.VOLUME)
   const tvlQuery = useTDPTVLChartData(variables, chartType !== ChartType.TVL)
 

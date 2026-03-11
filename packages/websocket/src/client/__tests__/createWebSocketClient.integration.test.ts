@@ -1,14 +1,17 @@
 import type { TestMessage } from '@universe/websocket/src/client/__tests__/testUtils'
-import {
-  connectViaSubscribe,
-  createTestClient,
-  flushMicrotasks,
-  flushPromises,
-} from '@universe/websocket/src/client/__tests__/testUtils'
+import { connectViaSubscribe, createTestClient } from '@universe/websocket/src/client/__tests__/testUtils'
 import type { ConnectionStatus } from '@universe/websocket/src/types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('createWebSocketClient integration', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   describe('lazy connection lifecycle', () => {
     it('first subscribe triggers connection: status transitions to connecting then connected', () => {
       const { client, mockSocket } = createTestClient()
@@ -47,11 +50,12 @@ describe('createWebSocketClient integration', () => {
 
       mockSocket.simulateOpen()
       mockSocket.simulateMessage({ type: 'connected', connectionId: 'conn-123' })
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       unsub()
+      await vi.advanceTimersByTimeAsync(2000)
 
-      // After last unsubscribe, should be disconnected
+      // After last unsubscribe + debounce window, should be disconnected
       expect(client.getConnectionStatus()).toBe('disconnected')
       expect(client.isConnected()).toBe(false)
       expect(client.getConnectionId()).toBe(null)
@@ -115,11 +119,12 @@ describe('createWebSocketClient integration', () => {
       })
       mockSocket.simulateOpen()
       mockSocket.simulateMessage({ type: 'connected', connectionId: 'conn-123' })
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
-      // Unsubscribing the last subscriber triggers disconnect
+      // Unsubscribing the last subscriber triggers debounced disconnect
       // wasConnected is set to false BEFORE socket.close(), preventing spurious 'reconnecting'
       unsub()
+      await vi.advanceTimersByTimeAsync(2000)
 
       // Should go straight to disconnected without reconnecting
       expect(statusChanges).toEqual(['connecting', 'connected', 'disconnected'])
@@ -138,7 +143,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: vi.fn(),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       // The connectViaSubscribe helper creates one subscription, so subscribeBatch is called
       // for resubscribeAll after connectionId, then our new subscribe
@@ -158,7 +163,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: vi.fn(),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       // No connectionId yet, so no REST calls
       expect(handler.subscribeBatch).not.toHaveBeenCalled()
@@ -167,7 +172,7 @@ describe('createWebSocketClient integration', () => {
       mockSocket.simulateOpen()
       mockSocket.simulateMessage({ type: 'connected', connectionId: 'conn-123' })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       // resubscribeAll sends the queued subscription
       expect(handler.subscribeBatch).toHaveBeenCalledWith('conn-123', [{ channel: 'prices', id: 'token-1' }])
@@ -177,7 +182,7 @@ describe('createWebSocketClient integration', () => {
       const { client, mockSocket, handler } = createTestClient()
 
       connectViaSubscribe({ client, mockSocket })
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
       handler.subscribeBatch.mockClear()
 
       client.subscribe({
@@ -191,7 +196,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: vi.fn(),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       expect(handler.subscribeBatch).toHaveBeenCalledTimes(1)
     })
@@ -200,7 +205,7 @@ describe('createWebSocketClient integration', () => {
       const { client, mockSocket, handler } = createTestClient()
 
       connectViaSubscribe({ client, mockSocket })
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
       handler.unsubscribeBatch.mockClear()
 
       const unsub = client.subscribe({
@@ -209,9 +214,9 @@ describe('createWebSocketClient integration', () => {
         onMessage: vi.fn(),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
       unsub()
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       expect(handler.unsubscribeBatch).toHaveBeenCalledWith(
         'conn-123',
@@ -223,7 +228,7 @@ describe('createWebSocketClient integration', () => {
       const { client, mockSocket, handler } = createTestClient()
 
       connectViaSubscribe({ client, mockSocket })
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
       handler.unsubscribeBatch.mockClear()
       handler.unsubscribe.mockClear()
 
@@ -238,9 +243,9 @@ describe('createWebSocketClient integration', () => {
         onMessage: vi.fn(),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
       unsub1()
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       expect(handler.unsubscribeBatch).not.toHaveBeenCalled()
       expect(handler.unsubscribe).not.toHaveBeenCalled()
@@ -260,7 +265,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: (m) => messages.push(m),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       mockSocket.simulateMessage({
         channel: 'prices',
@@ -283,7 +288,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: (m) => messages.push(m),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       // Message for different subscription key
       mockSocket.simulateMessage({
@@ -313,7 +318,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: (m) => messages2.push(m),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       mockSocket.simulateMessage({
         channel: 'prices',
@@ -401,7 +406,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: vi.fn(),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
       handler.subscribeBatch.mockClear()
 
       // Simulate reconnect
@@ -409,7 +414,7 @@ describe('createWebSocketClient integration', () => {
       mockSocket.simulateOpen()
       mockSocket.simulateMessage({ type: 'connected', connectionId: 'conn-2' })
 
-      await flushPromises()
+      await vi.advanceTimersByTimeAsync(0)
 
       // Resubscription happens with the new connectionId via subscribeBatch
       expect(handler.subscribeBatch).toHaveBeenCalledWith(
@@ -442,7 +447,7 @@ describe('createWebSocketClient integration', () => {
       const { client, mockSocket, handler } = createTestClient()
 
       connectViaSubscribe({ client, mockSocket })
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
       handler.subscribeBatch.mockClear()
       handler.subscribe.mockClear()
       handler.unsubscribeBatch.mockClear()
@@ -456,7 +461,7 @@ describe('createWebSocketClient integration', () => {
       })
       unsub()
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       // Net-zero: the pending subscribe and unsubscribe for the same key cancel out
       expect(handler.subscribeBatch).not.toHaveBeenCalled()
@@ -487,7 +492,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: vi.fn(),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       expect(onError).toHaveBeenCalledWith(subscribeError)
     })
@@ -543,7 +548,7 @@ describe('createWebSocketClient integration', () => {
         onMessage: (m) => messages.push(m),
       })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       mockSocket.simulateMessage({
         channel: 'prices',
@@ -573,11 +578,11 @@ describe('createWebSocketClient integration', () => {
       mockSocket.simulateClose()
       mockSocket.simulateOpen()
       mockSocket.simulateMessage({ type: 'connected', connectionId: 'conn-123' })
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
-      // Last unsubscribe triggers disconnect (wasConnected=false before close,
-      // so no spurious 'reconnecting')
+      // Last unsubscribe triggers debounced disconnect
       unsub1()
+      await vi.advanceTimersByTimeAsync(2000)
 
       expect(statusChanges).toEqual(['connecting', 'connected', 'reconnecting', 'connected', 'disconnected'])
     })
@@ -667,7 +672,7 @@ describe('createWebSocketClient integration', () => {
       expect(statusChanges).toEqual(['connecting', 'connected'])
       expect(client.getConnectionId()).toBe('conn-123')
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       // resubscribeAll fires because there are active subs when connectionId is received
       expect(handler.subscribeBatch).toHaveBeenCalledWith('conn-123', [{ channel: 'prices', id: 'ETH' }])
@@ -680,8 +685,9 @@ describe('createWebSocketClient integration', () => {
       expect(messages).toEqual([{ data: 'price', price: 3000 }])
 
       unsub()
+      await vi.advanceTimersByTimeAsync(2000)
 
-      // Last unsubscribe triggers disconnect
+      // Last unsubscribe triggers debounced disconnect
       expect(statusChanges).toContain('disconnected')
     })
   })
@@ -701,7 +707,7 @@ describe('createWebSocketClient integration', () => {
       mockSocket.simulateOpen()
       mockSocket.simulateMessage({ type: 'connected', connectionId: 'conn-123' })
 
-      await flushMicrotasks()
+      await vi.advanceTimersByTimeAsync(0)
 
       expect(handler.subscribeBatch).toHaveBeenCalledWith('conn-123', [{ channel: 'prices', id: 'token-1' }])
     })
@@ -723,14 +729,6 @@ describe('createWebSocketClient integration', () => {
   })
 
   describe('session refresh timer', () => {
-    beforeEach(() => {
-      vi.useFakeTimers()
-    })
-
-    afterEach(() => {
-      vi.useRealTimers()
-    })
-
     it('starts timer on connect and calls refreshSession at interval', async () => {
       const { client, mockSocket, handler } = createTestClient({
         sessionRefreshIntervalMs: 5000,
@@ -759,7 +757,7 @@ describe('createWebSocketClient integration', () => {
       await vi.advanceTimersByTimeAsync(0)
 
       unsub()
-
+      // Advance past the 2000ms disconnect debounce, then check no refreshSession fires
       await vi.advanceTimersByTimeAsync(10000)
 
       expect(handler.refreshSession).not.toHaveBeenCalled()
@@ -826,6 +824,96 @@ describe('createWebSocketClient integration', () => {
 
       // No error thrown, timer simply doesn't start
       await vi.advanceTimersByTimeAsync(10000)
+    })
+  })
+
+  describe('debounced disconnect', () => {
+    it('does not disconnect immediately when subscription count drops to 0', async () => {
+      const { client, mockSocket } = createTestClient()
+
+      const unsub = connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      unsub()
+
+      // Still connected — disconnect is debounced
+      expect(client.getConnectionStatus()).not.toBe('disconnected')
+    })
+
+    it('disconnects after the debounce window expires', async () => {
+      const { client, mockSocket } = createTestClient()
+
+      const unsub = connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      unsub()
+      await vi.advanceTimersByTimeAsync(2000)
+
+      expect(client.getConnectionStatus()).toBe('disconnected')
+    })
+
+    it('cancels pending disconnect when new subscription arrives during debounce window', async () => {
+      const { client, mockSocket } = createTestClient()
+      const statusChanges: ConnectionStatus[] = []
+
+      client.onStatusChange((s) => statusChanges.push(s))
+
+      const unsub1 = connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      // Unsubscribe last — starts debounce timer
+      unsub1()
+
+      // Resubscribe within the debounce window (simulates navigation: old page unmounts, new page mounts)
+      client.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'token-2' },
+        onMessage: vi.fn(),
+      })
+
+      // Advance past the debounce window
+      await vi.advanceTimersByTimeAsync(200)
+
+      // Should NOT have disconnected — the resubscribe cancelled the pending disconnect
+      expect(client.getConnectionStatus()).not.toBe('disconnected')
+      expect(statusChanges).not.toContain('disconnected')
+    })
+
+    it('preserves connection across simulated page navigation (unsub all → resub)', async () => {
+      const { client, mockSocket } = createTestClient()
+
+      connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      // Simulate old page unmounting: unsubscribe all tokens
+      const unsub1 = client.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'ETH' },
+        onMessage: vi.fn(),
+      })
+      const unsub2 = client.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'BTC' },
+        onMessage: vi.fn(),
+      })
+      await vi.advanceTimersByTimeAsync(0)
+
+      // Old page unmounts (cleanup effects fire)
+      unsub1()
+      unsub2()
+
+      // New page mounts (setup effects fire) — within the debounce window
+      client.subscribe({
+        channel: 'prices',
+        params: { channel: 'prices', id: 'UNI' },
+        onMessage: vi.fn(),
+      })
+
+      await vi.advanceTimersByTimeAsync(200)
+
+      // Connection should have persisted — no disconnect/reconnect cycle
+      expect(client.isConnected()).toBe(true)
+      expect(client.getConnectionStatus()).toBe('connected')
     })
   })
 })

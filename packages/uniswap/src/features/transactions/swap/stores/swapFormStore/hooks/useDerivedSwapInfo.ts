@@ -9,7 +9,6 @@ import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCur
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { useTradeFromExistingPlan } from 'uniswap/src/features/transactions/swap/hooks/useTradeFromExistingPlan'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -128,10 +127,7 @@ export function useDerivedSwapInfo({
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade
 
-  const priceUXEnabled = usePriceUXEnabled()
-  const displayableTradeOutputAmount = priceUXEnabled
-    ? displayableTrade?.quoteOutputAmount
-    : displayableTrade?.outputAmount
+  const displayableTradeOutputAmount = displayableTrade?.outputAmount
 
   const currencyAmounts = useMemo(
     () => ({

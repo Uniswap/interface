@@ -46,7 +46,6 @@ export const CurrencyInputPanel = memo(
         resetSelection,
         disabled = false,
         onPressDisabled,
-        priceDifferencePercentage,
         headerLabel,
         transactionType,
         customPanelStyle,
@@ -189,7 +188,6 @@ export const CurrencyInputPanel = memo(
                     value={value}
                     usdValue={usdValue}
                     isFiatMode={isFiatMode}
-                    priceDifferencePercentage={priceDifferencePercentage}
                     currencyInfo={currencyInfo}
                     currencyAmount={currencyAmount}
                     currencyField={currencyField}

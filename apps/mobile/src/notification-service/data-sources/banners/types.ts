@@ -8,8 +8,6 @@ export const UNITAG_NAV_PREFIX = 'unitag://'
 export enum BannerId {
   NoAppFees = 'local:no_app_fees_banner',
   FundWallet = 'local:fund_wallet_banner',
-  BridgedAssets = 'local:bridged_assets_banner',
-  BridgedAssetsV2 = 'local:bridged_assets_v2_banner',
 
   PushNotifications = 'local:push_notifications_banner',
   RecoveryBackup = 'local:recovery_backup_banner',

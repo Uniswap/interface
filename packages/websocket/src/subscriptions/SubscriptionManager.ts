@@ -10,6 +10,8 @@ import type {
  * Key features:
  * - Reference counting: Only calls REST subscribe on first subscriber, unsubscribe on last
  * - Microtask batching: Coalesces subscribe/unsubscribe calls within the same microtask
+ * - Eager cancellation: subscribe cancels a pending unsubscribe for the same key (and vice versa),
+ *   so navigations that unmount and remount the same subscription produce zero API calls
  * - Auto-resubscribe: On reconnect, resubscribes all active subscriptions with new connectionId
  * - Deduplication: Multiple subscribers to same params share one subscription
  * - Message routing: Routes incoming messages to appropriate callbacks
@@ -60,6 +62,7 @@ export class SubscriptionManager<TParams, TMessage> {
     let isNewEntry = false
 
     if (entry) {
+      entry.subscriberCount++
       if (callback) {
         entry.callbacks.add(callback)
       }
@@ -69,19 +72,31 @@ export class SubscriptionManager<TParams, TMessage> {
         channel,
         params,
         callbacks: new Set(callback ? [callback] : []),
+        subscriberCount: 1,
       }
       this.subscriptions.set(key, entry)
 
-      // Queue the REST subscribe call
-      this.pendingSubscribes.set(key, params)
-      this.scheduleSubscribeFlush()
+      if (this.pendingUnsubscribes.has(key)) {
+        // Re-subscribing to a key that was just unsubscribed in this microtask window.
+        // Cancel the pending unsubscribe — the server still has this subscription.
+        this.pendingUnsubscribes.delete(key)
+      } else {
+        // Genuinely new subscription — queue the REST subscribe call
+        this.pendingSubscribes.set(key, params)
+        this.scheduleSubscribeFlush()
+      }
     }
 
     if (isNewEntry) {
       this.onSubscriptionCountChange?.(this.subscriptions.size)
     }
 
+    let unsubscribed = false
     return () => {
+      if (unsubscribed) {
+        return
+      }
+      unsubscribed = true
       this.handleUnsubscribe(key, callback)
     }
   }
@@ -96,13 +111,21 @@ export class SubscriptionManager<TParams, TMessage> {
       entry.callbacks.delete(callback)
     }
 
-    // If no more callbacks, remove subscription entirely
-    if (entry.callbacks.size === 0) {
+    entry.subscriberCount--
+
+    // If no more subscribers, remove subscription entirely
+    if (entry.subscriberCount === 0) {
       this.subscriptions.delete(key)
 
-      // Queue the REST unsubscribe call
-      this.pendingUnsubscribes.set(key, entry.params)
-      this.scheduleUnsubscribeFlush()
+      if (this.pendingSubscribes.has(key)) {
+        // Unsubscribing a key that was just subscribed in this microtask window.
+        // Cancel the pending subscribe — no need to tell the server about either.
+        this.pendingSubscribes.delete(key)
+      } else {
+        // Queue the REST unsubscribe call
+        this.pendingUnsubscribes.set(key, entry.params)
+        this.scheduleUnsubscribeFlush()
+      }
 
       this.onSubscriptionCountChange?.(this.subscriptions.size)
     }
@@ -112,13 +135,6 @@ export class SubscriptionManager<TParams, TMessage> {
     if (!this.subscribeFlushScheduled) {
       this.subscribeFlushScheduled = true
       queueMicrotask(() => {
-        // Cancel out keys that appear in both pending subscribe and unsubscribe
-        for (const key of this.pendingUnsubscribes.keys()) {
-          if (this.pendingSubscribes.has(key)) {
-            this.pendingSubscribes.delete(key)
-            this.pendingUnsubscribes.delete(key)
-          }
-        }
         const params = [...this.pendingSubscribes.values()]
         this.pendingSubscribes.clear()
         this.subscribeFlushScheduled = false
@@ -133,13 +149,6 @@ export class SubscriptionManager<TParams, TMessage> {
     if (!this.unsubscribeFlushScheduled) {
       this.unsubscribeFlushScheduled = true
       queueMicrotask(() => {
-        // Cancel out keys that appear in both pending subscribe and unsubscribe
-        for (const key of this.pendingSubscribes.keys()) {
-          if (this.pendingUnsubscribes.has(key)) {
-            this.pendingUnsubscribes.delete(key)
-            this.pendingSubscribes.delete(key)
-          }
-        }
         const params = [...this.pendingUnsubscribes.values()]
         this.pendingUnsubscribes.clear()
         this.unsubscribeFlushScheduled = false
@@ -235,7 +244,7 @@ export class SubscriptionManager<TParams, TMessage> {
     return Array.from(this.subscriptions.entries()).map(([, entry]) => ({
       channel: entry.channel,
       params: entry.params,
-      subscriberCount: entry.callbacks.size,
+      subscriberCount: entry.subscriberCount,
     }))
   }
 

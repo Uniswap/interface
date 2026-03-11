@@ -105,15 +105,6 @@ export function sendSearchOptionItemClickedAnalytics({
       })
       return
     }
-    case OnchainItemListOptionType.NFTCollection:
-      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
-        ...searchContext,
-        name: item.name,
-        chain: item.chainId,
-        address: item.address,
-        type: 'collection',
-      })
-      return
     default:
       logger.warn('SearchModal/analytics.ts', 'sendSearchOptionItemClickedAnalytics', 'Unhandled search option type', {
         item,

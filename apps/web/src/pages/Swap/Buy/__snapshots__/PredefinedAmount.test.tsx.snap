@@ -10,7 +10,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 100
     style="border-color: rgba(19, 19, 19, 0.08);"
   >
     <span
-      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
       data-disable-theme="true"
       style="color: rgba(19, 19, 19, 0.63); padding-top: 1px;"
     >
@@ -34,7 +34,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 300
     style="border-color: rgba(19, 19, 19, 0.08);"
   >
     <span
-      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
       data-disable-theme="true"
       style="color: rgba(19, 19, 19, 0.35); padding-top: 1px;"
     >
@@ -57,7 +57,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 100
     style="border-color: rgba(19, 19, 19, 0.08);"
   >
     <span
-      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
       data-disable-theme="true"
       style="color: rgba(19, 19, 19, 0.63); padding-top: 1px;"
     >
@@ -81,7 +81,7 @@ exports[`PredefinedAmount > renders correctly with amount= %p , disabled= %p 100
     style="border-color: rgba(19, 19, 19, 0.08);"
   >
     <span
-      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
       data-disable-theme="true"
       style="color: rgba(19, 19, 19, 0.35); padding-top: 1px;"
     >

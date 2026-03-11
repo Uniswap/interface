@@ -23,8 +23,6 @@ export function searchResultId(searchResult: SearchHistoryResult): string {
       return `wallet-${normalizedAddress}`
     case SearchHistoryResultType.Etherscan:
       return `etherscan-${normalizedAddress}`
-    case SearchHistoryResultType.NFTCollection:
-      return `nftCollection-${searchResult.chainId}-${normalizedAddress}`
     case SearchHistoryResultType.Pool:
       return `pool-${searchResult.chainId}-${normalizedAddress}-${searchResult.feeTier}`
   }

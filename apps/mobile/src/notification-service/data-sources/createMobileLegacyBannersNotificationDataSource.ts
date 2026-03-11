@@ -5,12 +5,7 @@ import {
   type NotificationTracker,
 } from '@universe/notifications'
 import type { MobileState } from 'src/app/mobileReducer'
-import {
-  checkBridgedAssetsBanner,
-  checkBridgedAssetsV2Banner,
-} from 'src/notification-service/data-sources/banners/bridgedAssetsBanners'
 import { checkFundWalletBanner } from 'src/notification-service/data-sources/banners/fundWalletBanner'
-
 import { checkNoAppFeesBanner } from 'src/notification-service/data-sources/banners/noAppFeesBanner'
 import { checkPushNotificationsBanner } from 'src/notification-service/data-sources/banners/pushNotificationsBanner'
 import { checkRecoveryBackup } from 'src/notification-service/data-sources/banners/recoveryBackupBanner'
@@ -20,8 +15,6 @@ import { logger } from 'utilities/src/logger/logger'
 import {
   selectHasDismissedNoAppFeesAnnouncement,
   selectHasSkippedUnitagPrompt,
-  selectHasViewedBridgedAssetsCard,
-  selectHasViewedBridgedAssetsV2Card,
   selectHasViewedNotificationsCard,
 } from 'wallet/src/features/behaviorHistory/selectors'
 
@@ -87,28 +80,6 @@ export function createMobileLegacyBannersNotificationDataSource(
           'Migrating No App Fees announcement dismissal from legacy Redux state',
         )
         await tracker.track(BannerId.NoAppFees, { timestamp: Date.now() })
-      }
-
-      // Migrate Bridged Assets V1 dismissal
-      const bridgedAssetsWasViewed = selectHasViewedBridgedAssetsCard(state)
-      if (bridgedAssetsWasViewed) {
-        logger.info(
-          'createMobileLegacyBannersNotificationDataSource',
-          'migrateLegacyDismissalState',
-          'Migrating Bridged Assets V1 view from legacy Redux state',
-        )
-        await tracker.track(BannerId.BridgedAssets, { timestamp: Date.now() })
-      }
-
-      // Migrate Bridged Assets V2 dismissal
-      const bridgedAssetsV2WasViewed = selectHasViewedBridgedAssetsV2Card(state)
-      if (bridgedAssetsV2WasViewed) {
-        logger.info(
-          'createMobileLegacyBannersNotificationDataSource',
-          'migrateLegacyDismissalState',
-          'Migrating Bridged Assets V2 view from legacy Redux state',
-        )
-        await tracker.track(BannerId.BridgedAssetsV2, { timestamp: Date.now() })
       }
 
       // Migrate Push Notifications card dismissal
@@ -206,18 +177,6 @@ async function fetchNotifications(
   const pushNotificationsNotification = await checkPushNotificationsBanner()
   if (pushNotificationsNotification) {
     notifications.push(pushNotificationsNotification)
-  }
-
-  // Priority 6: Bridged Assets V2
-  const bridgedAssetsV2Notification = await checkBridgedAssetsV2Banner(getIsDarkMode())
-  if (bridgedAssetsV2Notification) {
-    notifications.push(bridgedAssetsV2Notification)
-  }
-
-  // Priority 7: Bridged Assets V1
-  const bridgedAssetsNotification = await checkBridgedAssetsBanner()
-  if (bridgedAssetsNotification) {
-    notifications.push(bridgedAssetsNotification)
   }
 
   return notifications

@@ -186,16 +186,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     [navigate, closeSearchModal],
   )
 
-  const navigateToNftCollection = useCallback((args: { collectionAddress: Address; chainId: UniverseChainId }) => {
-    window.open(
-      `https://opensea.io/assets/${getChainInfo(
-        args.chainId,
-      ).backendChain.chain.toLowerCase()}/${args.collectionAddress}`,
-      '_blank',
-      'noopener,noreferrer',
-    )
-  }, [])
-
   const { openModal } = useModalState(ModalName.DelegationMismatch)
 
   const handleOpenUniswapXUnsupportedModal = useEvent(() => {
@@ -265,7 +255,6 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
-      navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}

@@ -17,7 +17,7 @@
     "@types/uuid": "9.0.1",
     "@uniswap/analytics-events": "2.43.0",
     "@uniswap/client-notification-service": "0.0.11",
-    "@uniswap/sdk-core": "7.10.1",
+    "@uniswap/sdk-core": "7.11.0",
     "@uniswap/universal-router-sdk": "4.29.2",
     "@uniswap/v3-sdk": "3.27.0",
     "@uniswap/v4-sdk": "1.25.1",

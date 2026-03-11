@@ -6,7 +6,6 @@ import { DisplayName } from 'uniswap/src/features/accounts/types'
 import { WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -16,10 +15,7 @@ export type NavigateToNftItemArgs = {
   owner?: Address
   contractAddress: Address
   tokenId: string
-  fallbackChainId: UniverseChainId
-  chainId?: UniverseChainId
-  isSpam?: boolean
-  fallbackData?: NFTItem
+  chainId: UniverseChainId
 }
 
 export type NavigateToSwapFlowArgs = {
@@ -39,7 +35,6 @@ interface UniswapContextValue {
   navigateToTokenDetails: (currencyId: string) => void
   navigateToExternalProfile: (args: { address: Address }) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
-  navigateToNftCollection: (args: { collectionAddress: Address; chainId: UniverseChainId }) => void
   navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void
   handleShareToken: (args: { currencyId: string }) => void
   navigateToAdvancedSettings: () => void
@@ -82,7 +77,6 @@ export function UniswapProvider({
   navigateToTokenDetails,
   navigateToExternalProfile,
   navigateToNftDetails,
-  navigateToNftCollection,
   navigateToPoolDetails,
   handleShareToken,
   navigateToAdvancedSettings,
@@ -114,7 +108,6 @@ export function UniswapProvider({
       navigateToReceive,
       navigateToTokenDetails,
       navigateToExternalProfile,
-      navigateToNftCollection,
       navigateToNftDetails,
       navigateToPoolDetails,
       handleShareToken,
@@ -157,7 +150,6 @@ export function UniswapProvider({
       navigateToReceive,
       navigateToTokenDetails,
       navigateToExternalProfile,
-      navigateToNftCollection,
       navigateToNftDetails,
       navigateToPoolDetails,
       handleShareToken,

@@ -5,7 +5,6 @@ import { Clock } from 'ui/src/components/icons/Clock'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { Heart } from 'ui/src/components/icons/Heart'
 import { Person } from 'ui/src/components/icons/Person'
-import { PhotoStacked } from 'ui/src/components/icons/PhotoStacked'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { Search } from 'ui/src/components/icons/Search'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
@@ -92,10 +91,6 @@ function useSectionTitle(section: OnchainItemSectionName): string {
       return t('pool.top.volume')
     case OnchainItemSectionName.Wallets:
       return t('explore.search.section.wallets')
-    case OnchainItemSectionName.NFTCollections:
-      return t('explore.search.section.nft')
-    case OnchainItemSectionName.PopularNFTCollections:
-      return t('explore.search.section.popularNFT')
     case OnchainItemSectionName.FavoriteWallets:
       return t('explore.wallets.favorite.title.default')
     case OnchainItemSectionName.SuggestedTokens: // no suggested tokens header
@@ -115,7 +110,6 @@ function getSectionIcon(section: OnchainItemSectionName): JSX.Element | null {
       return <Coins color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.TrendingPools:
     case OnchainItemSectionName.TrendingTokens:
-    case OnchainItemSectionName.PopularNFTCollections:
       return <TrendUp color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.RecentSearches:
       return <Clock color="$neutral2" size="$icon.16" />
@@ -129,8 +123,6 @@ function getSectionIcon(section: OnchainItemSectionName): JSX.Element | null {
       return <Person color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.FavoriteWallets:
       return <Heart color="$neutral2" size="$icon.16" />
-    case OnchainItemSectionName.NFTCollections:
-      return <PhotoStacked color="$neutral2" size="$icon.16" />
     default:
       return null
   }
