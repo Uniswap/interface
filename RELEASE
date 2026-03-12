@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmdQ6urSp5w5e6VJxiyS2mdGKHUgmzpjNHkBT1YVdpigS6`
-- CIDv1: `bafybeig7ygwheh6xlew6fuz5tjgupkxx7gidccbsc6nsjrov7klmn5g7qm`
+- CIDv0: `QmRWQUuESBFQpRspBXxNzW6qyuE6KtdyCcHmvk3AxdoBtj`
+- CIDv1: `bafybeibpcleblyn2rtlfvsxmhi4meneq5rwyjk3rvvq6l3ufkzdthqayga`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,50 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeig7ygwheh6xlew6fuz5tjgupkxx7gidccbsc6nsjrov7klmn5g7qm.ipfs.dweb.link/
-- [ipfs://QmdQ6urSp5w5e6VJxiyS2mdGKHUgmzpjNHkBT1YVdpigS6/](ipfs://QmdQ6urSp5w5e6VJxiyS2mdGKHUgmzpjNHkBT1YVdpigS6/)
+- https://bafybeibpcleblyn2rtlfvsxmhi4meneq5rwyjk3rvvq6l3ufkzdthqayga.ipfs.dweb.link/
+- [ipfs://QmRWQUuESBFQpRspBXxNzW6qyuE6KtdyCcHmvk3AxdoBtj/](ipfs://QmRWQUuESBFQpRspBXxNzW6qyuE6KtdyCcHmvk3AxdoBtj/)
 
-## 5.137.0 (2026-03-11)
-
-
-### Features
-
-* **web:** add allowlisted hooks link to positions page (#29181) 0ff53ac
-* **web:** add multichain balances expanding rows (#29054) 506eafb
-* **web:** integrate REST price fallback (#29144) b18655d
-* **web:** Show reset filters button on no results for search modal (#28654) 71d5260
-* **web:** update token percentage allocation chart (#29117) 606f9ab
-* **web:** Update wallet connection panel styling (#29139) b53ac09
-* **web:** use multichain token format in portfolio page (#28942) 10f85d1
-* **web:** use price service in explore pages (#29082) 9df45d8
+### 5.137.1 (2026-03-12)
 
 
 ### Bug Fixes
 
-* **web:** Add compact mode for demo wallet header in portfolio (#29226) 1d9c341
-* **web:** cherry-pick #29363 (#5.136.1) (#29397) f2a1ada
-* **web:** cherry-pick #29386 (#5.136.3) (#29425) 820182e
-* **web:** cherry-pick #29399 (#5.136.2) (#29417) b3390fb
-* **web:** correctly pass multichain data argument so we don't get multichain dummy data when flag is off (#29174) 94dfa5f
-* **web:** Disable scrolling for context menus in token list from portfolio (#28837) 67fcfd9
-* **web:** Don't re-render avatars on scroll in Portfolio's activity (#29222) b824c10
-* **web:** fix light/dark mode transition flicker (#29247) 8a46c62
-* **web:** fix nav searchbar text overflow (#29284) d8b1968
-* **web:** Fix navbar e2e test for token details page (#29205) 00587bf
-* **web:** handle explore context issue for TokenCarousel component (#29166) a58f71c
-* **web:** use ref for dataLength comparison in useLoadMore hook (#29233) 4c5b664
-* **websocket:** debounce disconnects (#29085) 105efd1
-* **websocket:** track callback-less subscribers with eager cancellation (#29140) 578173b
-* **websockets:** update urls for staging/dev (#29171) 591c2c4
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 74f05b9
-
-
-### Code Refactoring
-
-* **web:** fix some egw proxy edge cases (#29112) 2ed1220
+* **web:** hotfix #29588 (#5.136.5) (#29592) ae76a15
 
 
