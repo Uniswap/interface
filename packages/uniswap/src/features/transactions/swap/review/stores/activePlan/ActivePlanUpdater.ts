@@ -68,11 +68,6 @@ export function ActivePlanUpdater(): null {
   const previousScreen = usePrevious(currentScreen)
 
   const updateActivePlan = useEvent((data: PlanResponse) => {
-    // Skip updates while the saga is executing — it manages plan state directly and stale poll responses could overwrite its calldata.
-    if (isSubmitting || isPlanExecutionLocked) {
-      return
-    }
-
     const transformedResponse = transformPlanResponse(data)
 
     activePlanStore.setState({
