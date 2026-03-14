@@ -129,9 +129,15 @@ export const DepositStep = () => {
 
   useEffect(() => {
     if (deposit1Disabled) {
-      setDepositState({ exactField: PositionField.TOKEN0, exactAmounts: {} })
+      setDepositState((prev) => ({
+        exactField: PositionField.TOKEN0,
+        exactAmounts: { [PositionField.TOKEN0]: prev.exactAmounts[PositionField.TOKEN0] || '' },
+      }))
     } else if (deposit0Disabled) {
-      setDepositState({ exactField: PositionField.TOKEN1, exactAmounts: {} })
+      setDepositState((prev) => ({
+        exactField: PositionField.TOKEN1,
+        exactAmounts: { [PositionField.TOKEN1]: prev.exactAmounts[PositionField.TOKEN1] || '' },
+      }))
     }
   }, [deposit0Disabled, deposit1Disabled, setDepositState])
 
