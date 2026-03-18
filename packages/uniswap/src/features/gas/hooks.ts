@@ -1,100 +1,46 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { BigNumber, providers } from 'ethers/lib/ethers'
-import { useEffect, useMemo, useState } from 'react'
+import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
+import { type FormattedUniswapXGasFeeInfo, type GasFeeResult, type GasStrategy } from '@universe/api'
+import { type GasStrategyType, useStatsigClientStatus } from '@universe/gating'
+import { BigNumber, type providers } from 'ethers/lib/ethers'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'ui/src'
-import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useAccountMeta, useProvider } from 'uniswap/src/contexts/UniswapContext'
-import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
-import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
-  FormattedUniswapXGasFeeInfo,
-  GasFeeResult,
-  TransactionEip1559FeeParams,
-  TransactionLegacyFeeParams,
-  areEqualGasStrategies,
-} from 'uniswap/src/features/gas/types'
-import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
-import { DynamicConfigs, GasStrategies, GasStrategyType } from 'uniswap/src/features/gating/configs'
-import { Statsig, useConfig } from 'uniswap/src/features/gating/sdk/statsig'
+  type Warning,
+  WarningAction,
+  WarningLabel,
+  WarningSeverity,
+} from 'uniswap/src/components/modals/WarningModal/types'
+import { type PollingInterval } from 'uniswap/src/constants/misc'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
+import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getActiveGasStrategy, hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
-import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
-import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { type DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
+import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { type UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { logger } from 'utilities/src/logger/logger'
-import { isInterface } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-// The default "Urgent" strategy that was previously hardcoded in the gas service
-export const DEFAULT_GAS_STRATEGY: GasStrategy = {
-  limitInflationFactor: 1.15,
-  displayLimitInflationFactor: 1.15,
-  priceInflationFactor: 1.5,
-  percentileThresholdFor1559Fee: 75,
-  minPriorityFeeGwei: 2,
-  maxPriorityFeeGwei: 9,
-}
+export const SMART_WALLET_DELEGATION_GAS_FEE = 21500
 
-export type CancelationGasFeeDetails = {
+export type CancellationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
-  cancelationGasFee: string
-}
-
-// Helper function to check if the config value is a valid GasStrategies object
-function isValidGasStrategies(value: unknown): value is GasStrategies {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'strategies' in value &&
-    Array.isArray((value as GasStrategies).strategies)
-  )
+  gasFeeDisplayValue: string
 }
 
 // Hook to use active GasStrategy for a specific chain.
 export function useActiveGasStrategy(chainId: number | undefined, type: GasStrategyType): GasStrategy {
-  const { isLoading } = useConfig(DynamicConfigs.GasStrategies)
-
-  return useMemo(() => {
-    if (isLoading) {
-      return DEFAULT_GAS_STRATEGY
-    }
-
-    const config = Statsig.getConfig(DynamicConfigs.GasStrategies)
-    const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
-    const activeStrategy = gasStrategies?.strategies.find(
-      (s) => s.conditions.chainId === chainId && s.conditions.types === type && s.conditions.isActive,
-    )
-    return activeStrategy ? activeStrategy.strategy : DEFAULT_GAS_STRATEGY
-  }, [isLoading, chainId, type])
-}
-
-// Hook to use shadow GasStrategies for a specific chain.
-export function useShadowGasStrategies(chainId: number | undefined, type: GasStrategyType): GasStrategy[] {
-  const { isLoading } = useConfig(DynamicConfigs.GasStrategies)
-
-  return useMemo(() => {
-    if (isLoading) {
-      return []
-    }
-
-    const config = Statsig.getConfig(DynamicConfigs.GasStrategies)
-    const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
-    const shadowStrategies = gasStrategies?.strategies
-      .filter((s) => s.conditions.chainId === chainId && s.conditions.types === type && !s.conditions.isActive)
-      .map((s) => s.strategy)
-    return shadowStrategies ?? []
-  }, [isLoading, chainId, type])
+  const { isStatsigReady } = useStatsigClientStatus()
+  return useMemo(() => getActiveGasStrategy({ chainId, type, isStatsigReady }), [isStatsigReady, chainId, type])
 }
 
 /**
@@ -131,107 +77,34 @@ export function convertGasFeeToDisplayValue(
     .toString()
 }
 
-export function useTransactionGasFee(
-  tx: providers.TransactionRequest | undefined,
-  skip?: boolean,
-  refetchInterval?: PollingInterval,
-  fallbackGasLimit?: number,
-): GasFeeResult {
+export function useTransactionGasFee({
+  tx,
+  smartContractDelegationAddress,
+  skip,
+  refetchInterval,
+  fallbackGasLimit,
+  // Warning: only use when it's Ok to return old data even when params change.
+  shouldUsePreviousValueDuringLoading,
+}: {
+  tx: providers.TransactionRequest | undefined
+  smartContractDelegationAddress?: Address
+  skip?: boolean
+  refetchInterval?: PollingInterval
+  fallbackGasLimit?: number
+  shouldUsePreviousValueDuringLoading?: boolean
+}): GasFeeResult {
   const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
-  const activeGasStrategy = useActiveGasStrategy(tx?.chainId, 'general')
-  const shadowGasStrategies = useShadowGasStrategies(tx?.chainId, 'general')
-  const { defaultChainId } = useEnabledChains()
-
-  const txWithGasStrategies = useMemo(
-    () => ({ ...tx, gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])] }),
-    [tx, activeGasStrategy, shadowGasStrategies],
-  )
 
   const { data, error, isLoading } = useGasFeeQuery({
-    params: skip || !tx ? undefined : txWithGasStrategies,
+    params: skip || !tx ? undefined : { tx, fallbackGasLimit, smartContractDelegationAddress },
     refetchInterval,
     staleTime: pollingIntervalForChain,
     immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,
+    shouldUsePreviousValueDuringLoading,
   })
 
-  // Gas Fee API currently errors on gas estimations on disconnected state & insufficient funds
-  // Fallback to clientside estimate using provider.estimateGas
-  const [clientsideGasEstimate, setClientsideGasEstimate] = useState<GasFeeResult>({
-    isLoading: true,
-    error: null,
-  })
-  const account = useAccountMeta()
-  const provider = useProvider(tx?.chainId ?? defaultChainId)
-  useEffect(() => {
-    async function calculateClientsideGasEstimate(): Promise<void> {
-      if (skip || !tx) {
-        setClientsideGasEstimate({
-          isLoading: false,
-          error: null,
-        })
-      }
-      try {
-        if (!provider) {
-          throw new Error('No provider for clientside gas estimation')
-        }
-        const gasUseEstimate = (await provider.estimateGas({ from: account?.address, ...tx })).toNumber() * 10e9
-        setClientsideGasEstimate({
-          value: gasUseEstimate.toString(),
-          // These estimates don't inflate the gas limit, so we can use the same value for display
-          displayValue: gasUseEstimate.toString(),
-          isLoading: false,
-          error: null,
-        })
-      } catch (e) {
-        // provider.estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
-        setClientsideGasEstimate({
-          value: fallbackGasLimit?.toString(),
-          // These estimates don't inflate the gas limit, so we can use the same value for display
-          displayValue: fallbackGasLimit?.toString(),
-          isLoading: false,
-          error: fallbackGasLimit ? null : (e as Error),
-        })
-      }
-    }
-
-    calculateClientsideGasEstimate().catch(() => undefined)
-  }, [account?.address, fallbackGasLimit, provider, skip, tx])
-
-  return useMemo(() => {
-    if (error && isInterface) {
-      // TODO(WEB-5086): Remove clientside fallback when Gas Fee API fixes errors
-      // Not currently necessary to run this fallback logic on mob/ext since they have workarounds for failing Gas Fee API (will never be disconnected + just hides gas fee display entirely when insufficient funds)
-      logger.debug(
-        'features/gas/hooks.ts',
-        'useTransactionGasFee',
-        'Error estimating gas from Gas Fee API, falling back to clientside estimate',
-        error,
-      )
-      return clientsideGasEstimate
-    }
-
-    if (!data) {
-      return { error: error ?? null, isLoading }
-    }
-
-    const activeEstimate = data.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
-
-    if (!activeEstimate) {
-      return { error: error ?? new Error('Could not get gas estimate'), isLoading }
-    }
-
-    return {
-      value: activeEstimate.gasFee,
-      displayValue: convertGasFeeToDisplayValue(activeEstimate.gasFee, activeGasStrategy),
-      isLoading,
-      error: error ?? null,
-      params: extractGasFeeParams(activeEstimate),
-      gasEstimates: {
-        activeEstimate,
-        shadowEstimates: data.gasEstimates?.filter((e) => e !== activeEstimate),
-      },
-    }
-  }, [clientsideGasEstimate, data, error, isLoading, activeGasStrategy])
+  // TODO(WALL-6421): Remove spread once GasFeeResult shape is decoupled from state fields
+  return useMemo(() => ({ ...data, error, isLoading }), [data, error, isLoading])
 }
 
 export function useUSDValueOfGasFee(
@@ -241,7 +114,7 @@ export function useUSDValueOfGasFee(
   const currencyAmount = getCurrencyAmount({
     value: feeValueInWei,
     valueType: ValueType.Raw,
-    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
+    currency: chainId ? nativeOnChain(chainId) : undefined,
   })
   const { value, isLoading } = useUSDCValueWithStatus(currencyAmount)
   return { isLoading, value: value?.toExact() }
@@ -255,7 +128,7 @@ export function useUSDCurrencyAmountOfGasFee(
   const currencyAmount = getCurrencyAmount({
     value: feeValueInWei,
     valueType: ValueType.Raw,
-    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
+    currency: chainId ? nativeOnChain(chainId) : undefined,
   })
   const { value } = useUSDCValueWithStatus(currencyAmount)
   return value
@@ -268,31 +141,31 @@ export function useFormattedUniswapXGasFeeInfo(
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { value: approvalCostUsd } = useUSDValueOfGasFee(chainId, uniswapXGasBreakdown?.approvalCost)
-  const { value: wrapCostUsd } = useUSDValueOfGasFee(chainId, uniswapXGasBreakdown?.wrapCost)
 
   return useMemo(() => {
     if (!uniswapXGasBreakdown) {
       return undefined
     }
-    const { approvalCost, wrapCost, inputTokenSymbol } = uniswapXGasBreakdown
-    // Without uniswapx, the swap would have costed approval price + classic swap fee. A separate wrap tx would not have occurred.
+    const { approvalCost, inputTokenSymbol } = uniswapXGasBreakdown
+    const approvalCostAmount = Number(approvalCost)
+    const hasApprovalCost = Number.isFinite(approvalCostAmount) && approvalCostAmount > 0
+    // If this swap was done via classic routing, the total gas fee would have been approval gas fee + classic swap gas fee.
     const preSavingsGasCostUsd =
-      Number(approvalCostUsd ?? 0) + Number(uniswapXGasBreakdown?.classicGasUseEstimateUSD ?? 0)
+      Number(approvalCostUsd ?? 0) + Number(uniswapXGasBreakdown.classicGasUseEstimateUSD ?? 0)
     const preSavingsGasFeeFormatted = convertFiatAmountFormatted(preSavingsGasCostUsd, NumberType.FiatGasPrice)
 
     // Swap submission will always cost 0, since it's not an on-chain tx.
     const swapFeeFormatted = convertFiatAmountFormatted(0, NumberType.FiatGasPrice)
 
     return {
-      approvalFeeFormatted: approvalCost
+      approvalFeeFormatted: hasApprovalCost
         ? convertFiatAmountFormatted(approvalCostUsd, NumberType.FiatGasPrice)
         : undefined,
-      wrapFeeFormatted: wrapCost ? convertFiatAmountFormatted(wrapCostUsd, NumberType.FiatGasPrice) : undefined,
       preSavingsGasFeeFormatted,
       swapFeeFormatted,
       inputTokenSymbol,
     }
-  }, [uniswapXGasBreakdown, approvalCostUsd, convertFiatAmountFormatted, wrapCostUsd])
+  }, [uniswapXGasBreakdown, approvalCostUsd, convertFiatAmountFormatted])
 }
 
 export function useGasFeeHighRelativeToValue(
@@ -309,24 +182,27 @@ export function useGasFeeHighRelativeToValue(
 }
 
 export function useTransactionGasWarning({
-  account,
+  accountAddress,
   derivedInfo,
   gasFee,
+  skipGasCheck = false,
 }: {
-  account?: AccountMeta
+  accountAddress?: Address
   derivedInfo: DerivedSwapInfo | DerivedSendInfo
   gasFee?: string
+  skipGasCheck?: boolean
 }): Warning | undefined {
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
-  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, account?.address)
+  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, accountAddress)
+  const { isSmartContractAddress } = useIsSmartContractAddress(accountAddress, chainId)
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
 
   // insufficient funds for gas
   const nativeAmountIn = currencyAmountIn?.currency.isNative
-    ? (currencyAmountIn as CurrencyAmount<NativeCurrency>)
+    ? (currencyAmountIn as CurrencyAmount<Currency>)
     : undefined
   const hasGasFunds = hasSufficientFundsIncludingGas({
     transactionAmount: nativeAmountIn,
@@ -336,11 +212,21 @@ export function useTransactionGasWarning({
   const balanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
 
   return useMemo(() => {
-    // if balance is already insufficient, dont need to show warning about network fee
-    if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) {
+    // Skip gas check if explicitly requested (e.g., for wallets that can pay fees in any token)
+    if (skipGasCheck) {
       return undefined
     }
-    // FIXME: Verify WALL-5906
+
+    // if balance is already insufficient, dont need to show warning about network fee
+    if (
+      gasFee === undefined ||
+      isSmartContractAddress ||
+      balanceInsufficient ||
+      !nativeCurrencyBalance ||
+      hasGasFunds
+    ) {
+      return undefined
+    }
     const currencySymbol = nativeCurrencyBalance.currency.symbol ?? ''
 
     return {
@@ -350,7 +236,7 @@ export function useTransactionGasWarning({
       title: t('swap.warning.insufficientGas.title', {
         currencySymbol,
       }),
-      buttonText: isWeb
+      buttonText: isWebPlatform
         ? t('swap.warning.insufficientGas.button', {
             currencySymbol,
           })
@@ -358,22 +244,7 @@ export function useTransactionGasWarning({
       message: undefined,
       currency: nativeCurrencyBalance.currency,
     }
-  }, [gasFee, balanceInsufficient, nativeCurrencyBalance, hasGasFunds, t])
-}
-
-function extractGasFeeParams(estimate: GasEstimate): TransactionLegacyFeeParams | TransactionEip1559FeeParams {
-  if ('maxFeePerGas' in estimate) {
-    return {
-      maxFeePerGas: estimate.maxFeePerGas,
-      maxPriorityFeePerGas: estimate.maxPriorityFeePerGas,
-      gasLimit: estimate.gasLimit,
-    }
-  } else {
-    return {
-      gasPrice: estimate.gasPrice,
-      gasLimit: estimate.gasLimit,
-    }
-  }
+  }, [gasFee, isSmartContractAddress, balanceInsufficient, nativeCurrencyBalance, hasGasFunds, t, skipGasCheck])
 }
 
 type GasFeeFormattedAmounts<T extends string | undefined> = T extends string
@@ -395,14 +266,16 @@ export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
   gasFee: GasFeeResult | undefined
   chainId: UniverseChainId
   placeholder: T
+  includesDelegation?: boolean
 }): GasFeeFormattedAmounts<T> {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+
   const { value: gasFeeUSD, isLoading: gasFeeUSDIsLoading } = useUSDValueOfGasFee(chainId, gasFee?.displayValue)
 
   // In testnet mode, use native currency values as USD pricing may be unreliable
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  const nativeCurrency = NativeCurrency.onChain(chainId)
+  const nativeCurrency = nativeOnChain(chainId)
   const nativeCurrencyAmount = getCurrencyAmount({
     currency: nativeCurrency,
     value: gasFee?.displayValue,

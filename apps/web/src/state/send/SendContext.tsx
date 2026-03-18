@@ -9,9 +9,9 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { RecipientData, SendInfo, useDerivedSendInfo } from 'state/send/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { RecipientData, SendInfo, useDerivedSendInfo } from '~/state/send/hooks'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
 
 export type SendState = {
   readonly exactAmountToken?: string
@@ -77,7 +77,11 @@ export function useSendContext() {
   return useContext(SendContext)
 }
 
-export function SendContextProvider({ children }: PropsWithChildren) {
+interface SendContextProviderProps extends PropsWithChildren {
+  initialRecipient?: string
+}
+
+export function SendContextProvider({ children, initialRecipient }: SendContextProviderProps) {
   const {
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
@@ -92,7 +96,20 @@ export function SendContextProvider({ children }: PropsWithChildren) {
   const [sendState, setSendState] = useState<SendState>({
     ...(isTestnetModeEnabled ? DEFAULT_TESTNET_SEND_STATE : DEFAULT_SEND_STATE),
     inputCurrency: initialCurrency,
+    recipient: initialRecipient ?? '',
   })
+
+  useEffect(() => {
+    if (isTestnetModeEnabled) {
+      setSendState((prev) => ({
+        ...prev,
+        exactAmountToken: prev.inputInFiat ? '' : prev.exactAmountToken,
+        exactAmountFiat: undefined,
+        inputInFiat: false,
+      }))
+    }
+  }, [isTestnetModeEnabled])
+
   const derivedSendInfo = useDerivedSendInfo(sendState)
 
   useEffect(() => {
@@ -112,7 +129,7 @@ export function SendContextProvider({ children }: PropsWithChildren) {
         return { ...prev, inputCurrency: sendState.inputCurrency }
       }
     })
-  }, [outputCurrency, sendState, setCurrencyState])
+  }, [outputCurrency, sendState.inputCurrency, setCurrencyState])
 
   const value = useMemo(
     () => ({
@@ -120,7 +137,7 @@ export function SendContextProvider({ children }: PropsWithChildren) {
       setSendState,
       derivedSendInfo,
     }),
-    [derivedSendInfo, setSendState, sendState],
+    [derivedSendInfo, sendState],
   )
 
   return <SendContext.Provider value={value}>{children}</SendContext.Provider>

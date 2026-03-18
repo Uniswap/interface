@@ -1,7 +1,9 @@
-import { Price, Token } from '@uniswap/sdk-core'
-import { tickToPrice } from '@uniswap/v3-sdk'
-import { Ticks } from 'graphql/data/AllV3TicksQuery'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
+import { tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
+import { Ticks } from '~/appGraphql/data/AllV3TicksQuery'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -11,27 +13,44 @@ export interface TickProcessed {
   liquidityActive: JSBI
   liquidityNet: JSBI
   price0: string
-  sdkPrice: Price<Token, Token>
+  sdkPrice: Price<Currency, Currency>
 }
 
 // Computes the numSurroundingTicks above or below the active tick.
-export default function computeSurroundingTicks(
-  token0: Token,
-  token1: Token,
-  activeTickProcessed: TickProcessed,
-  sortedTickData: Ticks,
-  pivot: number,
-  ascending: boolean,
-): TickProcessed[] {
+export default function computeSurroundingTicks({
+  token0,
+  token1,
+  activeTickProcessed,
+  sortedTickData,
+  pivot,
+  ascending,
+  version,
+}: {
+  token0: Currency
+  token1: Currency
+  activeTickProcessed: TickProcessed
+  sortedTickData: Ticks
+  pivot: number
+  ascending: boolean
+  version: ProtocolVersion
+}): TickProcessed[] {
   let previousTickProcessed: TickProcessed = {
     ...activeTickProcessed,
   }
+
+  if (version === ProtocolVersion.V3 && (token0.isNative || token1.isNative)) {
+    return []
+  }
+
   // Iterate outwards (either up or down depending on direction) from the active tick,
   // building active liquidity for every tick.
   let processedTicks: TickProcessed[] = []
   for (let i = pivot + (ascending ? 1 : -1); ascending ? i < sortedTickData.length : i >= 0; ascending ? i++ : i--) {
     const tick = Number(sortedTickData[i]?.tick)
-    const sdkPrice = tickToPrice(token0, token1, tick)
+    const sdkPrice =
+      version === ProtocolVersion.V3
+        ? tickToPriceV3(token0 as Token, token1 as Token, tick)
+        : tickToPriceV4(token0, token1, tick)
     const currentTickProcessed: TickProcessed = {
       liquidityActive: previousTickProcessed.liquidityActive,
       tick,
@@ -49,7 +68,7 @@ export default function computeSurroundingTicks(
         previousTickProcessed.liquidityActive,
         JSBI.BigInt(sortedTickData[i]?.liquidityNet ?? 0),
       )
-    } else if (!ascending && JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
+    } else if (JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
       // We are iterating descending, so look at the previous tick and apply any net liquidity.
       currentTickProcessed.liquidityActive = JSBI.subtract(
         previousTickProcessed.liquidityActive,

@@ -1,5 +1,5 @@
+import { GasFeeResult } from '@universe/api'
 import { providers } from 'ethers'
-import { GasFeeResult } from 'uniswap/src/features/gas/types'
 
 /**
  * This util should be used for formatting all external txn requests with gas estimates. This is

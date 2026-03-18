@@ -67,7 +67,7 @@ export function getCanonicalBridgingDappUrls(chainIds: UniverseChainId[]): strin
   const canonicalUrls = chainIds
     .map((chainId) => {
       const chainInfo = getChainInfo(chainId)
-      return chainInfo?.bridge ? extractBaseUrl(chainInfo.bridge) : undefined
+      return chainInfo.bridge ? extractBaseUrl(chainInfo.bridge) : undefined
     })
     .filter((url): url is string => url !== undefined)
 

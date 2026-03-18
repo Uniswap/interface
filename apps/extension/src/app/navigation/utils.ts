@@ -1,13 +1,12 @@
-import { To, matchPath, useLocation } from 'react-router-dom'
-import { TopLevelRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
+import { To, useLocation } from 'react-router'
+import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
-import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
-import { getTokenUrl } from 'wallet/src/utils/linking'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export type SidebarLocationState =
   | {
@@ -15,57 +14,18 @@ export type SidebarLocationState =
     }
   | undefined
 
-export function useRouteMatch(pathToMatch: string): boolean {
-  const { pathname } = useLocation()
-
-  return !!matchPath(pathToMatch, pathname)
-}
-
 export const useExtensionNavigation = (): {
   navigateTo: (path: To) => void
   navigateBack: () => void
   locationState: SidebarLocationState
 } => {
-  const navigateTo = (path: To): void => navigate(path)
-  const navigateBack = (): void => navigate(-1)
+  const navigateTo = useEvent((path: To): void => navigate(path))
+  const navigateBack = useEvent((): void => {
+    navigate(-1)
+  })
   const locationState = useLocation().state as SidebarLocationState
 
   return { navigateTo, navigateBack, locationState }
-}
-
-export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
-  const extension = await chrome.management.getSelf()
-
-  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/onboarding.html*` })
-  const tab = tabs[0]
-
-  const url = 'onboarding.html#/' + (page ? page : TopLevelRoutes.Onboarding)
-
-  if (!tab?.id) {
-    await chrome.tabs.create({ url })
-    return
-  }
-
-  await chrome.tabs.update(tab.id, {
-    active: true,
-    highlighted: true,
-    // We only want to update the URL if we're navigating to a specific page.
-    // Otherwise, just focus the existing tab without overriding the current URL.
-    url: page ? url : undefined,
-  })
-
-  if (page) {
-    // When navigating to a specific page, we need to reload the tab to ensure that the app state is reset and the store synchronization is properly initialized.
-    // This is necessary to handle the edge case where the user leaves a completed onboarding tab open (with synchronization paused)
-    // and then clicks on the "forgot password" link.
-    await chrome.tabs.reload(tab.id)
-  }
-
-  await chrome.windows.update(tab.windowId, { focused: true })
-
-  await onboardingMessageChannel.sendMessage({
-    type: OnboardingMessageType.HighlightOnboardingTab,
-  })
 }
 
 export async function focusOrCreateUnitagTab(address: Address, page: UnitagClaimRoutes): Promise<void> {
@@ -93,17 +53,15 @@ export async function focusOrCreateUnitagTab(address: Address, page: UnitagClaim
 export async function focusOrCreateDappRequestWindow(tabId: number | undefined, windowId: number): Promise<void> {
   const extension = await chrome.management.getSelf()
 
-  const window = await chrome.windows.getCurrent()
-
-  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/popup.html*` })
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/fallback-popup.html*` })
   const tab = tabs[0]
 
-  // Centering within current window
   const height = 410
   const width = 330
-  const top = Math.round((window.top ?? 0) + ((window.height ?? height) - height) / 2)
-  const left = Math.round((window.left ?? 0) + ((window.width ?? width) - width) / 2)
-  let url = `popup.html?windowId=${windowId}`
+
+  const { left, top } = await calculatePopupWindowPosition({ width, height })
+
+  let url = `fallback-popup.html?windowId=${windowId}`
   if (tabId) {
     url += `&tabId=${tabId}`
   }
@@ -149,7 +107,7 @@ export async function focusOrCreateUniswapInterfaceTab({
   const isInNewTabPage = activeTabUrl === 'chrome://newtab/'
 
   const shouldReuseActiveTab = reuseActiveTabIfItMatches
-    ? activeTabUrl && reuseActiveTabIfItMatches?.test(activeTabUrl)
+    ? activeTabUrl && reuseActiveTabIfItMatches.test(activeTabUrl)
     : false
 
   if (activeTab?.id && (shouldReuseActiveTab || isInNewTabPage)) {
@@ -183,21 +141,6 @@ export async function focusOrCreateTokensExploreTab({ currencyId }: { currencyId
   })
 }
 
-export async function focusOrCreateNftItemTab({
-  address,
-  tokenId,
-}: {
-  address: string
-  tokenId: string
-}): Promise<void> {
-  return focusOrCreateUniswapInterfaceTab({
-    url: `${uniswapUrls.webInterfaceNftItemUrl}/${address}/${tokenId}`,
-    // We want to reuse the active tab only if it's already in any other NFT item page.
-    // eslint-disable-next-line security/detect-non-literal-regexp
-    reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfaceNftItemUrl)}`),
-  })
-}
-
 export async function getCurrentTabAndWindowId(): Promise<{ tabId: number; windowId: number }> {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
   if (tabs.length === 0 || !tabs[0] || typeof tabs[0].id !== 'number' || typeof tabs[0].windowId !== 'number') {
@@ -223,4 +166,78 @@ export async function closeCurrentTab(): Promise<void> {
       },
     })
   }
+}
+
+/**
+ * Calculates the top and left position of a centered pop up window,
+ * making sure it's on the same monitor as the current window.
+ */
+async function calculatePopupWindowPosition({
+  width,
+  height,
+}: {
+  width: number
+  height: number
+}): Promise<{ left: number; top: number }> {
+  const currentWindow = await chrome.windows.getCurrent()
+  const currentWindowLeft = currentWindow.left ?? 0
+  const currentWindowTop = currentWindow.top ?? 0
+  const currentWindowWidth = currentWindow.width ?? width
+  const currentWindowHeight = currentWindow.height ?? height
+
+  return {
+    left: Math.round(currentWindowLeft + (currentWindowWidth - width) / 2),
+    top: Math.round(currentWindowTop + (currentWindowHeight - height) / 2),
+  }
+}
+
+/**
+ * Opens a popup window centered on the current window, making sure it's on the same monitor.
+ */
+export async function openPopupWindow({
+  url,
+  width,
+  height,
+}: {
+  url: string
+  width: number
+  height: number
+}): Promise<chrome.windows.Window> {
+  const { left, top } = await calculatePopupWindowPosition({ width, height })
+
+  const popupWindow = await chrome.windows.create({
+    url,
+    type: 'popup',
+    width,
+    height,
+    left,
+    top,
+  })
+
+  return popupWindow
+}
+
+export function closeWindow(window: chrome.windows.Window | undefined): void {
+  if (!window?.id) {
+    return
+  }
+
+  chrome.windows.remove(window.id).catch((error) => {
+    logger.error(error, {
+      tags: {
+        file: 'navigation/utils.ts',
+        function: 'closeWindow',
+      },
+    })
+  })
+}
+
+export async function bringWindowToFront(windowId: number, options?: { centered?: boolean }): Promise<void> {
+  if (options?.centered) {
+    const window = await chrome.windows.get(windowId)
+    const { left, top } = await calculatePopupWindowPosition({ width: window.width ?? 0, height: window.height ?? 0 })
+    await chrome.windows.update(windowId, { left, top })
+  }
+
+  await chrome.windows.update(windowId, { focused: true })
 }

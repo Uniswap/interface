@@ -1,0 +1,48 @@
+{
+  "name": "@universe/mycelium",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "sideEffects": ["*.css"],
+  "exports": {
+    ".": "./src/index.ts",
+    "./tailwind": "./tailwind.css",
+    "./fonts": "./fonts.css",
+    "./cn": {
+      "types": "./src/cn.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "clsx": "2.1.1",
+    "tailwind-merge": "3.3.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "tailwindcss": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.1",
+    "@typescript/native-preview": "7.0.0-dev.20260108.1",
+    "@uniswap/eslint-config": "workspace:^",
+    "depcheck": "1.4.7",
+    "eslint": "8.57.1",
+    "react": "19.0.3",
+    "tailwindcss": "4.1.16",
+    "typescript": "5.8.3"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck @universe/mycelium",
+    "typecheck:tsgo": "nx typecheck:tsgo @universe/mycelium",
+    "lint": "nx lint @universe/mycelium",
+    "lint:fix": "nx lint:fix @universe/mycelium",
+    "lint:biome": "nx lint:biome @universe/mycelium",
+    "lint:biome:fix": "nx lint:biome:fix @universe/mycelium",
+    "lint:eslint": "nx lint:eslint @universe/mycelium",
+    "lint:eslint:fix": "nx lint:eslint:fix @universe/mycelium",
+    "check:deps:usage": "nx check:deps:usage @universe/mycelium"
+  },
+  "nx": {
+    "includedScripts": []
+  }
+}

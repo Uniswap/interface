@@ -1,4 +1,11 @@
 import { getAddress } from '@ethersproject/address'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { HexString } from 'utilities/src/addresses/hex'
+import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
+import { tryCatch } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
 export enum AddressStringFormat {
@@ -7,48 +14,120 @@ export enum AddressStringFormat {
   Shortened = 2,
 }
 
+type GetValidAddressParams = {
+  address: Maybe<string>
+  withEVMChecksum?: boolean
+  log?: boolean
+} & (
+  | {
+      platform: Platform
+      chainId?: never
+    }
+  | {
+      platform?: never
+      chainId: UniverseChainId
+    }
+)
+
+const VALIDATION_CACHE_KEY_FN_MAP = {
+  [Platform.EVM]: (params: GetValidAddressParams) =>
+    `${Platform.EVM}-${params.address}-${Boolean(params.withEVMChecksum)}`,
+  [Platform.SVM]: (params: GetValidAddressParams) => `${Platform.SVM}-${params.address}`,
+} as const
+
+const ADDRESS_VALIDATION_CACHE = new Map<string, string | null>()
+
+function getCachedAddress(params: GetValidAddressParams): {
+  cachedAddress: string | null | undefined
+  cacheKey: string
+} {
+  const platform = params.platform ?? chainIdToPlatform(params.chainId)
+
+  const cacheKey = VALIDATION_CACHE_KEY_FN_MAP[platform](params)
+  return { cachedAddress: ADDRESS_VALIDATION_CACHE.get(cacheKey), cacheKey }
+}
+
+const VALIDATION_FN_MAP = {
+  [Platform.EVM]: getValidEVMAddress,
+  [Platform.SVM]: getValidSVMAddress,
+} as const
+
 /**
- * Validates an address and returns the normalized address: lowercased or checksummed depending on the checksum field.
+ * Validates an EVM or SVM address and returns the normalized address. EVM addresses will be lowercased or checksummed depending on the `withEVMChecksum` field.
  *
- * When withChecksum === true, this method performs a checksum on the address. Please, use only for validating user input.
+ * FOR EVM ADDRESSES:
+ * When withEVMChecksum === true, this method performs a checksum on the address. Please, use only for validating user input.
+ * When withEVMChecksum === false, it checks: length === 42 and startsWith('0x') and returns a lowercased address.
  *
- * When withChecksum === false, it checks: length === 42 and startsWith('0x') and returns a lowercased address.
- *
- * Usage:
- * `if(getValidAddress(address, withChecksum))`: Works because strings are truthy and null is falsy
+ * FOR SVM ADDRESSES:
+ * withEVMChecksum is ignored. SVM does not have checksum; addresses are validated to ensure they are 32 byte base58 strings.
  *
  * @param address The address to validate and normalize
- * @param withChecksum Whether to perform a checksum on the address
+ * @param withEVMChecksum Whether to perform a checksum on the address if it is an EVM address
+ * @param platform The blockchain platform of the address, determines what validation is performed
  * @param log If logging is enabled in case of errors
+ *
  * @returns The normalized address or false if the address is invalid
  */
-export function getValidAddress(address: Maybe<string>, withChecksum = false, log = true): Nullable<string> {
-  try {
-    if (!address) {
-      return null
-    }
-
-    const addressWith0x = ensureLeading0x(address.trim())
-
-    if (withChecksum) {
-      return getAddress(addressWith0x)
-    }
-
-    // TODO(WALL-5160): Note that we do not check for [0-9a-fA-F] due to possible performance
-    if (addressWith0x.length !== 42) {
-      throw new Error('Address has an invalid format')
-    }
-
-    return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase)
-  } catch (error) {
-    if (log) {
-      logger.warn('utils/addresses', 'getValidAddress', (error as Error)?.message, {
-        data: address,
-        stacktrace: new Error().stack,
-      })
-    }
+export function getValidAddress(params: GetValidAddressParams): Nullable<HexString | string> {
+  const { address, withEVMChecksum, log } = params
+  if (!address) {
     return null
   }
+
+  const platform = params.platform ?? chainIdToPlatform(params.chainId)
+
+  const { cachedAddress, cacheKey } = getCachedAddress(params)
+  if (cachedAddress !== undefined) {
+    return cachedAddress
+  }
+
+  const { data: result, error } = tryCatch(() => VALIDATION_FN_MAP[platform]({ address, withEVMChecksum }))
+  if (error && log) {
+    logger.warn('utils/addresses', 'getValidAddress', (error as Error).message, {
+      data: address,
+      stacktrace: new Error().stack,
+    })
+  }
+
+  ADDRESS_VALIDATION_CACHE.set(cacheKey, result)
+  return result
+}
+
+/**
+ * Validates an EVM address and returns the normalized address.
+ *
+ * @param address The address to validate and normalize
+ * @param withEVMChecksum Whether to perform a checksum on the address
+ * @returns The normalized address or null if the address is invalid
+ * @throws {Error} If the address is invalid
+ */
+function getValidEVMAddress({ address, withEVMChecksum }: { address: string; withEVMChecksum?: boolean }): HexString {
+  const addressWith0x = ensureLeading0x(address.trim())
+
+  if (withEVMChecksum) {
+    return getAddress(addressWith0x) as HexString
+  }
+
+  if (!isEVMAddress(addressWith0x)) {
+    throw new Error('Address has an invalid format')
+  }
+  return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase) as HexString
+}
+
+/**
+ * Validates a Solana address and returns the normalized address.
+ *
+ * @param address The address to validate and normalize
+ * @returns The input address, if it is a valid SVM address (32 byte base58 string)
+ * @throws {Error} If the address is invalid
+ */
+function getValidSVMAddress({ address }: { address: string }): string {
+  if (!isSVMAddress(address)) {
+    throw new Error('Address has an invalid format')
+  }
+
+  return address
 }
 
 /**
@@ -85,10 +164,45 @@ export function sanitizeAddressText(address?: string): Maybe<string> {
   return address?.replace('x', `x${zws}`)
 }
 
-export function areAddressesEqual(a1: Maybe<Address>, a2: Maybe<Address>): boolean {
-  const validA1 = getValidAddress(a1)
-  const validA2 = getValidAddress(a2)
-  return validA1 !== null && validA2 !== null && validA1 === validA2
+type AddressInput =
+  | {
+      address: Maybe<string>
+      chainId: UniverseChainId
+      platform?: never
+    }
+  | {
+      address: Maybe<string>
+      chainId?: never
+      platform: Platform
+    }
+
+type AreAddressesEqualParams = {
+  addressInput1: AddressInput
+  addressInput2: AddressInput
+}
+
+export function areAddressesEqual(params: AreAddressesEqualParams): boolean {
+  const { addressInput1, addressInput2 } = params
+  const platform1 = addressInput1.platform ?? chainIdToPlatform(addressInput1.chainId)
+  const platform2 = addressInput2.platform ?? chainIdToPlatform(addressInput2.chainId)
+
+  if (platform1 !== platform2) {
+    return false
+  }
+
+  // Solana addresses are Base58 encoded, so they are case-sensitive. Can compare strings directly.
+  if (addressInput1.address === addressInput2.address) {
+    return true
+  }
+
+  if (platform1 === Platform.EVM) {
+    return (
+      normalizeAddress(addressInput1.address ?? '', AddressStringFormat.Lowercase) ===
+      normalizeAddress(addressInput2.address ?? '', AddressStringFormat.Lowercase)
+    )
+  }
+
+  return false
 }
 
 /**

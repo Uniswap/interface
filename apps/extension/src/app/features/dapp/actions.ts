@@ -24,7 +24,15 @@ export async function saveDappChain(dappUrl: string, chainId: UniverseChainId): 
   await externalDappMessageChannel.sendMessageToTabUrl(dappUrl, response)
 }
 
-export async function saveDappConnection(dappUrl: string, account: Account, iconUrl?: string): Promise<void> {
+export async function saveDappConnection({
+  dappUrl,
+  account,
+  iconUrl,
+}: {
+  dappUrl: string
+  account: Account
+  iconUrl?: string
+}): Promise<void> {
   const displayName = await getCapitalizedDisplayNameFromTab(dappUrl)
 
   const initialProperties: Partial<DappInfo> = {}
@@ -37,7 +45,7 @@ export async function saveDappConnection(dappUrl: string, account: Account, icon
     initialProperties.iconUrl = iconUrl
   }
 
-  dappStore.saveDappActiveAccount(dappUrl, account, initialProperties)
+  dappStore.saveDappActiveAccount({ dappUrl, account, initialProperties })
   await updateConnectionFromExtension(dappUrl)
 }
 

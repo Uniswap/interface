@@ -1,0 +1,92 @@
+diff --git a/lib/module/reactUtils.js b/lib/module/reactUtils.js
+index 94e76acc602cd2eb2d7a16d9230062da4f4c42b0..1fe2a9dd5463c614be39c3f2fc30fcfce075070d 100644
+--- a/lib/module/reactUtils.js
++++ b/lib/module/reactUtils.js
+@@ -4,14 +4,25 @@ import React, { forwardRef } from 'react';
+ import { isReact19 } from "./PlatformChecker.js";
+ const IS_REACT_19 = isReact19();
+ function getCurrentReactOwner() {
+-  return (
++  try {
++    // Prefer the client internals getOwner when available
+     // @ts-expect-error React secret internals aren't typed
+-    React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.A?.getOwner?.() ||
++    const clientInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
++    const ownerFromClient = typeof (clientInternals?.A?.getOwner) === 'function'
++      ? clientInternals.A.getOwner()
++      : null;
++    if (ownerFromClient) return ownerFromClient;
++    // Fallback to secret internals current owner
+     // @ts-expect-error React secret internals aren't typed
+-    React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?.ReactCurrentOwner?.current ||
++    const secretCurrent = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?.ReactCurrentOwner?.current ?? null;
++    if (secretCurrent) return secretCurrent;
++    // Server internals fallback (SSR)
+     // @ts-expect-error React secret internals aren't typed
+-    React.__SERVER_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.ReactCurrentOwner?.current
+-  );
++    const serverCurrent = React.__SERVER_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.ReactCurrentOwner?.current ?? null;
++    return serverCurrent ?? null;
++  } catch (_err) {
++    return null;
++  }
+ }
+ export function isReactRendering() {
+   return !!getCurrentReactOwner();
+diff --git a/src/reactUtils.tsx b/src/reactUtils.tsx
+index 259e3f8b629da0fe5ae843d1b385311988ab1b98..87ca76f74e8e241e7cb37827474b684df5cc3c56 100644
+--- a/src/reactUtils.tsx
++++ b/src/reactUtils.tsx
+@@ -12,16 +12,28 @@ import { isReact19 } from './PlatformChecker';
+ const IS_REACT_19 = isReact19();
+
+ function getCurrentReactOwner() {
+-  return (
++  try {
++    // Prefer the client internals getOwner when available
+     // @ts-expect-error React secret internals aren't typed
+-    React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.A?.getOwner?.() ||
++    const clientInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
++    const ownerFromClient = typeof clientInternals?.A?.getOwner === 'function'
++      ? clientInternals.A.getOwner()
++      : null;
++    if (ownerFromClient) return ownerFromClient;
++
++    // Fallback to secret internals current owner
+     // @ts-expect-error React secret internals aren't typed
+-    React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?.ReactCurrentOwner
+-      ?.current ||
++    const secretCurrent = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?.ReactCurrentOwner?.current ?? null;
++    if (secretCurrent) return secretCurrent;
++
++    // Server internals fallback (SSR)
+     // @ts-expect-error React secret internals aren't typed
+-    React.__SERVER_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE
+-      ?.ReactCurrentOwner?.current
+-  );
++    const serverCurrent = React.__SERVER_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.ReactCurrentOwner?.current ?? null;
++
++    return serverCurrent ?? null;
++  } catch (_err) {
++    return null as unknown as any;
++  }
+ }
+
+ export function isReactRendering() {
+diff --git a/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm b/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm
+index 1111111111111111111111111111111111111111..2222222222222222222222222222222222222222 100644
+--- a/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm
++++ b/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm
+@@ -133,6 +133,12 @@
+   if (containerIsRootOfViewController) {
+     return;
+   }
++
++  // Guard against nil children when container was already unmounted (race condition during fast scroll)
++  // This prevents crash: "attempt to insert nil object from objects[1]" when creating @[index, nil]
++  if (!permanentlyRemovedChildren || permanentlyRemovedChildren.count != removeAtIndices.count) {
++    return;
++  }
+
+   // we sort the (index, view) pairs to make sure we insert views back in order
+   NSMutableArray<NSArray<id> *> *removedViewsWithIndices = [NSMutableArray new];

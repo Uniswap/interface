@@ -1,0 +1,280 @@
+/* Keyframe Animations */
+
+/* View Transitions */
+::view-transition-old(crossfade) {
+  animation: hide 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+::view-transition-new(crossfade) {
+  opacity: 0;
+  animation: appear 300ms cubic-bezier(0.4, 0, 0.2, 1) 80ms forwards;
+}
+
+@keyframes hide {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Dialog Animation - Subtle crossfade style */
+@keyframes dialog-appear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 4px));
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes dialog-hide {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 4px));
+  }
+}
+
+.dialog-content[data-state="open"] {
+  animation: dialog-appear 200ms cubic-bezier(0.6, 0, 0.8, 1) forwards;
+}
+
+.dialog-content[data-state="closed"] {
+  animation: dialog-hide 150ms cubic-bezier(0.6, 0, 0.8, 1) forwards;
+}
+
+/* Blur Fade Animations */
+@keyframes blur-fade-in {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes blur-fade-out {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+/* No entrance animation - just show immediately */
+.animate-entrance {
+  opacity: 1;
+}
+
+/* Blur fade in with translate - for elements that appear on mount */
+.animate-blur-fade-in {
+  animation: blur-fade-in-translate 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes blur-fade-in-translate {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Blur fade out with translate and height collapse - for elements that exit */
+.animate-blur-fade-out {
+  animation: blur-fade-out-translate 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  overflow: hidden;
+}
+
+@keyframes blur-fade-out-translate {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    max-height: 500px;
+    margin-bottom: 0;
+  }
+  50% {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(4px);
+    max-height: 0;
+    margin-bottom: -40px;
+  }
+}
+
+/* State-driven blur fade for elements inside stateful containers */
+[data-state="open"] .blur-fade-item {
+  animation: blur-fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+[data-state="closed"] .blur-fade-item {
+  animation: blur-fade-out 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+/* Button Loading Crossfade - Pure CSS Transitions */
+.button-loading-text {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition:
+    opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    filter 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-loading-text[data-loading="true"] {
+  opacity: 0;
+  transform: translateY(4px);
+  filter: blur(4px);
+}
+
+.button-loading-spinner {
+  opacity: 0;
+  transform: translateY(-4px);
+  filter: blur(4px);
+  pointer-events: none;
+  transition:
+    opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 50ms,
+    transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 50ms,
+    filter 200ms cubic-bezier(0.4, 0, 0.2, 1) 50ms;
+}
+
+.button-loading-spinner[data-loading="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  pointer-events: auto;
+}
+
+/* Button State Icons - Crossfade between spinner and success checkmark */
+.button-state-spinner,
+.button-state-success {
+  opacity: 0;
+  transform: translateY(-4px);
+  filter: blur(4px);
+  pointer-events: none;
+  transition:
+    opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    filter 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-state-spinner[data-visible="true"],
+.button-state-success[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  pointer-events: auto;
+}
+
+/* Console Terminal Animations */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.console-cursor {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes console-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.console-fade-in {
+  animation: console-fade-in 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Logo Carousel Animation - scrolls through one third of content for 3x duplicated logos */
+@keyframes logo-scroll {
+  0% {
+    transform: translateX(0) translateZ(0);
+  }
+  100% {
+    transform: translateX(calc(-33.333%)) translateZ(0);
+  }
+}
+
+/* Overlay Animations - matches view transition timings */
+@keyframes overlay-hide {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+}
+
+@keyframes overlay-appear {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+.overlay-backdrop[data-state="open"] {
+  animation: overlay-appear 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.overlay-backdrop[data-state="closed"] {
+  animation: overlay-hide 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

@@ -1,209 +1,227 @@
-import { config } from 'uniswap/src/config'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
-import { SwappableTokensParams } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
+import { createTradingApiClient, TradingApi, type TradingApiClient as TradingApiClientType } from '@universe/api'
+import { TRADING_API_PATHS } from '@universe/api/src/clients/trading/createTradingApiClient'
 import {
-  ApprovalRequest,
-  ApprovalResponse,
-  BridgeQuote,
-  ChainId,
-  CheckApprovalLPRequest,
-  CheckApprovalLPResponse,
-  ClaimLPFeesRequest,
-  ClaimLPFeesResponse,
-  ClassicQuote,
-  CreateLPPositionRequest,
-  CreateLPPositionResponse,
-  CreateSwapRequest,
-  CreateSwapResponse,
-  DecreaseLPPositionRequest,
-  DecreaseLPPositionResponse,
-  DutchQuoteV2,
-  DutchQuoteV3,
-  GetOrdersResponse,
-  GetSwappableTokensResponse,
-  GetSwapsResponse,
-  IncreaseLPPositionRequest,
-  IncreaseLPPositionResponse,
-  IndicativeQuoteRequest,
-  IndicativeQuoteResponse,
-  MigrateLPPositionRequest,
-  MigrateLPPositionResponse,
-  OrderRequest,
-  OrderResponse,
-  PriorityQuote,
-  QuoteRequest,
-  QuoteResponse,
-  Routing,
-  TransactionHash,
-  UniversalRouterVersion,
-} from 'uniswap/src/data/tradingApi/__generated__'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isTestEnv } from 'utilities/src/environment/env'
+  EthAsErc20UniswapXProperties,
+  Experiments,
+  FeatureFlags,
+  getExperimentValue,
+  getFeatureFlag,
+} from '@universe/gating'
+import { config } from 'uniswap/src/config'
+import { tradingApiVersionPrefix, uniswapUrls } from 'uniswap/src/constants/urls'
+import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
+import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
-// TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
-// See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
-export type DiscriminatedQuoteResponse =
-  | ClassicQuoteResponse
-  | DutchQuoteResponse
-  | DutchV3QuoteResponse
-  | PriorityQuoteResponse
-  | BridgeQuoteResponse
-
-export type DutchV3QuoteResponse = QuoteResponse & {
-  quote: DutchQuoteV3
-  routing: Routing.DUTCH_V3
-}
-
-export type DutchQuoteResponse = QuoteResponse & {
-  quote: DutchQuoteV2
-  routing: Routing.DUTCH_V2
-}
-
-export type PriorityQuoteResponse = QuoteResponse & {
-  quote: PriorityQuote
-  routing: Routing.PRIORITY
-}
-
-export type ClassicQuoteResponse = QuoteResponse & {
-  quote: ClassicQuote
-  routing: Routing.CLASSIC
-}
-
-export type BridgeQuoteResponse = QuoteResponse & {
-  quote: BridgeQuote
-  routing: Routing.BRIDGE
-}
-
-export const TRADING_API_CACHE_KEY = 'TradingApi'
-
-const TradingApiClient = createApiClient({
+const TradingFetchClient = createUniswapFetchClient({
   baseUrl: uniswapUrls.tradingApiUrl,
   additionalHeaders: {
     'x-api-key': config.tradingApiKey,
   },
 })
 
-export type WithV4Flag<T> = T & { v4Enabled: boolean }
-
-export async function fetchQuote({
-  v4Enabled,
-  ...params
-}: WithV4Flag<QuoteRequest>): Promise<DiscriminatedQuoteResponse> {
-  return await TradingApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
-    body: JSON.stringify(params),
-    headers: {
-      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
-    },
-  })
+/**
+ * Helper to add a header only if enabled.
+ */
+function addHeaderIfEnabled(params: { headers: Record<string, string>; key: string; enabled: boolean }): void {
+  const { headers, key, enabled } = params
+  if (enabled) {
+    headers[key] = 'true'
+  }
 }
 
-export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<IndicativeQuoteResponse> {
-  return await TradingApiClient.post<IndicativeQuoteResponse>(uniswapUrls.tradingApiPaths.indicativeQuote, {
-    body: JSON.stringify(params),
-  })
+export enum TradingApiHeaders {
+  UniversalRouterVersion = 'x-universal-router-version',
+  UniquoteEnabled = 'x-uniquote-enabled',
+  ViemProviderEnabled = 'x-viem-provider-enabled',
+  Erc20EthEnabled = 'x-erc20eth-enabled',
+  ChainedActionsEnabled = 'x-chained-actions-enabled',
+  UnirouteEnabled = 'x-uniroute-enabled',
+  UniroutePulumiEnabled = 'x-uniroute-pulumi-enabled',
+  DisableUniswapInterfaceFees = 'x-disable-uniswap-interface-fees',
 }
 
-export async function fetchSwap({ v4Enabled, ...params }: WithV4Flag<CreateSwapRequest>): Promise<CreateSwapResponse> {
-  return await TradingApiClient.post<CreateSwapResponse>(uniswapUrls.tradingApiPaths.swap, {
-    body: JSON.stringify(params),
-    headers: {
-      'x-universal-router-version': v4Enabled ? '2.0' : '1.2',
-    },
+/**
+ * Returns the headers for the trading API client that are based on feature flags
+ *
+ * NOTE: Be sure to confirm that adding this header does not cause a CORS issue
+ * with the web environments.
+ */
+export const getFeatureFlaggedHeaders = (
+  tradingApiPath: (typeof TRADING_API_PATHS)[keyof typeof TRADING_API_PATHS],
+): HeadersInit => {
+  const headers: Record<string, string> = {
+    [TradingApiHeaders.UniversalRouterVersion]: TradingApi.UniversalRouterVersion._2_0,
+  }
+  const uniquoteEnabled = getFeatureFlag(FeatureFlags.UniquoteEnabled)
+  const viemProviderEnabled = getFeatureFlag(FeatureFlags.ViemProviderEnabled)
+  addHeaderIfEnabled({ headers, key: TradingApiHeaders.UniquoteEnabled, enabled: uniquoteEnabled })
+  addHeaderIfEnabled({ headers, key: TradingApiHeaders.ViemProviderEnabled, enabled: viemProviderEnabled })
+
+  const chainedActionsEnabled = getFeatureFlag(FeatureFlags.ChainedActions)
+  const unirouteEnabled = getFeatureFlag(FeatureFlags.UnirouteEnabled)
+  const uniroutePulumiEnabled = getFeatureFlag(FeatureFlags.UniroutePulumiEnabled)
+  const ethAsErc20UniswapXEnabled = getExperimentValue({
+    experiment: Experiments.EthAsErc20UniswapX,
+    param: EthAsErc20UniswapXProperties.EthAsErc20UniswapXEnabled,
+    defaultValue: false,
   })
+  const disableUniswapInterfaceFees = getFeatureFlag(FeatureFlags.NoUniswapInterfaceFees)
+  switch (tradingApiPath) {
+    case TRADING_API_PATHS.quote:
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.UnirouteEnabled, enabled: unirouteEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.UniroutePulumiEnabled, enabled: uniroutePulumiEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
+      addHeaderIfEnabled({
+        headers,
+        key: TradingApiHeaders.DisableUniswapInterfaceFees,
+        enabled: disableUniswapInterfaceFees,
+      })
+      break
+    case TRADING_API_PATHS.plan:
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
+      break
+    case TRADING_API_PATHS.order:
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
+      break
+    case TRADING_API_PATHS.swap7702:
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.UnirouteEnabled, enabled: unirouteEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.UniroutePulumiEnabled, enabled: uniroutePulumiEnabled })
+      addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
+      break
+  }
+  return headers
 }
 
-export async function fetchCheckApproval(params: ApprovalRequest): Promise<ApprovalResponse> {
-  return await TradingApiClient.post<ApprovalResponse>(uniswapUrls.tradingApiPaths.approval, {
-    body: JSON.stringify(params),
-  })
+/**
+ * NOTE: Be sure to confirm that adding this header does not cause a CORS issue
+ * with the web environments
+ */
+export const getQuoteHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {}
+  const unirouteEnabled = getFeatureFlag(FeatureFlags.UnirouteEnabled)
+  const uniroutePulumiEnabled = getFeatureFlag(FeatureFlags.UniroutePulumiEnabled)
+  addHeaderIfEnabled({ headers, key: 'x-uniroute-enabled', enabled: unirouteEnabled })
+  addHeaderIfEnabled({ headers, key: 'x-uniroute-pulumi-enabled', enabled: uniroutePulumiEnabled })
+  return headers
 }
 
-export async function submitOrder(params: OrderRequest): Promise<OrderResponse> {
-  return await TradingApiClient.post<OrderResponse>(uniswapUrls.tradingApiPaths.order, {
-    body: JSON.stringify(params),
-  })
+// Narrowed to `TradingApiClientType` type safety to ensure we are only using the plan endpoints with sessions, until full migration
+export const TradingApiClient: TradingApiClientType = createTradingApiClient({
+  fetchClient: TradingFetchClient,
+  getFeatureFlagHeaders: getFeatureFlaggedHeaders,
+  getApiPathPrefix: () => tradingApiVersionPrefix,
+})
+
+// Default maximum amount of combinations wallet<>chainId per check delegation request
+const DEFAULT_CHECK_VALIDATIONS_BATCH_THRESHOLD = 140
+
+// Utility function to chunk wallet addresses for batching
+function chunkWalletAddresses(params: {
+  walletAddresses: Address[]
+  chainIds: TradingApi.ChainId[]
+  batchThreshold: number
+}): Address[][] {
+  const { walletAddresses, chainIds, batchThreshold } = params
+  const totalCombinations = walletAddresses.length * chainIds.length
+
+  if (totalCombinations <= batchThreshold) {
+    return [walletAddresses]
+  }
+
+  const maxWalletsPerBatch = Math.floor(batchThreshold / chainIds.length)
+  const chunks: Address[][] = []
+
+  for (let i = 0; i < walletAddresses.length; i += maxWalletsPerBatch) {
+    chunks.push(walletAddresses.slice(i, i + maxWalletsPerBatch))
+  }
+
+  return chunks
 }
 
-export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise<GetOrdersResponse> {
-  return await TradingApiClient.get<GetOrdersResponse>(uniswapUrls.tradingApiPaths.orders, {
-    params: {
-      orderIds: orderIds.join(','),
-    },
-  })
+function mergeDelegationResponses(
+  responses: TradingApi.WalletCheckDelegationResponseBody[],
+): TradingApi.WalletCheckDelegationResponseBody {
+  if (responses.length === 0) {
+    throw new Error('No responses to merge')
+  }
+
+  const firstResponse = responses[0]
+  if (!firstResponse) {
+    throw new Error('First response is undefined')
+  }
+
+  if (responses.length === 1) {
+    return firstResponse
+  }
+
+  const mergedDelegationDetails: Record<string, TradingApi.ChainDelegationMap> = {}
+
+  for (const response of responses) {
+    for (const [walletAddress, chainDelegationMap] of Object.entries(response.delegationDetails)) {
+      mergedDelegationDetails[walletAddress] = chainDelegationMap
+    }
+  }
+
+  return {
+    requestId: firstResponse.requestId,
+    delegationDetails: mergedDelegationDetails,
+  }
 }
 
-export async function fetchSwappableTokens(params: SwappableTokensParams): Promise<GetSwappableTokensResponse> {
-  const chainBlocklist = params.unichainEnabled ? [] : [UniverseChainId.Unichain.toString()]
+export type CheckWalletDelegation = (
+  params: TradingApi.WalletCheckDelegationRequestBody,
+) => Promise<TradingApi.WalletCheckDelegationResponseBody>
 
-  return await TradingApiClient.get<GetSwappableTokensResponse>(uniswapUrls.tradingApiPaths.swappableTokens, {
-    params: {
-      tokenIn: params.tokenIn,
-      tokenInChainId: params.tokenInChainId,
-    },
-    headers:
-      params.unichainEnabled || isTestEnv()
-        ? {}
-        : {
-            'x-chain-blocklist': chainBlocklist.join(','),
-          },
+export async function checkWalletDelegation(
+  params: TradingApi.WalletCheckDelegationRequestBody,
+  batchThreshold: number = DEFAULT_CHECK_VALIDATIONS_BATCH_THRESHOLD,
+): Promise<TradingApi.WalletCheckDelegationResponseBody> {
+  const { walletAddresses, chainIds } = params
+
+  // Filter out SVM chains - check_delegation only supports EVM chains
+  const evmChainIds = filterChainIdsByPlatform(chainIds, Platform.EVM)
+
+  // If no wallet addresses provided or if no EVM chains after filtering, return empty response
+  if (!walletAddresses || walletAddresses.length === 0 || evmChainIds.length === 0) {
+    return {
+      requestId: '',
+      delegationDetails: {},
+    }
+  }
+
+  // Ensure batchThreshold is at least the number of chain IDs
+  const effectiveBatchThreshold = Math.max(batchThreshold, evmChainIds.length)
+
+  const totalCombinations = walletAddresses.length * evmChainIds.length
+
+  // If under threshold, make a single request
+  if (totalCombinations <= effectiveBatchThreshold) {
+    return await TradingApiClient.checkWalletDelegationWithoutBatching({
+      walletAddresses,
+      chainIds: evmChainIds,
+    })
+  }
+
+  // Split into batches
+  const walletChunks = chunkWalletAddresses({
+    walletAddresses,
+    chainIds: evmChainIds,
+    batchThreshold: effectiveBatchThreshold,
   })
-}
 
-export async function createLpPosition(params: CreateLPPositionRequest): Promise<CreateLPPositionResponse> {
-  return await TradingApiClient.post<CreateLPPositionResponse>(uniswapUrls.tradingApiPaths.createLp, {
-    body: JSON.stringify({
-      ...params,
+  // Make batched requests
+  const batchPromises = walletChunks.map((chunk) =>
+    TradingApiClient.checkWalletDelegationWithoutBatching({
+      walletAddresses: chunk,
+      chainIds: evmChainIds,
     }),
-  })
-}
-export async function decreaseLpPosition(params: DecreaseLPPositionRequest): Promise<DecreaseLPPositionResponse> {
-  return await TradingApiClient.post<DecreaseLPPositionResponse>(uniswapUrls.tradingApiPaths.decreaseLp, {
-    body: JSON.stringify({
-      ...params,
-    }),
-  })
-}
-export async function increaseLpPosition(params: IncreaseLPPositionRequest): Promise<IncreaseLPPositionResponse> {
-  return await TradingApiClient.post<IncreaseLPPositionResponse>(uniswapUrls.tradingApiPaths.increaseLp, {
-    body: JSON.stringify({
-      ...params,
-    }),
-  })
-}
-export async function checkLpApproval(
-  params: CheckApprovalLPRequest,
-  headers?: Record<string, string>,
-): Promise<CheckApprovalLPResponse> {
-  return await TradingApiClient.post<CheckApprovalLPResponse>(uniswapUrls.tradingApiPaths.lpApproval, {
-    body: JSON.stringify({
-      ...params,
-    }),
-    headers,
-  })
-}
+  )
 
-export async function claimLpFees(params: ClaimLPFeesRequest): Promise<ClaimLPFeesResponse> {
-  return await TradingApiClient.post<ClaimLPFeesResponse>(uniswapUrls.tradingApiPaths.claimLpFees, {
-    body: JSON.stringify({
-      ...params,
-    }),
-  })
-}
+  const responses = await Promise.all(batchPromises)
 
-export async function fetchSwaps(params: { txHashes: TransactionHash[]; chainId: ChainId }): Promise<GetSwapsResponse> {
-  return await TradingApiClient.get<GetSwapsResponse>(uniswapUrls.tradingApiPaths.swaps, {
-    params: {
-      txHashes: params.txHashes.join(','),
-      chainId: params.chainId,
-    },
-  })
-}
-
-export async function migrateLpPosition(params: MigrateLPPositionRequest): Promise<MigrateLPPositionResponse> {
-  return await TradingApiClient.post<MigrateLPPositionResponse>(uniswapUrls.tradingApiPaths.migrate, {
-    body: JSON.stringify({
-      ...params,
-    }),
-  })
+  // Merge all responses
+  return mergeDelegationResponses(responses)
 }

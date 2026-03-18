@@ -14,20 +14,3 @@ export function formatTokenMetatagTitleName(symbol: string | undefined, name: st
   }
   return 'View Token on Uniswap'
 }
-
-export function formatNFTAssetMetatagTitleName(
-  name: string | undefined,
-  collectionName: string | undefined,
-  tokenId: string,
-) {
-  if (name) {
-    return name
-  }
-  if (collectionName && tokenId) {
-    return collectionName + ' #' + tokenId
-  }
-  if (tokenId) {
-    return 'Asset #' + tokenId
-  }
-  return 'View NFT on Uniswap'
-}

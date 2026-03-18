@@ -11,6 +11,7 @@ export function SwipeableCard({
   children,
   stackIndex,
   cardHeight,
+  activeCardHeight,
   disableSwipe,
   onPress,
   onSwiped,
@@ -47,7 +48,13 @@ export function SwipeableCard({
 
   return (
     <GestureDetector gesture={composed}>
-      <BaseCard panOffset={panOffset} stackIndex={stackIndex} cardHeight={cardHeight} onLayout={onLayout}>
+      <BaseCard
+        panOffset={panOffset}
+        stackIndex={stackIndex}
+        cardHeight={cardHeight}
+        activeCardHeight={activeCardHeight}
+        onLayout={onLayout}
+      >
         {children}
       </BaseCard>
     </GestureDetector>

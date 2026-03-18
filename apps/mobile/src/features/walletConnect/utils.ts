@@ -1,31 +1,52 @@
 import { WalletKitTypes } from '@reown/walletkit'
-import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
+import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes, Verify } from '@walletconnect/types'
 import { utils } from 'ethers'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
-import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
+import {
+  SignRequest,
+  TransactionRequest,
+  WalletGetCallsStatusRequest,
+  WalletGetCapabilitiesRequest,
+  WalletSendCallsRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
+import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappRequestInfo, DappRequestType } from 'uniswap/src/types/walletConnect'
+import { hexToNumber } from 'utilities/src/addresses/hex'
+import { logger } from 'utilities/src/logger/logger'
+import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
+import {
+  Capability,
+  DappVerificationStatus,
+  GetCallsStatusParams,
+  SendCallsParams,
+} from 'wallet/src/features/dappRequests/types'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
  * Assumes each namespace has been validated and is supported by the app with `validateProposalNamespaces()`.
  *
  * @param {Address} account address of account to complete WalletConnect pairing request
- * @param {ProposalTypes.RequiredNamespaces} proposalNamespaces validated proposal namespaces that specify all supported chains, methods, events for the session
+ * @param {ProposalTypes.OptionalNamespaces} proposalNamespaces validated proposal namespaces that specify all supported chains, methods, events for the session
  * @return {SessionTypes.Namespaces} session namespaces specifying which accounts, chains, methods, events to complete the pairing
  */
-export const getSessionNamespaces = (
-  account: Address,
-  proposalNamespaces: ProposalTypes.RequiredNamespaces,
-): SessionTypes.Namespaces => {
+export function getSessionNamespaces(
+  accounts: Address[],
+  proposalNamespaces: ProposalTypes.OptionalNamespaces,
+): SessionTypes.Namespaces {
   // Below inspired from https://github.com/WalletConnect/web-examples/blob/main/wallets/react-wallet-v2/src/views/SessionProposalModal.tsx#L63
   const namespaces: SessionTypes.Namespaces = {}
 
-  Object.entries(proposalNamespaces).forEach(([key, namespace]) => {
+  Object.entries(proposalNamespaces).forEach(([nameSpaceId, namespace]) => {
     const { chains, events, methods } = namespace
-    namespaces[key] = {
-      accounts: chains ? chains.map((chain) => `${chain}:${account}`) : [`${key}:${account}`],
+
+    const formattedAccounts = !chains
+      ? accounts.map((account) => `${nameSpaceId}:${account}`)
+      : accounts.flatMap((account) => chains.map((chain) => `${chain}:${account}`))
+
+    namespaces[nameSpaceId] = {
+      accounts: formattedAccounts,
       events,
       methods,
       chains,
@@ -70,6 +91,52 @@ export const getAccountAddressFromEIP155String = (account: string): Address | nu
 }
 
 /**
+ * Creates a base WalletConnect request object with common properties
+ *
+ * @param method The request method type
+ * @param topic WalletConnect session ID
+ * @param internalId WalletConnect request ID
+ * @param account Account address
+ * @param chainId Chain ID for the request
+ * @param dapp Dapp metadata
+ * @returns Base request object with common properties
+ */
+function createBaseRequest<T extends WalletConnectEthMethod>({
+  method,
+  topic,
+  internalId,
+  account,
+  dapp,
+}: {
+  method: T
+  topic: string
+  internalId: number
+  account: Address
+  dapp: SignClientTypes.Metadata
+}): {
+  type: T
+  sessionId: string
+  internalId: string
+  account: Address
+  isLinkModeSupported: boolean
+  dappRequestInfo: DappRequestInfo
+} {
+  return {
+    type: method,
+    sessionId: topic,
+    internalId: String(internalId),
+    account,
+    isLinkModeSupported: Boolean(dapp.redirect?.linkMode),
+    dappRequestInfo: {
+      name: dapp.name,
+      url: dapp.url,
+      icon: dapp.icons[0] ?? null,
+      requestType: DappRequestType.WalletConnectSessionRequest,
+    },
+  }
+}
+
+/**
  * Formats SignRequest object from WalletConnect 2.0 request parameters
  *
  * @param {EthSignMethod} method type of method to sign
@@ -80,32 +147,27 @@ export const getAccountAddressFromEIP155String = (account: string): Address | nu
  * @param {WalletKitTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
  * @returns {{Address, SignRequest}} address of the account receiving the request and formatted SignRequest object
  */
-export const parseSignRequest = (
-  method: EthSignMethod,
-  topic: string,
-  internalId: number,
-  chainId: UniverseChainId,
-  dapp: SignClientTypes.Metadata,
-  requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
-): { account: Address; request: SignRequest } => {
+export function parseSignRequest({
+  method,
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+}: {
+  method: EthSignMethod
+  topic: string
+  internalId: number
+  chainId: UniverseChainId
+  dapp: SignClientTypes.Metadata
+  requestParams: WalletKitTypes.SessionRequest['params']['request']['params']
+}): SignRequest {
   const { address, rawMessage, message } = getAddressAndMessageToSign(method, requestParams)
   return {
-    account: address,
-    request: {
-      type: method,
-      sessionId: topic,
-      internalId: String(internalId),
-      rawMessage,
-      message,
-      account: address,
-      chainId,
-      dapp: {
-        name: dapp.name,
-        url: dapp.url,
-        icon: dapp.icons[0] ?? null,
-        source: 'walletconnect',
-      },
-    },
+    ...createBaseRequest({ method, topic, internalId, account: address, dapp }),
+    chainId,
+    rawMessage,
+    message,
   }
 }
 
@@ -122,39 +184,126 @@ export const parseSignRequest = (
  * @param {WalletKitTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
  * @returns {{Address, TransactionRequest}} address of the account receiving the request and formatted TransactionRequest object
  */
-export const parseTransactionRequest = (
-  method: EthMethod.EthSendTransaction,
-  topic: string,
-  internalId: number,
-  chainId: UniverseChainId,
-  dapp: SignClientTypes.Metadata,
-  requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
-): { account: Address; request: TransactionRequest } => {
+export function parseTransactionRequest({
+  method,
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+}: {
+  method: EthMethod.EthSendTransaction
+  topic: string
+  internalId: number
+  chainId: UniverseChainId
+  dapp: SignClientTypes.Metadata
+  requestParams: WalletKitTypes.SessionRequest['params']['request']['params']
+}): TransactionRequest {
   // Omit gasPrice and nonce in tx sent from dapp since it is calculated later
   const { from, to, data, gasLimit, value } = requestParams[0]
 
   return {
-    account: from,
-    request: {
-      type: method,
-      sessionId: topic,
-      internalId: String(internalId),
-      transaction: {
-        to,
-        from,
-        value,
-        data,
-        gasLimit,
-      },
-      account: from,
-      chainId,
-      dapp: {
-        name: dapp.name,
-        url: dapp.url,
-        icon: dapp.icons[0] ?? null,
-        source: 'walletconnect',
-      },
+    ...createBaseRequest({ method, topic, internalId, account: from, dapp }),
+    chainId,
+    transaction: {
+      to,
+      from,
+      value,
+      data,
+      gasLimit,
     },
+  }
+}
+
+/**
+ * Formats WalletCapabilitiesRequest object from parameters
+ *
+ * @param {EthMethod.WalletGetCapabilities} method type of method
+ * @param {string} topic id for the WalletConnect session
+ * @param {number} internalId id for the WalletConnect request
+ * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting capabilities
+ * @param {[string, string[]?]} requestParams parameters of the request [Wallet Address, [Chain IDs]?]
+ * @returns {WalletGetCapabilitiesRequest} formatted request object
+ */
+export const parseGetCapabilitiesRequest = ({
+  method,
+  topic,
+  internalId,
+  dapp,
+  requestParams,
+}: {
+  method: EthMethod.WalletGetCapabilities
+  topic: string
+  internalId: number
+  dapp: SignClientTypes.Metadata
+  requestParams: [string, string[]?]
+}): WalletGetCapabilitiesRequest => {
+  const [address, chainIds] = requestParams
+  const parsedChainIds = chainIds
+    ?.map((chainId) => toSupportedChainId(hexToNumber(chainId)))
+    .filter((c): c is UniverseChainId => Boolean(c))
+
+  return {
+    ...createBaseRequest({ method, topic, internalId, account: address, dapp }), // 0 as chainId since it's not specific to a chain
+    chainIds: parsedChainIds,
+    account: address,
+  }
+}
+
+export function parseSendCallsRequest({
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+  account,
+}: {
+  topic: string
+  internalId: number
+  chainId: number
+  dapp: SignClientTypes.Metadata
+  requestParams: [SendCallsParams]
+  account: Address
+}): WalletSendCallsRequest {
+  const sendCallsParam = requestParams[0]
+  const requestId = sendCallsParam.id || generateBatchId()
+  return {
+    ...createBaseRequest({
+      method: EthMethod.WalletSendCalls,
+      topic,
+      internalId,
+      account: sendCallsParam.from ?? account,
+      dapp,
+    }),
+    chainId,
+    calls: sendCallsParam.calls,
+    capabilities: sendCallsParam.capabilities || {},
+    account: sendCallsParam.from ?? account,
+    id: requestId,
+    version: sendCallsParam.version,
+  }
+}
+
+export function parseGetCallsStatusRequest({
+  topic,
+  internalId,
+  chainId,
+  dapp,
+  requestParams,
+  account,
+}: {
+  topic: string
+  internalId: number
+  chainId: number
+  dapp: SignClientTypes.Metadata
+  requestParams: [GetCallsStatusParams]
+  account: Address
+}): WalletGetCallsStatusRequest {
+  const requestId = requestParams[0]
+  return {
+    ...createBaseRequest({ method: EthMethod.WalletGetCallsStatus, topic, internalId, account, dapp }),
+    chainId,
+    id: requestId,
   }
 }
 
@@ -162,7 +311,7 @@ export function decodeMessage(value: string): string {
   try {
     if (utils.isHexString(value)) {
       const decoded = utils.toUtf8String(value)
-      if (decoded?.trim()) {
+      if (decoded.trim()) {
         return decoded
       }
     }
@@ -181,7 +330,7 @@ export function decodeMessage(value: string): string {
  * See https://docs.walletconnect.com/2.0/advanced/rpc-reference/ethereum-rpc#personal_sign
  */
 // eslint-disable-next-line consistent-return
-export function getAddressAndMessageToSign(
+function getAddressAndMessageToSign(
   ethMethod: EthSignMethod,
   params: WalletKitTypes.SessionRequest['params']['request']['params'],
 ): { address: string; rawMessage: string; message: string | null } {
@@ -202,4 +351,72 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
   } catch (error) {
     return Promise.reject(error instanceof Error ? error.message : '')
   }
+}
+
+/**
+ * Formats safety level based on the verify context from a wallet connect proposal or sesison request.
+ *
+ * See https://docs.reown.com/walletkit/ios/verify
+ */
+export function parseVerifyStatus(verifyContext?: Verify.Context): DappVerificationStatus {
+  if (!verifyContext) {
+    return DappVerificationStatus.Unverified
+  }
+
+  const { verified } = verifyContext
+
+  // Must check for isScam first, since valid URLs can still be scams
+  if (verified.validation === 'INVALID' || verified.isScam) {
+    return DappVerificationStatus.Threat
+  }
+
+  if (verified.validation === 'VALID') {
+    return DappVerificationStatus.Verified
+  }
+
+  // Default to unverified status to enforce stricter warning if verification information is empty
+  // Also covers 'UNKNOWN' case
+  return DappVerificationStatus.Unverified
+}
+
+/**
+ * Converts capability objects from hex chainId format to WalletConnect-compatible scopedProperties format (CAIP-2).
+ * Used when advertising EIP-5792 capabilities during session approval.
+ *
+ * @param capabilities - Record with hex chainId keys (e.g., "0xa") and Capability values
+ * @returns scopedProperties with CAIP-2 keys (e.g., "eip155:10") or empty object if no capabilities
+ *
+ * @example
+ * convertCapabilitiesToScopedProperties({
+ *   "0xa": { atomic: { status: "supported" } },
+ *   "0x89": { atomic: { status: "unsupported" } }
+ * })
+ * // Returns:
+ * // {
+ * //   "eip155:10": { atomic: { status: "supported" } },
+ * //   "eip155:137": { atomic: { status: "unsupported" } }
+ * // }
+ */
+export function convertCapabilitiesToScopedProperties(
+  capabilities: Record<string, Capability>,
+): Record<string, Record<string, unknown>> {
+  const scopedProperties: Record<string, Record<string, unknown>> = {}
+
+  for (const [hexChainId, capability] of Object.entries(capabilities)) {
+    try {
+      const chainId = hexToNumber(hexChainId)
+      if (isNaN(chainId)) {
+        continue
+      }
+      const caip2Key = `eip155:${chainId}`
+      scopedProperties[caip2Key] = capability
+    } catch (error) {
+      logger.error(error, {
+        tags: { function: 'convertCapabilitiesToScopedProperties', file: 'walletConnect/utils.ts' },
+      })
+      continue
+    }
+  }
+
+  return scopedProperties
 }

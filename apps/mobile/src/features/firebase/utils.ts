@@ -25,11 +25,15 @@ export const getFirestoreUidRef = (
     .collection(address.toLowerCase())
     .doc('firebase')
 
-export const getFirestoreMetadataRef = (
-  firebaseApp: ReactNativeFirebase.FirebaseApp,
-  address: Address,
-  pushId: string,
-): FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData> =>
+export const getFirestoreMetadataRef = ({
+  firebaseApp,
+  address,
+  pushId,
+}: {
+  firebaseApp: ReactNativeFirebase.FirebaseApp
+  address: Address
+  pushId: string
+}): FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData> =>
   firestore(firebaseApp)
     .collection(getAddressDataCollectionFromBundleId())
     .doc('metadata')
@@ -38,7 +42,7 @@ export const getFirestoreMetadataRef = (
     .collection(pushId)
     .doc('data')
 
-export function getAddressDataCollectionFromBundleId(): string {
+function getAddressDataCollectionFromBundleId(): string {
   if (isDevEnv()) {
     return DEV_ADDRESS_DATA_COLLECTION
   }

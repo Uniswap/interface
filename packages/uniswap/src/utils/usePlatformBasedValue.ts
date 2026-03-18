@@ -1,5 +1,5 @@
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export type UsePlatformBasedValue<T> = {
@@ -21,7 +21,7 @@ export function usePlatformBasedValue<T>({ defaultValue, web, extension }: UsePl
   // Without this delay, we could end up triggering too many unnecessary API calls every time the window regains focus.
   const isChromeWindowFocused = useIsChromeWindowFocusedWithTimeout(30 * ONE_SECOND_MS)
 
-  if (isExtension) {
+  if (isExtensionApp) {
     if (!isChromeWindowFocused) {
       return extension?.windowNotFocused ?? defaultValue
     }

@@ -1,9 +1,9 @@
-import UniswapXRouterLabel from 'components/RouterLabel/UniswapXRouterLabel'
-import { mocked } from 'test-utils/mocked'
-import { render, screen } from 'test-utils/render'
 import { v4 as uuid } from 'uuid'
+import UniswapXRouterLabel from '~/components/RouterLabel/UniswapXRouterLabel'
+import { mocked } from '~/test-utils/mocked'
+import { render, screen } from '~/test-utils/render'
 
-jest.mock('uuid')
+vi.mock('uuid')
 
 describe('UniswapXRouterLabel', () => {
   it('matches snapshot', () => {

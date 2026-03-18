@@ -1,40 +1,49 @@
-import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
+import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, ModalCloseIcon, Text, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
+import { Flex, ModalCloseIcon, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { zIndexes } from 'ui/src/theme'
-import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
-import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
-import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
-import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
-import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapInputList'
-import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapOutputList'
-import { TokenOptionSection, TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
-import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
+import { spacing, zIndexes } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
+import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { CrosschainSwapsPromoBanner } from 'uniswap/src/components/TokenSelector/CrosschainSwapsPromoBanner'
+import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
+import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
+import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
+import { TokenSelectorSwapList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { UnsupportedChainedActionsBanner } from 'uniswap/src/components/TokenSelector/UnsupportedChainedActionsBanner'
+import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import {
+  ElementName,
+  InterfaceEventName,
+  ModalName,
+  SectionName,
+  UniswapEventName,
+} from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
-import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { isChainSupportedForChainedActions } from 'uniswap/src/features/transactions/swap/utils/chainedActions'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
-import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
+import { getClipboard } from 'utilities/src/clipboard/clipboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -50,20 +59,34 @@ export enum TokenSelectorVariation {
   SwapOutput = 'swap-output', // suggested bases, balances, recent searches, favorites, popular
 }
 
+export const SNAP_POINTS = ['65%', '100%']
+
 export interface TokenSelectorProps {
   variation: TokenSelectorVariation
   isModalOpen: boolean
   currencyField: CurrencyField
   flow: TokenSelectorFlow
-  activeAccountAddress?: string
+  addresses: AddressGroup
   chainId?: UniverseChainId
   chainIds?: UniverseChainId[]
   input?: TradeableAsset
+  output?: TradeableAsset
   isSurfaceReady?: boolean
   isLimits?: boolean
   onClose: () => void
+  focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
   onSelectChain?: (chainId: UniverseChainId | null) => void
-  onSelectCurrency: (currency: Currency, currencyField: CurrencyField, isBridgePair: boolean) => void
+  onSelectCurrency: ({
+    currency,
+    field,
+    allowCrossChainPair,
+    isPreselectedAsset,
+  }: {
+    currency: Currency
+    field: CurrencyField
+    allowCrossChainPair: boolean
+    isPreselectedAsset: boolean
+  }) => void
 }
 
 export function TokenSelectorContent({
@@ -71,7 +94,8 @@ export function TokenSelectorContent({
   flow,
   variation,
   input,
-  activeAccountAddress,
+  output,
+  addresses,
   chainId,
   chainIds,
   isSurfaceReady = true,
@@ -79,18 +103,21 @@ export function TokenSelectorContent({
   onClose,
   onSelectChain,
   onSelectCurrency,
-}: Omit<TokenSelectorProps, 'isModalOpen'>): JSX.Element {
+  renderedInModal,
+}: Omit<TokenSelectorProps, 'isModalOpen'> & {
+  renderedInModal: boolean
+}): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacks(chainId ?? null, flow)
+    useFilterCallbacks(chainId ?? null, flowToModalName(flow))
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
-  const isKeyboardOpen = useIsKeyboardOpen()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
-  const { shouldShowUnichainNetworkSelectorTooltip } = useUnichainTooltipVisibility()
+
+  const oppositeToken = currencyField === CurrencyField.INPUT ? output : input
 
   const media = useMedia()
-  const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
+  const isSmallScreen = (media.sm && isWebApp) || isMobileApp || isMobileWeb
 
   const [hasClipboardString, setHasClipboardString] = useState(false)
 
@@ -106,7 +133,7 @@ export function TokenSelectorContent({
     // Browser doesn't have permissions to access clipboard by default
     // so it will prompt the user to allow clipboard access which is
     // quite jarring and unnecessary.
-    if (isInterface) {
+    if (isWebApp) {
       return
     }
     checkClipboard().catch(() => undefined)
@@ -124,17 +151,19 @@ export function TokenSelectorContent({
       : undefined
 
   const onSelectCurrencyCallback = useCallback(
-    (currencyInfo: CurrencyInfo, section: TokenSection, index: number): void => {
+    // eslint-disable-next-line max-params
+    (currencyInfo: CurrencyInfo, section: OnchainItemSection<TokenSelectorOption>, index: number): void => {
       const searchContext: SearchContext = {
         category: section.sectionKey,
         query: debouncedSearchFilter ?? undefined,
         position: index + 1,
         suggestionCount: section.data.length,
+        searchChainFilter: chainFilter,
       }
 
       // log event that a currency was selected
       const tokenOption = section.data[index]
-      const balanceUSD = Array.isArray(tokenOption) ? undefined : tokenOption?.balanceUSD ?? undefined
+      const balanceUSD = Array.isArray(tokenOption) ? undefined : (tokenOption?.balanceUSD ?? undefined)
       sendAnalyticsEvent(UniswapEventName.TokenSelected, {
         name: currencyInfo.currency.name,
         address: currencyAddress(currencyInfo.currency),
@@ -148,12 +177,25 @@ export function TokenSelectorContent({
         suggestion_count: searchContext.suggestionCount,
         query: searchContext.query,
         tokenSection: section.sectionKey,
+        preselect_asset: false,
       })
 
-      const isBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens
-      onSelectCurrency(currencyInfo.currency, currencyField, isBridgePair)
+      const oppositeChainId = oppositeToken?.chainId
+
+      const isUnsupportedCombo =
+        (oppositeChainId && !isChainSupportedForChainedActions(oppositeChainId)) ||
+        !isChainSupportedForChainedActions(currencyInfo.currency.chainId)
+
+      const allowCrossChainPair = !isUnsupportedCombo || section.sectionKey === OnchainItemSectionName.BridgingTokens
+
+      onSelectCurrency({
+        currency: currencyInfo.currency,
+        field: currencyField,
+        allowCrossChainPair,
+        isPreselectedAsset: false,
+      })
     },
-    [flow, page, currencyField, onSelectCurrency, debouncedSearchFilter],
+    [debouncedSearchFilter, chainFilter, flow, page, currencyField, onSelectCurrency, oppositeToken?.chainId],
   )
 
   const handlePaste = async (): Promise<void> => {
@@ -174,19 +216,25 @@ export function TokenSelectorContent({
     setSearchInFocus(false)
   }
   function onFocus(): void {
-    if (!isWeb) {
+    if (!isWebPlatform) {
       setSearchInFocus(true)
     }
   }
 
-  const shouldAutoFocusSearch = isWeb && !media.sm
+  const shouldAutoFocusSearch = isWebPlatform && !media.sm
+
+  const shouldShowCrosschainPromoBanner = useMemo(
+    () => !isLimits && (!chainFilter || isChainSupportedForChainedActions(chainFilter)),
+    [isLimits, chainFilter],
+  )
 
   const tokenSelector = useMemo(() => {
     if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
       return (
         <TokenSelectorEmptySearchList
-          activeAccountAddress={activeAccountAddress}
+          addresses={addresses}
           chainFilter={chainFilter}
+          renderedInModal={renderedInModal}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -195,15 +243,15 @@ export function TokenSelectorContent({
     if (searchFilter) {
       return (
         <TokenSelectorSearchResultsList
-          activeAccountAddress={activeAccountAddress}
+          addresses={addresses}
           chainFilter={chainFilter}
           debouncedParsedSearchFilter={debouncedParsedSearchFilter}
           debouncedSearchFilter={debouncedSearchFilter}
           isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
-          isKeyboardOpen={isKeyboardOpen}
           parsedChainFilter={parsedChainFilter}
           searchFilter={searchFilter}
           input={input}
+          renderedInModal={renderedInModal}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -213,29 +261,30 @@ export function TokenSelectorContent({
       case TokenSelectorVariation.BalancesOnly:
         return (
           <TokenSelectorSendList
-            activeAccountAddress={activeAccountAddress}
+            addresses={addresses}
             chainFilter={chainFilter}
-            isKeyboardOpen={isKeyboardOpen}
+            renderedInModal={renderedInModal}
             onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
       case TokenSelectorVariation.SwapInput:
         return (
-          <TokenSelectorSwapInputList
-            activeAccountAddress={activeAccountAddress}
+          <TokenSelectorSwapList
+            oppositeSelectedToken={output}
+            addresses={addresses}
             chainFilter={chainFilter}
-            isKeyboardOpen={isKeyboardOpen}
+            renderedInModal={renderedInModal}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
       case TokenSelectorVariation.SwapOutput:
         return (
-          <TokenSelectorSwapOutputList
-            input={input}
-            activeAccountAddress={activeAccountAddress}
+          <TokenSelectorSwapList
+            oppositeSelectedToken={input}
+            addresses={addresses}
             chainFilter={chainFilter}
-            isKeyboardOpen={isKeyboardOpen}
+            renderedInModal={renderedInModal}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -247,22 +296,23 @@ export function TokenSelectorContent({
     searchFilter,
     isTestnetModeEnabled,
     variation,
+    addresses,
     chainFilter,
-    isKeyboardOpen,
     onSelectCurrencyCallback,
-    activeAccountAddress,
     debouncedParsedSearchFilter,
     debouncedSearchFilter,
     parsedChainFilter,
     input,
     onSendEmptyActionPress,
+    output,
+    renderedInModal,
   ])
 
   return (
     <Trace
-      logImpression={isInterface} // TODO(WEB-5161): Deduplicate shared vs interface-only trace event
-      eventOnTrigger={InterfaceEventName.TOKEN_SELECTOR_OPENED}
-      modal={InterfaceModalName.TOKEN_SELECTOR}
+      logImpression={isWebApp} // TODO(WEB-5161): Deduplicate shared vs interface-only trace event
+      eventOnTrigger={InterfaceEventName.TokenSelectorOpened}
+      modal={ModalName.TokenSelectorWeb}
     >
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
         <Flex grow gap="$spacing8" style={scrollbarStyles}>
@@ -272,37 +322,34 @@ export function TokenSelectorContent({
               <ModalCloseIcon onClose={onClose} />
             </Flex>
           )}
-          <Flex px="$spacing16" py="$spacing4">
-            <SearchTextInput
-              autoFocus={shouldAutoFocusSearch}
-              backgroundColor="$surface2"
-              endAdornment={
-                <Flex row alignItems="center">
-                  {hasClipboardString && !shouldShowUnichainNetworkSelectorTooltip && (
-                    <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />
-                  )}
-                  <NetworkFilter
-                    includeAllNetworks={!isTestnetModeEnabled}
-                    chainIds={chainIds || enabledChains}
-                    selectedChain={chainFilter}
-                    styles={isExtension ? { dropdownZIndex: zIndexes.overlay } : undefined}
-                    onDismiss={dismissNativeKeyboard}
-                    onPressChain={(newChainId) => {
-                      onChangeChainFilter(newChainId)
-                      onSelectChain?.(newChainId)
-                    }}
-                  />
-                </Flex>
-              }
-              placeholder={t('tokens.selector.search.placeholder')}
-              px="$spacing16"
-              py="$none"
-              value={searchFilter ?? ''}
-              onCancel={isWeb ? undefined : onCancel}
-              onChangeText={onChangeText}
-              onFocus={onFocus}
-            />
-          </Flex>
+          <SearchTextInput
+            autoFocus={shouldAutoFocusSearch}
+            backgroundColor="$surface2"
+            endAdornment={
+              <Flex row alignItems="center">
+                {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
+                <NetworkFilter
+                  includeAllNetworks={!isTestnetModeEnabled}
+                  chainIds={chainIds || enabledChains}
+                  selectedChain={chainFilter}
+                  styles={isExtensionApp || media.md ? { dropdownZIndex: zIndexes.overlay } : undefined}
+                  onPressChain={(newChainId) => {
+                    onChangeChainFilter(newChainId)
+                    onSelectChain?.(newChainId)
+                  }}
+                />
+              </Flex>
+            }
+            placeholder={t('tokens.selector.search.placeholder')}
+            px="$spacing16"
+            py="$none"
+            mx={spacing.spacing16}
+            my="$spacing4"
+            value={searchFilter ?? ''}
+            onCancel={isWebPlatform ? undefined : onCancel}
+            onChangeText={onChangeText}
+            onFocus={onFocus}
+          />
           {isLimits && (
             <Flex
               row
@@ -316,7 +363,14 @@ export function TokenSelectorContent({
               <Text variant="body3">{t('limits.form.disclaimer.mainnet.short')}</Text>
             </Flex>
           )}
-          {isSurfaceReady && <Flex grow>{tokenSelector}</Flex>}
+
+          {isSurfaceReady && (
+            <Flex grow>
+              {shouldShowCrosschainPromoBanner && <CrosschainSwapsPromoBanner />}
+              <UnsupportedChainedActionsBanner oppositeToken={oppositeToken} chainFilter={chainFilter ?? undefined} />
+              {tokenSelector}
+            </Flex>
+          )}
         </Flex>
       </Trace>
     </Trace>
@@ -334,12 +388,12 @@ function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
     }
   }, [isModalOpen])
 
-  return <TokenSelectorContent {...props} isSurfaceReady={isSheetReady} />
+  return <TokenSelectorContent {...props} isSurfaceReady={isSheetReady} renderedInModal={true} />
 }
 
 function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
   const colors = useSporeColors()
-  const { isModalOpen, onClose } = props
+  const { isModalOpen, onClose, focusHook } = props
 
   return (
     <Modal
@@ -350,15 +404,18 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       renderBehindBottomInset
       backgroundColor={colors.surface1.val}
       isModalOpen={isModalOpen}
-      maxWidth={isWeb ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
-      maxHeight={isInterface ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
+      maxWidth={isWebPlatform ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
+      maxHeight={isWebApp ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
-      snapPoints={['65%', '100%']}
-      height={isInterface ? '100vh' : undefined}
+      snapPoints={SNAP_POINTS}
+      height={isWebApp ? '100vh' : undefined}
+      focusHook={focusHook}
       onClose={onClose}
     >
-      <TokenSelectorModalContent {...props} />
+      <Flex grow maxHeight="100%" overflow="hidden">
+        <TokenSelectorModalContent {...props} />
+      </Flex>
     </Modal>
   )
 }

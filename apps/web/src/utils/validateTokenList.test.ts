@@ -1,5 +1,6 @@
 import { TokenInfo } from '@uniswap/token-lists'
-import { validateTokens } from 'utils/validateTokenList'
+import { DAI } from 'uniswap/src/constants/tokens'
+import { validateTokens } from '~/utils/validateTokenList'
 
 const INVALID_TOKEN: TokenInfo = {
   name: 'Dai Stablecoin',
@@ -12,7 +13,7 @@ const INVALID_TOKEN: TokenInfo = {
 const INLINE_TOKEN_LIST = [
   {
     name: 'Dai Stablecoin',
-    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    address: DAI.address,
     symbol: 'DAI',
     decimals: 18,
     chainId: 1,

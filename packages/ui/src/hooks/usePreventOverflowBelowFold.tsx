@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 export function usePreventOverflowBelowFold(isVisible = true): {
   maxHeight: number
-  ref: React.RefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLDivElement | null>
 } {
   const ref = useRef<HTMLDivElement>(null)
   const [maxHeight, setMaxHeight] = useState(0)
@@ -14,6 +14,7 @@ export function usePreventOverflowBelowFold(isVisible = true): {
     return diff > 0 ? diff : 0
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to trigger this effect when isVisible changes
   useEffect(() => {
     // Effectively waits for the menu to render before calculating the offset
     setTimeout(() => {

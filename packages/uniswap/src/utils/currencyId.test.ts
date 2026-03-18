@@ -1,9 +1,9 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { DAI } from 'uniswap/src/constants/tokens'
+import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
+import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
-  NATIVE_ANALYTICS_ADDRESS_VALUE,
   areCurrencyIdsEqual,
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -15,11 +15,11 @@ import {
   getCurrencyAddressForAnalytics,
   isCurrencyIdValid,
   isNativeCurrencyAddress,
+  NATIVE_ANALYTICS_ADDRESS_VALUE,
 } from 'uniswap/src/utils/currencyId'
 import { INVALID_ADDRESS_TOO_SHORT, INVALID_CHAIN_ID, VALID_ADDRESS, VALID_CHAIN_ID } from 'utilities/src/test/fixtures'
 
-const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
-const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+const ETH = nativeOnChain(UniverseChainId.Mainnet)
 
 describe('currencyId', () => {
   it.each`
@@ -42,6 +42,7 @@ describe('currencyId', () => {
 
   it.each([[UniverseChainId.Mainnet, DAI.address, `${UniverseChainId.Mainnet}-${DAI.address}`]])(
     'buildCurrencyId builds correct ID for chainId=%s + address=%s = %s',
+    // eslint-disable-next-line max-params
     (chainId, address, expectedId) => {
       expect(buildCurrencyId(chainId, address)).toEqual(expectedId)
     },
@@ -53,6 +54,7 @@ describe('currencyId', () => {
     [currencyId(DAI), currencyId(ETH), false],
   ])(
     'areCurrencyIdsEqual returns correct comparison for currencyId1=%s and currencyId2=%s = %s',
+    // eslint-disable-next-line max-params
     (currencyId1, currencyId2, expected) => {
       expect(areCurrencyIdsEqual(currencyId1, currencyId2)).toBe(expected)
     },
@@ -75,7 +77,7 @@ describe('currencyId', () => {
   it.each([
     [UniverseChainId.Mainnet, `1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`],
     [UniverseChainId.Polygon, `137-0x0000000000000000000000000000000000001010`],
-    [UniverseChainId.Bnb, `56-0xb8c77482e45f1f44de1745f52c74426c631bdd52`],
+    [UniverseChainId.Bnb, `56-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`],
   ])('buildNativeCurrencyId builds correct ID for chainId=%s = %s', (chainId, expectedId) => {
     expect(buildNativeCurrencyId(chainId)).toEqual(expectedId)
   })
@@ -86,31 +88,40 @@ describe('currencyId', () => {
     [UniverseChainId.Mainnet, null, true],
     [UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Polygon), false],
     [UniverseChainId.Mainnet, DAI.address, false],
+    [UniverseChainId.Mainnet, 'ETH', true],
+    [UniverseChainId.Mainnet, DEFAULT_NATIVE_ADDRESS, true],
+    [UniverseChainId.Solana, getNativeAddress(UniverseChainId.Solana), true],
+    [UniverseChainId.Solana, '11111', false],
+    [UniverseChainId.Solana, DEFAULT_NATIVE_ADDRESS_SOLANA, true],
+    // Invalid chainId should return false instead of crashing
+    [10143, DAI.address, false],
+    [99999, null, false],
   ])(
     'isNativeCurrencyAddress returns correct result for chainId=%s + address=%s = %s',
+    // eslint-disable-next-line max-params
     (chainId, address, expected) => {
       expect(isNativeCurrencyAddress(chainId, address)).toEqual(expected)
     },
   )
 
   it.each([
-    [`1-${DAI_ADDRESS}`, DAI_ADDRESS],
+    [`1-${DAI.address}`, DAI.address],
     [`1-${getNativeAddress(UniverseChainId.Mainnet)}`, getNativeAddress(UniverseChainId.Mainnet)],
   ])('currencyIdToAddress returns correct address for _currencyId=%s = %s', (_currencyId, expectedAddress) => {
     expect(currencyIdToAddress(_currencyId)).toEqual(expectedAddress)
   })
 
   it.each([
-    [`1-${DAI_ADDRESS}`, DAI_ADDRESS.toLowerCase()],
+    [`1-${DAI.address}`, DAI.address.toLowerCase()],
     [`1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`, null],
     ['137-0x0000000000000000000000000000000000001010', '0x0000000000000000000000000000000000001010'],
-    ['56-0xB8c77482e45F1F44dE1745F52C74426C631bDD52', null],
+    ['56-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', null],
   ])('currencyIdToGraphQLAddress returns correct address for currencyId=%s = %s', (_currencyId, expectedAddress) => {
     expect(currencyIdToGraphQLAddress(_currencyId)).toEqual(expectedAddress)
   })
 
   it.each([
-    [`1-${DAI_ADDRESS}`, UniverseChainId.Mainnet],
+    [`1-${DAI.address}`, UniverseChainId.Mainnet],
     [`1-${getNativeAddress(UniverseChainId.Mainnet)}`, UniverseChainId.Mainnet],
     ['', null],
   ])('currencyIdToChain returns correct chain for currencyId=%s = %s', (_currencyId, expectedChain) => {

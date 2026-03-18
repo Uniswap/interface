@@ -1,6 +1,8 @@
+/* eslint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
-import { Signer, providers } from 'ethers'
+import { Bytes, providers, Signer } from 'ethers'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
+import { HexString } from 'utilities/src/addresses/hex'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /**
@@ -22,8 +24,13 @@ export class NativeSigner extends Signer implements SignsTypedData {
     throw new PlatformSplitStubError('getAddress')
   }
 
-  signMessage(_message: string): Promise<string> {
+  signMessage(_message: string | Bytes): Promise<string> {
     throw new PlatformSplitStubError('signMessage')
+  }
+
+  // Doesn't include prefixed ethereum sign prefix, use sparingly
+  signHashForAddress(_address: string, _hash: string | Bytes, _chainId: number): Promise<string> {
+    throw new PlatformSplitStubError('signHashForAddress')
   }
 
   // reference: https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/wallet/src.ts/index.ts#L135
@@ -35,7 +42,7 @@ export class NativeSigner extends Signer implements SignsTypedData {
     throw new PlatformSplitStubError('_signTypedData')
   }
 
-  async signTransaction(_transaction: providers.TransactionRequest): Promise<string> {
+  async signTransaction(_transaction: providers.TransactionRequest): Promise<HexString> {
     throw new PlatformSplitStubError('signTransaction')
   }
 

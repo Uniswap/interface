@@ -4,11 +4,11 @@ import { NativeSyntheticEvent, StyleSheet } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedTouchableArea, Flex, Text } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { noop } from 'utilities/src/react/noop'
+import { DappHeaderIcon } from 'wallet/src/components/dappRequests/DappHeaderIcon'
 
 export function DappConnectionItem({
   session,
@@ -20,7 +20,7 @@ export function DappConnectionItem({
   handleDisconnect: (session: WalletConnectSession) => Promise<void>
 }): JSX.Element {
   const { t } = useTranslation()
-  const { dapp } = session
+  const { dappRequestInfo } = session
 
   const menuActions = [{ title: t('common.button.disconnect'), systemIcon: 'trash', destructive: true }]
 
@@ -64,7 +64,7 @@ export function DappConnectionItem({
               justifyContent="center"
               width={iconSizes.icon28}
               zIndex="$tooltip"
-              onLongPress={disableOnPress}
+              onLongPress={noop}
               onPress={onDisconnectSession}
             >
               <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={14} />
@@ -74,12 +74,12 @@ export function DappConnectionItem({
           )}
         </Flex>
         <Flex grow centered gap="$gap8">
-          <DappHeaderIcon size={iconSizes.icon36} dapp={dapp} />
+          <DappHeaderIcon size={iconSizes.icon36} dappInfo={dappRequestInfo} />
           <Text numberOfLines={2} textAlign="center" variant="body3" mt="$spacing4">
-            {dapp.name || dapp.url}
+            {dappRequestInfo.name || dappRequestInfo.url}
           </Text>
           <Text color="$neutral2" numberOfLines={1} textAlign="center" variant="body4">
-            {dapp.url}
+            {dappRequestInfo.url}
           </Text>
         </Flex>
       </Flex>

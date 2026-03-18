@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: Third-party types not available */
 import { DdLogs, DdRum, DdSdkReactNative, ErrorSource, RumActionType } from '@datadog/mobile-react-native'
 import dayjs from 'dayjs'
 import { Action, AnyAction, PreloadedState, Reducer, StoreEnhancerStoreCreator } from 'redux'
 import { ReduxEnhancerConfig } from 'utilities/src/logger/datadog/Datadog'
 import { handleReduxAction } from 'utilities/src/logger/datadog/reduxUtils'
 import { addErrorExtras } from 'utilities/src/logger/logger'
-import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
+import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
 
 let reduxState: Record<string, unknown> | undefined
 
@@ -99,7 +99,7 @@ export function attachUnhandledRejectionHandler(): void {
     allRejections: true,
     onUnhandled: (id: string, rejection: unknown) => {
       if (__DEV__) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
         console.warn(`Possible Unhandled Promise Rejection (id: ${id}):\n${rejection}`)
       } else {
         const error = rejection instanceof Error ? rejection : new Error(`${rejection}`)
@@ -111,7 +111,7 @@ export function attachUnhandledRejectionHandler(): void {
     },
     onHandled: (id: string) => {
       if (__DEV__) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
         console.warn(
           `Promise Rejection Handled (id: ${id})\n` +
             'This means you can ignore any previous messages of the form ' +

@@ -123,9 +123,7 @@ export function createFixture<T extends object, P extends object>(
       // Get overrides for options (filter out undefined values)
       const optionOverrides = Object.fromEntries(
         Object.entries(
-          defaultOptions
-            ? pick(overrides || ({} as { [key in string]: unknown }), Object.keys(defaultOptions) || [])
-            : {},
+          defaultOptions ? pick(overrides || ({} as { [key in string]: unknown }), Object.keys(defaultOptions)) : {},
         ).filter(([, value]) => value !== undefined),
       )
       // Get values with getValues function

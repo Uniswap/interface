@@ -1,21 +1,20 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { getCurrencyForProtocol } from '~/components/Liquidity/utils/currency'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
 
 export function TokenInfo({
   currencyAmount,
   currencyUSDAmount,
   isMigrating = false,
 }: {
-  currencyAmount?: CurrencyAmount<Currency>
-  currencyUSDAmount?: CurrencyAmount<Currency>
+  currencyAmount: Maybe<CurrencyAmount<Currency>>
+  currencyUSDAmount: Maybe<CurrencyAmount<Currency>>
   isMigrating?: boolean
 }) {
   const { formatCurrencyAmount } = useLocalizationContext()

@@ -1,12 +1,12 @@
 import { ReactNode, RefObject } from 'react'
-import { Flex, Popover, WebBottomSheet, styled, useScrollbarStyles, useShadowPropsMedium } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { Flex, FlexProps, Popover, styled, useScrollbarStyles, useShadowPropsMedium, WebBottomSheet } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 
 const NavDropdownContent = styled(Flex, {
   borderRadius: '$rounded16',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: '$surface2',
+  boxShadow: '$shadow.1',
   backgroundColor: '$surface1',
   maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT + 20}px)`,
   $sm: {
@@ -36,23 +36,37 @@ interface NavDropdownProps {
   children: ReactNode
   isOpen: boolean
   width?: number
-  dropdownRef?: RefObject<HTMLDivElement>
+  minWidth?: number
+  dropdownRef?: RefObject<HTMLDivElement | null>
   dataTestId?: string
   padded?: boolean
   mr?: number
+  borderColor?: FlexProps['borderColor']
 }
 
-export function NavDropdown({ children, width, dropdownRef, isOpen, padded, dataTestId, mr = 0 }: NavDropdownProps) {
+export function NavDropdown({
+  children,
+  width,
+  minWidth,
+  dropdownRef,
+  isOpen,
+  padded,
+  dataTestId,
+  mr = 0,
+  borderColor = '$surface2',
+}: NavDropdownProps) {
   const shadowProps = useShadowPropsMedium()
   const scrollbarStyles = useScrollbarStyles()
 
   return (
     <>
       <Popover.Content
+        zIndex={zIndexes.popover}
         backgroundColor="transparent"
         enterStyle={{ scale: 0.95, opacity: 0 }}
         exitStyle={{ scale: 0.95, opacity: 0 }}
         width={width}
+        minWidth={minWidth}
         mr={mr}
         elevate
         animation={[
@@ -70,7 +84,9 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
           data-testid={dataTestId}
           ref={dropdownRef}
           width={width}
+          minWidth={minWidth}
           padded={padded}
+          borderColor={borderColor}
           {...shadowProps}
           $platform-web={{ overflow: 'auto' }}
           style={scrollbarStyles}

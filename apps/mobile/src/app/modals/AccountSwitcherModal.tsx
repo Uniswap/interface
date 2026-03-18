@@ -1,20 +1,26 @@
+import { useIsFocused } from '@react-navigation/core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { Action } from 'redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
-import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
-import { openSettings } from 'src/utils/linking'
-import { DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
+import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
+import { UniswapWrapped2025Card } from 'uniswap/src/components/banners/UniswapWrapped2025Card/UniswapWrapped2025Card'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -22,32 +28,26 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { openUri } from 'uniswap/src/utils/linking'
+import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 export function AccountSwitcherModal(): JSX.Element {
-  const dispatch = useDispatch()
   const colors = useSporeColors()
+  const { onClose } = useReactNavigationModal()
 
   return (
-    <Modal
-      backgroundColor={colors.surface1.val}
-      name={ModalName.AccountSwitcher}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}
-    >
+    <Modal backgroundColor={colors.surface1.val} name={ModalName.AccountSwitcher} onClose={onClose}>
       <Flex backgroundColor="$surface1">
-        <AccountSwitcher
-          onClose={(): void => {
-            dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-          }}
-        />
+        <AccountSwitcher onClose={onClose} />
       </Flex>
     </Modal>
   )
@@ -64,7 +64,11 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const activeAccountAddress = useActiveAccountAddress()
   const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
-  const modalState = useSelector(selectModalState(ModalName.AccountSwitcher))
+  const isModalOpen = useIsFocused()
+  const { openWalletRestoreModal, walletRestoreType } = useWalletRestore()
+
+  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
+
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
@@ -95,12 +99,26 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       return
     }
 
-    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    navigate(MobileScreens.SettingsStack, {
-      screen: MobileScreens.SettingsWallet,
-      params: { address: activeAccountAddress },
+    onClose()
+    navigate(ModalName.ManageWalletsModal, {
+      address: activeAccountAddress,
     })
   }
+
+  const onPressWrappedCard = useCallback(async () => {
+    if (!activeAccountAddress) {
+      return
+    }
+
+    try {
+      const url = buildWrappedUrl(UNISWAP_WEB_URL, activeAccountAddress)
+      await openUri({ uri: url, openExternalBrowser: true })
+      onClose()
+      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
+    } catch (error) {
+      logger.error(error, { tags: { file: 'AccountSwitcherModal', function: 'onPressWrappedCard' } })
+    }
+  }, [activeAccountAddress, onClose, dispatch])
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
     const createAdditionalAccount = async (): Promise<void> => {
@@ -118,7 +136,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         wallet_type: ImportType.CreateAdditional,
         accounts_imported_count: 1,
         wallets_imported: [newAccount.address],
-        cloud_backup_used: newAccount.backups?.includes(BackupType.Cloud) ?? false,
+        cloud_backup_used: hasBackup(BackupType.Cloud, newAccount),
         modal: ModalName.AccountSwitcher,
       })
     }
@@ -126,6 +144,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     const onPressCreateNewWallet = async (): Promise<void> => {
       setShowAddWalletModal(false)
       onClose()
+
+      if (walletRestoreType === WalletRestoreType.SeedPhrase) {
+        openWalletRestoreModal()
+        return
+      }
+
       if (hasImportedSeedPhrase) {
         await createAdditionalAccount()
       } else {
@@ -141,6 +165,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     const onPressAddViewOnlyWallet = (): void => {
+      onClose()
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.WatchWallet,
         params: {
@@ -149,52 +174,35 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         },
       })
       setShowAddWalletModal(false)
-      onClose()
     }
 
     const onPressImportWallet = (): void => {
+      onClose()
       if (hasImportedSeedPhrase && activeAccountAddress) {
-        dispatch(openModal({ name: ModalName.RemoveWallet }))
+        navigate(ModalName.RemoveWallet, {
+          replaceMnemonic: true,
+        })
       } else {
         navigate(MobileScreens.OnboardingStack, {
           screen: OnboardingScreens.SeedPhraseInput,
           params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
         })
       }
-
       setShowAddWalletModal(false)
-      onClose()
     }
 
     const onPressRestore = async (): Promise<void> => {
-      const cloudStorageAvailable = await isCloudStorageAvailable()
-
-      if (!cloudStorageAvailable) {
-        Alert.alert(
-          isAndroid
-            ? t('account.cloud.error.unavailable.title.android')
-            : t('account.cloud.error.unavailable.title.ios'),
-          isAndroid
-            ? t('account.cloud.error.unavailable.message.android')
-            : t('account.cloud.error.unavailable.message.ios'),
-          [
-            {
-              text: t('account.cloud.error.unavailable.button.settings'),
-              onPress: openSettings,
-              style: 'default',
-            },
-            { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-          ],
-        )
+      const hasCloudBackup = await checkCloudBackupOrShowAlert(t)
+      if (!hasCloudBackup) {
         return
       }
 
+      onClose()
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.RestoreCloudBackupLoading,
         params: { importType: ImportType.Restore, entryPoint: OnboardingEntryPoint.Sidebar },
       })
       setShowAddWalletModal(false)
-      onClose()
     }
 
     const options: MenuItemProp[] = [
@@ -242,12 +250,27 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, sortedMnemonicAccounts, t])
+  }, [
+    activeAccountAddress,
+    dispatch,
+    hasImportedSeedPhrase,
+    onClose,
+    sortedMnemonicAccounts,
+    t,
+    openWalletRestoreModal,
+    walletRestoreType,
+  ])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 
   const isViewOnly =
-    accounts.find((a) => areAddressesEqual(a.address, activeAccountAddress))?.type === AccountType.Readonly
+    accounts.find((a) =>
+      // TODO(WALL-7065): Update to support solana
+      areAddressesEqual({
+        addressInput1: { address: a.address, platform: Platform.EVM },
+        addressInput2: { address: activeAccountAddress, platform: Platform.EVM },
+      }),
+    )?.type === AccountType.Readonly
 
   if (!activeAccountAddress) {
     return null
@@ -257,9 +280,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   return (
     <Flex $short={{ pb: '$none' }} maxHeight={fullScreenContentHeight} pb="$spacing12">
-      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
+      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12" mx="$spacing12">
         <AddressDisplay
           showCopy
+          centered
           address={activeAccountAddress}
           direction="column"
           horizontalGap="$spacing8"
@@ -267,19 +291,35 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           size={spacing.spacing60 - spacing.spacing4}
           variant="subheading1"
         />
-        <Flex px="$spacing24">
-          <DeprecatedButton size="small" testID={TestID.WalletSettings} theme="secondary" onPress={onManageWallet}>
+        {isWrappedBannerEnabled && (
+          <Flex row px="$spacing12">
+            <UniswapWrapped2025Card onPress={onPressWrappedCard} />
+          </Flex>
+        )}
+        <Flex row px="$spacing12">
+          <Button
+            lineHeightDisabled
+            size="medium"
+            testID={TestID.WalletSettings}
+            emphasis="secondary"
+            onPress={onManageWallet}
+          >
             {t('account.wallet.button.manage')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
       <Flex maxHeight={fullScreenContentHeight / 2}>
-        <AccountList accounts={accountsWithoutActive} isVisible={modalState.isOpen} onPress={onPressAccount} />
+        <AccountList
+          accounts={accountsWithoutActive}
+          isVisible={isModalOpen}
+          onPress={onPressAccount}
+          onClose={onClose}
+        />
       </Flex>
-      <TouchableArea mt="$spacing16" onPress={onPressAddWallet}>
+      <TouchableArea mt="$spacing16" testID={TestID.AccountSwitcherAddWallet} onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />
-          <Text color="$neutral2" variant="buttonLabel2">
+          <Text numberOfLines={1} width="100%" color="$neutral1" variant="buttonLabel2">
             {t('account.wallet.button.add')}
           </Text>
         </Flex>

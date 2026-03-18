@@ -1,27 +1,35 @@
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
-import { Flex, Text } from 'ui/src'
+import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { DappConnectionContent } from 'wallet/src/components/dappRequests/DappConnectionContent'
+import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
+import { useDappConnectionConfirmation } from 'wallet/src/features/dappRequests/hooks/useDappConnectionConfirmation'
 
 export function ConnectionRequestContent(): JSX.Element {
   const { t } = useTranslation()
+  const { currentAccount, dappUrl } = useDappRequestQueueContext()
+  const { verificationStatus } = useBlockaidVerification(dappUrl)
+
+  const isViewOnly = currentAccount.type === AccountType.Readonly
+  const { confirmedWarning, setConfirmedWarning, disableConfirm } = useDappConnectionConfirmation({
+    verificationStatus,
+    isViewOnly,
+  })
 
   return (
     <DappRequestContent
-      showAllNetworks
       confirmText={t('common.button.connect')}
       title={t('dapp.request.connect.title')}
+      verificationStatus={verificationStatus}
+      disableConfirm={disableConfirm}
     >
-      <Flex
-        backgroundColor="$surface2"
-        borderColor="$surface3"
-        borderRadius="$rounded12"
-        borderWidth="$spacing1"
-        p="$spacing12"
-      >
-        <Text color="$neutral2" variant="body4">
-          {t('dapp.request.connect.helptext')}
-        </Text>
-      </Flex>
+      <DappConnectionContent
+        verificationStatus={verificationStatus}
+        confirmedWarning={confirmedWarning}
+        onConfirmWarning={setConfirmedWarning}
+        isViewOnly={isViewOnly}
+      />
     </DappRequestContent>
   )
 }

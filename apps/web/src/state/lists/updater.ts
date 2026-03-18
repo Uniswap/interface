@@ -1,16 +1,16 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
-import { useFetchListCallback } from 'hooks/useFetchListCallback'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { useStateRehydrated } from 'hooks/useStateRehydrated'
-import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
 import { useCallback, useEffect } from 'react'
-import { useAppDispatch } from 'state/hooks'
-import { acceptListUpdate } from 'state/lists/actions'
-import { useAllLists } from 'state/lists/hooks'
 import { logger } from 'utilities/src/logger/logger'
+import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { DEFAULT_INACTIVE_LIST_URLS } from '~/constants/lists'
+import { useFetchListCallback } from '~/hooks/useFetchListCallback'
+import { useStateRehydrated } from '~/hooks/useStateRehydrated'
+import useInterval from '~/lib/hooks/useInterval'
+import { useAppDispatch } from '~/state/hooks'
+import { acceptListUpdate } from '~/state/lists/actions'
+import { useAllLists } from '~/state/lists/hooks'
 
 // TODO(WEB-3839): delete this when lists are removed from redux
 export default function Updater(): null {
@@ -38,7 +38,7 @@ export default function Updater(): null {
   useInterval(fetchAllListsCallback, provider ? ms(`10m`) : null)
 
   useEffect(() => {
-    if (!rehydrated || !lists) {
+    if (!rehydrated) {
       return
     } // loaded lists will not be available until state is rehydrated
 
@@ -53,17 +53,17 @@ export default function Updater(): null {
     })
     DEFAULT_INACTIVE_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
-      if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
+      if (!list.current && !list.loadingRequestId && !list.error) {
         fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
           logger.debug('lists/updater', 'Updater', 'list added fetching error', error),
         )
       }
     })
-  }, [dispatch, fetchList, lists, rehydrated])
+  }, [fetchList, lists, rehydrated])
 
   // automatically update lists for every version update
   useEffect(() => {
-    if (!rehydrated || !lists) {
+    if (!rehydrated) {
       return
     } // loaded lists will not be available until state is rehydrated
 

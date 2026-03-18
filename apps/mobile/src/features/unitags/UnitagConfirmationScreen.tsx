@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import { AnimatePresence, DeprecatedButton, Flex, Text } from 'ui/src'
+import { AnimatePresence, Button, Flex, Text } from 'ui/src'
 import { AnimateInOrder } from 'ui/src/animations'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
@@ -11,8 +11,8 @@ import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import {
-  ENSElement,
   EmojiElement,
+  ENSElement,
   FroggyElement,
   HeartElement,
   OpenseaElement,
@@ -21,7 +21,18 @@ import {
   SwapElement,
   TextElement,
 } from 'wallet/src/components/landing/elements'
+import { AnimatedArcCircle } from 'wallet/src/components/landing/shapes/AnimatedArcCircle'
 import { UnitagWithProfilePicture } from 'wallet/src/features/unitags/UnitagWithProfilePicture'
+
+const OUTER_CIRCLE_ARCS = [
+  { startAngle: -130, endAngle: -50 }, // Upper arc
+  { startAngle: 50, endAngle: 125 }, // Lower arc
+]
+
+const INNER_CIRCLE_ARCS = [
+  { startAngle: -115, endAngle: -30 }, // Upper arc
+  { startAngle: 60, endAngle: 170 }, // Lower arc
+]
 
 export function UnitagConfirmationScreen({
   route,
@@ -78,12 +89,11 @@ export function UnitagConfirmationScreen({
               index={1}
               position="absolute"
             >
-              <Flex
-                aspectRatio={1}
-                borderColor="$surface3"
-                borderRadius="$roundedFull"
-                borderWidth="$spacing1"
-                height={boxWidth}
+              <AnimatedArcCircle
+                size={boxWidth}
+                strokeWidth={spacing.spacing1}
+                arcs={OUTER_CIRCLE_ARCS}
+                fadeEnds={true}
               />
             </AnimateInOrder>
             <AnimateInOrder
@@ -93,12 +103,11 @@ export function UnitagConfirmationScreen({
               index={2}
               position="absolute"
             >
-              <Flex
-                aspectRatio={1}
-                borderColor="$surface3"
-                borderRadius="$roundedFull"
-                borderWidth="$spacing1"
-                height={boxWidth * 0.6}
+              <AnimatedArcCircle
+                size={boxWidth * 0.6}
+                strokeWidth={spacing.spacing1}
+                arcs={INNER_CIRCLE_ARCS}
+                fadeEnds={true}
               />
             </AnimateInOrder>
             {elementsToAnimate.map(({ element, coordinates }, index) => (
@@ -106,7 +115,7 @@ export function UnitagConfirmationScreen({
                 key={index}
                 index={index + 3}
                 position="absolute"
-                {...getInsetPropsForCoordinates(boxWidth, coordinates.x, coordinates.y)}
+                {...getInsetPropsForCoordinates({ boxWidth, x: coordinates.x, y: coordinates.y })}
               >
                 {element}
               </AnimateInOrder>
@@ -127,12 +136,16 @@ export function UnitagConfirmationScreen({
           </Text>
         </Flex>
         <Flex gap="$spacing12">
-          <DeprecatedButton size="medium" theme="primary" onPress={onPressDone}>
-            {t('common.button.done')}
-          </DeprecatedButton>
-          <DeprecatedButton size="medium" theme="secondary" onPress={onPressCustomize}>
-            {t('unitags.claim.confirmation.customize')}
-          </DeprecatedButton>
+          <Flex centered row>
+            <Button variant="branded" size="large" onPress={onPressDone}>
+              {t('common.button.done')}
+            </Button>
+          </Flex>
+          <Flex centered row>
+            <Button emphasis="secondary" size="large" onPress={onPressCustomize}>
+              {t('unitags.claim.confirmation.customize')}
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </Screen>
@@ -141,11 +154,12 @@ export function UnitagConfirmationScreen({
 
 // Calculates top and left insets for absolute positioned element based
 // on a 10x10 coordinate system where top left is 0,0.
-const getInsetPropsForCoordinates = (
-  boxWidth: number,
-  x: number,
-  y: number,
-): { top?: number; right?: number; bottom?: number; left?: number } => {
+function getInsetPropsForCoordinates({ boxWidth, x, y }: { boxWidth: number; x: number; y: number }): {
+  top?: number
+  right?: number
+  bottom?: number
+  left?: number
+} {
   const unitSize = 10
   const unit = boxWidth / unitSize
 

@@ -1,23 +1,18 @@
-// eslint-disable-next-line no-restricted-imports
-import { CurrencyAmount } from '@uniswap/sdk-core'
-import { LoaderButton } from 'components/Button/LoaderButton'
-import {
-  IncreaseLiquidityStep,
-  useIncreaseLiquidityContext,
-} from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
-import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
-import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
-import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
-import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
-import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useMemo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { PositionField } from 'types/position'
-import { Flex, Switch, Text } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { useTranslation } from 'react-i18next'
+import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { ErrorCallout } from '~/components/ErrorCallout'
+import { DepositInputForm } from '~/components/Liquidity/DepositInputForm'
+import { useUpdatedAmountsFromDependentAmount } from '~/components/Liquidity/hooks/useDependentAmountFallback'
+import { LiquidityModalDetailRows } from '~/components/Liquidity/LiquidityModalDetailRows'
+import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
+import { canUnwrapCurrency } from '~/components/Liquidity/utils/currency'
+import { getFieldsDisabled } from '~/components/Liquidity/utils/priceRangeInfo'
+import { IncreaseLiquidityStep, useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
+import { useIncreaseLiquidityTxContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
+import { PositionField } from '~/types/position'
 
 export function IncreaseLiquidityForm() {
   const { t } = useTranslation()
@@ -30,15 +25,8 @@ export function IncreaseLiquidityForm() {
     unwrapNativeCurrency,
     setUnwrapNativeCurrency,
   } = useIncreaseLiquidityContext()
-  const {
-    formattedAmounts,
-    currencyAmounts,
-    currencyAmountsUSDValue,
-    currencyBalances,
-    deposit0Disabled,
-    deposit1Disabled,
-    error,
-  } = derivedIncreaseLiquidityInfo
+  const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances, currencies, error } =
+    derivedIncreaseLiquidityInfo
   const { position, exactField } = increaseLiquidityState
 
   const {
@@ -59,41 +47,25 @@ export function IncreaseLiquidityForm() {
   const canUnwrap0 = canUnwrapCurrency(initialCurrency0Amount.currency, position.version)
   const canUnwrap1 = canUnwrapCurrency(initialCurrency1Amount.currency, position.version)
 
-  const token0 = getCurrencyWithOptionalUnwrap({
-    currency: initialCurrency0Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && canUnwrap0,
-  })
-  const token1 = getCurrencyWithOptionalUnwrap({
-    currency: initialCurrency1Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && canUnwrap1,
-  })
   const nativeCurrency = nativeOnChain(position.chainId)
 
-  const currency0Amount = useMemo(() => {
-    if (unwrapNativeCurrency && canUnwrap0) {
-      return CurrencyAmount.fromRawAmount(token0, initialCurrency0Amount.quotient)
-    }
-    return initialCurrency0Amount
-  }, [unwrapNativeCurrency, canUnwrap0, token0, initialCurrency0Amount])
-
-  const currency1Amount = useMemo(() => {
-    if (unwrapNativeCurrency && canUnwrap1) {
-      return CurrencyAmount.fromRawAmount(token1, initialCurrency1Amount.quotient)
-    }
-    return initialCurrency1Amount
-  }, [unwrapNativeCurrency, canUnwrap1, token1, initialCurrency1Amount])
-
-  const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
-    token0,
-    token1,
-    dependentAmount,
-    exactField,
-    currencyAmounts,
-    currencyAmountsUSDValue,
-    formattedAmounts,
-    deposit0Disabled: deposit0Disabled || false,
-    deposit1Disabled: deposit1Disabled || false,
+  const { tickLower, tickUpper } = position
+  const { TOKEN0: deposit0Disabled, TOKEN1: deposit1Disabled } = getFieldsDisabled({
+    ticks: [tickLower, tickUpper],
+    poolOrPair: position.version === ProtocolVersion.V2 ? undefined : position.poolOrPair,
   })
+  const { updatedFormattedAmounts, updatedUSDAmounts, updatedDeposit0Disabled, updatedDeposit1Disabled } =
+    useUpdatedAmountsFromDependentAmount({
+      token0: currencies?.TOKEN0,
+      token1: currencies?.TOKEN1,
+      dependentAmount,
+      exactField,
+      currencyAmounts,
+      currencyAmountsUSDValue,
+      formattedAmounts,
+      deposit0Disabled,
+      deposit1Disabled,
+    })
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setIncreaseLiquidityState((prev) => ({
@@ -147,16 +119,16 @@ export function IncreaseLiquidityForm() {
       <Flex gap="$gap24">
         <LiquidityPositionInfo positionInfo={position} />
         <DepositInputForm
-          token0={token0}
-          token1={token1}
+          token0={currencies?.TOKEN0}
+          token1={currencies?.TOKEN1}
           formattedAmounts={updatedFormattedAmounts}
           currencyAmounts={currencyAmounts}
           currencyAmountsUSDValue={updatedUSDAmounts}
           currencyBalances={currencyBalances}
           onUserInput={handleUserInput}
           onSetMax={handleOnSetMax}
-          deposit0Disabled={deposit0Disabled}
-          deposit1Disabled={deposit1Disabled}
+          deposit0Disabled={updatedDeposit0Disabled}
+          deposit1Disabled={updatedDeposit1Disabled}
           amount0Loading={requestLoading && exactField === PositionField.TOKEN1} // check isRefetching instead
           amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
           token0UnderCardComponent={canUnwrap0 ? UnwrapNativeCurrencyToggle : undefined}
@@ -164,41 +136,30 @@ export function IncreaseLiquidityForm() {
         />
       </Flex>
       <LiquidityModalDetailRows
-        currency0Amount={currency0Amount}
-        currency1Amount={currency1Amount}
+        currency0Amount={initialCurrency0Amount}
+        currency1Amount={initialCurrency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
       {fotErrorToken && (
-        <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
-          <Flex flexShrink={0}>
-            <AlertTriangleFilled size="$icon.20" color="$statusCritical" />
-          </Flex>
-          <Flex flex={1}>
-            <Text variant="body3" color="$statusCritical">
-              {t('token.safety.warning.fotLow.title')}
-            </Text>
-            <Text variant="body3" color="$neutral2">
-              <Trans
-                i18nKey="position.increase.fot"
-                values={{
-                  token: fotErrorToken.currency.symbol,
-                }}
-              />
-            </Text>
-          </Flex>
-        </Flex>
+        <ErrorCallout
+          errorMessage={true}
+          title={t('token.safety.warning.fotLow.title')}
+          description={t('position.increase.fot', { token: fotErrorToken.currency.symbol })}
+        />
       )}
-      <TradingAPIError errorMessage={dataFetchingError} refetch={refetch} />
-      <LoaderButton
-        isDisabled={Boolean(error) || !txInfo?.txRequest || Boolean(fotErrorToken)}
-        onPress={handleOnContinue}
-        loading={requestLoading}
-        buttonKey="IncreaseLiquidity-continue"
-      >
-        <Text variant="buttonLabel1" color="$white">
-          {error || t('common.add.label')}
-        </Text>
-      </LoaderButton>
+      <ErrorCallout errorMessage={dataFetchingError} onPress={refetch} />
+      <Flex row>
+        <Button
+          isDisabled={Boolean(error) || !txInfo?.txRequest || Boolean(fotErrorToken)}
+          onPress={handleOnContinue}
+          loading={requestLoading}
+          variant="branded"
+          key="LoaderButton-animation-IncreaseLiquidity-continue"
+          size="large"
+        >
+          {error || t('swap.button.review')}
+        </Button>
+      </Flex>
     </Flex>
   )
 }

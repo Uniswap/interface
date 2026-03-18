@@ -1,20 +1,20 @@
 import { act } from '@testing-library/react'
 import { Percent } from '@uniswap/sdk-core'
-import store from 'state'
-import { RouterPreference } from 'state/routing/types'
-import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import { updateUserSlippageTolerance } from 'state/user/reducer'
-import { SlippageTolerance } from 'state/user/types'
-import { renderHook } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
+import store from '~/state'
+import { RouterPreference } from '~/state/routing/types'
+import { useRouterPreference, useUserSlippageTolerance } from '~/state/user/hooks'
+import { updateUserSlippageTolerance } from '~/state/user/reducer'
+import { SlippageTolerance } from '~/state/user/types'
+import { renderHook } from '~/test-utils/render'
 
 describe('serializeToken', () => {
   it('serializes the token', () => {
     expect(serializeToken(USDC_MAINNET)).toEqual({
       chainId: 1,
       decimals: 6,
-      name: 'USD//C',
+      name: 'USD Coin',
       symbol: 'USDC',
       address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     })

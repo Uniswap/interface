@@ -1,0 +1,61 @@
+{
+  "transactions": [
+    {
+      "onChain": {
+        "chainId": 1,
+        "transactionHash": "0xec087ba7b67d59041c55c06c34c9aea915492e78061ed03343fdf952908e8cdd",
+        "timestampMillis": "1684364135000",
+        "from": "0xdbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+        "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "label": 11,
+        "status": 0,
+        "transfers": [
+          {
+            "direction": "RECEIVE",
+            "from": "0xdbef374fdf8d735e7589a9a9e2c5a091eb2dbe57",
+            "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "token": {
+              "chainId": 1,
+              "address": "0x0000000000000000000000000000000000000000",
+              "symbol": "ETH",
+              "decimals": 18,
+              "name": "Ether",
+              "type": "NATIVE",
+              "metadata": { "spamCode": "NOT_SPAM" }
+            },
+            "amount": { "raw": "1000000000000000", "amount": 0.001 }
+          }
+        ]
+      }
+    },
+    {
+      "onChain": {
+        "chainId": 1,
+        "transactionHash": "0xa91094497d15c36eb90ed3a24bed82466cf2b9131f1d5604b36bbfcb147a7088",
+        "timestampMillis": "1684319903000",
+        "from": "0xeda5e181146b1f9a7f40f85c0da334938420d514",
+        "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "label": 11,
+        "status": 1,
+        "transfers": [
+          {
+            "direction": "RECEIVE",
+            "from": "0xeda5e181146b1f9a7f40f85c0da334938420d514",
+            "to": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "token": {
+              "chainId": 1,
+              "address": "0x0000000000000000000000000000000000000000",
+              "symbol": "ETH",
+              "decimals": 18,
+              "name": "Ether",
+              "type": "NATIVE",
+              "metadata": { "spamCode": "NOT_SPAM" }
+            },
+            "amount": { "raw": "150000000000000000", "amount": 0.15 }
+          }
+        ]
+      }
+    }
+  ],
+  "nextPageToken": ""
+}

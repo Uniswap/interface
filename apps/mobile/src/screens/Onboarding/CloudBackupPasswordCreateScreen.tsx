@@ -8,9 +8,10 @@ import { Flex } from 'ui/src'
 import { Cloud } from 'ui/src/components/icons'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
-export type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordCreate>
-
-export function CloudBackupPasswordCreateScreen({ navigation, route: { params } }: Props): JSX.Element {
+export function CloudBackupPasswordCreateScreen({
+  navigation,
+  route: { params },
+}: NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordCreate>): JSX.Element {
   const { t } = useTranslation()
 
   const navigateToNextScreen = useCallback(

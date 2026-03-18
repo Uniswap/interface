@@ -1,5 +1,5 @@
 import { AppState, AppStateStatus } from 'react-native'
-import { EventChannel, SagaIterator, eventChannel } from 'redux-saga'
+import { EventChannel, eventChannel, SagaIterator } from 'redux-saga'
 import { transitionAppState } from 'src/features/appState/appStateSlice'
 import { cancelled, put, take } from 'typed-redux-saga'
 import { isAndroid } from 'utilities/src/platform'
@@ -38,7 +38,7 @@ const IS_ANDROID_SUBSCRIPTION_ENABLED = false
  * @param onChange - Callback function to handle app state changes
  * @returns - Function to unsubscribe from the app state change listener
  */
-export function appStateSubscription(onChange: (value: AppStateStatus) => void): () => void {
+function appStateSubscription(onChange: (value: AppStateStatus) => void): () => void {
   const subscription = AppState.addEventListener('change', (value: AppStateStatus) => {
     onChange(value)
   })
@@ -48,6 +48,7 @@ export function appStateSubscription(onChange: (value: AppStateStatus) => void):
   let blurSubscription: ReturnType<typeof AppState.addEventListener> | undefined
   let focusSubscription: ReturnType<typeof AppState.addEventListener> | undefined
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (isAndroid && IS_ANDROID_SUBSCRIPTION_ENABLED) {
     blurSubscription = AppState.addEventListener('blur', () => {
       onChange('inactive' as AppStateStatus)

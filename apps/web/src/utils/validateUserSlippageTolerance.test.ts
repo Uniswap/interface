@@ -3,7 +3,7 @@ import validateUserSlippageTolerance, {
   MAXIMUM_RECOMMENDED_SLIPPAGE,
   MINIMUM_RECOMMENDED_SLIPPAGE,
   SlippageValidationResult,
-} from 'utils/validateUserSlippageTolerance'
+} from '~/utils/validateUserSlippageTolerance'
 
 describe('validateUserSlippageTolerance', () => {
   it('should return warning when slippage is too low', () => {

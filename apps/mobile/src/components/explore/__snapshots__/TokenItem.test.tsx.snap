@@ -4,40 +4,79 @@ exports[`TokenItem renders without error 1`] = `
 <View
   actions={[]}
   onPress={[MockFunction]}
+  previewBackgroundColor="#FFFFFF"
 >
   <View
-    hitSlop={
+    collapsable={false}
+    focusVisibleStyle={{}}
+    forwardedRef={[Function]}
+    jestAnimatedProps={
       {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
+        "value": {},
       }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
     }
     onBlur={[Function]}
     onClick={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
+    role="button"
     style={
-      {
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
     testID="token-item-tkn"
   >
     <View
       collapsable={false}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       style={
         {
           "alignItems": "center",
@@ -75,16 +114,11 @@ exports[`TokenItem renders without error 1`] = `
             maxFontSizeMultiplier={1.4}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "#9B9B9B",
-                    "light": "#7D7D7D",
-                  },
-                },
+                "color": "rgba(19, 19, 19, 0.63)",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 15,
                 "fontWeight": "400",
-                "lineHeight": 20,
+                "lineHeight": 19.5,
               }
             }
             suppressHighlighting={true}
@@ -117,7 +151,7 @@ exports[`TokenItem renders without error 1`] = `
                 "flexDirection": "column",
                 "height": "96%",
                 "left": "2%",
-                "opacity": 0,
+                "opacity": 1,
                 "position": "absolute",
                 "top": "2%",
                 "width": "96%",
@@ -163,16 +197,11 @@ exports[`TokenItem renders without error 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#FFFFFF",
-                  "light": "#222222",
-                },
-              },
+              "color": "#131313",
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
-              "lineHeight": 24,
+              "lineHeight": 24.7,
             }
           }
           suppressHighlighting={true}
@@ -185,16 +214,11 @@ exports[`TokenItem renders without error 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#9B9B9B",
-                  "light": "#7D7D7D",
-                },
-              },
+              "color": "rgba(19, 19, 19, 0.63)",
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
-              "lineHeight": 24,
+              "lineHeight": 20,
             }
           }
           suppressHighlighting={true}
@@ -233,16 +257,11 @@ exports[`TokenItem renders without error 1`] = `
               maxFontSizeMultiplier={1.4}
               style={
                 {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#FFFFFF",
-                      "light": "#222222",
-                    },
-                  },
+                  "color": "#131313",
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
                   "fontWeight": "400",
-                  "lineHeight": 24,
+                  "lineHeight": 24.7,
                 }
               }
               suppressHighlighting={true}
@@ -273,16 +292,11 @@ exports[`TokenItem renders without error 1`] = `
                   maxFontSizeMultiplier={1.4}
                   style={
                     {
-                      "color": {
-                        "dynamic": {
-                          "dark": "#9B9B9B",
-                          "light": "#7D7D7D",
-                        },
-                      },
+                      "color": "rgba(19, 19, 19, 0.63)",
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 17,
                       "fontWeight": "400",
-                      "lineHeight": 24,
+                      "lineHeight": 22.1,
                     }
                   }
                   suppressHighlighting={true}

@@ -1,8 +1,10 @@
+import { NativeModules } from 'react-native'
+import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
+
 interface RNCloudStorageBackupsManager {
   isCloudStorageAvailable: () => Promise<boolean>
   deleteCloudStorageMnemonicBackup: (mnemonicId: string) => Promise<boolean>
-  startFetchingCloudStorageBackups: () => Promise<void>
-  stopFetchingCloudStorageBackups: () => Promise<void>
+  getCloudBackupList: () => Promise<CloudStorageMnemonicBackup[]>
   backupMnemonicToCloudStorage: (mnemonicId: string, password: string) => Promise<boolean>
   restoreMnemonicFromCloudStorage: (mnemonicId: string, password: string) => Promise<boolean>
 }
@@ -12,7 +14,6 @@ declare module 'react-native' {
     RNCloudStorageBackupsManager: RNCloudStorageBackupsManager
   }
 }
-import { NativeModules } from 'react-native'
 
 const { RNCloudStorageBackupsManager } = NativeModules
 
@@ -24,12 +25,8 @@ export function deleteCloudStorageMnemonicBackup(mnemonicId: string): Promise<bo
   return RNCloudStorageBackupsManager.deleteCloudStorageMnemonicBackup(mnemonicId)
 }
 
-export function startFetchingCloudStorageBackups(): Promise<void> {
-  return RNCloudStorageBackupsManager.startFetchingCloudStorageBackups()
-}
-
-export function stopFetchingCloudStorageBackups(): Promise<void> {
-  return RNCloudStorageBackupsManager.stopFetchingCloudStorageBackups()
+export function getCloudBackupList(): Promise<CloudStorageMnemonicBackup[]> {
+  return RNCloudStorageBackupsManager.getCloudBackupList()
 }
 
 export function backupMnemonicToCloudStorage(mnemonicId: string, password: string): Promise<boolean> {

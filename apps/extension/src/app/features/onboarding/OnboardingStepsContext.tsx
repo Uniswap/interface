@@ -4,10 +4,16 @@ import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScr
 export enum CreateOnboardingSteps {
   ClaimUnitag = 'claimUnitag',
   Password = 'password',
-  ViewMnemonic = 'mnemonic',
-  TestMnemonic = 'testMnemonic',
-  Naming = 'naming',
   Complete = 'complete',
+}
+
+export enum SelectImportMethodSteps {
+  SelectMethod = 'selectMethod',
+}
+
+export enum ImportPasskeySteps {
+  InitiatePasskeyAuth = 'initiatePasskeyAuth',
+  PasskeyImport = 'passkeyImport',
 }
 
 export enum ImportOnboardingSteps {
@@ -41,8 +47,14 @@ export enum ClaimUnitagSteps {
   Confirmation = 'confirmation',
 }
 
-export type Step = CreateOnboardingSteps | ImportOnboardingSteps | ResetSteps | ScanOnboardingSteps | ClaimUnitagSteps
-
+export type Step =
+  | CreateOnboardingSteps
+  | ImportOnboardingSteps
+  | ResetSteps
+  | ScanOnboardingSteps
+  | ClaimUnitagSteps
+  | SelectImportMethodSteps
+  | ImportPasskeySteps
 export type OnboardingStepsContextState = {
   step: Step
   going?: 'forward' | 'backward'

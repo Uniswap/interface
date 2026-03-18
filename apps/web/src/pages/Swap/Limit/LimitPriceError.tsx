@@ -1,22 +1,23 @@
 import { Currency } from '@uniswap/sdk-core'
-import { LimitPriceErrorType } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { AlertTriangle } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { LimitPriceErrorType } from '~/components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
+import Column from '~/components/deprecated/Column'
+import Row from '~/components/deprecated/Row'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
+import { FadePresence, FadePresenceAnimationType } from '~/theme/components/FadePresence'
+import { transitions } from '~/theme/styles'
 
-const Container = styled(Row)`
+const Container = deprecatedStyled(Row)`
   padding: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   margin-top: 4px;
 `
 
-const LogoContainer = styled.div`
+const LogoContainer = deprecatedStyled.div`
   height: 40px;
   width: 40px;
   position: relative;
@@ -77,16 +78,15 @@ function getDescription({ priceInverted, priceAdjustmentPercentage, priceError }
 }
 
 export function LimitPriceError(props: LimitPriceErrorProps) {
-  const theme = useTheme()
   return (
     <FadePresence
-      $transitionDuration={theme.transition.duration.fast}
-      $delay={theme.transition.duration.fast}
+      $transitionDuration={transitions.duration.fast}
+      $delay={transitions.duration.fast}
       animationType={FadePresenceAnimationType.FadeAndTranslate}
     >
       <Container gap="md">
         <LogoContainer>
-          <AlertTriangle strokeWidth={1} color={theme.critical} size="20px" />
+          <AlertTriangle color="$statusCritical" size="$icon.20" strokeWidth={1} />
         </LogoContainer>
         <Column>
           <ThemedText.SubHeader>{getTitle(props)}</ThemedText.SubHeader>

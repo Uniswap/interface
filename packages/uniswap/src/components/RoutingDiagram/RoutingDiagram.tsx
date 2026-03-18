@@ -1,8 +1,7 @@
-import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { Trans } from 'react-i18next'
-import { Flex, styled as tamaguiStyled, Text, Tooltip } from 'ui/src'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Flex, styled, Text, Tooltip } from 'ui/src'
 import { DotLine } from 'ui/src/components/icons/DotLine'
 import { zIndexes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -10,16 +9,20 @@ import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
+import { currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import type { RoutingDiagramEntry, RoutingHop } from 'uniswap/src/utils/routingDiagram/types'
 
-const PoolBadge = tamaguiStyled(Flex, {
+const HOP_BASE_CHARACTER_COST = 10
+const FIRST_ROUTE_ROW_CHARACTER_BUDGET = 36
+const ADDITIONAL_ROUTE_ROW_CHARACTER_BUDGET = 48
+
+const PoolBadge = styled(Flex, {
   row: true,
   centered: true,
   p: '$spacing8',
 })
 
-const OpaqueBadge = tamaguiStyled(PoolBadge, {
+const OpaqueBadge = styled(PoolBadge, {
   backgroundColor: '$surface2',
   borderRadius: '$rounded8',
   justifyContent: 'flex-start',
@@ -32,60 +35,79 @@ const OpaqueBadge = tamaguiStyled(PoolBadge, {
   },
 })
 
-const BadgeText = tamaguiStyled(Text, {
+const BadgeText = styled(Text, {
   variant: 'body4',
   '$platform-web': {
     wordBreak: 'normal',
   },
 })
 
-const currencyToCurrencyId = (currency: Currency): string => {
-  return 'address' in currency
-    ? buildCurrencyId(currency.chainId, currency.address)
-    : buildNativeCurrencyId(currency.chainId)
+function useHopBadgeContent({ hop, tokenPair }: { hop: RoutingHop; tokenPair: string }): {
+  badgeText: string
+  tooltipText: string
+} {
+  const { t } = useTranslation()
+
+  // Disabling this rule so that it elint warns us when we add a new hop type and it's properly handled.
+  // eslint-disable-next-line consistent-return
+  return useMemo(() => {
+    switch (hop.type) {
+      case 'uniswapPool': {
+        const feePercent = hop.fee / BIPS_BASE
+        const poolFeeText = hop.isDynamic ? t('pool.dynamic') : t('pool.percent', { pct: feePercent })
+
+        return {
+          badgeText: hop.isDynamic ? t('common.dynamic') : `${feePercent}%`,
+          tooltipText: `${tokenPair} ${poolFeeText}`,
+        }
+      }
+
+      case 'genericHop': {
+        return {
+          badgeText: hop.name,
+          tooltipText: t('pool.via', { tokenPair, dex: hop.name }),
+        }
+      }
+    }
+  }, [hop, tokenPair, t])
 }
 
-function Pool({
-  currency0,
-  currency1,
-  feeAmount,
-}: {
-  currency0: Currency
-  currency1: Currency
-  feeAmount: FeeAmount
-}): JSX.Element {
-  const currency0CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency0))
-  const currency1CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency1))
+function HopBadge({ hop }: { hop: RoutingHop }): JSX.Element {
+  const inputCurrencyInfo = useCurrencyInfo(hop.inputCurrencyId)
+  const outputCurrencyInfo = useCurrencyInfo(hop.outputCurrencyId)
+
+  const inputSymbol = inputCurrencyInfo?.currency.symbol ?? '-'
+  const outputSymbol = outputCurrencyInfo?.currency.symbol ?? '-'
+  const tokenPair = `${inputSymbol}/${outputSymbol}`
+
+  const chainId = inputCurrencyInfo?.currency.chainId ?? currencyIdToChain(hop.inputCurrencyId)
+
+  const { badgeText, tooltipText } = useHopBadgeContent({ hop, tokenPair })
 
   return (
     <Tooltip placement="top">
-      <Tooltip.Trigger>
+      <Tooltip.Trigger cursor="default">
         <OpaqueBadge>
           <Flex ml={2}>
             <SplitLogo
-              chainId={currency0.chainId}
-              inputCurrencyInfo={currency0CurrencyInfo}
-              outputCurrencyInfo={currency1CurrencyInfo}
-              size={20}
+              chainId={chainId}
+              inputCurrencyInfo={inputCurrencyInfo}
+              outputCurrencyInfo={outputCurrencyInfo}
+              size={16}
             />
           </Flex>
-          <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
+          <BadgeText>{badgeText}</BadgeText>
         </OpaqueBadge>
       </Tooltip.Trigger>
-      <Tooltip.Content>
-        <Text variant="body4">
-          <Trans
-            i18nKey="pool.percent"
-            values={{ pct: currency0?.symbol + '/' + currency1?.symbol + ' ' + feeAmount / 10000 }}
-          />
-        </Text>
+      <Tooltip.Content zIndex={zIndexes.overlay}>
+        <Text variant="body4">{tooltipText}</Text>
         <Tooltip.Arrow />
       </Tooltip.Content>
     </Tooltip>
   )
 }
 
-export default function RoutingDiagram({
+export function RoutingDiagram({
   currencyIn,
   currencyOut,
   routes,
@@ -94,8 +116,8 @@ export default function RoutingDiagram({
   currencyOut: Currency
   routes: RoutingDiagramEntry[]
 }): JSX.Element {
-  const currencyInCurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currencyIn))
-  const currencyOutCurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currencyOut))
+  const currencyInCurrencyInfo = useCurrencyInfo(currencyId(currencyIn))
+  const currencyOutCurrencyInfo = useCurrencyInfo(currencyId(currencyOut))
 
   return (
     <Flex>
@@ -121,58 +143,87 @@ function RouteRow({
   currencyOutCurrencyInfo: Maybe<CurrencyInfo>
 }): JSX.Element {
   const { path } = entry
+  const pathRows = useMemo(() => splitPathIntoRows(path), [path])
 
-  // If we only have 2 or fewer pools, show everything in one row
-  if (path.length <= 2) {
+  if (pathRows.length === 1) {
     return (
       <Flex row alignItems="center" gap="$spacing4">
-        <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={20} />
+        <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={16} />
         <Route entry={entry} />
-        <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={20} />
+        <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={16} />
       </Flex>
     )
   }
 
-  // For more than 2 pools, use a two-line layout
   return (
     <Flex width="100%" gap="$spacing4">
-      {/* First line: currencyIn icon, first 2 pools */}
-      <Flex row alignItems="center" width="100%" gap="$spacing4">
-        <Flex ml="$spacing4">
-          <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={20} />
-        </Flex>
-        <Flex flex={1}>
-          <Route entry={{ ...entry, path: path.slice(0, 2) }} />
-        </Flex>
-      </Flex>
+      {pathRows.map((rowPath, rowIndex) => {
+        const isFirstRow = rowIndex === 0
+        const isLastRow = rowIndex === pathRows.length - 1
 
-      {/* Second line: remaining pools, currencyOut icon */}
-      <Flex row alignItems="center" width="100%" gap="$spacing4">
-        <Flex ml="$spacing4" flex={1}>
-          <Route entry={{ ...entry, path: path.slice(2) }} showBadge={false} />
-        </Flex>
-        <Flex mr="$spacing4">
-          <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={20} />
-        </Flex>
-      </Flex>
+        return (
+          <Flex key={rowIndex} row alignItems="center" width="100%" gap="$spacing4">
+            <Flex ml="$spacing4" width={16}>
+              {isFirstRow && <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={16} />}
+            </Flex>
+
+            <Flex flex={1}>
+              <Route entry={{ ...entry, path: rowPath }} showBadge={isFirstRow} />
+            </Flex>
+
+            <Flex mr="$spacing4" width={16}>
+              {isLastRow && <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={16} />}
+            </Flex>
+          </Flex>
+        )
+      })}
     </Flex>
   )
 }
 
-function Route({
-  entry: { percent, path, protocol },
-  showBadge = true,
-}: {
-  entry: RoutingDiagramEntry
-  showBadge?: boolean
-}): JSX.Element {
-  const badgeText =
-    protocol === Protocol.MIXED
-      ? [...new Set(path.map(([, , , p]) => p.toUpperCase()))].sort().join(' + ')
-      : protocol.toUpperCase()
+function getHopCharacterCost(hop: RoutingHop): number {
+  if (hop.type === 'genericHop') {
+    return hop.name.length + HOP_BASE_CHARACTER_COST
+  }
 
+  const feeText = hop.isDynamic ? 'dynamic' : `${hop.fee / BIPS_BASE}%`
+  return feeText.length + HOP_BASE_CHARACTER_COST
+}
+
+function splitPathIntoRows(path: RoutingHop[]): RoutingHop[][] {
+  const rows: RoutingHop[][] = []
+  let currentRowCharacterCost = 0
+
+  for (const hop of path) {
+    const hopCharacterCost = getHopCharacterCost(hop)
+    const currentRow = rows.at(-1)
+
+    if (!currentRow) {
+      rows.push([hop])
+      currentRowCharacterCost = hopCharacterCost
+      continue
+    }
+
+    // The first row includes the route badge (protocol + percent), so it has less space for hop badges.
+    const currentRowCharacterBudget =
+      rows.length === 1 ? FIRST_ROUTE_ROW_CHARACTER_BUDGET : ADDITIONAL_ROUTE_ROW_CHARACTER_BUDGET
+
+    if (currentRowCharacterCost + hopCharacterCost > currentRowCharacterBudget) {
+      rows.push([hop])
+      currentRowCharacterCost = hopCharacterCost
+      continue
+    }
+
+    currentRow.push(hop)
+    currentRowCharacterCost += hopCharacterCost
+  }
+
+  return rows
+}
+
+function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBadge?: boolean }): JSX.Element {
   return (
-    <Flex row justifyContent="space-evenly" flex={1} position="relative" width="auto" py="$spacing4">
+    <Flex row justifyContent="space-evenly" flex={1} position="relative" width="auto">
       <Flex
         alignItems="center"
         position="absolute"
@@ -183,21 +234,31 @@ function Route({
         zIndex={1}
         opacity={0.5}
       >
-        <DotLine minWidth="100%" minHeight={35} />
+        <DotLine minWidth="100%" minHeight={26} />
       </Flex>
 
       {showBadge && (
         <OpaqueBadge>
-          <BadgeText>{badgeText}</BadgeText>
-          <BadgeText style={{ minWidth: 'auto' }}>{percent.toSignificant(2)}%</BadgeText>
+          <ProtocolBadge protocolLabel={entry.protocolLabel} />
+          <BadgeText style={{ minWidth: 'auto' }}>{entry.percent.toSignificant(2)}%</BadgeText>
         </OpaqueBadge>
       )}
 
       <Flex row gap="$spacing4" width="auto" zIndex={2} flex={1} justifyContent="space-evenly" alignItems="center">
-        {path.map(([currency0, currency1, feeAmount], index) => (
-          <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
+        {entry.path.map((hop, index) => (
+          <HopBadge key={index} hop={hop} />
         ))}
       </Flex>
+    </Flex>
+  )
+}
+
+function ProtocolBadge({ protocolLabel }: { protocolLabel: string }): JSX.Element {
+  return (
+    <Flex backgroundColor="$surface3" px="$spacing4" borderRadius="$rounded6">
+      <Text fontSize={8} color="$neutral2" lineHeight={12}>
+        {protocolLabel}
+      </Text>
     </Flex>
   )
 }

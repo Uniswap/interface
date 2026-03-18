@@ -13,7 +13,7 @@ describe(IntroCard, () => {
       title: 'Test title',
       description: 'Test description',
       cardType: CardType.Required,
-      loggingName: OnboardingCardLoggingName.BridgingBanner,
+      loggingName: OnboardingCardLoggingName.FundWallet,
     } satisfies IntroCardProps
 
     render(<IntroCard {...props} />)

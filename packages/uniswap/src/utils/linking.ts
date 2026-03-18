@@ -1,9 +1,14 @@
+import { GraphQLApi } from '@universe/api'
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
+import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
+import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { currencyIdToChain, currencyIdToGraphQLAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -17,24 +22,35 @@ const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
  * @param openExternalBrowser whether to leave the app and open in system browser. default is false, opens in-app browser window
  * @param isSafeUri whether to bypass ALLOWED_EXTERNAL_URI_SCHEMES check
  * @param controlsColor When opening in an in-app browser, determines the controls color
+ * @param throwOnError whether to throw errors instead of just logging them
  **/
-export async function openUri(
-  uri: string,
+export async function openUri({
+  uri,
   openExternalBrowser = false,
   isSafeUri = false,
-  // NOTE: okay to use colors object directly as we want the same color for light/dark modes
   controlsColor = colorsLight.accent1,
-): Promise<void> {
+  throwOnError = false,
+}: {
+  uri: string
+  openExternalBrowser?: boolean
+  isSafeUri?: boolean
+  // NOTE: okay to use colors object directly as we want the same color for light/dark modes
+  controlsColor?: string
+  throwOnError?: boolean
+}): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
-    // TODO: [MOB-253] show a visual warning that the link cannot be opened.
-    logger.error(new Error('User attempted to open potentially unsafe url'), {
+    const error = new Error('User attempted to open potentially unsafe url')
+    logger.error(error, {
       tags: {
         file: 'linking',
         function: 'openUri',
       },
       extra: { uri },
     })
+    if (throwOnError) {
+      throw error
+    }
     return
   }
 
@@ -44,7 +60,11 @@ export async function openUri(
   const supported = isHttp ? true : await canOpenURL(uri)
 
   if (!supported) {
-    logger.warn('linking', 'openUri', `Cannot open URI: ${uri}`)
+    const error = new Error(`Cannot open URI: ${uri}`)
+    logger.warn('linking', 'openUri', error.message)
+    if (throwOnError) {
+      throw error
+    }
     return
   }
 
@@ -67,6 +87,9 @@ export async function openUri(
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'linking', function: 'openUri' }, extra: { uri } })
+    if (throwOnError) {
+      throw error
+    }
   }
 }
 
@@ -85,9 +108,29 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink(chainId: UniverseChainId, data: string, type: ExplorerDataType): string {
-  const { explorer, nativeCurrency } = getChainInfo(chainId)
+export function getExplorerLink({
+  chainId,
+  data,
+  type,
+}: {
+  chainId: UniverseChainId
+  data?: string
+  type: ExplorerDataType
+}): string {
+  const chainInfo = getChainInfo(chainId)
+
+  // Handle unsupported chain IDs gracefully
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- chainInfo can be undefined in edge cases (SDK mismatch)
+  if (!chainInfo) {
+    return ''
+  }
+
+  const { explorer, nativeCurrency } = chainInfo
   const prefix = explorer.url
+
+  if (!data) {
+    return prefix
+  }
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
@@ -95,7 +138,7 @@ export function getExplorerLink(chainId: UniverseChainId, data: string, type: Ex
 
     case ExplorerDataType.TOKEN:
       if (data === nativeCurrency.address && nativeCurrency.explorerLink) {
-        return nativeCurrency.explorerLink ?? `${prefix}token/${data}`
+        return nativeCurrency.explorerLink
       }
       return `${prefix}token/${data}`
 
@@ -120,8 +163,42 @@ export function getExplorerLink(chainId: UniverseChainId, data: string, type: Ex
       return `${prefix}nft/${data}`
 
     default:
-      return `${prefix}`
+      return prefix
   }
+}
+
+export function getNftExplorerLink({
+  chainId,
+  contractAddress,
+  tokenId,
+}: {
+  chainId: UniverseChainId
+  contractAddress: string
+  tokenId: string
+}): string {
+  return getExplorerLink({
+    chainId,
+    data: `${contractAddress}/${tokenId}`,
+    type: ExplorerDataType.NFT,
+  })
+}
+
+export function getOpenseaLink({
+  chainId,
+  contractAddress,
+  tokenId,
+}: {
+  chainId: UniverseChainId
+  contractAddress: string
+  tokenId: string
+}): string | null {
+  const chainInfo = getChainInfo(chainId)
+
+  if (!chainInfo.openseaName) {
+    return null
+  }
+
+  return `https://opensea.io/item/${chainInfo.openseaName}/${contractAddress}/${tokenId}`
 }
 
 /**
@@ -138,13 +215,79 @@ export function getTokenDetailsURL({
   inputAddress,
 }: {
   address: string
-  chain: number
+  chain?: number
   chainUrlParam?: string
   inputAddress?: string | null
 }): string {
+  if (!chain) {
+    return '/not-found'
+  }
   const chainInfo = toGraphQLChain(chain)
 
-  const chainName = chainUrlParam || String(chainInfo)?.toLowerCase() || Chain.Ethereum.toLowerCase()
-  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return `/explore/tokens/${chainName}/${address}${inputAddressSuffix}`
+  const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
+  const adjustedInputAddress = isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
+
+  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
+  const inputAddressSuffix = adjustedInputAddress ? `?inputCurrency=${adjustedInputAddress}` : ''
+  return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
+}
+
+export function getFiatOnRampURL(chainId?: UniverseChainId): string {
+  const chainParam = chainId ? `?chain=${getChainInfo(chainId).urlParam}` : ''
+  return `/buy${chainParam}`
+}
+
+export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {
+  const chainName = getChainInfo(chain).urlParam
+  return `/explore/pools/${chainName}/${address}`
+}
+
+export async function openTransactionLink(hash: string | undefined, chainId: UniverseChainId): Promise<void> {
+  if (!hash) {
+    return undefined
+  }
+  const explorerUrl = getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })
+  return openUri({ uri: explorerUrl })
+}
+
+export async function openUniswapHelpLink(): Promise<void> {
+  return openUri({ uri: uniswapUrls.helpRequestUrl })
+}
+
+export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
+  return openUri({ uri: serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl })
+}
+
+export async function openOfframpPendingSupportLink(): Promise<void> {
+  return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
+}
+
+export function getPortfolioUrl(walletAddress: string): string {
+  return `${uniswapUrls.webInterfacePortfolioUrl}/${walletAddress}`
+}
+
+const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
+
+export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
+  const chainId = currencyIdToChain(currencyId)
+  if (!chainId) {
+    return undefined
+  }
+  const network = toUniswapWebAppLink(chainId)
+  try {
+    let tokenAddress = currencyIdToGraphQLAddress(currencyId)
+    // in case it's a native token
+    if (tokenAddress === null) {
+      // this is how web app handles native tokens
+      tokenAddress = BACKEND_NATIVE_CHAIN_ADDRESS_STRING
+    }
+    const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
+  } catch {
+    return undefined
+  }
+}
+
+export function getTwitterLink(twitterName: string): string {
+  return `https://twitter.com/${twitterName}`
 }

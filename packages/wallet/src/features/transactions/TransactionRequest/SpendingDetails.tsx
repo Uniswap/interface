@@ -2,16 +2,16 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileApp } from 'utilities/src/platform'
-import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
 export function SpendingEthDetails({ value, chainId }: { value: string; chainId: UniverseChainId }): JSX.Element {
   const variant = isMobileApp ? 'body3' : 'body4'
@@ -68,7 +68,7 @@ export function SpendingDetails({
     <ContentRow label={showLabel ? labelCopy : ''} variant={variant}>
       <Flex row alignItems="center" gap="$spacing4">
         <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon16} />
-        <Text variant={variant}>{getSymbolDisplayText(currencyInfo?.currency.symbol)}</Text>
+        <Text variant={variant}>{getSymbolDisplayText(currencyInfo.currency.symbol)}</Text>
       </Flex>
     </ContentRow>
   )

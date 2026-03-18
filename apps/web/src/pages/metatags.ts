@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { MetaTagInjectorInput } from 'shared-cloud/metatags'
+import { useLocation } from 'react-router'
 import i18n from 'uniswap/src/i18n'
+import { MetaTagInjectorInput } from '~/shared-cloud/metatags'
 
 const DEFAULT_METATAGS: MetaTagInjectorInput = {
   title: i18n.t('interface.metatags.title'),
@@ -22,6 +22,7 @@ type MetatagAttributes = { property?: string; name?: string; content: string }
 export function useDynamicMetatags(metaTags: MetaTagInjectorInput = DEFAULT_METATAGS) {
   const [metaTagAttributes, setMetaTagAttributes] = useState<MetatagAttributes[]>([])
   const location = useLocation()
+  // biome-ignore lint/correctness/useExhaustiveDependencies: location dependency is sufficient for this effect
   useEffect(() => {
     metaTags.url = window.location.href
     const attributes: MetatagAttributes[] = [

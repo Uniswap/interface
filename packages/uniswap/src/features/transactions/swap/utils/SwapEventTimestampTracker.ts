@@ -21,6 +21,7 @@ export class SwapEventTimestampTracker {
     // Private constructor to prevent direct construction calls with the `new` operator.
   }
   public static getInstance(): SwapEventTimestampTracker {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!this._instance) {
       this._instance = new SwapEventTimestampTracker()
     }

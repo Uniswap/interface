@@ -13,7 +13,7 @@ function parseMulticallCommand(calldata: string): NFPMCommand {
 
   return NfpmCommandSchema.parse({
     commandName: txDescription.name,
-    params: txDescription.args.params,
+    params: txDescription.args['params'],
   })
 }
 

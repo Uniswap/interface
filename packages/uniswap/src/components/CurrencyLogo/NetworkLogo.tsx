@@ -1,13 +1,10 @@
 import React from 'react'
-// eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
-import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
-import { ALL_NETWORKS_LOGO, ALL_NETWORKS_LOGO_UNICHAIN } from 'ui/src/assets'
+import { Flex, FlexProps, Image, Loader, useSporeColors } from 'ui/src'
+import { ALL_NETWORKS_LOGO } from 'ui/src/assets'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileWeb } from 'utilities/src/platform'
 
 export const SQUIRCLE_BORDER_RADIUS_RATIO = 0.3
@@ -18,13 +15,14 @@ type NetworkLogoProps = FlexProps & {
   shape?: 'circle' | 'square'
   borderWidth?: number
   borderRadius?: number
+  loading?: boolean
 }
 
 export function TransactionSummaryNetworkLogo({
   chainId,
   size = iconSizes.icon20,
 }: Pick<NetworkLogoProps, 'chainId' | 'size'>): JSX.Element {
-  return <NetworkLogo borderWidth={1.5} chainId={chainId} shape="square" size={size} />
+  return <NetworkLogo borderWidth={1.6} chainId={chainId} shape="square" size={size} />
 }
 
 function _NetworkLogo({
@@ -33,11 +31,12 @@ function _NetworkLogo({
   size: sizeWithoutBorder = iconSizes.icon20,
   borderWidth = 0,
   borderRadius,
+  loading,
+  transition,
 }: NetworkLogoProps): JSX.Element | null {
   const size = sizeWithoutBorder + 2 * borderWidth
   const shapeBorderRadius = shape === 'circle' ? size / 2 : size * SQUIRCLE_BORDER_RADIUS_RATIO
   const colors = useSporeColors()
-  const unichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
 
   const imageStyle = {
     width: size,
@@ -47,12 +46,14 @@ function _NetworkLogo({
     borderColor: colors.surface1.val,
   }
 
-  if (chainId === null) {
-    const logo = unichainPromoEnabled ? ALL_NETWORKS_LOGO_UNICHAIN : ALL_NETWORKS_LOGO
+  if (loading) {
+    return <Loader.Box height={size} width={size} borderRadius={borderRadius ?? shapeBorderRadius} />
+  }
 
+  if (chainId === null) {
     return (
       <Flex testID="all-networks-logo">
-        <NetworkImage logo={logo} imageSize={size} />
+        <NetworkImage logo={ALL_NETWORKS_LOGO} imageSize={size} transition={transition} />
       </Flex>
     )
   }
@@ -62,18 +63,26 @@ function _NetworkLogo({
 
   return logo ? (
     <Flex testID="network-logo" overflow="hidden" style={imageStyle} zIndex={zIndexes.mask}>
-      <NetworkImage logo={logo} imageSize={imageSize} />
+      <NetworkImage logo={logo} imageSize={imageSize} transition={transition} />
     </Flex>
   ) : null
 }
 
-function NetworkImage({ logo, imageSize }: { logo: ImageSourcePropType; imageSize: number }): JSX.Element {
+function NetworkImage({
+  logo,
+  imageSize,
+  transition,
+}: {
+  logo: ImageSourcePropType
+  imageSize: number
+  transition?: FlexProps['transition']
+}): JSX.Element {
   // As of iOS 18.3 network logos are no longer displaying because react-native-web-lite
   // adds z-index: -1 to the image. This is a workaround to display the logos on mobile web.
   return isMobileWeb && typeof logo === 'string' ? (
-    <img src={logo} style={{ width: imageSize, height: imageSize }} />
+    <img src={logo} style={{ width: imageSize, height: imageSize, transition }} />
   ) : (
-    <Image resizeMode="contain" source={logo} width={imageSize} height={imageSize} />
+    <Image resizeMode="contain" source={logo} width={imageSize} height={imageSize} transition={transition} />
   )
 }
 

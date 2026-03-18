@@ -1,4 +1,4 @@
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 
 interface TokenData {
   symbol: string
@@ -7,13 +7,9 @@ interface PoolData {
   token0Symbol?: string
   token1Symbol?: string
   feeTier: string
-  protocolVersion: ProtocolVersion
+  protocolVersion: GraphQLApi.ProtocolVersion
   token0Image?: string
   token1Image?: string
-}
-
-interface NftCollectionData {
-  isVerified: boolean
 }
 
 export interface Data {
@@ -24,7 +20,6 @@ export interface Data {
   ogImage?: string
   poolData?: PoolData
   tokenData?: TokenData
-  nftCollectionData?: NftCollectionData
 }
 
 const CACHE_NAME = 'functions-cache' as const

@@ -1,31 +1,25 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { MouseoverTooltip } from 'components/Tooltip'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
-import { PropsWithChildren, ReactNode } from 'react'
-import { TextProps } from 'rebass'
-import { ThemedText } from 'theme/components'
+import { type ComponentProps, PropsWithChildren, ReactNode } from 'react'
+import { Flex, Text } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { MouseoverTooltip } from '~/components/Tooltip'
 
-const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
-  cursor: ${({ cursor }) => cursor};
-  color: ${({ theme }) => theme.neutral2};
-  margin-right: 8px;
-`
+type ResponsiveHeadlineProps = PropsWithChildren<ComponentProps<typeof Text>>
 
-const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextProps>) => {
+const ResponsiveHeadline = ({ children, color, ...rest }: ResponsiveHeadlineProps) => {
   const { fullWidth: width } = useDeviceDimensions()
+  const variant = width && width < breakpoints.xs ? 'heading3' : 'heading2'
 
-  if (width && width < breakpoints.xs) {
-    return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
-  }
-
-  return <ThemedText.HeadlineLarge {...textProps}>{children}</ThemedText.HeadlineLarge>
+  return (
+    <Text variant={variant} color={color ?? '$neutral1'} {...rest}>
+      {children}
+    </Text>
+  )
 }
 
 interface AmountProps {
@@ -34,11 +28,10 @@ interface AmountProps {
   tooltipText?: ReactNode
   label: ReactNode
   amount: CurrencyAmount<Currency>
-  usdAmount?: number
-  headerTextProps?: TextProps
+  usdAmount?: string
+  headerTextProps?: ComponentProps<typeof Text>
   // The currency used here can be different than the currency denoted in the `amount` prop
-  // For UniswapX ETH input trades, the trade object will have WETH as the amount.currency, but
-  // the user's real input currency is ETH, so show ETH instead
+  // (e.g., for some trade types or display preferences)
   currency: Currency
 }
 
@@ -52,35 +45,44 @@ export function SwapModalHeaderAmount({
   isLoading,
   headerTextProps,
 }: AmountProps) {
-  const { formatNumber, formatReviewSwapCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
   return (
-    <Row align="center" justify="space-between" gap="md">
-      <Column gap="xs">
+    <Flex row alignItems="center" justifyContent="space-between" gap="$gap12">
+      <Flex gap="$spacing4">
         {label && (
-          <ThemedText.BodySecondary>
+          <Text variant="body2" color="$neutral2">
             <MouseoverTooltip text={tooltipText} disabled={!tooltipText}>
-              <Label cursor={tooltipText ? 'help' : undefined}>{label}</Label>
+              <Text
+                tag="span"
+                variant="body3"
+                color="$neutral2"
+                mr="$spacing8"
+                cursor={tooltipText ? 'help' : undefined}
+              >
+                {label}
+              </Text>
             </MouseoverTooltip>
-          </ThemedText.BodySecondary>
+          </Text>
         )}
-        <Column gap="xs">
+        <Flex gap="$spacing4">
           <ResponsiveHeadline
             data-testid={`${field}-amount`}
-            color={isLoading ? 'neutral2' : 'neutral1'}
+            color={isLoading ? '$neutral2' : '$neutral1'}
             {...headerTextProps}
           >
-            {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
+            {formatCurrencyAmount({
+              value: amount,
+              type: NumberType.TokenTx,
+            })}{' '}
+            {currency.symbol}
           </ResponsiveHeadline>
-          <ThemedText.BodySmall color="neutral2">
-            {formatNumber({
-              input: usdAmount,
-              type: NumberType.FiatTokenQuantity,
-            })}
-          </ThemedText.BodySmall>
-        </Column>
-      </Column>
+          <Text variant="body4" color="$neutral2">
+            {convertFiatAmountFormatted(usdAmount, NumberType.FiatTokenQuantity)}
+          </Text>
+        </Flex>
+      </Flex>
       <CurrencyLogo currency={currency} size={36} />
-    </Row>
+    </Flex>
   )
 }

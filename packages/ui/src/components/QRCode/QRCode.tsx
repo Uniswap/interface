@@ -4,9 +4,9 @@
 import { create, QRCodeErrorCorrectionLevel, QRCodeSegment } from 'qrcode'
 import { useMemo } from 'react'
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
-import { isWeb } from 'tamagui'
 import { BaseQRProps } from 'ui/src/components/QRCode/QRCodeDisplay'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { isWebPlatform } from 'utilities/src/platform'
 
 // size of the SVG element of the eye for the SVG we use in particular.
 const SVG_SIZE = 40
@@ -16,7 +16,7 @@ const EYE_SIZE_UNITS = 7
  * Unsure why this is need but the scaling on the web is 2x. This
  * offset multiplier ensures that we the eyes align correctly on web.
  */
-const EYE_OFFSET_MULTIPLIER = isWeb ? 2 : 1
+const EYE_OFFSET_MULTIPLIER = isWebPlatform ? 2 : 1
 
 export interface QRCodeProps extends BaseQRProps {
   /* what the qr code stands for */
@@ -46,7 +46,7 @@ const QREyes = ({
   fillColor?: string
 }): JSX.Element => (
   <Svg x={x} y={y}>
-    <G transform={`scale(${size / SVG_SIZE})`} x={x} y={y}>
+    <G transform={`translate(${x}, ${y}) scale(${size / SVG_SIZE})`}>
       <Path
         clipRule="evenodd"
         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
@@ -70,7 +70,7 @@ const QREyeBG = ({
   backgroundColor?: string
 }): JSX.Element => (
   <Svg x={x} y={y}>
-    <G transform={`scale(${size / SVG_SIZE})`} x={x} y={y}>
+    <G transform={`translate(${x}, ${y}) scale(${size / SVG_SIZE})`}>
       <Path d="M0 0H40V40H0V0Z" fill={backgroundColor} />
     </G>
   </Svg>
@@ -132,7 +132,7 @@ function genMatrix(value: string | QRCodeSegment[], errorCorrectionLevel: QRCode
   const sqrt = Math.sqrt(arr.length)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return arr.reduce(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, max-params
     (rows, key, index) => (index % sqrt === 0 ? rows.push([key]) : rows[rows.length - 1].push(key)) && rows,
     [],
   )

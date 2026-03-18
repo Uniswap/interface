@@ -1,0 +1,36 @@
+# multiple flows have the biometrics confirm step, so we abstract it here
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+---
+# Start tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/start-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-biometrics-confirm'
+
+# Wait for and tap confirm
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.Confirm}
+    timeout: 10000
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'BiometricsConfirm'
+      PHASE: 'start'
+- tapOn:
+    id: ${output.testIds.Confirm} # are you sure?
+- runScript:
+    file: ../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'BiometricsConfirm'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# End tracking shared flow
+- runScript:
+    file: ../scripts/performance/dist/actions/end-sub-flow.js
+    env:
+      SUB_FLOW_NAME: 'shared-biometrics-confirm'

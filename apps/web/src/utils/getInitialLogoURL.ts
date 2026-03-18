@@ -1,19 +1,29 @@
 import { CELO_LOGO } from 'ui/src/assets'
-import { isCelo, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { isUniverseChainId } from 'uniswap/src/features/chains/types'
-import { isAddress } from 'utilities/src/addresses'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 
-export function getInitialLogoUrl(
-  address?: string | null,
-  chainId?: number | null,
-  isNative?: boolean,
-  backupImg?: string | null,
-) {
-  const networkName = isUniverseChainId(chainId) ? getChainInfo(chainId).assetRepoNetworkName ?? 'ethereum' : 'ethereum'
-  const checksummedAddress = isAddress(address)
+export function getInitialLogoUrl({
+  address,
+  chainId,
+  backupImg,
+}: {
+  address?: string | null
+  chainId?: number | null
+  backupImg?: string | null
+}) {
+  const networkName = isUniverseChainId(chainId)
+    ? (getChainInfo(chainId).assetRepoNetworkName ?? 'ethereum')
+    : 'ethereum'
+  const checksummedAddress = getValidAddress({
+    address,
+    chainId: isUniverseChainId(chainId) ? chainId : UniverseChainId.Mainnet,
+    withEVMChecksum: true,
+  })
 
-  if (chainId && isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
+  if (chainId === UniverseChainId.Celo && address === nativeOnChain(chainId).wrapped.address) {
     return CELO_LOGO
   }
 

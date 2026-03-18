@@ -7,10 +7,10 @@
     "operationSearchPaths": [
       "../../../apps/mobile/src/components/PriceExplorer/TokenPriceHistory.graphql",
       "../../../apps/mobile/src/components/explore/search/SearchPopularTokens.graphql",
-      "../../../packages/uniswap/src/data/graphql/uniswap-data-api/queries.graphql"
+      "../../../packages/api/src/clients/graphql/queries.graphql"
     ],
     "schemaSearchPaths": [
-      "../../../packages/uniswap/src/data/graphql/uniswap-data-api/schema.graphql"
+      "../../../packages/api/src/clients/graphql/schema.graphql"
     ]
   },
   "output": {

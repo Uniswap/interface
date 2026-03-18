@@ -2,7 +2,7 @@ import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 
 import { PropsWithChildren, useEffect } from 'react'
-import { Outlet, RouterProvider, createHashRouter, useSearchParams } from 'react-router-dom'
+import { createHashRouter, Outlet, RouterProvider, useSearchParams } from 'react-router'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
@@ -22,7 +22,6 @@ import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { Flex } from 'ui/src'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { logger } from 'utilities/src/logger/logger'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
@@ -52,7 +51,9 @@ const router = createHashRouter([
  * this is the root of the app and it imports all sub-pages, we need to push the
  * router/router state to a different file so it can be imported by those pages
  */
-router.subscribe((state) => {
+
+// biome-ignore lint/suspicious/noExplicitAny: Router state object has dynamic structure from react-router
+router.subscribe((state: any) => {
   setRouterState(state)
 })
 
@@ -76,7 +77,8 @@ function UnitagAppInner(): JSX.Element {
       // needed to reload on address param change for hash router
       router
         .navigate(0)
-        .catch((e) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
+        // biome-ignore lint/suspicious/noExplicitAny: Router state object has dynamic structure from react-router
+        .catch((e: any) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
     }
   }, [address, prevAddress])
 
@@ -139,9 +141,7 @@ export default function UnitagClaimApp(): JSX.Element {
 
   return (
     <BaseAppContainer appName={DatadogAppNameTag.UnitagClaim}>
-      <UnitagUpdaterContextProvider>
-        <RouterProvider router={router} />
-      </UnitagUpdaterContextProvider>
+      <RouterProvider router={router} />
     </BaseAppContainer>
   )
 }

@@ -1,7 +1,8 @@
 import { EthersTransactionRequestSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
-import { ZodIssueCode, z } from 'zod'
+import { GetCallsStatusParamsSchema, SendCallsParamsSchema } from 'wallet/src/features/dappRequests/types'
+import { z } from 'zod'
 
 /**
  * Schemas + types for requests that come via `window.ethereum.request`
@@ -18,10 +19,9 @@ export const BaseEthereumRequestSchema = z.object({
   params: z.union([z.array(z.unknown()), z.record(z.string(), z.unknown())]).optional(),
 })
 
-export const EthereumRequestWithIdSchema = BaseEthereumRequestSchema.extend({
+const EthereumRequestWithIdSchema = BaseEthereumRequestSchema.extend({
   requestId: z.string().uuid(),
 })
-export type EthereumRequestWithId = z.infer<typeof EthereumRequestWithIdSchema>
 
 export type BaseEthereumRequest = z.infer<typeof BaseEthereumRequestSchema>
 
@@ -77,7 +77,8 @@ export const PersonalSignRequestSchema = EthereumRequestWithIdSchema.extend({
       {
         message: 'Params array must contain at least two elements',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -96,43 +97,6 @@ export const PersonalSignRequestSchema = EthereumRequestWithIdSchema.extend({
 
 export type PersonalSignRequest = z.infer<typeof PersonalSignRequestSchema>
 
-export const EthSignTransactionRequestSchema = EthereumRequestWithIdSchema.extend({
-  method: z.literal('eth_signTransaction'),
-  params: z.array(z.unknown()),
-}).transform((data) => {
-  const { requestId, method, params } = data
-
-  if (params.length < 1) {
-    throw new z.ZodError([
-      {
-        message: 'Params array must contain at least one element',
-        path: ['params'],
-        code: ZodIssueCode.custom,
-      },
-    ])
-  }
-
-  const parseResult = EthersTransactionRequestSchema.safeParse(params[0])
-  if (!parseResult.success) {
-    throw new z.ZodError([
-      {
-        message: 'First element of the array must match EthersTransactionRequestSchema',
-        path: ['params', '0'],
-        code: ZodIssueCode.custom,
-      },
-    ])
-  }
-  const transaction = parseResult.data
-
-  return {
-    requestId,
-    method,
-    params,
-    transaction,
-  }
-})
-export type EthSignTransactionRequest = z.infer<typeof EthSignTransactionRequestSchema>
-
 export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.extend({
   method: z.literal('eth_signTypedData_v4'),
   params: z.array(z.unknown()),
@@ -144,7 +108,8 @@ export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.exten
       {
         message: 'Params array must contain at least two elements',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -159,7 +124,8 @@ export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.exten
       {
         message: 'Typed data must contain a chainId',
         path: ['params', '1'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -173,7 +139,7 @@ export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.exten
 })
 export type EthSignTypedDataV4Request = z.infer<typeof EthSignTypedDataV4RequestSchema>
 
-export const SwitchEthereumChainParameterSchema = z.object({
+const SwitchEthereumChainParameterSchema = z.object({
   chainId: z.string(),
 })
 
@@ -187,7 +153,8 @@ export const WalletSwitchEthereumChainRequestSchema = EthereumRequestWithIdSchem
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -198,7 +165,8 @@ export const WalletSwitchEthereumChainRequestSchema = EthereumRequestWithIdSchem
       {
         message: 'Chain id should be specified as a hexadecimal string within object',
         path: ['params', '0'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -215,19 +183,13 @@ export const WalletSwitchEthereumChainRequestSchema = EthereumRequestWithIdSchem
 export type WalletSwitchEthereumChainRequest = z.infer<typeof WalletSwitchEthereumChainRequestSchema>
 
 // eslint-disable-next-line no-restricted-syntax
-export const PermissionRequestSchema = z.record(z.record(z.any()))
+export const PermissionRequestSchema = z.record(z.string(), z.record(z.string(), z.any()))
 
-export const RequestedPermissionSchema = z.object({
-  parentCapability: z.string(), // name of the method for which the permission is requested
-  date: z.number().optional(), // in UNIX time
-})
-
-export const CaveatSchema = z.object({
+const CaveatSchema = z.object({
   type: z.string(),
   // eslint-disable-next-line no-restricted-syntax
   value: z.any(),
 })
-export type Caveat = z.infer<typeof CaveatSchema>
 
 export const PermissionSchema = z.object({
   invoker: z.string(),
@@ -246,7 +208,8 @@ export const WalletRequestPermissionsRequestSchema = EthereumRequestWithIdSchema
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -273,7 +236,8 @@ export const WalletRevokePermissionsRequestSchema = EthereumRequestWithIdSchema.
       {
         message: 'Params array must contain at least one element',
         path: ['params'],
-        code: ZodIssueCode.custom,
+        code: 'custom',
+        input: undefined,
       },
     ])
   }
@@ -295,6 +259,36 @@ export const WalletGetPermissionsRequestSchema = EthereumRequestWithIdSchema.ext
 })
 export type WalletGetPermissionsRequest = z.infer<typeof WalletGetPermissionsRequestSchema>
 
+export const WalletGetCapabilitiesRequestSchema = EthereumRequestWithIdSchema.extend({
+  method: z.literal('wallet_getCapabilities'),
+  params: z.array(z.unknown()),
+}).transform((data) => {
+  const { requestId, method, params } = data
+
+  if (params.length < 1) {
+    throw new z.ZodError([
+      {
+        message: 'Params array must contain at least one element (address)',
+        path: ['params'],
+        code: 'custom',
+        input: undefined,
+      },
+    ])
+  }
+
+  const address = z.string().parse(params[0])
+  const chainIds = params.length > 1 ? z.array(z.string()).parse(params[1]) : undefined
+
+  return {
+    requestId,
+    method,
+    address,
+    chainIds,
+  }
+})
+
+export type WalletGetCapabilitiesRequest = z.infer<typeof WalletGetCapabilitiesRequestSchema>
+
 export const UniswapOpenSidebarRequestSchema = EthereumRequestWithIdSchema.extend({
   method: z.literal('uniswap_openSidebar'),
   params: z.array(z.unknown()),
@@ -307,3 +301,76 @@ export const UniswapOpenSidebarRequestSchema = EthereumRequestWithIdSchema.exten
 })
 
 export type UniswapOpenSidebarRequest = z.infer<typeof UniswapOpenSidebarRequestSchema>
+
+export const WalletSendCallsRequestSchema = EthereumRequestWithIdSchema.extend({
+  method: z.literal('wallet_sendCalls'),
+  params: z.array(z.unknown()),
+}).transform((data) => {
+  const { requestId, method, params } = data
+
+  if (params.length < 1) {
+    throw new z.ZodError([
+      {
+        message: 'Params array must contain at least one element',
+        path: ['params'],
+        code: 'custom',
+        input: undefined,
+      },
+    ])
+  }
+
+  const parseResult = SendCallsParamsSchema.safeParse(params[0])
+
+  if (!parseResult.success) {
+    throw new Error('First element of the array must match SendCallsParamsSchema')
+  }
+
+  if (!parseResult.data.from) {
+    throw new Error('From address must be specified')
+  }
+
+  const { calls, chainId, from, id, capabilities, version } = parseResult.data
+
+  return {
+    requestId,
+    method,
+    params,
+    calls,
+    chainId,
+    from,
+    id,
+    capabilities,
+    version,
+  }
+})
+
+export type WalletSendCallsRequest = z.infer<typeof WalletSendCallsRequestSchema>
+
+export const WalletGetCallsStatusRequestSchema = EthereumRequestWithIdSchema.extend({
+  method: z.literal('wallet_getCallsStatus'),
+  params: z.array(z.unknown()),
+}).transform((data) => {
+  const { requestId, method, params } = data
+
+  if (params.length < 1) {
+    throw new z.ZodError([
+      {
+        message: 'Params array must contain at least one element',
+        path: ['params'],
+        code: 'custom',
+        input: undefined,
+      },
+    ])
+  }
+
+  const batchId = GetCallsStatusParamsSchema.parse(params[0])
+
+  return {
+    requestId,
+    method,
+    params,
+    batchId,
+  }
+})
+
+export type WalletGetCallsStatusRequest = z.infer<typeof WalletGetCallsStatusRequestSchema>

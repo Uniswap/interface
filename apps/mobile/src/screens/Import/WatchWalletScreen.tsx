@@ -6,24 +6,25 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
-import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
+import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { createViewOnlyAccount } from 'wallet/src/features/onboarding/createViewOnlyAccount'
-import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -35,36 +36,36 @@ const validateForm = ({
   validAddress,
   name,
   walletExists,
-  loading,
+  isLoading,
   isSmartContractAddress,
   isValidSmartContract,
 }: {
   validAddress: string | null
   name: string | null
   walletExists: boolean
-  loading: boolean
+  isLoading: boolean
   isSmartContractAddress: boolean
   isValidSmartContract: boolean
 }): boolean => {
-  return (!!validAddress || !!name) && !walletExists && !loading && (!isSmartContractAddress || isValidSmartContract)
+  return (!!validAddress || !!name) && !walletExists && !isLoading && (!isSmartContractAddress || isValidSmartContract)
 }
 
 const getErrorText = ({
   walletExists,
   isSmartContractAddress,
-  loading,
+  isLoading,
   t,
 }: {
   walletExists: boolean
   isSmartContractAddress: boolean
-  loading: boolean
+  isLoading: boolean
   t: TFunction
 }): string | undefined => {
   if (walletExists) {
     return t('account.wallet.watch.error.alreadyImported')
   } else if (isSmartContractAddress) {
     return t('account.wallet.watch.error.smartContract')
-  } else if (!loading) {
+  } else if (!isLoading) {
     return t('account.wallet.watch.error.notFound')
   }
   return undefined
@@ -90,15 +91,21 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     nameOrAddress: normalizedValue,
     autocompleteDomain: !hasSuffixIncluded,
   })
-  const validAddress = getValidAddress(normalizedValue, true, false)
-  const { isSmartContractAddress, loading } = useIsSmartContractAddress(
+  // TODO(WALL-7065): Handle SVM address validation as well
+  const validAddress = getValidAddress({
+    address: normalizedValue,
+    platform: Platform.EVM,
+    withEVMChecksum: true,
+    log: false,
+  })
+  const { isSmartContractAddress, loading: isLoading } = useIsSmartContractAddress(
     (validAddress || resolvedAddress) ?? undefined,
     defaultChainId,
   )
-  const address = isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined
+  const address = isSmartContractAddress ? ((validAddress || resolvedAddress) ?? undefined) : undefined
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
-    address,
+    evmAddress: address,
     fetchPolicy: 'cache-and-network',
   })
   const isValidSmartContract = isSmartContractAddress && !!balancesById
@@ -107,7 +114,15 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
 
   const walletExists = Object.keys(initialAccounts.current).some(
     (accountAddress) =>
-      areAddressesEqual(accountAddress, resolvedAddress) || areAddressesEqual(accountAddress, validAddress),
+      // TODO(WALL-7065): Update to support solana
+      areAddressesEqual({
+        addressInput1: { address: accountAddress, platform: Platform.EVM },
+        addressInput2: { address: resolvedAddress, platform: Platform.EVM },
+      }) ||
+      areAddressesEqual({
+        addressInput1: { address: accountAddress, platform: Platform.EVM },
+        addressInput2: { address: validAddress, platform: Platform.EVM },
+      }),
   )
 
   // Form validation.
@@ -115,12 +130,12 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     validAddress,
     name,
     walletExists,
-    loading,
+    isLoading,
     isSmartContractAddress,
     isValidSmartContract,
   })
 
-  const errorText = !isValid ? getErrorText({ walletExists, isSmartContractAddress, loading, t }) : undefined
+  const errorText = !isValid ? getErrorText({ walletExists, isSmartContractAddress, isLoading, t }) : undefined
 
   const onSubmit = useCallback(async () => {
     if (isValid && value) {
@@ -148,6 +163,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     setValue(text?.trim())
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Only want to reset timer on value change
   useEffect(() => {
     const delayFn = setTimeout(() => {
       setShowLiveCheck(true)
@@ -193,9 +209,18 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           </Text>
         </Flex>
       </Flex>
-      <DeprecatedButton isDisabled={!isValid} mt="$spacing24" size="large" testID={TestID.Next} onPress={onSubmit}>
-        {t('common.button.continue')}
-      </DeprecatedButton>
+      <Flex row>
+        <Button
+          testID={TestID.Next}
+          mt="$spacing24"
+          isDisabled={!isValid}
+          variant="branded"
+          size="large"
+          onPress={onSubmit}
+        >
+          {t('common.button.continue')}
+        </Button>
+      </Flex>
     </SafeKeyboardOnboardingScreen>
   )
 }

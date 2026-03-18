@@ -1,15 +1,19 @@
 import { put, select, takeLatest } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
-import { makeSelectAddressNotifications } from 'uniswap/src/features/notifications/selectors'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { makeSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/selectors'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
-import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
-import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function* notificationWatcher() {
@@ -82,7 +86,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       }),
     )
   } else if (typeInfo.type === TransactionType.Send) {
-    if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw) {
+    if (typeInfo.assetType === AssetType.Currency && typeInfo.currencyAmountRaw) {
       yield* put(
         pushNotification({
           ...baseNotificationData,
@@ -95,8 +99,8 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         }),
       )
     } else if (
-      (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
-      typeInfo?.tokenId
+      (typeInfo.assetType === AssetType.ERC1155 || typeInfo.assetType === AssetType.ERC721) &&
+      typeInfo.tokenId
     ) {
       yield* put(
         pushNotification({
@@ -119,10 +123,25 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
     yield* put(
       pushNotification({
         type: AppNotificationType.WalletConnect,
-        event: WalletConnectEvent.TransactionConfirmed,
-        dappName: typeInfo.dapp.name,
-        imageUrl: typeInfo.dapp.icon ?? null,
+        event:
+          status === TransactionStatus.Failed
+            ? WalletConnectEvent.TransactionFailed
+            : WalletConnectEvent.TransactionConfirmed,
+        dappName: typeInfo.dappRequestInfo.name,
+        imageUrl: typeInfo.dappRequestInfo.icon ?? null,
         chainId,
+      }),
+    )
+  } else if (typeInfo.type === TransactionType.Plan) {
+    yield* put(
+      pushNotification({
+        ...baseNotificationData,
+        inputCurrencyId: typeInfo.inputCurrencyId,
+        outputCurrencyId: typeInfo.outputCurrencyId,
+        inputCurrencyAmountRaw: typeInfo.inputCurrencyAmountRaw,
+        outputCurrencyAmountRaw: typeInfo.outputCurrencyAmountRaw,
+        type: AppNotificationType.Transaction,
+        txType: TransactionType.Plan,
       }),
     )
   } else if (typeInfo.type === TransactionType.Unknown) {
@@ -131,7 +150,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         ...baseNotificationData,
         type: AppNotificationType.Transaction,
         txType: TransactionType.Unknown,
-        tokenAddress: typeInfo?.tokenAddress,
+        tokenAddress: typeInfo.tokenAddress,
       }),
     )
   }

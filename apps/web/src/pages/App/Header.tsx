@@ -1,53 +1,62 @@
-import Navbar from 'components/NavBar/index'
-import { MobileAppPromoBanner, useMobileAppPromoBannerEligible } from 'components/TopLevelBanners/MobileAppPromoBanner'
-import { UkBanner, useRenderUkBanner } from 'components/TopLevelBanners/UkBanner'
-import { useScroll } from 'hooks/useScroll'
-import styled from 'lib/styled-components'
-import { useBag } from 'nft/hooks'
-import { GRID_AREAS } from 'pages/App/utils/shared'
 import { memo } from 'react'
-import { Z_INDEX } from 'theme/zIndex'
-
-const AppHeader = styled.div`
-  grid-area: ${GRID_AREAS.HEADER};
-  width: 100vw;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0px;
-  z-index: ${Z_INDEX.sticky};
-  pointer-events: none;
-
-  & > * {
-    pointer-events: auto;
-  }
-`
-const Banners = styled.div`
-  position: relative;
-  z-index: ${Z_INDEX.sticky};
-`
-const NavOnScroll = styled.div<{ $transparent?: boolean }>`
-  width: 100%;
-  transition: transform ${({ theme }) => theme.transition.duration.slow};
-  background-color: ${({ theme, $transparent }) => !$transparent && theme.surface1};
-  border-bottom: ${({ theme, $transparent }) => !$transparent && `1px solid ${theme.surface3}`};
-`
+import { Flex } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
+import Navbar from '~/components/NavBar/index'
+import {
+  MobileAppPromoBanner,
+  useMobileAppPromoBannerEligible,
+} from '~/components/TopLevelBanners/MobileAppPromoBanner'
+import { UkBanner, useRenderUkBanner } from '~/components/TopLevelBanners/UkBanner'
+import { useRenderUniswapWrapped2025Banner } from '~/components/TopLevelBanners/UniswapWrapped2025Banner'
+import { PageType, useIsPage } from '~/hooks/useIsPage'
+import { useScroll } from '~/hooks/useScroll'
+import { GRID_AREAS } from '~/pages/App/utils/shared'
 
 export const Header = memo(function Header() {
   const { isScrolledDown } = useScroll()
-  const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isHeaderTransparent = !isScrolledDown && !isBagExpanded
+  const isPortfolioPage = useIsPage(PageType.PORTFOLIO)
+  const isExplorePage = useIsPage(PageType.EXPLORE)
+  const isHeaderTransparent = !isScrolledDown && !isPortfolioPage && !isExplorePage
+  const navHasBottomBorder = isScrolledDown
   const renderUkBanner = useRenderUkBanner()
   const extensionEligible = useMobileAppPromoBannerEligible()
+  const renderUniswapWrapped2025Banner = useRenderUniswapWrapped2025Banner()
 
   return (
-    <AppHeader id="AppHeader">
-      <Banners>
+    <Flex
+      id="AppHeader"
+      $platform-web={{
+        gridArea: GRID_AREAS.HEADER,
+        position: 'sticky',
+      }}
+      className="webkitSticky"
+      width="100vw"
+      top={0}
+      zIndex={zIndexes.header}
+      pointerEvents="none"
+    >
+      <style>
+        {`
+          .webkitSticky {
+            position: -webkit-sticky;
+          }
+        `}
+      </style>
+      <Flex position="relative" zIndex={zIndexes.sticky} pointerEvents="auto">
         {extensionEligible && <MobileAppPromoBanner />}
         {renderUkBanner && <UkBanner />}
-      </Banners>
-      <NavOnScroll $transparent={isHeaderTransparent}>
+        {renderUniswapWrapped2025Banner}
+      </Flex>
+      <Flex
+        width="100%"
+        backgroundColor={isHeaderTransparent ? 'transparent' : '$surface1'}
+        borderBottomColor={navHasBottomBorder ? '$surface3' : 'transparent'}
+        borderBottomWidth={1}
+        pointerEvents="auto"
+        transition="border-bottom-color 0.2s ease-in-out"
+      >
         <Navbar />
-      </NavOnScroll>
-    </AppHeader>
+      </Flex>
+    </Flex>
   )
 })

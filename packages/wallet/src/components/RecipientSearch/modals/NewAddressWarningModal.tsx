@@ -1,19 +1,20 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, GetProps, ScrollView, Text } from 'ui/src'
-import { UserSquare } from 'ui/src/components/icons'
+import { Button, Flex, GetProps, ScrollView, Text } from 'ui/src'
+import { Person } from 'ui/src/components/icons/Person'
 import { fonts, imageSizes } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useENSName } from 'uniswap/src/features/ens/api'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isMobileApp } from 'utilities/src/platform'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type NewAddressWarningModalProps = {
   address: string
@@ -50,16 +51,16 @@ const LeftRightText = ({ leftText, rightChild }: { leftText: string; rightChild:
 export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewAddressWarningModalProps): JSX.Element {
   const { t } = useTranslation()
 
-  const validated = getValidAddress(address)
+  // TODO(WALL-7065): Update to support Solana validation
+  const validated = getValidAddress({ address, platform: Platform.EVM })
   const displayName = useDisplayName(address, { includeUnitagSuffix: true })
   const ensDisplayName = useENSName(validated ?? undefined)
-  const { data: ensAvatar } = useENSAvatar(validated)
 
   return (
     <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
       <Flex px={isMobileApp ? '$spacing24' : undefined} py={isMobileApp ? '$spacing12' : undefined}>
         <GenericHeader
-          Icon={UserSquare}
+          Icon={Person}
           iconSize="$icon.24"
           title={t('send.warning.newAddress.title')}
           subtitle={t('send.warning.newAddress.message')}
@@ -74,6 +75,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
           borderRadius="$rounded16"
           borderWidth="$spacing1"
           flexDirection="column"
+          py="$padding12"
         >
           {displayName?.type === DisplayNameType.Unitag && (
             <LeftRightText
@@ -95,9 +97,17 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
             <LeftRightText
               leftText={t('send.warning.newAddress.details.ENS')}
               rightChild={
-                <Flex row alignItems="center" gap="$spacing4">
-                  <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
-                  <Text numberOfLines={0} loading={ensDisplayName.isLoading} variant="body3">
+                <Flex shrink row alignItems="center" gap="$spacing4">
+                  <AccountIcon address={address} size={imageSizes.image16} />
+                  <Text
+                    adjustsFontSizeToFit
+                    allowFontScaling
+                    flexShrink={1}
+                    numberOfLines={1}
+                    loading={ensDisplayName.isLoading}
+                    variant="body3"
+                    whiteSpace="initial"
+                  >
                     {ensDisplayName.data}
                   </Text>
                 </Flex>
@@ -107,20 +117,27 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
           <LeftRightText
             leftText={t('send.warning.newAddress.details.walletAddress')}
             rightChild={
-              <Text numberOfLines={0} variant="body3">
-                {shortenAddress(address, 6)}
+              <Text
+                adjustsFontSizeToFit
+                allowFontScaling
+                flexShrink={1}
+                numberOfLines={1}
+                variant="body3"
+                whiteSpace="initial"
+              >
+                {shortenAddress({ address, chars: 6 })}
               </Text>
             }
           />
         </ScrollView>
 
         <Flex row gap="$spacing12" pt="$spacing24">
-          <DeprecatedButton flex={1} flexBasis={1} theme="secondary" onPress={onClose}>
+          <Button emphasis="secondary" onPress={onClose}>
             {t('common.button.back')}
-          </DeprecatedButton>
-          <DeprecatedButton flex={1} flexBasis={1} theme="primary" onPress={onAcknowledge}>
+          </Button>
+          <Button emphasis="primary" variant="branded" onPress={onAcknowledge}>
             {t('common.button.confirm')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </Modal>
@@ -130,7 +147,6 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
 const styles = {
   scrollViewContent: {
     flexDirection: 'column',
-    flexWrap: 'wrap',
     py: '$spacing16',
     flexGrow: 1,
   } satisfies GetProps<typeof ScrollView>['contentContainerStyle'],

@@ -5,7 +5,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
   actions={
     [
       {
-        "systemIcon": "heart.fill",
+        "systemIcon": "heart.slash.fill",
         "title": "Remove favorite",
       },
       {
@@ -23,65 +23,108 @@ exports[`FavoriteWalletCard renders without error 1`] = `
   }
 >
   <View
-    disabled={false}
-    hitSlop={
+    collapsable={false}
+    focusVisibleStyle={{}}
+    forwardedRef={[Function]}
+    jestAnimatedProps={
       {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
+        "value": {},
       }
+    }
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+          "borderBottomLeftRadius": 16,
+          "borderBottomRightRadius": 16,
+          "borderBottomWidth": 1,
+          "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+          "borderLeftWidth": 1,
+          "borderRightColor": "rgba(19, 19, 19, 0.08)",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "rgba(19, 19, 19, 0.08)",
+          "borderTopLeftRadius": 16,
+          "borderTopRightRadius": 16,
+          "borderTopWidth": 1,
+          "flexDirection": "column",
+          "marginBottom": 4,
+          "marginLeft": 4,
+          "marginRight": 4,
+          "marginTop": 4,
+          "opacity": 1,
+          "overflow": "hidden",
+          "shadowColor": "rgb(0,0,0)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.0196078431372549,
+          "shadowRadius": 6,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
     }
     onBlur={[Function]}
     onClick={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
+    role="button"
     style={
-      {
-        "backgroundColor": {
-          "dynamic": {
-            "dark": "#131313",
-            "light": "#FFFFFF",
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+          "borderBottomLeftRadius": 16,
+          "borderBottomRightRadius": 16,
+          "borderBottomWidth": 1,
+          "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+          "borderLeftWidth": 1,
+          "borderRightColor": "rgba(19, 19, 19, 0.08)",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "rgba(19, 19, 19, 0.08)",
+          "borderTopLeftRadius": 16,
+          "borderTopRightRadius": 16,
+          "borderTopWidth": 1,
+          "flexDirection": "column",
+          "marginBottom": 4,
+          "marginLeft": 4,
+          "marginRight": 4,
+          "marginTop": 4,
+          "opacity": 1,
+          "overflow": "hidden",
+          "shadowColor": "rgb(0,0,0)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
           },
+          "shadowOpacity": 0.0196078431372549,
+          "shadowRadius": 6,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
         },
-        "borderBottomColor": "rgba(34,34,34,0.05)",
-        "borderBottomLeftRadius": 16,
-        "borderBottomRightRadius": 16,
-        "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(34,34,34,0.05)",
-        "borderLeftWidth": 1,
-        "borderRightColor": "rgba(34,34,34,0.05)",
-        "borderRightWidth": 1,
-        "borderStyle": "solid",
-        "borderTopColor": "rgba(34,34,34,0.05)",
-        "borderTopLeftRadius": 16,
-        "borderTopRightRadius": 16,
-        "borderTopWidth": 1,
-        "flexDirection": "column",
-        "marginBottom": 4,
-        "marginLeft": 4,
-        "marginRight": 4,
-        "marginTop": 4,
-        "opacity": 1,
-        "overflow": "hidden",
-        "shadowColor": "rgb(0,0,0)",
-        "shadowOffset": {
-          "height": 1,
-          "width": 0,
-        },
-        "shadowOpacity": 0.0196078431372549,
-        "shadowRadius": 6,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+        {},
+      ]
     }
     testID="favorite-wallet-card"
   >
@@ -111,42 +154,17 @@ exports[`FavoriteWalletCard renders without error 1`] = `
         <View
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderBottomColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "backgroundColor": "transparent",
+              "borderBottomColor": "transparent",
               "borderBottomLeftRadius": 999999,
               "borderBottomRightRadius": 999999,
               "borderBottomWidth": 0,
-              "borderLeftColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "borderLeftColor": "transparent",
               "borderLeftWidth": 0,
-              "borderRightColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "borderRightColor": "transparent",
               "borderRightWidth": 0,
               "borderStyle": "solid",
-              "borderTopColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "borderTopColor": "transparent",
               "borderTopLeftRadius": 999999,
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
@@ -160,41 +178,98 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             style={
               {
                 "flexDirection": "column",
-                "height": 20,
-                "width": 20,
               }
             }
-          />
+          >
+            <View
+              style={
+                {
+                  "flexDirection": "column",
+                  "height": 20,
+                  "width": 20,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "height": 20,
+                    "width": 20,
+                  }
+                }
+              >
+                <skCircle
+                  color="#00C3A01F"
+                  cx={10}
+                  cy={10}
+                  r={10}
+                />
+                <skGroup
+                  transform={
+                    [
+                      {
+                        "translateX": 3.333333333333333,
+                      },
+                      {
+                        "translateY": 3.333333333333333,
+                      },
+                    ]
+                  }
+                >
+                  <skGroup
+                    transform={
+                      [
+                        {
+                          "scale": 0.2777777777777778,
+                        },
+                      ]
+                    }
+                  >
+                    <skPath
+                      clip-rule="evenodd"
+                      color="#00C3A0"
+                      end={1}
+                      fillType="evenOdd"
+                      path="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                      start={0}
+                      strokeWidth={1}
+                    />
+                    <skPath
+                      clip-rule="evenodd"
+                      color="#00C3A0"
+                      end={1}
+                      fillType="evenOdd"
+                      path="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                      start={0}
+                      strokeWidth={1}
+                    />
+                  </skGroup>
+                </skGroup>
+              </View>
+            </View>
+          </View>
         </View>
         <View
           style={
             {
-              "alignItems": "center",
               "flexDirection": "row",
-              "justifyContent": "center",
+              "flexGrow": 1,
             }
           }
         >
           <Text
             adjustsFontSizeToFit={true}
             allowFontScaling={true}
-            ellipsizeMode="tail"
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "#FFFFFF",
-                    "light": "#222222",
-                  },
-                },
+                "color": "#131313",
                 "flexShrink": 1,
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 19,
                 "fontWeight": "400",
-                "lineHeight": 24,
-                "overflow": "hidden",
+                "lineHeight": 24.7,
               }
             }
             suppressHighlighting={true}
@@ -204,53 +279,78 @@ exports[`FavoriteWalletCard renders without error 1`] = `
         </View>
       </View>
       <View
+        aria-disabled={true}
         collapsable={false}
-        disabled={true}
-        hitSlop={
+        focusVisibleStyle={{}}
+        forwardedRef={[Function]}
+        jestAnimatedProps={
           {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
+            "value": {},
           }
         }
-        style={
+        jestAnimatedStyle={
           {
-            "alignItems": "center",
-            "backgroundColor": {
-              "dynamic": {
-                "dark": "#5E5E5E",
-                "light": "#BFBFBF",
-              },
+            "value": {},
+          }
+        }
+        jestInlineStyle={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(19, 19, 19, 0.35)",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "height": 24,
+              "justifyContent": "center",
+              "opacity": 0,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+              "width": 24,
+              "zIndex": 1080,
             },
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "flexDirection": "column",
-            "height": 24,
-            "justifyContent": "center",
-            "opacity": 0,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-            "width": 24,
-            "zIndex": 1080,
-          }
+          ]
         }
+        onLayout={[Function]}
+        pointerEvents="box-none"
+        role="button"
+        style={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "rgba(19, 19, 19, 0.35)",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "height": 24,
+              "justifyContent": "center",
+              "opacity": 0,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+              "width": 24,
+              "zIndex": 1080,
+            },
+            {},
+          ]
+        }
+        tabIndex={-1}
         testID="explore/remove-button"
+        userSelect="none"
       >
         <View
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "#131313",
-                  "light": "#FFFFFF",
-                },
-              },
+              "backgroundColor": "#FFFFFF",
               "borderBottomLeftRadius": 12,
               "borderBottomRightRadius": 12,
               "borderTopLeftRadius": 12,

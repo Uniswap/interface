@@ -1,32 +1,22 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
-import Identicon from 'components/Identicon'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import styled from 'lib/styled-components'
 import React, { memo } from 'react'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
+import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
-
-const UnknownContract = styled(UnknownStatus)`
-  color: ${({ theme }) => theme.neutral2};
-`
-
-const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-`
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { ReactComponent as UnknownStatus } from '~/assets/svg/contract-interaction.svg'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 
 interface PortfolioLogoProps {
   chainId: UniverseChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: Array<string | undefined>
+  fallbackSymbols?: Array<string | undefined>
   size?: number
   style?: React.CSSProperties
   customIcon?: React.ReactNode
@@ -35,36 +25,45 @@ interface PortfolioLogoProps {
 const LOGO_DEFAULT_SIZE = 40
 
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
-  if (SUPPORTED_TESTNET_CHAIN_IDS.includes(props.chainId)) {
+  const colors = useSporeColors()
+
+  if (isTestnetChain(props.chainId)) {
     return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
   }
 
   return (
-    <LogoContainer style={props.style}>
-      <Flex position="relative">{getLogo(props)}</Flex>
-    </LogoContainer>
+    <Flex alignItems="center" top={0} left={0} style={props.style}>
+      <Flex position="relative">{getLogo(props, colors)}</Flex>
+    </Flex>
   )
 })
 
-function getLogo({
-  accountAddress,
-  currencies,
-  images,
-  chainId,
-  customIcon,
-  size = LOGO_DEFAULT_SIZE,
-}: PortfolioLogoProps) {
+function getLogo(
+  {
+    accountAddress,
+    currencies,
+    images,
+    fallbackSymbols,
+    chainId,
+    customIcon,
+    size = LOGO_DEFAULT_SIZE,
+  }: PortfolioLogoProps,
+  colors: UseSporeColorsReturn,
+) {
   if (accountAddress) {
-    return <Identicon account={accountAddress} size={size} />
+    return <AccountIcon address={accountAddress} size={size} />
   }
   if (currencies && currencies.length) {
     return <DoubleCurrencyLogo currencies={currencies} size={size} customIcon={customIcon} />
   }
+
   if (images && images.length >= 2) {
     return (
       <SplitLogo
         inputLogoUrl={images[0]}
         outputLogoUrl={images[1]}
+        inputFallbackSymbol={fallbackSymbols?.[0]}
+        outputFallbackSymbol={fallbackSymbols?.[1]}
         inputCurrencyInfo={null}
         outputCurrencyInfo={null}
         chainId={chainId}
@@ -73,7 +72,7 @@ function getLogo({
     )
   }
   if (images && images.length === 1) {
-    return <TokenLogo url={images[0]} size={size} chainId={chainId} />
+    return <TokenLogo url={images[0]} size={size} chainId={chainId} symbol={fallbackSymbols?.[0]} />
   }
-  return <UnknownContract width={size} height={size} />
+  return <UnknownStatus width={size} height={size} color={colors.neutral2.val} />
 }

@@ -56,6 +56,9 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
             putString(FIELD_MNEMONIC_ID, it)
           }
           sendEvent(id, EVENT_MNEMONIC_STORED, bundle)
+        },
+        onSubmitError = {
+          sendEvent(id, EVENT_SUBMIT_ERROR)
         }
       )
 
@@ -110,6 +113,12 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
           "captured" to EVENT_HEIGHT_MEASURED
         )
       ),
+      EVENT_SUBMIT_ERROR to mapOf(
+        "phasedRegistrationNames" to mapOf(
+          "bubbled" to EVENT_SUBMIT_ERROR,
+          "captured" to EVENT_SUBMIT_ERROR
+        )
+      ),
     )
   }
 
@@ -135,9 +144,9 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
     }
   }
 
-  @ReactProp(name = "mnemonicIdForRecovery")
-  fun setMnemonicIdForRecovery(view: View, mnemonicId: String?) {
-    viewModel.mnemonicIdForRecovery = mnemonicId
+  @ReactProp(name = "targetMnemonicId")
+  fun setTargetMnemonicId(view: View, mnemonicId: String?) {
+    viewModel.targetMnemonicId = mnemonicId
   }
 
   @ReactProp(name = "strings")
@@ -149,6 +158,7 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
       errorPhraseLength = strings.getString("errorPhraseLength") ?: "",
       errorWrongPhrase = strings.getString("errorWrongPhrase") ?: "",
       errorInvalidPhrase = strings.getString("errorInvalidPhrase") ?: "",
+      errorWordIsAddress = strings.getString("errorWordIsAddress") ?: "",
     )
   }
 
@@ -157,6 +167,7 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
     private const val EVENT_INPUT_VALIDATED = "onInputValidated"
     private const val EVENT_MNEMONIC_STORED = "onMnemonicStored"
     private const val EVENT_HEIGHT_MEASURED = "onHeightMeasured"
+    private const val EVENT_SUBMIT_ERROR = "onSubmitError"
     private const val COMMAND_HANDLE_SUBMIT = "handleSubmit"
     private const val COMMAND_FOCUS = "focus"
     private const val COMMAND_BLUR = "blur"

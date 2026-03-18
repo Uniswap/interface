@@ -12,29 +12,27 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useAppStackNavigation } from 'src/app/navigation/types'
 import { pulseAnimation } from 'src/components/buttons/utils'
-import { openModal } from 'src/features/modals/modalSlice'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, FlexProps, LinearGradient, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts, opacify } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
+import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
+import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-
-export const NAV_BAR_HEIGHT_XS = 52
-export const NAV_BAR_HEIGHT_SM = 72
 
 const NAV_BAR_MARGIN_SIDES = 24
 const NAV_BAR_GAP = 12
@@ -59,6 +57,7 @@ export function NavBar(): JSX.Element {
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to ignore isNarrow because of unknown reason
   useEffect(() => {
     if (isNarrow || !exploreButtonLayout?.width || !swapButtonLayout?.width) {
       return
@@ -67,7 +66,6 @@ export function NavBar(): JSX.Element {
     // When the 2 buttons overflow, we set `isNarrow` to true and adjust the design accordingly.
     // To test this, you can use an iPhone Mini set to Spanish.
     setIsNarrow(exploreButtonLayout.width + swapButtonLayout.width + NAV_BAR_GAP + NAV_BAR_MARGIN_SIDES > screenWidth)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exploreButtonLayout?.width, swapButtonLayout?.width, screenWidth])
 
   const onExploreLayout = useCallback((e: LayoutChangeEvent) => setExploreButtonLayout(e.nativeEvent.layout), [])
@@ -125,24 +123,30 @@ type SwapTabBarButtonProps = {
 
 const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
   const { hapticFeedback } = useHapticFeedback()
+  const { navigate } = useAppStackNavigation()
 
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
+  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId({
+    evmAddress: activeAccountAddress,
+    chainId: persistedFilteredChainIds?.[CurrencyField.INPUT],
+  })
 
   const onPress = useCallback(async () => {
-    dispatch(
-      openModal({
-        name: ModalName.Swap,
-        initialState: prepareSwapFormState({ inputCurrencyId, defaultChainId }),
+    navigate(
+      ModalName.Swap,
+      prepareSwapFormState({
+        inputCurrencyId,
+        defaultChainId,
+        filteredChainIdsOverride: persistedFilteredChainIds,
       }),
     )
 
     await hapticFeedback.light()
-  }, [dispatch, inputCurrencyId, defaultChainId, hapticFeedback])
+  }, [inputCurrencyId, defaultChainId, hapticFeedback, persistedFilteredChainIds, navigate])
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
@@ -181,9 +185,8 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
             position="absolute"
             right={0}
             top={0}
-          >
-            <LinearGradient colors={['#F160F9', '#E14EE9']} end={[0, 1]} height="100%" start={[0, 0]} width="100%" />
-          </Flex>
+            backgroundColor="$accent1"
+          />
           <Text allowFontScaling={false} color="$white" numberOfLines={1} variant="buttonLabel1">
             {t('common.button.swap')}
           </Text>
@@ -209,18 +212,14 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
-
-  const handleTestnetWarningModalClose = useCallback(() => {
-    setIsTestnetWarningModalOpen(false)
-  }, [])
+  const { navigate } = useAppStackNavigation()
 
   const onPress = (): void => {
     if (isTestnetModeEnabled) {
-      setIsTestnetWarningModalOpen(true)
+      navigate(ModalName.TestnetMode, { unsupported: true })
       return
     }
-    dispatch(openModal({ name: ModalName.Explore }))
+    navigate(ModalName.Explore)
     dispatch(setHasUsedExplore(true))
   }
   const scale = useSharedValue(1)
@@ -256,9 +255,14 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
     onLayout(e)
   }
 
+  const Wrapper = isIOS ? BlurView : Flex
+
   return (
-    <TouchableArea activeOpacity={1} style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}>
-      <TestnetModeModal unsupported isOpen={isTestnetWarningModalOpen} onClose={handleTestnetWarningModalClose} />
+    <TouchableArea
+      activeOpacity={1}
+      style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
+      dd-action-name={TestID.SearchTokensAndWallets}
+    >
       <TapGestureHandler testID={TestID.SearchTokensAndWallets} onGestureEvent={onGestureEvent}>
         <AnimatedFlex
           borderRadius="$roundedFull"
@@ -267,7 +271,7 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
           width={isNarrow ? height : undefined}
           onLayout={internalOnLayout}
         >
-          <BlurView intensity={isIOS ? 100 : 0}>
+          <Wrapper {...(isIOS ? { intensity: 100 } : {})}>
             <Flex
               {...contentProps}
               fill
@@ -297,7 +301,7 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
                 </Text>
               )}
             </Flex>
-          </BlurView>
+          </Wrapper>
         </AnimatedFlex>
       </TapGestureHandler>
     </TouchableArea>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Text } from 'ui/src'
-import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { TXN_HISTORY_ICON_SIZE } from 'uniswap/src/components/activity/utils'
 
 interface TransactionLoaderProps {
   opacity: number

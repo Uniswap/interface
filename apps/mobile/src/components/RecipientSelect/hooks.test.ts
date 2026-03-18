@@ -61,6 +61,7 @@ const getPreloadedState = (props?: PreloadedStateProps): PreloadedState<MobileSt
       settings: {
         swapProtection: SwapProtectionSetting.On,
       },
+      androidCloudBackupEmail: null,
     },
     transactions,
   }

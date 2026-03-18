@@ -1,11 +1,11 @@
-import { LoadingRow } from 'components/Loader/styled'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import useHoverProps from 'hooks/useHoverProps'
-import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
-import { ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
+import { LoadingRow } from '~/components/Loader/styled'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
+import useHoverProps from '~/hooks/useHoverProps'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
 
 export type LineItemData = {
   Label: React.FC
@@ -15,12 +15,12 @@ export type LineItemData = {
   loaderWidth?: number
 }
 
-const LabelText = styled(ThemedText.BodySmall)<{ hasTooltip?: boolean }>`
+const LabelText = deprecatedStyled(ThemedText.BodySmall)<{ hasTooltip?: boolean }>`
   cursor: ${({ hasTooltip }) => (hasTooltip ? 'help' : 'auto')};
   color: ${({ theme }) => theme.neutral2};
 `
 
-const DetailRowValue = styled(ThemedText.BodySmall)`
+const DetailRowValue = deprecatedStyled(ThemedText.BodySmall)`
   text-align: right;
   overflow-wrap: break-word;
 `
@@ -61,6 +61,7 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
 
 export function DetailLineItem({ LineItem, syncing }: { LineItem: LineItemData; syncing?: boolean }) {
   const [labelHovered, hoverProps] = useHoverProps()
+
   return (
     <Flex row alignItems="center" justifyContent="space-between" width="100%">
       <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">

@@ -7,6 +7,7 @@ export type ClickableWithinGestureProps = PropsWithChildren<{ onPress?: () => vo
 export type SwipeableCardProps = PropsWithChildren<{
   stackIndex: number
   cardHeight: number
+  activeCardHeight: number
   disableSwipe: boolean
   onPress?: () => void
   onSwiped: () => void

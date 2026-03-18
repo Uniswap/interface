@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: Chrome extension message passing requires flexible typing for arbitrary message payloads */
+import { MessageParsers } from 'uniswap/src/extension/messagePassing/platform'
 import { logger } from 'utilities/src/logger/logger'
 
 const EXTENSION_CONTEXT_INVALIDATED_CHROMIUM_ERROR = 'Extension context invalidated.'
@@ -73,12 +74,14 @@ class ChromeMessageChannel {
     const promises: Promise<void>[] = []
     chrome.tabs.query({ url: urlMatcher }, (tabs) => {
       tabs.forEach((tab) => {
-        if (tab?.id) {
+        if (tab.id) {
           promises.push(
             // eslint-disable-next-line no-restricted-syntax
-            chrome.tabs.sendMessage(tab.id, { [this.channelName]: message }).catch(() => {
-              // Not logging error here because it is expected that inactive tabs will not be able to receive the message
-            }),
+            chrome.tabs
+              .sendMessage(tab.id, { [this.channelName]: message })
+              .catch(() => {
+                // Not logging error here because it is expected that inactive tabs will not be able to receive the message
+              }),
           )
         }
       })
@@ -97,9 +100,6 @@ class ChromeMessageChannel {
   }
 }
 
-export type MessageParsers<T extends string, R extends { [key in T]: { type: key } }> = {
-  [key in T]: (message: unknown) => R[key]
-}
 abstract class TypedMessageChannel<
   T extends string,
   R extends { [key in T]: { type: key } },
@@ -167,6 +167,7 @@ abstract class TypedMessageChannel<
     }
 
     const messageParser = this.messageParsers[type]
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!messageParser) {
       throw new Error(`No message parser found for type ${type}`)
     }

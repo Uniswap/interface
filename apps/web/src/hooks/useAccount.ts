@@ -1,28 +1,39 @@
-/* eslint-disable rulesdir/no-undefined-or */
 import { useMemo } from 'react'
-import { useSupportedChainIdWithConnector } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { UseAccountReturnType as UseAccountReturnTypeWagmi, useAccount as useAccountWagmi, useChainId } from 'wagmi'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  type Register,
+  type UseAccountReturnType as UseAccountReturnTypeWagmi,
+  // biome-ignore lint/style/noRestrictedImports: wagmi account hook needed for wallet integration
+  useAccount as useAccountWagmi,
+  // biome-ignore lint/style/noRestrictedImports: wagmi chain hook needed for chain management
+  useChainId,
+} from 'wagmi'
 
 type ReplaceChainId<T> = T extends { chainId: number }
-  ? Omit<T, 'chainId'> & { chainId: UniverseChainId | undefined }
+  ? Omit<T, 'chainId'> & { chainId: EVMUniverseChainId | undefined }
   : T extends { chainId: number | undefined }
-    ? Omit<T, 'chainId'> & { chainId: UniverseChainId | undefined }
+    ? Omit<T, 'chainId'> & { chainId: EVMUniverseChainId | undefined }
     : T
 
-type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi>
+type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi<Register['config']>>
 
+/**
+ * @deprecated use new Account hooks from apps/web/src/features/accounts/store/hooks.ts instead
+ */
 export function useAccount(): UseAccountReturnType {
-  const { chainId, ...rest } = useAccountWagmi()
+  const wagmiAccount = useAccountWagmi()
+
   const fallbackChainId = useChainId()
-  const supportedChainId = useSupportedChainIdWithConnector(chainId ?? fallbackChainId, rest.connector)
+  const supportedChainId = useSupportedChainId(wagmiAccount.chainId ?? fallbackChainId) as
+    | EVMUniverseChainId
+    | undefined
 
   return useMemo(
     () => ({
-      ...rest,
+      ...wagmiAccount,
       chainId: supportedChainId,
     }),
-    [rest, supportedChainId],
+    [wagmiAccount, supportedChainId],
   )
 }

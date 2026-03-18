@@ -1,0 +1,13 @@
+ignores: [
+    # Standard ignores
+    "typescript",
+    "@typescript/native-preview",
+    "depcheck",
+
+    # Internal packages / workspaces
+    "@universe/gating",
+    "@universe/config",
+
+    # Peer dependencies
+    "react",
+  ]

@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useNFT } from 'uniswap/src/features/nfts/hooks/useNFT'
 import { useOnChainCurrencyBalance, useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { useNFT } from 'wallet/src/features/nfts/hooks'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
@@ -27,19 +27,20 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
 
   const currencyInInfo = useCurrencyInfo(
     tradeableAsset?.type === AssetType.Currency
-      ? buildCurrencyId(tradeableAsset?.chainId, tradeableAsset?.address)
+      ? buildCurrencyId(tradeableAsset.chainId, tradeableAsset.address)
       : undefined,
     { refetch: true },
   )
 
   const currencyIn = currencyInInfo?.currency
-  const { data: nftIn } = useNFT(
-    activeAccount?.address,
-    tradeableAsset?.address,
-    tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
-      ? tradeableAsset.tokenId
-      : undefined,
-  )
+  const { data: nftIn } = useNFT({
+    owner: activeAccount?.address,
+    address: tradeableAsset?.address,
+    tokenId:
+      tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
+        ? tradeableAsset.tokenId
+        : undefined,
+  })
 
   const currencies = useMemo(
     () => ({
@@ -53,10 +54,7 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
     activeAccount?.address,
   )
 
-  const { balance: nativeInBalance } = useOnChainNativeCurrencyBalance(
-    chainId ?? defaultChainId,
-    activeAccount?.address,
-  )
+  const { balance: nativeInBalance } = useOnChainNativeCurrencyBalance(chainId, activeAccount?.address)
 
   const amountSpecified = useMemo(
     () =>

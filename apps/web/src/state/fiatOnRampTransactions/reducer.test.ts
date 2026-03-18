@@ -6,8 +6,8 @@ import reducer, {
   initialState,
   removeFiatOnRampTransaction,
   updateFiatOnRampTransaction,
-} from 'state/fiatOnRampTransactions/reducer'
-import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
+} from '~/state/fiatOnRampTransactions/reducer'
+import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 
 const account = '0xabc'
 

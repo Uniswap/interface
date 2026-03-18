@@ -9,23 +9,22 @@ export const selectHasDismissedBridgingWarning = (state: UniswapState): boolean 
 export const selectHasDismissedLowNetworkTokenWarning = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasDismissedLowNetworkTokenWarning === true
 
-export const selectHasDismissedUnichainColdBanner = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.coldBannerDismissed === true
+export const selectHasViewedContractAddressExplainer = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasViewedContractAddressExplainer === true
 
-export const selectHasDismissedUnichainWarmBanner = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.warmBannerDismissed === true
+export const selectHasShownMismatchToast = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasShownMismatchToast === true
 
-export const selectHasSeenUnichainPromotionNetworkSelectorAnimation = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.networkSelectorAnimationSeen === true
+/** Returns true if user has seen the modal globally (when disconnected) */
+export const selectHasSeenToucanIntroModal = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasSeenToucanIntroModal === true
 
-export const selectHasSeenUnichainPromotionNetworkSelectorTooltip = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.networkSelectorTooltipSeen === true
+/** Returns true if user has seen the modal for a specific wallet */
+export const selectHasSeenToucanIntroModalForWallet = (state: UniswapState, walletAddress: string): boolean =>
+  state.uniswapBehaviorHistory.toucanIntroModalSeenByWallet?.[walletAddress.toLowerCase()] === true
 
-export const selectHasSeenUnichainPromotionBridgingTooltip = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.bridgingTooltipSeen === true
+export const selectHasDismissedUniswapWrapped2025Banner = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasDismissedUniswapWrapped2025Banner === true
 
-export const selectHasSeenUnichainPromotionBridgingAnimation = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.bridgingAnimationSeen === true
-
-export const selectIsFirstUnichainBridgeSelection = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.isFirstUnichainBridgeSelection === true
+export const selectHasDismissedCrosschainSwapsPromoBanner = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasDismissedCrosschainSwapsPromoBanner === true

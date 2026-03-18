@@ -13,7 +13,7 @@ export function isBrowserRouterEnabled(): boolean {
     if (
       isAppUniswapOrg(window.location) ||
       isAppUniswapStagingOrg(window.location) ||
-      isLocalhost(window.location) // cypress tests
+      isLocalhost(window.location) // playwright tests
     ) {
       return true
     }
@@ -34,5 +34,5 @@ export function isRemoteReportingEnabled(): boolean {
   if (isProdEnv() && !isAppUniswapOrg(window.location)) {
     return false
   }
-  return process.env.REACT_APP_SENTRY_ENABLED === 'true'
+  return process.env.REACT_APP_ANALYTICS_ENABLED === 'true'
 }

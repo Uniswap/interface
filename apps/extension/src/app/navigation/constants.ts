@@ -6,12 +6,13 @@ export enum TopLevelRoutes {
 }
 
 export enum OnboardingRoutes {
-  Import = 'import',
   Create = 'create',
-  Claim = 'claim',
-  Scan = 'scan',
+  Import = 'import',
+  ImportPasskey = 'import-passkey',
   Reset = 'reset',
   ResetScan = 'reset-scan',
+  Scan = 'scan',
+  SelectImportMethod = 'select-import-method',
   UnsupportedBrowser = 'unsupported-browser',
 }
 
@@ -35,13 +36,17 @@ export enum HomeQueryParams {
 }
 
 export enum SettingsRoutes {
-  ChangePassword = 'change-password',
+  BackupRecoveryPhrase = 'backup-recovery-phrase',
+  BiometricUnlockSetUp = 'biometric-unlock-set-up',
   DevMenu = 'dev-menu',
-  ViewRecoveryPhrase = 'view-recovery-phrase',
-  RemoveRecoveryPhrase = 'remove-recovery-phrase',
-  Privacy = 'privacy',
+  DeviceAccess = 'device-access',
+  HashcashBenchmark = 'hashcash-benchmark',
   ManageConnections = 'manage-connections',
-  Permissions = 'permissions',
+  RemoveRecoveryPhrase = 'remove-recovery-phrase',
+  SessionsDebug = 'sessions-debug',
+  SmartWallet = 'smart-wallet',
+  Storage = 'storage',
+  ViewRecoveryPhrase = 'view-recovery-phrase',
 }
 
 export enum RemoveRecoveryPhraseRoutes {

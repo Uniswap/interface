@@ -1,32 +1,47 @@
-// Setups and mocks can go here
-// For example: https://reactnavigation.org/docs/testing/
-
+// From https://reactnavigation.org/docs/testing/#setting-up-jest
+import 'react-native-gesture-handler/jestSetup';
+import { setUpTests } from 'react-native-reanimated';
+// Other
 import 'core-js' // necessary so setImmediate works in tests
 import 'utilities/jest-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'wallet/jest-package-mocks'
-import 'ui/jest-package-mocks'
+import 'config/jest-presets/ui/ui-package-mocks'
 
 import 'uniswap/src/i18n' // Uses real translations for tests
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 
+setUpTests()
+
+// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
+jest.mock('react-native/Libraries/Animated/NativeAnimatedModule');
+
 jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
 
 jest.mock('@walletconnect/react-native-compat', () => ({}))
 
-jest.mock('src/lib/RNEthersRs')
-
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
   return {
-    setLogLevel: jest.fn(),
-    setAppId: jest.fn(),
-    promptForPushNotificationsWithUserResponse: jest.fn(),
-    setNotificationWillShowInForegroundHandler: jest.fn(),
-    setNotificationOpenedHandler: jest.fn(),
-    sendTag: jest.fn(),
-    getDeviceState: () => ({ userId: 'dummyUserId', pushToken: 'dummyPushToken' }),
+    OneSignal: {
+      Debug: {
+        setLogLevel: jest.fn(),
+      },
+      initialize: jest.fn(),
+      Notifications: {
+        addEventListener: jest.fn(),
+        requestPermission: jest.fn(),
+      },
+      User: {
+        addTag: jest.fn(),
+        addTags: jest.fn(),
+        getOnesignalId: jest.fn(() => 'dummyUserId'),
+        pushSubscription: {
+          getTokenAsync: jest.fn(() => 'dummyPushToken'),
+        }
+      },
+    }
   }
 })
 
@@ -56,6 +71,22 @@ jest.mock('@react-native-community/netinfo', () => ({ ...mockRNCNetInfo, NetInfo
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native') // use original implementation, which comes with mocks out of the box
 
+  // Mock Linking module within React Native
+  RN.Linking = {
+    openURL: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    canOpenURL: jest.fn(),
+    getInitialURL: jest.fn(),
+  }
+
+  // Mock Share module within React Native
+  RN.Share = {
+    share: jest.fn(),
+    sharedAction: 'sharedAction',
+    dismissedAction: 'dismissedAction',
+  }
+
   return RN
 })
 
@@ -65,25 +96,9 @@ jest.mock('@react-navigation/elements', () => ({
 
 require('react-native-reanimated').setUpTests()
 
-jest.mock('react-native/Libraries/Share/Share', () => ({
-  share: jest.fn(),
-}))
-
 jest.mock('@react-native-firebase/auth', () => () => ({
   signInAnonymously: jest.fn(),
 }))
-
-jest.mock('react-native/Libraries/Linking/Linking', () => ({
-  openURL: jest.fn(),
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  canOpenURL: jest.fn(),
-  getInitialURL: jest.fn(),
-}))
-
-
-jest.mock('openai')
-
 
 jest.mock("react-native-bootsplash", () => {
   return {
@@ -96,3 +111,20 @@ jest.mock("react-native-bootsplash", () => {
     }),
   };
 });
+
+jest.mock("react-native-keyboard-controller", () =>
+  require("react-native-keyboard-controller/jest"),
+);
+
+// Mock @gorhom/bottom-sheet with plain View components
+jest.mock('@gorhom/bottom-sheet', () => {
+  const reactNative = jest.requireActual('react-native')
+  const { View } = reactNative
+  return {
+    __esModule: true,
+    default: View,
+    BottomSheetModal: View,
+    BottomSheetModalProvider: View,
+    BottomSheetView: View,
+  }
+})

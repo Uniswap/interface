@@ -1,12 +1,15 @@
 import React, { lazy, Suspense } from 'react'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { UniconProps } from 'ui/src/components/Unicon/types'
 import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
+import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 
-// In test environments, import Icons synchronously
+// In test environments, we use an empty Icons object since tests don't render
+// the actual Unicon SVGs. In production, Icons is loaded lazily via dynamic import.
 const isTestEnv = process.env.NODE_ENV === 'test'
-const { Icons } = isTestEnv ? require('ui/src/components/Unicon/UniconSVGs') : { Icons: {} }
+const Icons: Record<string, string[]> = {}
 
 function UniconSVGInner({
   address,
@@ -14,7 +17,7 @@ function UniconSVGInner({
   icons,
 }: UniconProps & { icons: typeof Icons }): React.ReactElement | null {
   const isDarkMode = useIsDarkMode()
-  if (!address || !isAddress(address)) {
+  if (!address || (!isEVMAddressWithChecksum(address) && !isSVMAddress(address))) {
     return null
   }
 
@@ -57,7 +60,7 @@ const UniconSVGComponent = isTestEnv
     })
 
 export const Unicon: React.FC<UniconProps> = (props) => (
-  <Suspense fallback={<div style={{ width: props.size, height: props.size }} />}>
+  <Suspense fallback={<Flex width={props.size} height={props.size} />}>
     <UniconSVGComponent {...props} />
   </Suspense>
 )

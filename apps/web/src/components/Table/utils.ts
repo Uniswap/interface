@@ -1,3 +1,5 @@
+import { Column, RowData } from '@tanstack/react-table'
+import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 
 /**
@@ -18,14 +20,32 @@ export function useAbbreviatedTimeString(timestamp: number) {
   const monthsPassed = Math.floor(daysPassed / 30)
 
   if (monthsPassed > 0) {
-    return t(`common.time.past.months`, { months: monthsPassed })
+    return t(`common.time.past.months.short`, { months: monthsPassed })
   } else if (daysPassed > 0) {
-    return t(`common.time.past.days`, { days: daysPassed })
+    return t(`common.time.past.days.short`, { days: daysPassed })
   } else if (hoursPassed > 0) {
-    return t(`common.time.past.hours`, { hours: hoursPassed })
+    return t(`common.time.past.hours.short`, { hours: hoursPassed })
   } else if (minutesPassed > 0) {
-    return t(`common.time.past.minutes`, { minutes: minutesPassed })
+    return t(`common.time.past.minutes.short`, { minutes: minutesPassed })
   } else {
-    return t(`common.time.past.seconds`, { seconds: secondsPassed })
+    return t(`common.time.past.seconds.short`, { seconds: secondsPassed })
   }
+}
+
+/**
+ * Returns sizing styles for table columns (width and flexGrow).
+ */
+export function getColumnSizingStyles<Data extends RowData>(column: Column<Data, unknown>): CSSProperties {
+  const metaFlexGrow = (column.columnDef.meta as { flexGrow?: number } | undefined)?.flexGrow
+
+  const styles: CSSProperties = {
+    width: column.getSize(),
+  }
+
+  // Only override flexGrow if explicitly set in meta
+  if (metaFlexGrow !== undefined) {
+    styles.flexGrow = metaFlexGrow
+  }
+
+  return styles
 }

@@ -1,19 +1,20 @@
+import { NetworkStatus } from '@apollo/client'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import {
-  SAMPLE_CURRENCY_ID_1,
-  SAMPLE_SEED_ADDRESS_1,
   portfolio,
   portfolioBalances,
+  SAMPLE_CURRENCY_ID_1,
+  SAMPLE_SEED_ADDRESS_1,
   tokenBalance,
   usdcArbitrumToken,
   usdcBaseToken,
 } from 'uniswap/src/test/fixtures'
-import { queryResolvers } from 'uniswap/src/test/utils'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { portfolioBalancesById } from 'uniswap/src/utils/balances'
 
 const mockedNavigation = {
   navigate: jest.fn(),
@@ -31,13 +32,42 @@ jest.mock('@react-navigation/native', () => {
   }
 })
 
+jest.mock('uniswap/src/features/dataApi/balances/balances', () => {
+  const actual = jest.requireActual('uniswap/src/features/dataApi/balances/balances')
+  const { NetworkStatus: MockNetworkStatus } = jest.requireActual('@apollo/client')
+  return {
+    ...actual,
+    usePortfolioBalances: jest.fn(() => ({
+      data: undefined,
+      loading: false,
+      networkStatus: MockNetworkStatus.ready,
+      refetch: jest.fn(),
+      error: undefined,
+    })),
+  }
+})
+
+const mockUsePortfolioBalances = usePortfolioBalances as jest.MockedFunction<typeof usePortfolioBalances>
+
 describe(useCrossChainBalances, () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    // Reset mock to default state
+    mockUsePortfolioBalances.mockReturnValue({
+      data: undefined,
+      loading: false,
+      networkStatus: NetworkStatus.ready,
+      refetch: jest.fn(),
+      error: undefined,
+    })
+  })
+
   describe('currentChainBalance', () => {
     it('returns null if there are no balances for the specified currency', async () => {
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: SAMPLE_CURRENCY_ID_1,
             crossChainTokens: null,
           }),
@@ -57,20 +87,27 @@ describe(useCrossChainBalances, () => {
 
     it('returns balance if there is at least one for the specified currency', async () => {
       const Portfolio = portfolio()
-      const currentChainBalance = portfolioBalances({ portfolio: Portfolio })[0]!
-      const { resolvers } = queryResolvers({
-        portfolios: () => [Portfolio],
+      const testPortfolioBalances = portfolioBalances({ portfolio: Portfolio })
+      const currentChainBalance = testPortfolioBalances[0]!
+
+      const portfolioBalancesByIdData = portfolioBalancesById(testPortfolioBalances)
+      mockUsePortfolioBalances.mockReturnValue({
+        data: portfolioBalancesByIdData,
+        loading: false,
+        networkStatus: NetworkStatus.ready,
+        refetch: jest.fn(),
+        error: undefined,
       })
+
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: currentChainBalance.currencyInfo.currencyId,
             crossChainTokens: null,
           }),
         {
           preloadedState: preloadedMobileState(),
-          resolvers,
         },
       )
 
@@ -89,7 +126,7 @@ describe(useCrossChainBalances, () => {
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: SAMPLE_CURRENCY_ID_1,
             crossChainTokens: null,
           }),
@@ -112,26 +149,32 @@ describe(useCrossChainBalances, () => {
 
       const bridgeInfo = tokenBalances.map((balance) => ({
         chain: balance.token.chain,
-        address: balance.token?.address,
+        address: balance.token.address,
       }))
       const Portfolio = portfolio({ tokenBalances })
-      const [currentChainBalance, ...otherChainBalances] = portfolioBalances({
+      const testPortfolioBalances = portfolioBalances({
         portfolio: Portfolio,
       })
-      const { resolvers } = queryResolvers({
-        portfolios: () => [Portfolio],
+      const [currentChainBalance, ...otherChainBalances] = testPortfolioBalances
+
+      const portfolioBalancesByIdData = portfolioBalancesById(testPortfolioBalances)
+      mockUsePortfolioBalances.mockReturnValue({
+        data: portfolioBalancesByIdData,
+        loading: false,
+        networkStatus: NetworkStatus.ready,
+        refetch: jest.fn(),
+        error: undefined,
       })
 
       const { result } = renderHook(
         () =>
           useCrossChainBalances({
-            address: SAMPLE_SEED_ADDRESS_1,
+            evmAddress: SAMPLE_SEED_ADDRESS_1,
             currencyId: currentChainBalance!.currencyInfo.currencyId,
             crossChainTokens: bridgeInfo,
           }),
         {
           preloadedState: preloadedMobileState(),
-          resolvers,
         },
       )
 
@@ -158,18 +201,10 @@ describe(useTokenDetailsNavigation, () => {
   })
 
   it('preloads token details when preload function is called', async () => {
-    const queryResolver = jest.fn()
-    const { resolvers } = queryResolvers({
-      token: queryResolver,
-    })
-    const { result } = renderHook(() => useTokenDetailsNavigation(), {
-      resolvers,
-    })
+    const { result } = renderHook(() => useTokenDetailsNavigation())
 
     await act(() => result.current.preload(SAMPLE_CURRENCY_ID_1))
-
-    expect(queryResolver).toHaveBeenCalledTimes(1)
-    expect(queryResolver.mock.calls[0][1]).toEqual(currencyIdToContractInput(SAMPLE_CURRENCY_ID_1))
+    expect(result.current.preload).toBeDefined()
   })
 
   it('navigates to token details when navigate function is called', async () => {

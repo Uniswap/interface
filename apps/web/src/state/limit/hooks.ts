@@ -1,22 +1,23 @@
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
-import { useAccount } from 'hooks/useAccount'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import JSBI from 'jsbi'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useEffect, useMemo, useState } from 'react'
-import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
-import { LimitState } from 'state/limit/types'
-import { getWrapInfo } from 'state/routing/gas'
-import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapInfo } from 'state/routing/types'
-import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { isUniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { isEVMChain, isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
+import { SwapFee, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { useAccount } from '~/hooks/useAccount'
+import { useCurrencyBalances } from '~/lib/hooks/useCurrencyBalance'
+import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { expiryToDeadlineSeconds } from '~/state/limit/expiryToDeadlineSeconds'
+import { LimitState } from '~/state/limit/types'
+import { getWrapInfo } from '~/state/routing/gas'
+import { LimitOrderTrade, SwapFeeInfo, WrapInfo } from '~/state/routing/types'
+import { getUSDCostPerGas } from '~/state/routing/utils'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
 
 export type LimitInfo = {
   currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }
@@ -31,7 +32,7 @@ function isStablecoin(currency?: Currency): boolean {
   return (
     currency !== undefined &&
     isUniverseChainId(currency.chainId) &&
-    getChainInfo(currency.chainId).stablecoins.some((stablecoin) => stablecoin.equals(currency))
+    getStablecoinsForChain(currency.chainId).some((stablecoin) => stablecoin.equals(currency))
   )
 }
 
@@ -118,21 +119,22 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
 
   const { marketPrice, fee: swapFee } = useMarketPriceAndFee(inputCurrency, outputCurrency)
 
-  const skip = !(inputCurrency && outputCurrency)
+  const skip =
+    !(inputCurrency && outputCurrency) || isSVMChain(inputCurrency.chainId) || isSVMChain(outputCurrency.chainId)
 
-  const { trade } = useRoutingAPITrade(
+  const { trade } = useTrade({
+    amountSpecified: parsedAmounts[CurrencyField.INPUT],
+    otherCurrency: outputCurrency,
+    tradeType: TradeType.EXACT_INPUT,
     skip,
-    TradeType.EXACT_INPUT,
-    parsedAmounts?.[CurrencyField.INPUT],
-    outputCurrency,
-    RouterPreference.API,
-  )
+    isUSDQuote: true, // request classic quotes only for market price quote
+  })
 
   const limitOrderTrade = useLimitOrderTrade({
     inputCurrency,
     parsedAmounts,
     outputAmount: parsedAmounts[CurrencyField.OUTPUT],
-    trade,
+    trade: trade ?? undefined,
     state,
     swapFee,
   })
@@ -155,7 +157,7 @@ function useLimitOrderTrade({
   swapFee,
 }: {
   state: LimitState
-  trade?: SubmittableTrade
+  trade?: Trade<Currency, Currency, TradeType> | null
   inputCurrency?: Currency
   parsedAmounts: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   outputAmount?: CurrencyAmount<Currency>
@@ -166,19 +168,29 @@ function useLimitOrderTrade({
 
   useEffect(() => {
     async function calculateWrapInfo() {
-      if (!inputCurrency) {
+      if (!inputCurrency || !isEVMChain(inputCurrency.chainId)) {
         setWrapInfo(undefined)
         return
       }
 
       const [currencyIn, needsWrap] = inputCurrency.isNative ? [inputCurrency.wrapped, true] : [inputCurrency, false]
-      const [gasUseEstimate, gasUseEstimateUSD] = isClassicTrade(trade)
-        ? [trade.gasUseEstimate, trade.gasUseEstimateUSD]
-        : [undefined, undefined]
-      const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
 
       if (needsWrap) {
-        const wrapInfo = await getWrapInfo(needsWrap, account.address, currencyIn.chainId, '1', usdCostPerGas)
+        const gasUseEstimate =
+          trade && isClassic(trade) && trade.quote.quote.gasUseEstimate
+            ? parseFloat(trade.quote.quote.gasUseEstimate)
+            : undefined
+        const gasUseEstimateUSD =
+          trade && isClassic(trade) && trade.quote.quote.gasFeeUSD ? parseFloat(trade.quote.quote.gasFeeUSD) : undefined
+        const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
+
+        const wrapInfo = await getWrapInfo({
+          needsWrap,
+          account: account.address,
+          chainId: currencyIn.chainId,
+          amount: '1',
+          usdCostPerGas,
+        })
         setWrapInfo(wrapInfo)
       } else {
         setWrapInfo({ needsWrap: false })
@@ -188,10 +200,10 @@ function useLimitOrderTrade({
   }, [account.address, inputCurrency, trade])
 
   const limitOrderTrade = useMemo(() => {
-    if (!inputCurrency || !parsedAmounts?.[CurrencyField.INPUT] || !account.address || !outputAmount || !wrapInfo) {
+    if (!inputCurrency || !parsedAmounts[CurrencyField.INPUT] || !account.address || !outputAmount || !wrapInfo) {
       return undefined
     }
-    const amountIn = CurrencyAmount.fromRawAmount(inputCurrency.wrapped, parsedAmounts?.[CurrencyField.INPUT].quotient)
+    const amountIn = CurrencyAmount.fromRawAmount(inputCurrency.wrapped, parsedAmounts[CurrencyField.INPUT].quotient)
     return new LimitOrderTrade({
       amountIn,
       amountOut: outputAmount,
@@ -211,29 +223,35 @@ function isNativeOrWrappedNative(currency: Currency) {
   return currency.isNative || nativeOnChain(currency.chainId).wrapped.equals(currency)
 }
 
+// Convert from SwapFee (from quote) to SwapFeeInfo (deprecated type used in LimitOrderTrade)
+const toSwapFeeInfo = (swapFee: SwapFee | undefined): SwapFeeInfo | undefined =>
+  swapFee ? { ...swapFee, recipient: swapFee.recipient ?? '' } : undefined
+
 function useMarketPriceAndFee(
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined,
 ): { marketPrice?: Price<Currency, Currency>; fee?: SwapFeeInfo } {
-  const skip = !(inputCurrency && outputCurrency)
+  const skip =
+    !(inputCurrency && outputCurrency) || isSVMChain(inputCurrency.chainId) || isSVMChain(outputCurrency.chainId)
+
   // TODO(limits): update amount for MATIC and CELO once Limits are supported on those chains
   const baseCurrencyAmount =
     inputCurrency && CurrencyAmount.fromRawAmount(nativeOnChain(inputCurrency.chainId), 10 ** 18)
-  const { trade: tradeA } = useRoutingAPITrade(
+  const { trade: tradeA } = useTrade({
+    amountSpecified: baseCurrencyAmount,
+    otherCurrency: inputCurrency,
+    tradeType: TradeType.EXACT_OUTPUT,
     skip,
-    TradeType.EXACT_OUTPUT,
-    baseCurrencyAmount,
-    inputCurrency,
-    RouterPreference.API,
-  )
+    isUSDQuote: true, // request classic quotes only for market price quote
+  })
 
-  const { trade: tradeB } = useRoutingAPITrade(
+  const { trade: tradeB } = useTrade({
+    amountSpecified: baseCurrencyAmount,
+    otherCurrency: outputCurrency,
+    tradeType: TradeType.EXACT_INPUT,
     skip,
-    TradeType.EXACT_INPUT,
-    baseCurrencyAmount,
-    outputCurrency,
-    RouterPreference.API,
-  )
+    isUSDQuote: true, // request classic quotes only for market price quote
+  })
 
   const marketPrice: Price<Currency, Currency> | undefined = useMemo(() => {
     if (skip) {
@@ -242,7 +260,7 @@ function useMarketPriceAndFee(
 
     // if one of the currencies is ETH or WETH, just use the spot price from one of the Trade objects
     if (isNativeOrWrappedNative(inputCurrency)) {
-      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) {
+      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassic(tradeB)) {
         return undefined
       }
 
@@ -253,7 +271,7 @@ function useMarketPriceAndFee(
 
     // same thing but for output currency being ETH or WETH
     if (isNativeOrWrappedNative(outputCurrency)) {
-      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) {
+      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassic(tradeA)) {
         return undefined
       }
 
@@ -266,12 +284,13 @@ function useMarketPriceAndFee(
       return undefined
     }
 
-    if (!tradeA || !tradeB || !isClassicTrade(tradeA) || !isClassicTrade(tradeB)) {
+    if (!isClassic(tradeA) || !isClassic(tradeB)) {
       return undefined
     }
 
     const priceA = tradeA.routes[0]?.midPrice
     const priceB = tradeB.routes[0]?.midPrice
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!priceA || !priceB) {
       return undefined
     }
@@ -287,19 +306,19 @@ function useMarketPriceAndFee(
     }
 
     if (isNativeOrWrappedNative(inputCurrency)) {
-      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) {
+      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassic(tradeB)) {
         return undefined
       }
 
-      return tradeB.swapFee
+      return toSwapFeeInfo(tradeB.swapFee)
     }
 
     if (isNativeOrWrappedNative(outputCurrency)) {
-      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) {
+      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassic(tradeA)) {
         return undefined
       }
 
-      return tradeA.swapFee
+      return toSwapFeeInfo(tradeA.swapFee)
     }
 
     if (!tradeA || !tradeB) {
@@ -308,7 +327,7 @@ function useMarketPriceAndFee(
 
     // This currency pair is only eligible for fees iff both tradeA and tradeB are eligible for fees
     const canTakeFees = tradeA.swapFee?.percent.greaterThan(0) && tradeB.swapFee?.percent.greaterThan(0)
-    return canTakeFees ? tradeB.swapFee : undefined
+    return canTakeFees ? toSwapFeeInfo(tradeB.swapFee) : undefined
   }, [inputCurrency, outputCurrency, marketPrice, tradeA, tradeB, feesEnabled])
 
   return useMemo(() => ({ marketPrice, fee }), [marketPrice, fee])

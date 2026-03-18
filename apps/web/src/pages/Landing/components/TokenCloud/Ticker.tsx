@@ -1,50 +1,56 @@
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { TickerPosition } from 'pages/Landing/components/TokenCloud'
+import { GraphQLApi } from '@universe/api'
+import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
-import { useFormatter } from 'utils/formatNumbers'
+import { ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
 
-export function Ticker({
-  color,
-  pricePercentChange,
-  ticker,
-  tickerPosition,
-  size,
-}: {
-  color: string
-  pricePercentChange: number
-  ticker: string
-  tickerPosition: TickerPosition
-  size: number
-}) {
-  const { formatDelta } = useFormatter()
+export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }) {
+  const { formatPercent } = useLocalizationContext()
+
+  const { color, size, floatingElementPosition, itemData } = itemPoint
+  const { address, chain, symbol } = itemData
+
+  const tokenPromoQuery = GraphQLApi.useTokenPromoQuery({
+    variables: {
+      address: address !== NATIVE_CHAIN_ID ? address : undefined,
+      chain,
+    },
+  })
+
+  const pricePercentChange = useMemo(() => {
+    return tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
+  }, [tokenPromoQuery.data?.token?.market?.pricePercentChange?.value])
 
   return (
     <Flex
       position="absolute"
       flex={1}
       row
-      animation="100ms"
       opacity={0}
       x={0}
+      transition="all 0.1s ease-in-out"
       gap={20}
       $group-item-hover={{
         opacity: 1,
         x: 8,
       }}
-      {...(tickerPosition === 'right' ? { left: size * 1.25 } : { right: size * 0.6 })}
+      {...(floatingElementPosition === 'right' ? { left: size * 1.25 } : { right: size * 0.6 })}
     >
       <Flex justifyContent="center">
         <Text
           fontSize={14}
           fontWeight="$medium"
           color={color}
-          textAlign={tickerPosition === 'right' ? 'left' : 'right'}
+          textAlign={floatingElementPosition === 'right' ? 'left' : 'right'}
         >
-          {ticker}
+          {symbol}
         </Text>
         <Flex row alignItems="center">
-          <DeltaArrow delta={pricePercentChange} />
-          <Text variant="body2">{formatDelta(pricePercentChange)}</Text>
+          <DeltaArrow delta={pricePercentChange} formattedDelta={formatPercent(Math.abs(pricePercentChange))} />
+          <Text variant="body2">{formatPercent(Math.abs(pricePercentChange))}</Text>
         </Flex>
       </Flex>
     </Flex>

@@ -2,6 +2,7 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { WindowEthereumRequest } from 'src/contentScript/types'
 
 export abstract class BaseMethodHandler<T extends WindowEthereumRequest> {
+  // eslint-disable-next-line max-params
   constructor(
     protected readonly getChainId: () => string | undefined,
     protected readonly getProvider: () => JsonRpcProvider | undefined,
@@ -11,6 +12,5 @@ export abstract class BaseMethodHandler<T extends WindowEthereumRequest> {
     protected readonly setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void,
   ) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleRequest(request: T, source: MessageEventSource | null): void {}
+  handleRequest(_request: T, _source: MessageEventSource | null): void {}
 }

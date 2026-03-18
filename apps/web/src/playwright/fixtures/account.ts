@@ -1,0 +1,82 @@
+import { getPortfolio } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { shortenAddress } from 'utilities/src/addresses'
+import { expect, type Page } from '~/playwright/fixtures'
+import { Mocks } from '~/playwright/mocks/mocks'
+
+// eslint-disable-next-line multiline-comment-style
+/**
+ * Mocks the Unitag API response for a specific address
+ * @param page The Playwright page
+ * @param address The wallet address to mock unitag data for
+
+ * @param unitag The unitag data to return (null for no unitag)
+ */
+export async function mockUnitagResponse({
+  page,
+  address,
+  unitag,
+}: {
+  page: Page
+  address: string
+  unitag: string | null
+}) {
+  await page.route(`${uniswapUrls.unitagsApiUrl}/address?address=${address}`, async (route) => {
+    await route.fulfill({
+      body: JSON.stringify({
+        username: unitag,
+        address,
+      }),
+    })
+  })
+}
+
+/**
+ * Mocks the GetPortfolio API response
+ * @param page The Playwright page
+ * @param mockPath Optional path to mock JSON (default: get_portfolio with tokens)
+ */
+// eslint-disable-next-line import/no-unused-modules
+export async function mockGetPortfolioResponse({
+  page,
+  mockPath = Mocks.DataApiService.get_portfolio,
+}: {
+  page: Page
+  mockPath?: string
+}) {
+  await page.route(`**/${getPortfolio.service.typeName}/${getPortfolio.name}`, async (route) => {
+    await route.fulfill({ path: mockPath })
+  })
+}
+
+/**
+ * Opens the account drawer and verifies the expected content
+ * @param page The Playwright page
+ * @param expectedPrimaryText The primary text to verify (unitag or ENS name)
+ * @param walletAddress The wallet address to verify in shortened form
+ */
+export async function openAccountDrawerAndVerify({
+  page,
+  expectedPrimaryText,
+  walletAddress,
+}: {
+  page: Page
+  expectedPrimaryText?: string
+  walletAddress?: string
+}) {
+  await page.getByTestId(TestID.Web3StatusConnected).click()
+
+  const drawer = page.getByTestId(TestID.AccountDrawer)
+
+  if (expectedPrimaryText) {
+    await expect(
+      drawer.getByTestId(TestID.AddressDisplay).getByText(expectedPrimaryText, { exact: true }),
+    ).toBeVisible()
+  }
+
+  if (walletAddress) {
+    const shortenedAddress = shortenAddress({ address: walletAddress })
+    await expect(drawer.getByText(shortenedAddress)).toBeVisible()
+  }
+}

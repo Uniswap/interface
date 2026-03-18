@@ -1,17 +1,19 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, FlexProps, SpaceTokens, Text, isWeb, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+// This is intentionally imported from the native file as only the web app requires a web specific implementation
+import { NftsList } from 'uniswap/src/components/nfts/NftsList.native'
+import { NftView } from 'uniswap/src/components/nfts/NftView'
+import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithContextMenu'
+import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isMobileApp } from 'utilities/src/platform'
-import { NftView } from 'wallet/src/components/nfts/NftView'
-import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
-import { NftsList } from 'wallet/src/components/nfts/NftsList'
-import { NFTItem } from 'wallet/src/features/nfts/types'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NFT_MODAL_MAX_WIDTH = 610
 
@@ -47,6 +49,7 @@ export const ChooseNftModal = ({
   const colors = useSporeColors()
   const insets = useAppInsets()
   const { t } = useTranslation()
+  const accounts = useAccounts()
 
   const renderNFT = (item: NFTItem): JSX.Element => {
     const onPressNft = (): void => {
@@ -54,12 +57,14 @@ export const ChooseNftModal = ({
       onClose()
     }
 
+    const walletAddresses = Object.keys(accounts)
+
     return (
       <Flex fill m={itemMargin}>
         {includeContextMenu ? (
-          <NftViewWithContextMenu item={item} owner={address} onPress={onPressNft} />
+          <NftViewWithContextMenu item={item} owner={address} walletAddresses={walletAddresses} onPress={onPressNft} />
         ) : (
-          <NftView item={item} onPress={onPressNft} />
+          <NftView item={item} walletAddresses={walletAddresses} onPress={onPressNft} />
         )}
       </Flex>
     )
@@ -73,20 +78,20 @@ export const ChooseNftModal = ({
       backgroundColor={colors.surface1.val}
       hideHandlebar={false}
       isDismissible={renderedInBottomSheet}
-      name={ModalName.NftCollection}
+      name={ModalName.NftPicker}
       maxWidth={modalMaxWidth}
-      padding={isWeb ? spacing.spacing24 : undefined}
+      padding={isWebPlatform ? spacing.spacing24 : undefined}
       onClose={onClose}
     >
       <Flex fill gap="$spacing24">
-        {isWeb ? (
+        {isWebPlatform ? (
           <Flex row centered>
             <Flex grow centered>
               <Text color="$neutral1" variant="subheading1">
                 {t('unitags.choosePhoto.option.nft')}
               </Text>
             </Flex>
-            <X position="absolute" left={0} size="$icon.24" cursor="pointer" color="$neutral2" onClick={onClose} />
+            <X position="absolute" left={0} size="$icon.24" cursor="pointer" color="$neutral2" onPress={onClose} />
           </Flex>
         ) : undefined}
         <Flex fill {...containerProps}>

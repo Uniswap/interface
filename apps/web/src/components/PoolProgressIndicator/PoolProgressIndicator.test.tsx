@@ -1,5 +1,5 @@
-import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
-import { render } from 'test-utils/render'
+import { PoolProgressIndicator } from '~/components/PoolProgressIndicator/PoolProgressIndicator'
+import { render } from '~/test-utils/render'
 
 describe('PoolProgressIndicator', () => {
   it('should render with valid number of steps', () => {
@@ -18,7 +18,7 @@ describe('PoolProgressIndicator', () => {
   })
 
   it('should throw an error if no steps are provided', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(console, 'error').mockImplementation(() => {})
 
     try {
       render(<PoolProgressIndicator steps={[]} />)

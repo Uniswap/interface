@@ -1,9 +1,9 @@
 import { parseUri } from '@walletconnect/utils'
 import {
-  UWULINK_PREFIX,
   isUwULinkDirectLink,
   isUwuLinkUniswapDeepLink,
   parseUwuLinkDataFromDeeplink,
+  UWULINK_PREFIX,
 } from 'src/components/Requests/Uwulink/utils'
 import {
   UNISWAP_URL_SCHEME,
@@ -11,6 +11,7 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
@@ -24,7 +25,7 @@ export enum URIType {
   UwULink = 'uwu-link',
 }
 
-export type URIFormat = {
+type URIFormat = {
   type: URIType
   value: string
 }
@@ -45,7 +46,15 @@ export async function getSupportedURI(
     return undefined
   }
 
-  const maybeAddress = getValidAddress(uri, /*withChecksum=*/ true, /*log=*/ false)
+  // Decode URI in case it's encoded (handles both percent encoding and HTML ampersand)
+  uri = safeDecodeURIComponent(uri).replace(/&amp;/g, '&')
+
+  const maybeAddress = getValidAddress({
+    address: uri,
+    platform: Platform.EVM,
+    withEVMChecksum: true,
+    log: false,
+  })
   if (maybeAddress) {
     return { type: URIType.Address, value: maybeAddress }
   }
@@ -66,7 +75,7 @@ export async function getSupportedURI(
     (await getWcUriWithCustomPrefix(uri, CUSTOM_UNI_QR_CODE_PREFIX)) ||
     (await getWcUriWithCustomPrefix(uri, UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM)) ||
     (await getWcUriWithCustomPrefix(uri, UNISWAP_URL_SCHEME)) ||
-    (await getWcUriWithCustomPrefix(decodeURIComponent(uri), UNISWAP_WALLETCONNECT_URL)) ||
+    (await getWcUriWithCustomPrefix(uri, UNISWAP_WALLETCONNECT_URL)) ||
     {}
 
   if (maybeCustomWcUri && type) {
@@ -123,7 +132,7 @@ function getMetamaskAddress(uri: string): Nullable<string> {
     return null
   }
 
-  return getValidAddress(uriParts[1], /*withChecksum=*/ true, /*log=*/ false)
+  return getValidAddress({ address: uriParts[1], platform: Platform.EVM, withEVMChecksum: true, log: false })
 }
 
 // format is uniswap://scantastic?<params>
@@ -139,6 +148,22 @@ export function getScantasticQueryParams(uri: string): Nullable<string> {
   }
 
   return uriParts[1] || null
+}
+
+function safeDecodeURIComponent(value: string): string {
+  try {
+    return decodeURIComponent(value)
+  } catch (e) {
+    logger.error(new Error('Failed to decode URI component'), {
+      tags: {
+        file: 'util.ts',
+        function: 'safeDecodeURIComponent',
+      },
+      extra: { value, error: e },
+    })
+    // If decoding fails, return the original value
+    return value
+  }
 }
 
 const PARAM_PUB_KEY = 'pubKey'
@@ -175,10 +200,10 @@ export function parseScantasticParams(uri: string): ScantasticParams | undefined
   try {
     return ScantasticParamsSchema.parse({
       publicKey: publicKey ? JSON.parse(publicKey) : undefined,
-      uuid: uuid ? decodeURIComponent(uuid) : undefined,
-      vendor: vendor ? decodeURIComponent(vendor) : undefined,
-      model: model ? decodeURIComponent(model) : undefined,
-      browser: browser ? decodeURIComponent(browser) : undefined,
+      uuid: uuid ? safeDecodeURIComponent(uuid) : undefined,
+      vendor: vendor ? safeDecodeURIComponent(vendor) : undefined,
+      model: model ? safeDecodeURIComponent(model) : undefined,
+      browser: browser ? safeDecodeURIComponent(browser) : undefined,
     })
   } catch (e) {
     const wrappedError = new Error('Invalid scantastic params', { cause: e })

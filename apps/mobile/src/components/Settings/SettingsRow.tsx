@@ -1,7 +1,7 @@
 import { NavigatorScreenParams, useNavigation } from '@react-navigation/native'
 import { memo, useCallback } from 'react'
 import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
-import { useDispatch } from 'react-redux'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import {
   AppStackNavigationProp,
   OnboardingStackNavigationProp,
@@ -9,7 +9,8 @@ import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
-import { openModal } from 'src/features/modals/modalSlice'
+import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
+import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Skeleton, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
@@ -18,6 +19,7 @@ import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
+import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 
 export const SETTINGS_ROW_HEIGHT = 60
 
@@ -32,12 +34,29 @@ export interface SettingsSectionItemComponent {
   isHidden?: boolean
 }
 
-type SettingsModal = typeof ModalName.FiatCurrencySelector | typeof ModalName.LanguageSelector
+type SettingsNavigationModal =
+  | typeof ModalName.BiometricsModal
+  | typeof ModalName.FiatCurrencySelector
+  | typeof ModalName.EditProfileSettingsModal
+  | typeof ModalName.EditLabelSettingsModal
+  | typeof ModalName.ConnectionsDappListModal
+  | typeof ModalName.SmartWalletAdvancedSettingsModal
+  | typeof ModalName.PasskeyManagement
+  | typeof ModalName.Experiments
+  | typeof ModalName.SettingsAppearance
+  | typeof ModalName.PermissionsModal
+  | typeof ModalName.PortfolioBalanceModal
+  | typeof ModalName.LanguageSelector
 
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof MobileScreens.OnboardingStack
-  modal?: SettingsModal
+  navigationModal?: SettingsNavigationModal
+  testID?: string
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
+  navigationProps?:
+    | ConnectionsDappsListModalState
+    | EditWalletSettingsModalState
+    | SmartWalletAdvancedSettingsModalState
   externalLink?: string
   action?: JSX.Element
   disabled?: boolean
@@ -56,14 +75,16 @@ interface SettingsRowProps {
   page: SettingsSectionItem
   navigation: SettingsStackNavigationProp & OnboardingStackNavigationProp
   checkIfCanProceed?: SettingsSectionItem['checkIfCanProceed']
+  testID?: string
 }
 
 export const SettingsRow = memo(
   ({
     page: {
       screen,
-      modal,
+      navigationModal,
       screenProps,
+      navigationProps,
       externalLink,
       disabled,
       action,
@@ -74,12 +95,12 @@ export const SettingsRow = memo(
       onToggle,
       isToggleEnabled,
       count,
+      testID,
     },
     navigation,
     checkIfCanProceed,
   }: SettingsRowProps): JSX.Element => {
     const colors = useSporeColors()
-    const dispatch = useDispatch()
 
     const handleRow = useCallback(async (): Promise<void> => {
       if (checkIfCanProceed && !checkIfCanProceed()) {
@@ -89,25 +110,27 @@ export const SettingsRow = memo(
       if (onToggle) {
         return
       } else if (screen) {
-        navigation.navigate(screen, screenProps)
-      } else if (modal) {
-        dispatch(openModal({ name: modal }))
+        // Type assignment to `any` is a workaround until we figure out how to
+        // properly type screen param. `navigate` function also brings some issues,
+        // where it accepts other screen's params, and not throws an error on required ones.
+        // biome-ignore lint/suspicious/noExplicitAny: Navigation types don't properly handle dynamic screen names
+        navigation.navigate(screen as any, screenProps)
+      } else if (navigationModal) {
+        navigate(navigationModal, navigationProps)
       } else if (externalLink) {
-        await openUri(externalLink)
+        await openUri({ uri: externalLink })
       }
-    }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, modal, dispatch, externalLink])
+    }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, navigationProps, navigationModal, externalLink])
 
     return (
-      <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
+      <TouchableArea disabled={Boolean(action)} testID={testID} onPress={handleRow}>
         <Flex grow row alignItems="center" gap="$spacing12" minHeight={40}>
           <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="$spacing12">
             <Flex centered height={32} width={32}>
               {icon}
             </Flex>
             <Flex fill grow alignItems="stretch">
-              <Text numberOfLines={1} variant="body1">
-                {text}
-              </Text>
+              <Text variant="body1">{text}</Text>
               {subText && (
                 <Text color="$neutral2" numberOfLines={1} variant="buttonLabel2">
                   {subText}
@@ -122,7 +145,7 @@ export const SettingsRow = memo(
           )}
           <RowRightContent
             screen={screen}
-            modal={modal}
+            navigationModal={navigationModal}
             externalLink={externalLink}
             disabled={disabled}
             action={action}
@@ -157,7 +180,7 @@ const LOADING_DIMENSIONS = {
 const RowRightContent = memo(
   ({
     screen,
-    modal,
+    navigationModal,
     externalLink,
     disabled,
     action,
@@ -167,7 +190,14 @@ const RowRightContent = memo(
     colors,
   }: Pick<
     SettingsSectionItem,
-    'screen' | 'modal' | 'externalLink' | 'disabled' | 'action' | 'currentSetting' | 'onToggle' | 'isToggleEnabled'
+    | 'screen'
+    | 'navigationModal'
+    | 'externalLink'
+    | 'disabled'
+    | 'action'
+    | 'currentSetting'
+    | 'onToggle'
+    | 'isToggleEnabled'
   > & {
     colors: ReturnType<typeof useSporeColors>
   }): JSX.Element | null => {
@@ -191,7 +221,7 @@ const RowRightContent = memo(
       )
     }
 
-    if (screen || modal) {
+    if (screen || navigationModal) {
       return (
         <Flex centered row>
           {currentSetting &&
@@ -211,7 +241,7 @@ const RowRightContent = memo(
                 />
               </Skeleton>
             ))}
-          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
+          <RotatableChevron color="$neutral3" direction="end" size="$icon.24" />
         </Flex>
       )
     }

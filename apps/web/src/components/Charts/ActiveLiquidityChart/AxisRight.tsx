@@ -1,17 +1,7 @@
-import { NumberValue, ScaleLinear, axisRight, Axis as d3Axis, select } from 'd3'
-import styled from 'lib/styled-components'
+import { axisRight, Axis as d3Axis, NumberValue, ScaleLinear, select } from 'd3'
 import { useMemo } from 'react'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-const StyledGroup = styled.g`
-  line {
-    display: none;
-  }
-
-  text {
-    color: ${({ theme }) => theme.neutral2};
-  }
-`
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
 
 const TEXT_Y_OFFSET = 5
 
@@ -25,23 +15,21 @@ const Axis = ({
   yScale: ScaleLinear<number, number>
 }) => {
   const axisRef = (axis: SVGGElement) => {
-    if (axis) {
-      select(axis)
-        .call(axisGenerator)
-        .call((g) => g.select('.domain').remove())
-        .call((g) =>
-          g.selectAll('text').attr('transform', function (d) {
-            const yCoordinate = yScale(d as number)
-            if (yCoordinate < TEXT_Y_OFFSET) {
-              return `translate(0, ${TEXT_Y_OFFSET})`
-            }
-            if (yCoordinate > height - TEXT_Y_OFFSET) {
-              return `translate(0, ${-TEXT_Y_OFFSET})`
-            }
-            return ''
-          }),
-        )
-    }
+    select(axis)
+      .call(axisGenerator)
+      .call((g) => g.select('.domain').remove())
+      .call((g) =>
+        g.selectAll('text').attr('transform', function (d) {
+          const yCoordinate = yScale(d as number)
+          if (yCoordinate < TEXT_Y_OFFSET) {
+            return `translate(0, ${TEXT_Y_OFFSET})`
+          }
+          if (yCoordinate > height - TEXT_Y_OFFSET) {
+            return `translate(0, ${-TEXT_Y_OFFSET})`
+          }
+          return ''
+        }),
+      )
   }
 
   return <g ref={axisRef} />
@@ -62,7 +50,7 @@ export const AxisRight = ({
   current?: number
   max?: number
 }) => {
-  const { formatNumber } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
   const tickValues = useMemo(() => {
     const minCoordinate = min ? yScale(min) : undefined
     const maxCoordinate = max ? yScale(max) : undefined
@@ -77,19 +65,19 @@ export const AxisRight = ({
   }, [current, max, min, yScale])
 
   return (
-    <StyledGroup transform={`translate(${offset}, 0)`}>
+    <g transform={`translate(${offset}, 0)`} className="axis-right">
       <Axis
         axisGenerator={axisRight(yScale)
           .tickValues(tickValues)
           .tickFormat((d) =>
-            formatNumber({
-              input: d as number,
+            formatNumberOrString({
+              value: d as number,
               type: NumberType.TokenQuantityStats,
             }),
           )}
         height={height}
         yScale={yScale}
       />
-    </StyledGroup>
+    </g>
   )
 }

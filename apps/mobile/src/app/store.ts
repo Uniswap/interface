@@ -1,18 +1,19 @@
 import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
 import { MMKV } from 'react-native-mmkv'
-import { Storage, persistReducer, persistStore } from 'redux-persist'
+import { persistReducer, persistStore, Storage } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
 import { rootMobileSaga } from 'src/app/saga'
-import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { isNonJestDev } from 'utilities/src/environment/constants'
+import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
+import { isNonTestDev } from 'utilities/src/environment/constants'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
+import { setReduxPersistor } from 'wallet/src/state/persistor'
 
 const storage = new MMKV()
 
-export const reduxStorage: Storage = {
+const reduxStorage: Storage = {
   setItem: (key, value) => {
     storage.set(key, value)
     return Promise.resolve(true)
@@ -46,14 +47,14 @@ const dataDogReduxEnhancer = createDatadogReduxEnhancer({
 
 const enhancers = [dataDogReduxEnhancer]
 
-if (isNonJestDev) {
+if (isNonTestDev) {
   const reactotron = require('src/../ReactotronConfig').default
   enhancers.push(reactotron.createEnhancer())
 }
 
-const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware]
+const middlewares: Middleware[] = [delegationListenerMiddleware.middleware]
 
-export const setupStore = (
+const setupStore = (
   preloadedState?: PreloadedState<MobileState>,
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
@@ -65,6 +66,6 @@ export const setupStore = (
     enhancers,
   })
 }
-export const store = setupStore()
 
-export const persistor = persistStore(store)
+export const store = setupStore()
+setReduxPersistor(persistStore(store))

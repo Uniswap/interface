@@ -8,7 +8,21 @@ jobs:
   deploy-to-prod:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: bullfrogsec/bullfrog@dcde5841b19b7ef693224207a7fdec67fce604db # v0.8.3
+        with:
+          # List of IPs to allow outbound connections to.
+          # By default, only localhost and IPs required for the essential operations of Github Actions are allowed.
+          # allowed-ips:|
+      
+          # List of domains to allow outbound connections to.
+          # Wildcards are accepted. For example, if allowing `*.google.com`, this will allow `www.google.com`, `console.cloud.google.com` but not `google.com`.
+          # By default, only domains required for essential operations of Github Actions and uploading job summaries are allowed.
+          # Refer to https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#communication-requirements-for-github-hosted-runners-and-github for additional domains that should be allowed for additional Github Actions features.
+          #allowed-domains: |
+          # The egress policy to enforce. Valid values are `audit` and `block`.
+          # Default: audit
+          egress-policy: audit
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: 🧷️ Get version
         uses: juliangruber/read-file-action@02bbba9876a8f870efd4ad64e3b9088d3fb94d4b
@@ -31,7 +45,7 @@ jobs:
           tag_prefix: ""
 
       - name: 🪽 Release
-        uses: actions/create-release@v1.1.0
+        uses: actions/create-release@c9ba6969f07ed90fae07e2e66100dd03f9b1a50e
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

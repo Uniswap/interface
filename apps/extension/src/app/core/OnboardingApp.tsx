@@ -3,44 +3,49 @@ import 'src/app/Global.css'
 import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, order matters
 
 import { useEffect } from 'react'
-import { RouteObject, RouterProvider, createHashRouter } from 'react-router-dom'
+import { createHashRouter, RouteObject, RouterProvider } from 'react-router'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { ClaimUnitagScreen } from 'src/app/features/onboarding/ClaimUnitagScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
-import {
-  CreateOnboardingSteps,
-  ImportOnboardingSteps,
-  OnboardingStepsProvider,
-  ResetSteps,
-  ScanOnboardingSteps,
-} from 'src/app/features/onboarding/OnboardingSteps'
-import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
-import { PasswordImport } from 'src/app/features/onboarding/PasswordImport'
-import { NameWallet } from 'src/app/features/onboarding/create/NameWallet'
 import { PasswordCreate } from 'src/app/features/onboarding/create/PasswordCreate'
-import { TestMnemonic } from 'src/app/features/onboarding/create/TestMnemonic'
-import { ViewMnemonic } from 'src/app/features/onboarding/create/ViewMnemonic'
 import { ImportMnemonic } from 'src/app/features/onboarding/import/ImportMnemonic'
+import { InitiatePasskeyAuth } from 'src/app/features/onboarding/import/InitiatePasskeyAuth'
+import { PasskeyImport } from 'src/app/features/onboarding/import/PasskeyImport'
+import { PasskeyImportContextProvider } from 'src/app/features/onboarding/import/PasskeyImportContextProvider'
+import { SelectImportMethod } from 'src/app/features/onboarding/import/SelectImportMethod'
 import { SelectWallets } from 'src/app/features/onboarding/import/SelectWallets'
 import { IntroScreen } from 'src/app/features/onboarding/intro/IntroScreen'
 import { UnsupportedBrowserScreen } from 'src/app/features/onboarding/intro/UnsupportedBrowserScreen'
+import {
+  CreateOnboardingSteps,
+  ImportOnboardingSteps,
+  ImportPasskeySteps,
+  OnboardingStepsProvider,
+  ResetSteps,
+  ScanOnboardingSteps,
+  SelectImportMethodSteps,
+} from 'src/app/features/onboarding/OnboardingSteps'
+import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
+import { PasswordImport } from 'src/app/features/onboarding/PasswordImport'
 import { ResetComplete } from 'src/app/features/onboarding/reset/ResetComplete'
 import { OTPInput } from 'src/app/features/onboarding/scan/OTPInput'
 import { ScanToOnboard } from 'src/app/features/onboarding/scan/ScanToOnboard'
 import { ScantasticContextProvider } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
+import { OnboardingNavigationProvider } from 'src/app/navigation/providers'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
-import { getReduxPersistor } from 'src/store/store'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
+import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
+import { getReduxPersistor } from 'wallet/src/state/persistor'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
 
@@ -64,26 +69,36 @@ const allRoutes = [
       <OnboardingStepsProvider
         key={OnboardingRoutes.Create}
         steps={{
+          [CreateOnboardingSteps.ClaimUnitag]: <ClaimUnitagScreen />,
           [CreateOnboardingSteps.Password]: <PasswordCreate />,
-          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
-          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
-          [CreateOnboardingSteps.Naming]: <NameWallet />,
-          [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
+          [CreateOnboardingSteps.Complete]: <Complete tryToClaimUnitag flow={ExtensionOnboardingFlow.New} />,
         }}
       />
     ),
   },
   {
-    path: OnboardingRoutes.Claim,
+    path: OnboardingRoutes.SelectImportMethod,
     element: (
       <OnboardingStepsProvider
-        key={OnboardingRoutes.Claim}
+        key={OnboardingRoutes.SelectImportMethod}
         steps={{
-          [CreateOnboardingSteps.ClaimUnitag]: <ClaimUnitagScreen />,
-          [CreateOnboardingSteps.Password]: <PasswordCreate />,
-          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
-          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
-          [CreateOnboardingSteps.Complete]: <Complete tryToClaimUnitag flow={ExtensionOnboardingFlow.New} />,
+          [SelectImportMethodSteps.SelectMethod]: <SelectImportMethod />,
+        }}
+      />
+    ),
+  },
+  {
+    path: OnboardingRoutes.ImportPasskey,
+    element: (
+      <OnboardingStepsProvider
+        ContainerComponent={PasskeyImportContextProvider}
+        key={OnboardingRoutes.ImportPasskey}
+        steps={{
+          [ImportPasskeySteps.InitiatePasskeyAuth]: <InitiatePasskeyAuth />,
+          [ImportPasskeySteps.PasskeyImport]: <PasskeyImport />,
+          [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Passkey} />,
+          [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Passkey} />,
+          [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Passkey} />,
         }}
       />
     ),
@@ -180,10 +195,14 @@ export default function OnboardingApp(): JSX.Element {
   return (
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
-        <UnitagUpdaterContextProvider>
-          <PrimaryAppInstanceDebuggerLazy />
-          <RouterProvider router={router} />
-        </UnitagUpdaterContextProvider>
+        <OnboardingNavigationProvider>
+          <WalletUniswapProvider>
+            <AccountsStoreContextProvider>
+              <PrimaryAppInstanceDebuggerLazy />
+              <RouterProvider router={router} />
+            </AccountsStoreContextProvider>
+          </WalletUniswapProvider>
+        </OnboardingNavigationProvider>
       </BaseAppContainer>
     </PersistGate>
   )

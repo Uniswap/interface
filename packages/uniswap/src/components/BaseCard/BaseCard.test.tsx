@@ -64,7 +64,7 @@ describe(BaseCard.Header, () => {
 
   describe('onPress', () => {
     it('calls onPress if onPress is passed and title is pressed', () => {
-      const onPress = jest.fn()
+      const onPress = vi.fn()
       const { getByTestId } = render(<BaseCard.Header testID="header" title={title} onPress={onPress} />)
 
       expect(onPress).toHaveBeenCalledTimes(0)
@@ -111,7 +111,7 @@ describe(BaseCard.EmptyState, () => {
     })
 
     it('calls onPress when button is pressed', () => {
-      const onPress = jest.fn()
+      const onPress = vi.fn()
       const { getByText } = render(
         <BaseCard.EmptyState buttonLabel="buttonLabel" description="description" onPress={onPress} />,
       )
@@ -134,7 +134,7 @@ describe(BaseCard.EmptyState, () => {
     })
 
     it('calls onPressAdditional when additional button is pressed', () => {
-      const onPressAdditional = jest.fn()
+      const onPressAdditional = vi.fn()
       const { getByText } = render(
         <BaseCard.EmptyState
           additionalButtonLabel="additionalButtonLabel"
@@ -181,7 +181,7 @@ describe(BaseCard.ErrorState, () => {
     })
 
     it('calls onRetry when retry button is pressed', () => {
-      const onRetry = jest.fn()
+      const onRetry = vi.fn()
       const { getByText } = render(
         <BaseCard.ErrorState description="description" retryButtonLabel="retryButtonLabel" onRetry={onRetry} />,
       )
@@ -232,19 +232,19 @@ describe(BaseCard.InlineErrorState, () => {
     })
 
     it('renders default retry button when retryButtonLabel is not passed', () => {
-      const { queryByText } = render(<BaseCard.InlineErrorState onRetry={jest.fn()} />)
+      const { queryByText } = render(<BaseCard.InlineErrorState onRetry={vi.fn()} />)
 
       expect(queryByText('Retry')).toBeTruthy()
     })
 
     it('renders custom retry button when retryButtonLabel is passed', () => {
-      const { queryByText } = render(<BaseCard.InlineErrorState retryButtonLabel="custom-label" onRetry={jest.fn()} />)
+      const { queryByText } = render(<BaseCard.InlineErrorState retryButtonLabel="custom-label" onRetry={vi.fn()} />)
 
       expect(queryByText('custom-label')).toBeTruthy()
     })
 
     it('calls onRetry when retry button is pressed', () => {
-      const onRetry = jest.fn()
+      const onRetry = vi.fn()
       const { getByText } = render(<BaseCard.InlineErrorState onRetry={onRetry} />)
 
       expect(onRetry).toHaveBeenCalledTimes(0)

@@ -1,11 +1,11 @@
-import { PersistState } from 'redux-persist'
-import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
-import { SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
+import { type PersistState } from 'redux-persist'
+import { type TokensState } from 'uniswap/src/features/tokens/warnings/slice/slice'
+import { type SerializedTokenMap, type TokenDismissInfo } from 'uniswap/src/features/tokens/warnings/slice/types'
 
 export type PersistAppStateV16 = {
   _persist: PersistState
   user?: {
-    tokens: SerializedTokenMap
+    tokens: SerializedTokenMap<TokenDismissInfo>
   }
   tokens?: TokensState
 }
@@ -26,7 +26,7 @@ export const migration16 = (state: PersistAppStateV16 | undefined) => {
   }
 
   // remove old tokens slice
-  delete newState.user.tokens
+  delete newState.user?.tokens
 
   return { ...newState, _persist: { ...state._persist, version: 16 } }
 }

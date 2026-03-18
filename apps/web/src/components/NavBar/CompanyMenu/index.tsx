@@ -1,36 +1,25 @@
-import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
-import { NavIcon } from 'components/Logo/NavIcon'
-import { MenuDropdown } from 'components/NavBar/CompanyMenu/MenuDropdown'
-import { MobileMenuDrawer } from 'components/NavBar/CompanyMenu/MobileMenuDrawer'
-import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import styled from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { Popover, Text, useIsTouchDevice, useMedia } from 'ui/src'
+import { Link, useLocation } from 'react-router'
+import { Flex, Popover, styled, Text, useIsTouchDevice, useMedia } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons/Hamburger'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ArrowChangeDown } from '~/components/Icons/ArrowChangeDown'
+import { NavIcon } from '~/components/Logo/NavIcon'
+import { MenuDropdown } from '~/components/NavBar/CompanyMenu/MenuDropdown'
+import { MobileMenuDrawer } from '~/components/NavBar/CompanyMenu/MobileMenuDrawer'
+import { useIsMobileDrawer } from '~/components/NavBar/ScreenSizes'
 
-const ArrowDown = styled(ArrowChangeDown)<{ $isActive: boolean }>`
-  height: 100%;
-  color: ${({ $isActive, theme }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-`
-const Trigger = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px;
-  cursor: pointer;
-  &:hover {
-    ${ArrowDown} {
-      color: ${({ theme }) => theme.neutral1} !important;
-    }
-  }
-`
-const UniIcon = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`
+const ArrowDownWrapper = styled(Text, {
+  color: '$neutral2',
+  '$group-hover': { color: '$neutral1' },
+  variants: {
+    open: {
+      true: { color: '$neutral1' },
+    },
+  },
+})
 
 export function CompanyMenu() {
   const popoverRef = useRef<Popover>(null)
@@ -38,37 +27,52 @@ export function CompanyMenu() {
   const isMobileDrawer = useIsMobileDrawer()
   const isLargeScreen = !media.xxl
   const location = useLocation()
-  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +popoverRef
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
   }, [popoverRef])
-  useEffect(() => closeMenu(), [location, closeMenu])
+  // biome-ignore lint/correctness/useExhaustiveDependencies: location dependency is sufficient for this effect
+  useEffect(() => {
+    // Immediately reset state to prevent flash during transitions
+    setIsOpen(false)
+    closeMenu()
+  }, [location, closeMenu])
 
-  const handleLogoClick = useCallback(() => {
-    navigate({
-      pathname: '/',
-      search: '?intro=true',
-    })
-  }, [navigate])
   const isTouchDevice = useIsTouchDevice()
 
   return (
-    <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
-      <Popover.Trigger data-testid="nav-company-menu">
-        <Trigger>
-          <UniIcon onClick={handleLogoClick} data-testid="nav-uniswap-logo">
-            <NavIcon />
-            {isLargeScreen && (
-              <Text variant="subheading1" color="$accent1" userSelect="none">
-                Uniswap
-              </Text>
-            )}
-          </UniIcon>
+    <Popover ref={popoverRef} placement="bottom" hoverable={!media.xl} stayInFrame allowFlip onOpenChange={setIsOpen}>
+      <Popover.Trigger data-testid={TestID.NavCompanyMenu}>
+        <Flex
+          row
+          alignItems="center"
+          gap="$gap4"
+          p="$spacing8"
+          cursor="pointer"
+          group
+          $platform-web={{ containerType: 'normal' }}
+        >
+          <Trace logPress element={ElementName.NavbarCompanyMenuLogo}>
+            <Link to="/?intro=true" style={{ textDecoration: 'none' }}>
+              <Flex row alignItems="center" gap="$gap4" data-testid={TestID.NavUniswapLogo}>
+                <NavIcon />
+                {isLargeScreen && (
+                  <Text variant="subheading1" color="$accent1" userSelect="none">
+                    Uniswap
+                  </Text>
+                )}
+              </Flex>
+            </Link>
+          </Trace>
           {(media.md || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          {!media.md && !isTouchDevice && <ArrowDown $isActive={isOpen} width="12px" height="12px" />}
-        </Trigger>
+          {!media.md && !isTouchDevice && (
+            <ArrowDownWrapper open={isOpen}>
+              <ArrowChangeDown width="12px" height="12px" />
+            </ArrowDownWrapper>
+          )}
+        </Flex>
       </Popover.Trigger>
       {isMobileDrawer ? <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} /> : <MenuDropdown close={closeMenu} />}
     </Popover>

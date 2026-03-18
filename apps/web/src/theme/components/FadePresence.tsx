@@ -1,6 +1,6 @@
-import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import styled, { css, keyframes } from 'lib/styled-components'
 import { useRef } from 'react'
+import { useUnmountingAnimation } from '~/hooks/useUnmountingAnimation'
+import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
 const fadeIn = keyframes`
   from { opacity: 0;}
@@ -14,7 +14,7 @@ const fadeAndTranslateUpIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 `
-export const fadeInAnimation = css<{ $transitionDuration?: string }>`
+const fadeInAnimation = css<{ $transitionDuration?: string }>`
   animation: ${fadeIn}
     ${({ theme, $transitionDuration }) =>
       `${$transitionDuration ?? theme.transition.duration.medium} ${theme.transition.timing.inOut}`}
@@ -113,7 +113,7 @@ function getAnimationDelayCss($animationDelay: string, animationType: FadePresen
   }
 }
 
-const FadeWrapper = styled.div<{
+const FadeWrapper = deprecatedStyled.div<{
   animationType: FadePresenceAnimationType
   $transitionDuration?: string
   $animationDelay?: string
@@ -153,7 +153,7 @@ export function FadePresence({
   $zIndex?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  useUnmountingAnimation(ref, () => AnimationType.EXITING)
+  useUnmountingAnimation({ node: ref, getAnimatingClass: () => AnimationType.EXITING })
   return (
     <FadeWrapper
       ref={ref}

@@ -1,63 +1,11 @@
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
-import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
+import { Currency } from '@uniswap/sdk-core'
+import { createContext, Dispatch, SetStateAction } from 'react'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-
-export type SwapInfo = {
-  currencies: { [field in CurrencyField]?: Currency }
-  currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }
-  inputTax: Percent
-  outputTax: Percent
-  outputFeeFiatValue?: number
-  parsedAmount?: CurrencyAmount<Currency>
-  inputError?: ReactNode
-  trade: {
-    trade?: InterfaceTrade
-    state: TradeState
-    uniswapXGasUseEstimateUSD?: number
-    error?: any
-    swapQuoteLatency?: number
-  }
-  allowedSlippage: Percent
-  autoSlippage: Percent
-}
-
-type SwapContextType = {
-  swapState: SwapState
-  derivedSwapInfo: SwapInfo
-  setSwapState: Dispatch<SetStateAction<SwapState>>
-}
-
-export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
-  currencies: {},
-  currencyBalances: {},
-  inputTax: new Percent(0),
-  outputTax: new Percent(0),
-  autoSlippage: new Percent(0),
-  allowedSlippage: new Percent(0),
-  trade: {
-    state: TradeState.LOADING,
-  },
-})
-
-export const initialSwapState: SwapState = {
-  typedValue: '',
-  independentField: CurrencyField.INPUT,
-}
-
-export const SwapContext = createContext<SwapContextType>({
-  swapState: initialSwapState,
-  derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
-  setSwapState: () => undefined,
-})
+import { RouterPreference } from '~/state/routing/types'
 
 type SwapAndLimitContextType = {
   currencyState: CurrencyState
-  prefilledState: {
-    inputCurrency?: Currency
-    outputCurrency?: Currency
-  }
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
@@ -69,17 +17,13 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     outputCurrency: undefined,
   },
   setCurrencyState: () => undefined,
-  prefilledState: {
-    inputCurrency: undefined,
-    outputCurrency: undefined,
-  },
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
 })
 
 export interface SerializedCurrencyState {
-  inputCurrencyId?: string
-  outputCurrencyId?: string
+  inputCurrencyAddress?: string
+  outputCurrencyAddress?: string
   value?: string
   field?: string
   chainId?: number

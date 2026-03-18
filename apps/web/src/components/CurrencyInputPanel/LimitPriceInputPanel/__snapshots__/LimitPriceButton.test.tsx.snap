@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = `
+exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] = `
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -10,101 +10,67 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
 
 .c1 {
   width: unset;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 1px;
 }
 
 .c3 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c2 {
-  color: #222222;
+  color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: #22222212;
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px 0px 0px 999px;
-  border-top: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-left: 1px solid #22222212;
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-left: 1px solid rgba(19, 19, 19, 0.08);
   border-right: 0px;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c2:hover {
+.c2 :hover {
   opacity: 0.6;
 }
 
-.c2:active {
+.c2 :active {
   opacity: 0.4;
 }
 
 .c4 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  background-color: #22222212;
-  color: #7D7D7D;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  background-color: rgba(19, 19, 19, 0.08);
+  color: rgba(19, 19, 19, 0.63);
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   text-align: center;
   padding: 6px 6px 6px 4px;
   height: 28px;
   border-radius: 0px 999px 999px 0px;
-  border-top: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-right: 1px solid #22222212;
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-right: 1px solid rgba(19, 19, 19, 0.08);
   border-left: 1px solid transparent;
 }
 
-.c4:hover {
+.c4 :hover {
   opacity: 0.6;
 }
 
-.c4:active {
+.c4 :active {
   opacity: 0.4;
 }
 
@@ -112,64 +78,44 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    class="c0 c1"
+    gap="1px"
+    width="unset"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <button
+      class="c2"
     >
       <div
-        class="c0 c1"
-        width="unset"
+        class="c3 css-1guhfcl"
       >
-        <button
-          class="c2"
-        >
-          <div
-            class="c3 css-1guhfcl"
-          >
-            +
-            10%
-          </div>
-        </button>
-        <button
-          class="c4"
-        >
-          <svg
-            fill="none"
-            height="16"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="16"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line
-              x1="18"
-              x2="6"
-              y1="6"
-              y2="18"
-            />
-            <line
-              x1="6"
-              x2="18"
-              y1="6"
-              y2="18"
-            />
-          </svg>
-        </button>
+        +
+        10%
       </div>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+    </button>
+    <button
+      class="c4"
+    >
+      <svg
+        fill="none"
+        stroke-width="8"
+        style="width: 16px; height: 16px; color: currentColor;"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negative change 1`] = `
+exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, negative change 1`] = `
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -179,101 +125,67 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
 
 .c1 {
   width: unset;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 1px;
 }
 
 .c3 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c2 {
-  color: #222222;
+  color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: #22222212;
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px 0px 0px 999px;
-  border-top: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-left: 1px solid #22222212;
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-left: 1px solid rgba(19, 19, 19, 0.08);
   border-right: 0px;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c2:hover {
+.c2 :hover {
   opacity: 0.6;
 }
 
-.c2:active {
+.c2 :active {
   opacity: 0.4;
 }
 
 .c4 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  background-color: #22222212;
-  color: #7D7D7D;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  background-color: rgba(19, 19, 19, 0.08);
+  color: rgba(19, 19, 19, 0.63);
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   text-align: center;
   padding: 6px 6px 6px 4px;
   height: 28px;
   border-radius: 0px 999px 999px 0px;
-  border-top: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-right: 1px solid #22222212;
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-right: 1px solid rgba(19, 19, 19, 0.08);
   border-left: 1px solid transparent;
 }
 
-.c4:hover {
+.c4 :hover {
   opacity: 0.6;
 }
 
-.c4:active {
+.c4 :active {
   opacity: 0.4;
 }
 
@@ -281,101 +193,67 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <div
+    class="c0 c1"
+    gap="1px"
+    width="unset"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <button
+      class="c2"
     >
       <div
-        class="c0 c1"
-        width="unset"
+        class="c3 css-1guhfcl"
       >
-        <button
-          class="c2"
-        >
-          <div
-            class="c3 css-1guhfcl"
-          >
-            -10%
-          </div>
-        </button>
-        <button
-          class="c4"
-        >
-          <svg
-            fill="none"
-            height="16"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="16"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line
-              x1="18"
-              x2="6"
-              y1="6"
-              y2="18"
-            />
-            <line
-              x1="6"
-              x2="18"
-              y1="6"
-              y2="18"
-            />
-          </svg>
-        </button>
+        -10.00%
       </div>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+    </button>
+    <button
+      class="c4"
+    >
+      <svg
+        fill="none"
+        stroke-width="8"
+        style="width: 16px; height: 16px; color: currentColor;"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected false 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 false false 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: #7D7D7D;
+  color: rgba(19, 19, 19, 0.63);
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid #22222212;
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -383,68 +261,46 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <button
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1 css-1guhfcl"
     >
-      <button
-        class="c0"
-      >
-        <div
-          class="c1 css-1guhfcl"
-        >
-          Market
-        </div>
-      </button>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+      Market
+    </div>
+  </button>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected true 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 false true 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: #222222;
+  color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: #22222212;
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px;
-  border: 1px solid #22222212;
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -452,124 +308,82 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <button
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1 css-1guhfcl"
     >
-      <button
-        class="c0"
-      >
-        <div
-          class="c1 css-1guhfcl"
-        >
-          Market
-        </div>
-      </button>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+      Market
+    </div>
+  </button>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected false 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 true false 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: #7D7D7D;
+  color: rgba(19, 19, 19, 0.63);
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid #22222212;
+  border: 1px solid rgba(19, 19, 19, 0.08);
 }
 
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <button
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1 css-1guhfcl"
     >
-      <button
-        class="c0"
-      >
-        <div
-          class="c1 css-1guhfcl"
-        >
-          Market
-        </div>
-      </button>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+      Market
+    </div>
+  </button>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected true 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 5 false true 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: #222222;
+  color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: #22222212;
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px;
-  border: 1px solid #22222212;
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -577,126 +391,84 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <button
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1 css-1guhfcl"
     >
-      <button
-        class="c0"
-      >
-        <div
-          class="c1 css-1guhfcl"
-        >
-          +
-          5%
-        </div>
-      </button>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+      +
+      5%
+    </div>
+  </button>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected false 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 5 true false 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: #7D7D7D;
+  color: rgba(19, 19, 19, 0.63);
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid #22222212;
+  border: 1px solid rgba(19, 19, 19, 0.08);
 }
 
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <button
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1 css-1guhfcl"
     >
-      <button
-        class="c0"
-      >
-        <div
-          class="c1 css-1guhfcl"
-        >
-          +
-          5%
-        </div>
-      </button>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+      +
+      5%
+    </div>
+  </button>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;
 
-exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selected true 1`] = `
+exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 10 false true 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: #222222;
+  color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: #22222212;
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px;
-  border: 1px solid #22222212;
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -704,26 +476,18 @@ exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selecte
   class=""
   style="display: contents;"
 >
-  <span
-    class=" _dsp_contents"
+  <button
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1 css-1guhfcl"
     >
-      <button
-        class="c0"
-      >
-        <div
-          class="c1 css-1guhfcl"
-        >
-          +
-          10%
-        </div>
-      </button>
-      <div
-        style="display: contents;"
-      />
-    </span>
-  </span>
+      +
+      10%
+    </div>
+  </button>
+  <div
+    style="display: contents;"
+  />
 </span>
 `;

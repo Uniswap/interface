@@ -1,27 +1,25 @@
 import { useStartProfiler } from '@shopify/react-native-performance'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { navigate } from 'src/app/navigation/rootNavigation'
+import { TabProps } from 'src/components/layout/TabHelpers'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { TabProps } from 'src/components/layout/TabHelpers'
+import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex } from 'ui/src'
 import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { PortfolioEmptyState } from 'uniswap/src/components/portfolio/PortfolioEmptyState'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { PortfolioEmptyState } from 'wallet/src/features/portfolio/PortfolioEmptyState'
-import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
-
-export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
+import { usePortfolioEmptyStateBackground } from 'wallet/src/components/portfolio/empty'
 
 // ignore ref type
 
@@ -44,7 +42,8 @@ export const TokensTab = memo(
     const dispatch = useDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
     const startProfilerTimer = useStartProfiler()
-    const cexTransferProviders = useCexTransferProviders()
+    const onPressReceive = useOpenReceiveModal()
+    const backgroundImageWrapperCallback = usePortfolioEmptyStateBackground()
 
     const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
@@ -61,30 +60,18 @@ export const TokensTab = memo(
     }, [dispatch])
 
     const onPressBuy = useCallback(() => {
-      dispatch(
-        openModal({ name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator }),
-      )
+      disableForKorea
+        ? navigate(ModalName.KoreaCexTransferInfoModal)
+        : dispatch(
+            openModal({
+              name: ModalName.FiatOnRampAggregator,
+            }),
+          )
     }, [disableForKorea, dispatch])
 
-    const onPressReceive = useCallback(() => {
-      dispatch(
-        openModal(
-          cexTransferProviders.length > 0
-            ? {
-                name: ModalName.ReceiveCryptoModal,
-                initialState: cexTransferProviders,
-              }
-            : {
-                name: ModalName.WalletConnectScan,
-                initialState: ScannerModalState.WalletQr,
-              },
-        ),
-      )
-    }, [cexTransferProviders, dispatch])
-
     const onPressImport = useCallback(() => {
-      dispatch(openModal({ name: ModalName.AccountSwitcher }))
-    }, [dispatch])
+      navigate(ModalName.AccountSwitcher)
+    }, [])
 
     const renderEmpty = useMemo((): JSX.Element => {
       // Show different empty state on external profile pages
@@ -98,16 +85,22 @@ export const TokensTab = memo(
           />
         </Flex>
       ) : (
-        <PortfolioEmptyState onPressBuy={onPressBuy} onPressImport={onPressImport} onPressReceive={onPressReceive} />
+        <PortfolioEmptyState
+          backgroundImageWrapperCallback={backgroundImageWrapperCallback}
+          onPressBuy={onPressBuy}
+          onPressImport={onPressImport}
+          onPressReceive={onPressReceive}
+        />
       )
     }, [
       isExternalProfile,
+      containerProps?.emptyComponentStyle,
+      t,
       onPressAction,
       onPressBuy,
       onPressImport,
       onPressReceive,
-      containerProps?.emptyComponentStyle,
-      t,
+      backgroundImageWrapperCallback,
     ])
 
     return (

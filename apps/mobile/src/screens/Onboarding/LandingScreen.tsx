@@ -1,30 +1,30 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import { openModal } from 'src/features/modals/modalSlice'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { isE2EMode } from 'utilities/src/environment/constants'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { LANDING_ANIMATION_DURATION, LandingBackground } from 'wallet/src/components/landing/LandingBackground'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
@@ -38,10 +38,8 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
 
   useEffect(() => {
     // disables looping animation during e2e tests which was preventing js thread from idle
-    if (!isE2EMode) {
-      actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
-    }
-  }, [actionButtonsOpacity])
+    actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
+  }, [])
 
   // Disables testnet mode on mount if enabled (eg upon removing a wallet)
   useEffect(() => {
@@ -84,6 +82,8 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
     })
   }
 
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+
   return (
     <ReactNavigationPerformanceView interactive screenName={OnboardingScreens.Landing}>
       <Screen backgroundColor="$surface1" edges={['bottom']} onLayout={hideSplashScreen}>
@@ -95,25 +95,22 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
             <Flex grow $short={{ gap: '$spacing16' }} gap="$spacing24" mx="$spacing16">
               <Trace logPress element={ElementName.CreateAccount}>
                 <Flex centered row>
-                  <TouchableArea
-                    alignItems="center"
-                    backgroundColor="$accent1"
-                    borderRadius="$rounded20"
+                  <Button
+                    fill={false}
+                    variant="branded"
                     flexShrink={1}
                     hitSlop={16}
-                    px="$spacing36"
-                    py="$spacing16"
-                    scaleTo={0.97}
                     shadowColor="$accent1"
                     shadowOpacity={0.4}
                     shadowRadius="$spacing8"
+                    size="large"
                     testID={TestID.CreateAccount}
                     onPress={onPressCreateWallet}
                   >
-                    <Text color="$white" variant="buttonLabel1">
-                      {t('onboarding.landing.button.create')}
-                    </Text>
-                  </TouchableArea>
+                    {isEmbeddedWalletEnabled
+                      ? t('onboarding.landing.button.createAccount')
+                      : t('onboarding.landing.button.create')}
+                  </Button>
                 </Flex>
               </Trace>
               <Trace logPress element={ElementName.ImportAccount}>
@@ -123,7 +120,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                   testID={TestID.ImportAccount}
                   onLongPress={async (): Promise<void> => {
                     if (isDevEnv()) {
-                      dispatch(openModal({ name: ModalName.Experiments }))
+                      navigate(ModalName.Experiments)
                     }
                   }}
                   onPress={onPressImportWallet}
@@ -133,7 +130,9 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                     color="$accent1"
                     variant="buttonLabel1"
                   >
-                    {t('onboarding.landing.button.add')}
+                    {isEmbeddedWalletEnabled
+                      ? t('onboarding.intro.button.logInOrImport')
+                      : t('onboarding.landing.button.add')}
                   </Text>
                 </TouchableArea>
               </Trace>

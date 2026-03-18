@@ -1,7 +1,7 @@
 import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { DDRumAction } from 'utilities/src/logger/datadog/datadogEvents'
 
-export function logContextUpdate(contextName: string, newState: unknown, _isDatadogEnabled: boolean): void {
+export function logContextUpdate(contextName: string, newState: unknown): void {
   if (__DEV__) {
     return
   }

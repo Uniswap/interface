@@ -1,38 +1,21 @@
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
 import {
-  UnitagAddressRequest,
-  UnitagAddressResponse,
-  UnitagAddressesRequest,
-  UnitagAddressesResponse,
-  UnitagClaimEligibilityRequest,
-  UnitagClaimEligibilityResponse,
-  UnitagUsernameRequest,
-  UnitagUsernameResponse,
-} from 'uniswap/src/features/unitags/types'
+  createFetchClient,
+  createUnitagsApiClient,
+  getCloudflareApiBaseUrl,
+  provideSessionService,
+  TrafficFlows,
+} from '@universe/api'
+import { getConfig } from '@universe/config'
+import { getIsSessionServiceEnabled } from '@universe/gating'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
-export const UNITAGS_API_CACHE_KEY = 'UnitagsApi'
-
-const UnitagsApiClient = createApiClient({
-  baseUrl: uniswapUrls.unitagsApiUrl,
+const UnitagsApiFetchClient = createFetchClient({
+  baseUrl:
+    getConfig().unitagsApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.Unitags, postfix: 'v2/unitags' }),
+  getSessionService: () =>
+    provideSessionService({ getBaseUrl: () => uniswapUrls.apiBaseUrlV2, getIsSessionServiceEnabled }),
 })
 
-export async function fetchUsername(params: UnitagUsernameRequest): Promise<UnitagUsernameResponse> {
-  return await UnitagsApiClient.get<UnitagUsernameResponse>('/username', { params })
-}
-
-export async function fetchAddress(params: UnitagAddressRequest): Promise<UnitagAddressResponse> {
-  return await UnitagsApiClient.get<UnitagAddressResponse>('/address', { params })
-}
-
-export async function fetchAddresses({ addresses }: UnitagAddressesRequest): Promise<UnitagAddressesResponse> {
-  return await UnitagsApiClient.get<UnitagAddressesResponse>(
-    `/addresses?addresses=${encodeURIComponent(addresses.join(','))}`,
-  )
-}
-
-export async function fetchClaimEligibility(
-  params: UnitagClaimEligibilityRequest,
-): Promise<UnitagClaimEligibilityResponse> {
-  return await UnitagsApiClient.get<UnitagClaimEligibilityResponse>('/claim/eligibility', { params })
-}
+export const UnitagsApiClient = createUnitagsApiClient({
+  fetchClient: UnitagsApiFetchClient,
+})

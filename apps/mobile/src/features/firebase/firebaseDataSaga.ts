@@ -6,15 +6,15 @@ import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Language } from 'uniswap/src/features/language/constants'
-import { getLocale } from 'uniswap/src/features/language/hooks'
+import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
 import {
   EditAccountAction,
-  TogglePushNotificationParams,
   editAccountActions,
+  TogglePushNotificationParams,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { makeSelectAccountNotificationSetting, selectAccounts } from 'wallet/src/features/wallet/selectors'
@@ -152,7 +152,7 @@ function* addAccountToFirebase(account: Account) {
   }
 }
 
-export function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean | undefined) {
+function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean | undefined) {
   try {
     if (!notificationsEnabled) {
       return
@@ -166,7 +166,7 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
   }
 }
 
-export function* renameAccountInFirebase(address: Address | undefined, newName: string) {
+function* renameAccountInFirebase(address: Address | undefined, newName: string) {
   if (!address) {
     throw new Error('Address is required for renameAccountInFirebase')
   }
@@ -178,7 +178,7 @@ export function* renameAccountInFirebase(address: Address | undefined, newName: 
   }
 }
 
-export function* toggleFirebaseNotificationSettings({ address, enabled }: TogglePushNotificationParams) {
+function* toggleFirebaseNotificationSettings({ address, enabled }: TogglePushNotificationParams) {
   if (!address) {
     throw new Error('Address is required for toggleFirebaseNotificationSettings')
   }
@@ -258,7 +258,7 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
   try {
     const firebaseApp = firebase.app()
     const pushId = await getOneSignalUserIdOrError()
-    const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
+    const metadataRef = getFirestoreMetadataRef({ firebaseApp, address, pushId })
 
     // Firestore does not support updating properties with an `undefined` value so must strip them out
     const metadataWithDefinedPropsOnly = getKeys(metadata).reduce((obj: Record<string, unknown>, prop) => {
@@ -278,6 +278,6 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
 async function deleteFirebaseMetadata(address: Address): Promise<void> {
   const firebaseApp = firebase.app()
   const pushId = await getOneSignalUserIdOrError()
-  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
+  const metadataRef = getFirestoreMetadataRef({ firebaseApp, address, pushId })
   await metadataRef.delete()
 }

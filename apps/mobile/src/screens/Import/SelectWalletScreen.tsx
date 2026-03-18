@@ -1,20 +1,27 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import React, { ComponentProps, useCallback } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { DeprecatedButton, Flex, Loader, useLayoutAnimationOnChange } from 'ui/src'
+import { Button, Flex, Loader, Text, TouchableArea, useLayoutAnimationOnChange } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
+import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+
+const ANIMATION_DURATION = 300
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectWallet>
 
@@ -40,7 +47,10 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     await selectImportedAccounts(selectedAddresses)
 
     navigation.navigate({
-      name: params?.importType === ImportType.Restore ? OnboardingScreens.Notifications : OnboardingScreens.Backup,
+      name:
+        params.importType === ImportType.Restore || params.importType === ImportType.Passkey
+          ? OnboardingScreens.Notifications
+          : OnboardingScreens.Backup,
       params,
       merge: true,
     })
@@ -51,6 +61,21 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     : t('account.wallet.select.title_one', { count: importableAccounts?.length ?? 0 })
 
   const subtitle = isLoading ? t('account.wallet.select.loading.subtitle') : undefined
+
+  const smartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+
+  const highlightComponent = <CustomHighlightText />
+
+  const isContinueButtonDisabled = isLoading || !!showError || selectedAddresses.length === 0
+
+  const showSmartWalletDisclaimer = smartWalletEnabled && !isContinueButtonDisabled
+
+  const opacityStyle = useAnimatedStyle(
+    () => ({
+      opacity: withTiming(showSmartWalletDisclaimer ? 1 : 0, { duration: ANIMATION_DURATION }),
+    }),
+    [showSmartWalletDisclaimer],
+  )
 
   return (
     <>
@@ -72,15 +97,19 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             <Loader.Wallets repeat={5} />
           </Flex>
         ) : (
-          <ScrollView>
+          <ScrollView testID={TestID.SelectWalletScreenLoaded}>
             <Flex height="$spacing12" />
-            <Flex gap="$spacing12">
+            <Flex gap="$gap12">
               {importableAccounts?.map((account, i) => {
                 const { address, balance } = account
+                // prevents flickering and incorrect width calculation for long wallet names on Android
+                // it's not possible to deselect last wallet
+                if (selectedAddresses.length === 0) {
+                  return null
+                }
                 return (
-                  <Flex key={address} px="$spacing16">
+                  <Flex key={i} px="$spacing16">
                     <WalletPreviewCard
-                      key={address}
                       address={address}
                       balance={balance}
                       hideSelectionCircle={isOnlyOneAccount}
@@ -95,17 +124,52 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             </Flex>
           </ScrollView>
         )}
+        <Animated.View
+          style={[
+            opacityStyle,
+            {
+              marginBottom: spacing.spacing16,
+              marginHorizontal: spacing.spacing24,
+            },
+          ]}
+        >
+          <Trace logPress element={ElementName.SmartWalletDisclaimer}>
+            <TouchableArea
+              flexDirection="row"
+              gap="$gap8"
+              pt="$padding8"
+              onPress={(): void => {
+                navigate(ModalName.SmartWalletInfoModal)
+              }}
+            >
+              <Text color="$neutral2" variant="body4" textAlign="center" flexGrow={1}>
+                <Trans
+                  key="smartWalletDisclaimer"
+                  components={{ highlight: highlightComponent }}
+                  i18nKey="account.wallet.select.smartWalletDisclaimer"
+                />
+              </Text>
+            </TouchableArea>
+          </Trace>
+        </Animated.View>
         <Flex opacity={showError ? 0 : 1} px="$spacing16">
-          <DeprecatedButton
-            isDisabled={isLoading || !!showError || selectedAddresses.length === 0}
-            testID={TestID.Next}
-            size="large"
-            onPress={onSubmit}
-          >
-            {t('common.button.continue')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button
+              isDisabled={isContinueButtonDisabled}
+              variant="branded"
+              size="large"
+              testID={TestID.Continue}
+              onPress={onSubmit}
+            >
+              {t('common.button.continue')}
+            </Button>
+          </Flex>
         </Flex>
       </OnboardingScreen>
     </>
   )
+}
+
+function CustomHighlightText(props: ComponentProps<typeof Text>): JSX.Element {
+  return <Text variant="buttonLabel4" color="$neutral1" {...props} />
 }

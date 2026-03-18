@@ -1,11 +1,17 @@
 import { useNavigation } from '@react-navigation/core'
-import { default as React, useCallback, useMemo, useState } from 'react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { SvgProps } from 'react-native-svg'
-import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
+import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
+import { ForceReduxDataLossRow } from 'src/components/Settings/ForceReduxDataLossRow'
+import { SettingsList } from 'src/components/Settings/lists/SettingsList'
+import { SectionData } from 'src/components/Settings/lists/types'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
 import { ResetBehaviorHistoryRow } from 'src/components/Settings/ResetBehaviorHistoryRow'
 import {
@@ -15,9 +21,6 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { WalletSettings } from 'src/components/Settings/WalletSettings'
-import { SettingsList } from 'src/components/Settings/lists/SettingsList'
-import { SectionData } from 'src/components/Settings/lists/types'
-import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
 import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { useBiometricName } from 'src/features/biometricsSettings/hooks'
@@ -25,46 +28,50 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { useWalletRestore } from 'src/features/wallet/hooks'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
+import { useAdvancedSettingsMenuState } from 'src/features/settings/hooks/useAdvancedSettingsMenuState'
+import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
+import { importFromCloudBackupOption, restoreFromCloudBackupOption } from 'src/screens/Import/constants'
 import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
-import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
-import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
-import FaceIdIcon from 'ui/src/assets/icons/faceid.svg'
-import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
-import LockIcon from 'ui/src/assets/icons/lock.svg'
-import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
-import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import {
   Bell,
+  BookOpen,
   Chart,
+  Cloud,
   Coins,
-  Feedback,
+  Contrast,
+  Faceid,
+  FileListLock,
+  Fingerprint,
   Key,
   Language,
+  LikeSquare,
   LineChartDots,
-  OSDynamicCloudIcon,
-  ShieldQuestion,
+  Lock,
+  MessageQuestion,
+  Passkey,
+  Sliders,
+  TouchId,
+  UniswapLogo,
   WavePulse,
   Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useCurrentAppearanceSetting } from 'uniswap/src/features/appearance/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { setHideSmallBalances, setHideSpamTokens, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
-import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
-import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
-import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { selectHasCopiedPrivateKeys } from 'wallet/src/features/behaviorHistory/selectors'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 // avoids rendering during animation which makes it laggy
@@ -73,10 +80,12 @@ const AVOID_RENDER_DURING_ANIMATION_MS = 100
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
-  const dispatch = useDispatch()
   const colors = useSporeColors()
+  const hasCopiedPrivateKeys = useSelector(selectHasCopiedPrivateKeys)
+  const shouldShowPrivateKeys = useFeatureFlag(FeatureFlags.EnableExportPrivateKeys)
   const { deviceSupportsBiometrics } = useBiometricsState()
   const { t } = useTranslation()
+  const { onClose } = useReactNavigationModal()
 
   // check if device supports biometric authentication, if not, hide option
   const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } = useDeviceSupportsBiometricAuth()
@@ -85,20 +94,7 @@ export function SettingsScreen(): JSX.Element {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
-
-  const hideSmallBalances = useHideSmallBalancesSetting()
-  const onToggleHideSmallBalances = useCallback(() => {
-    setTimeout(() => {
-      dispatch(setHideSmallBalances(!hideSmallBalances))
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, hideSmallBalances])
-
-  const hideSpamTokens = useHideSpamTokensSetting()
-  const onToggleHideSpamTokens = useCallback(() => {
-    setTimeout(() => {
-      dispatch(setHideSpamTokens(!hideSpamTokens))
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, hideSpamTokens])
+  const isSmartWalletSettingsEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
 
   const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
 
@@ -108,41 +104,22 @@ export function SettingsScreen(): JSX.Element {
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [setHapticsEnabled, hapticsEnabled])
 
-  const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
   const { notificationPermissionsEnabled: notificationOSPermission } = useNotificationOSPermissionsEnabled()
 
   const { isTestnetModeEnabled } = useEnabledChains()
-  const handleTestnetModeToggle = useCallback((): void => {
-    const newIsTestnetMode = !isTestnetModeEnabled
 
-    const fireAnalytic = (): void =>
-      sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
-        enabled: newIsTestnetMode,
-        location: 'settings',
-      })
-
-    setTimeout(() => {
-      // trigger before toggling on (ie disabling analytics)
-      if (newIsTestnetMode) {
-        fireAnalytic()
-      }
-
-      setIsTestnetModalOpen(newIsTestnetMode)
-      dispatch(setIsTestnetModeEnabled(newIsTestnetMode))
-
-      // trigger after toggling off (ie enabling analytics)
-      if (!newIsTestnetMode) {
-        fireAnalytic()
-      }
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, isTestnetModeEnabled])
+  // For non-smart-wallet mode, we need to close the settings modal instead of going back
+  const advancedSettingsState = useAdvancedSettingsMenuState({
+    onClose: isSmartWalletSettingsEnabled ? undefined : onClose,
+  })
 
   // Signer account info
   const signerAccount = useSignerAccounts()[0]
   // We sync backup state across all accounts under the same mnemonic, so can check status with any account.
-  const hasCloudBackup = signerAccount?.backups?.includes(BackupType.Cloud)
+  const hasCloudBackup = hasBackup(BackupType.Cloud, signerAccount)
+  const hasPasskeyBackup = hasBackup(BackupType.Passkey, signerAccount)
   const noSignerAccountImported = !signerAccount
-  const { walletNeedsRestore } = useWalletRestore()
+  const { walletNeedsRestore, walletRestoreType } = useWalletRestore()
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>): JSX.Element | null => {
@@ -153,20 +130,25 @@ export function SettingsScreen(): JSX.Element {
         return item.component
       }
       return (
-        <SettingsRow key={item.screen} navigation={navigation} page={item} checkIfCanProceed={item.checkIfCanProceed} />
+        <SettingsRow
+          key={item.screen}
+          navigation={navigation}
+          page={item}
+          checkIfCanProceed={item.checkIfCanProceed}
+          testID={item.testID}
+        />
       )
     },
     [navigation],
   )
 
-  const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
-    const svgProps: SvgProps = {
+  const sections: SettingsSection[] = useMemo(() => {
+    const svgProps: IconProps = {
       color: colors.neutral2.get(),
-      height: iconSizes.icon24,
+      size: iconSizes.icon24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
-      strokeWidth: '2',
-      width: iconSizes.icon24,
+      strokeWidth: 2,
     }
     const iconProps: IconProps = {
       color: '$neutral2',
@@ -181,7 +163,7 @@ export function SettingsScreen(): JSX.Element {
         subTitle: t('settings.section.preferences'),
         data: [
           {
-            screen: MobileScreens.SettingsAppearance,
+            navigationModal: ModalName.SettingsAppearance,
             text: t('settings.setting.appearance.title'),
             currentSetting:
               currentAppearanceSetting === 'system'
@@ -189,16 +171,16 @@ export function SettingsScreen(): JSX.Element {
                 : currentAppearanceSetting === 'dark'
                   ? t('settings.setting.appearance.option.dark.title')
                   : t('settings.setting.appearance.option.light.title'),
-            icon: <ContrastIcon {...svgProps} />,
+            icon: <Contrast {...svgProps} />,
           },
           {
-            modal: ModalName.FiatCurrencySelector,
+            navigationModal: ModalName.FiatCurrencySelector,
             text: t('settings.setting.currency.title'),
             currentSetting: currentFiatCurrencyInfo.code,
             icon: <Coins {...iconProps} />,
           },
           {
-            modal: ModalName.LanguageSelector,
+            navigationModal: ModalName.LanguageSelector,
             text: t('settings.setting.language.title'),
             currentSetting: currentLanguage,
             icon: <Language {...iconProps} />,
@@ -216,17 +198,9 @@ export function SettingsScreen(): JSX.Element {
             },
           },
           {
-            text: t('settings.setting.smallBalances.title'),
+            navigationModal: ModalName.PortfolioBalanceModal,
+            text: t('settings.setting.balancesActivity.title'),
             icon: <Chart {...iconProps} />,
-            isToggleEnabled: hideSmallBalances && !isTestnetModeEnabled,
-            disabled: isTestnetModeEnabled,
-            onToggle: onToggleHideSmallBalances,
-          },
-          {
-            text: t('settings.setting.unknownTokens.title'),
-            icon: <ShieldQuestion {...iconProps} />,
-            isToggleEnabled: hideSpamTokens,
-            onToggle: onToggleHideSpamTokens,
           },
           {
             text: t('settings.setting.hapticTouch.title'),
@@ -234,13 +208,23 @@ export function SettingsScreen(): JSX.Element {
             isToggleEnabled: hapticsEnabled,
             onToggle: onToggleEnableHaptics,
           },
-
-          {
-            text: t('settings.setting.wallet.testnetMode.title'),
-            icon: <Wrench {...iconProps} />,
-            isToggleEnabled: isTestnetModeEnabled,
-            onToggle: handleTestnetModeToggle,
-          },
+          ...(isSmartWalletSettingsEnabled
+            ? [
+                {
+                  navigationModal: ModalName.SmartWalletAdvancedSettingsModal,
+                  text: t('settings.setting.advanced.title'),
+                  icon: <Sliders {...iconProps} />,
+                  navigationProps: advancedSettingsState,
+                },
+              ]
+            : [
+                {
+                  text: t('settings.setting.wallet.testnetMode.title'),
+                  icon: <Wrench {...iconProps} size="$icon.20" />,
+                  isToggleEnabled: isTestnetModeEnabled,
+                  onToggle: advancedSettingsState.handleTestnetModeToggle,
+                },
+              ]),
         ],
       },
       {
@@ -250,43 +234,79 @@ export function SettingsScreen(): JSX.Element {
           ...(deviceSupportsBiometrics
             ? [
                 {
-                  screen: MobileScreens.SettingsBiometricAuth as MobileScreens.SettingsBiometricAuth,
+                  navigationModal: ModalName.BiometricsModal,
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
                   text: isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod,
-                  icon: isTouchIdSupported ? <FingerprintIcon {...svgProps} /> : <FaceIdIcon {...svgProps} />,
+                  icon: isAndroid ? (
+                    <TouchId size="$icon.20" />
+                  ) : isTouchIdSupported ? (
+                    <Fingerprint {...svgProps} />
+                  ) : (
+                    <Faceid {...svgProps} />
+                  ),
                 },
               ]
             : []),
           {
             screen: MobileScreens.SettingsViewSeedPhrase,
             text: t('settings.setting.recoveryPhrase.title'),
-            icon: <Key {...iconProps} />,
+            icon: <FileListLock {...iconProps} />,
             screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
             isHidden: noSignerAccountImported,
+            testID: TestID.WalletSettingsRecoveryPhrase,
           },
           {
-            screen: walletNeedsRestore
-              ? MobileScreens.OnboardingStack
-              : hasCloudBackup
-                ? MobileScreens.SettingsCloudBackupStatus
-                : MobileScreens.SettingsCloudBackupPasswordCreate,
-            screenProps: walletNeedsRestore
-              ? {
-                  screen: OnboardingScreens.RestoreCloudBackupLoading,
+            screen: MobileScreens.ViewPrivateKeys,
+            screenProps: {
+              showHeader: true,
+            },
+            text: t('settings.setting.privateKeys.title'),
+            icon: <Key {...iconProps} />,
+            isHidden: !hasCopiedPrivateKeys || !shouldShowPrivateKeys,
+            testID: TestID.WalletSettingsPrivateKeys,
+          },
+          walletNeedsRestore
+            ? {
+                screen: MobileScreens.OnboardingStack,
+                screenProps: {
+                  screen:
+                    walletRestoreType === WalletRestoreType.NewDevice
+                      ? importFromCloudBackupOption.nav
+                      : restoreFromCloudBackupOption.nav,
                   params: {
                     entryPoint: OnboardingEntryPoint.Sidebar,
-                    importType: ImportType.Restore,
+                    importType:
+                      walletRestoreType === WalletRestoreType.NewDevice
+                        ? importFromCloudBackupOption.importType
+                        : restoreFromCloudBackupOption.importType,
                   },
-                }
-              : { address: signerAccount?.address ?? '' },
-            text: t('settings.setting.backup.selected', {
-              cloudProviderName: getCloudProviderName(),
-            }),
-            icon: <OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
-            isHidden: noSignerAccountImported,
+                },
+                text: t('settings.setting.backup.selected', {
+                  cloudProviderName: getCloudProviderName(),
+                }),
+                icon: <Cloud color="$neutral2" size="$icon.24" />,
+                isHidden: noSignerAccountImported,
+              }
+            : {
+                screen: hasCloudBackup
+                  ? MobileScreens.SettingsCloudBackupStatus
+                  : MobileScreens.SettingsCloudBackupPasswordCreate,
+                screenProps: { address: signerAccount?.address ?? '' },
+                text: t('settings.setting.backup.selected', {
+                  cloudProviderName: getCloudProviderName(),
+                }),
+                icon: <Cloud color="$neutral2" size="$icon.24" />,
+                isHidden: noSignerAccountImported,
+              },
+          {
+            navigationModal: ModalName.PasskeyManagement,
+            isHidden: !hasPasskeyBackup,
+            text: t('common.passkeys'),
+            icon: <Passkey {...iconProps} />,
+            navigationProps: { address: signerAccount?.address },
           },
           {
-            screen: MobileScreens.SettingsPrivacy,
+            navigationModal: ModalName.PermissionsModal,
             text: t('settings.setting.permissions.title'),
             icon: <LineChartDots {...iconProps} />,
           },
@@ -302,7 +322,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),
-            icon: <Feedback color="$neutral2" size="$icon.24" />,
+            icon: <LikeSquare color="$neutral2" size="$icon.24" />,
           },
           {
             screen: MobileScreens.WebView,
@@ -325,7 +345,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.privacy'),
             },
             text: t('settings.action.privacy'),
-            icon: <LockIcon {...svgProps} />,
+            icon: <Lock {...svgProps} />,
           },
           {
             screen: MobileScreens.WebView,
@@ -334,7 +354,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.terms'),
             },
             text: t('settings.action.terms'),
-            icon: <BookOpenIcon {...svgProps} />,
+            icon: <BookOpen {...svgProps} />,
           },
         ],
       },
@@ -343,12 +363,24 @@ export function SettingsScreen(): JSX.Element {
         isHidden: !isDevEnv(),
         data: [
           {
+            navigationModal: ModalName.Experiments,
+            text: 'Dev Modal',
+            icon: <UniswapLogo {...svgProps} />,
+            testID: TestID.AppSettingsDevModal,
+          },
+          {
             screen: MobileScreens.Dev,
             text: 'Dev options',
-            icon: <UniswapIcon {...svgProps} />,
+            icon: <UniswapLogo {...svgProps} />,
+          },
+          {
+            screen: MobileScreens.DebugScreens,
+            text: 'Debug Screens',
+            icon: <UniswapLogo {...svgProps} />,
           },
           { component: <OnboardingRow iconProps={svgProps} /> },
           { component: <ResetBehaviorHistoryRow iconProps={svgProps} /> },
+          { component: <ForceReduxDataLossRow iconProps={svgProps} /> },
         ],
       },
     ]
@@ -358,10 +390,6 @@ export function SettingsScreen(): JSX.Element {
     currentAppearanceSetting,
     currentFiatCurrencyInfo.code,
     currentLanguage,
-    hideSmallBalances,
-    onToggleHideSmallBalances,
-    hideSpamTokens,
-    onToggleHideSpamTokens,
     hapticsEnabled,
     onToggleEnableHaptics,
     noSignerAccountImported,
@@ -372,17 +400,22 @@ export function SettingsScreen(): JSX.Element {
     signerAccount?.address,
     walletNeedsRestore,
     hasCloudBackup,
+    hasPasskeyBackup,
     isTestnetModeEnabled,
-    handleTestnetModeToggle,
+    isSmartWalletSettingsEnabled,
+    advancedSettingsState,
     notificationOSPermission,
     navigation,
+    hasCopiedPrivateKeys,
+    shouldShowPrivateKeys,
+    walletRestoreType,
   ])
 
-  const handleModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
-
   return (
-    <ScreenWithHeader centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
-      <TestnetModeModal isOpen={isTestnetModalOpen} onClose={handleModalClose} />
+    <ScreenWithHeader
+      centerElement={<Text variant="body1">{t('settings.title')}</Text>}
+      edges={isAndroid ? ['top', 'left', 'right', 'bottom'] : undefined}
+    >
       <SettingsList
         keyExtractor={keyExtractor}
         sections={sections}
@@ -403,12 +436,12 @@ function keyExtractor(_item: SectionData, index: number): string {
 }
 
 function renderSectionFooter(): JSX.Element {
-  return <Flex pt="$spacing24" />
+  return <Flex pt="$spacing8" />
 }
 
 function renderSectionHeader({ section }: { section: SettingsSection }): JSX.Element {
   return section.subTitle ? (
-    <Flex backgroundColor="$surface1" py="$spacing12">
+    <Flex backgroundColor="$surface1" py="$spacing8">
       <Text color="$neutral2" variant="body1">
         {section.subTitle}
       </Text>

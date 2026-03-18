@@ -1,7 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
-import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { render } from 'test-utils/render'
+import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { LiquidityPositionStatusIndicator } from '~/components/Liquidity/LiquidityPositionStatusIndicator'
+import { render } from '~/test-utils/render'
 
 describe('LiquidityPositionStatusIndicator', () => {
   it('should say in range', () => {

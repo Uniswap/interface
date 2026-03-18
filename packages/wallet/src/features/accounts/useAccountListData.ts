@@ -1,14 +1,9 @@
 import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
+import { GqlResult, GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
-import {
-  AccountListQuery,
-  // eslint-disable-next-line no-restricted-imports
-  useAccountListQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-// eslint-disable-next-line no-restricted-imports
-import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
+// biome-ignore lint/style/noRestrictedImports: This is the wrapper hook that uses the restricted hook properly
+import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 
 export function useAccountListData({
   addresses,
@@ -18,7 +13,7 @@ export function useAccountListData({
   addresses: Address[]
   fetchPolicy?: WatchQueryFetchPolicy
   notifyOnNetworkStatusChange?: boolean | undefined
-}): GqlResult<AccountListQuery> & {
+}): GqlResult<GraphQLApi.AccountListQuery> & {
   startPolling: (pollInterval: number) => void
   stopPolling: () => void
   networkStatus: NetworkStatus
@@ -27,7 +22,7 @@ export function useAccountListData({
   const { gqlChains } = useEnabledChains()
 
   const valueModifiers = usePortfolioValueModifiers(addresses)
-  const { data, loading, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
+  const { data, loading, networkStatus, refetch, startPolling, stopPolling } = GraphQLApi.useAccountListQuery({
     variables: { addresses, valueModifiers, chains: gqlChains },
     notifyOnNetworkStatusChange,
     fetchPolicy,

@@ -1,23 +1,26 @@
 /* eslint-disable max-lines */
 import { useApolloClient } from '@apollo/client'
-import { useIsFocused } from '@react-navigation/native'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useIsFocused, useScrollToTop } from '@react-navigation/native'
+import { SharedQueryClient } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { getIsNotificationServiceLocalOverrideEnabled } from '@universe/notifications'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Freeze } from 'react-freeze'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, { FadeIn, interpolateColor, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
+import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { ACTIVITY_TAB_DATA_DEPENDENCIES, ActivityTab } from 'src/components/home/ActivityTab'
+import { ActivityContent } from 'src/components/activity/ActivityContent'
 import { HomeExploreTab } from 'src/components/home/HomeExploreTab'
-import { NFTS_TAB_DATA_DEPENDENCIES, NftsTab } from 'src/components/home/NftsTab'
-import { TOKENS_TAB_DATA_DEPENDENCIES, TokensTab } from 'src/components/home/TokensTab'
 import { OnboardingIntroCardStack } from 'src/components/home/introCards/OnboardingIntroCardStack'
+import { NftsTab } from 'src/components/home/NftsTab'
+import { TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
 import {
   HeaderConfig,
@@ -30,35 +33,45 @@ import {
   TabLabelProps,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
-import { openModal } from 'src/features/modals/modalSlice'
+import TraceTabView from 'src/components/Trace/TraceTabView'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
-import { DevAIAssistantOverlay } from 'src/features/openai/DevAIGate'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
-import { useWalletRestore } from 'src/features/wallet/hooks'
+import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
+import { MobileNotificationServiceManager } from 'src/notification-service/MobileNotificationServiceManager'
 import { HomeScreenQuickActions } from 'src/screens/HomeScreen/HomeScreenQuickActions'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { SmartWalletModals } from 'src/screens/HomeScreen/SmartWalletModals'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { useHomeScrollRefs } from 'src/screens/HomeScreen/useHomeScrollRefs'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
-import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
+import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
+import { UniswapWrapped2025Banner } from 'uniswap/src/components/banners/UniswapWrapped2025Banner/UniswapWrapped2025Banner'
+import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
-import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
-import { ModalName, SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
+import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
+import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
+import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
+import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
+import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
-import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
+import { openUri } from 'uniswap/src/utils/linking'
+import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hooks'
+import { setIncrementNumPostSwapNudge } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 type HomeRoute = {
   key: (typeof SectionName)[keyof typeof SectionName]
@@ -68,14 +81,44 @@ type HomeRoute = {
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 
 /**
+ * Adding `key` forces a full re-render and re-mount when switching accounts
+ * to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
+ */
+export function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+  const activeAccount = useActiveAccountWithThrow()
+
+  const [isLayoutReady, setIsLayoutReady] = useState(false)
+
+  return (
+    <>
+      <HomeScreen
+        key={activeAccount.address}
+        isLayoutReady={isLayoutReady}
+        setIsLayoutReady={setIsLayoutReady}
+        {...props}
+      />
+      <SmartWalletModals isLayoutReady={isLayoutReady} />
+    </>
+  )
+}
+
+/**
  * Home Screen hosts both Tokens and NFTs Tab
  * Manages TokensTabs and NftsTab scroll offsets when header is collapsed
  * Borrowed from: https://stormotion.io/blog/how-to-create-collapsing-tab-header-using-react-native/
  */
-export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+function HomeScreen({
+  isLayoutReady,
+  setIsLayoutReady,
+  ...props
+}: AppStackScreenProp<MobileScreens.Home> & {
+  isLayoutReady: boolean
+  setIsLayoutReady: Dispatch<SetStateAction<boolean>>
+}): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const darkColors = useSporeColors('dark')
   const media = useMedia()
   const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
@@ -84,17 +127,26 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isModalOpen = useSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
   const hideSplashScreen = useHideSplashScreen()
+  const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
+
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
+  const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
+  const isNotificationServiceEnabled =
+    getIsNotificationServiceLocalOverrideEnabled() || isNotificationServiceEnabledFlag
+
+  const hasDismissedWrappedBanner = useSelector(selectHasDismissedUniswapWrapped2025Banner)
+  const shouldShowWrappedBanner = isWrappedBannerEnabled && !hasDismissedWrappedBanner
 
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
+  const [hasIntroCards, setHasIntroCards] = useState(false)
 
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
-  // Record a heartbeat for anonymous user DAU
-  useHeartbeatReporter()
-  // Report balances at most every 24 hours, checking every 15 seconds when app is open
-  useLastBalancesReporter()
 
-  const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
+  const { trigger } = useBiometricPrompt()
+
+  const [routeTabIndex, setRouteTabIndex] = useState(props.route.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
   const tabIndex = showEmptyWalletState ? HomeScreenTabIndex.Tokens : routeTabIndex
 
@@ -119,24 +171,24 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     const tabs: Array<HomeRoute> = [
       { key: SectionName.HomeTokensTab, title: tokensTitle },
       { key: SectionName.HomeNFTsTab, title: nftsTitle },
-      { key: SectionName.HomeActivityTab, title: activityTitle, enableNotificationBadge: true },
+      ...(!isBottomTabsEnabled
+        ? [{ key: SectionName.HomeActivityTab, title: activityTitle, enableNotificationBadge: true }]
+        : []),
     ]
 
     return tabs
-  }, [showEmptyWalletState, tokensTitle, nftsTitle, activityTitle, exploreTitle])
+  }, [showEmptyWalletState, tokensTitle, nftsTitle, isBottomTabsEnabled, activityTitle, exploreTitle])
 
   useEffect(
     function syncTabIndex() {
-      const newTabIndex = props?.route.params?.tab
+      const newTabIndex = props.route.params?.tab
       if (newTabIndex === undefined) {
         return
       }
       setRouteTabIndex(newTabIndex)
     },
-    [props?.route.params?.tab],
+    [props.route.params?.tab],
   )
-
-  const [isLayoutReady, setIsLayoutReady] = useState(false)
 
   const [headerHeight, setHeaderHeight] = useState(CONTENT_HEADER_HEIGHT_ESTIMATE)
   const headerConfig = useMemo<HeaderConfig>(
@@ -149,10 +201,13 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const { heightCollapsed, heightExpanded } = headerConfig
   const headerHeightDiff = heightExpanded - heightCollapsed
 
-  const handleHeaderLayout = useCallback<NonNullable<ViewProps['onLayout']>>((event) => {
-    setHeaderHeight(event.nativeEvent.layout.height)
-    setIsLayoutReady(true)
-  }, [])
+  const handleHeaderLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
+    (event) => {
+      setHeaderHeight(event.nativeEvent.layout.height)
+      setIsLayoutReady(true)
+    },
+    [setIsLayoutReady],
+  )
 
   const {
     tokensTabScrollValue,
@@ -190,15 +245,30 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     tokensTabScrollValue.value,
   ])
 
+  // Only enable scroll to top for bottom tab mode
+  const dummyRef = useRef(null)
+  useScrollToTop(isBottomTabsEnabled ? tokensTabScrollRef : dummyRef)
+  useScrollToTop(isBottomTabsEnabled ? exploreTabScrollRef : dummyRef)
+  // We need to create a new ref for this because the nfts tab is a flash list, which is not supported by useScrollToTop
+  const nftsScrollToTopRef = useRef({
+    scrollToTop: () => nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true }),
+  })
+
+  useScrollToTop(isBottomTabsEnabled ? nftsScrollToTopRef : dummyRef)
+
   // clear the notification indicator if the user is on the activity tab
   const hasNotifications = useSelectAddressHasNotifications(activeAccount.address)
   useEffect(() => {
+    if (isBottomTabsEnabled) {
+      return
+    }
     if (tabIndex === 2 && hasNotifications) {
       dispatch(setNotificationStatus({ address: activeAccount.address, hasNotifications: false }))
     }
-  }, [dispatch, activeAccount.address, tabIndex, hasNotifications])
+  }, [dispatch, activeAccount.address, tabIndex, hasNotifications, isBottomTabsEnabled])
 
   // If accounts are switched, we want to scroll to top and show full header
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to trigger this effect also when activeAccount changes
   useEffect(() => {
     resetScrollState()
   }, [activeAccount, resetScrollState])
@@ -219,11 +289,12 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     () => [
       { list: tokensTabScrollRef, position: tokensTabScrollValue, index: 0 },
       { list: nftsTabScrollRef, position: nftsTabScrollValue, index: 1 },
-      { list: activityTabScrollRef, position: activityTabScrollValue, index: 2 },
+      ...(!isBottomTabsEnabled ? [{ list: activityTabScrollRef, position: activityTabScrollValue, index: 2 }] : []),
     ],
     [
       activityTabScrollRef,
       activityTabScrollValue,
+      isBottomTabsEnabled,
       nftsTabScrollRef,
       nftsTabScrollValue,
       tokensTabScrollRef,
@@ -231,69 +302,81 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     ],
   )
 
-  const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
+  const { sync } = useScrollSync({ currentTabIndex, scrollPairs, headerConfig })
 
-  // Shows an info modal instead of FOR flow if country is listed behind this flag
-  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
-
-  const { isTestnetModeEnabled } = useEnabledChains()
-  const { hapticFeedback } = useHapticFeedback()
-
-  const triggerHaptics = useCallback(async () => {
-    await hapticFeedback.light()
-  }, [hapticFeedback])
-
-  const onPressViewOnlyLabel = useCallback(() => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })), [dispatch])
+  const onPressViewOnlyLabel = useCallback(() => navigate(ModalName.ViewOnlyExplainer), [])
 
   // Hide actions when active account isn't a signer account.
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
 
-  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
-
-  const handleTestnetWarningModalClose = useCallback(() => {
-    setIsTestnetWarningModalOpen(false)
-  }, [])
-
-  // TODO: when TestnetModeModal is moved to react-navigation, this can be moved
-  // to the HomeScreenQuickActions component
-  const onPressBuy = useCallback(async (): Promise<void> => {
-    await triggerHaptics()
-    if (isTestnetModeEnabled) {
-      setIsTestnetWarningModalOpen(true)
-      return
-    }
-    dispatch(
-      openModal({
-        name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
-      }),
-    )
-  }, [dispatch, isTestnetModeEnabled, disableForKorea, triggerHaptics])
-
-  // This hooks handles the logic for when to open the BackupReminderModal
-  useOpenBackupReminderModal(activeAccount)
+  // Sets isLayoutReady to false when switching a wallet
+  useEffect(() => {
+    return () => setIsLayoutReady(false)
+  }, [setIsLayoutReady])
 
   const viewOnlyLabel = t('home.warning.viewOnly')
 
+  const handleDismissWrappedBanner = useCallback(() => {
+    dispatch(setHasDismissedUniswapWrapped2025Banner(true))
+  }, [dispatch])
+
+  const handlePressWrappedBanner = useCallback(async () => {
+    try {
+      const url = buildWrappedUrl(UNISWAP_WEB_URL, activeAccount.address)
+      await openUri({ uri: url, openExternalBrowser: true })
+      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
+    } catch (error) {
+      logger.error(error, { tags: { file: 'HomeScreen', function: 'handlePressWrappedBanner' } })
+    }
+  }, [activeAccount.address, dispatch])
+
+  const handleIntroCardsChange = useCallback((hasCards: boolean) => {
+    setHasIntroCards(hasCards)
+  }, [])
+
   const promoBanner = useMemo(
-    () => <OnboardingIntroCardStack isLoading={!isTabsDataLoaded} showEmptyWalletState={showEmptyWalletState} />,
-    [showEmptyWalletState, isTabsDataLoaded],
+    () =>
+      isNotificationServiceEnabled ? (
+        <MobileNotificationServiceManager />
+      ) : (
+        <OnboardingIntroCardStack
+          isLoading={!isTabsDataLoaded}
+          showEmptyWalletState={showEmptyWalletState}
+          onCardsChange={handleIntroCardsChange}
+        />
+      ),
+    [showEmptyWalletState, isTabsDataLoaded, isNotificationServiceEnabled, handleIntroCardsChange],
   )
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex backgroundColor="$surface1" pb={showEmptyWalletState ? '$spacing8' : '$spacing16'} px="$spacing12">
-        <TestnetModeModal
-          unsupported
-          isOpen={isTestnetWarningModalOpen}
-          descriptionCopy={t('tdp.noTestnetSupportDescription')}
-          onClose={handleTestnetWarningModalClose}
-        />
+      <Flex
+        backgroundColor="$surface1"
+        pb={hasIntroCards ? '$none' : showEmptyWalletState ? '$spacing8' : '$spacing16'}
+        px={isBottomTabsEnabled ? '$none' : '$spacing12'}
+      >
+        {shouldShowWrappedBanner && (
+          <Flex>
+            <UniswapWrapped2025Banner
+              handleDismiss={handleDismissWrappedBanner}
+              handlePress={handlePressWrappedBanner}
+            />
+            <Flex
+              height="$spacing24"
+              width="100%"
+              mt={-24}
+              backgroundColor="$surface1"
+              borderTopLeftRadius={24}
+              borderTopRightRadius={24}
+            />
+          </Flex>
+        )}
         <AccountHeader />
-        <Flex py="$spacing20" px="$spacing12">
-          <PortfolioBalance owner={activeAccount.address} />
+        <Flex py="$spacing20" px={isBottomTabsEnabled ? '$spacing24' : '$spacing12'}>
+          <PortfolioBalance evmOwner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
-          <HomeScreenQuickActions onPressBuy={onPressBuy} />
+          <HomeScreenQuickActions />
         ) : (
           <TouchableArea mt="$spacing8" onPress={onPressViewOnlyLabel}>
             <Flex centered row backgroundColor="$surface2" borderRadius="$rounded12" minHeight={40} p="$spacing8">
@@ -307,16 +390,17 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       </Flex>
     )
   }, [
+    hasIntroCards,
     showEmptyWalletState,
-    isTestnetWarningModalOpen,
-    t,
-    handleTestnetWarningModalClose,
+    isBottomTabsEnabled,
+    shouldShowWrappedBanner,
+    handleDismissWrappedBanner,
+    handlePressWrappedBanner,
     activeAccount.address,
     isSignerAccount,
     onPressViewOnlyLabel,
     viewOnlyLabel,
     promoBanner,
-    onPressBuy,
   ])
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
@@ -360,11 +444,9 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   )
 
   const statusBarStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      currentScrollValue.value,
-      [0, headerHeightDiff],
-      [colors.surface1.val, colors.surface1.val],
-    ),
+    backgroundColor: shouldShowWrappedBanner
+      ? darkColors.surface1.val
+      : interpolateColor(currentScrollValue.value, [0, headerHeightDiff], [colors.surface1.val, colors.surface1.val]),
   }))
 
   const apolloClient = useApolloClient()
@@ -374,7 +456,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       const { textStyleType: theme, enableNotificationBadge, ...rest } = route
       return (
         <TabLabel
-          enableNotificationBadge={enableNotificationBadge}
+          enableNotificationBadge={isBottomTabsEnabled ? false : enableNotificationBadge}
           focused={focused}
           isExternalProfile={isExternalProfile}
           route={rest}
@@ -382,7 +464,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         />
       )
     },
-    [],
+    [isBottomTabsEnabled],
   )
 
   const renderTabBar = useCallback(
@@ -420,35 +502,51 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const onRefreshHomeData = useCallback(async () => {
     setRefreshing(true)
 
-    await apolloClient.refetchQueries({
-      include: [...TOKENS_TAB_DATA_DEPENDENCIES, ...NFTS_TAB_DATA_DEPENDENCIES, ...ACTIVITY_TAB_DATA_DEPENDENCIES],
-    })
+    const activeAccountAddress = activeAccount.address
+
+    const restQueriesToInvalidate = [
+      SharedQueryClient.invalidateQueries({
+        queryKey: getPortfolioQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
+      }),
+      // Always invalidate transactions since we use REST for transactions
+      SharedQueryClient.invalidateQueries({
+        queryKey: getListTransactionsQuery({ input: { evmAddress: activeAccountAddress } }).queryKey,
+      }),
+    ]
+    const gqlQueriesToRefetch = [...NFTS_TAB_DATA_DEPENDENCIES]
+
+    await Promise.all([
+      ...restQueriesToInvalidate,
+      apolloClient.refetchQueries({
+        include: gqlQueriesToRefetch,
+      }),
+    ])
 
     // Artificially delay 0.5 second to show the refresh animation
     const timeout = setTimeout(() => setRefreshing(false), 500)
     return () => clearTimeout(timeout)
-  }, [apolloClient])
+  }, [apolloClient, activeAccount.address])
 
   const renderTab = useCallback(
     ({
       route,
     }: {
       route: {
-        key: SectionNameType
+        key: SectionName
         title: string
       }
     }) => {
-      switch (route?.key) {
+      switch (route.key) {
         case SectionName.HomeTokensTab:
           return (
-            <Freeze freeze={tabIndex !== 0 && isHomeScreenBlur}>
+            <Freeze freeze={tabIndex !== HomeScreenTabIndex.Tokens && isHomeScreenBlur}>
               {isLayoutReady && (
                 <Animated.View entering={FadeIn}>
                   <TokensTab
                     ref={tokensTabScrollRef}
                     containerProps={sharedProps}
                     headerHeight={headerHeight}
-                    owner={activeAccount?.address}
+                    owner={activeAccount.address}
                     refreshing={refreshing}
                     scrollHandler={tokensTabScrollHandler}
                     testID={TestID.TokensTab}
@@ -460,27 +558,28 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           )
         case SectionName.HomeNFTsTab:
           return (
-            <Freeze freeze={tabIndex !== 1 && isHomeScreenBlur}>
+            <Freeze freeze={tabIndex !== HomeScreenTabIndex.NFTs && isHomeScreenBlur}>
               <NftsTab
                 ref={nftsTabScrollRef}
                 containerProps={sharedProps}
                 headerHeight={headerHeight}
-                owner={activeAccount?.address}
+                owner={activeAccount.address}
                 refreshing={refreshing}
                 scrollHandler={nftsTabScrollHandler}
                 testID={TestID.NFTsTab}
+                isActiveTab={tabIndex === HomeScreenTabIndex.NFTs && !isHomeScreenBlur}
                 onRefresh={onRefreshHomeData}
               />
             </Freeze>
           )
         case SectionName.HomeActivityTab:
           return (
-            <Freeze freeze={tabIndex !== 2 && isHomeScreenBlur}>
-              <ActivityTab
+            <Freeze freeze={tabIndex !== HomeScreenTabIndex.Activity && isHomeScreenBlur}>
+              <ActivityContent
                 ref={activityTabScrollRef}
                 containerProps={sharedProps}
                 headerHeight={headerHeight}
-                owner={activeAccount?.address}
+                owner={activeAccount.address}
                 refreshing={refreshing}
                 scrollHandler={activityTabScrollHandler}
                 testID={TestID.ActivityTab}
@@ -494,7 +593,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
               ref={exploreTabScrollRef}
               containerProps={sharedProps}
               headerHeight={headerHeight}
-              owner={activeAccount?.address}
+              owner={activeAccount.address}
               refreshing={refreshing}
               scrollHandler={exploreTabScrollHandler}
               onRefresh={onRefreshHomeData}
@@ -510,7 +609,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       tokensTabScrollRef,
       sharedProps,
       headerHeight,
-      activeAccount?.address,
+      activeAccount.address,
       refreshing,
       tokensTabScrollHandler,
       onRefreshHomeData,
@@ -523,9 +622,34 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     ],
   )
 
+  useOpenSmartWalletNudgeOnCompletedSwap(
+    useEvent(() => {
+      if (!activeAccount.address || activeAccount.type !== AccountType.SignerMnemonic) {
+        return
+      }
+
+      navigate(ModalName.SmartWalletNudge, {
+        onEnableSmartWallet: async () => {
+          const successAction = (): void => {
+            dispatch(setSmartWalletConsent({ address: activeAccount.address, smartWalletConsent: true }))
+            navigate(ModalName.SmartWalletEnabledModal, {
+              showReconnectDappPrompt: false,
+            })
+          }
+
+          if (requiresBiometrics) {
+            await trigger({ successCallback: successAction })
+          } else {
+            successAction()
+          }
+        },
+      })
+      dispatch(setIncrementNumPostSwapNudge({ walletAddress: activeAccount.address }))
+    }),
+  )
+
   return (
     <Screen edges={['left', 'right']} onLayout={hideSplashScreen}>
-      <DevAIAssistantOverlay />
       <View style={TAB_STYLES.container}>
         <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
           {contentHeader}
@@ -533,6 +657,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
         {isTabsDataLoaded && isLayoutReady && (
           <TraceTabView
+            // Force remount when transitioning between empty wallet and funded wallet
+            key={showEmptyWalletState ? 'empty' : 'filled'}
             lazy
             initialLayout={{
               height: dimensions.fullHeight,
@@ -546,7 +672,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           />
         )}
       </View>
-      <NavBar />
+      {!isBottomTabsEnabled && <NavBar />}
       <AnimatedFlex
         height={insets.top}
         position="absolute"

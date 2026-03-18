@@ -1,27 +1,35 @@
-import { AnimatePresence, Variants, motion } from 'framer-motion'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
+import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router'
+import { AutoLockProvider } from 'src/app/components/AutoLockProvider'
+import { SmartWalletNudgeModals } from 'src/app/components/modals/SmartWalletNudgeModals'
+import { SmartWalletNudgesProvider } from 'src/app/context/SmartWalletNudgesContext'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
+import { ForceUpgradeModal } from 'src/app/features/forceUpgrade/ForceUpgradeModal'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
 import { NotificationToastWrapper } from 'src/app/features/notifications/NotificationToastWrapper'
-import { StorageWarningModal } from 'src/app/features/warnings/StorageWarningModal'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
-import { HideContentsWhenSidebarBecomesInactive } from 'src/app/navigation/HideContentsWhenSidebarBecomesInactive'
-import { SideBarNavigationProvider } from 'src/app/navigation/SideBarNavigationProvider'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { RouterState, subscribeToRouterState, useRouterState } from 'src/app/navigation/state'
-import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
+import { HideContentsWhenSidebarBecomesInactive } from 'src/app/navigation/HideContentsWhenSidebarBecomesInactive'
+import { SidebarNavigationProvider } from 'src/app/navigation/providers'
+import { useRouterState } from 'src/app/navigation/state'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
-import { Flex, SpinningLoader, styled } from 'ui/src'
+import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
-import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
+import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
+import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
+import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
+import { useHeartbeatReporter } from 'wallet/src/features/telemetry/hooks/useHeartbeatReporter'
+import { useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks/useLastBalancesReporter'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
+import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
+import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 
 export function MainContent(): JSX.Element {
   const isOnboarded = useSelector(isOnboardedSelector)
@@ -33,10 +41,22 @@ export function MainContent(): JSX.Element {
 
   return (
     <>
-      <StorageWarningModal isOnboarding={false} />
+      <BackgroundServices />
       <HomeScreen />
     </>
   )
+}
+
+/**
+ * Background side effects that run in the background and are not part of the main app.
+ * A separate component is used to avoid unnecessary re-rendering of the main app when
+ * these services are running.
+ */
+function BackgroundServices(): JSX.Element {
+  const isOnboarded = useSelector(isOnboardedSelector)
+  useHeartbeatReporter({ isOnboarded })
+  useLastBalancesReporter({ isOnboarded })
+  return <></>
 }
 
 enum Direction {
@@ -72,29 +92,7 @@ const getAppRouteFromPathName = (pathname: string): AppRoutes | null => {
   return null
 }
 
-const animationVariant: Variants = {
-  initial: (dir: Direction) => ({
-    x: isVertical(dir) ? 0 : dir === 'right' ? -30 : 30,
-    y: !isVertical(dir) ? 0 : dir === 'down' ? -15 : 15,
-    opacity: 0,
-    zIndex: 1,
-  }),
-  animate: {
-    x: 0,
-    y: 0,
-    opacity: 1,
-    zIndex: 1,
-  },
-  exit: (dir: Direction) => ({
-    x: isVertical(dir) ? 0 : dir === 'left' ? -30 : 30,
-    y: !isVertical(dir) ? 0 : dir === 'up' ? -15 : 15,
-    opacity: 0,
-    zIndex: 0,
-  }),
-}
-
 export function WebNavigation(): JSX.Element {
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const isLoggedIn = useIsWalletUnlocked()
   const { pathname } = useLocation()
   const history = useRef<string[]>([]).current
@@ -118,90 +116,57 @@ export function WebNavigation(): JSX.Element {
   // Only restore scroll if path on latest re-render is different from the previous path.
   const prevPathname = usePrevious(pathname)
   const shouldRestoreScroll = pathname !== prevPathname
-
-  useEffect(() => {
-    // We're using subscribeToRouterState subscriber to detect, whether we will
-    // navigate to another page, which will lead to the start of the animation.
-    subscribeToRouterState(({ historyAction, location }: RouterState) => {
-      const trimmedPathname = location.pathname.replace('/', '') as AppRoutes
-      if (historyAction !== NavigationType.Replace && Object.values(AppRoutes).includes(trimmedPathname)) {
-        setIsTransitioning(true)
-      }
-    })
-  }, [])
-
   const childrenMemo = useMemo(() => {
     return (
-      <OverflowControlledFlex isTransitioning={isTransitioning}>
-        <AnimatePresence initial={false}>
-          <MotionFlex
-            key={pathname}
-            variants={animationVariant}
-            custom={towards}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            onAnimationComplete={() => {
-              setIsTransitioning(false)
-            }}
-          >
-            <Flex fill grow overflow="visible">
-              <TestnetModeBanner />
-              {isLoggedIn === null ? (
-                <Loading />
-              ) : isLoggedIn === true ? (
+      <AnimatePresence custom={{ towards }} initial={false}>
+        <AnimatedPane
+          key={pathname}
+          animation={[
+            isVertical(towards) ? 'quicker' : '100ms',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+        >
+          <Flex fill grow overflow="visible">
+            <TestnetModeBanner />
+            {isLoggedIn === null ? (
+              <Loading />
+            ) : isLoggedIn === true ? (
+              <AutoLockProvider>
                 <HideContentsWhenSidebarBecomesInactive>
                   <LoggedIn />
                 </HideContentsWhenSidebarBecomesInactive>
-              ) : (
-                <LoggedOut />
-              )}
-            </Flex>
-          </MotionFlex>
-        </AnimatePresence>
-      </OverflowControlledFlex>
+              </AutoLockProvider>
+            ) : (
+              <LoggedOut />
+            )}
+          </Flex>
+        </AnimatedPane>
+      </AnimatePresence>
     )
-  }, [isLoggedIn, pathname, towards, isTransitioning])
+  }, [isLoggedIn, pathname, towards])
 
   return (
-    <SideBarNavigationProvider>
-      <WalletUniswapProvider>
-        <NotificationToastWrapper />
-        {shouldRestoreScroll && <ScrollRestoration />}
-        {childrenMemo}
-      </WalletUniswapProvider>
-    </SideBarNavigationProvider>
+    <SidebarNavigationProvider>
+      <NativeWalletProvider>
+        <TokenPriceProvider>
+          <WalletUniswapProvider>
+            <AccountsStoreContextProvider>
+              <NotificationToastWrapper />
+              {shouldRestoreScroll && <ScrollRestoration />}
+              {childrenMemo}
+              {isLoggedIn && <ForceUpgradeModal />}
+            </AccountsStoreContextProvider>
+          </WalletUniswapProvider>
+        </TokenPriceProvider>
+      </NativeWalletProvider>
+    </SidebarNavigationProvider>
   )
 }
 
-const MotionFlex = styled(motion(Flex), {
-  zIndex: 1,
-  fill: true,
-  position: 'absolute',
-  inset: 0,
-  x: 0,
-  opacity: 1,
-  maxWidth: 'calc(min(535px, 100vw))',
-  minHeight: '100vh',
-  mx: 'auto',
-  width: '100%',
-})
-
-function OverflowControlledFlex({
-  children,
-  isTransitioning,
-}: React.PropsWithChildren & { isTransitioning: boolean }): JSX.Element {
-  if (!isTransitioning) {
-    return <Flex fill>{children}</Flex>
-  }
-  return (
-    <Flex fill overflow="hidden">
-      {children}
-    </Flex>
-  )
-}
-
-// TODO(EXT-994): improve this loading screen.
 function Loading(): JSX.Element {
   return (
     <Flex centered grow>
@@ -210,10 +175,39 @@ function Loading(): JSX.Element {
   )
 }
 
+const AnimatedPane = styled(Flex, {
+  zIndex: 1,
+  fill: true,
+  position: 'absolute',
+  inset: 0,
+  x: 0,
+  opacity: 1,
+  maxWidth: 'calc(min(535px, 100vw))',
+  minWidth: 319,
+  minHeight: '100vh',
+  mx: 'auto',
+  width: '100%',
+
+  variants: {
+    towards: (dir: Direction) => ({
+      enterStyle: {
+        opacity: 0,
+        zIndex: 1,
+      },
+      exitStyle: {
+        zIndex: 0,
+        x: isVertical(dir) ? 0 : dir === 'left' ? 30 : -30,
+        y: !isVertical(dir) ? 0 : dir === 'up' ? 15 : -15,
+        opacity: 0,
+      },
+    }),
+  } as const,
+})
+
 const isVertical = (dir: Direction): boolean => dir === 'up' || dir === 'down'
 
 function useConstant<A>(c: A): A {
-  const out = useRef<A>()
+  const out = useRef<A>(undefined)
   if (!out.current) {
     out.current = c
   }
@@ -246,7 +240,7 @@ function LoggedIn(): JSX.Element {
   const isChromeWindowFocused = useIsChromeWindowFocusedWithTimeout(30 * ONE_SECOND_MS)
 
   return (
-    <>
+    <SmartWalletNudgesProvider>
       {contents}
 
       <QueuedOrderModal />
@@ -254,7 +248,9 @@ function LoggedIn(): JSX.Element {
       {isChromeWindowFocused && <TransactionHistoryUpdater />}
 
       <DappRequestQueue />
-    </>
+
+      <SmartWalletNudgeModals />
+    </SmartWalletNudgesProvider>
   )
 }
 
@@ -262,17 +258,27 @@ function LoggedOut(): JSX.Element {
   const isOnboarded = useSelector(isOnboardedSelector)
   const didOpenOnboarding = useRef(false)
 
-  const handleOnboarding = useCallback(async () => {
-    if (!isOnboarded && !didOpenOnboarding.current) {
+  const focusOrCreateOnboardingTabMutation = useMutation({
+    onSettled: () => {
       // We keep track of this to avoid opening the onboarding page multiple times if this component remounts.
       didOpenOnboarding.current = true
-      await focusOrCreateOnboardingTab()
+    },
+    mutationFn: () => {
+      return focusOrCreateOnboardingTab()
+    },
+    onSuccess: () => {
       // Automatically close the pop up after focusing on the onboarding tab.
       window.close()
-    }
-  }, [isOnboarded])
+    },
+  })
 
-  useAsyncData(handleOnboarding)
+  const focusOrCreateOnboardingTabEvent = useEvent(focusOrCreateOnboardingTabMutation.mutate)
+
+  useEffect(() => {
+    if (!focusOrCreateOnboardingTabMutation.isPending && !isOnboarded && !didOpenOnboarding.current) {
+      focusOrCreateOnboardingTabEvent()
+    }
+  }, [focusOrCreateOnboardingTabEvent, isOnboarded, focusOrCreateOnboardingTabMutation.isPending])
 
   // If the user has not onboarded, we render nothing and let the `useEffect` above automatically close the popup.
   // We could consider showing a loading spinner while the popup is being closed.

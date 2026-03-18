@@ -1,28 +1,37 @@
 import { BigNumber, providers } from 'ethers'
 import { call, put, select } from 'typed-redux-saga'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { addTransaction, deleteTransaction } from 'uniswap/src/features/transactions/slice'
 import {
-  BridgeTransactionDetails,
-  ClassicTransactionDetails,
+  OnChainTransactionDetails,
   TransactionDetails,
+  TransactionOriginType,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
-import { signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import {
+  ExecuteTransactionParams,
+  executeTransaction,
+} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
-import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
-export function* attemptReplaceTransaction(
-  transaction: ClassicTransactionDetails | BridgeTransactionDetails,
-  newTxRequest: providers.TransactionRequest,
+export function* attemptReplaceTransaction({
+  transaction,
+  newTxRequest,
   isCancellation = false,
-) {
+}: {
+  transaction: OnChainTransactionDetails
+  newTxRequest: providers.TransactionRequest
+  isCancellation?: boolean
+}) {
   const { chainId, hash, options } = transaction
   logger.debug('replaceTransaction', '', 'Attempting tx replacement', hash)
   const replacementTxnId = createTransactionId()
@@ -34,13 +43,21 @@ export function* attemptReplaceTransaction(
     }
 
     const accounts = yield* select(selectAccounts)
-    const checksummedAddress = getValidAddress(from, true, false)
+    const checksummedAddress = getValidAddress({
+      address: from,
+      chainId,
+      withEVMChecksum: true,
+      log: false,
+    })
     if (!checksummedAddress) {
       throw new Error(`Cannot replace transaction, address is invalid: ${checksummedAddress}`)
     }
     const account = accounts[checksummedAddress]
     if (!account) {
       throw new Error(`Cannot replace transaction, account missing: ${hash}`)
+    }
+    if (account.type !== AccountType.SignerMnemonic) {
+      throw new Error(`Cannot replace transaction, account is not a signer account: ${hash}`)
     }
 
     const request: providers.TransactionRequest = {
@@ -49,33 +66,43 @@ export function* attemptReplaceTransaction(
       nonce,
     }
 
-    // If the transaction was submitted through Flashbots, use Flashbots to submit the replacement transaction
-    const provider =
-      transaction.options.privateRpcProvider === 'flashbots'
-        ? yield* call(getPrivateProvider, chainId)
-        : yield* call(getProvider, chainId)
-    const signerManager = yield* call(getSignerManager)
-
-    const { transactionResponse, populatedRequest } = yield* call(
-      signAndSendTransaction,
-      request,
+    const executeTransactionParams: ExecuteTransactionParams = {
+      txId: replacementTxnId,
+      chainId,
       account,
-      provider,
-      signerManager,
-    )
-    logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionResponse.hash)
+      options: {
+        request,
+        submitViaPrivateRpc: transaction.options.submitViaPrivateRpc,
+      },
+      transactionOriginType: TransactionOriginType.Internal,
+      // Don't send typeInfo so the service just submits without updating local state
+      typeInfo: undefined,
+    }
+
+    const { transactionHash } = yield* call(executeTransaction, executeTransactionParams)
+    logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionHash)
+
+    if (isCancellation) {
+      yield* call(sendAnalyticsEvent, WalletEventName.CancelSubmitted, {
+        original_transaction_hash: transaction.hash,
+        replacement_transaction_hash: transactionHash,
+        chain_id: chainId,
+        nonce: request.nonce,
+      })
+    }
 
     const replacementTransaction: TransactionDetails = {
       ...transaction,
       // Ensure we create a new, unique txn to monitor
       id: replacementTxnId,
-      hash: transactionResponse.hash,
+      hash: transactionHash,
       status: isCancellation ? TransactionStatus.Cancelling : TransactionStatus.Pending,
       receipt: undefined,
       addedTime: Date.now(), // update timestamp to now
       options: {
         ...options,
-        request: getSerializableTransactionRequest(populatedRequest, chainId),
+        request: getSerializableTransactionRequest(request, chainId),
+        replacedTransactionHash: transaction.hash,
       },
     }
 

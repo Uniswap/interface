@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Util to format numbers inside reanimated worklets.
  *
@@ -11,7 +12,7 @@
 function replaceSeparators(sNum: string, separators: { decimal: string; thousands: string }): string {
   'worklet'
   const sNumParts = sNum.split('.')
-  if (separators && separators.thousands && sNumParts[0]) {
+  if (separators.thousands && sNumParts[0]) {
     // every three digits, replace it with the digits + the thousands separator
     // $1 indicates that the matched substring is to be replaced by the first captured group
     sNumParts[0] = sNumParts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + separators.thousands)
@@ -59,7 +60,7 @@ function mapMatch(
   'worklet'
   let match = locale
 
-  if (!Object.prototype.hasOwnProperty.call(map, locale)) {
+  if (!Object.hasOwn(map, locale)) {
     match = 'en'
   }
 
@@ -132,9 +133,29 @@ const transformForLocale = {
   en: commaThousDotDec,
   'en-GB': commaThousDotDec,
   'en-US': commaThousDotDec,
-  'es-ES': dotThousCommaDec,
-  'es-US': commaThousDotDec,
   'es-419': commaThousDotDec,
+  'es-BZ': commaThousDotDec,
+  'es-CU': commaThousDotDec,
+  'es-DO': commaThousDotDec,
+  'es-GT': commaThousDotDec,
+  'es-HN': commaThousDotDec,
+  'es-MX': commaThousDotDec,
+  'es-NI': commaThousDotDec,
+  'es-PA': commaThousDotDec,
+  'es-PE': commaThousDotDec,
+  'es-PR': commaThousDotDec,
+  'es-SV': commaThousDotDec,
+  'es-US': commaThousDotDec,
+  'es-AR': dotThousCommaDec,
+  'es-BO': dotThousCommaDec,
+  'es-CL': dotThousCommaDec,
+  'es-CO': dotThousCommaDec,
+  'es-CR': dotThousCommaDec,
+  'es-EC': dotThousCommaDec,
+  'es-ES': dotThousCommaDec,
+  'es-PY': dotThousCommaDec,
+  'es-UY': dotThousCommaDec,
+  'es-VE': dotThousCommaDec,
   'fi-FI': spaceThousCommaDec,
   fr: spaceThousCommaDec,
   'fr-FR': spaceThousCommaDec,
@@ -187,9 +208,29 @@ const currencyFormatMap = {
   en: 'pre',
   'en-GB': 'pre',
   'en-US': 'pre',
-  'es-ES': 'post',
-  'es-US': 'pre',
   'es-419': 'pre',
+  'es-BZ': 'pre',
+  'es-CU': 'pre',
+  'es-DO': 'pre',
+  'es-GT': 'pre',
+  'es-HN': 'pre',
+  'es-MX': 'pre',
+  'es-NI': 'pre',
+  'es-PA': 'pre',
+  'es-PE': 'pre',
+  'es-PR': 'pre',
+  'es-SV': 'pre',
+  'es-US': 'pre',
+  'es-AR': 'pre',
+  'es-BO': 'pre',
+  'es-CL': 'pre',
+  'es-CO': 'pre',
+  'es-CR': 'pre',
+  'es-EC': 'pre',
+  'es-ES': 'post',
+  'es-PY': 'pre',
+  'es-UY': 'pre',
+  'es-VE': 'pre',
   'fi-FI': 'post',
   fr: 'post',
   'fr-FR': 'post',
@@ -376,14 +417,19 @@ function convertSmallSciNotationToDecimal(value: number): string {
   return '0.'.concat('0'.repeat(Number(exponent) - 1).concat(decimal))
 }
 
-export function numberToLocaleStringWorklet(
-  value: number,
-  locale: Language = 'en-US',
-  options: OptionsType = {},
-  symbol?: string,
-): string {
+export function numberToLocaleStringWorklet({
+  value,
+  locale = 'en-US',
+  options = {},
+  symbol,
+}: {
+  value: number
+  locale?: Language
+  options?: OptionsType
+  symbol?: string
+}): string {
   'worklet'
-  if (locale && locale.length < 2) {
+  if (locale.length < 2) {
     throw new RangeError('Invalid language tag: ' + locale)
   }
 
@@ -406,7 +452,7 @@ export function numberToLocaleStringWorklet(
 
   sNum = (<(key: string, options?: OptionsType) => string>mapMatch(transformForLocale, locale))(sNum, options)
 
-  if (options && options.currency && options.style === 'currency') {
+  if (options.currency && options.style === 'currency') {
     const format = currencyFormats[<string>mapMatch(currencyFormatMap, locale)]
     const targetSymbol = symbol ?? currencySymbols[options.currency.toLowerCase()]
     if (format) {

@@ -1,8 +1,9 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
-import { TickData } from 'graphql/data/AllV3TicksQuery'
 import JSBI from 'jsbi'
-import computeSurroundingTicks, { TickProcessed } from 'utils/computeSurroundingTicks'
+import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
+import computeSurroundingTicks, { TickProcessed } from '~/utils/computeSurroundingTicks'
 
 const getV3Tick = (tick: number, liquidityNet: number): TickData => ({
   tick,
@@ -25,7 +26,6 @@ describe('#computeSurroundingTicks', () => {
       sdkPrice: new Price(token0, token1, '1', '100'),
     }
     const pivot = 3
-    const ascending = true
     const sortedTickData: TickData[] = [
       getV3Tick(activeTickProcessed.tick - 4 * spacing, 10),
       getV3Tick(activeTickProcessed.tick - 2 * spacing, 20),
@@ -36,9 +36,25 @@ describe('#computeSurroundingTicks', () => {
       getV3Tick(activeTickProcessed.tick + 5 * spacing, 20),
     ]
 
-    const previous = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, !ascending)
+    const previous = computeSurroundingTicks({
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData,
+      pivot,
+      ascending: false,
+      version: ProtocolVersion.V3,
+    })
 
-    const subsequent = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, ascending)
+    const subsequent = computeSurroundingTicks({
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData,
+      pivot,
+      ascending: true,
+      version: ProtocolVersion.V3,
+    })
 
     expect(previous.length).toEqual(3)
     expect(previous.map((t) => [t.tick, parseFloat(t.liquidityActive.toString())])).toEqual([

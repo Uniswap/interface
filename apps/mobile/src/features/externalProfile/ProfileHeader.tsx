@@ -7,16 +7,15 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Favorite } from 'src/components/icons/Favorite'
 import { LongText } from 'src/components/text/LongText'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
-import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   Flex,
+  getUniconColors,
   Image,
   LinearGradient,
   ScrollView,
   Text,
   TouchableArea,
-  getUniconColors,
   useExtractedColors,
   useIsDarkMode,
   useSporeColors,
@@ -25,19 +24,20 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEP_accentColors, iconSizes, imageSizes, spacing, validColor } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'uniswap/src/features/ens/api'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
+import { useToggleWatchedWalletCallback } from 'uniswap/src/features/favorites/useToggleWatchedWalletCallback'
 import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { openUri } from 'uniswap/src/utils/linking'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { HeaderRadial, solidHeaderProps } from 'wallet/src/features/unitags/HeaderRadial'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const HEADER_GRADIENT_HEIGHT = 144
 const HEADER_ICON_SIZE = 72
@@ -59,7 +59,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   // Note that if a user has a Unitag AND ENS, this prioritizes the Unitag's metadata over the ENS metadata
   const nameToFetchENSMetadata =
-    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) && displayName?.name
+    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) && displayName.name
       ? displayName.name
       : undefined
 
@@ -116,7 +116,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   const onPressTwitter = useCallback(async () => {
     if (twitter) {
-      await openUri(`https://twitter.com/${twitter}`)
+      await openUri({ uri: `https://twitter.com/${twitter}` })
     }
   }, [twitter])
 
@@ -155,8 +155,8 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4" px="$spacing24">
-        <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" p="$spacing4">
-          <BackButton color="$white" size={iconSizes.icon24} />
+        <Flex centered backgroundColor="$surface4" borderRadius="$roundedFull" p="$spacing4">
+          <BackButton color="$neutral2" size="$icon.24" />
         </Flex>
         <ProfileContextMenu address={address} />
       </Flex>
@@ -172,11 +172,10 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               address={address}
               captionTextColor="$neutral3"
               captionVariant="body3"
-              contentAlign="flex-start"
               direction="column"
               size={HEADER_ICON_SIZE}
-              textAlign="flex-start"
               variant="heading3"
+              alignItems="flex-start"
             />
             {bio ? <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} /> : null}
           </Flex>
@@ -186,7 +185,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
                 {twitter ? (
                   <TouchableArea onPress={onPressTwitter}>
                     <Flex centered row gap="$spacing4">
-                      <XTwitter color={colors.neutral1.val} size={iconSizes.icon16} />
+                      <XTwitter color="$neutral1" size="$icon.16" />
                       <Text color="$neutral1" variant="buttonLabel2">
                         {twitter}
                       </Text>

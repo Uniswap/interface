@@ -1,88 +1,106 @@
-import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import UniwalletModal from 'components/AccountDrawer/UniwalletModal'
-import { AddressQRModal } from 'components/AddressQRModal'
-import { Banners } from 'components/Banner/shared/Banners'
-import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
-import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
-import { GetTheAppModal } from 'components/NavBar/DownloadApp/Modal'
-import { PrivacyChoicesModal } from 'components/PrivacyChoices'
-import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
-import { RecoveryPhraseModal } from 'components/RecoveryPhrase/Modal'
-import { UkDisclaimerModal } from 'components/TopLevelModals/UkDisclaimerModal'
-import AddressClaimModal from 'components/claim/AddressClaimModal'
-import DevFlagsBox from 'dev/DevFlagsBox'
-import { useAccount } from 'hooks/useAccount'
-import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
-import { PageType, useIsPage } from 'hooks/useIsPage'
-import Bag from 'nft/components/bag/Bag'
-import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
-import { IncreaseLiquidityModal } from 'pages/IncreaseLiquidity/IncreaseLiquidityModal'
-import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
-import { RemoveLiquidityModal } from 'pages/RemoveLiquidity/RemoveLiquidityModal'
-import { useCloseModal, useModalIsOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import { useMedia } from 'ui/src'
+import { useAtomValue } from 'jotai/utils'
+import { useTranslation } from 'react-i18next'
+import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
+import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
+import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
+import { useEvent } from 'utilities/src/react/hooks'
+import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { ModalRenderer } from '~/components/TopLevelModals/modalRegistry'
+import useAccountRiskCheck from '~/hooks/useAccountRiskCheck'
+import { PageType, useIsPage } from '~/hooks/useIsPage'
+import { PasskeysHelpModalTypeAtom } from '~/hooks/usePasskeyAuthWithHelpModal'
 
 export default function TopLevelModals() {
+  const { t } = useTranslation()
   const isLandingPage = useIsPage(PageType.LANDING)
-  const media = useMedia()
+  const { evmAddress, svmAddress } = useActiveAddresses()
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: evmAddress ? { address: evmAddress } : undefined,
+  })
+  const evmAccountName = unitag?.username
+    ? unitag.username + '.uni.eth'
+    : evmAddress
+      ? shortenAddress({ address: evmAddress })
+      : undefined
+  const blockedAddress = useAccountRiskCheck({ evmAddress, svmAddress })
+  const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
+  const bridgedAssetModalProps = useAtomValue(BridgedAssetModalAtom)
+  const wormholeModalProps = useAtomValue(WormholeModalAtom)
 
-  const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
-  const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
-  const isAddLiquidityModalOpen = useModalIsOpen(ModalName.AddLiquidity)
-  const isRemoveLiquidityModalOpen = useModalIsOpen(ModalName.RemoveLiquidity)
-  const isClaimFeeModalOpen = useModalIsOpen(ModalName.ClaimFee)
-  const isTestnetModeModalOpen = useModalIsOpen(ModalName.TestnetMode)
-  const closeTestnetModeModal = useCloseModal(ModalName.TestnetMode)
+  const reportTokenIssueProps = useAtomValue(ReportTokenIssueModalPropsAtom)
+  const onReportSuccess = useEvent(() => {
+    popupRegistry.addPopup(
+      { type: PopupType.Success, message: t('common.reported') },
+      'report-token-success',
+      POPUP_MEDIUM_DISMISS_MS,
+    )
+  })
 
-  const account = useAccount()
-  useAccountRiskCheck(account.address)
-  const accountBlocked = Boolean(blockedAccountModalOpen && account.isConnected)
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
 
-  // On mobile landing page we need to be very careful about what modals we show
+  // On landing page we need to be very careful about what modals we show
   // because too many modals attached to the dom can cause performance issues
   // and potentially lead to crashes. Only add modals here if they are strictly
   // necessary and add minimal overhead to the dom.
-  if (isLandingPage && media.sm) {
+  if (isLandingPage) {
     return (
       <>
-        <PrivacyPolicyModal />
-        <PrivacyChoicesModal />
+        <ModalRenderer modalName={ModalName.PrivacyPolicy} />
+        <ModalRenderer modalName={ModalName.PrivacyChoices} />
+        <ModalRenderer modalName={ModalName.GetTheApp} />
+        <ModalRenderer modalName={ModalName.FeatureFlags} />
+        <ModalRenderer modalName={ModalName.UniWalletConnect} />
+        <ModalRenderer modalName={ModalName.BlockedAccount} />
+        {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
+        <ModalRenderer modalName={ModalName.Help} />
+        <ModalRenderer modalName={ModalName.OffchainActivity} />
+        <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
+        <ModalRenderer modalName={ModalName.PendingWalletConnection} />
       </>
     )
   }
 
   return (
     <>
-      <AddressClaimModal isOpen={addressClaimOpen} connectedAddress={account.address} onDismiss={addressClaimToggle} />
-      <ConnectedAccountBlocked account={account.address} isOpen={accountBlocked} />
-      <Bag />
-      <UniwalletModal />
-
-      <Banners />
-
-      <OffchainActivityModal />
-      <TransactionCompleteModal />
-      {account.address && <ReceiveCryptoModal />}
-      {account.address && <AddressQRModal accountAddress={account.address} />}
-      <UkDisclaimerModal />
-      <TestnetModeModal isOpen={isTestnetModeModalOpen} onClose={closeTestnetModeModal} showCloseButton />
-      <GetTheAppModal />
-      <PrivacyPolicyModal />
-      <PrivacyChoicesModal />
-      <FeatureFlagModal />
-      {shouldShowDevFlags && <DevFlagsBox />}
-
-      {isAddLiquidityModalOpen && <IncreaseLiquidityModal />}
-      {isRemoveLiquidityModalOpen && <RemoveLiquidityModal />}
-      {isClaimFeeModalOpen && <ClaimFeeModal />}
-      <RecoveryPhraseModal />
+      <ModalRenderer modalName={ModalName.AddressClaim} />
+      <ModalRenderer modalName={ModalName.BlockedAccount} componentProps={{ blockedAddress }} />
+      <ModalRenderer modalName={ModalName.UniWalletConnect} />
+      <ModalRenderer modalName={ModalName.Banners} />
+      <ModalRenderer modalName={ModalName.OffchainActivity} />
+      <ModalRenderer modalName={ModalName.TransactionConfirmation} />
+      <ModalRenderer modalName={ModalName.UkDisclaimer} />
+      <ModalRenderer modalName={ModalName.TestnetMode} componentProps={{ showCloseButton: true }} />
+      <ModalRenderer modalName={ModalName.GetTheApp} />
+      <ModalRenderer modalName={ModalName.PrivacyPolicy} />
+      <ModalRenderer modalName={ModalName.PrivacyChoices} />
+      <ModalRenderer modalName={ModalName.FeatureFlags} />
+      <ModalRenderer modalName={ModalName.SolanaPromo} />
+      {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
+      <ModalRenderer modalName={ModalName.AddLiquidity} />
+      <ModalRenderer modalName={ModalName.RemoveLiquidity} />
+      <ModalRenderer modalName={ModalName.ClaimFee} />
+      <ModalRenderer
+        modalName={ModalName.PasskeysHelp}
+        componentProps={{ type: passkeysHelpModalType, accountName: evmAccountName }}
+      />
+      <ModalRenderer modalName={ModalName.Help} />
+      <ModalRenderer modalName={ModalName.DelegationMismatch} />
+      <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
+      <ModalRenderer modalName={ModalName.Send} />
+      <ModalRenderer modalName={ModalName.BridgedAsset} componentProps={bridgedAssetModalProps} />
+      <ModalRenderer modalName={ModalName.Wormhole} componentProps={wormholeModalProps} />
+      <ModalRenderer modalName={ModalName.PendingWalletConnection} />
+      <ModalRenderer
+        modalName={ModalName.ReportTokenIssue}
+        componentProps={{ ...reportTokenIssueProps, onReportSuccess }}
+      />
     </>
   )
 }

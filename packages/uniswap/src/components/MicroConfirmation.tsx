@@ -1,5 +1,5 @@
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 type MicroConfirmationProps = {
   /** Intended to be a micro toast/tooltip, text should not be more than 4 words */
@@ -16,7 +16,7 @@ type MicroConfirmationProps = {
 - On mobile/extension, this is a micro notification toast
  */
 export function MicroConfirmation({ text, showTooltip, trigger, icon }: MicroConfirmationProps): JSX.Element | null {
-  if (isInterface) {
+  if (isWebApp) {
     return <InfoTooltip icon={icon} open={showTooltip} trigger={trigger} text={text} />
   }
   // Not the greatest pattern, but callsite handles showing/hiding notification via dispatch(pushNotification(...))

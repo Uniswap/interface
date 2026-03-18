@@ -11,7 +11,15 @@ import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 
-export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, offline: boolean): Warning[] {
+export function getSendWarnings({
+  t,
+  derivedSendInfo,
+  offline,
+}: {
+  t: TFunction
+  derivedSendInfo: DerivedSendInfo
+  offline: boolean
+}): Warning[] {
   const warnings: Warning[] = []
 
   if (offline) {
@@ -22,14 +30,14 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
 
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
-  const isMissingRequiredParams = checkIsMissingRequiredParams(
+  const isMissingRequiredParams = checkIsMissingRequiredParams({
     currencyInInfo,
     nftIn,
-    chainId as UniverseChainId,
+    chainId: chainId as UniverseChainId,
     recipient,
-    !!currencyAmountIn,
-    !!currencyBalanceIn,
-  )
+    hasCurrencyAmount: !!currencyAmountIn,
+    hasCurrencyBalance: !!currencyBalanceIn,
+  })
 
   // insufficient balance
   if (currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)) {
@@ -38,10 +46,10 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
       title: t('send.warning.insufficientFunds.title', {
-        currencySymbol: currencyAmountIn.currency?.symbol,
+        currencySymbol: currencyAmountIn.currency.symbol,
       }),
       message: t('send.warning.insufficientFunds.message', {
-        currencySymbol: currencyAmountIn.currency?.symbol,
+        currencySymbol: currencyAmountIn.currency.symbol,
       }),
     })
   }
@@ -61,17 +69,24 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
 export function useSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo): Warning[] {
   const offline = useIsOffline()
 
-  return useMemoCompare(() => getSendWarnings(t, derivedSendInfo, offline), isEqual)
+  return useMemoCompare(() => getSendWarnings({ t, derivedSendInfo, offline }), isEqual)
 }
 
-const checkIsMissingRequiredParams = (
-  currencyInInfo: Maybe<CurrencyInfo>,
-  nftIn: GQLNftAsset | undefined,
-  chainId: UniverseChainId | undefined,
-  recipient: Address | undefined,
-  hasCurrencyAmount: boolean,
-  hasCurrencyBalance: boolean,
-): boolean => {
+const checkIsMissingRequiredParams = ({
+  currencyInInfo,
+  nftIn,
+  chainId,
+  recipient,
+  hasCurrencyAmount,
+  hasCurrencyBalance,
+}: {
+  currencyInInfo: Maybe<CurrencyInfo>
+  nftIn?: GQLNftAsset
+  chainId?: UniverseChainId
+  recipient?: Address
+  hasCurrencyAmount: boolean
+  hasCurrencyBalance: boolean
+}): boolean => {
   const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.nftContract?.address
 
   if (!tokenAddress || !chainId || !recipient) {

@@ -1,0 +1,362 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`[object Object] > renders empty when no chainIds provided 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`[object Object] > renders multiple network logos in list 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _flexDirection-row"
+    >
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-transparent _ml-0px _overflowX-hidden _overflowY-hidden _width-14--3999999991290302312 _height-14--3999999991290302312 _borderTopLeftRadius-6--0479999999734361025 _borderTopRightRadius-6--0479999999734361025 _borderBottomRightRadius-6--0479999999734361025 _borderBottomLeftRadius-6--0479999999734361025 _zIndex-2"
+      >
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+            data-testid="network-logo"
+            style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-color: #131313; border-style: solid;"
+          >
+            <div
+              class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+              style="width: 12px; height: 12px;"
+            >
+              <div
+                class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+              />
+              <img
+                alt=""
+                class="css-accessibilityImage-9pa8cd"
+                draggable="false"
+                src="mock-asset-ETHEREUM_LOGO.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-transparent _ml--4--3199999991290302312 _overflowX-hidden _overflowY-hidden _width-14--3999999991290302312 _height-14--3999999991290302312 _borderTopLeftRadius-6--0479999999734361025 _borderTopRightRadius-6--0479999999734361025 _borderBottomRightRadius-6--0479999999734361025 _borderBottomLeftRadius-6--0479999999734361025 _zIndex-1"
+      >
+        <svg
+          aria-hidden="true"
+          height="14.399999999999999"
+          style="display: block;"
+          width="14.399999999999999"
+        >
+          <defs>
+            <mask
+              id=":r1a:-overlap-mask"
+            >
+              <rect
+                fill="white"
+                height="14.399999999999999"
+                rx="6.047999999999999"
+                ry="6.047999999999999"
+                width="14.399999999999999"
+              />
+              <rect
+                fill="black"
+                height="14.399999999999999"
+                rx="6.047999999999999"
+                ry="6.047999999999999"
+                width="14.399999999999999"
+                x="-10.079999999999998"
+                y="0"
+              />
+            </mask>
+          </defs>
+          <foreignobject
+            height="14.399999999999999"
+            mask="url(#:r1a:-overlap-mask)"
+            width="14.399999999999999"
+            x="0"
+            y="0"
+          >
+            <div
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+            >
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+                  data-testid="network-logo"
+                  style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-color: #131313; border-style: solid;"
+                >
+                  <div
+                    class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                    style="width: 12px; height: 12px;"
+                  >
+                    <div
+                      class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                      style="background-image: url(mock-asset-POLYGON_LOGO.png);"
+                    />
+                    <img
+                      alt=""
+                      class="css-accessibilityImage-9pa8cd"
+                      draggable="false"
+                      src="mock-asset-POLYGON_LOGO.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </foreignobject>
+        </svg>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`[object Object] > renders single network logo 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _flexDirection-row"
+    >
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-transparent _ml-0px _overflowX-hidden _overflowY-hidden _width-14--3999999991290302312 _height-14--3999999991290302312 _borderTopLeftRadius-6--0479999999734361025 _borderTopRightRadius-6--0479999999734361025 _borderBottomRightRadius-6--0479999999734361025 _borderBottomLeftRadius-6--0479999999734361025 _zIndex-1"
+      >
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+            data-testid="network-logo"
+            style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-color: #131313; border-style: solid;"
+          >
+            <div
+              class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+              style="width: 12px; height: 12px;"
+            >
+              <div
+                class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+              />
+              <img
+                alt=""
+                class="css-accessibilityImage-9pa8cd"
+                draggable="false"
+                src="mock-asset-ETHEREUM_LOGO.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`[object Object] > renders stacked network logos 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _flexDirection-row"
+    >
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-transparent _ml-0px _overflowX-hidden _overflowY-hidden _width-14--3999999991290302312 _height-14--3999999991290302312 _borderTopLeftRadius-6--0479999999734361025 _borderTopRightRadius-6--0479999999734361025 _borderBottomRightRadius-6--0479999999734361025 _borderBottomLeftRadius-6--0479999999734361025 _zIndex-3"
+      >
+        <div
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+            data-testid="network-logo"
+            style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-color: #131313; border-style: solid;"
+          >
+            <div
+              class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+              style="width: 12px; height: 12px;"
+            >
+              <div
+                class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+              />
+              <img
+                alt=""
+                class="css-accessibilityImage-9pa8cd"
+                draggable="false"
+                src="mock-asset-ETHEREUM_LOGO.png"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-transparent _ml--4--3199999991290302312 _overflowX-hidden _overflowY-hidden _width-14--3999999991290302312 _height-14--3999999991290302312 _borderTopLeftRadius-6--0479999999734361025 _borderTopRightRadius-6--0479999999734361025 _borderBottomRightRadius-6--0479999999734361025 _borderBottomLeftRadius-6--0479999999734361025 _zIndex-2"
+      >
+        <svg
+          aria-hidden="true"
+          height="14.399999999999999"
+          style="display: block;"
+          width="14.399999999999999"
+        >
+          <defs>
+            <mask
+              id=":ri:-overlap-mask"
+            >
+              <rect
+                fill="white"
+                height="14.399999999999999"
+                rx="6.047999999999999"
+                ry="6.047999999999999"
+                width="14.399999999999999"
+              />
+              <rect
+                fill="black"
+                height="14.399999999999999"
+                rx="6.047999999999999"
+                ry="6.047999999999999"
+                width="14.399999999999999"
+                x="-10.079999999999998"
+                y="0"
+              />
+            </mask>
+          </defs>
+          <foreignobject
+            height="14.399999999999999"
+            mask="url(#:ri:-overlap-mask)"
+            width="14.399999999999999"
+            x="0"
+            y="0"
+          >
+            <div
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+            >
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+                  data-testid="network-logo"
+                  style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-color: #131313; border-style: solid;"
+                >
+                  <div
+                    class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                    style="width: 12px; height: 12px;"
+                  >
+                    <div
+                      class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                      style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                    />
+                    <img
+                      alt=""
+                      class="css-accessibilityImage-9pa8cd"
+                      draggable="false"
+                      src="mock-asset-ARBITRUM_LOGO.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </foreignobject>
+        </svg>
+      </div>
+      <div
+        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-transparent _ml--4--3199999991290302312 _overflowX-hidden _overflowY-hidden _width-14--3999999991290302312 _height-14--3999999991290302312 _borderTopLeftRadius-6--0479999999734361025 _borderTopRightRadius-6--0479999999734361025 _borderBottomRightRadius-6--0479999999734361025 _borderBottomLeftRadius-6--0479999999734361025 _zIndex-1"
+      >
+        <svg
+          aria-hidden="true"
+          height="14.399999999999999"
+          style="display: block;"
+          width="14.399999999999999"
+        >
+          <defs>
+            <mask
+              id=":rq:-overlap-mask"
+            >
+              <rect
+                fill="white"
+                height="14.399999999999999"
+                rx="6.047999999999999"
+                ry="6.047999999999999"
+                width="14.399999999999999"
+              />
+              <rect
+                fill="black"
+                height="14.399999999999999"
+                rx="6.047999999999999"
+                ry="6.047999999999999"
+                width="14.399999999999999"
+                x="-10.079999999999998"
+                y="0"
+              />
+            </mask>
+          </defs>
+          <foreignobject
+            height="14.399999999999999"
+            mask="url(#:rq:-overlap-mask)"
+            width="14.399999999999999"
+            x="0"
+            y="0"
+          >
+            <div
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+            >
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-14--3999999991290302312 _height-14--3999999991290302312"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+                  data-testid="network-logo"
+                  style="width: 12px; height: 12px; border-radius: 3.5999999999999996px; border-width: 0px; border-color: #131313; border-style: solid;"
+                >
+                  <div
+                    class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                    style="width: 12px; height: 12px;"
+                  >
+                    <div
+                      class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                      style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                    />
+                    <img
+                      alt=""
+                      class="css-accessibilityImage-9pa8cd"
+                      draggable="false"
+                      src="mock-asset-OPTIMISM_LOGO.png"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </foreignobject>
+        </svg>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

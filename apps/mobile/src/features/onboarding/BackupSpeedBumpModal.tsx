@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
-import { DeprecatedButton, Flex, LabeledCheckbox, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
+import { Button, Flex, LabeledCheckbox, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -10,7 +10,7 @@ import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 const PREVIEW_BOX_HEIGHT = 122
 
 type BackupSpeedBumpModalProps = {
-  backupType: BackupType
+  backupType: BackupType.Cloud | BackupType.Manual
 
   onContinue: () => void
   onClose: () => void
@@ -74,12 +74,12 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
         </Flex>
 
         <Flex row gap="$spacing8">
-          <DeprecatedButton fill size="medium" theme="secondary" onPress={() => onClose()}>
+          <Button size="large" emphasis="secondary" onPress={() => onClose()}>
             {t('common.button.back')}
-          </DeprecatedButton>
-          <DeprecatedButton fill isDisabled={!checked} size="medium" theme="primary" onPress={() => onContinue()}>
+          </Button>
+          <Button isDisabled={!checked} size="large" variant="branded" onPress={() => onContinue()}>
             {t('common.button.continue')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </Modal>

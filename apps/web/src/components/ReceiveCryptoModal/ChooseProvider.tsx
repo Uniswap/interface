@@ -1,53 +1,34 @@
-import { Status } from 'components/AccountDrawer/Status'
-import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
-import { useAccount } from 'hooks/useAccount'
-import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
-import { useOpenModal, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import { CopyToClipboard } from 'theme/components'
-import { DeprecatedButton, Flex, GeneratedIcon, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
+import { Flex, GeneratedIcon, IconButton, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
-import { iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-
-const ICON_SIZE = 32
-const ICON_BORDER_RADIUS = 100
+import { AccountOption } from '~/components/ReceiveCryptoModal/AccountOption'
+import { ProviderOption } from '~/components/ReceiveCryptoModal/ProviderOption'
+import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
+import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useActiveAddresses } from '~/features/accounts/store/hooks'
+import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
+import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
+import { CopyToClipboard } from '~/theme/components/CopyHelper'
 
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
-  const theme = useTheme()
-  const activeStyle = { backgroundColor: theme.surface3 }
-  return (
-    <DeprecatedButton
-      backgroundColor="$surface3"
-      hoverStyle={activeStyle}
-      pressStyle={activeStyle}
-      borderRadius={ICON_BORDER_RADIUS}
-      height={ICON_SIZE}
-      width={ICON_SIZE}
-      p={0}
-    >
-      <Icon color="$neutral2" size={iconSizes.icon16} />
-    </DeprecatedButton>
-  )
+  return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />
 }
 
-function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
-  const account = useAccount()
-  const { unitag } = useUnitagByAddress(account.address)
-  const { data: ENSName } = useENSName(account.address)
-  const openAddressQRModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO_QR })
+function AccountCardItem({ address }: { address: Address }): JSX.Element {
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
+  const { data: ENSName } = useENSName(address)
 
-  const onPressShowWalletQr = (): void => {
-    onClose()
-    openAddressQRModal()
-  }
+  const onPressShowWalletQr = useOpenReceiveCryptoModal({
+    modalState: ReceiveModalState.QR_CODE,
+    qrCodeAddress: address,
+  })
 
   return (
     <Flex row alignItems="flex-start" gap="$spacing12">
@@ -61,15 +42,10 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
         p="$spacing12"
       >
         <Flex fill>
-          <Status
-            account={account.address!}
-            ensUsername={ENSName}
-            uniswapUsername={unitag?.username}
-            showAddressCopy={false}
-          />
+          <AccountOption account={address} ensUsername={ENSName} uniswapUsername={unitag?.username} />
         </Flex>
         <Flex centered row gap="$spacing12" px="$spacing8">
-          <CopyToClipboard toCopy={account.address!}>
+          <CopyToClipboard toCopy={address}>
             <ActionIcon Icon={CopySheets} />
           </CopyToClipboard>
           <TouchableArea onPress={onPressShowWalletQr}>
@@ -82,32 +58,54 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
 }
 
 type ChooseProviderProps = {
+  providersOnly?: boolean
+  errorProvider?: FORServiceProvider
+  connectedProvider?: FORServiceProvider
   setConnectedProvider: (provider: FORServiceProvider) => void
-  setErrorProvider: (provider: FORServiceProvider) => void
+  setErrorProvider: (provider: FORServiceProvider | undefined) => void
 }
 
-export function ChooseProvider({ setConnectedProvider, setErrorProvider }: ChooseProviderProps): JSX.Element {
+export function ChooseProvider({
+  providersOnly = false,
+  errorProvider,
+  connectedProvider,
+  setConnectedProvider,
+  setErrorProvider,
+}: ChooseProviderProps): JSX.Element {
   const { t } = useTranslation()
-  const account = useAccount()
-  const toggleModal = useToggleModal(ApplicationModal.RECEIVE_CRYPTO)
+  const activeAddresses = useActiveAddresses()
   const providers = useCexTransferProviders()
+
+  if (errorProvider) {
+    return (
+      <ProviderConnectionError onBack={() => setErrorProvider(undefined)} selectedServiceProvider={errorProvider} />
+    )
+  }
+
+  if (connectedProvider) {
+    return <ProviderConnectedView selectedServiceProvider={connectedProvider} />
+  }
 
   return (
     <Flex grow gap="$spacing24" mb="$spacing16">
-      <GetHelpHeader link={uniswapUrls.helpArticleUrls.transferCryptoHelp} closeModal={toggleModal} />
-      <Flex gap="$spacing4" p="$spacing8">
+      <Flex gap="$spacing4" p="$spacing8" pt="$spacing24">
         <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
-          {t('fiatOnRamp.receiveCrypto.title')}
+          {providersOnly ? t('home.empty.cexTransfer') : t('fiatOnRamp.receiveCrypto.title')}
         </Text>
         <Text color="$neutral2" mt="$spacing2" textAlign="center" variant="body3">
-          {t('fiatOnRamp.receiveCrypto.transferFunds')}
+          {providersOnly ? t('home.empty.cexTransfer.description') : t('fiatOnRamp.receiveCrypto.transferFunds')}
         </Text>
       </Flex>
       <Flex gap="$spacing12">
-        <AccountCardItem onClose={toggleModal} />
+        {!providersOnly && (
+          <>
+            {activeAddresses.evmAddress && <AccountCardItem address={activeAddresses.evmAddress} />}
+            {activeAddresses.svmAddress && <AccountCardItem address={activeAddresses.svmAddress} />}
+          </>
+        )}
         {providers.length > 0 && (
-          <HeightAnimator animation="fastHeavy">
-            <Flex gap="$spacing12">
+          <Flex gap="$spacing12">
+            {!providersOnly && (
               <Flex centered row shrink gap="$spacing12">
                 <Separator />
                 <Text color="$neutral2" textAlign="center" variant="body3">
@@ -115,21 +113,18 @@ export function ChooseProvider({ setConnectedProvider, setErrorProvider }: Choos
                 </Text>
                 <Separator />
               </Flex>
-              {account.address && (
-                <Flex grow gap="$spacing12">
-                  {providers.map((serviceProvider) => (
-                    <ProviderOption
-                      key={serviceProvider.name}
-                      serviceProvider={serviceProvider}
-                      walletAddress={account.address!}
-                      setConnectedProvider={setConnectedProvider}
-                      setErrorProvider={setErrorProvider}
-                    />
-                  ))}
-                </Flex>
-              )}
+            )}
+            <Flex grow gap="$spacing12">
+              {providers.map((serviceProvider) => (
+                <ProviderOption
+                  key={serviceProvider.name}
+                  serviceProvider={serviceProvider}
+                  setConnectedProvider={setConnectedProvider}
+                  setErrorProvider={setErrorProvider}
+                />
+              ))}
             </Flex>
-          </HeightAnimator>
+          </Flex>
         )}
       </Flex>
     </Flex>

@@ -1,13 +1,14 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { useColorHexFromThemeKey } from 'ui/src/hooks/useColorHexFromThemeKey'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock the useSporeColors hook
-jest.mock('ui/src/hooks/useSporeColors', () => ({
-  useSporeColors: jest.fn(),
+vi.mock('ui/src/hooks/useSporeColors', () => ({
+  useSporeColors: vi.fn(),
 }))
 
-const mockUseSporeColors = useSporeColors as jest.MockedFunction<typeof useSporeColors>
+const mockUseSporeColors = useSporeColors as ReturnType<typeof vi.fn>
 
 describe(useColorHexFromThemeKey, () => {
   beforeEach(() => {

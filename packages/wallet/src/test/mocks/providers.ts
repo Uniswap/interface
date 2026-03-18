@@ -7,6 +7,7 @@ import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ethersTransactionReceipt } from 'uniswap/src/test/fixtures'
+import { createPublicClient, http, walletActions } from 'viem'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
@@ -16,6 +17,10 @@ export const provider = new providers.JsonRpcProvider()
 export const providerManager = {
   getProvider: (): typeof provider => provider,
 }
+
+export const viemClient = createPublicClient({
+  transport: http('https://rpc.flashbots.net'),
+}).extend(walletActions)
 
 const mockFeeData = {
   maxFeePerPrice: BigNumber.from('1000'),
@@ -57,13 +62,18 @@ export const getTxProvidersMocks = (txReceipt?: TransactionReceipt): TxProviders
 }
 
 export const contractManager = new ContractManager()
-contractManager.getOrCreateContract(UniverseChainId.Mainnet, DAI.address, provider, ERC20_ABI)
-contractManager.getOrCreateContract(
-  UniverseChainId.Mainnet,
-  getWrappedNativeAddress(UniverseChainId.Mainnet),
+contractManager.getOrCreateContract({
+  chainId: UniverseChainId.Mainnet,
+  address: DAI.address,
   provider,
-  WETH_ABI,
-)
+  ABI: ERC20_ABI,
+})
+contractManager.getOrCreateContract({
+  chainId: UniverseChainId.Mainnet,
+  address: getWrappedNativeAddress(UniverseChainId.Mainnet),
+  provider,
+  ABI: WETH_ABI,
+})
 export const tokenContract = contractManager.getContract(UniverseChainId.Mainnet, DAI.address) as Erc20
 
 export const mockTokenContract = {

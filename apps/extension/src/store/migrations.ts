@@ -1,9 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: Migration functions handle arbitrary state shapes from different versions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
+import {
+  migratePendingDappRequestsToRecord,
+  migrateUnknownBackupAccountsToMaybeManualBackup,
+  removeDappInfoToChromeLocalStorage,
+  setLanguageToNavigatorLanguage,
+} from 'src/store/extensionMigrations'
+import {
+  addActivityVisibility,
+  addDismissedBridgedAndCompatibleWarnings,
+  migrateDismissedTokenWarnings,
+  migrateSearchHistory,
+  removeThaiBahtFromFiatCurrency,
+  unchecksumDismissedTokenWarningKeys,
+} from 'uniswap/src/state/uniswapMigrations'
 import {
   activatePendingAccounts,
+  addBatchedTransactions,
   addCreatedOnboardingRedesignAccountBehaviorHistory,
   addExploreAndWelcomeBehaviorHistory,
   addHapticSetting,
@@ -13,8 +27,10 @@ import {
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
   deleteWelcomeWalletCardBehaviorHistory,
+  migrateLiquidityTransactionInfo,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
+  moveHapticsToUserSettings,
   moveLanguageSetting,
   moveTokenAndNFTVisibility,
   moveUserSettings,
@@ -29,9 +45,7 @@ export const migrations = {
   1: removeUniconV2BehaviorState,
   2: addRoutingFieldToTransactions,
   3: activatePendingAccounts,
-  4: function removeDappInfoToChromeLocalStorage({ dapp: _dapp, ...state }: any) {
-    return state
-  },
+  4: removeDappInfoToChromeLocalStorage,
   5: deleteBetaOnboardingState,
   6: deleteExtensionOnboardingState,
   7: deleteDefaultFavoritesFromFavoritesState,
@@ -48,6 +62,17 @@ export const migrations = {
   18: unchecksumDismissedTokenWarningKeys,
   19: deleteWelcomeWalletCardBehaviorHistory,
   20: moveTokenAndNFTVisibility,
+  21: migratePendingDappRequestsToRecord,
+  22: addBatchedTransactions,
+  23: migrateUnknownBackupAccountsToMaybeManualBackup,
+  24: moveHapticsToUserSettings,
+  25: removeThaiBahtFromFiatCurrency,
+  26: migrateLiquidityTransactionInfo,
+  27: migrateSearchHistory,
+  28: addDismissedBridgedAndCompatibleWarnings,
+  29: addActivityVisibility,
+  30: migrateDismissedTokenWarnings,
+  31: setLanguageToNavigatorLanguage,
 }
 
-export const EXTENSION_STATE_VERSION = 20
+export const EXTENSION_STATE_VERSION = 31

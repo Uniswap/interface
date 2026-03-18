@@ -1,14 +1,13 @@
-import 'test-utils/tokens/mocks'
+import '~/test-utils/tokens/mocks'
 
 import { BigNumber } from '@ethersproject/bignumber'
-import { CallState } from '@uniswap/redux-multicall'
-import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
-import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
-import { mocked } from 'test-utils/mocked'
-import { renderHook } from 'test-utils/render'
-import { PositionDetails } from 'types/position'
+import { useFilterPossiblyMaliciousPositions } from '~/hooks/useFilterPossiblyMaliciousPositions'
+import { useTokenContractsConstant } from '~/hooks/useTokenContractsConstant'
+import { mocked } from '~/test-utils/mocked'
+import { renderHook } from '~/test-utils/render'
+import { PositionDetails } from '~/types/position'
 
-jest.mock('./useTokenContractsConstant')
+vi.mock('./useTokenContractsConstant')
 
 const positions: PositionDetails[] = [
   {
@@ -58,29 +57,12 @@ const positions: PositionDetails[] = [
   },
 ]
 
-const unsafeReturnValue: CallState[] = [
-  {
-    valid: true,
-    loading: false,
-    syncing: false,
-    result: ['Uniswap-LP.org'],
-    error: false,
-  },
-  {
-    valid: true,
-    loading: false,
-    syncing: false,
-    result: ['Claim Rewards'],
-    error: false,
-  },
-]
-
 describe('useFilterPossiblyMaliciousPositions', () => {
   beforeEach(() => {
     mocked(useTokenContractsConstant).mockReturnValue([])
   })
   it('filters out unsafe positions', async () => {
-    mocked(useTokenContractsConstant).mockReturnValue(unsafeReturnValue)
+    mocked(useTokenContractsConstant).mockReturnValue([{ result: 'Uniswap-LP.org' }, { result: 'Claim Rewards' }])
 
     const { result } = renderHook(() => useFilterPossiblyMaliciousPositions(positions))
 

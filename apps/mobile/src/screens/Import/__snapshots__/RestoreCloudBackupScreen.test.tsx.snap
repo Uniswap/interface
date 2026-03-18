@@ -4,35 +4,26 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
 <View
   style={
     {
-      "backgroundColor": {
-        "dynamic": {
-          "dark": "#131313",
-          "light": "#FFFFFF",
-        },
-      },
+      "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
-      "paddingLeft": undefined,
-      "paddingRight": undefined,
+      "paddingLeft": 0,
+      "paddingRight": 0,
       "paddingTop": 200,
     }
   }
 >
   <View
-    onLayout={[Function]}
+    behavior="padding"
+    enabled={true}
     style={
       [
-        [
-          {
-            "flex": 1,
-            "justifyContent": "flex-end",
-          },
-          {
-            "marginBottom": undefined,
-          },
-        ],
         {
-          "paddingBottom": 0,
+          "flex": 1,
+          "justifyContent": "flex-end",
+        },
+        {
+          "marginBottom": 0,
         },
       ]
     }
@@ -41,6 +32,11 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       collapsable={false}
       entering={[Function]}
       exiting={[Function]}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       style={
         {
           "flexDirection": "column",
@@ -80,12 +76,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "rgba(255,255,255,0.12)",
-                    "light": "rgba(34,34,34,0.05)",
-                  },
-                },
+                "backgroundColor": "rgba(19, 19, 19, 0.08)",
                 "borderBottomLeftRadius": 8,
                 "borderBottomRightRadius": 8,
                 "borderTopLeftRadius": 8,
@@ -116,7 +107,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#222222",
+                    "color": "#131313",
                     "height": 18,
                     "width": 18,
                   },
@@ -131,7 +122,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
               vbWidth={19}
             >
               <RNSVGGroup
-                color="#222222"
+                color="#131313"
                 fill={null}
                 propList={
                   [
@@ -163,12 +154,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#FFFFFF",
-                  "light": "#222222",
-                },
-              },
+              "color": "#131313",
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -186,16 +172,11 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#9B9B9B",
-                  "light": "#7D7D7D",
-                },
-              },
+              "color": "rgba(19, 19, 19, 0.63)",
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
-              "lineHeight": 24,
+              "lineHeight": 20,
               "textAlign": "center",
             }
           }
@@ -220,13 +201,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           handlerType="NativeViewGestureHandler"
           onGestureHandlerEvent={[Function]}
           onGestureHandlerStateChange={[Function]}
-          waitFor={
-            [
-              {
-                "current": null,
-              },
-            ]
-          }
         >
           <View>
             <View
@@ -236,7 +210,640 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                   "gap": 8,
                 }
               }
-            />
+            >
+              <View
+                collapsable={false}
+                focusVisibleStyle={{}}
+                forwardedRef={[Function]}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
+                jestAnimatedStyle={
+                  {
+                    "value": {},
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+                      "borderBottomLeftRadius": 20,
+                      "borderBottomRightRadius": 20,
+                      "borderBottomWidth": 1,
+                      "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+                      "borderLeftWidth": 1,
+                      "borderRightColor": "rgba(19, 19, 19, 0.08)",
+                      "borderRightWidth": 1,
+                      "borderStyle": "solid",
+                      "borderTopColor": "rgba(19, 19, 19, 0.08)",
+                      "borderTopLeftRadius": 20,
+                      "borderTopRightRadius": 20,
+                      "borderTopWidth": 1,
+                      "flexDirection": "column",
+                      "opacity": 1,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "shadowColor": "rgb(19,19,19)",
+                      "shadowOffset": {
+                        "height": 0,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.0784313725490196,
+                      "shadowRadius": 4,
+                      "transform": [
+                        {
+                          "scale": 1,
+                        },
+                      ],
+                    },
+                  ]
+                }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onLayout={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                role="button"
+                style={
+                  [
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+                      "borderBottomLeftRadius": 20,
+                      "borderBottomRightRadius": 20,
+                      "borderBottomWidth": 1,
+                      "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+                      "borderLeftWidth": 1,
+                      "borderRightColor": "rgba(19, 19, 19, 0.08)",
+                      "borderRightWidth": 1,
+                      "borderStyle": "solid",
+                      "borderTopColor": "rgba(19, 19, 19, 0.08)",
+                      "borderTopLeftRadius": 20,
+                      "borderTopRightRadius": 20,
+                      "borderTopWidth": 1,
+                      "flexDirection": "column",
+                      "opacity": 1,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "shadowColor": "rgb(19,19,19)",
+                      "shadowOffset": {
+                        "height": 0,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.0784313725490196,
+                      "shadowRadius": 4,
+                      "transform": [
+                        {
+                          "scale": 1,
+                        },
+                      ],
+                    },
+                    {},
+                  ]
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 12,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "backgroundColor": "transparent",
+                        "borderBottomColor": "transparent",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderBottomWidth": 0,
+                        "borderLeftColor": "transparent",
+                        "borderLeftWidth": 0,
+                        "borderRightColor": "transparent",
+                        "borderRightWidth": 0,
+                        "borderStyle": "solid",
+                        "borderTopColor": "transparent",
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "borderTopWidth": 0,
+                        "flexDirection": "column",
+                        "position": "relative",
+                      }
+                    }
+                    testID="account-icon"
+                  >
+                    <View
+                      style={
+                        {
+                          "flexDirection": "column",
+                        }
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "flex": 1,
+                        "flexDirection": "column",
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <Text
+                        adjustsFontSizeToFit={true}
+                        allowFontScaling={true}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          {
+                            "color": "#131313",
+                            "fontFamily": "Basel Grotesk",
+                            "fontSize": 19,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          }
+                        }
+                        suppressHighlighting={true}
+                      />
+                    </View>
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "rgba(19, 19, 19, 0.63)",
+                          "fontFamily": "Basel Grotesk",
+                          "fontSize": 15,
+                          "fontWeight": "400",
+                          "lineHeight": 19.5,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Nov 8, 55840 5:30 PM
+                    </Text>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "flexDirection": "column",
+                      }
+                    }
+                  >
+                    <View
+                      collapsable={false}
+                      forwardedRef={[Function]}
+                      jestAnimatedProps={
+                        {
+                          "value": {},
+                        }
+                      }
+                      jestAnimatedStyle={
+                        {
+                          "value": {
+                            "borderBottomLeftRadius": 999999,
+                            "borderBottomRightRadius": 999999,
+                            "borderTopLeftRadius": 999999,
+                            "borderTopRightRadius": 999999,
+                            "transform": [
+                              {
+                                "rotate": "180deg",
+                              },
+                            ],
+                          },
+                        }
+                      }
+                      jestInlineStyle={
+                        [
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "column",
+                            "justifyContent": "center",
+                          },
+                        ]
+                      }
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "column",
+                            "justifyContent": "center",
+                          },
+                          {
+                            "borderBottomLeftRadius": 999999,
+                            "borderBottomRightRadius": 999999,
+                            "borderTopLeftRadius": 999999,
+                            "borderTopRightRadius": 999999,
+                            "transform": [
+                              {
+                                "rotate": "180deg",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                    >
+                      <RNSVGSvgView
+                        align="xMidYMid"
+                        bbHeight={20}
+                        bbWidth={20}
+                        fill="none"
+                        focusable={false}
+                        meetOrSlice={0}
+                        minX={0}
+                        minY={0}
+                        strokeWidth={8}
+                        style={
+                          [
+                            {
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                            },
+                            {
+                              "color": "rgba(19, 19, 19, 0.63)",
+                              "height": 20,
+                              "width": 20,
+                            },
+                            {
+                              "flex": 0,
+                              "height": 20,
+                              "width": 20,
+                            },
+                          ]
+                        }
+                        vbHeight={24}
+                        vbWidth={24}
+                      >
+                        <RNSVGGroup
+                          color="rgba(19, 19, 19, 0.63)"
+                          fill={null}
+                          propList={
+                            [
+                              "fill",
+                              "strokeWidth",
+                            ]
+                          }
+                          strokeWidth={8}
+                        >
+                          <RNSVGPath
+                            clipRule={0}
+                            d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                            fill={
+                              {
+                                "type": 2,
+                              }
+                            }
+                            fillRule={0}
+                            propList={
+                              [
+                                "fill",
+                                "fillRule",
+                              ]
+                            }
+                          />
+                        </RNSVGGroup>
+                      </RNSVGSvgView>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View
+                collapsable={false}
+                focusVisibleStyle={{}}
+                forwardedRef={[Function]}
+                jestAnimatedProps={
+                  {
+                    "value": {},
+                  }
+                }
+                jestAnimatedStyle={
+                  {
+                    "value": {},
+                  }
+                }
+                jestInlineStyle={
+                  [
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+                      "borderBottomLeftRadius": 20,
+                      "borderBottomRightRadius": 20,
+                      "borderBottomWidth": 1,
+                      "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+                      "borderLeftWidth": 1,
+                      "borderRightColor": "rgba(19, 19, 19, 0.08)",
+                      "borderRightWidth": 1,
+                      "borderStyle": "solid",
+                      "borderTopColor": "rgba(19, 19, 19, 0.08)",
+                      "borderTopLeftRadius": 20,
+                      "borderTopRightRadius": 20,
+                      "borderTopWidth": 1,
+                      "flexDirection": "column",
+                      "opacity": 1,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "shadowColor": "rgb(19,19,19)",
+                      "shadowOffset": {
+                        "height": 0,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.0784313725490196,
+                      "shadowRadius": 4,
+                      "transform": [
+                        {
+                          "scale": 1,
+                        },
+                      ],
+                    },
+                  ]
+                }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onLayout={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                role="button"
+                style={
+                  [
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+                      "borderBottomLeftRadius": 20,
+                      "borderBottomRightRadius": 20,
+                      "borderBottomWidth": 1,
+                      "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+                      "borderLeftWidth": 1,
+                      "borderRightColor": "rgba(19, 19, 19, 0.08)",
+                      "borderRightWidth": 1,
+                      "borderStyle": "solid",
+                      "borderTopColor": "rgba(19, 19, 19, 0.08)",
+                      "borderTopLeftRadius": 20,
+                      "borderTopRightRadius": 20,
+                      "borderTopWidth": 1,
+                      "flexDirection": "column",
+                      "opacity": 1,
+                      "paddingBottom": 16,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "paddingTop": 16,
+                      "shadowColor": "rgb(19,19,19)",
+                      "shadowOffset": {
+                        "height": 0,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.0784313725490196,
+                      "shadowRadius": 4,
+                      "transform": [
+                        {
+                          "scale": 1,
+                        },
+                      ],
+                    },
+                    {},
+                  ]
+                }
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                      "gap": 12,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "backgroundColor": "transparent",
+                        "borderBottomColor": "transparent",
+                        "borderBottomLeftRadius": 999999,
+                        "borderBottomRightRadius": 999999,
+                        "borderBottomWidth": 0,
+                        "borderLeftColor": "transparent",
+                        "borderLeftWidth": 0,
+                        "borderRightColor": "transparent",
+                        "borderRightWidth": 0,
+                        "borderStyle": "solid",
+                        "borderTopColor": "transparent",
+                        "borderTopLeftRadius": 999999,
+                        "borderTopRightRadius": 999999,
+                        "borderTopWidth": 0,
+                        "flexDirection": "column",
+                        "position": "relative",
+                      }
+                    }
+                    testID="account-icon"
+                  >
+                    <View
+                      style={
+                        {
+                          "flexDirection": "column",
+                        }
+                      }
+                    />
+                  </View>
+                  <View
+                    style={
+                      {
+                        "flex": 1,
+                        "flexDirection": "column",
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <Text
+                        adjustsFontSizeToFit={true}
+                        allowFontScaling={true}
+                        maxFontSizeMultiplier={1.4}
+                        style={
+                          {
+                            "color": "#131313",
+                            "fontFamily": "Basel Grotesk",
+                            "fontSize": 19,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          }
+                        }
+                        suppressHighlighting={true}
+                      />
+                    </View>
+                    <Text
+                      adjustsFontSizeToFit={true}
+                      allowFontScaling={true}
+                      maxFontSizeMultiplier={1.4}
+                      style={
+                        {
+                          "color": "rgba(19, 19, 19, 0.63)",
+                          "fontFamily": "Basel Grotesk",
+                          "fontSize": 15,
+                          "fontWeight": "400",
+                          "lineHeight": 19.5,
+                        }
+                      }
+                      suppressHighlighting={true}
+                    >
+                      Nov 8, 55840 5:13 PM
+                    </Text>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "flexDirection": "column",
+                      }
+                    }
+                  >
+                    <View
+                      collapsable={false}
+                      forwardedRef={[Function]}
+                      jestAnimatedProps={
+                        {
+                          "value": {},
+                        }
+                      }
+                      jestAnimatedStyle={
+                        {
+                          "value": {
+                            "borderBottomLeftRadius": 999999,
+                            "borderBottomRightRadius": 999999,
+                            "borderTopLeftRadius": 999999,
+                            "borderTopRightRadius": 999999,
+                            "transform": [
+                              {
+                                "rotate": "180deg",
+                              },
+                            ],
+                          },
+                        }
+                      }
+                      jestInlineStyle={
+                        [
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "column",
+                            "justifyContent": "center",
+                          },
+                        ]
+                      }
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "flexDirection": "column",
+                            "justifyContent": "center",
+                          },
+                          {
+                            "borderBottomLeftRadius": 999999,
+                            "borderBottomRightRadius": 999999,
+                            "borderTopLeftRadius": 999999,
+                            "borderTopRightRadius": 999999,
+                            "transform": [
+                              {
+                                "rotate": "180deg",
+                              },
+                            ],
+                          },
+                        ]
+                      }
+                    >
+                      <RNSVGSvgView
+                        align="xMidYMid"
+                        bbHeight={20}
+                        bbWidth={20}
+                        fill="none"
+                        focusable={false}
+                        meetOrSlice={0}
+                        minX={0}
+                        minY={0}
+                        strokeWidth={8}
+                        style={
+                          [
+                            {
+                              "backgroundColor": "transparent",
+                              "borderWidth": 0,
+                            },
+                            {
+                              "color": "rgba(19, 19, 19, 0.63)",
+                              "height": 20,
+                              "width": 20,
+                            },
+                            {
+                              "flex": 0,
+                              "height": 20,
+                              "width": 20,
+                            },
+                          ]
+                        }
+                        vbHeight={24}
+                        vbWidth={24}
+                      >
+                        <RNSVGGroup
+                          color="rgba(19, 19, 19, 0.63)"
+                          fill={null}
+                          propList={
+                            [
+                              "fill",
+                              "strokeWidth",
+                            ]
+                          }
+                          strokeWidth={8}
+                        >
+                          <RNSVGPath
+                            clipRule={0}
+                            d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                            fill={
+                              {
+                                "type": 2,
+                              }
+                            }
+                            fillRule={0}
+                            propList={
+                              [
+                                "fill",
+                                "fillRule",
+                              ]
+                            }
+                          />
+                        </RNSVGGroup>
+                      </RNSVGSvgView>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
           </View>
         </RCTScrollView>
       </View>

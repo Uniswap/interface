@@ -1,18 +1,19 @@
 import { Currency } from '@uniswap/sdk-core'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import Row from 'components/deprecated/Row'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
-import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import Row from '~/components/deprecated/Row'
+import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
+import { ClickableStyle } from '~/theme/components/styles'
 
-const CurrencySymbolContainer = styled.span`
+const CurrencySymbolContainer = deprecatedStyled.span`
   display: inline-block;
   margin: 0 8px;
 `
 
-const TokenSelectorRow = styled(Row)`
+const TokenSelectorRow = deprecatedStyled(Row)`
   ${ClickableStyle}
 `
 

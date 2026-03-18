@@ -1,22 +1,27 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import type { GasFeeResult } from '@universe/api'
 import { useWeb3React } from '@web3-react/core'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useCurrency } from 'hooks/Tokens'
-import { useAccount } from 'hooks/useAccount'
-import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
-import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { SendState } from 'state/send/SendContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
-import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
-import { isAddress } from 'utilities/src/addresses'
-import { useCreateTransferTransaction } from 'utils/transfer'
-
+import { GasSpeed } from 'uniswap/src/features/gas/utils'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useCurrency } from '~/hooks/Tokens'
+import { useAccount } from '~/hooks/useAccount'
+import { useTransactionGasFee } from '~/hooks/useTransactionGasFee'
+import { useUSDTokenUpdater } from '~/hooks/useUSDTokenUpdater'
+import { useCurrencyBalances } from '~/lib/hooks/useCurrencyBalance'
+import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { SendState } from '~/state/send/SendContext'
+import { useCreateTransferTransaction } from '~/utils/transfer'
 export interface RecipientData {
   address: string
   ensName?: string
@@ -49,7 +54,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   // Otherwise, use raw `recipient` input from the user.
   const userInput = validatedRecipientData ? undefined : recipient
 
-  const isRecipientAnAddress = isAddress(userInput ?? '')
+  const isRecipientAnAddress = isEVMAddressWithChecksum(userInput ?? '')
 
   // If userInput is an address, do a reverse ENS lookup
   // (address → ENS). Otherwise skip.
@@ -58,30 +63,37 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
 
   // If userInput is *not* an address, do a forward lookup
   // (ENS → address). Otherwise skip.
-  const forwardLookupInput = !isRecipientAnAddress ? userInput ?? null : null
+  const forwardLookupInput = !isRecipientAnAddress ? (userInput ?? null) : null
   const { data: forwardLookupAddress } = useAddressFromEns(forwardLookupInput)
 
   // Check Unitag by name and see if it yields an address
-  const { unitag: recipientInputUnitag } = useUnitagByName(userInput)
+  const { data: recipientInputUnitag } = useUnitagsUsernameQuery({
+    params: userInput ? { username: userInput } : undefined,
+  })
   const recipientInputUnitagAddress = recipientInputUnitag?.address?.address
   const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
 
   const validatedRecipientAddress = useMemo(() => {
+    const platform = chainIdToPlatform(chainId ?? UniverseChainId.Mainnet)
     return (
       validatedRecipientData?.address ??
-      (isAddress(userInput) || isAddress(forwardLookupAddress) || isAddress(recipientInputUnitagAddress) || undefined)
+      (getValidAddress({ address: userInput, platform, withEVMChecksum: true }) ||
+        getValidAddress({ address: forwardLookupAddress, platform, withEVMChecksum: true }) ||
+        getValidAddress({ address: recipientInputUnitagAddress, platform, withEVMChecksum: true }) ||
+        undefined)
     )
-  }, [validatedRecipientData?.address, userInput, forwardLookupAddress, recipientInputUnitagAddress])
+  }, [chainId, validatedRecipientData?.address, userInput, forwardLookupAddress, recipientInputUnitagAddress])
 
   // Unitag fallback: If there's no known username from input or validated data,
   // try to look up a unitag by the final address.
-  const { unitag: fallbackUnitag } = useUnitagByAddress(
-    recipientInputUnitagUsername ? undefined : validatedRecipientAddress,
-  )
+  const { data: fallbackUnitag } = useUnitagsAddressQuery({
+    params:
+      !recipientInputUnitagUsername && validatedRecipientAddress ? { address: validatedRecipientAddress } : undefined,
+  })
 
   // If forward lookup succeeded, use the original user input as ENS name.
   const finalEnsName = useMemo(() => {
-    if (isAddress(forwardLookupAddress)) {
+    if (isEVMAddressWithChecksum(forwardLookupAddress)) {
       return userInput
     }
     return validatedRecipientData?.ensName ?? reverseLookupName ?? undefined
@@ -105,17 +117,17 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     }
   }, [validatedRecipientAddress, finalEnsName, finalUnitag])
 
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
+  const nativeCurrency = useCurrency({ address: NATIVE_CHAIN_ID, chainId })
   const [inputCurrencyBalance, nativeCurrencyBalance] = useCurrencyBalances(
     account.address,
     useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency]),
   )
 
-  const { formattedAmount: exactAmountOut } = useUSDTokenUpdater(
-    inputInFiat,
-    exactAmountToken ?? exactAmountFiat,
-    inputCurrency,
-  )
+  const { formattedAmount: exactAmountOut } = useUSDTokenUpdater({
+    isFiatInput: inputInFiat,
+    exactAmount: exactAmountToken ?? exactAmountFiat,
+    exactCurrency: inputCurrency,
+  })
   const parsedTokenAmount = useMemo(() => {
     return tryParseCurrencyAmount(inputInFiat ? exactAmountOut : exactAmountToken, inputCurrency)
   }, [exactAmountOut, exactAmountToken, inputCurrency, inputInFiat])
@@ -130,17 +142,18 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     }
   }, [account.address, chainId, parsedTokenAmount, provider, recipientData?.address])
   const transferTransaction = useCreateTransferTransaction(transferInfo)
-  const gasFee = useTransactionGasFee(transferTransaction, GasSpeed.Normal, !transferTransaction)
+  const gasFee = useTransactionGasFee(transferTransaction ?? undefined, GasSpeed.Normal)
   const gasFeeCurrencyAmount = useMemo(() => {
-    if (!chainId || !gasFee?.value) {
+    if (!chainId || !gasFee.value) {
       return undefined
     }
 
     return CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasFee.value)
-  }, [chainId, gasFee?.value])
+  }, [chainId, gasFee.value])
 
   const inputError = useMemo(() => {
-    const insufficientBalance = parsedTokenAmount && inputCurrencyBalance?.lessThan(parsedTokenAmount)
+    const insufficientBalance =
+      parsedTokenAmount && (!inputCurrencyBalance || inputCurrencyBalance.lessThan(parsedTokenAmount))
     if (insufficientBalance) {
       return SendInputError.INSUFFICIENT_FUNDS
     }
@@ -149,12 +162,13 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       return undefined
     }
 
-    let totalAmount = CurrencyAmount.fromRawAmount(nativeCurrency, gasFee?.value)
-    if (parsedTokenAmount && inputCurrency && nativeCurrency?.equals(inputCurrency)) {
-      totalAmount = totalAmount?.add(parsedTokenAmount)
+    let totalAmount = CurrencyAmount.fromRawAmount(nativeCurrency, gasFee.value)
+    if (parsedTokenAmount && inputCurrency && nativeCurrency.equals(inputCurrency)) {
+      totalAmount = totalAmount.add(parsedTokenAmount)
     }
 
-    if (!totalAmount || nativeCurrencyBalance?.lessThan(totalAmount)) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!totalAmount || nativeCurrencyBalance.lessThan(totalAmount)) {
       return SendInputError.INSUFFICIENT_FUNDS_FOR_GAS
     }
 
@@ -167,7 +181,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       exactAmountOut,
       parsedTokenAmount,
       recipientData,
-      transaction: transferTransaction,
+      transaction: transferTransaction ?? undefined,
       gasFeeCurrencyAmount,
       gasFee,
       inputError,

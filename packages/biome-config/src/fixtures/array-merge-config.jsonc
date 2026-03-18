@@ -1,0 +1,52 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              {
+                "group": ["localStorage/*"],
+                "message": "Please do not import from localStorage"
+              },
+              {
+                "group": ["global/*"],
+                "message": "Please do not import from global"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "include": ["src/legacy/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  "__INCLUDE_GLOBAL_VALUES__",
+                  {
+                    "group": ["localStorage/*"],
+                    "message": "Please do not import from localStorage"
+                  },
+                  {
+                    "group": ["sessionStorage/*"],
+                    "message": "Please do not import from sessionStorage"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

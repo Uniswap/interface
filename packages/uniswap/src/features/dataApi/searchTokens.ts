@@ -1,49 +1,73 @@
-import { useCallback, useMemo } from 'react'
-import { useSearchTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
+import { SearchTokensResponse, SearchType } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { GqlResult } from '@universe/api'
+import { useMemo } from 'react'
+import { searchTokenToCurrencyInfo, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
+import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
+import { isWSOL } from 'uniswap/src/utils/isWSOL'
+import { useEvent } from 'utilities/src/react/hooks'
 
-export function useSearchTokens(
-  searchQuery: string | null,
-  chainFilter: UniverseChainId | null,
-  skip: boolean,
-): GqlResult<CurrencyInfo[]> {
-  const gqlChainFilter = chainFilter ? toGraphQLChain(chainFilter) : null
-  const { gqlChains } = useEnabledChains()
-  const { data, loading, error, refetch } = useSearchTokensQuery({
-    variables: {
-      searchQuery: searchQuery ?? '',
-      chains: gqlChainFilter ? [gqlChainFilter] : gqlChains,
-    },
-    skip: skip || !searchQuery,
+export function useSearchTokens({
+  searchQuery,
+  chainFilter,
+  skip,
+  size = NUMBER_OF_RESULTS_LONG,
+  hideWSOL = false,
+}: {
+  searchQuery: string | null
+  chainFilter: UniverseChainId | null
+  skip: boolean
+  size?: number
+  hideWSOL?: boolean
+}): GqlResult<CurrencyInfo[]> {
+  const { chains: enabledChainIds } = useEnabledChains()
+
+  const isSvmConnected = useConnectionStatus(Platform.SVM).isConnected
+
+  const variables = useMemo(
+    () => ({
+      searchQuery: searchQuery ?? undefined,
+      chainIds: chainFilter ? [chainFilter] : enabledChainIds,
+      searchType: SearchType.TOKEN,
+      page: 1,
+      size,
+      prioritizeSvm: isSvmConnected,
+    }),
+    [searchQuery, chainFilter, size, enabledChainIds, isSvmConnected],
+  )
+
+  const tokenSelect = useEvent((data: SearchTokensResponse): CurrencyInfo[] => {
+    return data.tokens
+      .map((token) => searchTokenToCurrencyInfo(token))
+      .filter((c): c is CurrencyInfo => {
+        if (!c) {
+          return false
+        }
+        // Filter out WSOL from Solana search results when hideWSOL is true
+        if (hideWSOL && isWSOL(c.currency)) {
+          return false
+        }
+        return true
+      })
   })
 
-  const persistedError = usePersistedError(loading, error)
-
-  const formattedData = useMemo(() => {
-    if (!data || !data.searchTokens) {
-      return undefined
-    }
-
-    return data.searchTokens
-      .map((token) => {
-        if (!token) {
-          return null
-        }
-
-        return gqlTokenToCurrencyInfo(token)
-      })
-      .filter((c): c is CurrencyInfo => Boolean(c))
-  }, [data])
-
-  const retry = useCallback(() => !skip && refetch({ searchQuery: searchQuery ?? '' }), [refetch, searchQuery, skip])
+  const {
+    data: tokens,
+    error,
+    isPending,
+    refetch,
+  } = useSearchTokensAndPoolsQuery<CurrencyInfo[]>({
+    input: variables,
+    enabled: !skip,
+    select: tokenSelect,
+  })
 
   return useMemo(
-    () => ({ data: formattedData, loading, error: persistedError, refetch: retry }),
-    [formattedData, loading, retry, persistedError],
+    () => ({ data: tokens, loading: isPending, error: error ?? undefined, refetch }),
+    [tokens, isPending, error, refetch],
   )
 }

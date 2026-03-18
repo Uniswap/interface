@@ -1,33 +1,31 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
-import darkImage from 'assets/images/404-page-dark.png'
-import lightImage from 'assets/images/404-page-light.png'
-import { SmallButtonPrimary } from 'components/Button/buttons'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
-import { Link } from 'react-router-dom'
-import { ThemedText } from 'theme/components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { Button, Flex, useIsDarkMode } from 'ui/src'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import darkImage from '~/assets/images/404-page-dark.png'
+import lightImage from '~/assets/images/404-page-light.png'
+import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ThemedText } from '~/theme/components'
 
-const Image = styled.img`
+const Image = deprecatedStyled.img`
   max-width: 510px;
   width: 100%;
   padding: 0 75px;
 `
 
-const Container = styled.div`
+const Container = deprecatedStyled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 
-const Header = styled(Container)`
+const Header = deprecatedStyled(Container)`
   gap: 30px;
 `
 
-const PageWrapper = styled(Container)`
+const PageWrapper = deprecatedStyled(Container)`
   flex: 1;
   justify-content: center;
   gap: 50px;
@@ -53,7 +51,7 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
 
   return (
     <PageWrapper>
-      <Trace logImpression page={InterfacePageName.NOT_FOUND}>
+      <Trace logImpression page={InterfacePageName.NotFound}>
         <Header>
           <Container>
             {title ?? <Title>404</Title>}
@@ -66,9 +64,11 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
           <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
         </Header>
         {actionButton ?? (
-          <SmallButtonPrimary as={Link} to="/">
-            <Trans i18nKey="notFound.oops" />
-          </SmallButtonPrimary>
+          <Flex row alignSelf="stretch">
+            <Button href="/" tag="a" variant="branded" $platform-web={{ textDecoration: 'none' }}>
+              <Trans i18nKey="notFound.oops" />
+            </Button>
+          </Flex>
         )}
       </Trace>
     </PageWrapper>

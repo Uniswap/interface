@@ -1,68 +1,58 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { SwapBottomCard } from 'components/SwapBottomCard'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import SwapHeader, { PathnameToTab } from 'components/swap/SwapHeader'
-import { PageWrapper, SwapWrapper } from 'components/swap/styled'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { PageType, useIsPage } from 'hooks/useIsPage'
-import { BuyForm } from 'pages/Swap/Buy/BuyForm'
-import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
-import { SendForm } from 'pages/Swap/Send/SendForm'
-import { SwapForm } from 'pages/Swap/SwapForm'
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import type { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { MultichainContextProvider } from 'state/multichain/MultichainContext'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
-import { isPreviewTrade } from 'state/routing/utils'
-import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
-import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
-import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
-import { useInitialCurrencyState } from 'state/swap/hooks'
-import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
-import { Flex, SegmentedControl, Text, Tooltip, styled, useMedia } from 'ui/src'
-import { AppTFunction } from 'ui/src/i18n/types'
+import { useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router'
+import type { SegmentedControlOption } from 'ui/src'
+import { Flex, SegmentedControl, styled, Text, Tooltip } from 'ui/src'
+import type { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
+import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
+import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
-import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
-import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
-import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
-import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { SwapTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/SwapTransactionSettingsStoreContextProvider'
+import type {
+  PasskeyAuthStatus,
+  SwapRedirectFn,
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
+import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
+import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
+import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
+import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isMobileWeb } from 'utilities/src/platform'
-import noop from 'utilities/src/react/noop'
-
-export function getIsReviewableQuote(
-  trade: InterfaceTrade | undefined,
-  tradeState: TradeState,
-  swapInputError?: ReactNode,
-): boolean {
-  if (swapInputError) {
-    return false
-  }
-  // if the current quote is a preview quote, allow the user to progress to the Swap review screen
-  if (isPreviewTrade(trade)) {
-    return true
-  }
-
-  return Boolean(trade && tradeState === TradeState.VALID)
-}
+import { noop } from 'utilities/src/react/noop'
+import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { SwapBottomCard } from '~/components/SwapBottomCard'
+import { PageWrapper } from '~/components/swap/styled'
+import { useAccount } from '~/hooks/useAccount'
+import { useDeferredComponent } from '~/hooks/useDeferredComponent'
+import { PageType, useIsPage } from '~/hooks/useIsPage'
+import { useModalState } from '~/hooks/useModalState'
+import { ReturnToAuctionBanner } from '~/pages/Swap/ReturnToAuctionBanner'
+import { useResetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
+import { useWebSwapSettings } from '~/pages/Swap/settings/useWebSwapSettings'
+import { TDPContext } from '~/pages/TokenDetails/context/TDPContext'
+import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
+import { useSwapHandlers } from '~/state/sagas/transactions/useSwapHandlers'
+import { useInitialCurrencyState } from '~/state/swap/hooks'
+import { SwapAndLimitContextProvider } from '~/state/swap/SwapContext'
+import type { CurrencyState } from '~/state/swap/types'
+import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
+import { isIFramed } from '~/utils/isIFramed'
 
 export default function SwapPage() {
   const navigate = useNavigate()
@@ -75,10 +65,10 @@ export default function SwapPage() {
   const {
     initialInputCurrency,
     initialOutputCurrency,
-    initialChainId,
+    initialInputChainId,
+    initialOutputChainId,
     initialTypedValue,
     initialField,
-    initialCurrencyLoading,
     triggerConnect,
   } = useInitialCurrencyState()
 
@@ -90,21 +80,41 @@ export default function SwapPage() {
   }, [accountDrawer, triggerConnect, navigate, location.pathname])
 
   return (
-    <Trace logImpression page={InterfacePageName.SWAP_PAGE}>
+    <Trace logImpression page={InterfacePageName.SwapPage}>
       <PageWrapper>
-        <Swap
-          chainId={initialChainId}
-          initialInputCurrency={initialInputCurrency}
-          initialOutputCurrency={initialOutputCurrency}
-          initialTypedValue={initialTypedValue}
-          initialIndependentField={initialField}
-          initialCurrencyLoading={initialCurrencyLoading}
-          syncTabToUrl={true}
-        />
+        <WebFORNudgeProvider>
+          <Swap
+            initialInputChainId={initialInputChainId}
+            initialInputCurrency={initialInputCurrency}
+            initialOutputCurrency={initialOutputCurrency}
+            initialOutputChainId={initialOutputChainId}
+            initialTypedValue={initialTypedValue}
+            initialIndependentField={initialField}
+            syncTabToUrl={true}
+            usePersistedFilteredChainIds
+          />
+        </WebFORNudgeProvider>
       </PageWrapper>
-      {location.pathname === '/swap' && <SwitchLocaleLink />}
+      <ReturnToAuctionBanner />
     </Trace>
   )
+}
+
+// If there are persisted filtered chain ids, use them. Otherwise, use the initial input and output chain ids derived from query params.
+function getFilteredChainIdsOverride({
+  initialInputChainId,
+  initialOutputChainId,
+  usePersistedFilteredChainIds,
+  persistedFilteredChainIds,
+}: {
+  initialInputChainId?: UniverseChainId
+  initialOutputChainId?: UniverseChainId
+  usePersistedFilteredChainIds?: boolean
+  persistedFilteredChainIds?: { [key in CurrencyField]?: UniverseChainId }
+}): TransactionState['filteredChainIdsOverride'] {
+  return usePersistedFilteredChainIds && !!persistedFilteredChainIds
+    ? persistedFilteredChainIds
+    : { [CurrencyField.OUTPUT]: initialOutputChainId, [CurrencyField.INPUT]: initialInputChainId }
 }
 
 /**
@@ -117,46 +127,43 @@ export default function SwapPage() {
 export function Swap({
   initialInputCurrency,
   initialOutputCurrency,
+  initialOutputChainId,
   initialTypedValue,
   initialIndependentField,
-  initialCurrencyLoading = false,
-  chainId,
+  initialInputChainId,
   hideHeader = false,
   hideFooter = false,
   onCurrencyChange,
-  disableTokenInputs = false,
-  compact = false,
   syncTabToUrl,
   swapRedirectCallback,
   tokenColor,
+  usePersistedFilteredChainIds = false,
 }: {
-  chainId?: UniverseChainId
+  initialInputChainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState) => void
-  disableTokenInputs?: boolean
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
+  initialOutputChainId?: UniverseChainId
   initialTypedValue?: string
   initialIndependentField?: CurrencyField
-  initialCurrencyLoading?: boolean
-  compact?: boolean
   syncTabToUrl: boolean
   hideHeader?: boolean
   hideFooter?: boolean
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
+  usePersistedFilteredChainIds?: boolean
+  passkeyAuthStatus?: PasskeyAuthStatus
 }) {
-  const media = useMedia()
+  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+
   const isExplorePage = useIsPage(PageType.EXPLORE)
-
-  const { value: universalSwapFlow, isLoading } = useFeatureFlagWithLoading(FeatureFlags.UniversalSwap)
-
-  const { isTestnetModeEnabled } = useEnabledChains()
-  const isSharedSwapDisabled = isTestnetModeEnabled && isExplorePage
+  const isModeMismatch = useIsModeMismatch(initialInputChainId)
+  const isSharedSwapDisabled = isModeMismatch && isExplorePage
 
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
-  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const prefilledState = useSwapPrefilledState({
     input,
@@ -166,88 +173,62 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
     selectingCurrencyChainId: swapOutputChainId,
     skipFocusOnCurrencyField: isMobileWeb,
+    filteredChainIdsOverride: getFilteredChainIdsOverride({
+      initialInputChainId,
+      initialOutputChainId,
+      usePersistedFilteredChainIds,
+      persistedFilteredChainIds,
+    }),
   })
 
-  if (universalSwapFlow || isTestnetModeEnabled || isLoading) {
-    return (
-      <MultichainContextProvider initialChainId={chainId}>
-        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
-          <SwapAndLimitContextProvider
-            initialInputCurrency={initialInputCurrency}
-            initialOutputCurrency={initialOutputCurrency}
-          >
-            <PrefetchBalancesWrapper>
-              <SwapFormContextProvider
-                prefilledState={prefilledState}
-                hideSettings={hideHeader}
-                hideFooter={hideFooter}
-              >
-                <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
-                  {isSharedSwapDisabled && <DisabledSwapOverlay />}
-                  <UniversalSwapFlow
-                    hideHeader={hideHeader}
-                    hideFooter={hideFooter}
-                    syncTabToUrl={syncTabToUrl}
-                    swapRedirectCallback={swapRedirectCallback}
-                    onCurrencyChange={onCurrencyChange}
-                    prefilledState={prefilledState}
-                    tokenColor={tokenColor}
-                  />
-                </Flex>
-              </SwapFormContextProvider>
-            </PrefetchBalancesWrapper>
-          </SwapAndLimitContextProvider>
-        </TransactionSettingsContextProvider>
-      </MultichainContextProvider>
-    )
-  }
-
   return (
-    <MultichainContextProvider initialChainId={chainId}>
-      <SwapAndLimitContextProvider
-        initialInputCurrency={initialInputCurrency}
-        initialOutputCurrency={initialOutputCurrency}
-      >
-        {/* TODO: Move SwapContextProvider inside Swap tab ONLY after SwapHeader removes references to trade / autoSlippage */}
-        <SwapAndLimitContext.Consumer>
-          {({ currentTab }) => (
-            <SwapContextProvider
-              initialTypedValue={initialTypedValue}
-              initialIndependentField={initialIndependentField}
+    <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
+      <SwapTransactionSettingsStoreContextProvider>
+        <SwapAndLimitContextProvider
+          initialInputCurrency={initialInputCurrency}
+          initialOutputCurrency={initialOutputCurrency}
+        >
+          <PrefetchBalancesWrapper>
+            <SwapFormStoreContextProvider
+              prefilledState={prefilledState}
+              hideSettings={hideHeader}
+              hideFooter={hideFooter}
             >
-              <Flex width="100%" gap="$spacing16">
-                <SwapWrapper id="swap-page">
-                  {!hideHeader && <SwapHeader compact={compact || media.md} syncTabToUrl={syncTabToUrl} />}
-                  {currentTab === SwapTab.Swap && (
-                    <SwapForm
-                      onCurrencyChange={onCurrencyChange}
-                      initialCurrencyLoading={initialCurrencyLoading}
-                      disableTokenInputs={disableTokenInputs}
-                    />
-                  )}
-                  {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-                  {currentTab === SwapTab.Send && (
-                    <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
-                  )}
-                  {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
-                </SwapWrapper>
-                <SwapBottomCard />
+              <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+                {isSharedSwapDisabled && <DisabledSwapOverlay />}
+                <UniversalSwapFlow
+                  hideHeader={hideHeader}
+                  hideFooter={hideFooter}
+                  syncTabToUrl={syncTabToUrl}
+                  swapRedirectCallback={swapRedirectCallback}
+                  onCurrencyChange={onCurrencyChange}
+                  prefilledState={prefilledState}
+                  tokenColor={tokenColor}
+                />
               </Flex>
-            </SwapContextProvider>
-          )}
-        </SwapAndLimitContext.Consumer>
-      </SwapAndLimitContextProvider>
+            </SwapFormStoreContextProvider>
+          </PrefetchBalancesWrapper>
+        </SwapAndLimitContextProvider>
+      </SwapTransactionSettingsStoreContextProvider>
     </MultichainContextProvider>
   )
 }
 
-const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Send, SwapTab.Buy]
+const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Buy, SwapTab.Sell]
 
 const TAB_TYPE_TO_LABEL = {
   [SwapTab.Swap]: (t: AppTFunction) => t('swap.form.header'),
   [SwapTab.Limit]: (t: AppTFunction) => t('swap.limit'),
   [SwapTab.Send]: (t: AppTFunction) => t('send.title'),
   [SwapTab.Buy]: (t: AppTFunction) => t('common.buy.label'),
+  [SwapTab.Sell]: (t: AppTFunction) => t('common.sell.label'),
+}
+
+const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
+  '/swap': SwapTab.Swap,
+  '/limit': SwapTab.Limit,
+  '/buy': SwapTab.Buy,
+  '/sell': SwapTab.Sell,
 }
 
 function UniversalSwapFlow({
@@ -269,24 +250,46 @@ function UniversalSwapFlow({
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
 }) {
-  const [currentTab, setCurrentTab] = useState(SwapTab.Swap)
+  const { currentTab, setCurrentTab } = useSwapAndLimitContext()
+
+  // Get TDP currency if available (will be null if not in TDP context)
+  const tdpCurrency = currencyToAsset(useContext(TDPContext)?.currency)
+
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const swapCallback = useSwapCallback()
-  const wrapCallback = useWrapCallback()
+  const swapHandlers = useSwapHandlers()
+
+  const LimitFormWrapper = useDeferredComponent(() =>
+    import('~/pages/Swap/Limit/LimitForm').then((module) => ({
+      default: module.LimitFormWrapper,
+    })),
+  )
+  const BuyForm = useDeferredComponent(() =>
+    import('~/pages/Swap/Buy/BuyForm').then((module) => ({
+      default: module.BuyForm,
+    })),
+  )
+
+  const { openModal: openSendFormModal } = useModalState(ModalName.Send)
 
   useEffect(() => {
-    const tab = PathnameToTab[pathname]
-
-    if (tab) {
-      setCurrentTab(tab)
+    if (pathname === '/send') {
+      setCurrentTab(SwapTab.Swap)
+      // Do not open the send modal if iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
+      // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
+      if (!isIFramed()) {
+        openSendFormModal()
+      }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      setCurrentTab(PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap)
     }
-  }, [pathname, setCurrentTab])
+  }, [pathname, openSendFormModal, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
-      sendAnalyticsEvent(InterfaceEventNameLocal.SwapTabClicked, { tab })
+      sendAnalyticsEvent(InterfaceEventName.SwapTabClicked, { tab })
       if (syncTabToUrl) {
         navigate(`/${tab}`, { replace: true })
       } else {
@@ -296,9 +299,11 @@ function UniversalSwapFlow({
     [navigate, syncTabToUrl, setCurrentTab],
   )
 
-  const SWAP_TAB_OPTIONS = useMemo(() => {
+  const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
     return SWAP_TABS.map((tab) => ({
       value: tab,
+      // Use href for proper link semantics when syncing to URL (SEO, accessibility, right-click menu)
+      href: syncTabToUrl ? `/${tab}` : undefined,
       display: (
         <Text
           variant="buttonLabel3"
@@ -309,7 +314,13 @@ function UniversalSwapFlow({
         </Text>
       ),
     }))
-  }, [t, currentTab])
+  }, [t, currentTab, syncTabToUrl])
+
+  const swapSettings = useWebSwapSettings()
+  const resetDisableOneClickSwap = useResetOverrideOneClickSwapFlag()
+
+  const connectorId = useAccount().connector?.id
+  const passkeyAuthStatus = useGetPasskeyAuthStatus(connectorId)
 
   return (
     <Flex>
@@ -327,26 +338,38 @@ function UniversalSwapFlow({
       )}
       {currentTab === SwapTab.Swap && (
         <Flex gap="$spacing16">
-          <SwapFlow
-            settings={[Slippage, Deadline, ProtocolPreference]}
-            hideHeader={hideHeader}
-            hideFooter={hideFooter}
-            onClose={noop}
-            swapRedirectCallback={swapRedirectCallback}
-            onCurrencyChange={onCurrencyChange}
-            swapCallback={swapCallback}
-            wrapCallback={wrapCallback}
-            prefilledState={prefilledState}
-            tokenColor={tokenColor}
-          />
+          <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
+            <SwapFlow
+              settings={swapSettings}
+              hideHeader={hideHeader}
+              hideFooter={hideFooter}
+              onClose={noop}
+              swapRedirectCallback={swapRedirectCallback}
+              onCurrencyChange={onCurrencyChange}
+              prefilledState={prefilledState}
+              tokenColor={tokenColor}
+              onSubmitSwap={resetDisableOneClickSwap}
+              passkeyAuthStatus={passkeyAuthStatus}
+            />
+          </SwapDependenciesStoreContextProvider>
           <SwapBottomCard />
         </Flex>
       )}
-      {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Send && (
-        <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
+      {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+      {currentTab === SwapTab.Buy && BuyForm && (
+        <BuyForm
+          rampDirection={RampDirection.ON_RAMP}
+          disabled={disableTokenInputs}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
+        />
       )}
-      {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
+      {currentTab === SwapTab.Sell && BuyForm && (
+        <BuyForm
+          rampDirection={RampDirection.OFF_RAMP}
+          disabled={disableTokenInputs}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
+        />
+      )}
     </Flex>
   )
 }
@@ -364,7 +387,7 @@ const DisabledSwapOverlay = () => {
   return (
     <DisabledOverlay cursor="not-allowed">
       <Tooltip placement="left-start">
-        <Tooltip.Content>
+        <Tooltip.Content animationDirection="left" zIndex={zIndexes.overlay}>
           <Tooltip.Arrow />
           <Text variant="body4">{t('testnet.unsupported')}</Text>
         </Tooltip.Content>

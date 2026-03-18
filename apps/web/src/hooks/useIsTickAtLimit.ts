@@ -1,12 +1,20 @@
-import { TickMath, nearestUsableTick } from '@uniswap/v3-sdk'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
-import { Bound } from 'state/mint/v3/actions'
 
-export default function useIsTickAtLimit(
-  tickSpacing: number | undefined,
-  tickLower: number | undefined,
-  tickUpper: number | undefined,
-) {
+export enum Bound {
+  LOWER = 'LOWER',
+  UPPER = 'UPPER',
+}
+
+export default function useIsTickAtLimit({
+  tickSpacing,
+  tickLower,
+  tickUpper,
+}: {
+  tickSpacing?: number
+  tickLower?: number
+  tickUpper?: number
+}) {
   return useMemo(
     () => ({
       [Bound.LOWER]:

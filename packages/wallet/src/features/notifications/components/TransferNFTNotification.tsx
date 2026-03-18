@@ -1,33 +1,37 @@
+import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
-import { TransferNFTTxNotification } from 'uniswap/src/features/notifications/types'
+import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
+import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useNFT } from 'uniswap/src/features/nfts/hooks/useNFT'
+import { NOTIFICATION_ICON_SIZE } from 'uniswap/src/features/notifications/constants'
+import { TransferNFTTxNotification } from 'uniswap/src/features/notifications/slice/types'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import { isAndroid } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useNFT } from 'wallet/src/features/nfts/hooks'
-import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
-import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formTransferNFTNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
+
+const platformAdjustedUnitagYPosition = isAndroid ? -1 : -2
 
 export function TransferNFTNotification({ notification }: { notification: TransferNFTTxNotification }): JSX.Element {
   const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus, hideDelay } = notification
   const userAddress = useActiveAccountAddressWithThrow()
   const senderOrRecipient = txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress
-  const { data: nft } = useNFT(nftOwner, tokenAddress, tokenId)
+  const { data: nft } = useNFT({ owner: nftOwner, address: tokenAddress, tokenId })
   const { name: displayName, type: displayNameType } =
     useDisplayName(senderOrRecipient, { includeUnitagSuffix: true }) ?? {}
   const showUnicon = txStatus !== TransactionStatus.Canceled && displayNameType === DisplayNameType.Unitag
 
-  const title = formTransferNFTNotificationTitle(
+  const title = formTransferNFTNotificationTitle({
     txType,
     txStatus,
     nft,
     tokenAddress,
     tokenId,
-    displayName ?? senderOrRecipient,
-  )
+    senderOrRecipient: displayName ?? senderOrRecipient,
+  })
 
   const { navigateToAccountActivityList } = useWalletNavigation()
 
@@ -47,7 +51,13 @@ export function TransferNFTNotification({ notification }: { notification: Transf
       address={address}
       hideDelay={hideDelay}
       icon={icon}
-      postCaptionElement={showUnicon ? <Unitag size="$icon.24" /> : undefined}
+      postCaptionElement={
+        showUnicon ? (
+          <Flex y={platformAdjustedUnitagYPosition}>
+            <Unitag size="$icon.24" />
+          </Flex>
+        ) : undefined
+      }
       title={title}
       onPress={navigateToAccountActivityList}
     />

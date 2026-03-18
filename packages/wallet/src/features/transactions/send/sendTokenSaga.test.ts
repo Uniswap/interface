@@ -1,5 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { call } from '@redux-saga/core/effects'
-import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
@@ -13,9 +13,9 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
 import { noOpFunction } from 'utilities/src/test/utils'
+import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { sendToken } from 'wallet/src/features/transactions/send/sendTokenSaga'
 import { SendCurrencyParams, SendNFTParams } from 'wallet/src/features/transactions/send/types'
-import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks, mockContractManager } from 'wallet/src/test/mocks'
@@ -63,7 +63,7 @@ const typeInfo: SendTokenTransactionInfo = {
   tokenAddress: erc20TransferParams.tokenAddress,
   type: TransactionType.Send,
   currencyAmountUSD: undefined,
-  gasEstimates: undefined,
+  gasEstimate: undefined,
 }
 
 describe('sendTokenSaga', () => {
@@ -81,9 +81,9 @@ describe('sendTokenSaga', () => {
       .provide([
         [call(getProvider, nativeTransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
-        [matchers.call.fn(sendTransaction), true],
+        [matchers.call.fn(executeTransaction), true],
       ])
-      .call(sendTransaction, {
+      .call(executeTransaction, {
         transactionOriginType: TransactionOriginType.Internal,
         chainId: nativeTransferParams.chainId,
         account: nativeTransferParams.account,
@@ -109,9 +109,9 @@ describe('sendTokenSaga', () => {
       .provide([
         [call(getProvider, erc20TransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
-        [matchers.call.fn(sendTransaction), true],
+        [matchers.call.fn(executeTransaction), true],
       ])
-      .call(sendTransaction, {
+      .call(executeTransaction, {
         transactionOriginType: TransactionOriginType.Internal,
         chainId: erc20TransferParams.chainId,
         account: erc20TransferParams.account,
@@ -126,9 +126,9 @@ describe('sendTokenSaga', () => {
       .provide([
         [call(getProvider, erc721TransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
-        [matchers.call.fn(sendTransaction), true],
+        [matchers.call.fn(executeTransaction), true],
       ])
-      .call(sendTransaction, {
+      .call(executeTransaction, {
         transactionOriginType: TransactionOriginType.Internal,
         chainId: erc721TransferParams.chainId,
         account: erc721TransferParams.account,
@@ -140,7 +140,7 @@ describe('sendTokenSaga', () => {
           tokenId: erc721TransferParams.tokenId,
           type: TransactionType.Send,
           currencyAmountUSD: undefined,
-          gasEstimates: undefined,
+          gasEstimate: undefined,
         },
         txId: '1',
       })
@@ -151,9 +151,9 @@ describe('sendTokenSaga', () => {
       .provide([
         [call(getProvider, erc1155TransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
-        [matchers.call.fn(sendTransaction), true],
+        [matchers.call.fn(executeTransaction), true],
       ])
-      .call(sendTransaction, {
+      .call(executeTransaction, {
         transactionOriginType: TransactionOriginType.Internal,
         chainId: erc1155TransferParams.chainId,
         account: erc1155TransferParams.account,
@@ -167,7 +167,7 @@ describe('sendTokenSaga', () => {
           tokenId: erc1155TransferParams.tokenId,
           type: TransactionType.Send,
           currencyAmountUSD: undefined,
-          gasEstimates: undefined,
+          gasEstimate: undefined,
         },
         txId: '1',
       })

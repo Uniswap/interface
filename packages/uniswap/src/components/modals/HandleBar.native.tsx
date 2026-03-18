@@ -13,7 +13,7 @@ export const HandleBar = ({
   containerFlexStyles,
 }: HandleBarProps): JSX.Element => {
   const colors = useSporeColors()
-  const bg = hidden ? 'transparent' : backgroundColor ?? colors.surface1.get()
+  const bg = hidden ? 'transparent' : (backgroundColor ?? colors.surface1.get())
 
   return (
     <Flex mt={isAndroid ? '$spacing4' : '$none'}>

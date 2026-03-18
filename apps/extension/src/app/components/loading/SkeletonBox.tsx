@@ -12,5 +12,6 @@ export function SkeletonBox({
   height: number | string
   borderRadius?: string
 }): JSX.Element {
+  // biome-ignore  lint/correctness/noRestrictedElements: needed here
   return <div className="skeleton-box" style={{ width, height, borderRadius }} />
 }

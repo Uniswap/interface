@@ -1,31 +1,34 @@
-import { Dialog } from 'components/Dialog/Dialog'
-import { UserIcon } from 'components/Icons/UserIcon'
-import Identicon, { IdenticonType, useIdenticonType } from 'components/Identicon'
-import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSendContext } from 'state/send/SendContext'
-import type { RecipientData } from 'state/send/hooks'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Dialog } from 'uniswap/src/components/dialog/Dialog'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { UserIcon } from '~/components/Icons/UserIcon'
+import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
+import type { RecipientData } from '~/state/send/hooks'
+import { useSendContext } from '~/state/send/SendContext'
 
-const RecipientDisplay = ({
-  recipientData,
-  identiconType,
-}: {
-  recipientData?: RecipientData
-  identiconType?: IdenticonType
-}) => {
-  const ensOrUnitag = recipientData?.ensName ?? recipientData?.unitag
+const RecipientDisplay = ({ recipientData }: { recipientData?: RecipientData }) => {
+  const ensOrUnitag = recipientData?.unitag ?? recipientData?.ensName
 
   if (ensOrUnitag) {
     return (
       <Flex centered gap="$gap4">
         <Flex row centered gap="$gap4">
-          {(identiconType === IdenticonType.ENS_AVATAR || identiconType === IdenticonType.UNITAG_PROFILE_PICTURE) && (
-            <Identicon data-testid="speedbump-identicon" size={16} account={recipientData?.address ?? ''} />
-          )}
+          <AccountIcon
+            data-testid="speedbump-account-icon"
+            size={16}
+            address={recipientData?.address}
+            marginRight="$spacing2"
+          />
           <Text variant="body2">{ensOrUnitag}</Text>
-          {recipientData?.unitag && <Unitag size={18} />}
+          {recipientData?.unitag && (
+            <Flex pt="$spacing2">
+              <Unitag size={18} />
+            </Flex>
+          )}
         </Flex>
         <Text color="$neutral2" variant="body4">
           {recipientData?.address}
@@ -46,37 +49,41 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
   const {
     derivedSendInfo: { recipientData },
   } = useSendContext()
-  const identiconType = useIdenticonType(recipientData?.address)
+
+  const primaryButton = useMemo(
+    () => ({
+      text: t('common.button.continue'),
+      onPress: onConfirm,
+      variant: 'default' as const,
+      emphasis: 'primary' as const,
+    }),
+    [t, onConfirm],
+  )
+
+  const secondaryButton = useMemo(
+    () => ({
+      text: t('common.button.close'),
+      onPress: onDismiss,
+      variant: 'default' as const,
+      emphasis: 'secondary' as const,
+    }),
+    [t, onDismiss],
+  )
 
   return (
     <Dialog
-      isVisible={isOpen}
+      isOpen={isOpen}
+      onClose={onDismiss}
       icon={<UserIcon fill={colors.neutral2.val} width={28} height={28} />}
+      iconBackgroundColor="$surface3"
       title={t('speedBump.newAddress.warning.title')}
-      description={t('speedBump.newAddress.warning.description')}
-      body={
-        <Flex
-          centered
-          borderWidth="$spacing1"
-          borderColor="$surface3"
-          borderRadius="$rounded20"
-          py="$padding20"
-          width="100%"
-        >
-          <RecipientDisplay recipientData={recipientData} identiconType={identiconType} />
-        </Flex>
-      }
-      onCancel={onDismiss}
-      buttonsConfig={{
-        left: {
-          title: t('common.button.cancel'),
-          onClick: onDismiss,
-        },
-        right: {
-          title: t('common.button.continue'),
-          onClick: onConfirm,
-        },
-      }}
-    />
+      subtext={t('speedBump.newAddress.warning.description')}
+      modalName={ModalName.NewAddressSpeedBump}
+      primaryButton={primaryButton}
+      secondaryButton={secondaryButton}
+      displayHelpCTA
+    >
+      <RecipientDisplay recipientData={recipientData} />
+    </Dialog>
   )
 }

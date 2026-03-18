@@ -1,15 +1,15 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import Column, { AutoColumn } from 'components/deprecated/Column'
-import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
-import { useUSDPrice } from 'hooks/useUSDPrice'
-import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
-import { InterfaceTrade } from 'state/routing/types'
-import { isPreviewTrade } from 'state/routing/utils'
-import { ThemedText } from 'theme/components'
+import { Flex, Text } from 'ui/src'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { AutoColumn } from '~/components/deprecated/Column'
+import { SwapModalHeaderAmount } from '~/components/swap/SwapModalHeaderAmount'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { InterfaceTrade } from '~/state/routing/types'
+import { isPreviewTrade } from '~/state/routing/utils'
 
-const HeaderContainer = styled(AutoColumn)`
+const HeaderContainer = deprecatedStyled(AutoColumn)`
   margin-top: 0px;
 `
 
@@ -22,18 +22,18 @@ export function SwapPreview({
   inputCurrency?: Currency
   allowedSlippage: Percent
 }) {
-  const fiatValueInput = useUSDPrice(trade.inputAmount)
-  const fiatValueOutput = useUSDPrice(trade.outputAmount)
+  const fiatValueInput = useUSDCValue(trade.inputAmount)
+  const fiatValueOutput = useUSDCValue(trade.outputAmount)
 
   return (
     <HeaderContainer gap="sm">
-      <Column gap="lg">
+      <Flex gap="$gap24">
         <SwapModalHeaderAmount
           field={CurrencyField.INPUT}
           label={<Trans i18nKey="common.sell.label" />}
           amount={trade.inputAmount}
           currency={inputCurrency ?? trade.inputAmount.currency}
-          usdAmount={fiatValueInput.data}
+          usdAmount={fiatValueInput?.toExact()}
           isLoading={isPreviewTrade(trade) && trade.tradeType === TradeType.EXACT_OUTPUT}
         />
         <SwapModalHeaderAmount
@@ -41,11 +41,11 @@ export function SwapPreview({
           label={<Trans i18nKey="common.buy.label" />}
           amount={trade.outputAmount}
           currency={trade.outputAmount.currency}
-          usdAmount={fiatValueOutput.data}
+          usdAmount={fiatValueOutput?.toExact()}
           isLoading={isPreviewTrade(trade) && trade.tradeType === TradeType.EXACT_INPUT}
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (
-              <ThemedText.Caption>
+              <Text variant="body4">
                 <Trans
                   i18nKey="swap.outputEstimated.atLeast"
                   components={{
@@ -56,9 +56,9 @@ export function SwapPreview({
                     ),
                   }}
                 />
-              </ThemedText.Caption>
+              </Text>
             ) : (
-              <ThemedText.Caption>
+              <Text variant="body4">
                 <Trans
                   i18nKey="swap.inputEstimated.atMost"
                   components={{
@@ -69,11 +69,11 @@ export function SwapPreview({
                     ),
                   }}
                 />
-              </ThemedText.Caption>
+              </Text>
             )
           }
         />
-      </Column>
+      </Flex>
     </HeaderContainer>
   )
 }

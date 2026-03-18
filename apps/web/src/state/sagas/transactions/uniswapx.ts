@@ -1,38 +1,43 @@
-import { SwapEventName } from '@uniswap/analytics-events'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { call, put, SagaGenerator } from 'typed-redux-saga'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { InterfaceEventName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  HandleSignatureStepParams,
+  HandleUniswapXPlanSignatureStepParams,
+} from 'uniswap/src/features/transactions/steps/types'
+import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
+import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
+import {
+  QueuedOrderStatus,
+  TransactionOriginType,
+  TransactionStatus,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
 import {
   addTransactionBreadcrumb,
   getSwapTransactionInfo,
   handleSignatureStep,
-  HandleSignatureStepParams,
-} from 'state/sagas/transactions/utils'
-import { addSignature } from 'state/signatures/reducer'
-import { SignatureType, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
-import { call, put } from 'typed-redux-saga'
-import { UniswapXOrderStatus } from 'types/uniswapx'
-import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/types/steps'
-import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
+  TransactionBreadcrumbStatus,
+} from '~/state/sagas/transactions/utils'
 
 interface HandleUniswapXSignatureStepParams extends HandleSignatureStepParams<UniswapXSignatureStep> {
   trade: UniswapXTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
 }
+
 export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStepParams) {
-  const { analytics, step, trade } = params
+  const { analytics, step, trade, address } = params
   const { quote, routing } = trade.quote
   const orderHash = quote.orderId
   const chainId = trade.inputAmount.currency.chainId
-  const signatureDetails = getUniswapXSignatureInfo(step, trade, chainId, routing)
 
   const analyticsParams: Parameters<typeof formatSwapSignedAnalyticsEventProperties>[0] = {
     trade,
@@ -47,19 +52,21 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   }
 
   sendAnalyticsEvent(
-    InterfaceEventNameLocal.UniswapXSignatureRequested,
+    InterfaceEventName.UniswapXSignatureRequested,
     formatSwapSignedAnalyticsEventProperties(analyticsParams),
   )
 
   const signature = yield* call(handleSignatureStep, params)
 
-  if (Date.now() / 1000 > step.deadline) {
-    throw new HandledTransactionInterrupt('User signed after deadline')
-  }
+  checkDeadline(step.deadline)
 
-  addTransactionBreadcrumb({ step, data: { routing, ...signatureDetails.swapInfo }, status: 'in progress' })
+  const swapInfo = getSwapTransactionInfo({
+    trade,
+    swapStartTimestamp: analytics.swap_start_timestamp,
+  })
+  addTransactionBreadcrumb({ step, data: { routing, ...swapInfo }, status: TransactionBreadcrumbStatus.InProgress })
   sendAnalyticsEvent(
-    SwapEventName.SWAP_SIGNED,
+    SwapEventName.SwapSigned,
     formatSwapSignedAnalyticsEventProperties({
       trade,
       allowedSlippage: slippageToleranceToPercent(trade.slippageTolerance),
@@ -74,9 +81,9 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   )
 
   try {
-    yield* call(submitOrder, { signature, quote, routing })
+    yield* call(TradingApiClient.submitOrder, { signature, quote, routing })
   } catch (error) {
-    sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderPostError, {
+    sendAnalyticsEvent(InterfaceEventName.UniswapXOrderPostError, {
       ...formatSwapSignedAnalyticsEventProperties(analyticsParams),
       detail: error.message,
     })
@@ -84,40 +91,57 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   }
 
   sendAnalyticsEvent(
-    InterfaceEventNameLocal.UniswapXOrderSubmitted,
+    InterfaceEventName.UniswapXOrderSubmitted,
     formatSwapSignedAnalyticsEventProperties(analyticsParams),
   )
+  const transaction: UniswapXOrderDetails = {
+    // Use orderHash as the ID to ensure consistency with orders fetched from remote
+    // This prevents duplicate orders when the same order is fetched from GraphQL
+    id: orderHash,
+    routing,
+    orderHash,
+    chainId,
+    from: address,
+    typeInfo: swapInfo,
+    status: TransactionStatus.Pending,
+    queueStatus: QueuedOrderStatus.Waiting,
+    transactionOriginType: TransactionOriginType.Internal,
+    addedTime: Date.now(),
+    expiry: step.deadline,
+    encodedOrder: trade.quote.quote.encodedOrder,
+  }
 
-  yield* put(addSignature(signatureDetails))
+  yield* put(addTransaction(transaction))
 
   popupRegistry.addPopup({ type: PopupType.Order, orderHash }, orderHash)
 }
 
-const ROUTING_TO_SIGNATURE_TYPE_MAP: {
-  [key in Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY]: SignatureType
-} = {
-  [Routing.DUTCH_V2]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
-  [Routing.DUTCH_V3]: SignatureType.SIGN_UNISWAPX_V3_ORDER,
-  [Routing.PRIORITY]: SignatureType.SIGN_PRIORITY_ORDER,
-  // [Routing.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
+export function* handleUniswapXPlanSignatureStep(params: HandleUniswapXPlanSignatureStepParams): SagaGenerator<string> {
+  const { step, analytics } = params
+
+  // Check before requiring user to sign an expired deadline
+  checkDeadline(step.deadline)
+
+  sendAnalyticsEvent(InterfaceEventName.UniswapXSignatureRequested, { ...analytics })
+
+  const signature = yield* call(handleSignatureStep, params)
+
+  // Check again after user has signed to ensure they didn't sign after the deadline
+  checkDeadline(step.deadline)
+
+  sendAnalyticsEvent(SwapEventName.SwapSigned, { ...analytics })
+
+  return signature
 }
 
-function getUniswapXSignatureInfo(
-  step: UniswapXSignatureStep,
-  trade: UniswapXTrade,
-  chainId: UniverseChainId,
-  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY,
-): UnfilledUniswapXOrderDetails {
-  const swapInfo = getSwapTransactionInfo(trade)
-
-  return {
-    type: ROUTING_TO_SIGNATURE_TYPE_MAP[routing],
-    id: step.quote.orderId,
-    addedTime: Date.now(),
-    chainId,
-    offerer: trade.quote.quote.orderInfo.swapper,
-    orderHash: trade.quote.quote.orderId,
-    status: UniswapXOrderStatus.OPEN,
-    swapInfo,
+/**
+ * Helper function to check a signature deadline.
+ *
+ * @throws {HandledTransactionInterrupt} if the deadline has expired
+ * @param deadline
+ */
+const checkDeadline = (deadlineSeconds: number) => {
+  if (Date.now() / 1000 > deadlineSeconds) {
+    throw new HandledTransactionInterrupt('User signed after deadline')
   }
 }

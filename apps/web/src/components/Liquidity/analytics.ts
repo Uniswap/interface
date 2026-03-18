@@ -1,16 +1,19 @@
-import { LiquidityEventName } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { LiquidityAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
-import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function getLPBaseAnalyticsProperties({
   trace,
   fee,
+  tickSpacing,
+  tickLower,
+  tickUpper,
+  hook,
   currency0,
   currency1,
   currency0AmountUsd,
@@ -20,6 +23,10 @@ export function getLPBaseAnalyticsProperties({
 }: {
   trace: ITraceContext
   fee?: number | string // denominated in hundredths of bips
+  tickSpacing: number | undefined
+  tickLower: number | undefined
+  tickUpper: number | undefined
+  hook: string | undefined
   currency0: Currency
   currency1: Currency
   currency0AmountUsd: Maybe<CurrencyAmount<Currency>>
@@ -31,7 +38,12 @@ export function getLPBaseAnalyticsProperties({
     ...trace,
     label: [currency0.symbol, currency1.symbol].join('/'),
     type: ProtocolVersion[version],
+    protocol_version: version,
     fee_tier: (typeof fee === 'string' ? parseInt(fee) : fee) ?? FeeAmount.MEDIUM,
+    tick_spacing: tickSpacing,
+    tick_lower: tickLower,
+    tick_upper: tickUpper,
+    hook,
     pool_address: poolId,
     chain_id: currency0.chainId,
     baseCurrencyId: currencyIdToAddress(currencyId(currency0)),
@@ -46,21 +58,21 @@ export function getLPBaseAnalyticsProperties({
 export function getLiquidityEventName(
   stepType: TransactionStepType,
 ):
-  | LiquidityEventName.ADD_LIQUIDITY_SUBMITTED
-  | LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED
-  | LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED
-  | LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED {
+  | LiquidityEventName.AddLiquiditySubmitted
+  | LiquidityEventName.RemoveLiquiditySubmitted
+  | LiquidityEventName.MigrateLiquiditySubmitted
+  | LiquidityEventName.CollectLiquiditySubmitted {
   switch (stepType) {
     case TransactionStepType.IncreasePositionTransaction:
     case TransactionStepType.IncreasePositionTransactionAsync:
-      return LiquidityEventName.ADD_LIQUIDITY_SUBMITTED
+      return LiquidityEventName.AddLiquiditySubmitted
     case TransactionStepType.DecreasePositionTransaction:
-      return LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED
-    case TransactionStepType.MigratePositionTransactionStep:
-    case TransactionStepType.MigratePositionTransactionStepAsync:
-      return LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED
+      return LiquidityEventName.RemoveLiquiditySubmitted
+    case TransactionStepType.MigratePositionTransaction:
+    case TransactionStepType.MigratePositionTransactionAsync:
+      return LiquidityEventName.MigrateLiquiditySubmitted
     case TransactionStepType.CollectFeesTransactionStep:
-      return LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED
+      return LiquidityEventName.CollectLiquiditySubmitted
     default:
       throw new Error('Unexpected step type')
   }

@@ -1,0 +1,338 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+env:
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+# Initialize tracking at the very beginning
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start flow tracking (includes setup time)
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'restore-missing-seed'
+
+# Run prerequisite flows (tracked as sub-flows)
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+- runFlow: ../../shared-flows/delete-seed-phrase.yaml
+
+# Track app restart
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'killApp'
+      TARGET: 'app'
+      PHASE: 'start'
+- killApp
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'killApp'
+      TARGET: 'app'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'start'
+- launchApp
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'end'
+
+- assertVisible:
+    text: 'Restore your wallet'
+
+# Track cancel tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'cancel'
+      PHASE: 'start'
+- tapOn:
+    id: 'cancel'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'cancel'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track settings navigation
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'settings-icon'
+      PHASE: 'start'
+- tapOn:
+    id: 'account-header-settings-icon'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'settings-icon'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track recovery phrase navigation
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'recovery-phrase'
+      PHASE: 'start'
+- tapOn:
+    id: 'wallet-settings-recovery-phrase'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'recovery-phrase'
+      PHASE: 'end'
+- waitForAnimationToEnd
+- assertVisible:
+    text: 'Restore your wallet'
+
+# Track continue tap
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'continue'
+      PHASE: 'start'
+- tapOn:
+    id: 'continue'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'continue'
+      PHASE: 'end'
+
+- assertVisible:
+    text: 'Select how to restore your wallet'
+- assertVisible:
+    id: 'onboarding-import-seed-phrase'
+- assertVisible:
+    id: 'restore-from-cloud'
+- assertVisible:
+    id: 'onboarding-view-private-keys'
+
+# Track restore from cloud attempt
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'restore-from-cloud'
+      PHASE: 'start'
+- tapOn:
+    id: 'restore-from-cloud'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'restore-from-cloud'
+      PHASE: 'end'
+
+- extendedWaitUntil:
+    visible:
+      text: 'No backups found'
+    timeout: 5000 # wait for cloud back to fail
+
+# Track incorrect seed phrase input
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'incorrect-seed-phrase'
+      PHASE: 'start'
+- inputText: 'purchase arrest rotate cave alone walk naive claim day tube pact soap' # random incorrect phrase
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'incorrect-seed-phrase'
+      PHASE: 'end'
+- waitForAnimationToEnd: # workaround for a native bug where the validation check has a delay
+    timeout: 1000
+- tapOn:
+    id: 'continue'
+- assertVisible:
+    text: 'Wrong recovery phrase'
+
+# Track back navigation
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'back'
+      PHASE: 'start'
+- tapOn:
+    id: 'back'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'back'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Track import seed phrase selection
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'import-seed-phrase'
+      PHASE: 'start'
+- tapOn:
+    id: 'onboarding-import-seed-phrase'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'import-seed-phrase'
+      PHASE: 'end'
+- waitForAnimationToEnd
+
+# Another incorrect seed phrase attempt
+# Track second incorrect seed phrase input
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'incorrect-seed-phrase-retry'
+      PHASE: 'start'
+- inputText: 'purchase arrest rotate cave alone walk naive claim day tube pact soap' # random incorrect phrase
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'incorrect-seed-phrase-retry'
+      PHASE: 'end'
+
+# workaround for a native bug where the validation check has a delay
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 1000
+    optional: true
+
+- tapOn:
+    id: 'continue'
+- assertVisible:
+    text: 'Wrong recovery phrase'
+
+# Track correct seed phrase input
+- eraseText: 150
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'correct-seed-phrase'
+      PHASE: 'start'
+- inputText: ${E2E_RECOVERY_PHRASE}
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'inputText'
+      TARGET: 'correct-seed-phrase'
+      PHASE: 'end'
+- tapOn:
+    id: 'continue'
+- assertVisible:
+    id: 'account-header-avatar'
+- runFlow: ../../shared-flows/delete-seed-phrase.yaml
+
+# Second part - view private keys flow
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'killApp'
+      TARGET: 'app'
+      PHASE: 'start'
+- killApp
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'killApp'
+      TARGET: 'app'
+      PHASE: 'end'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'start'
+- launchApp
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'launchApp'
+      TARGET: 'app'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+- tapOn:
+    id: 'cancel'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'account-header-settings-icon'
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: 'wallet-settings-private-keys'
+- tapOn:
+    id: 'wallet-settings-recovery-phrase'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+
+# Track view private keys selection
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'view-private-keys'
+      PHASE: 'start'
+- tapOn:
+    id: 'onboarding-view-private-keys'
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tapOn'
+      TARGET: 'view-private-keys'
+      PHASE: 'end'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: 'view-native-private-key'
+- tapOn:
+    id: 'continue'
+- waitForAnimationToEnd
+- assertVisible:
+    id: 'view-native-private-key'
+- tapOn:
+    id: 'view-native-private-keys-on-copied'
+
+# End flow tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+# Upload metrics to Datadog (for Maestro Cloud)
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

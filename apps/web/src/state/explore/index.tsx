@@ -1,11 +1,11 @@
-// eslint-disable-next-line no-restricted-imports
 import { ExploreStatsResponse, ProtocolStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { ALL_NETWORKS_ARG } from '@universe/api'
 import { createContext, useMemo } from 'react'
-import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useProtocolStatsQuery } from 'uniswap/src/data/rest/protocolStats'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useExploreBackendSortingEnabled } from '~/state/explore/useExploreBackendSortingEnabled'
 
 interface QueryResult<T> {
   data?: T
@@ -50,20 +50,23 @@ export function ExploreContextProvider({
   children: React.ReactNode
 }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
+  const isExploreBackendSortingEnabled = useExploreBackendSortingEnabled()
 
+  // Skip exploreStats query when backend sorting is enabled (tokens/pools tables use new endpoints)
   const {
     data: exploreStatsData,
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
-  } = useExploreStatsQuery({
-    chainId: isSupportedChain ? chainId?.toString() : ALL_NETWORKS_ARG,
+  } = useExploreStatsQuery<ExploreStatsResponse>({
+    input: { chainId: isSupportedChain ? chainId.toString() : ALL_NETWORKS_ARG },
+    enabled: !isExploreBackendSortingEnabled,
   })
   const {
     data: protocolStatsData,
     isLoading: protocolStatsLoading,
     error: protocolStatsError,
   } = useProtocolStatsQuery({
-    chainId: isSupportedChain ? chainId?.toString() : ALL_NETWORKS_ARG,
+    chainId: isSupportedChain ? chainId.toString() : ALL_NETWORKS_ARG,
   })
 
   const exploreContext = useMemo(() => {

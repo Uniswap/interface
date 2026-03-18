@@ -1,0 +1,17 @@
+# Bun configuration file
+
+[install]
+# Disable telemetry
+telemetry = false
+
+# Use node_modules (default behavior)
+linkStrategy = "node"
+linker = "hoisted"
+
+# Save exact versions (equivalent to defaultSemverRangePrefix: '')
+save = "exact"
+
+# Dev settings
+[dev]
+# Port for dev server
+port = 3000

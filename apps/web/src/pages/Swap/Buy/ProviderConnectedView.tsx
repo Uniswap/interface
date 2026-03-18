@@ -1,25 +1,25 @@
-import styled, { useTheme } from 'lib/styled-components'
-import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans, useTranslation } from 'react-i18next'
-import { ExternalLink } from 'theme/components'
-import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { ConnectingViewWrapper } from '~/pages/Swap/Buy/shared'
+import { ExternalLink } from '~/theme/components/Links'
 
-const StyledLink = styled(ExternalLink)`
+const StyledLink = deprecatedStyled(ExternalLink)`
   font-weight: 535;
   color: ${({ theme }) => theme.neutral3};
 `
 
 interface ProviderConnectedViewProps {
-  closeModal: () => void
+  closeModal?: () => void
   selectedServiceProvider: FORServiceProvider
 }
 
 export function ProviderConnectedView({ closeModal, selectedServiceProvider }: ProviderConnectedViewProps) {
   const isDarkMode = useIsDarkMode()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   return (
@@ -29,7 +29,7 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
           <img
             style={ServiceProviderLogoStyles.uniswapLogoWrapper}
             height={120}
-            src={getOptionalServiceProviderLogo(selectedServiceProvider?.logos, isDarkMode)}
+            src={getOptionalServiceProviderLogo(selectedServiceProvider.logos, isDarkMode)}
             width={120}
           />
           <Flex alignItems="center" gap="$spacing8">
@@ -52,12 +52,12 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
             }}
             components={{
               tosLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/terms-of-service/">
+                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/terms-of-service/">
                   {t('common.termsOfService')}
                 </StyledLink>
               ),
               privacyLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/privacy-policy">
+                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/privacy-policy">
                   {t('common.privacyPolicy')}
                 </StyledLink>
               ),

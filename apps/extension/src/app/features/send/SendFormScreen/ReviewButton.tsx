@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Text, isWeb } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 type ReviewButtonProps = {
@@ -20,7 +21,7 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
     derivedSendInfo: { chainId },
   } = useSendContext()
 
-  const nativeCurrencySymbol = NativeCurrency.onChain(chainId).symbol
+  const nativeCurrencySymbol = nativeOnChain(chainId).symbol
 
   const insufficientGasFunds = warnings.warnings.some((warning) => warning.type === WarningLabel.InsufficientGasFunds)
 
@@ -28,24 +29,22 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
 
   const buttonText = insufficientGasFunds
     ? t('send.warning.insufficientFunds.title', {
-        currencySymbol: nativeCurrencySymbol,
+        currencySymbol: nativeCurrencySymbol ?? '',
       })
     : t('common.button.review')
 
   return (
-    <Flex gap="$spacing16">
+    <Flex row alignSelf="stretch" gap="$spacing16">
       <Trace logPress element={ElementName.SendReview}>
-        <DeprecatedButton
-          backgroundColor="$accent1"
+        <Button
+          variant="branded"
           isDisabled={disableReviewButton}
-          size={isWeb ? 'medium' : 'large'}
+          size={isWebPlatform ? 'medium' : 'large'}
           testID={TestID.SendReview}
           onPress={onPress}
         >
-          <Text color="white" variant="buttonLabel1">
-            {buttonText}
-          </Text>
-        </DeprecatedButton>
+          {buttonText}
+        </Button>
       </Trace>
     </Flex>
   )

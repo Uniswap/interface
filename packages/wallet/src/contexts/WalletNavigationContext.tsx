@@ -1,12 +1,14 @@
-import { createContext, ReactNode, useContext } from 'react'
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { createContext, PropsWithChildren, useContext } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/send/getSendPrefilledState'
 
 type NavigateToTransactionFlowTransactionState = {
@@ -17,6 +19,7 @@ type NavigateToSwapFlowPartialState = {
   currencyField: CurrencyField
   currencyAddress: Address
   currencyChainId: UniverseChainId
+  origin?: ModalNameType
 }
 
 type NavigateToSwapFlowWithActions = {
@@ -95,19 +98,6 @@ export function getNavigateToSendFlowArgsInitialState(args: NavigateToSendFlowAr
       : undefined
 }
 
-export type NavigateToNftItemArgs = {
-  owner?: Address
-  address: Address
-  tokenId: string
-  chainId?: UniverseChainId
-  isSpam?: boolean
-  fallbackData?: NFTItem
-}
-
-export type NavigateToNftCollectionArgs = {
-  collectionAddress: Address
-}
-
 export type NavigateToFiatOnRampArgs = {
   prefilledCurrency?: FiatOnRampCurrency
   isOfframp?: boolean
@@ -117,13 +107,13 @@ export type NavigateToExternalProfileArgs = {
   address: Address
 }
 
-export type ShareTokenArgs = {
-  currencyId: string
+export type NavigateToPoolDetailsArgs = {
+  poolId: Address
+  chainId: UniverseChainId
 }
 
-export type ShareNftArgs = {
-  contractAddress: string
-  tokenId: string
+export type ShareTokenArgs = {
+  currencyId: string
 }
 
 export type WalletNavigationContextState = {
@@ -134,13 +124,13 @@ export type WalletNavigationContextState = {
   navigateToExternalProfile: (args: NavigateToExternalProfileArgs) => void
   navigateToFiatOnRamp: (args: NavigateToFiatOnRampArgs) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
-  navigateToNftCollection: (args: NavigateToNftCollectionArgs) => void
+  navigateToPoolDetails: (args: NavigateToPoolDetailsArgs) => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToTokenDetails: (currencyId: string) => void
   navigateToReceive: () => void
   navigateToSend: (args: NavigateToSendFlowArgs) => void
-  handleShareNft: (args: ShareNftArgs) => void
   handleShareToken: (args: ShareTokenArgs) => void
+  navigateToAdvancedSettings: () => void
 }
 
 export const WalletNavigationContext = createContext<WalletNavigationContextState | undefined>(undefined)
@@ -148,9 +138,7 @@ export const WalletNavigationContext = createContext<WalletNavigationContextStat
 export function WalletNavigationProvider({
   children,
   ...props
-}: {
-  children: ReactNode
-} & WalletNavigationContextState): JSX.Element {
+}: PropsWithChildren<WalletNavigationContextState>): JSX.Element {
   return <WalletNavigationContext.Provider value={props}>{children}</WalletNavigationContext.Provider>
 }
 

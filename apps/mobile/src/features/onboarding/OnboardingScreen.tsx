@@ -1,11 +1,13 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { useHeaderHeight } from '@react-navigation/elements'
 import React, { PropsWithChildren, useCallback } from 'react'
-import { BackHandler, KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { BackHandler, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { HeaderSkipButton, renderHeaderBackButton } from 'src/app/navigation/components'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
-import { SHORT_SCREEN_HEADER_HEIGHT_RATIO, Screen } from 'src/components/layout/Screen'
+import { Screen, SHORT_SCREEN_HEADER_HEIGHT_RATIO } from 'src/components/layout/Screen'
+import { useRegionalizedLineHeight } from 'src/components/text/useRegionalizedLineHeight'
 import { Flex, GeneratedIcon, SpaceTokens, Text, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
@@ -63,6 +65,8 @@ export function OnboardingScreen({
     }, [navigation, disableGoBack, onSkip]),
   )
 
+  const titleLineHeight = useRegionalizedLineHeight()
+
   return (
     <Screen
       $short={{ pt: headerHeight * SHORT_SCREEN_HEADER_HEIGHT_RATIO }}
@@ -92,7 +96,13 @@ export function OnboardingScreen({
               </Flex>
             )}
             {title && (
-              <Text allowFontScaling={false} pt={paddingTop} textAlign="center" variant="subheading1">
+              <Text
+                allowFontScaling={false}
+                pt={paddingTop}
+                textAlign="center"
+                variant="subheading1"
+                lineHeight={titleLineHeight}
+              >
                 {title}
               </Text>
             )}

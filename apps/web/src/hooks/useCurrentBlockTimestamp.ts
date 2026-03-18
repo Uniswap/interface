@@ -1,9 +1,9 @@
 import { MULTICALL_ADDRESSES } from '@uniswap/sdk-core'
-import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { assume0xAddress } from 'utils/wagmi'
 import { useReadContract } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
+import { assume0xAddress } from '~/utils/wagmi'
 
 /**
  * Gets the current block timestamp from the blockchain
@@ -12,7 +12,9 @@ import { useReadContract } from 'wagmi'
  */
 export default function useCurrentBlockTimestamp({
   refetchInterval = ms('3min'),
-}: { refetchInterval?: number | false } = {}): bigint | undefined {
+}: {
+  refetchInterval?: number | false
+} = {}): bigint | undefined {
   const account = useAccount()
 
   return useReadContract({

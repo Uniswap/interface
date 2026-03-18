@@ -9,9 +9,8 @@ import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import RNQRGenerator from 'rn-qr-generator'
 import { useCameraPermissionQuery } from 'src/components/QRCodeScanner/hooks/useCameraPermissionQuery'
 import { useRequestCameraPermissionOnMountEffect } from 'src/components/QRCodeScanner/hooks/useRequestCameraPermissionOnMountEffect'
-import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeName, useSporeColors } from 'ui/src'
-import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
-import { Global, PhotoStacked } from 'ui/src/components/icons'
+import { Button, Flex, SpinningLoader, Text, ThemeName, useSporeColors } from 'ui/src'
+import { CameraScan, Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
@@ -47,6 +46,9 @@ const SCAN_ICON_RADIUS_RATIO = 0.1
 const SCAN_ICON_WIDTH_RATIO = 0.7
 const SCAN_ICON_MASK_OFFSET_RATIO = 0.02 // used for mask to match spacing in CameraScan SVG
 const LOADER_SIZE = iconSizes.icon40
+// Adjusts the center point of the QR code scanner upward to prevent content overflow on devices with smaller screens
+// Should be removed after rewriting to flex, having: https://github.com/Uniswap/universe/pull/4762 in mind
+const BOTTOM_PADDING = 48
 
 export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
   const { onScanCode, shouldFreezeCamera, theme } = props
@@ -67,7 +69,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       if (shouldFreezeCamera) {
         return
       }
-      const data = result?.data
+      const data = result.data
       onScanCode(data)
       setIsReadingImageFile(false)
     },
@@ -125,7 +127,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     mute: true,
     mode: 'picture',
   }
-
   return (
     <AnimatedFlex grow theme={theme} borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
@@ -148,7 +149,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         centered
         alignItems="center"
         gap="$spacing48"
-        style={StyleSheet.absoluteFill}
+        style={{ ...StyleSheet.absoluteFillObject, bottom: BOTTOM_PADDING }}
         onLayout={(event: LayoutChangeEvent): void => setOverlayLayout(event.nativeEvent.layout)}
       >
         <Flex alignItems="center">
@@ -174,7 +175,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           </Flex>
           {!shouldFreezeCamera ? (
             // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
-            <CameraScan color={colors.white.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
+            <CameraScan color="$white" size={scannerSize} strokeWidth={5} />
           ) : (
             // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
             <Flex height={scannerSize} width={scannerSize}>
@@ -239,15 +240,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             </Flex>
 
             {isWalletConnectModal && props.numConnections > 0 && (
-              <DeprecatedButton
-                fontFamily="$body"
-                icon={<Global color={colors.neutral2.val} />}
-                backgroundColor={colors.surface3.val}
-                color={colors.neutral1.val}
-                onPress={props.onPressConnections}
-              >
+              <Button size="small" emphasis="secondary" icon={<Global />} onPress={props.onPressConnections}>
                 {t('qrScanner.button.connections', { count: props.numConnections })}
-              </DeprecatedButton>
+              </Button>
             )}
           </Flex>
         </Flex>
@@ -299,14 +294,14 @@ const GradientOverlay = memo(function GradientOverlay({
     setSize({ width, height })
   }
 
-  const gradientOffset = (overlayWidth / dimensions.fullWidth - 1) / 2
+  const gradientOffset = (overlayWidth / dimensions.fullWidth - 1 + BOTTOM_PADDING / dimensions.fullHeight) / 2
 
   return (
     <Flex
       alignItems="center"
       justifyContent="center"
       position="absolute"
-      style={StyleSheet.absoluteFill}
+      style={{ ...StyleSheet.absoluteFillObject, bottom: BOTTOM_PADDING }}
       onLayout={onLayout}
     >
       <Svg height="100%" width="100%">

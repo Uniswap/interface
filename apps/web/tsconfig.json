@@ -3,7 +3,6 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
-    "baseUrl": "src",
     "composite": true,
     "declarationMap": false,
     "downlevelIteration": true,
@@ -27,17 +26,49 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ESNext",
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
-    "types": ["jest", "chrome"],
+    "types": ["chrome", "vitest/globals"],
     "useUnknownInCatchVariables": false,
+    "paths": {
+      "~/*": ["./src/*"],
+      "ui/src/*": ["../../packages/ui/src/*"],
+      "utilities/src/*": ["../../packages/utilities/src/*"],
+      "uniswap/src/*": ["../../packages/uniswap/src/*"]
+    }
   },
-  "include": ["src/**/*", "src/**/*.json"],
+  "include": [
+    "src/**/*",
+    "src/**/*.json",
+    ".storybook/preview.tsx",
+    ".storybook/main.ts",
+    "vite.config.mts",
+    "scripts/*",
+    "vite/*"
+  ],
+  "exclude": ["scripts/build-vercel.ts"],
   "references": [
+    {
+      "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/websocket"
+    },
+    {
+      "path": "../../packages/prices"
+    },
+    {
+      "path": "../../packages/sessions"
+    },
+    {
+      "path": "../../packages/notifications"
+    },
+    {
+      "path": "../../packages/gating"
+    },
     {
       "path": "../../packages/ui"
     },
     {
-      "path": "../../packages/utilities"
+      "path": "../../packages/api"
     },
     {
       "path": "../../packages/uniswap"

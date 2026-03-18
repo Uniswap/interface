@@ -1,15 +1,15 @@
 import { curveNatural } from 'd3-shape'
 import { useMemo } from 'react'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
-import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
+import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useExtractedTokenColor, useSporeColors } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 // Used to divide the number of data points for a smoother charts
 // Necessary because graphql query does not support a time resolution parameter
-export const DATA_REDUCTION_FACTOR = 10
+const DATA_REDUCTION_FACTOR = 10
 
 export function TokenItemChart({
   tokenItemData,
@@ -27,13 +27,13 @@ export function TokenItemChart({
   const currencyId = tokenItemData.address
     ? buildCurrencyId(tokenItemData.chainId, tokenItemData.address)
     : buildNativeCurrencyId(tokenItemData.chainId)
-  const { data } = useTokenPriceHistory(currencyId)
-  const { tokenColor } = useExtractedTokenColor(
-    tokenItemData.logoUrl,
-    tokenItemData.symbol,
-    /*background=*/ colors.surface1.val,
-    /*default=*/ colors.neutral3.val,
-  )
+  const { data } = useTokenPriceHistory({ currencyId })
+  const { tokenColor } = useExtractedTokenColor({
+    imageUrl: tokenItemData.logoUrl,
+    tokenName: tokenItemData.symbol,
+    backgroundColor: colors.surface1.val,
+    defaultColor: colors.neutral3.val,
+  })
 
   const convertedPriceHistory = useMemo(
     () =>

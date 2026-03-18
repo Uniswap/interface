@@ -1,45 +1,43 @@
-// eslint-disable-next-line no-restricted-imports
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { ActiveLiquidityChart2 } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart2'
-import { BandsIndicator } from 'components/Charts/BandsIndicator/bands-indicator'
-import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
+/* eslint-disable max-lines */
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Currency, Price } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
+import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { GraphQLApi } from '@universe/api'
+import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
+import { useMemo, useState } from 'react'
+import { ColorTokens, Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
+import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
+import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
+import { opacify, zIndexes } from 'ui/src/theme'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import useResizeObserver from 'use-resize-observer'
+// Not using the formatters in a react context, so we need to import the formatter directly.
+// biome-ignore lint/style/noRestrictedImports: Need direct formatter import for chart formatting outside React context
+import { formatNumber } from 'utilities/src/format/localeBased'
+import { isMobileWeb } from 'utilities/src/platform'
+import { ActiveLiquidityChart } from '~/components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
+import { BandsIndicator } from '~/components/Charts/BandsIndicator/bands-indicator'
+import { cloneReadonly } from '~/components/Charts/BandsIndicator/helpers/simple-clone'
 import {
   Chart,
   ChartModel,
   ChartModelParams,
   DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
   DEFAULT_TOP_PRICE_SCALE_MARGIN,
-} from 'components/Charts/ChartModel'
-import { PriceChartData } from 'components/Charts/PriceChart'
-import { PriceChartType, formatTickMarks } from 'components/Charts/utils'
-import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
-import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
-import { ZERO_ADDRESS } from 'constants/misc'
-import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
-import { useTheme } from 'lib/styled-components'
-import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
-import { CreatePositionInfo, PriceRangeInfo } from 'pages/Pool/Positions/create/types'
-import {
-  getCurrencyAddressWithWrap,
-  getPoolIdOrAddressFromCreatePositionInfo,
-  getSortedCurrenciesTupleWithWrap,
-} from 'pages/Pool/Positions/create/utils'
-import { useMemo, useState } from 'react'
-import { opacify } from 'theme/utils'
-import { Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
-import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
-import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
-import { zIndexes } from 'ui/src/theme/zIndexes'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import useResizeObserver from 'use-resize-observer'
-// Not using the formatters in a react context, so we need to import the formatter directly.
-// eslint-disable-next-line no-restricted-imports
-import { formatNumber } from 'utilities/src/format/localeBased'
-import { isMobileWeb } from 'utilities/src/platform'
+} from '~/components/Charts/ChartModel'
+import { getCrosshairProps, priceToNumber } from '~/components/Charts/LiquidityPositionRangeChart/utils'
+import { useDensityChartData } from '~/components/Charts/LiquidityRangeInput/hooks'
+import { PriceChartData } from '~/components/Charts/PriceChart'
+import { DataQuality, formatTickMarks, PriceChartType } from '~/components/Charts/utils'
+import ErrorBoundary from '~/components/ErrorBoundary'
+import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
+import { getPoolIdOrAddressFromCreatePositionInfo } from '~/components/Liquidity/utils/getPoolIdOrAddressFromCreatePositionInfo'
+import { isOutOfRange } from '~/components/Liquidity/utils/priceRangeInfo'
+import { usePoolPriceChartData } from '~/hooks/usePoolPriceChartData'
 
 export const CHART_HEIGHT = 52
 export const CHART_WIDTH = 224
@@ -60,51 +58,22 @@ const pulseKeyframe = `
   }
 `
 
-function getCrosshairProps(
-  color: any,
-  { yCoordinate, xCoordinate }: { yCoordinate: number; xCoordinate: number },
-): FlexProps {
-  return {
-    position: 'absolute',
-    left: xCoordinate - 3,
-    top: yCoordinate - 3, // Center the crosshair vertically on the price line.
-    width: 6,
-    height: 6,
-    borderRadius: '$roundedFull',
-    backgroundColor: color,
-  }
-}
-
-function isEffectivelyInfinity(value: number): boolean {
-  return Math.abs(value) >= 1e20 || Math.abs(value) <= 1e-20
-}
-
-function priceToNumber(price?: Price<Currency, Currency>): number {
-  const baseCurrency = price?.baseCurrency
-  if (!baseCurrency) {
-    return 0
-  }
-  return Number(
-    price
-      ?.quote(CurrencyAmount.fromRawAmount(baseCurrency, Math.pow(10, baseCurrency.decimals)))
-      ?.toSignificant(baseCurrency.decimals ?? 6) ?? 0,
-  )
-}
-
 interface LPPriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType.LINE
   // Optional, used to calculate the color of the price line.
   positionStatus?: PositionStatus
   // If defined these will be used to draw a range band on the chart.
-  positionPriceLower?: Price<Currency, Currency> | number
-  positionPriceUpper?: Price<Currency, Currency> | number
+  positionPriceLower?: Maybe<Price<Currency, Currency>> | number
+  positionPriceUpper?: Maybe<Price<Currency, Currency>> | number
   // These callbacks provide information to the parent component.
   setCrosshairCoordinates?: ({ x, y }: { x: number; y: number }) => void
   setBoundaryPrices?: (price: [number, number]) => void
+  onChartReady?: (chart: LPPriceChartModel) => void
   // Color of the price data line,
-  color?: string
+  color?: ColorTokens
+  colors: ReturnType<typeof useSporeColors>
   // Color of the current price dotted line.
-  currentPriceLineColor?: string
+  currentPriceLineColor?: ColorTokens
   // Total height of the chart, including the time axis pane if showXAxis is true.
   height: number
   showXAxis?: boolean
@@ -113,21 +82,24 @@ interface LPPriceChartModelParams extends ChartModelParams<PriceChartData> {
     top: number
     bottom: number
   }
+  priceInverted?: boolean
   minVisiblePrice?: number
   maxVisiblePrice?: number
   disableExtendedTimeScale?: boolean
 }
 
-export class LPPriceChartModel extends ChartModel<PriceChartData> {
+class LPPriceChartModel extends ChartModel<PriceChartData> {
   protected series: ISeriesApi<'Area'>
   private rangeBandSeries?: ISeriesApi<'Line'>
   private extendedData?: PriceChartData[]
   private positionRangeMin!: number
   private positionRangeMax!: number
   private bandIndicator?: BandsIndicator
+  private currentParams?: LPPriceChartModelParams
 
   constructor(chartDiv: HTMLDivElement, params: LPPriceChartModelParams) {
     super(chartDiv, params)
+    this.currentParams = params
 
     // Price history (primary series)
     this.series = this.api.addAreaSeries()
@@ -148,9 +120,17 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
     this.updateOptions(params)
     this.fitContent()
     this.overrideCrosshair(params)
+
+    // Notify parent that chart is ready
+    if (params.onChartReady) {
+      params.onChartReady(this)
+    }
   }
 
   updateOptions(params: LPPriceChartModelParams): void {
+    // Store current params for resetBoundaryPrices method
+    this.currentParams = params
+
     // Handle changes in data
     if (this.data !== params.data) {
       this.data = params.data
@@ -223,6 +203,7 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
       lineColor: priceLineColor,
       topColor: 'transparent',
       bottomColor: 'transparent',
+
       autoscaleInfoProvider,
     })
 
@@ -238,26 +219,33 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
 
     // Report the min/max price ticks of this chart to the parent
     requestAnimationFrame(() => {
-      if (params.setBoundaryPrices) {
-        const maxPrice = this.series.coordinateToPrice(0)
-        const minPrice = this.series.coordinateToPrice(params.height)
-        params.setBoundaryPrices([minPrice as number, maxPrice as number])
-      }
+      this.resetBoundaryPrices()
     })
   }
 
-  public static getPriceLineColor(params: Pick<LPPriceChartModelParams, 'color' | 'positionStatus' | 'theme'>): string {
+  public resetBoundaryPrices(): void {
+    if (this.currentParams?.setBoundaryPrices) {
+      const maxPrice = this.series.coordinateToPrice(0)
+      const minPrice = this.series.coordinateToPrice(this.currentParams.height)
+      this.currentParams.setBoundaryPrices([minPrice as number, maxPrice as number])
+    }
+  }
+
+  public static getPriceLineColor(
+    params: Pick<LPPriceChartModelParams, 'color' | 'positionStatus' | 'colors'>,
+  ): ColorTokens {
     if (params.color) {
       return params.color
     }
+
     switch (params.positionStatus) {
       case PositionStatus.OUT_OF_RANGE:
-        return params.theme.critical
+        return params.colors.statusCritical.val
       case PositionStatus.IN_RANGE:
-        return params.theme.success
+        return params.colors.statusSuccess.val
       case PositionStatus.CLOSED:
       default:
-        return params.theme.neutral2
+        return params.colors.neutral2.val
     }
   }
 
@@ -265,33 +253,26 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
     this.positionRangeMin =
       typeof params.positionPriceLower === 'number'
         ? params.positionPriceLower
-        : priceToNumber(params.positionPriceLower)
+        : priceToNumber(params.positionPriceLower, 0)
     this.positionRangeMax =
       typeof params.positionPriceUpper === 'number'
         ? params.positionPriceUpper
-        : priceToNumber(params.positionPriceUpper)
-
-    if (isEffectivelyInfinity(this.positionRangeMin)) {
-      this.positionRangeMin = 0
-    }
-    if (isEffectivelyInfinity(this.positionRangeMax)) {
-      this.positionRangeMax = Number.MAX_SAFE_INTEGER
-    }
+        : priceToNumber(params.positionPriceUpper, Number.MAX_SAFE_INTEGER)
 
     if (params.positionPriceLower !== undefined && params.positionPriceUpper !== undefined) {
       if (!this.bandIndicator) {
         this.bandIndicator = new BandsIndicator({
-          lineColor: opacify(10, params.theme.neutral1),
-          fillColor: params.theme.surface3,
-          lineWidth: 1,
+          lineColor: opacify(40, params.colors.neutral1.val),
+          fillColor: params.colors.surface3.val,
+          lineWidth: 1.5,
           upperValue: this.positionRangeMax,
           lowerValue: this.positionRangeMin,
         })
         this.rangeBandSeries?.attachPrimitive(this.bandIndicator)
       } else {
         this.bandIndicator.updateOptions({
-          lineColor: opacify(10, params.theme.neutral1),
-          fillColor: params.theme.surface3,
+          lineColor: opacify(10, params.colors.neutral1.val),
+          fillColor: params.colors.surface3.val,
           lineWidth: 1,
           upperValue: this.positionRangeMax,
           lowerValue: this.positionRangeMin,
@@ -303,6 +284,7 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
 
   private overrideCrosshair(params: LPPriceChartModelParams): void {
     const lastDataPoint = this.data[this.data.length - 1]
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!lastDataPoint) {
       return
     }
@@ -348,21 +330,26 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
 
 interface LiquidityPositionRangeChartProps {
   version: ProtocolVersion
+  priceInverted: boolean
   poolAddressOrId?: string
   chainId: UniverseChainId
-  currency0: Currency
-  currency1: Currency
+  quoteCurrency: Currency
+  baseCurrency: Currency
+  sdkCurrencies: {
+    TOKEN0: Maybe<Currency>
+    TOKEN1: Maybe<Currency>
+  }
   positionStatus?: PositionStatus
   // Note: this should be representative of the ordering/prices you want to display.
   // e.g. if the callsite supports inverting the prices, you should switch and invert the prices before passing them here.
   priceOrdering: {
-    base?: Currency
-    priceLower?: Price<Currency, Currency>
-    priceUpper?: Price<Currency, Currency>
+    base?: Maybe<Currency>
+    priceLower?: Maybe<Price<Currency, Currency>>
+    priceUpper?: Maybe<Price<Currency, Currency>>
   }
   width?: number | string
   height?: number
-  duration?: HistoryDuration
+  duration?: GraphQLApi.HistoryDuration
   showXAxis?: boolean
   showYAxis?: boolean
   interactive?: boolean
@@ -371,46 +358,67 @@ interface LiquidityPositionRangeChartProps {
   hook?: string
   showLiquidityBars?: boolean
   crosshairEnabled?: boolean
+  showChartBorder?: boolean
 }
 
 export function getLiquidityRangeChartProps({
-  positionInfo,
-  priceRangeInfo,
+  protocolVersion,
+  sdkCurrencies,
+  priceInverted,
   interactive,
+  poolOrPair,
+  ticks,
+  pricesAtTicks,
 }: {
-  positionInfo: CreatePositionInfo
-  priceRangeInfo: PriceRangeInfo
+  protocolVersion: ProtocolVersion
+  sdkCurrencies: {
+    TOKEN0: Maybe<Currency>
+    TOKEN1: Maybe<Currency>
+  }
+  priceInverted: boolean
   interactive?: boolean
+  poolOrPair: V3Pool | V4Pool | Pair | undefined
+  ticks: [Maybe<number>, Maybe<number>]
+  pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
 }): LiquidityPositionRangeChartProps | undefined {
-  const { currencies, protocolVersion } = positionInfo
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(sdkCurrencies, priceInverted)
 
-  if (!currencies || !currencies[1] || !currencies[0]?.chainId) {
+  if (!baseCurrency || !quoteCurrency || !quoteCurrency.chainId) {
     return undefined
   }
 
-  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(currencies[0], currencies[1], protocolVersion)
+  const poolAddressOrId = getPoolIdOrAddressFromCreatePositionInfo({
+    protocolVersion,
+    poolOrPair,
+    sdkCurrencies,
+  })
 
-  const poolAddressOrId = getPoolIdOrAddressFromCreatePositionInfo(positionInfo)
   const priceOrdering =
-    priceRangeInfo.protocolVersion === ProtocolVersion.V2
+    protocolVersion === ProtocolVersion.V2
       ? {}
       : {
-          base: sortedCurrencies[0],
-          priceLower: priceRangeInfo.prices[0],
-          priceUpper: priceRangeInfo.prices[1],
+          base: sdkCurrencies.TOKEN0,
+          priceLower: pricesAtTicks[0],
+          priceUpper: pricesAtTicks[1],
         }
+
+  const outOfRange = isOutOfRange({
+    poolOrPair,
+    lowerTick: ticks[0],
+    upperTick: ticks[1],
+  })
 
   return {
     poolAddressOrId,
     version: protocolVersion,
-    currency0: currencies[0],
-    currency1: currencies[1],
-    chainId: currencies[0].chainId,
+    priceInverted,
+    quoteCurrency,
+    baseCurrency,
+    sdkCurrencies,
+    chainId: quoteCurrency.chainId,
     priceOrdering,
     positionStatus:
-      priceRangeInfo.protocolVersion !== ProtocolVersion.V2 && priceRangeInfo.outOfRange
-        ? PositionStatus.OUT_OF_RANGE
-        : PositionStatus.IN_RANGE,
+      protocolVersion !== ProtocolVersion.V2 && outOfRange ? PositionStatus.OUT_OF_RANGE : PositionStatus.IN_RANGE,
     interactive,
   }
 }
@@ -438,10 +446,12 @@ export function LiquidityPositionRangeChartLoader({
   )
 }
 
-export function LiquidityPositionRangeChart({
+function LiquidityPositionRangeChart({
   version,
-  currency0,
-  currency1,
+  quoteCurrency,
+  baseCurrency,
+  sdkCurrencies,
+  priceInverted,
   poolAddressOrId,
   chainId,
   positionStatus,
@@ -457,8 +467,9 @@ export function LiquidityPositionRangeChart({
   feeTier,
   showLiquidityBars,
   crosshairEnabled,
+  showChartBorder = false,
 }: LiquidityPositionRangeChartProps) {
-  const theme = useTheme()
+  const colors = useSporeColors()
   const isV2 = version === ProtocolVersion.V2
   const isV3 = version === ProtocolVersion.V3
   const isV4 = version === ProtocolVersion.V4
@@ -467,23 +478,13 @@ export function LiquidityPositionRangeChart({
     ? {
         addressOrId: poolAddressOrId,
         chain: chainInfo.backendChain.chain,
-        duration: duration ?? HistoryDuration.Month,
+        duration: duration ?? GraphQLApi.HistoryDuration.Month,
         isV4,
         isV3,
         isV2,
       }
     : undefined
-  const sortedCurrencies = useMemo(
-    () => getSortedCurrenciesTupleWithWrap(currency0, currency1, version),
-    [currency0, currency1, version],
-  )
-  const priceData = usePoolPriceChartData(
-    variables,
-    currency0,
-    currency1,
-    version,
-    getCurrencyAddressWithWrap(sortedCurrencies[0], version),
-  )
+  const priceData = usePoolPriceChartData({ variables, priceInverted })
 
   const [crosshairCoordinates, setCrosshairCoordinates] = useState<{ x: number; y: number }>()
   const [boundaryPrices, setBoundaryPrices] = useState<[number, number]>()
@@ -493,16 +494,20 @@ export function LiquidityPositionRangeChart({
       data: priceData.entries,
       stale: priceData.dataQuality === DataQuality.STALE,
       type: PriceChartType.LINE,
-      color: LPPriceChartModel.getPriceLineColor({ positionStatus, theme }),
+      color: LPPriceChartModel.getPriceLineColor({ positionStatus, colors }),
+      colors,
       positionPriceLower: isV2 ? 0 : priceOrdering.priceLower,
       positionPriceUpper: isV2 ? Number.MAX_SAFE_INTEGER : priceOrdering.priceUpper,
       height: showLiquidityBars ? height - X_AXIS_HEIGHT : height,
+      priceScaleMargins: {
+        top: 0,
+        bottom: 0,
+      },
       setCrosshairCoordinates,
       setBoundaryPrices,
       showXAxis,
       showYAxis,
       interactive,
-      theme,
     } as const
   }, [
     priceOrdering.priceLower,
@@ -510,7 +515,7 @@ export function LiquidityPositionRangeChart({
     priceData.entries,
     priceData.dataQuality,
     positionStatus,
-    theme,
+    colors,
     isV2,
     height,
     showLiquidityBars,
@@ -521,9 +526,7 @@ export function LiquidityPositionRangeChart({
 
   const { formattedData, isLoading: liquidityDataLoading } = useDensityChartData({
     poolId: poolAddressOrId,
-    currencyA: sortedCurrencies[0],
-    currencyB: sortedCurrencies[1],
-    invertPrices: currency0.equals(sortedCurrencies[0]),
+    sdkCurrencies,
     version,
     feeAmount: Number(feeTier),
     tickSpacing,
@@ -547,7 +550,6 @@ export function LiquidityPositionRangeChart({
   const loading = liquidityDataLoading && priceData.loading && priceData.entries.length === 0
   const dataUnavailable = priceData.entries.length === 0 && !liquidityDataLoading && !priceData.loading
 
-  const colors = useSporeColors()
   const { ref: frameRef, width: chartWidth } = useResizeObserver<HTMLElement>()
   const hasChartWidth = !!chartWidth
   const shouldRenderChart = !dataUnavailable && hasChartWidth
@@ -569,7 +571,7 @@ export function LiquidityPositionRangeChart({
       )}
       {loading && (
         <LoadingPriceCurve
-          size={{ width: chartWidth ?? CHART_WIDTH, height: height ?? CHART_HEIGHT }}
+          size={{ width: chartWidth ?? CHART_WIDTH, height }}
           color="$neutral2"
           mt="$spacing8"
           ml="$spacing4"
@@ -577,24 +579,37 @@ export function LiquidityPositionRangeChart({
       )}
       {shouldRenderChart && (
         <Flex
-          width={showLiquidityBars ? chartWidth - Y_AXIS_WIDTH : chartWidth}
+          width={showLiquidityBars ? chartWidth - Y_AXIS_WIDTH + 2 : chartWidth}
           $md={{ width: '100%' }}
           zIndex={zIndexes.default}
+          position="relative"
         >
-          <Chart Model={LPPriceChartModel} params={chartParams} height={height ?? CHART_HEIGHT} />
+          {showChartBorder && (
+            <Flex
+              position="absolute"
+              left={0}
+              top={0}
+              width={chartWidth - Y_AXIS_WIDTH}
+              height={height - X_AXIS_HEIGHT}
+              borderRightWidth={1}
+              borderBottomWidth={1}
+              borderColor="$surface3"
+            />
+          )}
+          <Chart Model={LPPriceChartModel} params={chartParams} height={height} disableChartTouchPanning={true} />
         </Flex>
       )}
       <style>{pulseKeyframe}</style>
       {shouldRenderCrosshair && (
         <>
           <Flex
-            {...getCrosshairProps(LPPriceChartModel.getPriceLineColor({ positionStatus, theme }), {
+            {...getCrosshairProps(LPPriceChartModel.getPriceLineColor({ positionStatus, colors }), {
               xCoordinate: crosshairCoordinates.x,
               yCoordinate: crosshairCoordinates.y,
             })}
           />
           <Flex
-            {...getCrosshairProps(LPPriceChartModel.getPriceLineColor({ positionStatus, theme }), {
+            {...getCrosshairProps(LPPriceChartModel.getPriceLineColor({ positionStatus, colors }), {
               xCoordinate: crosshairCoordinates.x,
               yCoordinate: crosshairCoordinates.y,
             })}
@@ -613,7 +628,7 @@ export function LiquidityPositionRangeChart({
           top={0}
           zIndex={zIndexes.mask}
         >
-          <ActiveLiquidityChart2
+          <ActiveLiquidityChart
             barColor={colors.surface3.val}
             data={{
               series: sortedFormattedData,
@@ -621,7 +636,10 @@ export function LiquidityPositionRangeChart({
               min: boundaryPrices[0],
               max: boundaryPrices[1],
             }}
-            brushDomain={[priceToNumber(priceOrdering.priceLower), priceToNumber(priceOrdering.priceUpper)]}
+            brushDomain={[
+              priceToNumber(priceOrdering.priceLower, 0),
+              priceToNumber(priceOrdering.priceUpper, Number.MAX_SAFE_INTEGER),
+            ]}
             disableBrush={true}
             disableRightAxis={!showYAxis}
             showDiffIndicators={false}
@@ -632,8 +650,8 @@ export function LiquidityPositionRangeChart({
               axisLabelPaneWidth: Y_AXIS_WIDTH,
             }}
             onBrushDomainChange={() => {}}
-            currency0={currency0}
-            currency1={currency1}
+            quoteCurrency={quoteCurrency}
+            baseCurrency={baseCurrency}
             isMobile={isMobileWeb}
           />
         </Flex>
@@ -651,5 +669,13 @@ export function LiquidityPositionRangeChart({
         </Shine>
       )}
     </Flex>
+  )
+}
+
+export function WrappedLiquidityPositionRangeChart(props: LiquidityPositionRangeChartProps): JSX.Element {
+  return (
+    <ErrorBoundary fallback={() => null}>
+      <LiquidityPositionRangeChart {...props} />
+    </ErrorBoundary>
   )
 }

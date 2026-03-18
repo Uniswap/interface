@@ -1,112 +1,150 @@
-// eslint-disable-next-line no-restricted-imports
 import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { StackedLineData } from 'components/Charts/StackedLineChart'
-import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
-import { ChartType } from 'components/Charts/utils'
-import { checkDataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
-import { UTCTimestamp } from 'lightweight-charts'
 import { useContext, useMemo } from 'react'
-import { ExploreContext } from 'state/explore'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { logger } from 'utilities/src/logger/logger'
+import { ExploreContext } from '~/state/explore'
 
-function mapDataByTimestamp(
-  v2Data?: TimestampedAmount[],
-  v3Data?: TimestampedAmount[],
-  v4Data?: TimestampedAmount[],
-): Record<number, Record<string, number>> {
-  const dataByTime: Record<number, Record<string, number>> = {}
-  v2Data?.forEach((v2Point) => {
-    const timestamp = Number(v2Point.timestamp)
-    dataByTime[timestamp] = { ['v2']: Number(v2Point.value), ['v3']: 0, ['v4']: 0 }
-  })
-  v3Data?.forEach((v3Point) => {
-    const timestamp = Number(v3Point.timestamp)
-    if (!dataByTime[timestamp]) {
-      dataByTime[timestamp] = { ['v2']: 0, ['v3']: Number(v3Point.value), ['v4']: 0 }
-    } else {
-      dataByTime[timestamp]['v3'] = Number(v3Point.value)
+/**
+ * Extracts the latest and previous values for a protocol from timestamped data.
+ * Uses the most recent data point available for each protocol, regardless of other protocols' timestamps.
+ * This prevents showing 0 values when protocols have data at different timestamps due to sync delays.
+ */
+function getLatestAndPreviousValues(
+  data: TimestampedAmount[] | undefined,
+  options?: { protocolName?: string; isLoading?: boolean },
+): {
+  latest: { value: number; timestamp: number }
+  previous: { value: number; timestamp: number }
+} {
+  if (!data || data.length === 0) {
+    // Only log warning if data is missing AND not currently loading
+    if (options?.protocolName && !options.isLoading) {
+      logger.warn(
+        'protocolStats',
+        'getLatestAndPreviousValues',
+        `No data available for protocol ${options.protocolName}`,
+      )
     }
-  })
-  v4Data?.forEach((v4Point) => {
-    const timestamp = Number(v4Point.timestamp)
-    if (!dataByTime[timestamp]) {
-      dataByTime[timestamp] = { ['v2']: 0, ['v3']: 0, ['v4']: Number(v4Point.value) }
-    } else {
-      dataByTime[timestamp]['v4'] = Number(v4Point.value)
+    return {
+      latest: { value: 0, timestamp: 0 },
+      previous: { value: 0, timestamp: 0 },
     }
-  })
-  return dataByTime
-}
-
-export function useHistoricalProtocolVolume(duration: HistoryDuration) {
-  const {
-    protocolStats: { data, isLoading },
-  } = useContext(ExploreContext)
-
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
-  let v4Data: TimestampedAmount[] | undefined
-  let v3Data: TimestampedAmount[] | undefined
-  let v2Data: TimestampedAmount[] | undefined
-  switch (duration) {
-    case HistoryDuration.Max:
-      v2Data = data?.historicalProtocolVolume?.Max?.v2
-      v3Data = data?.historicalProtocolVolume?.Max?.v3
-      v4Data = data?.historicalProtocolVolume?.Max?.v4
-      break
-    case HistoryDuration.Year:
-      v2Data = data?.historicalProtocolVolume?.Year?.v2
-      v3Data = data?.historicalProtocolVolume?.Year?.v3
-      v4Data = data?.historicalProtocolVolume?.Year?.v4
-      break
-    default:
-      v2Data = data?.historicalProtocolVolume?.Month?.v2
-      v3Data = data?.historicalProtocolVolume?.Month?.v3
-      v4Data = data?.historicalProtocolVolume?.Month?.v4
-      break
   }
 
-  return useMemo(() => {
-    const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4DataEnabled ? v4Data : undefined)
+  const sorted = [...data].sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
 
-    const entries = Object.entries(dataByTime).reduce((acc, [timestamp, values]) => {
-      acc.push({
-        time: Number(timestamp) as UTCTimestamp,
-        values: {
-          ['SUBGRAPH_V2']: values['v2'],
-          ['SUBGRAPH_V3']: values['v3'],
-          ['SUBGRAPH_V4']: isV4DataEnabled ? values['v4'] : undefined,
-        },
-      })
-      return acc
-    }, [] as StackedHistogramData[])
-
-    const dataQuality = checkDataQuality(entries, ChartType.VOLUME, duration)
-    return { chartType: ChartType.VOLUME, entries, loading: isLoading, dataQuality }
-  }, [duration, isLoading, isV4DataEnabled, v2Data, v3Data, v4Data])
+  return {
+    latest: { value: Number(sorted[0].value), timestamp: Number(sorted[0].timestamp) },
+    previous:
+      sorted.length > 1
+        ? { value: Number(sorted[1].value), timestamp: Number(sorted[1].timestamp) }
+        : { value: 0, timestamp: 0 },
+  }
 }
 
-export function useDailyProtocolTVL() {
+/**
+ * Returns:
+ * - total 24h volume (sum of all protocols for the latest day)
+ * - each protocol’s 24h volume (v2, v3, and v4)
+ * - 24hr total volume percentage change
+ *
+ * Each protocol uses its own latest available data point, preventing 0 values when timestamps differ.
+ */
+export function use24hProtocolVolume() {
   const {
     protocolStats: { data, isLoading },
   } = useContext(ExploreContext)
 
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
-  const v4Data = data?.dailyProtocolTvl?.v4
-  const v3Data = data?.dailyProtocolTvl?.v3
-  const v2Data = data?.dailyProtocolTvl?.v2
+  const v2Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v2
+  const v3Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v3
+  const v4Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v4
 
   return useMemo(() => {
-    const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4DataEnabled ? v4Data : undefined)
-    const entries = Object.entries(dataByTime).map(([timestamp, values]) => ({
-      time: Number(timestamp),
-      values: isV4DataEnabled ? [values['v2'], values['v3'], values['v4']] : [values['v2'], values['v3']],
-    })) as StackedLineData[]
+    const v2 = getLatestAndPreviousValues(v2Data, { protocolName: 'V2', isLoading })
+    const v3 = getLatestAndPreviousValues(v3Data, { protocolName: 'V3', isLoading })
+    const v4 = getLatestAndPreviousValues(v4Data, { protocolName: 'V4', isLoading })
 
-    const dataQuality = checkDataQuality(entries, ChartType.TVL, HistoryDuration.Year)
-    return { chartType: ChartType.TVL, entries, loading: isLoading, dataQuality }
-  }, [isLoading, isV4DataEnabled, v2Data, v3Data, v4Data])
+    const totalLatest = v2.latest.value + v3.latest.value + v4.latest.value
+    const totalPrevious = v2.previous.value + v3.previous.value + v4.previous.value
+
+    const computeChangePercent = (latest: number, previous: number): number => {
+      // If previous is 0, treat change as 0% rather than showing misleading "infinite growth".
+      // This handles cases like new protocol launches where there's no meaningful baseline for comparison.
+      if (previous === 0) {
+        return 0
+      }
+      return ((latest - previous) / previous) * 100
+    }
+
+    const totalChangePercent = computeChangePercent(totalLatest, totalPrevious)
+
+    return {
+      isLoading,
+      totalVolume: totalLatest,
+      totalChangePercent,
+      protocolVolumes: {
+        v2: v2.latest.value,
+        v3: v3.latest.value,
+        v4: v4.latest.value,
+      },
+    }
+  }, [isLoading, v2Data, v3Data, v4Data])
+}
+
+/**
+ * Returns:
+ * - total 24h TVL (sum of all protocols for the latest day)
+ * - each protocol’s 24h TVL (v2, v3, and v4)
+ * - 24hr total TVL percentage change
+ * - each protocol’s 24hr TVL percentage change (v2, v3, and v4)
+ *
+ * Each protocol uses its own latest available data point, preventing 0 values when timestamps differ.
+ */
+export function useDailyTVLWithChange() {
+  const {
+    protocolStats: { data, isLoading },
+  } = useContext(ExploreContext)
+
+  const v2Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v2
+  const v3Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v3
+  const v4Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v4
+
+  return useMemo(() => {
+    const v2 = getLatestAndPreviousValues(v2Data, { protocolName: 'V2', isLoading })
+    const v3 = getLatestAndPreviousValues(v3Data, { protocolName: 'V3', isLoading })
+    const v4 = getLatestAndPreviousValues(v4Data, { protocolName: 'V4', isLoading })
+
+    const protocolTVL = {
+      v2: v2.latest.value,
+      v3: v3.latest.value,
+      v4: v4.latest.value,
+    }
+
+    const totalTVL = v2.latest.value + v3.latest.value + v4.latest.value
+    const previousTotal = v2.previous.value + v3.previous.value + v4.previous.value
+
+    // If previous is 0, treat change as 0% rather than showing misleading "infinite growth".
+    // This handles cases like new protocol launches where there's no meaningful baseline for comparison.
+    const computeChangePercent = (latestVal: number, previousVal: number) =>
+      previousVal === 0 ? 0 : ((latestVal - previousVal) / previousVal) * 100
+
+    // Combined protocol changes
+    const totalChangePercent = computeChangePercent(totalTVL, previousTotal)
+
+    // Individual protocol changes
+    const v2Change = computeChangePercent(v2.latest.value, v2.previous.value)
+    const v3Change = computeChangePercent(v3.latest.value, v3.previous.value)
+    const v4Change = computeChangePercent(v4.latest.value, v4.previous.value)
+
+    return {
+      isLoading,
+      totalTVL,
+      protocolTVL,
+      totalChangePercent,
+      protocolChangePercent: {
+        v2: v2Change,
+        v3: v3Change,
+        v4: v4Change,
+      },
+    }
+  }, [isLoading, v2Data, v3Data, v4Data])
 }

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import styled, { css, keyframes } from 'lib/styled-components'
+import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
 type RiseInProps = {
   delay?: number
@@ -27,12 +27,12 @@ const RiseInStyles = css<{ count?: number; delay?: number }>`
   animation-delay: ${(props) => 1000 * (props.delay ?? 0)}ms;
 `
 
-export const RiseInText = styled.span<{ delay?: number }>`
+export const RiseInText = deprecatedStyled.span<{ delay?: number }>`
   display: inline-flex;
   ${RiseInStyles}
 `
 
-export const RiseIn = styled.span<{ delay?: number }>`
+export const RiseIn = deprecatedStyled.span<{ delay?: number }>`
   display: flex;
   width: 100%;
   flex: none;
@@ -58,12 +58,4 @@ export const Hover = (props: RiseInProps) => {
       {props.children}
     </motion.div>
   )
-}
-
-export function Wiggle({ ...props }) {
-  const variants = {
-    initial: { rotate: 0, scale: 1 },
-    animate: { rotate: [20, 0], scale: 1.2, transition: { type: 'spring', stiffness: 200 } },
-  }
-  return <motion.div {...props} whileHover="animate" initial="initial" variants={variants} />
 }

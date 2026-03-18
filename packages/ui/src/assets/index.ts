@@ -1,11 +1,10 @@
 export const ALL_NETWORKS_LOGO = require('./logos/png/all-networks-icon.png')
-export const ALL_NETWORKS_LOGO_UNICHAIN = require('./logos/png/all-networks-icon-unichain.png')
 export const ETHEREUM_LOGO = require('./logos/png/ethereum-logo.png')
 export const OPTIMISM_LOGO = require('./logos/png/optimism-logo.png')
 export const ARBITRUM_LOGO = require('./logos/png/arbitrum-logo.png')
 export const BASE_LOGO = require('./logos/png/base-logo.png')
 export const BNB_LOGO = require('./logos/png/bnb-logo.png')
-export const MONAD_LOGO = require('./logos/png/monad-logo.png')
+export const MONAD_LOGO_FILLED = require('./logos/png/monad-logo-filled.png')
 export const POLYGON_LOGO = require('./logos/png/polygon-logo.png')
 export const BLAST_LOGO = require('./logos/png/blast-logo.png')
 export const AVALANCHE_LOGO = require('./logos/png/avalanche-logo.png')
@@ -13,13 +12,17 @@ export const CELO_LOGO = require('./logos/png/celo-logo.png')
 export const WORLD_CHAIN_LOGO = require('./logos/png/world-chain-logo.png')
 export const ZORA_LOGO = require('./logos/png/zora-logo.png')
 export const ZKSYNC_LOGO = require('./logos/png/zksync-logo.png')
+export const SOLANA_LOGO = require('./logos/png/solana-logo.png')
 export const SONEIUM_LOGO = require('./logos/png/soneium-logo.png')
+export const XLAYER_LOGO = require('./logos/png/xlayer-logo.png')
+export const OKB_LOGO = require('./logos/png/okb-logo.png')
 export const UNICHAIN_LOGO = require('./logos/png/unichain-logo.png')
 export const UNICHAIN_SEPOLIA_LOGO = require('./logos/png/unichain-sepolia-logo.png')
 export const UNISWAP_LOGO = require('./logos/png/uniswap-logo.png')
 export const UNISWAP_LOGO_LARGE = require('./logos/png/uniswap-logo-large.png')
 export const UNISWAP_MONO_LOGO_LARGE = require('./logos/png/uniswap-mono-logo-large.png')
 export const UNISWAP_APP_ICON = require('./logos/png/uniswap-app-icon.png')
+export const BINANCE_WALLET_ICON = require('./logos/png/binance-icon.png')
 
 export const ONBOARDING_QR_ETCHING_VIDEO_LIGHT = require('./videos/light-etching.mp4')
 export const ONBOARDING_QR_ETCHING_VIDEO_DARK = require('./videos/dark-etching.mp4')
@@ -27,7 +30,6 @@ export const AVATARS_LIGHT = require('./misc/avatars-light.png')
 export const AVATARS_DARK = require('./misc/avatars-dark.png')
 export const APP_SCREENSHOT_LIGHT = require('./misc/app-screenshot-light.png')
 export const APP_SCREENSHOT_DARK = require('./misc/app-screenshot-dark.png')
-export const CHROME_LOGO = require('./logos/png/chrome-logo.png')
 export const DOT_GRID = require('./misc/dot-grid.png')
 
 export const UNITAGS_BANNER_VERTICAL_LIGHT = require('./graphics/unitags-banner-v-light.png')
@@ -36,10 +38,6 @@ export const UNITAGS_INTRO_BANNER_LIGHT = require('./graphics/unitags-intro-bann
 export const UNITAGS_INTRO_BANNER_DARK = require('./graphics/unitags-intro-banner-dark.png')
 
 export const BRIDGING_BANNER = require('./graphics/bridging-banner.png')
-export const UNICHAIN_BANNER_COLD = require('./graphics/unichain-banner-cold.png')
-export const UNICHAIN_BANNER_WARM = require('./graphics/unichain-banner-warm.png')
-
-export const UNICHAIN_PROMO_MODAL_GIF = require('./graphics/unichain-modal.gif')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')
@@ -58,6 +56,7 @@ export const UNITAG_DARK_SMALL = require('./graphics/unitag-dark-small.png')
 export const UNITAG_LIGHT_SMALL = require('./graphics/unitag-light-small.png')
 
 export const PUSH_NOTIFICATIONS_CARD_BANNER = require('./graphics/push-notifications-card-banner.png')
+
 export const ONBOARDING_NOTIFICATIONS_DARK = {
   ios: require(`./backgrounds/ios/notifications-dark.png`),
   android: require(`./backgrounds/android/notifications-dark.png`),
@@ -71,6 +70,9 @@ export const FOR_CONNECTING_BACKGROUND_LIGHT = require('./backgrounds/for-connec
 
 export const CRYPTO_PURCHASE_BACKGROUND_LIGHT = require('./backgrounds/coins-background-light.png')
 export const CRYPTO_PURCHASE_BACKGROUND_DARK = require('./backgrounds/coins-background-dark.png')
+
+export const SOLANA_BANNER_LIGHT = require('./backgrounds/solana-banner-light.png')
+export const SOLANA_BANNER_DARK = require('./backgrounds/solana-banner-dark.png')
 
 export const SECURITY_SCREEN_BACKGROUND_DARK = {
   ios: require(`./backgrounds/ios/security-background-dark.png`),
@@ -99,3 +101,10 @@ export const UNITAGS_PHIL_LIGHT = require('./graphics/unitags/phil-light.png')
 export const UNITAGS_PHIL_DARK = require('./graphics/unitags/phil-dark.png')
 export const UNITAGS_SPENCER_LIGHT = require('./graphics/unitags/spencer-light.png')
 export const UNITAGS_SPENCER_DARK = require('./graphics/unitags/spencer-dark.png')
+
+export const SMART_WALLET_UPGRADE_VIDEO = require('./videos/smart-wallet-upgrade.mp4')
+export const SMART_WALLET_UPGRADE_FALLBACK = require('./graphics/smart-wallet-image.png')
+
+export const NO_UNISWAP_INTERFACE_FEES_BANNER_LIGHT = require('./backgrounds/dots-banner-light.png')
+export const NO_UNISWAP_INTERFACE_FEES_BANNER_DARK = require('./backgrounds/dots-banner-dark.png')
+export const NO_FEES_ICON = require('./graphics/zero-percent.png')

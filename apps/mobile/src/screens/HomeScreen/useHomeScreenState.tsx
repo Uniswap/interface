@@ -1,13 +1,22 @@
+import { GraphQLApi } from '@universe/api'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
-import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks/useFormattedTransactionDataForActivity'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useRestOnRampAuth } from 'wallet/src/features/activity/useRestOnRampAuth'
+import { useAccounts, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectHasBalanceOrActivityForAddress } from 'wallet/src/features/wallet/selectors'
 import { setHasBalanceOrActivity } from 'wallet/src/features/wallet/slice'
 import { WalletState } from 'wallet/src/state/walletReducer'
+
+/**
+ * This is the interval at which the NFTs tab will poll for new NFTs
+ * when the wallet is empty. Both activity and balances are updated
+ * in other parts of the app so we don't need to poll.
+ */
+const EMPTY_WALLET_NFT_POLL_INTERVAL = 15 * ONE_SECOND_MS
 
 /**
  * Helper hook used to determine the state of the home screen such as whether the wallet should fetch
@@ -20,6 +29,7 @@ export function useHomeScreenState(): {
 } {
   const dispatch = useDispatch()
   const { address } = useActiveAccountWithThrow()
+  const ownerAddresses = Object.keys(useAccounts())
   const hasUsedWalletFromCache = useSelector((state: WalletState) =>
     selectHasBalanceOrActivityForAddress(state, address),
   )
@@ -33,23 +43,28 @@ export function useHomeScreenState(): {
   // is a work around to only trigger the loading state once.
   const dataLoadedRef = useRef(false)
 
+  const fiatOnRampParams = useRestOnRampAuth(address)
+
   const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
-    address,
+    evmAddress: address,
     skip: hasUsedWalletFromCache,
   })
-  const { data: nftData, loading: areNFTsLoading } = useNftsTabQuery({
+  const { data: nftData, loading: areNFTsLoading } = GraphQLApi.useNftsTabQuery({
     variables: {
       ownerAddress: address,
       first: 1,
       filter: { filterSpam: true },
       chains: gqlChains,
     },
+    pollInterval: EMPTY_WALLET_NFT_POLL_INTERVAL,
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
     skip: hasUsedWalletFromCache,
   })
   const { hasData: hasActivity, isLoading: isActivityLoading } = useFormattedTransactionDataForActivity({
-    address,
+    evmAddress: address,
+    ownerAddresses,
+    fiatOnRampParams,
     hideSpamTokens: true,
     pageSize: 1,
     skip: hasUsedWalletFromCache,

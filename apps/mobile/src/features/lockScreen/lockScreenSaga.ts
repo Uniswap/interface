@@ -17,7 +17,7 @@ import {
   setLockScreenVisibility,
   setManualRetryRequired,
 } from 'src/features/lockScreen/lockScreenSlice'
-import { hideSplashScreen } from 'src/features/splashScreen/splashScreenSlice'
+import { onSplashScreenHidden } from 'src/features/splashScreen/splashScreenSlice'
 import { call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 
 //------------------------------
@@ -28,7 +28,7 @@ export function* lockScreenSaga(): SagaIterator {
   // setup initial lock screen state on app load if required
   yield* call(setupInitialLockScreenState)
   // handle when splash screen is hidden
-  yield* takeLatest(hideSplashScreen.type, onSplashScreenHide)
+  yield* takeLatest(onSplashScreenHidden.type, onSplashScreenHide)
   // handle when app state changes
   yield* takeLatest(transitionAppState.type, onAppStateTransition)
   // handle authentication status change in dedicated saga

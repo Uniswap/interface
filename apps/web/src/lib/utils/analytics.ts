@@ -1,12 +1,11 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from 'state/routing/types'
-import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApi } from '@universe/api'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { planAnalyticsToSnakeCase } from 'uniswap/src/features/transactions/swap/plan/types'
 import {
   BridgeTrade,
+  ChainedActionTrade,
   ClassicTrade,
   PriorityOrderTrade,
   UniswapXTrade,
@@ -14,9 +13,15 @@ import {
   UniswapXV3Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  type PlanSwapTransactionInfoFields,
+  TransactionOriginType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
-import { computeRealizedPriceImpact } from 'utils/prices'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from '~/state/routing/types'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from '~/state/routing/utils'
+import { computeRealizedPriceImpact } from '~/utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
   if (!futureTimestampInSecondsSinceEpoch) {
@@ -34,7 +39,7 @@ export const getTokenAddress = (currency: Currency) => (currency.isNative ? NATI
 
 export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
 
-export const formatPercentNumber = (percent: Percent): number => parseFloat(percent.toFixed(2))
+const formatPercentNumber = (percent: Percent): number => parseFloat(percent.toFixed(2))
 
 export const getPriceUpdateBasisPoints = (
   prevPrice: Price<Currency, Currency>,
@@ -55,45 +60,56 @@ function getEstimatedNetworkFee(trade: InterfaceTrade) {
   return undefined
 }
 
-function tradeRoutingToOffchainOrderType(routing: Routing): OffchainOrderType | undefined {
+function tradeRoutingToOffchainOrderType(routing: TradingApi.Routing): OffchainOrderType | undefined {
   switch (routing) {
-    case Routing.DUTCH_V2:
+    case TradingApi.Routing.DUTCH_V2:
       return OffchainOrderType.DUTCH_V2_AUCTION
-    case Routing.DUTCH_LIMIT:
-    case Routing.LIMIT_ORDER:
+    case TradingApi.Routing.DUTCH_LIMIT:
+    case TradingApi.Routing.LIMIT_ORDER:
       return OffchainOrderType.LIMIT_ORDER
     default:
       return undefined
   }
 }
 
-export function formatCommonPropertiesForTrade(
-  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade,
-  allowedSlippage: Percent,
-  outputFeeFiatValue?: number,
-): SwapTradeBaseProperties {
+export function formatCommonPropertiesForTrade({
+  trade,
+  allowedSlippage,
+  outputFeeFiatValue,
+  isBatched,
+  batchId,
+  includedPermitTransactionStep,
+}: {
+  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
+  allowedSlippage: Percent
+  outputFeeFiatValue?: number
+  isBatched?: boolean
+  batchId?: string
+  includedPermitTransactionStep?: boolean
+}): SwapTradeBaseProperties {
   const isUniversalSwapFlow =
     trade instanceof ClassicTrade ||
     trade instanceof UniswapXV2Trade ||
     trade instanceof UniswapXV3Trade ||
     trade instanceof PriorityOrderTrade ||
-    trade instanceof BridgeTrade
+    trade instanceof BridgeTrade ||
+    trade instanceof ChainedActionTrade
 
   return {
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
     type: trade.tradeType,
-    ura_quote_id: isUniversalSwapFlow ? trade.quote?.quote.quoteId : isUniswapXTrade(trade) ? trade.quoteId : undefined,
+    ura_quote_id: isUniversalSwapFlow ? trade.quote.quote.quoteId : isUniswapXTrade(trade) ? trade.quoteId : undefined,
     ura_request_id: isUniversalSwapFlow
-      ? trade.quote?.requestId
+      ? trade.quote.requestId
       : isSubmittableTrade(trade)
         ? trade.requestId
         : undefined,
     ura_quote_block_number: isUniversalSwapFlow
       ? isClassic(trade)
-        ? trade.quote?.quote.blockNumber
+        ? trade.quote.quote.blockNumber
         : undefined
       : isClassicTrade(trade)
-        ? trade.blockNumber ?? undefined
+        ? (trade.blockNumber ?? undefined)
         : undefined,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
@@ -113,10 +129,15 @@ export function formatCommonPropertiesForTrade(
     chain_id_out: trade.outputAmount.currency.chainId,
     estimated_network_fee_usd: isUniversalSwapFlow
       ? trade instanceof ClassicTrade
-        ? trade.quote?.quote.gasFeeUSD
+        ? trade.quote.quote.gasFeeUSD
         : undefined
       : getEstimatedNetworkFee(trade)?.toString(),
-    minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
+    minimum_output_after_slippage:
+      trade instanceof ClassicTrade
+        ? trade.minAmountOut.toSignificant(6)
+        : !isUniversalSwapFlow && isClassicTrade(trade)
+          ? trade.minimumAmountOut(allowedSlippage).toSignificant(6)
+          : undefined,
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: isUniversalSwapFlow ? undefined : getQuoteMethod(trade),
     fee_usd: outputFeeFiatValue,
@@ -128,6 +149,9 @@ export function formatCommonPropertiesForTrade(
         ? trade.offchainOrderType
         : undefined,
     transactionOriginType: TransactionOriginType.Internal,
+    is_batch: isBatched,
+    batch_id: batchId,
+    included_permit_transaction_step: includedPermitTransactionStep,
   }
 }
 
@@ -139,14 +163,22 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   timeToSignSinceRequestMs,
   portfolioBalanceUsd,
   trace,
+  isBatched,
+  batchId,
+  includedPermitTransactionStep,
+  planAnalytics,
 }: {
-  trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade
+  trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   txHash?: string
   timeToSignSinceRequestMs?: number
   portfolioBalanceUsd?: number
   trace: ITraceContext
+  isBatched?: boolean
+  batchId?: string
+  includedPermitTransactionStep?: boolean
+  planAnalytics?: PlanSwapTransactionInfoFields
 }) => ({
   ...trace,
   total_balances_usd: portfolioBalanceUsd,
@@ -155,7 +187,18 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   token_out_amount_usd: fiatValues.amountOut,
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
-  ...formatCommonPropertiesForTrade(trade, allowedSlippage, fiatValues.feeUsd),
+  ...planAnalyticsToSnakeCase(planAnalytics),
+  ...['routing' in trade ? getRouteAnalyticsData(trade) : undefined],
+  ...formatCommonPropertiesForTrade({
+    trade,
+    allowedSlippage,
+    outputFeeFiatValue: fiatValues.feeUsd,
+    isBatched,
+    batchId,
+    includedPermitTransactionStep,
+  }),
+  // Override routing with per-step routing for plan steps
+  ...(planAnalytics?.stepRouting ? { routing: planAnalytics.stepRouting } : {}),
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {
@@ -164,21 +207,4 @@ function getQuoteMethod(trade: InterfaceTrade) {
   }
 
   return trade.quoteMethod
-}
-
-export const formatSwapQuoteReceivedEventProperties = (
-  trade: InterfaceTrade,
-  allowedSlippage: Percent,
-  swapQuoteLatencyMs: number | undefined,
-  outputFeeFiatValue: number | undefined,
-) => {
-  return {
-    ...formatCommonPropertiesForTrade(trade, allowedSlippage, outputFeeFiatValue),
-    swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber ?? undefined : undefined,
-    allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
-    token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
-    token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
-    quote_latency_milliseconds: swapQuoteLatencyMs,
-    transactionOriginType: TransactionOriginType.Internal,
-  }
 }

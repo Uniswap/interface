@@ -1,40 +1,50 @@
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { parse } from 'qs'
+import { ReactNode } from 'react'
+import { DAI, nativeOnChain, UNI, USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
+import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import {
   queryParametersToCurrencyState,
   serializeSwapAddressesToURLParameters,
   serializeSwapStateToURLParameters,
   useInitialCurrencyState,
-} from 'state/swap/hooks'
-import { ETH_MAINNET, ETH_SEPOLIA } from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
-import { renderHook, waitFor } from 'test-utils/render'
-import { UNI, USDC_OPTIMISM, nativeOnChain } from 'uniswap/src/constants/tokens'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyField } from 'uniswap/src/types/currency'
+} from '~/state/swap/hooks'
+import { ETH_MAINNET, ETH_SEPOLIA } from '~/test-utils/constants'
+import { mocked } from '~/test-utils/mocked'
+import { renderHook, waitFor } from '~/test-utils/render'
 
-jest.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
-    useFeatureFlag: jest.fn(),
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
   }
 })
 
-jest.mock('uniswap/src/contexts/UniswapContext')
+vi.mock('uniswap/src/contexts/UniswapContext')
 
-jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
-  ...jest.requireActual('uniswap/src/features/chains/hooks/useEnabledChains'),
-  useEnabledChains: jest.fn(),
-}))
+vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', async () => {
+  const actual = await vi.importActual('uniswap/src/features/chains/hooks/useEnabledChains')
+  return {
+    ...actual,
+    useEnabledChains: vi.fn(),
+  }
+})
 
-jest.mock('uniswap/src/contexts/UrlContext', () => ({
-  ...jest.requireActual('uniswap/src/contexts/UrlContext'),
-  useUrlContext: jest.fn(),
-}))
+vi.mock('uniswap/src/contexts/UrlContext', async () => {
+  const actual = await vi.importActual('uniswap/src/contexts/UrlContext')
+  return {
+    ...actual,
+    useUrlContext: vi.fn(),
+  }
+})
 
 describe('hooks', () => {
   beforeEach(() => {
@@ -46,8 +56,8 @@ describe('hooks', () => {
     })
 
     mocked(useUrlContext).mockReturnValue({
-      useParsedQueryString: jest.fn(),
-      usePathname: jest.fn(),
+      useParsedQueryString: vi.fn(),
+      usePathname: vi.fn(),
     })
   })
 
@@ -61,8 +71,8 @@ describe('hooks', () => {
           ),
         ),
       ).toEqual({
-        outputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-        inputCurrencyId: 'ETH',
+        outputCurrencyAddress: DAI.address,
+        inputCurrencyAddress: 'ETH',
       })
     })
 
@@ -75,8 +85,8 @@ describe('hooks', () => {
           ),
         ),
       ).toEqual({
-        outputCurrencyId: '0x6fd9d7AD17242c41f7131d257212c54A0e816691',
-        inputCurrencyId: 'ETH',
+        outputCurrencyAddress: '0x6fd9d7AD17242c41f7131d257212c54A0e816691',
+        inputCurrencyAddress: 'ETH',
         chainId: 10,
       })
     })
@@ -87,8 +97,8 @@ describe('hooks', () => {
           parse('?outputCurrency=invalid', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
-        inputCurrencyId: undefined,
-        outputCurrencyId: undefined,
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
       })
     })
 
@@ -98,8 +108,8 @@ describe('hooks', () => {
           parse('?outputCurrency=eth&value=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
-        outputCurrencyId: 'ETH',
-        inputCurrencyId: undefined,
+        outputCurrencyAddress: 'ETH',
+        inputCurrencyAddress: undefined,
         value: '20.5',
         field: undefined,
         chainId: undefined,
@@ -112,11 +122,96 @@ describe('hooks', () => {
           parse('?outputcurrency=eth&value=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
-        outputCurrencyId: 'ETH',
-        inputCurrencyId: undefined,
+        outputCurrencyAddress: 'ETH',
+        inputCurrencyAddress: undefined,
         value: '20.5',
         field: undefined,
         chainId: undefined,
+      })
+    })
+
+    test('no query parameters', () => {
+      expect(queryParametersToCurrencyState(parse('', { parseArrays: false, ignoreQueryPrefix: true }))).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: undefined,
+        outputChainId: undefined,
+      })
+    })
+
+    test('only chain parameter, no currencies', () => {
+      expect(
+        queryParametersToCurrencyState(parse('?chain=optimism', { parseArrays: false, ignoreQueryPrefix: true })),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: UniverseChainId.Optimism,
+        outputChainId: undefined,
+      })
+    })
+
+    test('only outputChain parameter, no currencies', () => {
+      expect(
+        queryParametersToCurrencyState(parse('?outputChain=base', { parseArrays: false, ignoreQueryPrefix: true })),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: undefined,
+        outputChainId: UniverseChainId.Base,
+      })
+    })
+
+    test('both chain and outputChain parameters, no currencies', () => {
+      expect(
+        queryParametersToCurrencyState(
+          parse('?chain=mainnet&outputChain=optimism', { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: UniverseChainId.Mainnet,
+        outputChainId: UniverseChainId.Optimism,
+      })
+    })
+
+    test('outputChain parameter with output currency', () => {
+      expect(
+        queryParametersToCurrencyState(
+          parse(`?outputChain=base&outputCurrency=${DAI.address}`, { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: DAI.address,
+        value: undefined,
+        field: undefined,
+        chainId: undefined,
+        outputChainId: UniverseChainId.Base,
+      })
+    })
+
+    test('both chain and outputChain with input and output currencies', () => {
+      expect(
+        queryParametersToCurrencyState(
+          parse(`?chain=mainnet&outputChain=optimism&inputCurrency=ETH&outputCurrency=${USDC_OPTIMISM.address}`, {
+            parseArrays: false,
+            ignoreQueryPrefix: true,
+          }),
+        ),
+      ).toEqual({
+        inputCurrencyAddress: 'ETH',
+        outputCurrencyAddress: USDC_OPTIMISM.address,
+        value: undefined,
+        field: undefined,
+        chainId: UniverseChainId.Mainnet,
+        outputChainId: UniverseChainId.Optimism,
       })
     })
   })
@@ -146,7 +241,7 @@ describe('hooks', () => {
       })
 
       expect(result).toBe(
-        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address}&value=100&field=${CurrencyField.OUTPUT}`,
+        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${NATIVE_CHAIN_ID}&value=100&field=${CurrencyField.OUTPUT}`,
       )
     })
 
@@ -178,11 +273,11 @@ describe('hooks', () => {
       const result = serializeSwapAddressesToURLParameters({
         chainId: UniverseChainId.Mainnet,
         inputTokenAddress: UNI_ADDRESSES[UniverseChainId.Mainnet],
-        outputTokenAddress: ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address,
+        outputTokenAddress: NATIVE_CHAIN_ID,
       })
 
       expect(result).toBe(
-        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address}`,
+        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${NATIVE_CHAIN_ID}`,
       )
     })
 
@@ -220,13 +315,22 @@ describe('hooks', () => {
         swapInputChainId: undefined,
         navigateToSwapFlow: () => {},
         navigateToFiatOnRamp: () => {},
+        navigateToTokenDetails: () => {},
+        navigateToExternalProfile: () => {},
+        navigateToPoolDetails: () => {},
+        navigateToNftDetails: () => {},
+        navigateToSendFlow: () => {},
+        navigateToReceive: () => {},
+        handleShareToken: () => {},
+        navigateToAdvancedSettings: () => {},
         onSwapChainsChanged: () => {},
         signer: undefined,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         useProviderHook: (_chainId: number) => undefined,
+        useWalletDisplayName: () => undefined,
         isSwapTokenSelectorOpen: false,
         setIsSwapTokenSelectorOpen: () => {},
         setSwapOutputChainId: () => {},
+        useAccountsStoreContextHook: () => ({}) as AccountsStore,
       })
     })
 
@@ -237,12 +341,12 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -259,12 +363,12 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -284,12 +388,18 @@ describe('hooks', () => {
             value: '200',
             field: 'OUTPUT',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialTypedValue, initialField, initialChainId },
+            current: {
+              initialInputCurrency,
+              initialOutputCurrency,
+              initialTypedValue,
+              initialField,
+              initialInputChainId: initialChainId,
+            },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -305,12 +415,12 @@ describe('hooks', () => {
           useParsedQueryString: () => ({
             chain: 'mainnet',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -323,7 +433,8 @@ describe('hooks', () => {
     })
 
     describe('Connected wallet with balance', () => {
-      jest.mock('graphql/data/apollo/TokenBalancesProvider', () => ({
+      vi.mock('~/appGraphql/data/apollo/TokenBalancesProvider', () => ({
+        TokenBalancesProvider: ({ children }: { children: ReactNode }) => children,
         useTokenBalancesQuery: () => ({
           data: {
             portfolios: [
@@ -360,7 +471,7 @@ describe('hooks', () => {
             inputCurrency: 'ETH',
             chain: 'mainnet',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         mocked(useEnabledChains).mockReturnValue({
@@ -372,7 +483,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialChainId },
+            current: { initialInputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -386,7 +497,7 @@ describe('hooks', () => {
             inputCurrency: 'ETH',
             chain: 'sepolia',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         mocked(useEnabledChains).mockReturnValue({
@@ -398,7 +509,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -413,7 +524,7 @@ describe('hooks', () => {
             inputCurrency: 'ETH',
             chain: 'sepolia',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         mocked(useEnabledChains).mockReturnValue({
@@ -425,7 +536,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialChainId },
+            current: { initialInputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -439,12 +550,12 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -458,12 +569,12 @@ describe('hooks', () => {
           useParsedQueryString: () => ({
             chain: 'mainnet',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -480,12 +591,12 @@ describe('hooks', () => {
             outputCurrency: USDC_OPTIMISM.address,
             chain: 'optimism',
           }),
-          usePathname: jest.fn(),
+          usePathname: vi.fn(),
         })
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 

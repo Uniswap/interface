@@ -2,9 +2,10 @@ import { Flex, TouchableArea, UniversalImage } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { isWeb } from 'utilities/src/platform'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isWebPlatform } from 'utilities/src/platform'
 
 const ICON_SIZE = iconSizes.icon16
 
@@ -35,9 +36,9 @@ export function FiatOnRampCountryPicker({
         py="$spacing2"
         onPress={onPress}
       >
-        <Flex row shrink alignItems="center" data-testid="FiatOnRampCountryPicker" flex={0} gap="$spacing2">
+        <Flex row shrink alignItems="center" data-testid={TestID.FiatOnRampCountryPicker} flex={0} gap="$spacing2">
           <Flex borderRadius="$roundedFull" overflow="hidden">
-            {isWeb ? (
+            {isWebPlatform ? (
               <img alt={countryCode} height={ICON_SIZE} src={countryFlagUrl} width={ICON_SIZE} />
             ) : (
               <UniversalImage
@@ -49,7 +50,7 @@ export function FiatOnRampCountryPicker({
               />
             )}
           </Flex>
-          <RotatableChevron color="$neutral2" direction="down" width={iconSizes.icon20} />
+          <RotatableChevron color="$neutral2" direction="down" size="$icon.20" />
         </Flex>
       </TouchableArea>
     </Trace>

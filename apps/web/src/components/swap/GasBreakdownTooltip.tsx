@@ -1,34 +1,37 @@
 import { Currency } from '@uniswap/sdk-core'
-import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
-import { AutoColumn } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
-import { InterfaceTrade } from 'state/routing/types'
-import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
-import { Divider, ExternalLink, ThemedText } from 'theme/components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { NumberType } from 'utilities/src/format/types'
+import { AutoColumn } from '~/components/deprecated/Column'
+import Row from '~/components/deprecated/Row'
+import UniswapXRouterLabel, { UniswapXGradient } from '~/components/RouterLabel/UniswapXRouterLabel'
+import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { InterfaceTrade } from '~/state/routing/types'
+import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/state/routing/utils'
+import { ThemedText } from '~/theme/components'
+import { Divider } from '~/theme/components/Dividers'
+import { ExternalLink } from '~/theme/components/Links'
 
-const Container = styled(AutoColumn)`
+const Container = deprecatedStyled(AutoColumn)`
   padding: 4px;
 `
 
 type GasCostItemProps = { title: ReactNode; itemValue?: React.ReactNode; amount?: number }
 
 const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
-  const { formatNumber } = useFormatter()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   if (!amount && !itemValue) {
     return null
   }
 
-  const value = itemValue ?? formatNumber({ input: amount, type: NumberType.FiatGasPrice })
+  const value = itemValue ?? convertFiatAmountFormatted(amount, NumberType.FiatGasPrice)
   return (
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
@@ -38,8 +41,8 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
 }
 
 const GaslessSwapLabel = () => {
-  const { formatNumber } = useFormatter()
-  return <UniswapXRouterLabel>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</UniswapXRouterLabel>
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  return <UniswapXRouterLabel>{convertFiatAmountFormatted(0, NumberType.FiatGasPrice)}</UniswapXRouterLabel>
 }
 
 type GasBreakdownTooltipProps = { trade: InterfaceTrade }
@@ -55,7 +58,8 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 
   const swapEstimate = !isUniswapX ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
-  const wrapEstimate = isUniswapX && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
+  // Limit orders still require wrapping ETH to WETH (unlike regular UniswapX swaps which now support native ETH)
+  const wrapEstimate = isLimitTrade(trade) && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
   const showEstimateDetails = Boolean(wrapEstimate || approvalEstimate)
 
   const description = isUniswapX ? <UniswapXDescription /> : <NetworkCostDescription native={native} />
@@ -87,7 +91,7 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 function NetworkCostDescription({ native }: { native: Currency }) {
   const supportedChain = useSupportedChainId(native.chainId)
   const { defaultChainId } = useEnabledChains()
-  const chainName = toGraphQLChain(supportedChain ?? defaultChainId)
+  const chainName = getChainLabel(supportedChain ?? defaultChainId)
 
   return (
     <ThemedText.LabelMicro>
@@ -99,7 +103,7 @@ function NetworkCostDescription({ native }: { native: Currency }) {
   )
 }
 
-const InlineUniswapXGradient = styled(UniswapXGradient)`
+const InlineUniswapXGradient = deprecatedStyled(UniswapXGradient)`
   display: inline;
 `
 export function UniswapXDescription() {

@@ -1,121 +1,231 @@
+import {
+  createHelpArticleUrl,
+  getCloudflareApiBaseUrl,
+  getMigratedForApiUrl,
+  helpUrl,
+  TrafficFlows,
+} from '@universe/api'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { config } from 'uniswap/src/config'
-import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
-import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
-
-enum TrafficFlows {
-  GraphQL = 'graphql',
-  Metrics = 'metrics',
-  Gating = 'gating',
-  TradingApi = 'trading-api-labs',
-  Unitags = 'unitags',
-  FOR = 'for',
-  Scantastic = 'scantastic',
-}
-
-const FLOWS_USING_BETA = [TrafficFlows.FOR]
+import { isDevEnv, isPlaywrightEnv } from 'utilities/src/environment/env'
+import { isWebApp } from 'utilities/src/platform'
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
+const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
+
+/**
+ * Returns the FOR API URL based on the ForUrlMigration feature flag.
+ * When the flag is enabled, uses the new migrated URLs (staging/prod).
+ * When disabled, uses the legacy URL structure.
+ */
+export function getForApiUrl(): string {
+  if (config.forApiUrlOverride) {
+    return config.forApiUrlOverride
+  }
+
+  if (getFeatureFlag(FeatureFlags.ForUrlMigration)) {
+    return getMigratedForApiUrl()
+  }
+
+  return getCloudflareApiBaseUrl({ flow: TrafficFlows.FOR, postfix: 'v2/FOR.v1.FORService' })
+}
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
-const helpUrl = 'https://support.uniswap.org/hc/en-us'
+// The trading api uses custom builds for testing which may not use the v1 prefix
+export const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
+
+export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
 
 export const uniswapUrls = {
   // Help and web articles/items
   helpUrl,
   helpRequestUrl: `${helpUrl}/requests/new`,
   helpArticleUrls: {
-    acrossRoutingInfo: `${helpUrl}/articles/30677918339341`,
-    approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
-    cexTransferKorea: `${helpUrl}/articles/29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea`,
-    extensionHelp: `${helpUrl}/articles/24458735271181`,
-    extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
-    feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
-    howToSwapTokens: `${helpUrl}/articles/8370549680909-How-to-swap-tokens-`,
-    hiddenTokenInfo: `${helpUrl}/articles/30432674756749-How-to-hide-and-unhide-tokens-in-the-Uniswap-Wallet`,
-    hiddenNFTInfo: `${helpUrl}/articles/14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet`,
-    impermanentLoss: `${helpUrl}/articles/20904453751693-What-is-Impermanent-Loss`,
-    limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
-    limitsInfo: `${helpUrl}/articles/24470337797005`,
-    limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
-    fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
-    fiatOffRampHelp: `${helpUrl}/articles/34006552258957`,
-    transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
-    mobileWalletHelp: `${helpUrl}/articles/20317941356429`,
-    moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
-    networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
-    poolOutOfSync: `${helpUrl}/articles/25845512413069`,
-    positionsLearnMore: `${helpUrl}/articles/8829880740109`,
-    priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
-    providingLiquidityInfo: `${helpUrl}/sections/20982919867021`,
-    recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
-    recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
-    recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
-    revokeExplainer: `${helpUrl}/articles/15724901841037-How-to-revoke-a-token-approval`,
-    supportedNetworks: `${helpUrl}/articles/14569415293325`,
-    swapFeeInfo: `${helpUrl}/articles/20131678274957`,
-    swapProtection: `${helpUrl}/articles/18814993155853`,
-    swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
-    tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,
-    transactionFailure: `${helpUrl}/articles/8643975058829-Why-did-my-transaction-fail-`,
-    uniswapXInfo: `${helpUrl}/articles/17544708791821`,
-    uniswapXFailure: `${helpUrl}/articles/17515489874189-Why-can-my-swap-not-be-filled-`,
-    unsupportedTokenPolicy: `${helpUrl}/articles/18783694078989-Unsupported-Token-Policy`,
-    addingV4Hooks: `${helpUrl}/articles/32402040565133`,
-    routingSettings: `${helpUrl}/articles/27362707722637`,
-    v4HooksInfo: `${helpUrl}/articles/30998263256717`,
-    walletSecurityMeasures: `${helpUrl}/articles/28278904584077-Uniswap-Wallet-Security-Measures`,
-    wethExplainer: `${helpUrl}/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH`,
+    bridgedAssets: createHelpArticleUrl('39264728322317'),
+    acrossRoutingInfo: createHelpArticleUrl('30677918339341'),
+    approvalsExplainer: createHelpArticleUrl('8120520483085-What-is-an-approval-transaction'),
+    batchedSwaps: createHelpArticleUrl('36393697148045'),
+    batchedSwapsFailure: `${createHelpArticleUrl('36393697148045')}#error-messages-and-troubleshooting`,
+    batchedSwapsReview: createHelpArticleUrl('36394497329933'),
+    cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea'),
+    contractAddressExplainer: createHelpArticleUrl('26757826138637-What-is-a-token-contract-address'),
+    dappProtectionInfo: createHelpArticleUrl('37781087046029'),
+    extensionBiometricsEnrollment: createHelpArticleUrl('38225957094541'),
+    extensionHelp: createHelpArticleUrl('24458735271181'),
+    extensionDappTroubleshooting: createHelpArticleUrl(
+      '25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps',
+    ),
+    feeOnTransferHelp: createHelpArticleUrl('18673568523789-What-is-a-token-fee-'),
+    howToSwapTokens: createHelpArticleUrl('8370549680909-How-to-swap-tokens-'),
+    hiddenTokenInfo: createHelpArticleUrl('30432674756749-How-to-hide-and-unhide-tokens-in-the-Uniswap-Wallet'),
+    hiddenNFTInfo: createHelpArticleUrl('14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet'),
+    impermanentLoss: createHelpArticleUrl('20904453751693-What-is-Impermanent-Loss'),
+    jupiterApiError: createHelpArticleUrl('39829559404685'),
+    limitsFailure: createHelpArticleUrl('24300813697933-Why-did-my-limit-order-fail-or-not-execute'),
+    limitsInfo: createHelpArticleUrl('24470337797005'),
+    limitsNetworkSupport: createHelpArticleUrl('24470251716237-What-networks-do-limits-support'),
+    lpIncentiveInfo: createHelpArticleUrl('35506888223501'),
+    fiatOnRampHelp: createHelpArticleUrl('11306574799117'),
+    fiatOffRampHelp: createHelpArticleUrl('34006552258957'),
+    transferCryptoHelp: createHelpArticleUrl(
+      '27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet',
+    ),
+    mismatchedImports: createHelpArticleUrl('36393527081997'),
+    mobileWalletHelp: createHelpArticleUrl('20317941356429'),
+    moonpayRegionalAvailability: createHelpArticleUrl('11306664890381-Why-isn-t-MoonPay-available-in-my-region-'),
+    multichainDelegation: createHelpArticleUrl('36391987158797'),
+    networkFeeInfo: createHelpArticleUrl('8370337377805-What-is-a-network-fee-'),
+    poolOutOfSync: createHelpArticleUrl('25845512413069'),
+    positionsLearnMore: createHelpArticleUrl('8829880740109'),
+    priceImpact: createHelpArticleUrl('8671539602317-What-is-Price-Impact'),
+    providingLiquidityInfo: createHelpArticleUrl('20982919867021', 'sections'),
+    providingLiquidityVersions: createHelpArticleUrl('30998269400333'),
+    recoveryPhraseHowToImport: createHelpArticleUrl(
+      '11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet',
+    ),
+    recoveryPhraseHowToFind: createHelpArticleUrl(
+      '11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet',
+    ),
+    recoveryPhraseForgotten: createHelpArticleUrl('11306367118349'),
+    revokeExplainer: createHelpArticleUrl('15724901841037-How-to-revoke-a-token-approval'),
+    supportedNetworks: createHelpArticleUrl('14569415293325'),
+    swapFeeInfo: createHelpArticleUrl('20131678274957'),
+    passkeysInfo: createHelpArticleUrl('35522111260173'),
+    smartWalletDelegation: createHelpArticleUrl('36391987158797'),
+    swapProtection: createHelpArticleUrl('18814993155853'),
+    swapSlippage: createHelpArticleUrl('8643879653261-What-is-Price-Slippage-'),
+    toucanBidHelp: createHelpArticleUrl(
+      '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#bidding-in-an-auction',
+    ),
+    toucanBidDetailsHelp: createHelpArticleUrl(
+      '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#bidding-in-an-auction',
+    ),
+    toucanIntro: createHelpArticleUrl('43107626487437'),
+    toucanFailedToLaunchHelp: createHelpArticleUrl(
+      '43107626487437-What-are-Continuous-Clearing-Auctions#what-is-a-graduation-threshold',
+    ),
+    toucanVerifiedAuctionsHelp: createHelpArticleUrl('43107250032781'),
+    tokenWarning: createHelpArticleUrl('8723118437133-What-are-token-warnings-'),
+    toucanWithdrawHelp: createHelpArticleUrl(
+      '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#claiming-your-tokens-and-unspent-budget',
+    ),
+    transactionFailure: createHelpArticleUrl('8643975058829-Why-did-my-transaction-fail-'),
+    uniswapXInfo: createHelpArticleUrl('17544708791821'),
+    uniswapXFailure: createHelpArticleUrl('17515489874189-Why-can-my-swap-not-be-filled-'),
+    unsupportedTokenPolicy: createHelpArticleUrl('18783694078989-Unsupported-Token-Policy'),
+    addingV4Hooks: createHelpArticleUrl('32402040565133'),
+    routingSettings: createHelpArticleUrl('27362707722637'),
+    uniswapVersionsInfo: createHelpArticleUrl('7425482965517-Uniswap-v2-v3-and-v4'),
+    v4HooksInfo: createHelpArticleUrl('30998263256717'),
+    allowlistedHooks: createHelpArticleUrl('41305283155597'),
+    subgraphDowntime: createHelpArticleUrl('23952001935373-Subgraph-downtime'),
+    walletSecurityMeasures: createHelpArticleUrl('28278904584077-Uniswap-Wallet-Security-Measures'),
+    whatIsPrivateKey: createHelpArticleUrl('11306371824653-What-is-a-private-key'),
+    wethExplainer: createHelpArticleUrl('16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH'),
+  },
+  downloadWalletUrl: 'https://wallet.uniswap.org/',
+  tradingApiDocsUrl: 'https://hub.uniswap.org/',
+  unichainUrl: 'https://www.unichain.org/',
+  uniswapXUrl: 'https://x.uniswap.org/',
+  helpCenterUrl: 'https://help.uniswap.org/',
+  blogUrl: 'https://blog.uniswap.org/',
+  docsUrl: 'https://docs.uniswap.org/',
+  voteUrl: 'https://vote.uniswapfoundation.org',
+  governanceUrl: 'https://uniswap.org/governance',
+  developersUrl: 'https://uniswap.org/developers',
+  aboutUrl: 'https://about.uniswap.org/',
+  careersUrl: 'https://careers.uniswap.org/',
+  social: {
+    x: 'https://x.com/Uniswap',
+    farcaster: 'https://farcaster.xyz/Uniswap',
+    linkedin: 'https://www.linkedin.com/company/uniswaporg',
+    tiktok: 'https://www.tiktok.com/@uniswap',
   },
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   chromeExtension: 'http://uniswap.org/ext',
+  chromeExtensionUninstallUrl: `${UNISWAP_WEB_URL}${CHROME_EXTENSION_UNINSTALL_URL_PATH}`,
+
+  // Download links
+  appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476',
+  playStoreDownloadUrl: 'https://play.google.com/store/apps/details?id=com.uniswap.mobile&pcampaignid=web_share',
 
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',
   apiBaseUrl: config.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
-  apiBaseUrlV2: config.apiBaseUrlV2Override || `${getCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: config.graphqlUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  apiBaseUrlV2: config.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ postfix: 'v2' }),
+  dataApiBaseUrlV2:
+    config.apiBaseUrlV2Override || getCloudflareApiBaseUrl({ flow: TrafficFlows.DataApi, postfix: 'v2' }),
+  graphQLUrl:
+    config.graphqlUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.GraphQL, postfix: 'v1/graphql' }),
 
   // Proxies
   amplitudeProxyUrl:
-    config.amplitudeProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
-  statsigProxyUrl: config.statsigProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
+    config.amplitudeProxyUrlOverride ||
+    getCloudflareApiBaseUrl({ flow: TrafficFlows.Metrics, postfix: 'v1/amplitude-proxy' }),
+  // On web, proxy through same-origin "/config" — the BFF (Hono) rewrites to the real Cloudflare URL.
+  statsigProxyUrl:
+    config.statsigProxyUrlOverride ||
+    (isWebApp ? '/config' : getCloudflareApiBaseUrl({ flow: TrafficFlows.Gating, postfix: 'v1/statsig-proxy' })),
 
   // Feature service URL's
-  unitagsApiUrl: config.unitagsApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
+  unitagsApiUrl:
+    config.unitagsApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.Unitags, postfix: 'v2/unitags' }),
   scantasticApiUrl:
-    config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
-  tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+    config.scantasticApiUrlOverride ||
+    getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic, postfix: 'v2/scantastic' }),
+  forApiUrl:
+    config.forApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.FOR, postfix: 'v2/FOR.v1.FORService' }),
+  tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.TradingApi }),
+  liquidityServiceUrl: config.liquidityServiceUrlOverride || 'https://liquidity.backend-prod.api.uniswap.org',
+
+  // Merkl Docs for LP Incentives
+  merklDocsUrl: 'https://docs.merkl.xyz/earn-with-merkl/faq-earn#how-are-aprs-calculated',
 
   // Embedded Wallet URL's
   // Totally fine that these are public
   evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
   evervaultStagingUrl: 'https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com',
   evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
+  embeddedWalletUrl: `https://${EMBEDDED_WALLET_HOSTNAME}`,
+  passkeysManagementUrl: `https://${EMBEDDED_WALLET_HOSTNAME}/manage/passkey`,
+  privyEmbeddedWalletUrl: 'https://privy-embedded-wallet.backend-dev.api.uniswap.org',
 
   // API Paths
   trmPath: '/v1/screen',
   gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
-    quote: '/v1/quote',
-    indicativeQuote: '/v1/indicative_quote',
-    approval: '/v1/check_approval',
-    swap: '/v1/swap',
-    order: '/v1/order',
-    orders: '/v1/orders',
-    swaps: '/v1/swaps',
-    swappableTokens: '/v1/swappable_tokens',
-    createLp: '/v1/lp/create',
-    increaseLp: '/v1/lp/increase',
-    decreaseLp: '/v1/lp/decrease',
-    claimLpFees: '/v1/lp/claim',
-    lpApproval: '/v1/lp/approve',
-    migrate: '/v1/lp/migrate',
+    approval: `${tradingApiVersionPrefix}/check_approval`,
+    claimLpFees: `${tradingApiVersionPrefix}/lp/claim`,
+    claimRewards: `${tradingApiVersionPrefix}/lp/claim_rewards`,
+    createLp: `${tradingApiVersionPrefix}/lp/create`,
+    decreaseLp: `${tradingApiVersionPrefix}/lp/decrease`,
+    increaseLp: `${tradingApiVersionPrefix}/lp/increase`,
+    lpApproval: `${tradingApiVersionPrefix}/lp/approve`,
+    poolInfo: `${tradingApiVersionPrefix}/lp/pool_info`,
+    order: `${tradingApiVersionPrefix}/order`,
+    orders: `${tradingApiVersionPrefix}/orders`,
+    plan: `${tradingApiVersionPrefix}/plan`,
+    priceDiscrepancy: `${tradingApiVersionPrefix}/lp/price_discrepancy`,
+    quote: `${tradingApiVersionPrefix}/quote`,
+    swap: `${tradingApiVersionPrefix}/swap`,
+    swap5792: `${tradingApiVersionPrefix}/swap_5792`,
+    swap7702: `${tradingApiVersionPrefix}/swap_7702`,
+    swappableTokens: `${tradingApiVersionPrefix}/swappable_tokens`,
+    swaps: `${tradingApiVersionPrefix}/swaps`,
+    wallet: {
+      checkDelegation: `${tradingApiVersionPrefix}/wallet/check_delegation`,
+      encode7702: `${tradingApiVersionPrefix}/wallet/encode_7702`,
+    },
   },
+
+  wormholeUrl: 'https://portalbridge.com/',
+
+  // Limit orders paths
+  limitOrderStatusesPath: '/limit-orders',
 
   // App and Redirect URL's
   appBaseUrl: UNISWAP_APP_URL,
@@ -125,48 +235,13 @@ export const uniswapUrls = {
   // Web Interface Urls
   webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,
   webInterfaceTokensUrl: `${UNISWAP_WEB_URL}/explore/tokens`,
-  webInterfaceAddressUrl: `${UNISWAP_WEB_URL}/address`,
-  webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
-  webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
+  webInterfacePoolsUrl: `${UNISWAP_WEB_URL}/explore/pools`,
+  webInterfacePortfolioUrl: `${UNISWAP_WEB_URL}/portfolio`,
   webInterfaceBuyUrl: `${UNISWAP_WEB_URL}/buy`,
 
   // Feedback Links
   walletFeedbackForm:
     'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
-}
 
-function getCloudflarePrefix(flow?: TrafficFlows): string {
-  if (flow && isDevEnv() && FLOWS_USING_BETA.includes(flow)) {
-    return `beta`
-  }
-
-  if (isMobileApp) {
-    return `${isAndroid ? 'android' : 'ios'}.wallet`
-  }
-
-  if (isExtension) {
-    return 'extension'
-  }
-
-  if (isInterface) {
-    return 'interface'
-  }
-
-  if (isTestEnv()) {
-    return 'wallet'
-  }
-
-  throw new Error('Could not determine app to generate Cloudflare prefix')
-}
-
-function getServicePrefix(flow?: TrafficFlows): string {
-  if (flow && !(isDevEnv() && FLOWS_USING_BETA.includes(flow))) {
-    return flow + '.'
-  } else {
-    return ''
-  }
-}
-
-function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
-  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniswap.org`
+  dataApiServiceUrl: getCloudflareApiBaseUrl({ postfix: 'v2/data.v1.DataApiService' }),
 }

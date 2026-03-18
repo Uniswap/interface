@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -5,18 +6,16 @@ import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetails
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar, ChartPie, ChartPyramid, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
-import { DEP_accentColors, iconSizes, validColor } from 'ui/src/theme'
-import { useTokenProjectDescriptionQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { DEP_accentColors, validColor } from 'ui/src/theme'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
-  useTokenMarketPartsFragment,
-  useTokenProjectMarketsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -52,27 +51,14 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
   const { currencyId, tokenColor } = useTokenDetailsContext()
 
-  const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data?.market
-  const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data.project?.markets
-
-  const price = projectMarkets?.[0]?.price?.value || tokenMarket?.price?.value || undefined
-  const marketCap = projectMarkets?.[0]?.marketCap?.value
-  const volume = tokenMarket?.volume?.value
-  const rawPriceHigh52W = projectMarkets?.[0]?.priceHigh52W?.value || tokenMarket?.priceHigh52W?.value || undefined
-  const rawPriceLow52W = projectMarkets?.[0]?.priceLow52W?.value || tokenMarket?.priceLow52W?.value || undefined
-
-  // Use current price for 52w high/low if it exceeds the bounds
-  const priceHight52W =
-    price !== undefined && rawPriceHigh52W !== undefined ? Math.max(price, rawPriceHigh52W) : rawPriceHigh52W
-  const priceLow52W =
-    price !== undefined && rawPriceLow52W !== undefined ? Math.min(price, rawPriceLow52W) : rawPriceLow52W
-  const fullyDilutedValuation = projectMarkets?.[0]?.fullyDilutedValuation?.value
+  // Use shared hook for unified data fetching (CoinGecko-first strategy)
+  const { marketCap, fdv, volume, high52w, low52w } = useTokenMarketStats(currencyId)
 
   return (
     <Flex gap="$spacing8">
       <StatsRow
         label={t('token.stats.marketCap')}
-        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
           {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
@@ -81,16 +67,16 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
       <StatsRow
         label={t('token.stats.fullyDilutedValuation')}
-        statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+        statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}
+          {convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.volume')}
-        statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+        statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
           {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
@@ -99,19 +85,19 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
       <StatsRow
         label={t('token.stats.priceHighYear')}
-        statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+        statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
+          {convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
 
       <StatsRow
         label={t('token.stats.priceLowYear')}
-        statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+        statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}
+          {convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
     </Flex>
@@ -133,7 +119,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
 
   const language = useCurrentLanguage()
 
-  const descriptions = useTokenProjectDescriptionQuery({
+  const descriptions = GraphQLApi.useTokenProjectDescriptionQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
       includeSpanish:
@@ -162,7 +148,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
     descriptions?.descriptionTranslations?.descriptionZhHans ||
     descriptions?.descriptionTranslations?.descriptionZhHant
 
-  const name = offChainData?.name ?? onChainData?.name
+  const name = offChainData?.name ?? onChainData.name
   const currentDescription = showTranslation && translatedDescription ? translatedDescription : description
 
   return (

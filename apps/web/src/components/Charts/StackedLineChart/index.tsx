@@ -1,31 +1,23 @@
-import { ChartHeader } from 'components/Charts/ChartHeader'
-import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
-import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
-import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
-import { getProtocolColor } from 'graphql/data/util'
-import { useTheme } from 'lib/styled-components'
-import {
-  CustomStyleOptions,
-  DeepPartial,
-  ISeriesApi,
-  LineStyle,
-  Logical,
-  UTCTimestamp,
-  WhitespaceData,
-} from 'lightweight-charts'
+import { GraphQLApi } from '@universe/api'
+import { CustomStyleOptions, DeepPartial, ISeriesApi, Logical, UTCTimestamp, WhitespaceData } from 'lightweight-charts'
 import { useMemo } from 'react'
-import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ColorTokens, useSporeColors } from 'ui/src'
+import { getProtocolColor } from '~/appGraphql/data/util'
+import { ChartHeader } from '~/components/Charts/ChartHeader'
+import { Chart, ChartModel, ChartModelParams } from '~/components/Charts/ChartModel'
+import { StackedAreaSeriesOptions } from '~/components/Charts/StackedLineChart/stacked-area-series/options'
+import { StackedAreaSeries } from '~/components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
 
 export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
   values: number[]
 }
 
 interface TVLChartParams extends ChartModelParams<StackedLineData> {
-  colors: string[]
+  chartColors: ColorTokens[] // renamed from 'colors' to avoid conflict
   gradients?: { start: string; end: string }[]
 }
 
-export class TVLChartModel extends ChartModel<StackedLineData> {
+class TVLChartModel extends ChartModel<StackedLineData> {
   protected series: ISeriesApi<'Custom'>
 
   private hoveredLogicalIndex: Logical | null | undefined
@@ -40,8 +32,8 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
     this.fitContent()
 
     this.api.subscribeCrosshairMove((param) => {
-      if (param?.logical !== this.hoveredLogicalIndex) {
-        this.hoveredLogicalIndex = param?.logical
+      if (param.logical !== this.hoveredLogicalIndex) {
+        this.hoveredLogicalIndex = param.logical
         this.series.applyOptions({
           hoveredLogicalIndex: this.hoveredLogicalIndex ?? (-1 as Logical), // -1 is used because series will use prev value if undefined is passed
         } as DeepPartial<StackedAreaSeriesOptions>)
@@ -50,16 +42,7 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
   }
 
   updateOptions(params: TVLChartParams) {
-    const isSingleLineChart = params.colors.length === 1
-
-    const gridSettings = isSingleLineChart
-      ? {
-          grid: {
-            vertLines: { style: LineStyle.CustomDotGrid, color: params.theme.neutral3 },
-            horzLines: { style: LineStyle.CustomDotGrid, color: params.theme.neutral3 },
-          },
-        }
-      : {}
+    const isSingleLineChart = params.chartColors.length === 1
 
     super.updateOptions(params, {
       handleScale: false,
@@ -73,9 +56,8 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
         },
         autoScale: true,
       },
-      ...gridSettings,
     })
-    const { data, colors, gradients } = params
+    const { data, chartColors, gradients } = params
 
     // Handles changes in data, e.g. time period selection
     if (this.data !== data) {
@@ -84,10 +66,13 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
       this.fitContent()
     }
 
+    // For single line charts, use theme.accent1 as the color - this will be the token color in TokenDetails
+    const effectiveColors = isSingleLineChart ? [params.colors.accent1.val] : chartColors
+
     this.series.applyOptions({
       priceLineVisible: false,
       lastValueVisible: false,
-      colors,
+      colors: effectiveColors,
       gradients,
       lineWidth: 2.5,
     } as DeepPartial<StackedAreaSeriesOptions>)
@@ -96,25 +81,35 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
 
 interface LineChartProps {
   height: number
-  sources?: PriceSource[]
+  sources?: GraphQLApi.PriceSource[]
   data: StackedLineData[]
   stale: boolean
+  overrideColor?: string
 }
 
-export function LineChart({ height, data, sources, stale }: LineChartProps) {
-  const theme = useTheme()
+export function LineChart({ height, data, sources, stale, overrideColor }: LineChartProps) {
+  const sporeColors = useSporeColors()
+  // Theme handling is now done in the chart model via ThemeProvider
 
   const params = useMemo(() => {
-    const colors = sources?.map((source) => getProtocolColor(source, theme)) ?? [theme.accent1]
-    return { data, colors, stale }
-  }, [data, theme, sources, stale])
+    const chartColors = sources?.map((source) => getProtocolColor(source)) ?? [sporeColors.accent1.val]
+    return { data, chartColors, stale }
+  }, [data, sporeColors, sources, stale])
 
   const lastEntry = data[data.length - 1]
+  const isSingleLineChart = params.chartColors.length === 1
+
   return (
-    <Chart Model={TVLChartModel} params={params} height={height}>
+    <Chart
+      Model={TVLChartModel}
+      params={params}
+      height={height}
+      showDottedBackground={isSingleLineChart}
+      overrideColor={overrideColor}
+    >
       {(crosshairData: StackedLineData | undefined) => (
         <ChartHeader
-          value={(crosshairData ?? lastEntry)?.values.reduce((v, sum) => (sum += v), 0)}
+          value={(crosshairData ?? lastEntry).values.reduce((v, sum) => (sum += v), 0)}
           time={crosshairData?.time}
           protocolData={sources?.map((source, index) => ({ protocol: source, value: crosshairData?.values[index] }))}
         />

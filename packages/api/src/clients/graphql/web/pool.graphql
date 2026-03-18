@@ -1,0 +1,199 @@
+fragment TokenPrice on Token {
+  id
+  project {
+    id
+    markets(currencies: [USD]) {
+      id
+      price {
+        id
+        value
+      }
+    }
+    logo {
+      id
+      url
+    }
+  }
+  market(currency: USD) {
+    id
+    price {
+      id
+      value
+    }
+  }
+}
+
+query V3Pool($chain: Chain!, $address: String!) {
+  v3Pool(chain: $chain, address: $address) {
+    id
+    protocolVersion
+    address
+    feeTier
+    token0 {
+      ...SimpleTokenDetails
+      ...TokenPrice
+    }
+    token0Supply
+    token1 {
+      ...SimpleTokenDetails
+      ...TokenPrice
+    }
+    token1Supply
+    txCount
+    volume24h: cumulativeVolume(duration: DAY) {
+      value
+    }
+    historicalVolume(duration: WEEK) {
+      value
+      timestamp
+    }
+    totalLiquidity {
+      value
+    }
+    totalLiquidityPercentChange24h {
+      value
+    }
+  }
+}
+
+query V4Pool($chain: Chain!, $poolId: String!) {
+  v4Pool(chain: $chain, poolId: $poolId) {
+    id
+    protocolVersion
+    feeTier
+    isDynamicFee
+    tickSpacing
+    poolId
+    hook {
+      id
+      address
+    }
+    token0 {
+      ...SimpleTokenDetails
+      ...TokenPrice
+    }
+    token0Supply
+    token1 {
+      ...SimpleTokenDetails
+      ...TokenPrice
+    }
+    token1Supply
+    txCount
+    volume24h: cumulativeVolume(duration: DAY) {
+      value
+    }
+    historicalVolume(duration: WEEK) {
+      value
+      timestamp
+    }
+    rewardsCampaign {
+      id
+      boostedApr
+      startTimestamp
+      endTimestamp
+      totalRewardAllocation
+      distributedRewards
+    }
+    totalLiquidity {
+      value
+    }
+    totalLiquidityPercentChange24h {
+      value
+    }
+  }
+}
+
+query PoolPriceHistory($chain: Chain!, $addressOrId: String!, $duration: HistoryDuration!, $isV4: Boolean!, $isV3: Boolean!, $isV2: Boolean!) {
+  v4Pool(chain: $chain, poolId: $addressOrId)
+  @include (if: $isV4) {
+    id
+    priceHistory(duration: $duration) {
+      id
+      token0Price
+      token1Price
+      timestamp
+    }
+  }
+  v3Pool(chain: $chain, address: $addressOrId)
+  @include (if: $isV3) {
+    id
+    priceHistory(duration: $duration) {
+      id
+      token0Price
+      token1Price
+      timestamp
+    }
+  }
+  v2Pair(chain: $chain, address: $addressOrId)
+  @include (if: $isV2) {
+    id
+    priceHistory(duration: $duration) {
+      id
+      token0Price
+      token1Price
+      timestamp
+    }
+  }
+}
+
+query PoolVolumeHistory($chain: Chain!, $addressOrId: String!, $duration: HistoryDuration!, $isV4: Boolean!, $isV3: Boolean!, $isV2: Boolean!) {
+  v4Pool(chain: $chain, poolId: $addressOrId)
+  @include (if: $isV4) {
+    id
+    historicalVolume(duration: $duration) {
+      id
+      value
+      timestamp
+    }
+  }
+  v3Pool(chain: $chain, address: $addressOrId)
+  @include (if: $isV3) {
+    id
+    historicalVolume(duration: $duration) {
+      id
+      value
+      timestamp
+    }
+  }
+  v2Pair(chain: $chain, address: $addressOrId)
+  @include (if: $isV2) {
+    id
+    historicalVolume(duration: $duration) {
+      id
+      value
+      timestamp
+    }
+  }
+}
+
+query V2Pair($chain: Chain!, $address: String!) {
+  v2Pair(chain: $chain, address: $address) {
+    id
+    protocolVersion
+    address
+    token0 {
+      ...SimpleTokenDetails
+      ...TokenPrice
+    }
+    token0Supply
+    token1 {
+      ...SimpleTokenDetails
+      ...TokenPrice
+    }
+    token1Supply
+    txCount
+    volume24h: cumulativeVolume(duration: DAY) {
+      value
+    }
+    historicalVolume(duration: WEEK) {
+      value
+      timestamp
+    }
+    totalLiquidity {
+      value
+    }
+    totalLiquidityPercentChange24h {
+      value
+    }
+  }
+}

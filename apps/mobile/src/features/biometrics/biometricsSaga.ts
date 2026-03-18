@@ -8,11 +8,11 @@ import {
 import { SagaIterator, Task } from 'redux-saga'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics/biometrics-utils'
 import {
-  TriggerAuthenticationPayload,
   setAuthenticationStatus,
   setDeviceSupportsBiometrics,
   setIsEnrolled,
   setSupportedAuthenticationTypes,
+  TriggerAuthenticationPayload,
   triggerAuthentication,
 } from 'src/features/biometrics/biometricsSlice'
 import { all, call, cancel, fork, put, take } from 'typed-redux-saga'
@@ -35,7 +35,7 @@ export function* biometricsSaga(): SagaIterator {
   // --------------------------------------------------------------------------------------------
   const authTask: Task = yield* fork(function* watchAuthenticationTriggers(): SagaIterator {
     while (true) {
-      const action = yield* take(triggerAuthentication.type)
+      const action = yield* take(triggerAuthentication)
       yield* call(handleAuthentication, action)
     }
   })

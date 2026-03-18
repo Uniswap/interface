@@ -1,27 +1,28 @@
-/* eslint-disable no-restricted-imports */
+import type { BottomSheetBackdropProps, BottomSheetHandleProps } from '@gorhom/bottom-sheet'
 import {
   BottomSheetModal as BaseModal,
   BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-  BottomSheetHandleProps,
   BottomSheetView,
+  // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
   BottomSheetTextInput as GorhomBottomSheetTextInput,
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
-import React, { ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import type { ComponentProps } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { StyleProp, ViewStyle } from 'react-native'
+import { BackHandler, StyleSheet } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Flex, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, spacing, zIndexes } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
-import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import type { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { BSM_ANIMATION_CONFIGS, IS_SHEET_READY_DELAY } from 'uniswap/src/components/modals/modalConstants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isIOS } from 'utilities/src/platform'
 
 /**
@@ -31,7 +32,7 @@ import { isIOS } from 'utilities/src/platform'
  * @param modalRef - ref to the modal
  * @param enabled - whether to enable the back handler
  */
-function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: boolean): void {
+function useModalBackHandler(modalRef: React.RefObject<BaseModal | null>, enabled: boolean): void {
   useEffect(() => {
     if (enabled) {
       const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -49,11 +50,39 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: bool
 const BACKDROP_APPEARS_ON_INDEX = 0
 const DISAPPEARS_ON_INDEX = -1
 
-const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
+function ModalBackdrop({
+  fullScreen,
+  zIndex,
+  hideScrim,
+  blurredBackground,
+  isDismissible,
+  ...props
+}: BottomSheetBackdropProps &
+  Pick<ModalProps, 'fullScreen' | 'zIndex' | 'hideScrim' | 'blurredBackground' | 'isDismissible'>): JSX.Element {
   return (
     <BottomSheetBackdrop
       {...props}
-      style={[props.style, { zIndex: zIndexes.popoverBackdrop }]}
+      style={useMemo(
+        () =>
+          StyleSheet.flatten([
+            props.style,
+            { zIndex: fullScreen ? undefined : zIndex ? zIndex - 1 : zIndexes.modalBackdrop },
+          ]),
+        [fullScreen, zIndex, props.style],
+      )}
+      appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
+      disappearsOnIndex={DISAPPEARS_ON_INDEX}
+      opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
+      pressBehavior={isDismissible ? 'close' : 'none'}
+    />
+  )
+}
+
+function DetachedModalBackdrop(props: BottomSheetBackdropProps): JSX.Element {
+  return (
+    <BottomSheetBackdrop
+      {...props}
+      style={useMemo(() => StyleSheet.flatten([props.style, { zIndex: zIndexes.popoverBackdrop }]), [props.style])}
       appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
       disappearsOnIndex={DISAPPEARS_ON_INDEX}
       opacity={0.4}
@@ -78,6 +107,7 @@ function BottomSheetModalContents({
   animatedPosition: providedAnimatedPosition,
   containerComponent,
   footerComponent,
+  focusHook,
   fullScreen,
   hideHandlebar,
   backgroundColor,
@@ -92,14 +122,15 @@ function BottomSheetModalContents({
   renderBehindBottomInset = false,
   hideKeyboardOnDismiss = false,
   hideKeyboardOnSwipeDown = false,
+  forceRoundedCorners = false,
   // keyboardBehavior="extend" does not work and it's hard to figure why,
   // probably it requires usage of <BottomSheetTextInput>
   extendOnKeyboardVisible = false,
   hideScrim = false,
   analyticsProperties,
   skipLogImpression,
+  zIndex,
 }: ModalProps): JSX.Element {
-  const dimensions = useDeviceDimensions()
   const insets = useAppInsets()
   const media = useMedia()
   const keyboard = useKeyboardLayout()
@@ -118,10 +149,11 @@ function BottomSheetModalContents({
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
   useEffect(() => {
-    modalRef.current?.present()
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    modalRef.current?.present?.()
     // Close modal when it is unmounted
     return modalRef.current?.close
-  }, [modalRef])
+  }, [])
 
   useEffect(() => {
     if (extendOnKeyboardVisible && keyboard.isVisible) {
@@ -131,20 +163,20 @@ function BottomSheetModalContents({
 
   const animatedPosition = providedAnimatedPosition ?? internalAnimatedPosition
 
-  const backgroundColorValue = blurredBackground ? colors.transparent.val : backgroundColor ?? colors.surface1.val
+  const backgroundColorValue = blurredBackground ? colors.transparent.val : (backgroundColor ?? colors.surface1.val)
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
+      <ModalBackdrop
+        fullScreen={fullScreen}
+        zIndex={zIndex}
+        hideScrim={hideScrim}
+        blurredBackground={blurredBackground}
+        isDismissible={isDismissible}
         {...props}
-        style={[props.style, { zIndex: fullScreen ? undefined : zIndexes.modalBackdrop }]}
-        appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
-        disappearsOnIndex={DISAPPEARS_ON_INDEX}
-        opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
-        pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
-    [blurredBackground, hideScrim, isDismissible, fullScreen],
+    [fullScreen, zIndex, hideScrim, blurredBackground, isDismissible],
   )
 
   const renderHandleBar = useCallback(
@@ -174,7 +206,7 @@ function BottomSheetModalContents({
     const interpolatedRadius = interpolate(
       animatedPosition.value,
       [0, insets.top],
-      [0, borderRadius ?? borderRadii.rounded24],
+      [0, borderRadius],
       Extrapolate.CLAMP,
     )
     return { borderTopLeftRadius: interpolatedRadius, borderTopRightRadius: interpolatedRadius }
@@ -221,50 +253,73 @@ function BottomSheetModalContents({
   // on screens < xs (iPhone SE), assume no rounded corners on screen and remove rounded corners from fullscreen modal
   const borderRadius = media.short ? borderRadii.none : borderRadii.rounded24
 
-  const hiddenHandlebarStyle = {
-    borderTopLeftRadius: borderRadius,
-    borderTopRightRadius: borderRadius,
-  }
+  const backgroundStyle = useMemo(
+    () => ({
+      backgroundColor: backgroundColorValue,
+    }),
+    [backgroundColorValue],
+  )
 
-  const background = blurredBackground ? { backgroundComponent: renderBlurredBg } : undefined
-  const backdrop = { backdropComponent: renderBackdrop }
+  const bottomSheetViewStyles: StyleProp<ViewStyle> = useMemo(() => {
+    const styles: StyleProp<ViewStyle> = [
+      { backgroundColor: renderBehindTopInset ? 'transparent' : backgroundColorValue },
+    ]
 
-  const backgroundStyle = {
-    backgroundColor: backgroundColorValue,
-  }
-
-  const bottomSheetViewStyles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
-
-  const handleBarHeight = hideHandlebar ? 0 : spacing.spacing12 + spacing.spacing16 + spacing.spacing4
-  let fullContentHeight = dimensions.fullHeight - insets.top - handleBarHeight
-
-  if (renderBehindTopInset) {
-    bottomSheetViewStyles.push(bottomSheetStyle.behindInset)
-    if (hideHandlebar) {
-      bottomSheetViewStyles.push(animatedBorderRadius)
+    const hiddenHandlebarStyle = {
+      borderTopLeftRadius: borderRadius,
+      borderTopRightRadius: borderRadius,
     }
-    fullContentHeight += insets.top
-  } else if (hideHandlebar) {
-    bottomSheetViewStyles.push(hiddenHandlebarStyle)
-  }
-  if (!renderBehindBottomInset) {
-    bottomSheetViewStyles.push({ paddingBottom: insets.bottom })
-  }
-  // Add the calculated height only if the sheet is full screen
-  // (otherwise, rely on the dynamic sizing of the sheet)
-  if (fullScreen) {
-    bottomSheetViewStyles.push({ height: fullContentHeight })
-  }
+
+    if (renderBehindTopInset) {
+      styles.push(bottomSheetStyle.behindInset)
+
+      if (hideHandlebar) {
+        if (forceRoundedCorners) {
+          styles.push(hiddenHandlebarStyle)
+        } else {
+          styles.push(animatedBorderRadius)
+        }
+      }
+    } else if (hideHandlebar) {
+      styles.push(hiddenHandlebarStyle)
+    }
+
+    if (!renderBehindBottomInset) {
+      styles.push({ paddingBottom: insets.bottom })
+    }
+    // When in fullScreen mode, set a fixed height to fill the available space
+    // (when not in fullScreen, we use dynamic sizing based on content)
+    if (fullScreen) {
+      styles.push({ height: '100%' })
+    }
+
+    return styles
+  }, [
+    backgroundColorValue,
+    borderRadius,
+    renderBehindTopInset,
+    hideHandlebar,
+    renderBehindBottomInset,
+    fullScreen,
+    forceRoundedCorners,
+    animatedBorderRadius,
+    insets.bottom,
+  ])
+
+  const containerStyle = useMemo(() => {
+    return { zIndex: fullScreen ? undefined : zIndex ? zIndex : zIndexes.modal }
+  }, [fullScreen, zIndex])
 
   return (
     <BaseModal
-      {...background}
-      {...backdrop}
       ref={modalRef}
+      backgroundComponent={blurredBackground ? renderBlurredBg : undefined}
+      backdropComponent={renderBackdrop}
+      accessible={false}
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
-      containerStyle={{ zIndex: fullScreen ? undefined : zIndexes.modal }}
+      containerStyle={containerStyle}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints || enableDynamicSizing}
       enableHandlePanningGesture={isDismissible}
@@ -282,7 +337,9 @@ function BottomSheetModalContents({
           {overrideInnerContainer ? (
             children
           ) : (
-            <BottomSheetView style={bottomSheetViewStyles}>{children}</BottomSheetView>
+            <BottomSheetView style={bottomSheetViewStyles} focusHook={focusHook}>
+              {children}
+            </BottomSheetView>
           )}
         </BottomSheetContextProvider>
       </Trace>
@@ -311,10 +368,11 @@ export function BottomSheetDetachedModal({
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
 
   useEffect(() => {
-    modalRef.current?.present()
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    modalRef.current?.present?.()
     // Close modal when it is unmounted
     return modalRef.current?.close
-  }, [modalRef])
+  }, [])
 
   const renderHandleBar = useCallback(
     (props: BottomSheetHandleProps) => {
@@ -334,10 +392,10 @@ export function BottomSheetDetachedModal({
   return (
     <BaseModal
       ref={modalRef}
-      backdropComponent={Backdrop}
+      backdropComponent={DetachedModalBackdrop}
       backgroundStyle={backgroundStyle}
       bottomInset={insets.bottom}
-      containerStyle={{ zIndex: zIndexes.popover }}
+      containerStyle={bottomSheetStyle.detachedContainer}
       detached={true}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints}
@@ -361,6 +419,9 @@ const bottomSheetStyle = StyleSheet.create({
   },
   detached: {
     marginHorizontal: spacing.spacing12,
+  },
+  detachedContainer: {
+    zIndex: zIndexes.popover,
   },
   modalTransparent: {
     backgroundColor: 'transparent',

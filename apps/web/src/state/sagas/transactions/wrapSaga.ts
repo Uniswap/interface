@@ -1,22 +1,25 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
-import { useAccount } from 'hooks/useAccount'
-import useSelectChain from 'hooks/useSelectChain'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { HandleOnChainStepParams, handleOnChainStep } from 'state/sagas/transactions/utils'
-import { TransactionType, WrapTransactionInfo } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
-import { TransactionStepType, WrapTransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { HandleOnChainStepParams, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import { WrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
 import { WrapCallback, WrapCallbackParams } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
+import { TransactionType, WrapTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import noop from 'utilities/src/react/noop'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { noop } from 'utilities/src/react/noop'
+import { popupRegistry } from '~/components/Popups/registry'
+import { PopupType } from '~/components/Popups/types'
+import { INTERNAL_JSON_RPC_ERROR_CODE } from '~/constants/misc'
+import { useAccount } from '~/hooks/useAccount'
+import useSelectChain from '~/hooks/useSelectChain'
+import { handleOnChainStep } from '~/state/sagas/transactions/utils'
+import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
 interface HandleWrapStepParams extends Omit<HandleOnChainStepParams<WrapTransactionStep>, 'info'> {}
-export function* handleWrapStep(params: HandleWrapStepParams) {
+function* handleWrapStep(params: HandleWrapStepParams) {
   const info = getWrapTransactionInfo(params.step.amount)
   return yield* call(handleOnChainStep, { ...params, info })
 }
@@ -25,7 +28,7 @@ type WrapParams = WrapCallbackParams & { selectChain: (chainId: number) => Promi
 
 function* wrap(params: WrapParams) {
   try {
-    const { account, inputCurrencyAmount, selectChain, txRequest, startChainId, onFailure } = params
+    const { address, inputCurrencyAmount, selectChain, txRequest, startChainId, onFailure } = params
 
     // Switch chains if needed
     if (txRequest.chainId !== startChainId) {
@@ -40,7 +43,7 @@ function* wrap(params: WrapParams) {
 
     const hash = yield* call(handleWrapStep, {
       step,
-      account,
+      address,
       setCurrentStep: noop,
       shouldWaitForConfirmation: false,
       allowDuplicativeTx: true, // Compared to UniswapX wraps, the user should not be stopped from wrapping in quick succession
@@ -50,8 +53,19 @@ function* wrap(params: WrapParams) {
 
     params.onSuccess()
   } catch (error) {
-    if (!didUserReject(error)) {
-      logger.error(error, { tags: { file: 'wrapSaga', function: 'wrap' } })
+    if (didUserReject(error)) {
+      params.onFailure()
+      return
+    }
+
+    if (!(isTestnetChain(params.txRequest.chainId) && error.code === INTERNAL_JSON_RPC_ERROR_CODE)) {
+      logger.error(error, {
+        tags: {
+          file: 'wrapSaga',
+          function: 'wrap',
+          chainId: params.txRequest.chainId,
+        },
+      })
     }
     params.onFailure()
   }
@@ -60,12 +74,12 @@ function* wrap(params: WrapParams) {
 function getWrapTransactionInfo(amount: CurrencyAmount<Currency>): WrapTransactionInfo {
   return amount.currency.isNative
     ? {
-        type: TransactionType.WRAP,
+        type: TransactionType.Wrap,
         unwrapped: false,
         currencyAmountRaw: amount.quotient.toString(),
       }
     : {
-        type: TransactionType.WRAP,
+        type: TransactionType.Wrap,
         unwrapped: true,
         currencyAmountRaw: amount.quotient.toString(),
       }

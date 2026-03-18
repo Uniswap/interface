@@ -1,7 +1,9 @@
 import { CSSProperties } from 'react'
+import { FlexProps } from 'ui/src/components/layout'
 
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 
 const getDefaultBorderRadius = (size: number) => size / 2 - 4
 
@@ -13,6 +15,7 @@ type ChainLogoProps = {
   style?: CSSProperties
   testId?: string
   fillContainer?: boolean
+  transition?: FlexProps['transition']
 }
 export function ChainLogo({
   chainId,
@@ -21,6 +24,7 @@ export function ChainLogo({
   borderRadius = getDefaultBorderRadius(size),
   testId,
   fillContainer = false,
+  transition,
 }: ChainLogoProps) {
   const isSupportedChain = isUniverseChainId(chainId)
 
@@ -38,7 +42,7 @@ export function ChainLogo({
       width={iconSize}
       height={iconSize}
       src={logo as string}
-      style={{ ...style, borderRadius: borderRadius + 'px' }}
+      style={{ ...style, borderRadius: borderRadius + 'px', transition }}
       alt={`${label} logo`}
     />
   )

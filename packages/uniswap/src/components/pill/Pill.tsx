@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { TextVariantTokens } from 'ui/src/theme'
 
-type PillProps = {
+export type PillProps = {
   customBackgroundColor?: string
   customBorderColor?: string
   foregroundColor?: string

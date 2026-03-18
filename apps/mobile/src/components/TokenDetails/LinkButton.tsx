@@ -1,23 +1,36 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
-import { useDispatch } from 'react-redux'
-import { Flex, IconProps, Text, TouchableArea, useSporeColors } from 'ui/src'
-import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
-import { iconSizes } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { useSelector } from 'react-redux'
+import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
+import { Flex, GeneratedIcon, IconProps, Text, TouchableArea } from 'ui/src'
+import { CopySheets } from 'ui/src/components/icons'
+import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 
 export enum LinkButtonType {
   Copy = 'copy',
   Link = 'link',
+}
+
+export type LinkButtonProps = {
+  label: string
+  Icon?: React.FC<SvgProps & { size?: IconProps['size'] }> | GeneratedIcon
+  element: ElementName
+  openExternalBrowser?: boolean
+  isSafeUri?: boolean
+  testID?: TestIDType
+  /** Override default press behavior (link/copy). When provided, buttonType and value are unused. */
+  onPress?: () => void
+  /** Controls default press behavior and icon display. Not required when onPress is provided. */
+  buttonType?: LinkButtonType
+  /** URI to open or address to copy. Not required when onPress is provided. */
+  value?: string
 }
 
 export function LinkButton({
@@ -29,27 +42,21 @@ export function LinkButton({
   isSafeUri = false,
   value,
   testID,
-}: {
-  buttonType: LinkButtonType
-  label: string
-  Icon?: React.FC<SvgProps & { size?: IconProps['size'] }>
-  element: ElementNameType
-  openExternalBrowser?: boolean
-  isSafeUri?: boolean
-  value: string
-  testID?: TestIDType
-}): JSX.Element {
-  const dispatch = useDispatch()
-  const colors = useSporeColors()
+  onPress: onPressProp,
+}: LinkButtonProps): JSX.Element {
+  const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
+  const { openContractAddressExplainerModal, copyAddressToClipboard } = useTokenDetailsContext()
 
   const copyValue = async (): Promise<void> => {
-    await setClipboard(value)
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.Copied,
-        copyType: CopyNotificationType.Address,
-      }),
-    )
+    if (!value) {
+      return
+    }
+    if (!hasViewedContractAddressExplainer) {
+      openContractAddressExplainerModal()
+      return
+    }
+    await copyAddressToClipboard(value)
+
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.CopyAddress,
       screen: MobileScreens.TokenDetails,
@@ -57,8 +64,12 @@ export function LinkButton({
   }
 
   const onPress = async (): Promise<void> => {
-    if (buttonType === LinkButtonType.Link) {
-      await openUri(value, openExternalBrowser, isSafeUri)
+    if (onPressProp) {
+      onPressProp()
+      return
+    }
+    if (buttonType === LinkButtonType.Link && value) {
+      await openUri({ uri: value, openExternalBrowser, isSafeUri })
     } else {
       await copyValue()
     }
@@ -67,21 +78,19 @@ export function LinkButton({
   return (
     <Trace logPress element={element}>
       <TouchableArea
-        backgroundColor="$surface2"
-        borderRadius="$rounded20"
-        px="$spacing12"
-        py="$spacing8"
+        backgroundColor="$surface3"
+        borderRadius="$roundedFull"
+        p="$spacing8"
+        pr="$spacing12"
         testID={testID}
         onPress={onPress}
       >
         <Flex centered row shrink gap="$spacing8" width="auto">
-          {Icon && <Icon color={colors.neutral1.get()} size="$icon.16" />}
+          {Icon && <Icon color="$neutral1" size="$icon.20" />}
           <Text $short={{ variant: 'buttonLabel3' }} color="$neutral1" variant="buttonLabel2">
             {label}
           </Text>
-          {buttonType === LinkButtonType.Copy && (
-            <CopyIcon color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
-          )}
+          {buttonType === LinkButtonType.Copy && <CopySheets color="$neutral2" size="$icon.20" />}
         </Flex>
       </TouchableArea>
     </Trace>

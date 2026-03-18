@@ -1,20 +1,22 @@
+import { UnitagClaimSource } from '@universe/api'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
-import { DeprecatedButton, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
-import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { imageSizes, spacing } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
+import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
+import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { MobileScreens, OnboardingScreens, UnitagEntryPoint } from 'uniswap/src/types/screens/mobile'
 import { isMobileApp } from 'utilities/src/platform'
 import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSelection'
 import { ChoosePhotoOptionsModal, ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
-import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
-import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useWalletSigners } from 'wallet/src/features/wallet/context'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
   switch (entryPoint) {
@@ -49,10 +51,12 @@ export function UnitagChooseProfilePicContent({
   onContinue: (imageUri: string | undefined) => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const { data: ensName } = useENSName(address)
   const claimUnitag = useClaimUnitag()
   const isDarkMode = useIsDarkMode()
+  const accounts = useAccounts()
+  const signerManager = useWalletSigners()
+  const account = accounts[address]
 
   const [imageUri, setImageUri] = useState<string>()
   const [showModal, setShowModal] = useState(false)
@@ -85,17 +89,18 @@ export function UnitagChooseProfilePicContent({
   const attemptClaimUnitag = async (): Promise<void> => {
     setIsClaiming(true)
     const source = convertEntryPointToAnalyticsSource(entryPoint)
-    const { claimError: attemptClaimError } = await claimUnitag(
-      {
+    const { claimError: attemptClaimError } = await claimUnitag({
+      claim: {
         address,
         username: unitag,
         avatarUri: imageUri,
       },
-      {
+      context: {
         source,
         hasENSAddress: !!ensName,
       },
-    )
+      signMessage: generateSignerFunc(account, signerManager),
+    })
     setIsClaiming(false)
     setClaimError(attemptClaimError)
 
@@ -121,11 +126,13 @@ export function UnitagChooseProfilePicContent({
             testID={TestID.Edit}
           >
             <Flex backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'} borderRadius="$roundedFull" p={8}>
-              <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
+              <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size="$icon.16" />
             </Flex>
           </Flex>
         </TouchableArea>
-        <Flex row>{isMobileApp && <UnitagName fontSize={unitagFontSize} name={unitag} />}</Flex>
+        <Flex row>
+          {isMobileApp && <UnitagName animateText textProps={{ fontSize: unitagFontSize }} name={unitag} />}
+        </Flex>
         {!!claimError && (
           <Text color="$statusCritical" variant="body2">
             {claimError}
@@ -133,21 +140,19 @@ export function UnitagChooseProfilePicContent({
         )}
       </Flex>
       {isMobileApp && <Flex fill />}
-      <DeprecatedButton
-        isDisabled={!!claimError || isClaiming}
-        size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
-        testID={TestID.Continue}
-        theme="primary"
-        onPress={onPressContinue}
-      >
-        {isClaiming ? (
-          <Flex height={fonts.buttonLabel1.lineHeight}>
-            <ActivityIndicator color={colors.white.val} />
-          </Flex>
-        ) : (
-          t('common.button.continue')
-        )}
-      </DeprecatedButton>
+      <Flex row>
+        <Button
+          loading={isClaiming}
+          testID={TestID.Continue}
+          isDisabled={!!claimError || isClaiming}
+          size="large"
+          variant="branded"
+          onPress={onPressContinue}
+        >
+          {t('common.button.continue')}
+        </Button>
+      </Flex>
+
       {showModal && (
         <ChoosePhotoOptionsModal
           address={address}

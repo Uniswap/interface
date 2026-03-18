@@ -1,61 +1,57 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { BRIDGING_BANNER, UNICHAIN_BANNER_COLD, UNICHAIN_BANNER_WARM } from 'ui/src/assets'
-import { Person } from 'ui/src/components/icons'
-import { PollingInterval } from 'uniswap/src/constants/misc'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { selectHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/selectors'
+import { useIsDarkMode } from 'ui/src'
 import {
-  setHasDismissedUnichainColdBanner,
-  setHasDismissedUnichainWarmBanner,
-  setHasViewedBridgingBanner,
-} from 'uniswap/src/features/behaviorHistory/slice'
-import { useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
+  NO_FEES_ICON,
+  NO_UNISWAP_INTERFACE_FEES_BANNER_DARK,
+  NO_UNISWAP_INTERFACE_FEES_BANNER_LIGHT,
+} from 'ui/src/assets'
+import { Person, ShieldCheck } from 'ui/src/components/icons'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
-import { useUnichainPromoVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainPromoVisibility'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
-import { CurrencyField } from 'uniswap/src/types/currency'
+import { buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { isExtensionApp } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
-import { useCanActiveAddressClaimUnitag, useHasAnyAccountsWithUnitag } from 'wallet/src/features/unitags/hooks'
+import {
+  selectHasDismissedNoAppFeesAnnouncement,
+  selectHasSkippedUnitagPrompt,
+} from 'wallet/src/features/behaviorHistory/selectors'
+import { setHasDismissedNoAppFeesAnnouncement } from 'wallet/src/features/behaviorHistory/slice'
+import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanActiveAddressClaimUnitag'
+import { useHasAnyAccountsWithUnitag } from 'wallet/src/features/unitags/hooks/useHasAnyAccountsWithUnitag'
 import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
+import { hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type SharedIntroCardsProps = {
-  showUnichainModal: () => void
   navigateToUnitagClaim: () => void
   navigateToUnitagIntro: () => void
+  navigateToBackupFlow: () => void
 }
 
 type SharedIntroCardReturn = {
   cards: IntroCardProps[]
   shouldPromptUnitag: boolean
-  shouldShowBridgingBanner: boolean
 }
 
 export function useSharedIntroCards({
   navigateToUnitagClaim,
   navigateToUnitagIntro,
-  showUnichainModal,
+  navigateToBackupFlow,
 }: SharedIntroCardsProps): SharedIntroCardReturn {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
-  const claimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
+  const isDarkMode = useIsDarkMode()
 
-  const { data: totalValueData } = usePortfolioTotalValue({
-    address: activeAccount.address,
-    // Not needed often given usage, and will get updated from other sources
-    pollInterval: PollingInterval.Slow,
-  })
-  const hasTokens = (totalValueData?.balanceUSD ?? 0) > 0
+  const externalBackups = hasExternalBackup(activeAccount)
 
   const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
   const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
@@ -68,81 +64,55 @@ export function useSharedIntroCards({
   const hasAnyUnitags = useHasAnyAccountsWithUnitag()
   const shouldPromptUnitag = isSignerAccount && !hasSkippedUnitagPrompt && canClaimUnitag && !hasAnyUnitags
 
-  const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
-  const { navigateToSwapFlow } = useWalletNavigation()
-  const numBridgingChains = useNumBridgingChains()
-  const handleBridgingDismiss = useCallback(
-    (shouldNavigate: boolean) => {
-      if (shouldNavigate) {
-        navigateToSwapFlow({ openTokenSelector: CurrencyField.OUTPUT })
-      } else {
-        dispatch(setHasViewedBridgingBanner(true))
-      }
-    },
-    [dispatch, navigateToSwapFlow],
+  // No app fees announcement state
+  const { navigateToSwapFlow } = useUniswapContext()
+  const handleNavigateToSwapFlow = useEvent(() =>
+    navigateToSwapFlow({ inputCurrencyId: buildNativeCurrencyId(UniverseChainId.Mainnet) }),
   )
-  const shouldShowBridgingBanner = isSignerAccount && !hasViewedBridgingBanner && hasTokens
+  const isNoAppFeesAnnouncementEnabled = useFeatureFlag(FeatureFlags.NoUniswapInterfaceFees)
+  const isNoAppFeesCardDismissed = useSelector(selectHasDismissedNoAppFeesAnnouncement)
 
-  const bridgingCard = useMemo(() => {
-    return {
-      loggingName: OnboardingCardLoggingName.BridgingBanner,
-      graphic: {
-        type: IntroCardGraphicType.Image as const,
-        image: BRIDGING_BANNER,
-      },
-      title: t('swap.bridging.title'),
-      description: t('onboarding.home.intro.bridging.description', { count: numBridgingChains }),
-      cardType: CardType.Dismissible,
-      onPress: () => handleBridgingDismiss(true),
-      onClose: () => handleBridgingDismiss(false),
-    }
-  }, [handleBridgingDismiss, numBridgingChains, t])
-
-  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainPromoVisibility()
-
-  const unichainBannerCold = useMemo(() => {
-    return {
-      loggingName: OnboardingCardLoggingName.UnichainBannerCold,
-      isNew: true,
-      graphic: {
-        type: IntroCardGraphicType.Image as const,
-        image: UNICHAIN_BANNER_COLD,
-      },
-      title: t('unichain.promotion.cold.title'),
-      description: t('unichain.promotion.cold.description'),
-      cardType: CardType.Dismissible,
-      onPress: showUnichainModal,
-      onClose: (): void => {
-        dispatch(setHasDismissedUnichainColdBanner(true))
-      },
-    }
-  }, [dispatch, showUnichainModal, t])
-
-  const unichainBannerWarm = useMemo(() => {
-    return {
-      loggingName: OnboardingCardLoggingName.UnichainBannerWarm,
-      isNew: true,
-      graphic: {
-        type: IntroCardGraphicType.Image as const,
-        image: UNICHAIN_BANNER_WARM,
-      },
-      title: t('unichain.promotion.warm.title'),
-      description: t('unichain.promotion.warm.description'),
-      cardType: CardType.Dismissible,
-      onPress: (): void => {
-        navigateToSwapFlow({ openTokenSelector: CurrencyField.OUTPUT, inputChainId: UniverseChainId.Unichain })
-        dispatch(setHasDismissedUnichainWarmBanner(true))
-      },
-      onClose: (): void => {
-        dispatch(setHasDismissedUnichainWarmBanner(true))
-      },
-    }
-  }, [dispatch, navigateToSwapFlow, t])
+  const handleNoAppFeesCardDismiss = useCallback(() => {
+    dispatch(setHasDismissedNoAppFeesAnnouncement(true))
+  }, [dispatch])
 
   return useMemo(() => {
     const output: IntroCardProps[] = []
 
-    if (shouldPromptUnitag && claimUnitagEnabled) {
+    // No app fees announcement card
+    if (isNoAppFeesAnnouncementEnabled && !isNoAppFeesCardDismissed) {
+      output.push({
+        loggingName: OnboardingCardLoggingName.NoAppFeesAnnouncement,
+        graphic: {
+          type: IntroCardGraphicType.Gradient,
+          icon: NO_FEES_ICON,
+          gradientImage: isDarkMode ? NO_UNISWAP_INTERFACE_FEES_BANNER_DARK : NO_UNISWAP_INTERFACE_FEES_BANNER_LIGHT,
+        },
+        title: t('notification.noAppFees.title'),
+        description: t('notification.noAppFees.subtitle'),
+        cardType: CardType.Dismissible,
+        onPress: handleNavigateToSwapFlow,
+        onClose: handleNoAppFeesCardDismiss,
+      })
+    }
+
+    if (!externalBackups) {
+      output.push({
+        loggingName: OnboardingCardLoggingName.RecoveryBackup,
+        graphic: {
+          type: IntroCardGraphicType.Icon,
+          Icon: ShieldCheck,
+        },
+        title: t('onboarding.home.intro.backup.title'),
+        description: isExtensionApp
+          ? t('onboarding.home.intro.backup.description.extension')
+          : t('onboarding.home.intro.backup.description.mobile'),
+        cardType: CardType.Required,
+        onPress: navigateToBackupFlow,
+      })
+    }
+
+    if (shouldPromptUnitag) {
       output.push({
         loggingName: OnboardingCardLoggingName.ClaimUnitag,
         graphic: {
@@ -159,34 +129,21 @@ export function useSharedIntroCards({
       })
     }
 
-    if (shouldShowUnichainBannerCold) {
-      output.push(unichainBannerCold)
-    }
-
-    if (shouldShowUnichainBannerWarm) {
-      output.push(unichainBannerWarm)
-    }
-
-    if (shouldShowBridgingBanner) {
-      output.push(bridgingCard)
-    }
-
     return {
       cards: output,
-      shouldShowBridgingBanner,
       shouldPromptUnitag,
     }
   }, [
+    isDarkMode,
+    isNoAppFeesAnnouncementEnabled,
+    isNoAppFeesCardDismissed,
+    externalBackups,
     shouldPromptUnitag,
-    claimUnitagEnabled,
-    shouldShowUnichainBannerCold,
-    shouldShowUnichainBannerWarm,
-    shouldShowBridgingBanner,
     t,
+    navigateToBackupFlow,
     handleUnitagClaim,
     handleUnitagDismiss,
-    unichainBannerCold,
-    unichainBannerWarm,
-    bridgingCard,
+    handleNavigateToSwapFlow,
+    handleNoAppFeesCardDismiss,
   ])
 }

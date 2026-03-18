@@ -1,10 +1,10 @@
-import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { RefObject, useCallback, useEffect, useRef } from 'react'
 
 // modified from https://usehooks.com/usePrevious/
 export function usePrevious<T>(value: T): T | undefined {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef<T>()
+  const ref = useRef<T>(undefined)
 
   // Store current value in ref
   useEffect(() => {
@@ -15,84 +15,10 @@ export function usePrevious<T>(value: T): T | undefined {
   return ref.current
 }
 
-// adapted from https://usehooks.com/useAsync/ but simplified
-// above link contains example on how to add delayed execution if ever needed
-export function useAsyncData<T>(
-  asyncCallback: () => Promise<T> | undefined,
-  onCancel?: () => void,
-): {
-  isLoading: boolean
-  data: T | undefined
-  error?: Error
-} {
-  const [state, setState] = useState<{
-    data: T | undefined
-    isLoading: boolean
-    error?: Error
-  }>({
-    data: undefined,
-    isLoading: true,
-    error: undefined,
-  })
-  const onCancelRef = useRef(onCancel)
-  const lastCompletedAsyncCallbackRef = useRef(asyncCallback)
-
-  useEffect(() => {
-    let isPending = false
-
-    async function runCallback(): Promise<void> {
-      isPending = true
-      setState((prevState) => {
-        if (!prevState.error) {
-          // Return the same state to avoid an unneeded re-render.
-          return prevState
-        }
-        return { ...prevState, error: undefined }
-      })
-      const data = await asyncCallback()
-      if (isPending) {
-        lastCompletedAsyncCallbackRef.current = asyncCallback
-        setState((prevState) => ({ ...prevState, data, isLoading: false }))
-      }
-    }
-
-    runCallback()
-      .catch((error) => {
-        setState((prevState) => ({ ...prevState, error }))
-        if (isPending) {
-          lastCompletedAsyncCallbackRef.current = asyncCallback
-          setState((prevState) => ({ ...prevState, isLoading: false }))
-        }
-      })
-      .finally(() => {
-        isPending = false
-      })
-
-    const handleCancel = onCancelRef.current
-
-    return () => {
-      if (!isPending) {
-        return
-      }
-      isPending = false
-      if (handleCancel) {
-        handleCancel()
-      }
-    }
-  }, [asyncCallback])
-
-  return useMemo(() => {
-    if (asyncCallback !== lastCompletedAsyncCallbackRef.current) {
-      return { isLoading: true, data: undefined }
-    }
-    return state
-  }, [asyncCallback, state])
-}
-
 // modified from https://usehooks.com/useMemoCompare/
 export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: T) => boolean): T {
   // Ref for storing previous value
-  const previousRef = useRef<T>()
+  const previousRef = useRef<T>(undefined)
   const previous = previousRef.current
   const nextValue = next()
 
@@ -111,11 +37,20 @@ export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: 
   return isEqual && previous ? previous : nextValue
 }
 
-export function useOnClickOutside<T extends HTMLElement>(
-  node: RefObject<T | undefined>,
-  handler: undefined | (() => void),
-  ignoredNodes: Array<RefObject<T | undefined>> = [],
-): void {
+export function useOnClickOutside<T extends HTMLElement>({
+  node,
+  handler,
+  ignoredNodes = [],
+  event = 'mousedown',
+  capture = false,
+}: {
+  node: RefObject<T | undefined | null>
+  handler?: () => void
+  ignoredNodes?: Array<RefObject<HTMLElement | undefined | null>>
+  event?: 'mousedown' | 'mouseup'
+  /** When true, listen in capture phase so the handler runs before inner elements (e.g. modal overlays) that call stopPropagation. Use when the trigger/content may be inside a modal. */
+  capture?: boolean
+}): void {
   const handlerRef = useRef<undefined | (() => void)>(handler)
 
   useEffect(() => {
@@ -130,7 +65,7 @@ export function useOnClickOutside<T extends HTMLElement>(
         false,
       )
 
-      if ((nodeClicked || ignoredNodeClicked) ?? false) {
+      if (nodeClicked || ignoredNodeClicked) {
         return
       }
 
@@ -139,12 +74,12 @@ export function useOnClickOutside<T extends HTMLElement>(
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener(event, handleClickOutside, capture)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener(event, handleClickOutside, capture)
     }
-  }, [node, ignoredNodes])
+  }, [node, ignoredNodes, event, capture])
 }
 
 /**
@@ -158,10 +93,16 @@ export function useOnClickOutside<T extends HTMLElement>(
  *
  * @see {@link https://www.schiener.io/2024-03-03/react-closures}
  * @see {@link https://github.com/facebook/react/issues/14099}
- * @see {@link https://github.com/stutrek/use-callback-stable
+ * @see {@link https://github.com/stutrek/use-callback-stable}
  */
-export function useEvent<T extends unknown[], U>(callback: (...args: T) => U): (...args: T) => U {
+
+export function useEvent<T, S extends T>(callback: (param: S | T) => param is S): (param: S | T) => param is S
+export function useEvent<T, S extends T, A extends unknown[]>(
+  callback: (param: S | T, ...args: A) => param is S,
+): (param: S | T, ...args: A) => param is S
+export function useEvent<A extends unknown[], R>(callback: (...args: A) => R): (...args: A) => R
+export function useEvent<A extends unknown[], R>(callback: (...args: A) => R): (...args: A) => R {
   const callbackRef = useRef(callback)
   callbackRef.current = callback
-  return useCallback((...args: T) => callbackRef.current(...args), [])
+  return useCallback((...args: A) => callbackRef.current(...args), [])
 }

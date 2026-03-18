@@ -1,0 +1,182 @@
+import { Token } from '@uniswap/sdk-core'
+import {
+  OnchainItemListOptionType,
+  TokenOption,
+  UnitagOption,
+  WalletOption,
+} from 'uniswap/src/components/lists/items/types'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
+import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import type { Mock } from 'vitest'
+
+// Use vi.hoisted to create a mutable mock value that can be changed between tests
+const mockPlatformState = vi.hoisted(() => ({ isMobileApp: false }))
+
+vi.mock('uniswap/src/features/telemetry/send')
+vi.mock('utilities/src/platform', () => ({
+  get isMobileApp(): boolean {
+    return mockPlatformState.isMobileApp
+  },
+}))
+
+const MOCK_TOKEN1: TokenOption = {
+  type: OnchainItemListOptionType.Token,
+  currencyInfo: {
+    currency: {
+      chainId: 1,
+      address: '0x123',
+      name: 'Test Token 1',
+      decimals: 18,
+    } as Token,
+    currencyId: '1_0x123',
+    logoUrl: 'https://example.com/logo.png',
+  },
+  quantity: null,
+  balanceUSD: undefined,
+}
+
+const MOCK_TOKEN2: TokenOption = {
+  type: OnchainItemListOptionType.Token,
+  currencyInfo: {
+    currency: {
+      chainId: 130,
+      address: '0x345',
+      name: 'Test Token 2',
+      decimals: 18,
+    } as Token,
+    currencyId: '130_0x345',
+    logoUrl: 'https://example.com/logo.png',
+  },
+  quantity: null,
+  balanceUSD: undefined,
+}
+
+describe('sendSearchOptionItemClickedAnalytics', () => {
+  const mockSendAnalyticsEvent = sendAnalyticsEvent as Mock
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockPlatformState.isMobileApp = false
+  })
+
+  it('sends token analytics event on mobile', () => {
+    mockPlatformState.isMobileApp = true
+
+    const mockSection: OnchainItemSection<TokenOption> = {
+      sectionKey: OnchainItemSectionName.TrendingTokens,
+      data: [MOCK_TOKEN1, MOCK_TOKEN1, MOCK_TOKEN2],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'test',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_TOKEN2,
+      section: mockSection,
+      rowIndex: 3,
+      sectionIndex: 2,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
+      category: OnchainItemSectionName.TrendingTokens,
+      isHistory: false,
+      position: 3,
+      sectionPosition: 3,
+      suggestionCount: 3,
+      query: 'test',
+      name: 'Test Token 2',
+      chain: 130,
+      address: '0x345',
+      type: 'token',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.All,
+    })
+  })
+
+  it('sends token analytics event on web', () => {
+    mockPlatformState.isMobileApp = false
+
+    const mockSection: OnchainItemSection<TokenOption> = {
+      sectionKey: OnchainItemSectionName.Tokens,
+      data: [MOCK_TOKEN1, MOCK_TOKEN2],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'test',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_TOKEN1,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NavbarResultSelected, {
+      category: OnchainItemSectionName.Tokens,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 1,
+      suggestionCount: 2,
+      query: 'test',
+      chainId: 1,
+      suggestion_type: 'token-suggestion',
+      total_suggestions: 2,
+      query_text: 'test',
+      selected_search_result_name: 'Test Token 1',
+      selected_search_result_address: '0x123',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Tokens,
+    })
+  })
+
+  it('sends wallet address analytics event', () => {
+    mockPlatformState.isMobileApp = true
+    const mockWallet: UnitagOption = {
+      type: OnchainItemListOptionType.Unitag,
+      address: '0x456',
+      unitag: 'test-unitag.uni.eth',
+    }
+    const mockSection: OnchainItemSection<WalletOption> = {
+      sectionKey: OnchainItemSectionName.Wallets,
+      data: [mockWallet],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'test',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.Wallets,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: mockWallet,
+      section: mockSection,
+      rowIndex: 1,
+      sectionIndex: 0,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
+      category: OnchainItemSectionName.Wallets,
+      isHistory: false,
+      position: 1,
+      sectionPosition: 1,
+      suggestionCount: 1,
+      query: 'test',
+      address: '0x456',
+      type: 'address',
+      searchChainFilter: null,
+      name: 'test-unitag.uni.eth',
+      domain: '.uni.eth',
+      searchTabFilter: SearchTab.Wallets,
+    })
+  })
+})

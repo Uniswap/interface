@@ -2,19 +2,21 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
 import { UNI } from 'uniswap/src/constants/tokens'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isAddress } from 'utilities/src/addresses'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { assume0xAddress } from 'utils/wagmi'
 import { useReadContract } from 'wagmi'
+import { useAccount } from '~/hooks/useAccount'
+import { useContract } from '~/hooks/useContract'
+import { useTransactionAdder } from '~/state/transactions/hooks'
+import { calculateGasMargin } from '~/utils/calculateGasMargin'
+import { assume0xAddress } from '~/utils/wagmi'
 
 const claimAbi = [
   {
@@ -40,11 +42,10 @@ const claimAbi = [
 
 function useMerkleDistributorContract() {
   const account = useAccount()
-  return useContract(
-    account.chainId ? MERKLE_DISTRIBUTOR_ADDRESS[account.chainId] : undefined,
-    MerkleDistributorJSON.abi,
-    true,
-  )
+  return useContract({
+    address: account.chainId ? MERKLE_DISTRIBUTOR_ADDRESS[account.chainId] : undefined,
+    ABI: MerkleDistributorJSON.abi,
+  })
 }
 
 interface UserClaimData {
@@ -78,6 +79,7 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
 const FETCH_CLAIM_FILE_PROMISES: { [startingAddress: string]: Promise<{ [address: string]: UserClaimData }> } = {}
 function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData }> {
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     FETCH_CLAIM_FILE_PROMISES[key] ??
     (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
       `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`,
@@ -93,21 +95,24 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
 const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 // returns the claim for the given address, or null if not valid
 function fetchClaim(account: string): Promise<UserClaimData> {
-  const formatted = isAddress(account)
+  const formatted = getValidAddress({ address: account, platform: Platform.EVM, withEVMChecksum: true })
   if (!formatted) {
     return Promise.reject(new Error('Invalid address'))
   }
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     FETCH_CLAIM_PROMISES[account] ??
     (FETCH_CLAIM_PROMISES[account] = fetchClaimMapping()
       .then((mapping) => {
-        const sorted = Object.keys(mapping).sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1))
+        const sorted = Object.keys(mapping).sort((a, b) =>
+          normalizeTokenAddressForCache(a) < normalizeTokenAddressForCache(b) ? -1 : 1,
+        )
 
         for (const startingAddress of sorted) {
           const lastAddress = mapping[startingAddress]
-          if (startingAddress.toLowerCase() <= formatted.toLowerCase()) {
-            if (formatted.toLowerCase() <= lastAddress.toLowerCase()) {
+          if (normalizeTokenAddressForCache(startingAddress) <= normalizeTokenAddressForCache(formatted)) {
+            if (normalizeTokenAddressForCache(formatted) <= normalizeTokenAddressForCache(lastAddress)) {
               return startingAddress
             }
           } else {
@@ -118,6 +123,7 @@ function fetchClaim(account: string): Promise<UserClaimData> {
       })
       .then(fetchClaimFile)
       .then((result) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (result[formatted]) {
           return result[formatted]
         }
@@ -216,12 +222,12 @@ export function useClaimCallback(address: string | null | undefined): {
 
     const args = [claimData.index, address, claimData.amount, claimData.proof]
 
-    return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
+    return distributorContract.estimateGas.claim(...args, {}).then((estimatedGasLimit) => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            type: TransactionType.CLAIM,
+            type: TransactionType.ClaimUni,
             recipient: address,
             uniAmountRaw: unclaimedAmount?.quotient.toString(),
           })

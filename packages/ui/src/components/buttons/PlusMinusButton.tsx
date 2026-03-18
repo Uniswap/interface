@@ -1,6 +1,6 @@
 import { Plus as PlusIcon } from 'ui/src/components/icons'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { TouchableArea } from 'ui/src/components/touchable/TouchableArea'
+import { TouchableArea } from 'ui/src/components/touchable/TouchableArea/TouchableArea'
 import { iconSizes } from 'ui/src/theme'
 
 export enum PlusMinusButtonType {

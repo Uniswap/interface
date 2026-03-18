@@ -1,5 +1,14 @@
 import { memo, useState } from 'react'
-import { Flex, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  FlexProps,
+  Loader,
+  Text,
+  TextProps,
+  UniversalImage,
+  useColorSchemeFromSeed,
+  useSporeColors,
+} from 'ui/src'
 import { iconSizes, validColor, zIndexes } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -11,10 +20,14 @@ interface TokenLogoProps {
   url?: string | null
   symbol?: string
   name?: string | null
-  chainId?: UniverseChainId
+  chainId?: UniverseChainId | null
   size?: number
   hideNetworkLogo?: boolean
   networkLogoBorderWidth?: number
+  loading?: boolean
+  webFontSize?: number
+  lineHeight?: TextProps['lineHeight']
+  transition?: FlexProps['transition']
 }
 
 const TESTNET_BORDER_DIVISOR = 15
@@ -28,13 +41,19 @@ export const TokenLogo = memo(function _TokenLogo({
   size = iconSizes.icon40,
   hideNetworkLogo,
   networkLogoBorderWidth = isMobileApp ? 2 : 1.5,
+  loading,
+  webFontSize = 10,
+  lineHeight = 14,
+  transition,
 }: TokenLogoProps): JSX.Element {
-  const [showBackground, setShowBackground] = useState(false)
+  const isTestnetToken = !!chainId && isTestnetChain(chainId)
+
+  // We want to avoid the extra render on mobile when updating the state, so we set this to `true` from the start.
+  const [showBackground, setShowBackground] = useState(isMobileApp ? true : false)
 
   const colors = useSporeColors()
   const { foreground, background } = useColorSchemeFromSeed(name ?? symbol ?? '')
 
-  const isTestnetToken = chainId && isTestnetChain(chainId)
   const borderWidth = isTestnetToken ? size / TESTNET_BORDER_DIVISOR : 0
 
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet
@@ -43,6 +62,10 @@ export const TokenLogo = memo(function _TokenLogo({
   const borderOffset = isTestnetToken ? BORDER_OFFSET : 0
 
   const tokenSize = size - borderWidth - borderOffset
+
+  if (loading) {
+    return <Loader.Box borderRadius="$roundedFull" height={size} width={size} />
+  }
 
   const fallback = (
     <Flex
@@ -58,7 +81,7 @@ export const TokenLogo = memo(function _TokenLogo({
         adjustsFontSizeToFit
         $platform-web={{
           // adjustFontSizeToFit is a react-native-only prop
-          fontSize: 10,
+          fontSize: webFontSize,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'clip',
@@ -68,30 +91,13 @@ export const TokenLogo = memo(function _TokenLogo({
         fontFamily="$button"
         fontSize={17}
         fontWeight="500"
-        lineHeight={14}
+        lineHeight={lineHeight}
         minimumFontScale={0.5}
         numberOfLines={1}
       >
         {symbol?.slice(0, 3)}
       </Text>
     </Flex>
-  )
-
-  const tokenImage = (
-    <UniversalImage
-      allowLocalUri
-      fallback={fallback}
-      size={{ height: tokenSize, width: tokenSize }}
-      style={{
-        image: {
-          borderRadius: size / 2,
-          zIndex: zIndexes.default,
-        },
-      }}
-      testID="token-image"
-      uri={url ?? undefined}
-      onLoad={() => setShowBackground(true)}
-    />
   )
 
   return (
@@ -103,8 +109,9 @@ export const TokenLogo = memo(function _TokenLogo({
       pointerEvents="auto"
       width={size}
       position="relative"
+      transition={transition}
     >
-      {isTestnetToken ? null : (
+      {!isTestnetToken && (
         <Flex
           opacity={showBackground ? 1 : 0}
           height="96%"
@@ -117,7 +124,23 @@ export const TokenLogo = memo(function _TokenLogo({
           borderRadius={size / 2}
         />
       )}
-      {tokenImage}
+
+      <UniversalImage
+        allowLocalUri
+        fallback={fallback}
+        size={{ height: tokenSize, width: tokenSize }}
+        style={{
+          image: {
+            borderRadius: size / 2,
+            zIndex: zIndexes.default,
+            ...(transition && { transition }),
+          },
+        }}
+        testID="token-image"
+        uri={url ?? undefined}
+        onLoad={() => setShowBackground(true)}
+      />
+
       {isTestnetToken && (
         <Flex
           borderRadius={size / 2}
@@ -130,6 +153,7 @@ export const TokenLogo = memo(function _TokenLogo({
           position="absolute"
         />
       )}
+
       {showNetworkLogo && (
         <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndexes.mask}>
           <NetworkLogo borderWidth={networkLogoBorderWidth} chainId={chainId} size={networkLogoSize} />

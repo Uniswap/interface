@@ -1,0 +1,7 @@
+imports:
+  - shared-infra/datadog-2026
+
+values:
+  pulumiConfig:
+    datadog:apiKey: ${pulumiConfig["env:DD_API_KEY"]}
+    datadog:appKey: ${pulumiConfig["env:DD_APP_KEY"]}

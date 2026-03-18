@@ -1,19 +1,19 @@
-import { useMenuContent } from 'components/NavBar/CompanyMenu/Content'
-import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
-import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
-import { NavDropdown } from 'components/NavBar/NavDropdown'
-import { getSettingsViewIndex } from 'components/NavBar/PreferencesMenu'
-import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
-import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
-import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
-import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
-import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { useTheme } from 'lib/styled-components'
-import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Accordion, AnimateTransition, Flex, Square, Text } from 'ui/src'
+import { Accordion, AnimateTransition, Flex, Separator, Square, Text } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { HelpModal } from '~/components/HelpModal/HelpModal'
+import { MenuSectionTitle, useMenuContent } from '~/components/NavBar/CompanyMenu/Content'
+import { MenuLink } from '~/components/NavBar/CompanyMenu/MenuDropdown'
+import { LegalAndPrivacyMenu } from '~/components/NavBar/LegalAndPrivacyMenu'
+import { NavDropdown } from '~/components/NavBar/NavDropdown'
+import { getSettingsViewIndex } from '~/components/NavBar/PreferencesMenu'
+import { CurrencySettings } from '~/components/NavBar/PreferencesMenu/Currency'
+import { LanguageSettings } from '~/components/NavBar/PreferencesMenu/Language'
+import { PreferencesView } from '~/components/NavBar/PreferencesMenu/shared'
+import { useTabsContent } from '~/components/NavBar/Tabs/TabsContent'
+import { Socials } from '~/pages/Landing/sections/Footer'
 
 function MenuSection({
   title,
@@ -24,27 +24,25 @@ function MenuSection({
   children: JSX.Element | JSX.Element[]
   collapsible?: boolean
 }) {
-  const theme = useTheme()
-
   return (
     <Accordion.Item value={title} disabled={!collapsible}>
-      <Flex gap="10px">
+      <Flex gap="8px">
         <Accordion.Trigger flexDirection="row" p="0" gap="4px">
           {({ open }: { open: boolean }) => (
             <>
-              <Text variant="body1" color="$neutral1">
+              <Text variant="body4" color="$neutral2">
                 {title}
               </Text>
               {collapsible && (
-                <Square animation="200ms" rotate={open ? '-180deg' : '0deg'}>
-                  <ChevronDown size="20px" color={theme.neutral2} />
+                <Square animation="200ms" rotate={open ? '90deg' : '270deg'}>
+                  <RotatableChevron size="$icon.16" color="$neutral2" />
                 </Square>
               )}
             </>
           )}
         </Accordion.Trigger>
         <Accordion.Content p="0" forceMount={!collapsible || undefined}>
-          <Flex gap="10px">{children}</Flex>
+          <Flex gap="8px">{children}</Flex>
         </Accordion.Content>
       </Flex>
     </Accordion.Item>
@@ -55,10 +53,11 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   const [openSections, setOpenSections] = useState<string[]>()
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +setSettingsView, +dropdownRef
   const changeView = useCallback(
     (view: PreferencesView) => {
       setSettingsView(view)
-      if (dropdownRef?.current) {
+      if (dropdownRef.current) {
         dropdownRef.current.scroll({
           top: 0,
         })
@@ -69,7 +68,12 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()
   const tabsContent = useTabsContent()
-  const menuContent = useMenuContent()
+  const productContent = useMenuContent({
+    keys: [MenuSectionTitle.Products],
+  })
+  const menuContent = useMenuContent({
+    keys: [MenuSectionTitle.Protocol, MenuSectionTitle.Company],
+  })
 
   // Collapse sections on close
   useEffect(() => {
@@ -79,7 +83,12 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   }, [isOpen])
 
   return (
-    <NavDropdown dropdownRef={dropdownRef} isOpen={isOpen} dataTestId="company-menu-mobile-drawer">
+    <NavDropdown
+      dropdownRef={dropdownRef}
+      isOpen={isOpen}
+      dataTestId={TestID.CompanyMenuMobileDrawer}
+      borderColor="$surface3"
+    >
       <Flex pt="$spacing12" pb="$spacing32" px="$spacing24">
         <AnimateTransition
           currentIndex={getSettingsViewIndex(settingsView)}
@@ -92,7 +101,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
             value={openSections}
             onValueChange={setOpenSections}
           >
-            <Flex gap="$spacing24">
+            <Flex gap="$spacing20">
               <MenuSection title={t('common.app')} collapsible={false}>
                 {tabsContent.map((tab, index) => (
                   <MenuLink
@@ -101,30 +110,54 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                     href={tab.href}
                     internal
                     closeMenu={closeMenu}
+                    icon={tab.icon}
+                    textVariant="body2"
+                    elementName={tab.elementName}
                   />
                 ))}
               </MenuSection>
-
-              {menuContent.map((sectionContent, index) => (
-                <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title}>
-                  {sectionContent.items.map(({ label, href, internal }, index) => (
+              {Object.values(productContent).map((sectionContent, index) => (
+                <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title} collapsible={false}>
+                  {sectionContent.items.map(({ label, href, internal, icon, elementName }, index) => (
                     <MenuLink
                       key={`${label}_${index}}`}
                       label={label}
                       href={href}
                       internal={internal}
                       closeMenu={closeMenu}
+                      icon={icon}
+                      textVariant="body2"
+                      elementName={elementName}
                     />
                   ))}
                 </MenuSection>
               ))}
 
-              <MenuSection title={t('common.displaySettings')}>
-                <PreferenceSettings showHeader={false} showThemeLabel={false} setSettingsView={changeView} />
-              </MenuSection>
+              <Separator backgroundColor="$surface3" />
 
-              <DownloadApp onClick={closeMenu} />
-              <Socials iconSize="25px" />
+              {Object.values(menuContent).map((sectionContent, index) => (
+                <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title}>
+                  {sectionContent.items.map(({ label, href, internal, elementName }, index) => (
+                    <MenuLink
+                      key={`${label}_${index}}`}
+                      label={label}
+                      href={href}
+                      internal={internal}
+                      closeMenu={closeMenu}
+                      elementName={elementName}
+                    />
+                  ))}
+                </MenuSection>
+              ))}
+              <Flex paddingBottom="$padding8">
+                <LegalAndPrivacyMenu closeMenu={closeMenu} />
+              </Flex>
+              <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
+                <HelpModal showOnXL />
+                <Flex gap="$spacing16">
+                  <Socials iconSize="20px" />
+                </Flex>
+              </Flex>
             </Flex>
           </Accordion>
 

@@ -1,13 +1,5 @@
 {
   "version": 1,
-  "include": [
-    "/*"
-  ],
-  "exclude": [
-    "/fonts/*",
-    "/images/*",
-    "/nft/*",
-    "/rive/*",
-    "/static/*"
-  ]
+  "include": ["/*"],
+  "exclude": ["/fonts/*", "/images/*", "/nft/*", "/rive/*", "/static/*"]
 }

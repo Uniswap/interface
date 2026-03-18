@@ -1,28 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { PositionInfo } from 'components/Liquidity/types'
-import { PopupType } from 'components/Popups/types'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-
-// TODO(WEB-4888): remove this type
-/** @deprecated add new Modals to the ModalName object in uniswap/src/features/telemetry/constants */
-export enum ApplicationModal {
-  ADDRESS_CLAIM = 0,
-  BLOCKED_ACCOUNT = 1,
-  CLAIM_POPUP = 2,
-  DELEGATE = 3,
-  EXECUTE = 4,
-  FEATURE_FLAGS = 5,
-  FIAT_ONRAMP = 6,
-  RECEIVE_CRYPTO = 7,
-  RECEIVE_CRYPTO_QR = 8,
-  RECOVERY_PHRASE = 9,
-  PRIVACY_POLICY = 10,
-  QUEUE = 11,
-  SETTINGS = 12,
-  VOTE = 13,
-  UK_DISCLAIMER = 14,
-  GET_THE_APP = 15,
-}
+import { PositionInfo } from '~/components/Liquidity/types'
+import { PopupType } from '~/components/Popups/types'
+import { ReceiveCryptoModalInitialState } from '~/components/ReceiveCryptoModal/types'
 
 export type LiquidityModalInitialState = PositionInfo
 
@@ -41,30 +21,53 @@ type ClaimFeeModalParams = {
   initialState: LiquidityModalInitialState
 }
 
+type BlockedAccountModalParams = {
+  name: typeof ModalName.BlockedAccount
+  initialState: { blockedAddress?: string }
+}
+
+type ReceiveCryptoModalParams = {
+  name: typeof ModalName.ReceiveCryptoModal
+  initialState: ReceiveCryptoModalInitialState
+}
+
 export type OpenModalParams =
-  | { name: ModalNameType | ApplicationModal; initialState?: undefined }
+  | { name: ModalNameType; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
+  | BlockedAccountModalParams
+  | ReceiveCryptoModalParams
 
-export type CloseModalParams = ModalNameType | ApplicationModal
+type CloseModalParams = ModalNameType
 
 export interface ApplicationState {
   readonly chainId: number | null
   readonly openModal: OpenModalParams | null
   readonly suppressedPopups: PopupType[]
+  /** List of addresses where the graduated wallet card has been dismissed for this session. The same property in the user reducer is if the card has been dismissed for 30 days. */
+  readonly downloadGraduatedWalletCardsDismissed: string[]
 }
 
 const initialState: ApplicationState = {
   chainId: null,
   openModal: null,
   suppressedPopups: [],
+  downloadGraduatedWalletCardsDismissed: [],
 }
 
 const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
+    updateDownloadGraduatedWalletCardsDismissed(
+      state,
+      { payload: { walletAddress } }: PayloadAction<{ walletAddress: string }>,
+    ) {
+      state.downloadGraduatedWalletCardsDismissed = Array.from(
+        new Set([...state.downloadGraduatedWalletCardsDismissed, walletAddress]),
+      )
+    },
     updateChainId(state, action) {
       const { chainId } = action.payload
       state.chainId = chainId
@@ -84,9 +87,17 @@ const applicationSlice = createSlice({
     removeSuppressedPopups(state, { payload: { popupTypes } }) {
       state.suppressedPopups = state.suppressedPopups.filter((type) => !popupTypes.includes(type))
     },
+    resetApplication: () => initialState,
   },
 })
 
-export const { updateChainId, setOpenModal, setCloseModal, addSuppressedPopups, removeSuppressedPopups } =
-  applicationSlice.actions
+export const {
+  updateChainId,
+  setOpenModal,
+  setCloseModal,
+  addSuppressedPopups,
+  removeSuppressedPopups,
+  updateDownloadGraduatedWalletCardsDismissed,
+  resetApplication,
+} = applicationSlice.actions
 export default applicationSlice.reducer

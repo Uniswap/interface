@@ -1,17 +1,25 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
-import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } from 'react'
-import { isWeb } from 'utilities/src/platform'
-// eslint-disable-next-line no-restricted-imports
+import React, { memo, PropsWithChildren, ReactNode, useEffect, useId, useMemo } from 'react'
+import { isWebPlatform } from 'utilities/src/platform'
+// biome-ignore lint/style/noRestrictedImports: Platform-specific implementation needs internal types
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ITraceContext, TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getEventHandlers } from 'utilities/src/telemetry/trace/utils'
 
-export function getEventsFromProps(logPress?: boolean, logFocus?: boolean, logKeyPress?: boolean): string[] {
+function getEventsFromProps({
+  logPress = false,
+  logFocus = false,
+  logKeyPress = false,
+}: {
+  logPress?: boolean
+  logFocus?: boolean
+  logKeyPress?: boolean
+}): string[] {
   const events = []
   if (logPress) {
-    events.push(isWeb ? 'onClick' : 'onPress')
+    events.push(isWebPlatform ? 'onClick' : 'onPress')
   }
   if (logFocus) {
     events.push(BrowserEvent.onFocus)
@@ -71,7 +79,7 @@ function _Trace({
   const parentTrace = useTrace()
 
   const events = useMemo(() => {
-    return getEventsFromProps(logPress, logFocus, logKeyPress)
+    return getEventsFromProps({ logPress, logFocus, logKeyPress })
   }, [logFocus, logKeyPress, logPress])
 
   // Component props are destructured to ensure shallow comparison
@@ -92,6 +100,7 @@ function _Trace({
   }, [parentTrace, screen, section, modal, element, page])
 
   // Log impression on mount for elements that are not part of the navigation tree
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Impressions should only be logged on mount
   useEffect(() => {
     if (!devDoubleLogDisableMap[id] && logImpression && !isPartOfNavigationTree) {
       if (shouldLogScreen(directFromPage, (properties as ITraceContext | undefined)?.screen)) {
@@ -108,8 +117,6 @@ function _Trace({
         }
       }
     }
-    // Impressions should only be logged on mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logImpression])
 
   const modifiedChildren =
@@ -124,14 +131,14 @@ function _Trace({
             // For each child, augment event handlers defined in `actionProps` with event tracing
             return React.cloneElement(
               child,
-              getEventHandlers(
+              getEventHandlers({
                 child,
                 consumedProps,
-                events,
-                eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
+                triggers: events,
+                eventName: eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
                 element,
                 properties,
-              ),
+              }),
             )
           })
         }

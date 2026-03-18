@@ -1,7 +1,7 @@
-import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
-import { LimitContext } from 'state/limit/LimitContext'
-import { render } from 'test-utils/render'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
+import { LimitExpirySection } from '~/pages/Swap/Limit/LimitExpirySection'
+import { LimitContext } from '~/state/limit/LimitContext'
+import { render } from '~/test-utils/render'
 
 const mockLimitContextValue = {
   limitState: {
@@ -13,7 +13,7 @@ const mockLimitContextValue = {
     expiry: LimitsExpiry.Day,
     isInputAmountFixed: true,
   },
-  setLimitState: jest.fn(),
+  setLimitState: vi.fn(),
   derivedLimitInfo: {
     currencyBalances: {},
     parsedAmounts: {},
@@ -35,7 +35,7 @@ describe('LimitExpirySection', () => {
   })
 
   it('should call the callback when clicking unselected option', () => {
-    const callback = jest.fn()
+    const callback = vi.fn()
     const result = render(
       <LimitContext.Provider value={{ ...mockLimitContextValue, setLimitState: callback }}>
         <LimitExpirySection />
@@ -46,7 +46,7 @@ describe('LimitExpirySection', () => {
   })
 
   it('should not call the callback when clicking selected option', () => {
-    const callback = jest.fn()
+    const callback = vi.fn()
     const result = render(
       <LimitContext.Provider value={{ ...mockLimitContextValue, setLimitState: callback }}>
         <LimitExpirySection />

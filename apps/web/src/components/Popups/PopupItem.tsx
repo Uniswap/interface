@@ -1,32 +1,34 @@
-import {
-  FailedNetworkSwitchPopup,
-  TransactionPopupContent,
-  UniswapXOrderPopupContent,
-} from 'components/Popups/PopupContent'
-import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
-import { PopupContent, PopupType } from 'components/Popups/types'
-import { useAccount } from 'hooks/useAccount'
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
+import { Eye } from 'ui/src/components/icons/Eye'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
+import { spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { MismatchToastItem } from '~/components/Popups/MismatchToastItem'
+import {
+  FailedNetworkSwitchPopup,
+  FORTransactionPopupContent,
+  PlanPopupContent,
+  TransactionPopupContent,
+  UniswapXOrderPopupContent,
+} from '~/components/Popups/PopupContent'
+import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'
+import { PopupContent, PopupType, SwitchNetworkAction } from '~/components/Popups/types'
 
 export function PopupItem({ content, onClose }: { content: PopupContent; popKey: string; onClose: () => void }) {
   const { t } = useTranslation()
 
-  const { chainId } = useAccount()
-  const supportedChainId = useSupportedChainId(chainId)
-
   switch (content.type) {
     case PopupType.Transaction: {
-      return supportedChainId ? (
-        <TransactionPopupContent hash={content.hash} chainId={supportedChainId} onClose={onClose} />
-      ) : null
+      return <TransactionPopupContent hash={content.hash} onClose={onClose} />
+    }
+    case PopupType.Plan: {
+      return <PlanPopupContent planId={content.planId} onClose={onClose} />
     }
     case PopupType.Order: {
       return <UniswapXOrderPopupContent orderHash={content.orderHash} onClose={onClose} />
@@ -37,9 +39,14 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
     case PopupType.SwitchNetwork: {
       return (
         <ToastRegularSimple
+          width="unset"
           onDismiss={onClose}
           icon={<NetworkLogo chainId={content.chainId} />}
-          text={getSwitchNetworkTitle(t, content.action, content.chainId as UniverseChainId)}
+          text={getSwitchNetworkTitle({
+            t,
+            action: content.action,
+            chainId: content.chainId,
+          })}
         />
       )
     }
@@ -51,17 +58,68 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
         />
       )
     }
+    case PopupType.Mismatch: {
+      return <MismatchToastItem onDismiss={onClose} />
+    }
+    case PopupType.FORTransaction: {
+      return <FORTransactionPopupContent transaction={content.transaction} onClose={onClose} />
+    }
+    case PopupType.Error: {
+      return (
+        <ToastRegularSimple
+          onDismiss={onClose}
+          icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
+          text={content.error}
+        />
+      )
+    }
+    case PopupType.Success: {
+      return (
+        <ToastRegularSimple
+          onDismiss={onClose}
+          icon={<CheckCircleFilled color="$statusSuccess" size="$icon.24" />}
+          text={content.message}
+        />
+      )
+    }
+    case PopupType.Unhide: {
+      return (
+        <ToastRegularSimple
+          onDismiss={onClose}
+          icon={<Eye color="$neutral1" size="$icon.24" />}
+          text={t('notification.assetVisibility.unhidden', { assetName: content.assetName })}
+        />
+      )
+    }
   }
 }
 
-function getSwitchNetworkTitle(t: TFunction, action: SwapTab, chainId: UniverseChainId) {
+function getSwitchNetworkTitle({
+  t,
+  action,
+  chainId,
+}: {
+  t: TFunction
+  action: SwitchNetworkAction
+  chainId: UniverseChainId
+}) {
   const { label } = getChainInfo(chainId)
 
   switch (action) {
-    case SwapTab.Swap:
+    case SwitchNetworkAction.Swap:
       return t('notification.swap.network', { network: label })
-    case SwapTab.Send:
+    case SwitchNetworkAction.Send:
       return t('notification.send.network', { network: label })
+    case SwitchNetworkAction.Buy:
+      return t('notification.buy.network', { network: label })
+    case SwitchNetworkAction.Sell:
+      return t('notification.sell.network', { network: label })
+    case SwitchNetworkAction.LP:
+      return t('notification.lp.network', { network: label })
+    case SwitchNetworkAction.Limit:
+      return t('notification.limit.network', { network: label })
+    case SwitchNetworkAction.PoolFinder:
+      return t('notification.poolFinder.network', { network: label })
     default:
       return ''
   }
@@ -77,17 +135,17 @@ function BridgeToast({
   const originChain = getChainInfo(inputChainId)
   const targetChain = getChainInfo(outputChainId)
   return (
-    <Flex row gap="$gap8">
-      <Flex row gap="$gap4">
+    <Flex row alignItems="center" gap="$gap8">
+      <Flex row gap={spacing.spacing6}>
         <NetworkLogo chainId={inputChainId} />
-        <Text variant="body2" lineHeight={20}>
+        <Text variant="body4" lineHeight={20}>
           {originChain.label}
         </Text>
       </Flex>
-      <Shuffle color="$neutral2" size="$icon.20" />
-      <Flex row gap="$gap4">
+      <Shuffle color="$neutral2" size="$icon.16" />
+      <Flex row gap={spacing.spacing6}>
         <NetworkLogo chainId={outputChainId} />
-        <Text variant="body2" lineHeight={20}>
+        <Text variant="body4" lineHeight={20}>
           {targetChain.label}
         </Text>
       </Flex>

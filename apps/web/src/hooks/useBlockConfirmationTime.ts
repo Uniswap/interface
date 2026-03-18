@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useState } from 'react'
+import useBlockNumber from '~/lib/hooks/useBlockNumber'
 
 export function useBlockConfirmationTime() {
   const { provider } = useWeb3React()
@@ -23,13 +23,13 @@ export function useBlockConfirmationTime() {
           provider.getBlock(currentBlockNumber - 1),
         ])
 
-        if (currentBlock?.timestamp && previousBlock?.timestamp) {
+        if (currentBlock.timestamp && previousBlock.timestamp) {
           setBlockConfirmationTime(currentBlock.timestamp - previousBlock.timestamp)
         } else {
           setError(true)
           setBlockConfirmationTime(null)
         }
-      } catch (e) {
+      } catch {
         setError(true)
         setBlockConfirmationTime(null)
       }

@@ -35,14 +35,14 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
     myRef.current?._listRef._scrollRef.scrollTo({
       x: Math.ceil(scroll.value / fullWidth + 0.5) * fullWidth,
     })
-  }, [fullWidth, scroll])
+  }, [fullWidth])
 
   const goToPrev = useCallback(() => {
     // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/2976
     myRef.current?._listRef._scrollRef.scrollTo({
       x: Math.floor(scroll.value / fullWidth - 0.5) * fullWidth,
     })
-  }, [fullWidth, scroll])
+  }, [fullWidth])
 
   return (
     <CarouselContext.Provider value={{ goToNext, goToPrev, current: 0 }}>

@@ -1,14 +1,13 @@
-import { Flex, SpinningLoader, useSporeColors } from 'ui/src'
-import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
-import { CheckmarkCircle } from 'ui/src/components/icons'
+import { Flex, SpinningLoader } from 'ui/src'
+import { AlertCircle, CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import {
   useSelectAddressHasNotifications,
   useSelectAddressNotifications,
-} from 'uniswap/src/features/notifications/hooks'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+} from 'uniswap/src/features/notifications/slice/hooks'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { useSortedPendingTransactions } from 'uniswap/src/features/transactions/hooks/usePendingTransactions'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useSortedPendingTransactions } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
@@ -19,9 +18,8 @@ interface Props {
 }
 
 export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props): JSX.Element | null {
-  const colors = useSporeColors()
   const activeAccountAddress = useActiveAccountAddress()
-  const sortedPendingTransactions = useSortedPendingTransactions(activeAccountAddress)
+  const sortedPendingTransactions = useSortedPendingTransactions({ evmAddress: activeAccountAddress, svmAddress: null })
   const hasNotifications = useSelectAddressHasNotifications(activeAccountAddress)
   const notifications = useSelectAddressNotifications(activeAccountAddress)
 
@@ -34,7 +32,7 @@ export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props)
       return <CheckmarkCircle size={size} />
     }
 
-    return <AlertCircle color={colors.DEP_accentWarning.val} height={size} width={size} />
+    return <AlertCircle color="$statusWarning" size={size} />
   }
 
   /*************** Pending in-app txn  **************/

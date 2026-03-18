@@ -1,11 +1,13 @@
-import { PopupContent } from 'components/Popups/types'
 import { toast } from 'sonner'
+import { PopupContent } from '~/components/Popups/types'
+
 type PopupListener = (content: PopupContent, key: string, removeAfterMs?: number) => string | number
 
 class PopupRegistry {
   private listener: PopupListener | undefined
   private popupKeyToId = new Map<string, string | number>()
 
+  // eslint-disable-next-line max-params
   addPopup(content: PopupContent, key: string, removeAfterMs?: number): void {
     if (this.popupKeyToId.has(key)) {
       return
@@ -22,8 +24,8 @@ class PopupRegistry {
   }
 
   removePopup(key: string): void {
-    this.popupKeyToId.delete(key)
     toast.dismiss(this.popupKeyToId.get(key))
+    this.popupKeyToId.delete(key)
   }
 }
 

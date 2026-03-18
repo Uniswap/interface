@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionHistoryUpdater skips rendering when no accounts available 1`] = `null`;

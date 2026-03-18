@@ -1,15 +1,17 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { useCurrency } from 'hooks/Tokens'
-import { useV2Pair } from 'hooks/useV2Pairs'
-import { getCurrencyWithWrap } from 'pages/Pool/Positions/create/utils'
-import PoolFinder from 'pages/PoolFinder'
-import { Navigate, useParams, useSearchParams } from 'react-router-dom'
-import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { lazy, Suspense } from 'react'
+import { Navigate, useParams, useSearchParams } from 'react-router'
+import { Loader } from 'ui/src/loading/Loader'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { getChainIdFromChainUrlParam, searchParamToBackendName } from 'utils/chainParams'
-import { useAccount } from 'wagmi'
+import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { getCurrencyWithWrap } from '~/components/Liquidity/utils/currency'
+import { useCurrency } from '~/hooks/Tokens'
+import { useAccount } from '~/hooks/useAccount'
+import { useV2Pair } from '~/hooks/useV2Pairs'
+import { searchParamToBackendName } from '~/utils/chainParams'
+
+const PoolFinder = lazy(() => import('~/pages/PoolFinder'))
 
 // /pool
 export function LegacyPoolRedirects() {
@@ -18,7 +20,11 @@ export function LegacyPoolRedirects() {
 
 // /pool/v2/find
 export function PoolFinderRedirects() {
-  return <PoolFinder />
+  return (
+    <Suspense fallback={<Loader.Box />}>
+      <PoolFinder />
+    </Suspense>
+  )
 }
 
 // /remove/v2/:currencyIdA/:currencyIdB
@@ -30,15 +36,15 @@ export function RemoveLiquidityV2WithTokenRedirects() {
     currencyIdA: string
     currencyIdB: string
   }>()
-  const [searchParams] = useSearchParams()
-  const chainParam = searchParams.get('chain') ?? undefined
 
-  const currencyAddressA = parseCurrencyFromURLParameter(currencyIdA ?? '')
-  const currencyAddressB = parseCurrencyFromURLParameter(currencyIdB ?? '')
+  const chainId = currencyIdToChain(currencyIdA ?? '') ?? connectedChainId ?? defaultChainId
+  const currencyAddressA = currencyIdToAddress(currencyIdA ?? '')
+  const currencyAddressB = currencyIdToAddress(currencyIdB ?? '')
 
-  const chainId = getChainIdFromChainUrlParam(chainParam) ?? connectedChainId ?? defaultChainId
-
-  const [currencyA, currencyB] = [useCurrency(currencyAddressA, chainId), useCurrency(currencyAddressB, chainId)]
+  const [currencyA, currencyB] = [
+    useCurrency({ address: currencyAddressA, chainId }),
+    useCurrency({ address: currencyAddressB, chainId }),
+  ]
 
   const [, pair] = useV2Pair(
     getCurrencyWithWrap(currencyA, ProtocolVersion.V2),

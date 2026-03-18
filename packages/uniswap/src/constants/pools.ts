@@ -1,0 +1,3 @@
+export const V2_DEFAULT_FEE_TIER = 3000
+export const DEFAULT_TICK_SPACING = 60
+export const DYNAMIC_FEE_AMOUNT = 8388608

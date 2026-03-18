@@ -1,5 +1,5 @@
-import { PricePoint } from 'graphql/data/util'
 import { CandlestickData } from 'lightweight-charts'
+import { PricePoint } from '~/appGraphql/data/util'
 
 /**
  * Returns the minimum and maximum values in the given array of PricePoints.

@@ -7,12 +7,18 @@ import {
   ChangeChainRequestSchema,
   ChangeChainResponse,
   ChangeChainResponseSchema,
-  DappRequestType,
-  DappResponseType,
   ErrorResponse,
   ErrorResponseSchema,
   GetAccountRequest,
   GetAccountRequestSchema,
+  GetCallsStatusRequest,
+  GetCallsStatusRequestSchema,
+  GetCallsStatusResponse,
+  GetCallsStatusResponseSchema,
+  GetCapabilitiesRequest,
+  GetCapabilitiesRequestSchema,
+  GetCapabilitiesResponse,
+  GetCapabilitiesResponseSchema,
   GetChainIdRequest,
   GetChainIdRequestSchema,
   GetPermissionsRequest,
@@ -29,6 +35,10 @@ import {
   RevokePermissionsRequestSchema,
   RevokePermissionsResponse,
   RevokePermissionsResponseSchema,
+  SendCallsRequest,
+  SendCallsRequestSchema,
+  SendCallsResponse,
+  SendCallsResponseSchema,
   SendTransactionRequest,
   SendTransactionRequestSchema,
   SendTransactionResponse,
@@ -50,11 +60,7 @@ import {
   UniswapOpenSidebarResponse,
   UniswapOpenSidebarResponseSchema,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import {
-  MessageParsers,
-  TypedPortMessageChannel,
-  TypedRuntimeMessageChannel,
-} from 'src/background/messagePassing/platform'
+import { TypedPortMessageChannel, TypedRuntimeMessageChannel } from 'src/background/messagePassing/platform'
 import {
   HighlightOnboardingTabMessage,
   HighlightOnboardingTabMessageSchema,
@@ -65,6 +71,8 @@ import {
 import {
   AnalyticsLog,
   AnalyticsLogSchema,
+  ArcBrowserCheckMessage,
+  ArcBrowserCheckMessageSchema,
   BackgroundToSidePanelRequestType,
   ContentScriptUtilityMessageType,
   DappRequestMessage,
@@ -83,8 +91,10 @@ import {
   UpdateConnectionRequest,
   UpdateConnectionRequestSchema,
 } from 'src/background/messagePassing/types/requests'
+import { MessageParsers } from 'uniswap/src/extension/messagePassing/platform'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 
-export enum MessageChannelName {
+enum MessageChannelName {
   DappContentScript = 'DappContentScript',
   DappBackground = 'DappBackground',
   DappResponse = 'DappResponse',
@@ -107,16 +117,6 @@ function createOnboardingMessageChannel(): TypedRuntimeMessageChannel<Onboarding
   return new TypedRuntimeMessageChannel<OnboardingMessageType, OnboardingMessageSchemas>({
     channelName: MessageChannelName.Onboarding,
     messageParsers: onboardingMessageParsers,
-  })
-}
-
-export function createOnboardingMessagePort(
-  port: chrome.runtime.Port,
-): TypedPortMessageChannel<OnboardingMessageType, OnboardingMessageSchemas> {
-  return new TypedPortMessageChannel({
-    channelName: MessageChannelName.Onboarding,
-    messageParsers: onboardingMessageParsers,
-    port,
   })
 }
 
@@ -171,6 +171,9 @@ type ContentScriptToBackgroundMessageSchemas = {
   [DappRequestType.SignTransaction]: SignTransactionRequest
   [DappRequestType.SignTypedData]: SignTypedDataRequest
   [DappRequestType.UniswapOpenSidebar]: UniswapOpenSidebarRequest
+  [DappRequestType.SendCalls]: SendCallsRequest
+  [DappRequestType.GetCallsStatus]: GetCallsStatusRequest
+  [DappRequestType.GetCapabilities]: GetCapabilitiesRequest
 }
 const contentScriptToBackgroundMessageParsers: MessageParsers<
   DappRequestType,
@@ -191,6 +194,9 @@ const contentScriptToBackgroundMessageParsers: MessageParsers<
   [DappRequestType.SignTypedData]: (message): SignTypedDataRequest => SignTypedDataRequestSchema.parse(message),
   [DappRequestType.UniswapOpenSidebar]: (message): UniswapOpenSidebarRequest =>
     UniswapOpenSidebarRequestSchema.parse(message),
+  [DappRequestType.SendCalls]: (message): SendCallsRequest => SendCallsRequestSchema.parse(message),
+  [DappRequestType.GetCallsStatus]: (message): GetCallsStatusRequest => GetCallsStatusRequestSchema.parse(message),
+  [DappRequestType.GetCapabilities]: (message): GetCapabilitiesRequest => GetCapabilitiesRequestSchema.parse(message),
 }
 
 function createContentScriptToBackgroundMessageChannel(): TypedRuntimeMessageChannel<
@@ -201,17 +207,6 @@ function createContentScriptToBackgroundMessageChannel(): TypedRuntimeMessageCha
     channelName: MessageChannelName.DappContentScript,
     messageParsers: contentScriptToBackgroundMessageParsers,
     canReceiveFromWebPage: true,
-  })
-}
-
-export function createContentScriptToBackgroundMessagePort(
-  port: chrome.runtime.Port,
-): TypedPortMessageChannel<DappRequestType, ContentScriptToBackgroundMessageSchemas> {
-  return new TypedPortMessageChannel<DappRequestType, ContentScriptToBackgroundMessageSchemas>({
-    channelName: MessageChannelName.DappContentScript,
-    messageParsers: contentScriptToBackgroundMessageParsers,
-    canReceiveFromContentScript: true,
-    port,
   })
 }
 
@@ -228,6 +223,9 @@ type DappResponseMessageSchemas = {
   [DappResponseType.SignTransactionResponse]: SignTransactionResponse
   [DappResponseType.SignTypedDataResponse]: SignTypedDataResponse
   [DappResponseType.UniswapOpenSidebarResponse]: UniswapOpenSidebarResponse
+  [DappResponseType.SendCallsResponse]: SendCallsResponse
+  [DappResponseType.GetCallsStatusResponse]: GetCallsStatusResponse
+  [DappResponseType.GetCapabilitiesResponse]: GetCapabilitiesResponse
 }
 const dappResponseMessageParsers: MessageParsers<DappResponseType, DappResponseMessageSchemas> = {
   [DappResponseType.AccountResponse]: (message): AccountResponse => AccountResponseSchema.parse(message),
@@ -249,22 +247,17 @@ const dappResponseMessageParsers: MessageParsers<DappResponseType, DappResponseM
     SignTypedDataResponseSchema.parse(message),
   [DappResponseType.UniswapOpenSidebarResponse]: (message): UniswapOpenSidebarResponse =>
     UniswapOpenSidebarResponseSchema.parse(message),
+  [DappResponseType.SendCallsResponse]: (message): SendCallsResponse => SendCallsResponseSchema.parse(message),
+  [DappResponseType.GetCallsStatusResponse]: (message): GetCallsStatusResponse =>
+    GetCallsStatusResponseSchema.parse(message),
+  [DappResponseType.GetCapabilitiesResponse]: (message): GetCapabilitiesResponse =>
+    GetCapabilitiesResponseSchema.parse(message),
 }
 
 function createDappResponseMessageChannel(): TypedRuntimeMessageChannel<DappResponseType, DappResponseMessageSchemas> {
   return new TypedRuntimeMessageChannel<DappResponseType, DappResponseMessageSchemas>({
     channelName: MessageChannelName.DappResponse,
     messageParsers: dappResponseMessageParsers,
-  })
-}
-
-export function createDappResponseMessagePort(
-  port: chrome.runtime.Port,
-): TypedPortMessageChannel<DappResponseType, DappResponseMessageSchemas> {
-  return new TypedPortMessageChannel<DappResponseType, DappResponseMessageSchemas>({
-    channelName: MessageChannelName.DappResponse,
-    messageParsers: dappResponseMessageParsers,
-    port,
   })
 }
 
@@ -279,7 +272,7 @@ const externalDappMessageParsers: MessageParsers<ExtensionToDappRequestType, Ext
     UpdateConnectionRequestSchema.parse(message),
 }
 
-export function createExternalDappMessageChannel(): TypedRuntimeMessageChannel<
+function createExternalDappMessageChannel(): TypedRuntimeMessageChannel<
   ExtensionToDappRequestType,
   ExternalDappMessageSchemas
 > {
@@ -289,17 +282,8 @@ export function createExternalDappMessageChannel(): TypedRuntimeMessageChannel<
   })
 }
 
-export function createExternalDappMessagePort(
-  port: chrome.runtime.Port,
-): TypedPortMessageChannel<ExtensionToDappRequestType, ExternalDappMessageSchemas> {
-  return new TypedPortMessageChannel<ExtensionToDappRequestType, ExternalDappMessageSchemas>({
-    channelName: MessageChannelName.ExternalDapp,
-    messageParsers: externalDappMessageParsers,
-    port,
-  })
-}
-
 type ContentScriptUtilityMessageSchemas = {
+  [ContentScriptUtilityMessageType.ArcBrowserCheck]: ArcBrowserCheckMessage
   [ContentScriptUtilityMessageType.FocusOnboardingTab]: FocusOnboardingMessage
   [ContentScriptUtilityMessageType.ErrorLog]: ErrorLog
   [ContentScriptUtilityMessageType.AnalyticsLog]: AnalyticsLog
@@ -308,13 +292,15 @@ const contentScriptUtilityMessageParsers: MessageParsers<
   ContentScriptUtilityMessageType,
   ContentScriptUtilityMessageSchemas
 > = {
+  [ContentScriptUtilityMessageType.ArcBrowserCheck]: (message): ArcBrowserCheckMessage =>
+    ArcBrowserCheckMessageSchema.parse(message),
   [ContentScriptUtilityMessageType.FocusOnboardingTab]: (message): FocusOnboardingMessage =>
     FocusOnboardingMessageSchema.parse(message),
   [ContentScriptUtilityMessageType.ErrorLog]: (message): ErrorLog => ErrorLogSchema.parse(message),
   [ContentScriptUtilityMessageType.AnalyticsLog]: (message): AnalyticsLog => AnalyticsLogSchema.parse(message),
 }
 
-export function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageChannel<
+function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageChannel<
   ContentScriptUtilityMessageType,
   ContentScriptUtilityMessageSchemas
 > {
@@ -322,16 +308,6 @@ export function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageC
     channelName: MessageChannelName.ContentScriptUtility,
     messageParsers: contentScriptUtilityMessageParsers,
     canReceiveFromWebPage: true,
-  })
-}
-
-export function createContentScriptUtilityMessagePort(
-  port: chrome.runtime.Port,
-): TypedPortMessageChannel<ContentScriptUtilityMessageType, ContentScriptUtilityMessageSchemas> {
-  return new TypedPortMessageChannel<ContentScriptUtilityMessageType, ContentScriptUtilityMessageSchemas>({
-    channelName: MessageChannelName.ExternalDapp,
-    messageParsers: contentScriptUtilityMessageParsers,
-    port,
   })
 }
 

@@ -1,29 +1,44 @@
-import { logger } from 'utilities/src/logger/logger'
-import { isExtension, isInterface } from 'utilities/src/platform'
-
-const EXTENSION_ID_LOCAL = 'ceofpnbcmdjbibjjdniemjemmgaibeih'
-const EXTENSION_ID_DEV = 'afhngfaoadjjlhbgopehflaabbgfbcmn'
-const EXTENSION_ID_BETA = 'foilfbjokdonehdajefeadkclfpmhdga'
-const EXTENSION_ID_PROD = 'nnpmfplkfogfpmcngplhnbdnnilmcdcg'
+import { getChromeRuntime } from 'utilities/src/chrome/chrome'
+import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
+import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
 export function isTestEnv(): boolean {
   return (
     !!process.env.JEST_WORKER_ID ||
+    !!process.env.VITEST_WORKER_ID ||
     process.env.NODE_ENV === 'test' ||
-    !!(typeof window !== 'undefined' && window.Cypress) ||
     !!isPlaywrightEnv()
   )
 }
 
 export function isPlaywrightEnv(): boolean {
-  return typeof window !== 'undefined' && typeof window.__playwright__binding__ !== 'undefined'
+  return (
+    (typeof window !== 'undefined' && typeof window.__playwright__binding__ !== 'undefined') ||
+    process.env.REACT_APP_IS_PLAYWRIGHT_ENV === 'true'
+  )
 }
 
 export function isDevEnv(): boolean {
-  if (isInterface) {
+  if (isWebApp) {
     return process.env.NODE_ENV === 'development'
-  } else if (isExtension) {
-    return __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV || chrome.runtime.id === EXTENSION_ID_LOCAL
+  } else if (isExtensionApp) {
+    const chromeRuntime = getChromeRuntime()
+
+    if (!chromeRuntime) {
+      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
+      console.warn(
+        'Avoid using `isDevEnv()` inside the injected script. Use `__DEV__` instead. ' +
+          '`chrome.runtime` is only available when the injected script is running inside a trusted site (`app.uniswap.org`). ' +
+          'This helper only works reliably when running the app locally but not when publishing the Dev build.',
+      )
+      return __DEV__
+    }
+
+    return (
+      __DEV__ ||
+      chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.dev ||
+      chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.local
+    )
   } else if (isTestEnv()) {
     return false
   } else {
@@ -32,11 +47,22 @@ export function isDevEnv(): boolean {
 }
 
 export function isBetaEnv(): boolean {
-  if (isInterface) {
-    // This is set in vercel builds and deploys from web/staging.
+  if (isWebApp) {
+    // This is set in vercel builds for all pre-production envs, including `web/staging` and all other branches.
     return Boolean(process.env.REACT_APP_STAGING)
-  } else if (isExtension) {
-    return chrome.runtime.id === EXTENSION_ID_BETA
+  } else if (isExtensionApp) {
+    const chromeRuntime = getChromeRuntime()
+    if (!chromeRuntime) {
+      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
+      console.warn(
+        'Avoid using `isBetaEnv()` inside the injected script. ' +
+          '`chrome.runtime` is only available when the injected script is running inside a trusted site (`app.uniswap.org`). ' +
+          'This helper always returns `false` when running inside the injected script on other websites.',
+      )
+      return false
+    }
+
+    return chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.beta
   } else if (isTestEnv()) {
     return false
   } else {
@@ -45,10 +71,21 @@ export function isBetaEnv(): boolean {
 }
 
 export function isProdEnv(): boolean {
-  if (isInterface) {
+  if (isWebApp) {
     return process.env.NODE_ENV === 'production' && !isBetaEnv()
-  } else if (isExtension) {
-    return chrome.runtime.id === EXTENSION_ID_PROD
+  } else if (isExtensionApp) {
+    const chromeRuntime = getChromeRuntime()
+    if (!chromeRuntime) {
+      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
+      console.warn(
+        'Avoid using `isProdEnv()` inside the injected script. ' +
+          '`chrome.runtime` is only available when the injected script is running inside a trusted site (`app.uniswap.org`). ' +
+          'This helper always returns `true` when running inside the injected script on other websites.',
+      )
+      return true
+    }
+
+    return chromeRuntime.id === TRUSTED_CHROME_EXTENSION_IDS.prod
   } else if (isTestEnv()) {
     return false
   } else {
@@ -58,12 +95,8 @@ export function isProdEnv(): boolean {
 
 function createAndLogError(funcName: string): Error {
   const e = new Error('Unsupported app environment that failed all checks')
-  logger.error(e, {
-    tags: {
-      file: 'utilities/src/environment/env.web.ts',
-      function: funcName,
-    },
-  })
+  // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
+  console.error(`[utilities/env.web.ts/${funcName}]`, e)
   return e
 }
 

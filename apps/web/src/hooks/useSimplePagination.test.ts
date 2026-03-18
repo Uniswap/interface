@@ -1,5 +1,5 @@
-import useSimplePagination from 'hooks/useSimplePagination'
-import { act, renderHook } from 'test-utils/render'
+import useSimplePagination from '~/hooks/useSimplePagination'
+import { act, renderHook } from '~/test-utils/render'
 
 describe('useSimplePagination', () => {
   it('should initialize with page 1', () => {
@@ -24,7 +24,7 @@ describe('useSimplePagination', () => {
   })
 
   it('should call onComplete callback after incrementing page', () => {
-    const onComplete = jest.fn()
+    const onComplete = vi.fn()
     const { result } = renderHook(() => useSimplePagination())
 
     act(() => {

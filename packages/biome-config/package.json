@@ -1,0 +1,20 @@
+{
+  "name": "@uniswap/biome-config",
+  "version": "1.0.0",
+  "description": "Shared Biome configuration for Uniswap Universe",
+  "devDependencies": {
+    "jsonc-parser": "3.2.0"
+  },
+  "exports": {
+    ".": "./compiled/base.json"
+  },
+  "scripts": {
+    "prepare": "nx prepare biome-config",
+    "test": "nx test biome-config"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "keywords": ["biome", "config", "linting", "formatting"],
+  "license": "MIT"
+}

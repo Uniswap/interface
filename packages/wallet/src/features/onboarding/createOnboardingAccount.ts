@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 /**
  * Takes a list of existing mnemonic accounts to use as reference for pulling the next derivation index
@@ -24,6 +24,7 @@ export const createOnboardingAccount = async (
     backups: existingBackups,
     name: `Wallet ${nextDerivationIndex + 1}`,
     pushNotificationsEnabled: true,
+    smartWalletConsent: true,
   }
 }
 

@@ -33,7 +33,7 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
       -1,
     )
     return () => cancelAnimation(rotation)
-  }, [rotation])
+  }, [])
 
   if (disabled) {
     return <EmptySpinner color="$neutral3" size={size} />

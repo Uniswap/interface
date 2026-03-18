@@ -1,7 +1,7 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { type Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { requireAcceptNewTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -15,76 +15,66 @@ export const mockPool = new Pool(
   -69633,
 )
 
+const createClassicTrade = ({
+  tradeType,
+  inputAmount,
+  outputAmount,
+}: {
+  tradeType: TradeType
+  inputAmount: number
+  outputAmount: number
+}): ClassicTrade =>
+  new ClassicTrade({
+    quote: { quote: {} } as ClassicQuoteResponse,
+    v4Routes: [],
+    v3Routes: [
+      {
+        routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
+        inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], inputAmount),
+        outputAmount: CurrencyAmount.fromRawAmount(WBTC, outputAmount),
+      },
+    ],
+    v2Routes: [],
+    mixedRoutes: [],
+    tradeType,
+    deadline: Date.now() + 60 * 30 * 1000,
+  })
+
 describe(requireAcceptNewTrade, () => {
   describe('ClassicTrade', () => {
-    const oldTrade = new ClassicTrade({
-      v4Routes: [],
-      v3Routes: [
-        {
-          routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
-          inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
-          outputAmount: CurrencyAmount.fromRawAmount(WBTC, 1000),
-        },
-      ],
-      v2Routes: [],
-      mixedRoutes: [],
-      tradeType: TradeType.EXACT_INPUT,
-      deadline: Date.now() + 60 * 30 * 1000,
-    })
-
-    it('returns false when prices are within threshold', () => {
-      const newTrade = new ClassicTrade({
-        v4Routes: [],
-        v3Routes: [
-          {
-            routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
-            inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
-            // Update this number if `ACCEPT_NEW_TRADE_THRESHOLD` changes
-            outputAmount: CurrencyAmount.fromRawAmount(WBTC, 990),
-          },
-        ],
-        v2Routes: [],
-        mixedRoutes: [],
-        tradeType: TradeType.EXACT_INPUT,
-        deadline: Date.now() + 60 * 30 * 1000,
-      })
+    it('returns false when prices are within threshold, exact input', () => {
+      const oldTrade = createClassicTrade({ tradeType: TradeType.EXACT_INPUT, inputAmount: 100, outputAmount: 100 })
+      const newTrade = createClassicTrade({ tradeType: TradeType.EXACT_INPUT, inputAmount: 100, outputAmount: 99 })
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
     })
 
-    it('returns true when prices move above threshold', () => {
-      const newTrade = new ClassicTrade({
-        v4Routes: [],
-        v3Routes: [
-          {
-            routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
-            inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
-            // Update this number if `ACCEPT_NEW_TRADE_THRESHOLD` changes
-            outputAmount: CurrencyAmount.fromRawAmount(WBTC, 979),
-          },
-        ],
-        v2Routes: [],
-        mixedRoutes: [],
-        tradeType: TradeType.EXACT_INPUT,
-        deadline: Date.now() + 60 * 30 * 1000,
-      })
+    it('returns false when prices are within threshold, exact output', () => {
+      const oldTrade = createClassicTrade({ tradeType: TradeType.EXACT_OUTPUT, inputAmount: 100, outputAmount: 100 })
+      const newTrade = createClassicTrade({ tradeType: TradeType.EXACT_OUTPUT, inputAmount: 101, outputAmount: 100 })
+      expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
+    })
+
+    it('returns true when prices move above threshold, exact input', () => {
+      const oldTrade = createClassicTrade({ tradeType: TradeType.EXACT_INPUT, inputAmount: 100, outputAmount: 100 })
+      const newTrade = createClassicTrade({ tradeType: TradeType.EXACT_INPUT, inputAmount: 100, outputAmount: 98 })
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(true)
     })
 
-    it('returns false when new price is better', () => {
-      const newTrade = new ClassicTrade({
-        v4Routes: [],
-        v3Routes: [
-          {
-            routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
-            inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
-            outputAmount: CurrencyAmount.fromRawAmount(WBTC, 2000000),
-          },
-        ],
-        v2Routes: [],
-        mixedRoutes: [],
-        tradeType: TradeType.EXACT_INPUT,
-        deadline: Date.now() + 60 * 30 * 1000,
-      })
+    it('returns true when prices move above threshold, exact output', () => {
+      const oldTrade = createClassicTrade({ tradeType: TradeType.EXACT_OUTPUT, inputAmount: 100, outputAmount: 100 })
+      const newTrade = createClassicTrade({ tradeType: TradeType.EXACT_OUTPUT, inputAmount: 102, outputAmount: 100 })
+      expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(true)
+    })
+
+    it('returns false when new price is better, exact input', () => {
+      const oldTrade = createClassicTrade({ tradeType: TradeType.EXACT_INPUT, inputAmount: 100, outputAmount: 100 })
+      const newTrade = createClassicTrade({ tradeType: TradeType.EXACT_INPUT, inputAmount: 100, outputAmount: 101 })
+      expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
+    })
+
+    it('returns false when new price is better, exact output', () => {
+      const oldTrade = createClassicTrade({ tradeType: TradeType.EXACT_OUTPUT, inputAmount: 100, outputAmount: 100 })
+      const newTrade = createClassicTrade({ tradeType: TradeType.EXACT_OUTPUT, inputAmount: 99, outputAmount: 100 })
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
     })
   })
@@ -101,7 +91,7 @@ describe(requireAcceptNewTrade, () => {
           },
         },
         requestId: '123',
-        routing: Routing.BRIDGE,
+        routing: TradingApi.Routing.BRIDGE,
         permitData: null,
       },
       currencyIn: UNI[UniverseChainId.Mainnet],
@@ -121,7 +111,7 @@ describe(requireAcceptNewTrade, () => {
             },
           },
           requestId: '123',
-          routing: Routing.BRIDGE,
+          routing: TradingApi.Routing.BRIDGE,
           permitData: null,
         },
         currencyIn: UNI[UniverseChainId.Mainnet],
@@ -143,7 +133,7 @@ describe(requireAcceptNewTrade, () => {
             },
           },
           requestId: '123',
-          routing: Routing.BRIDGE,
+          routing: TradingApi.Routing.BRIDGE,
           permitData: null,
         },
         currencyIn: UNI[UniverseChainId.Mainnet],
@@ -165,7 +155,7 @@ describe(requireAcceptNewTrade, () => {
             },
           },
           requestId: '123',
-          routing: Routing.BRIDGE,
+          routing: TradingApi.Routing.BRIDGE,
           permitData: null,
         },
         currencyIn: UNI[UniverseChainId.Mainnet],

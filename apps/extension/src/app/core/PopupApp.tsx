@@ -3,18 +3,17 @@ import 'src/app/Global.css'
 
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { RouterProvider, createHashRouter } from 'react-router-dom'
+import { createHashRouter, RouterProvider } from 'react-router'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
-import { DeprecatedButton, Flex, Image, Text } from 'ui/src'
-import { CHROME_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
+import { Button, Flex, Image, Text } from 'ui/src'
+import { UNISWAP_LOGO } from 'ui/src/assets'
+import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 
@@ -28,11 +27,7 @@ const router = createHashRouter([
 
 function PopupContent(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(syncAppWithDeviceLanguage())
-  }, [dispatch])
   useTestnetModeForLoggingAndAnalytics()
 
   const searchParams = new URLSearchParams(window.location.search)
@@ -58,7 +53,7 @@ function PopupContent(): JSX.Element {
               position="absolute"
               right={-spacing.spacing4}
             >
-              <Image height={iconSizes.icon12} source={CHROME_LOGO} width={iconSizes.icon12} />
+              <GoogleChromeLogo size={iconSizes.icon12} />
             </Flex>
           </Flex>
         </Flex>
@@ -75,19 +70,22 @@ function PopupContent(): JSX.Element {
         <Flex fill />
 
         <Trace logPress element={ElementName.ExtensionPopupOpenButton}>
-          <DeprecatedButton
-            theme="primary"
-            width="100%"
-            onPress={async () => {
-              if (windowIdNumber) {
-                // eslint-disable-next-line security/detect-non-literal-fs-filename
-                await chrome.sidePanel.open({ tabId: tabIdNumber, windowId: windowIdNumber })
-                window.close()
-              }
-            }}
-          >
-            {t('extension.popup.chrome.button')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button
+              variant="branded"
+              emphasis="primary"
+              size="medium"
+              width="100%"
+              onPress={async () => {
+                if (windowIdNumber) {
+                  await chrome.sidePanel.open({ tabId: tabIdNumber, windowId: windowIdNumber })
+                  window.close()
+                }
+              }}
+            >
+              {t('extension.popup.chrome.button')}
+            </Button>
+          </Flex>
         </Trace>
       </Flex>
     </Trace>

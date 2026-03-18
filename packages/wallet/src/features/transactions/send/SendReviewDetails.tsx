@@ -2,40 +2,40 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, IconButton, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { AlertTriangleFilled, BackArrow, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
+import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { NFTTransfer } from 'uniswap/src/components/nfts/NFTTransfer'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
-import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
@@ -65,8 +65,6 @@ export function SendReviewDetails({
   const { setScreen } = useTransactionModalContext()
   const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput, fiatOffRampMetaData } = useSendContext()
   const { txId, chainId, recipient, currencyInInfo, currencyAmounts, nftIn, exactAmountFiat } = derivedSendInfo
-
-  const { avatar } = useAvatar(recipient)
 
   const currency = useAppFiatCurrencyInfo()
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
@@ -101,28 +99,28 @@ export function SendReviewDetails({
     inputCurrencyUSDValue,
   ])
 
-  const transferERC20Callback = useSendERC20Callback(
+  const transferERC20Callback = useSendERC20Callback({
     txId,
-    chainId as UniverseChainId,
-    recipient,
-    currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
-    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
-    txRequest,
-    onNext,
+    chainId: chainId as UniverseChainId,
+    toAddress: recipient,
+    tokenAddress: currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
+    amountInWei: currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    transferTxWithGasSettings: txRequest,
+    onSubmit: onNext,
     currencyAmountUSD,
-    gasFee.gasEstimates,
-  )
+    gasEstimate: gasFee.gasEstimate,
+  })
 
-  const transferNFTCallback = useSendNFTCallback(
+  const transferNFTCallback = useSendNFTCallback({
     txId,
-    chainId as UniverseChainId,
-    recipient,
-    nftIn?.nftContract?.address,
-    nftIn?.tokenId,
+    chainId: chainId as UniverseChainId,
+    toAddress: recipient,
+    tokenAddress: nftIn?.nftContract?.address,
+    tokenId: nftIn?.tokenId,
     txRequest,
-    onNext,
-    gasFee.gasEstimates,
-  )
+    onSubmit: onNext,
+    gasEstimate: gasFee.gasEstimate,
+  })
 
   const submitTranaction = useCallback(() => {
     if (nftIn) {
@@ -238,7 +236,7 @@ export function SendReviewDetails({
           <Text color="$neutral2" variant="body2">
             {t('send.review.modal.title')}
           </Text>
-          {isWeb && (
+          {isWebPlatform && (
             <TouchableArea onPress={onPrev}>
               <X color="$neutral2" size="$icon.20" />
             </TouchableArea>
@@ -284,23 +282,13 @@ export function SendReviewDetails({
                   {fiatOffRampMetaData.name}
                 </Text>
                 <Text color="$neutral2" variant="body4">
-                  {shortenAddress(recipient)}
+                  {shortenAddress({ address: recipient })}
                 </Text>
               </Flex>
             ) : (
-              <AddressDisplay
-                address={recipient}
-                captionVariant="body3"
-                showAccountIcon={false}
-                textAlign="flex-start"
-                variant="heading3"
-              />
+              <AddressDisplay address={recipient} captionVariant="body3" showAccountIcon={false} variant="heading3" />
             )}
-            <AccountIcon
-              address={recipient}
-              avatarUri={fiatOffRampMetaData?.logoUrl || avatar}
-              size={iconSizes.icon40}
-            />
+            <AccountIcon address={recipient} avatarUriOverride={fiatOffRampMetaData?.logoUrl} size={iconSizes.icon40} />
           </Flex>
         )}
       </Flex>
@@ -308,11 +296,10 @@ export function SendReviewDetails({
       <TransactionDetails
         AccountDetails={
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text color="$neutral2" variant="body3">
+            <Text color="$neutral2" variant="body3" pr="$spacing8">
               {t('common.wallet.label')}
             </Text>
             <AddressDisplay
-              disableForcedWidth
               address={account.address}
               hideAddressInSubtitle={true}
               horizontalGap="$spacing4"
@@ -345,17 +332,17 @@ export function SendReviewDetails({
 
       <TransactionModalFooterContainer>
         <Flex row gap="$spacing8">
-          {!isWeb && <DeprecatedButton icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />}
-          <DeprecatedButton
-            fill
+          {!isWebPlatform && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
+          <Button
             isDisabled={actionButtonProps.disabled}
-            icon={ButtonAuthIcon}
+            icon={ButtonAuthIcon ?? undefined}
             size="medium"
             testID={actionButtonProps.name}
+            variant="branded"
             onPress={actionButtonProps.onPress}
           >
             {actionButtonProps.label}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </TransactionModalFooterContainer>
     </Trace>

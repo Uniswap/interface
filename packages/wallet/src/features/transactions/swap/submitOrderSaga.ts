@@ -1,15 +1,16 @@
-import { call, put, take } from 'typed-redux-saga'
-import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { DutchQuoteV2, DutchQuoteV3, PriorityQuote, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
+import { call, put } from 'typed-redux-saga'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
-import { finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { transactionActions } from 'uniswap/src/features/transactions/slice'
+import { getRouteAnalyticsData } from 'uniswap/src/features/transactions/swap/analytics'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   QueuedOrderStatus,
@@ -20,8 +21,12 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
+import { DatadogLogMetrics, logAsMetric } from 'utilities/src/logger/datadog/datadogLogMetrics'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
+import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'
+import { isSignedPermit, SignedPermit } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 
 // If the app is closed during the waiting period and then reopened, the saga will resume;
@@ -31,43 +36,26 @@ export const ORDER_STALENESS_THRESHOLD = 45 * ONE_SECOND_MS
 export interface SubmitUniswapXOrderParams {
   // internal id used for tracking transactions before they're submitted
   txId?: string
-  quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote
-  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
-  permit: ValidatedPermit
+  quote: TradingApi.DutchQuoteV2 | TradingApi.DutchQuoteV3 | TradingApi.PriorityQuote
+  routing: TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.DUTCH_V3 | TradingApi.Routing.PRIORITY
+  permit: ValidatedPermit | SignedPermit
   chainId: UniverseChainId
   account: AccountMeta
   typeInfo: TransactionTypeInfo
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
   approveTxHash?: string
-  wrapTxHash?: string
   onSuccess: () => void
   onFailure: () => void
 }
 
 export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
-  const {
-    quote,
-    routing,
-    permit,
-    approveTxHash,
-    wrapTxHash,
-    txId,
-    chainId,
-    typeInfo,
-    account,
-    analytics,
-    onSuccess,
-    onFailure,
-  } = params
+  const { quote, routing, permit, approveTxHash, txId, chainId, typeInfo, account, analytics, onSuccess, onFailure } =
+    params
 
   const orderHash = quote.orderId
 
-  // Wait for approval and/or wrap transactions to confirm, otherwise order submission will fail.
-  let waitingForApproval = Boolean(approveTxHash)
-  let waitingForWrap = Boolean(wrapTxHash)
-
   const order = {
-    routing: Routing.DUTCH_V2,
+    routing,
     orderHash,
     id: txId ?? createTransactionId(),
     chainId,
@@ -82,32 +70,22 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   yield* put(transactionActions.addTransaction(order))
   logger.debug('submitOrder', 'addOrder', 'order added:', { chainId, orderHash, ...typeInfo })
 
-  const waitStartTime = Date.now()
+  if (approveTxHash) {
+    const waitStartTime = Date.now()
 
-  // Wait for approval and/or wrap
-  while (waitingForApproval || waitingForWrap) {
-    const { payload } = yield* take<ReturnType<typeof finalizeTransaction>>(finalizeTransaction.type)
+    const { success } = yield* waitForTransactionConfirmation({ hash: approveTxHash })
+    let failureCondition: QueuedOrderStatus | undefined
 
-    if (Date.now() - waitStartTime > ORDER_STALENESS_THRESHOLD) {
-      yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Stale }))
-      yield* call(onFailure)
-      return
+    if (!success) {
+      failureCondition = QueuedOrderStatus.ApprovalFailed
+    } else if (Date.now() - waitStartTime > ORDER_STALENESS_THRESHOLD) {
+      failureCondition = QueuedOrderStatus.Stale
     }
 
-    if (payload.hash === approveTxHash) {
-      if (payload.status !== TransactionStatus.Success) {
-        yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.ApprovalFailed }))
-        yield* call(onFailure)
-        return
-      }
-      waitingForApproval = false
-    } else if (payload.hash === wrapTxHash) {
-      if (payload.status !== TransactionStatus.Success) {
-        yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.WrapFailed }))
-        yield* call(onFailure)
-        return
-      }
-      waitingForWrap = false
+    if (failureCondition) {
+      yield* put(transactionActions.updateTransaction({ ...order, queueStatus: failureCondition }))
+      yield* call(onFailure)
+      return
     }
   }
 
@@ -116,21 +94,61 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     const addedTime = Date.now() // refresh the addedTime to match the actual submission time
     yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Submitted, addedTime }))
 
-    const signerManager = yield* call(getSignerManager)
-    const signer = yield* call([signerManager, 'getSignerForAccount'], account)
-
-    const signature = yield* call(signTypedData, permit.domain, permit.types, permit.values, signer)
-
-    yield* call(submitOrder, { signature, quote, routing })
+    let signature: string
+    if (isSignedPermit(permit)) {
+      signature = permit.signedData
+    } else {
+      const signerManager = yield* call(getSignerManager)
+      const signer = yield* call([signerManager, 'getSignerForAccount'], account)
+      signature = yield* call(signTypedData, {
+        domain: permit.domain,
+        types: permit.types,
+        value: permit.values,
+        signer,
+      })
+    }
+    yield* call(TradingApiClient.submitOrder, { signature, quote, routing })
   } catch {
     // In the rare event that submission fails, we update the order status to prompt the user.
     // If the app is closed before this catch block is reached, orderWatcherSaga will handle the failure upon reopening.
     yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.SubmissionFailed }))
+
+    logAsMetric({
+      fileName: 'submitOrderSaga',
+      functionName: 'submitOrder',
+      metric: DatadogLogMetrics.UniswapXSwapFailed,
+      data: {
+        orderHash,
+        tokenInChainId: chainId,
+        tokenInSymbol: analytics.token_in_symbol,
+        tokenInAddress: analytics.token_in_address,
+        tokenOutSymbol: analytics.token_out_symbol,
+        tokenOutAddress: analytics.token_out_address,
+      },
+    })
     yield* call(onFailure)
     return
   }
 
-  const properties = { order_hash: orderHash, ...analytics }
+  const properties = {
+    order_hash: orderHash,
+    ...analytics,
+    ...getRouteAnalyticsData({ routing }),
+  }
+  logAsMetric({
+    fileName: 'submitOrderSaga',
+    functionName: 'submitOrder',
+    metric: DatadogLogMetrics.UniswapXSwapSubmitted,
+    data: {
+      orderHash,
+      tokenInChainId: chainId,
+      tokenInSymbol: properties.token_in_symbol,
+      tokenInAddress: properties.token_in_address,
+      tokenOutSymbol: properties.token_out_symbol,
+      tokenOutAddress: properties.token_out_address,
+    },
+  })
+
   yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, properties)
 
   yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))

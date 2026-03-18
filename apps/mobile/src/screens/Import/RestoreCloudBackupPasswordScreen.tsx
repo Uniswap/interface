@@ -6,25 +6,25 @@ import { TextInput } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
-import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import {
   incrementPasswordAttempts,
   resetLockoutEndTime,
   resetPasswordAttempts,
   setLockoutEndTime,
 } from 'src/features/CloudBackup/passwordLockoutSlice'
+import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
-import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
+import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Cloud } from 'ui/src/components/icons'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { MINUTES_IN_HOUR, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -121,8 +121,14 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
         dispatch(resetPasswordAttempts())
         setIsLoading(false)
-        onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
-      } catch (error) {
+        onRestoreComplete({
+          isRestoringMnemonic,
+          dispatch,
+          params,
+          navigation,
+          screen: OnboardingScreens.RestoreCloudBackupPassword,
+        })
+      } catch {
         setIsLoading(false)
         dispatch(incrementPasswordAttempts())
         const updatedLockoutEndTime = calculateLockoutEndTime(passwordAttemptCount + 1)
@@ -145,10 +151,25 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
   }
 
   return (
-    <OnboardingScreen
+    <SafeKeyboardOnboardingScreen
       Icon={Cloud}
       subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
       title={t('account.cloud.password.title')}
+      footer={
+        <Flex row>
+          <Button
+            isDisabled={!enteredPassword || isLockedOut || isLoading}
+            testID={TestID.Continue}
+            variant="branded"
+            size="large"
+            my="$spacing12"
+            mx="$spacing16"
+            onPress={onPasswordSubmit}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Flex>
+      }
     >
       <Flex>
         <PasswordInput
@@ -175,15 +196,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
             </Text>
           </TouchableArea>
         )}
-        <DeprecatedButton
-          isDisabled={!enteredPassword || isLockedOut || isLoading}
-          testID={TestID.Continue}
-          size="large"
-          onPress={onPasswordSubmit}
-        >
-          {t('common.button.continue')}
-        </DeprecatedButton>
       </Flex>
-    </OnboardingScreen>
+    </SafeKeyboardOnboardingScreen>
   )
 }

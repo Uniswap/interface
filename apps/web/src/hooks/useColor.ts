@@ -1,26 +1,44 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useCurrencyInfo } from 'hooks/Tokens'
-import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
-import { useExtractedTokenColor } from 'ui/src'
+import { useExtractedTokenColor, useSporeColors } from 'ui/src'
+import { useCurrencyInfo } from '~/hooks/Tokens'
 
 type ContrastSettings = { backgroundColor: string; darkMode: boolean }
 
 export function useColor(currency?: Currency, contrastSettings?: ContrastSettings) {
-  const theme = useTheme()
+  const colors = useSporeColors()
   const currencyInfo = useCurrencyInfo(currency)
   const src = currencyInfo?.logoUrl ?? undefined
 
-  return useSrcColor(src, currency?.name, contrastSettings?.backgroundColor).tokenColor ?? theme.accent1
+  return (
+    useSrcColor({
+      src,
+      currencyName: currency?.name,
+      backgroundColor: contrastSettings?.backgroundColor,
+    }).tokenColor ?? colors.accent1.val
+  )
 }
 
-export function useSrcColor(src?: string, currencyName?: string, backgroundColor?: string) {
-  const theme = useTheme()
+export function useSrcColor({
+  src,
+  currencyName,
+  backgroundColor,
+}: {
+  src?: string
+  currencyName?: string
+  backgroundColor?: string
+}) {
+  const colors = useSporeColors()
 
   const extractSrc = useMemo(
     () => (src?.includes('coingecko') ? 'https://corsproxy.io/?' + encodeURIComponent(src) : src),
     [src],
   )
 
-  return useExtractedTokenColor(extractSrc, currencyName, backgroundColor ?? theme.surface1, theme.accent1)
+  return useExtractedTokenColor({
+    imageUrl: extractSrc,
+    tokenName: currencyName,
+    backgroundColor: backgroundColor ?? colors.surface1.val,
+    defaultColor: colors.accent1.val,
+  })
 }

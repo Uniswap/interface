@@ -1,19 +1,19 @@
-import 'test-utils/tokens/mocks'
+import '~/test-utils/tokens/mocks'
 
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
-import { MultichainContext } from 'state/multichain/types'
-import { SendContext, SendContextType } from 'state/send/SendContext'
-import { SwapAndLimitContext } from 'state/swap/types'
-import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
+import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { SendReviewModalInner } from '~/pages/Swap/Send/SendReviewModal'
+import { MultichainContext } from '~/state/multichain/types'
+import { SendContext, SendContextType } from '~/state/send/SendContext'
+import { SwapAndLimitContext } from '~/state/swap/types'
+import { render, screen } from '~/test-utils/render'
 
 const mockMultichainContextValue = {
-  reset: jest.fn(),
-  setSelectedChainId: jest.fn(),
-  setIsUserSelectedToken: jest.fn(),
+  reset: vi.fn(),
+  setSelectedChainId: vi.fn(),
+  setIsUserSelectedToken: vi.fn(),
   isSwapAndLimitContext: true,
   isUserSelectedToken: false,
   isMultichainContext: true,
@@ -24,10 +24,9 @@ const mockSwapAndLimitContextValue = {
     inputCurrency: DAI,
     outputCurrency: undefined,
   },
-  prefilledState: {},
-  setCurrencyState: jest.fn(),
+  setCurrencyState: vi.fn(),
   currentTab: SwapTab.Limit,
-  setCurrentTab: jest.fn(),
+  setCurrentTab: vi.fn(),
 }
 
 const mockedSendContextFiatInput: SendContextType = {
@@ -46,7 +45,7 @@ const mockedSendContextFiatInput: SendContextType = {
       ensName: 'hayden.eth',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 const mockedSendContextTokenInput: SendContextType = {
@@ -65,16 +64,16 @@ const mockedSendContextTokenInput: SendContextType = {
       ensName: 'hayden.eth',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
-describe('SendCurrencyInputform', () => {
+describe('SendReviewModal', () => {
   it('should render input in fiat correctly', () => {
     render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextFiatInput}>
-            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -82,7 +81,7 @@ describe('SendCurrencyInputform', () => {
     expect(screen.getByText('$1,000.00')).toBeVisible()
     expect(screen.getByText('100.00 DAI')).toBeVisible()
     expect(screen.getByText('hayden.eth')).toBeVisible()
-    expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
+    expect(screen.getByText(shortenAddress({ address: '0x9984b4b4E408e8D618A879e5315BD30952c89103' }))).toBeVisible()
     const modalComponent = screen.getByTestId('send-review-modal')
     expect(modalComponent).toMatchSnapshot()
   })
@@ -92,7 +91,7 @@ describe('SendCurrencyInputform', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextTokenInput}>
-            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModalInner onDismiss={vi.fn()} onConfirm={vi.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -100,7 +99,7 @@ describe('SendCurrencyInputform', () => {
     expect(screen.getByText('$100.00')).toBeVisible()
     expect(screen.getByText('1.00 DAI')).toBeVisible()
     expect(screen.getByText('hayden.eth')).toBeVisible()
-    expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
+    expect(screen.getByText(shortenAddress({ address: '0x9984b4b4E408e8D618A879e5315BD30952c89103' }))).toBeVisible()
     const modalComponent = screen.getByTestId('send-review-modal')
     expect(modalComponent).toMatchSnapshot()
   })

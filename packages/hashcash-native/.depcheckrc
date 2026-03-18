@@ -1,0 +1,12 @@
+ignores: [
+    # Nitrogen codegen tool
+    "nitrogen",
+
+    # Standard ignores
+    "typescript",
+    "@typescript/native-preview",
+    "depcheck",
+
+    # Internal packages / workspaces
+    "hashcash-native",
+  ]

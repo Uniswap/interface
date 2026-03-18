@@ -1,7 +1,9 @@
+import { vi } from 'vitest'
+
 export function mockUIAssets(): void {
-  jest.mock('ui/src/assets', () => {
+  vi.mock('ui/src/assets', () => {
     const assets: Record<string, unknown> = {
-      ...jest.requireActual('ui/src/assets'),
+      ...vi.importActual('ui/src/assets'),
     }
 
     Object.keys(assets).map((key) => {

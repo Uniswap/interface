@@ -1,0 +1,13 @@
+diff --git a/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt b/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt
+index 41ca6c597adb202688f822047e9e8416f196102e..ea5fa979c975dff26016c9f5f6ce47b8cf151e1c 100644
+--- a/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt
++++ b/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt
+@@ -28,7 +28,7 @@ abstract class ReactSettingsExtension @Inject constructor(val settings: Settings
+       settings.layout.rootDirectory.file("build/generated/autolinking/").asFile
+ 
+   private val defaultConfigCommand: List<String> =
+-      windowsAwareCommandLine(listOf("npx", "@react-native-community/cli", "config")).map {
++      windowsAwareCommandLine(listOf("node", "../../node_modules/@react-native-community/cli/build/bin.js", "config")).map {
+         it.toString()
+       }
+ 

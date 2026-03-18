@@ -1,0 +1,52 @@
+{
+  // Global configuration
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": ["nodejs_compat_v2"],
+  "main": "./functions/main.ts",
+
+  // Assets configuration (applies to all environments)
+  "assets": {
+    "run_worker_first": true,
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS"
+  },
+
+  // Default for local development (the CF Vite plugin uses top-level config, not env.development)
+  "name": "app-development",
+  "vars": {
+    "ENTRY_GATEWAY_API_URL": "https://entry-gateway.backend-staging.api.uniswap.org",
+    "WEBSOCKET_URL": "https://websockets.backend-staging.api.uniswap.org"
+  },
+
+  "env": {
+    "development": {
+      "vars": {
+        "ENTRY_GATEWAY_API_URL": "https://entry-gateway.backend-dev.api.uniswap.org",
+        "WEBSOCKET_URL": "https://websockets.backend-dev.api.uniswap.org"
+      }
+    },
+    "staging": {
+      "name": "app-staging",
+      "vars": {
+        "ENTRY_GATEWAY_API_URL": "https://entry-gateway.backend-staging.api.uniswap.org",
+        "WEBSOCKET_URL": "https://websockets.backend-staging.api.uniswap.org"
+      },
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 1
+      }
+    },
+    "production": {
+      "name": "app",
+      "vars": {
+        "ENTRY_GATEWAY_API_URL": "https://entry-gateway.backend-prod.api.uniswap.org",
+        "WEBSOCKET_URL": "https://websockets.backend-prod.api.uniswap.org"
+      },
+      "observability": {
+        "enabled": true,
+        "head_sampling_rate": 1,
+        "invocation_logs": false
+      }
+    }
+  }
+}

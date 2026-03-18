@@ -1,13 +1,27 @@
 import type { Preview } from '@storybook/react'
+import { Provider } from 'react-redux'
+import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import store from '~/state'
 import { TamaguiProvider } from '../src/theme/tamaguiProvider'
+
+import '@reach/dialog/styles.css'
+import { MemoryRouter } from 'react-router'
+import '../src/global.css'
+import '../src/polyfills'
 
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <TamaguiProvider>
-        {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
-        <Story />
-      </TamaguiProvider>
+      <MemoryRouter>
+        <ReactRouterUrlProvider>
+          <Provider store={store}>
+            <TamaguiProvider>
+              {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
+              <Story />
+            </TamaguiProvider>
+          </Provider>
+        </ReactRouterUrlProvider>
+      </MemoryRouter>
     ),
   ],
   parameters: {

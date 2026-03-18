@@ -22,7 +22,6 @@ exports[`AccountDetails renders without error 1`] = `
     }
   >
     <View
-      onLayout={[Function]}
       style={
         {
           "alignItems": "center",
@@ -35,68 +34,70 @@ exports[`AccountDetails renders without error 1`] = `
       <View
         style={
           {
-            "backgroundColor": "transparent",
-            "borderBottomColor": "transparent",
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderBottomWidth": 0,
-            "borderLeftColor": "transparent",
-            "borderLeftWidth": 0,
-            "borderRightColor": "transparent",
-            "borderRightWidth": 0,
-            "borderStyle": "solid",
-            "borderTopColor": "transparent",
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "borderTopWidth": 0,
             "flexDirection": "column",
-            "position": "relative",
           }
         }
-        testID="account-icon"
       >
-        <svg
-          height={50}
-          viewBox="0 0 50 50"
-          width={50}
-          xmlns="http://www.w3.org/2000/svg"
+        <View
+          style={
+            {
+              "backgroundColor": "transparent",
+              "borderBottomColor": "transparent",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderBottomWidth": 0,
+              "borderLeftColor": "transparent",
+              "borderLeftWidth": 0,
+              "borderRightColor": "transparent",
+              "borderRightWidth": 0,
+              "borderStyle": "solid",
+              "borderTopColor": "transparent",
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "borderTopWidth": 0,
+              "flexDirection": "column",
+              "position": "relative",
+            }
+          }
+          testID="account-icon"
         >
-          <g
+          <View
             style={
               {
-                "transformOrigin": "center center",
+                "flexDirection": "column",
               }
             }
           >
-            <circle
-              cx={25}
-              cy={25}
-              fill="#00C3A01F"
-              r={25}
-            />
-            <g
-              transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+            <svg
+              height={24}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                clipRule="evenodd"
-                d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                fill="#00C3A0"
-                fillRule="evenodd"
-              />
-              <path
-                clipRule="evenodd"
-                d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                fill="#00C3A0"
-                fillRule="evenodd"
-              />
-            </g>
-          </g>
-        </svg>
+              <g
+                style={
+                  {
+                    "transformOrigin": "center center",
+                  }
+                }
+              >
+                <circle
+                  cx={12}
+                  cy={12}
+                  fill="#00C3A01F"
+                  r={12}
+                />
+                <g
+                  transform="translate(4, 4) scale(0.3333333333333333)"
+                />
+              </g>
+            </svg>
+          </View>
+        </View>
       </View>
       <View
         style={
           {
-            "alignItems": "flex-start",
             "flexDirection": "column",
             "flexShrink": 1,
             "gap": 0,
@@ -106,20 +107,18 @@ exports[`AccountDetails renders without error 1`] = `
         <View
           style={
             {
-              "alignItems": "center",
               "flexDirection": "row",
               "gap": 12,
-              "justifyContent": "center",
             }
           }
         >
           <View
             style={
               {
-                "alignItems": "center",
                 "flexDirection": "row",
+                "flexGrow": 1,
+                "flexShrink": 1,
                 "gap": 4,
-                "justifyContent": "center",
               }
             }
           >
@@ -131,22 +130,26 @@ exports[`AccountDetails renders without error 1`] = `
               numberOfLines={1}
               style={
                 {
-                  "color": "#222222",
+                  "color": "#131313",
                   "flexShrink": 1,
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 14,
                   "fontWeight": "400",
-                  "lineHeight": 20,
-                  "overflow": "hidden",
+                  "lineHeight": 18.2,
                 }
               }
               suppressHighlighting={true}
-              testID="address-display/name/0x​82D5...3Fa6"
-            >
-              0x​82D5...3Fa6
-            </Text>
+              testID="address-display/name/undefined"
+            />
           </View>
         </View>
+        <View
+          style={
+            {
+              "flexDirection": "column",
+            }
+          }
+        />
       </View>
     </View>
   </View>
@@ -167,11 +170,11 @@ exports[`AccountDetails renders without error 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": "#7D7D7D",
+          "color": "rgba(19, 19, 19, 0.63)",
           "fontFamily": "Basel Grotesk",
           "fontSize": 14,
           "fontWeight": "400",
-          "lineHeight": 20,
+          "lineHeight": 18.2,
         }
       }
       suppressHighlighting={true}
@@ -204,7 +207,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
     }
   >
     <View
-      onLayout={[Function]}
       style={
         {
           "alignItems": "center",
@@ -217,68 +219,70 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       <View
         style={
           {
-            "backgroundColor": "transparent",
-            "borderBottomColor": "transparent",
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderBottomWidth": 0,
-            "borderLeftColor": "transparent",
-            "borderLeftWidth": 0,
-            "borderRightColor": "transparent",
-            "borderRightWidth": 0,
-            "borderStyle": "solid",
-            "borderTopColor": "transparent",
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "borderTopWidth": 0,
             "flexDirection": "column",
-            "position": "relative",
           }
         }
-        testID="account-icon"
       >
-        <svg
-          height={50}
-          viewBox="0 0 50 50"
-          width={50}
-          xmlns="http://www.w3.org/2000/svg"
+        <View
+          style={
+            {
+              "backgroundColor": "transparent",
+              "borderBottomColor": "transparent",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderBottomWidth": 0,
+              "borderLeftColor": "transparent",
+              "borderLeftWidth": 0,
+              "borderRightColor": "transparent",
+              "borderRightWidth": 0,
+              "borderStyle": "solid",
+              "borderTopColor": "transparent",
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "borderTopWidth": 0,
+              "flexDirection": "column",
+              "position": "relative",
+            }
+          }
+          testID="account-icon"
         >
-          <g
+          <View
             style={
               {
-                "transformOrigin": "center center",
+                "flexDirection": "column",
               }
             }
           >
-            <circle
-              cx={25}
-              cy={25}
-              fill="#00C3A01F"
-              r={25}
-            />
-            <g
-              transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+            <svg
+              height={24}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                clipRule="evenodd"
-                d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                fill="#00C3A0"
-                fillRule="evenodd"
-              />
-              <path
-                clipRule="evenodd"
-                d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                fill="#00C3A0"
-                fillRule="evenodd"
-              />
-            </g>
-          </g>
-        </svg>
+              <g
+                style={
+                  {
+                    "transformOrigin": "center center",
+                  }
+                }
+              >
+                <circle
+                  cx={12}
+                  cy={12}
+                  fill="#00C3A01F"
+                  r={12}
+                />
+                <g
+                  transform="translate(4, 4) scale(0.3333333333333333)"
+                />
+              </g>
+            </svg>
+          </View>
+        </View>
       </View>
       <View
         style={
           {
-            "alignItems": "flex-start",
             "flexDirection": "column",
             "flexShrink": 1,
             "gap": 0,
@@ -288,20 +292,18 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         <View
           style={
             {
-              "alignItems": "center",
               "flexDirection": "row",
               "gap": 12,
-              "justifyContent": "center",
             }
           }
         >
           <View
             style={
               {
-                "alignItems": "center",
                 "flexDirection": "row",
+                "flexGrow": 1,
+                "flexShrink": 1,
                 "gap": 4,
-                "justifyContent": "center",
               }
             }
           >
@@ -313,22 +315,26 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               numberOfLines={1}
               style={
                 {
-                  "color": "#222222",
+                  "color": "#131313",
                   "flexShrink": 1,
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 14,
                   "fontWeight": "400",
-                  "lineHeight": 20,
-                  "overflow": "hidden",
+                  "lineHeight": 18.2,
                 }
               }
               suppressHighlighting={true}
-              testID="address-display/name/0x​82D5...3Fa6"
-            >
-              0x​82D5...3Fa6
-            </Text>
+              testID="address-display/name/undefined"
+            />
           </View>
         </View>
+        <View
+          style={
+            {
+              "flexDirection": "column",
+            }
+          }
+        />
       </View>
     </View>
   </View>
@@ -349,11 +355,11 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": "#7D7D7D",
+          "color": "rgba(19, 19, 19, 0.63)",
           "fontFamily": "Basel Grotesk",
           "fontSize": 14,
           "fontWeight": "400",
-          "lineHeight": 20,
+          "lineHeight": 18.2,
         }
       }
       suppressHighlighting={true}
@@ -361,27 +367,62 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       0x82D5...3Fa6
     </Text>
     <View
-      style={
+      collapsable={false}
+      forwardedRef={[Function]}
+      jestAnimatedProps={
         {
-          "alignItems": "center",
-          "borderBottomLeftRadius": 999999,
-          "borderBottomRightRadius": 999999,
-          "borderTopLeftRadius": 999999,
-          "borderTopRightRadius": 999999,
-          "flexDirection": "column",
-          "justifyContent": "center",
-          "transform": [
-            {
-              "rotate": "180deg",
-            },
-          ],
+          "value": {},
         }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "180deg",
+              },
+            ],
+          },
+        }
+      }
+      jestInlineStyle={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+        ]
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+          {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "180deg",
+              },
+            ],
+          },
+        ]
       }
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight={50}
-        bbWidth={50}
+        bbHeight={24}
+        bbWidth={24}
         fill="none"
         focusable={false}
         meetOrSlice={0}
@@ -395,14 +436,14 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               "borderWidth": 0,
             },
             {
-              "color": "#7D7D7D",
-              "height": 50,
-              "width": 50,
+              "color": "rgba(19, 19, 19, 0.63)",
+              "height": 24,
+              "width": 24,
             },
             {
               "flex": 0,
-              "height": 50,
-              "width": 50,
+              "height": 24,
+              "width": 24,
             },
           ]
         }
@@ -410,7 +451,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
         vbWidth={24}
       >
         <RNSVGGroup
-          color="#7D7D7D"
+          color="rgba(19, 19, 19, 0.63)"
           fill={null}
           propList={
             [

@@ -4,20 +4,26 @@ import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, or
 
 import { EXTENSION_ORIGIN_APPLICATION } from 'src/app/version'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { getUniqueId } from 'utilities/src/device/uniqueId'
+import { isTestEnv } from 'utilities/src/environment/env'
+import { logger } from 'utilities/src/logger/logger'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
-// eslint-disable-next-line no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Direct utilities import required for analytics initialization
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
 
 export async function initExtensionAnalytics(): Promise<void> {
+  if (isTestEnv()) {
+    logger.debug('analytics.ts', 'initExtensionAnalytics', 'Skipping Amplitude initialization in test environment')
+    return
+  }
+
   const analyticsAllowed = await getAnalyticsAtomDirect(true)
-  await analytics.init(
-    new ApplicationTransport({
+  await analytics.init({
+    transportProvider: new ApplicationTransport({
       serverUrl: uniswapUrls.amplitudeProxyUrl,
       appOrigin: EXTENSION_ORIGIN_APPLICATION,
     }),
-    analyticsAllowed,
-    undefined,
-    getUniqueId,
-  )
+    allowed: analyticsAllowed,
+    userIdGetter: getUniqueId,
+  })
 }

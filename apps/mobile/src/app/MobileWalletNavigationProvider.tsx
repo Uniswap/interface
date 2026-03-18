@@ -1,92 +1,77 @@
+import { StackActions } from '@react-navigation/native'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PropsWithChildren, useCallback } from 'react'
 import { Share } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { exploreNavigationRef } from 'src/app/navigation/navigation'
+import { exploreNavigationRef, navigationRef } from 'src/app/navigation/navigationRef'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
+import { useAdvancedSettingsMenuState } from 'src/features/settings/hooks/useAdvancedSettingsMenuState'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   useFiatOnRampAggregatorCountryListQuery,
   useFiatOnRampAggregatorGetCountryQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
+} from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { getTokenUrl } from 'uniswap/src/utils/linking'
+import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { noop } from 'utilities/src/react/noop'
 import {
-  NavigateToExternalProfileArgs,
-  NavigateToFiatOnRampArgs,
-  NavigateToNftCollectionArgs,
-  NavigateToNftItemArgs,
-  NavigateToSendFlowArgs,
-  NavigateToSwapFlowArgs,
-  ShareNftArgs,
-  ShareTokenArgs,
-  WalletNavigationProvider,
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
   isNavigateToSwapFlowArgsPartialState,
+  NavigateToExternalProfileArgs,
+  NavigateToFiatOnRampArgs,
+  NavigateToSendFlowArgs,
+  NavigateToSwapFlowArgs,
+  ShareTokenArgs,
+  WalletNavigationProvider,
 } from 'wallet/src/contexts/WalletNavigationContext'
-import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
-  const handleShareNft = useHandleShareNft()
   const handleShareToken = useHandleShareToken()
-  const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
+  const navigateToAccountActivityList = useNavigateToActivity()
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
-  const navigateToNftCollection = useNavigateToNftCollection()
-  const navigateToNftDetails = useNavigateToNftDetails()
+  const navigateToNftDetails = useNavigateToNftExplorerLink()
   const navigateToReceive = useNavigateToReceive()
   const navigateToSend = useNavigateToSend()
   const navigateToSwapFlow = useNavigateToSwapFlow()
   const navigateToTokenDetails = useNavigateToTokenDetails()
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
   const navigateToExternalProfile = useNavigateToExternalProfile()
+  const navigateToAdvancedSettings = useNavigateToAdvancedSettings()
 
   return (
     <WalletNavigationProvider
-      handleShareNft={handleShareNft}
       handleShareToken={handleShareToken}
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
-      navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
       navigateToReceive={navigateToReceive}
       navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToTokenDetails={navigateToTokenDetails}
+      navigateToPoolDetails={noop} // no pool details screen on mobile
+      navigateToAdvancedSettings={navigateToAdvancedSettings}
     >
       {children}
     </WalletNavigationProvider>
   )
-}
-
-function useHandleShareNft(): (args: ShareNftArgs) => Promise<void> {
-  return useCallback(async ({ contractAddress, tokenId }: ShareNftArgs): Promise<void> => {
-    try {
-      const url = getNftUrl(contractAddress, tokenId)
-
-      await Share.share({ message: url })
-
-      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
-        entity: ShareableEntity.NftItem,
-        url,
-      })
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'MobileWalletNavigationProvider.tsx', function: 'useHandleShareNft' },
-      })
-    }
-  }, [])
 }
 
 function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
@@ -116,11 +101,32 @@ function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
   }, [])
 }
 
+function useNavigateToActivity(): () => void {
+  const { navigate } = useAppStackNavigation()
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+
+  const navigateToActivityTab = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
+
+  const navigateToActivityScreen = useCallback((): void => {
+    navigate(MobileScreens.Activity)
+  }, [navigate])
+
+  return useCallback((): void => {
+    if (isBottomTabsEnabled) {
+      navigateToActivityScreen()
+    } else {
+      navigateToActivityTab()
+    }
+  }, [navigateToActivityTab, isBottomTabsEnabled, navigateToActivityScreen])
+}
+
 function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
   const { navigate } = useAppStackNavigation()
 
   return useCallback((): void => {
-    navigate(MobileScreens.Home, { tab })
+    closeKeyboardBeforeCallback(() => {
+      navigate(MobileScreens.Home, { tab })
+    })
   }, [navigate, tab])
 }
 
@@ -128,7 +134,9 @@ function useNavigateToReceive(): () => void {
   const dispatch = useDispatch()
 
   return useCallback((): void => {
-    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
+    closeKeyboardBeforeCallback(() => {
+      dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
+    })
   }, [dispatch])
 }
 
@@ -137,90 +145,155 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 
   return useCallback(
     (args: NavigateToSendFlowArgs) => {
-      const initialSendState = getNavigateToSendFlowArgsInitialState(args)
-      dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
+      closeKeyboardBeforeCallback(() => {
+        const initialSendState = getNavigateToSendFlowArgsInitialState(args)
+        dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
+      })
     },
     [dispatch],
   )
 }
 
+// Helper function for when coming from BridgedAsset modal (skip BridgedAsset step)
+function navigateToSwapWithTokenWarning({
+  navigation,
+  currencyId,
+  swapInitialState,
+}: {
+  navigation: ReturnType<typeof useAppStackNavigation>
+  currencyId: string
+  swapInitialState?: TransactionState
+}): void {
+  navigation.dispatch(
+    StackActions.replace(ModalName.TokenWarning, {
+      initialState: {
+        currencyId,
+        onAcknowledge: () => {
+          navigation.dispatch(StackActions.replace(ModalName.Swap, swapInitialState))
+        },
+      },
+    }),
+  )
+}
+
+// Helper function for full flow: TokenWarning -> BridgedAsset -> Swap
+function navigateToSwapWithFullFlow({
+  navigation,
+  currencyId,
+  swapInitialState,
+}: {
+  navigation: ReturnType<typeof useAppStackNavigation>
+  currencyId: string
+  swapInitialState?: TransactionState
+}): void {
+  navigation.navigate(ModalName.TokenWarning, {
+    initialState: {
+      currencyId,
+      onAcknowledge: () => {
+        navigation.dispatch(
+          // Then replace TokenWarning with BridgedAsset
+          StackActions.replace(ModalName.BridgedAssetNav, {
+            initialState: {
+              currencyId,
+              onAcknowledge: () => {
+                // Then replace BridgedAsset with Swap
+                navigation.dispatch(StackActions.replace(ModalName.Swap, swapInitialState))
+              },
+            },
+          }),
+        )
+      },
+    },
+  })
+}
+
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
-  const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
+  const navigation = useAppStackNavigation()
+  const { onClose } = useReactNavigationModal()
 
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
-      const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
+      closeKeyboardBeforeCallback(() => {
+        const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
 
-      // If no prefilled token, go directly to swap
-      if (!isNavigateToSwapFlowArgsPartialState(args)) {
-        dispatch(closeModal({ name: ModalName.Swap }))
-        dispatch(openModal({ name: ModalName.Swap, initialState }))
-        return
-      }
+        // If no prefilled token, go directly to swap
+        if (!isNavigateToSwapFlowArgsPartialState(args)) {
+          onClose()
+          navigation.navigate(ModalName.Swap, initialState)
+          return
+        }
 
-      // Show warning modal for prefilled tokens, which will handle token safety checks
-      const currencyId = buildCurrencyId(args.currencyChainId, args.currencyAddress)
-      dispatch(
-        openModal({
-          name: ModalName.TokenWarning,
-          initialState: {
-            currencyId,
-            onAcknowledge: () => {
-              dispatch(closeModal({ name: ModalName.TokenWarning }))
-              dispatch(closeModal({ name: ModalName.Swap }))
-              dispatch(openModal({ name: ModalName.Swap, initialState }))
-            },
-          },
-        }),
-      )
+        const currencyId = buildCurrencyId(args.currencyChainId, args.currencyAddress)
+
+        // Show warning modal for prefilled tokens, which will handle token safety and bridged asset checks
+        // The happy path is we first show the token warning modal, then the bridged asset modal, then the swap modal
+        // However, if we are coming from BridgedAssetModal then we do not need to show it later
+        if (args.origin === ModalName.BridgedAsset) {
+          navigateToSwapWithTokenWarning({ navigation, currencyId, swapInitialState: initialState })
+        } else {
+          navigateToSwapWithFullFlow({ navigation, currencyId, swapInitialState: initialState })
+        }
+      })
     },
-    [dispatch, defaultChainId],
+    [defaultChainId, navigation, onClose],
   )
 }
 
 function useNavigateToTokenDetails(): (currencyId: string) => void {
   const appNavigation = useAppStackNavigation()
+  const { onClose } = useReactNavigationModal()
+  const dispatch = useDispatch()
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
 
   return useCallback(
     (currencyId: string): void => {
-      if (exploreNavigationRef.isFocused()) {
-        exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
-      } else {
+      const currentNavRouteName = navigationRef.getCurrentRoute()?.name
+      const isExploreNavigationActuallyFocused = Boolean(
+        currentNavRouteName === ModalName.Explore && exploreNavigationRef.current && exploreNavigationRef.isFocused(),
+      )
+
+      closeKeyboardBeforeCallback(() => {
+        const route = navigationRef.getCurrentRoute()
+        const isSwap = route?.name === ModalName.Swap
+        const isExploreScreen = route?.name === MobileScreens.Explore
+
+        dispatch(closeAllModals())
+
+        if (!isBottomTabsEnabled) {
+          if (isExploreNavigationActuallyFocused) {
+            exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
+            return
+          }
+
+          onClose()
+          appNavigation.reset({
+            index: 1,
+            routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
+          })
+          return
+        }
+
+        if (isExploreScreen) {
+          // There's nothing to close on Explore with bottom tabs enabled
+          appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
+          return
+        }
+
+        onClose()
+
+        if (isSwap) {
+          appNavigation.reset({
+            index: 1,
+            routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
+          })
+          return
+        }
+
         appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
-      }
-    },
-    [appNavigation],
-  )
-}
-
-function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
-  const navigation = useAppStackNavigation()
-
-  return useCallback(
-    ({ owner, address, tokenId, isSpam, fallbackData }: NavigateToNftItemArgs): void => {
-      navigation.navigate(MobileScreens.NFTItem, {
-        owner,
-        address,
-        tokenId,
-        isSpam,
-        fallbackData,
       })
     },
-    [navigation],
-  )
-}
-
-function useNavigateToNftCollection(): (args: NavigateToNftCollectionArgs) => void {
-  const navigation = useAppStackNavigation()
-
-  return useCallback(
-    ({ collectionAddress }: NavigateToNftCollectionArgs): void => {
-      navigation.navigate(MobileScreens.NFTCollection, {
-        collectionAddress,
-      })
-    },
-    [navigation],
+    [appNavigation, dispatch, onClose, isBottomTabsEnabled],
   )
 }
 
@@ -229,25 +302,27 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
 
   const { data: countryResult } = useFiatOnRampAggregatorGetCountryQuery()
   const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery({
-    rampDirection: RampDirection.ONRAMP,
+    rampDirection: RampDirection.ON_RAMP,
   })
   const forAggregatorEnabled = countryOptionsResult?.supportedCountries.some(
     (c) => c.countryCode === countryResult?.countryCode,
   )
 
   return useCallback((): void => {
-    dispatch(closeModal({ name: ModalName.Send }))
+    closeKeyboardBeforeCallback(() => {
+      dispatch(closeModal({ name: ModalName.Send }))
 
-    if (forAggregatorEnabled) {
-      dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
-    } else {
-      dispatch(
-        openModal({
-          name: ModalName.WalletConnectScan,
-          initialState: ScannerModalState.WalletQr,
-        }),
-      )
-    }
+      if (forAggregatorEnabled) {
+        dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
+      } else {
+        dispatch(
+          openModal({
+            name: ModalName.WalletConnectScan,
+            initialState: ScannerModalState.WalletQr,
+          }),
+        )
+      }
+    })
   }, [dispatch, forAggregatorEnabled])
 }
 
@@ -256,21 +331,38 @@ function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
 
   return useCallback(
     ({ prefilledCurrency, isOfframp }: NavigateToFiatOnRampArgs): void => {
-      dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency, isOfframp } }))
+      closeKeyboardBeforeCallback(() => {
+        dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency, isOfframp } }))
+      })
     },
     [dispatch],
   )
 }
 
 function useNavigateToExternalProfile(): (args: NavigateToExternalProfileArgs) => void {
-  const navigation = useAppStackNavigation()
+  const appNavigation = useAppStackNavigation()
 
   return useCallback(
     ({ address }: NavigateToExternalProfileArgs): void => {
-      navigation.navigate(MobileScreens.ExternalProfile, {
-        address,
+      closeKeyboardBeforeCallback(() => {
+        if (exploreNavigationRef.isFocused()) {
+          exploreNavigationRef.navigate(MobileScreens.ExternalProfile, { address })
+        } else {
+          appNavigation.navigate(MobileScreens.ExternalProfile, { address })
+        }
       })
     },
-    [navigation],
+    [appNavigation],
   )
+}
+
+function useNavigateToAdvancedSettings(): () => void {
+  const navigation = useAppStackNavigation()
+  const advancedSettingsState = useAdvancedSettingsMenuState()
+
+  return useCallback((): void => {
+    closeKeyboardBeforeCallback(() => {
+      navigation.navigate(ModalName.SmartWalletAdvancedSettingsModal, advancedSettingsState)
+    })
+  }, [navigation, advancedSettingsState])
 }

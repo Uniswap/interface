@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { DEP_accentColors, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -7,11 +7,11 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
 
-export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): JSX.Element {
+export function SettingsLanguageModal({ isOpen, onClose }: SettingsLanguageModalProps): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Modal name={ModalName.LanguageSelector} onClose={onClose}>
+    <Modal isModalOpen={isOpen} name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex p="$spacing4" pt="$spacing8">
         <Flex centered>
           <Flex backgroundColor={opacify(10, DEP_accentColors.blue300)} borderRadius="$rounded12" p="$spacing12">
@@ -27,9 +27,11 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
               {t('settings.setting.language.description.extension')}
             </Text>
           </Flex>
-          <DeprecatedButton theme="tertiary" onPress={() => onClose()}>
-            {t('common.button.close')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button emphasis="secondary" onPress={() => onClose()}>
+              {t('common.button.close')}
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </Modal>

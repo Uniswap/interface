@@ -1,0 +1,336 @@
+import { type PartialMessage } from '@bufbuild/protobuf'
+import { createPromiseClient } from '@connectrpc/connect'
+import { type Query, queryOptions, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
+import { type GetPortfolioRequest, type GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { type Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import {
+  createDataApiServiceClient,
+  getGetPortfolioQueryOptions,
+  SharedQueryClient,
+  transformInput,
+  type WithoutWalletAccount,
+} from '@universe/api'
+import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { buildAccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
+import {
+  cleanupCaughtUpOverrides,
+  getOverridesForAddress,
+  getOverridesForQuery,
+  getPortfolioQueryReduxStore,
+} from 'uniswap/src/data/rest/portfolioBalanceOverrides'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { fetchAndMergeOnchainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/refetchRestQueriesViaOnchainOverrideVariantSaga'
+import { removeExpiredBalanceOverrides } from 'uniswap/src/features/portfolio/slice/slice'
+import { type CurrencyId } from 'uniswap/src/types/currency'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { createLogger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+
+export type GetPortfolioInput<TSelectData = GetPortfolioResponse> = {
+  input?: WithoutWalletAccount<PartialMessage<GetPortfolioRequest>> & {
+    evmAddress?: string
+    svmAddress?: string
+  }
+  enabled?: boolean
+  refetchInterval?: number | false
+  select?: (data: GetPortfolioResponse | undefined) => TSelectData
+}
+
+export interface TokenBalanceQuantityParts {
+  quantity: number
+}
+
+export interface TokenBalanceMainParts {
+  denominatedValue?: {
+    value?: number
+  }
+  tokenProjectMarket?: {
+    relativeChange24?: {
+      value?: number
+    }
+  }
+}
+
+const dataApiClient = createDataApiServiceClient({
+  rpcClient: createPromiseClient(DataApiService, uniswapGetTransport),
+})
+
+/**
+ * Wrapper around query for DataApiService/GetPortfolio
+ * This fetches users portfolio and balances data
+ */
+export function useGetPortfolioQuery<TSelectData = GetPortfolioResponse>(
+  params: GetPortfolioInput<TSelectData>,
+): UseQueryResult<TSelectData, Error> {
+  return useQuery(getPortfolioQuery(params))
+}
+
+type GetPortfolioQueryKey = readonly [
+  ReactQueryCacheKey.GetPortfolio,
+  { evmAddress?: string; svmAddress?: string },
+  Record<string, unknown>,
+]
+
+type GetPortfolioQuery<TSelectData = GetPortfolioResponse> = QueryOptionsResult<
+  GetPortfolioResponse | undefined,
+  Error,
+  TSelectData,
+  GetPortfolioQueryKey
+>
+
+export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
+  input,
+  enabled = true,
+  refetchInterval,
+  select,
+}: GetPortfolioInput<TSelectData>): GetPortfolioQuery<TSelectData> => {
+  const baseOptions = getGetPortfolioQueryOptions(dataApiClient, { input })
+
+  return queryOptions({
+    ...baseOptions,
+    enabled,
+    refetchInterval,
+    subscribed: !!enabled,
+    select,
+    queryFn: async () => {
+      const log = createLogger('getPortfolio.ts', 'queryFn', '[REST-ITBU]')
+      const transformedInput = transformInput(input)
+      if (!transformedInput) {
+        return undefined
+      }
+      const apiResponse = await dataApiClient.getPortfolio(transformedInput)
+
+      try {
+        const reduxStore = getPortfolioQueryReduxStore()
+
+        if (!reduxStore) {
+          log.warn('`getPortfolioQuery` called before `initializePortfolioQueryOverrides`')
+          return apiResponse
+        }
+
+        const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
+        if (!accountAddressesByPlatform || !apiResponse.portfolio) {
+          return apiResponse
+        }
+
+        log.debug('Removing potentially expired balance overrides')
+        reduxStore.dispatch(removeExpiredBalanceOverrides())
+
+        const overrideCurrencyIds = getOverridesForQuery({ accountAddressesByPlatform })
+
+        if (overrideCurrencyIds.size === 0) {
+          log.debug('No overrides to apply, returning original response')
+          return apiResponse
+        }
+
+        log.debug('Applying portfolio balance overrides', {
+          overrideCount: overrideCurrencyIds.size,
+          currencyIds: Array.from(overrideCurrencyIds),
+          accountAddresses: accountAddressesByPlatform,
+        })
+
+        let modifiedResponse = apiResponse
+        const addresses = Object.values(accountAddressesByPlatform)
+
+        for (const address of addresses) {
+          // Get overrides specific to this address only
+          const overridesForCurrentAddress = getOverridesForAddress({ address })
+
+          if (overridesForCurrentAddress.size === 0 || !modifiedResponse.portfolio) {
+            continue
+          }
+
+          log.debug(`Processing ${overridesForCurrentAddress.size} overrides for address ${address}`, {
+            currencyIds: Array.from(overridesForCurrentAddress),
+          })
+
+          const mergedResult = await fetchAndMergeOnchainBalances({
+            cachedPortfolio: modifiedResponse.portfolio,
+            accountAddress: address,
+            currencyIds: overridesForCurrentAddress,
+          })
+
+          if (!mergedResult) {
+            log.debug(`No merged result for address ${address}, continuing`)
+            continue
+          }
+
+          // Check if backend has caught up and clean up overrides if needed
+          cleanupCaughtUpOverrides({ ownerAddress: address, originalData: apiResponse, mergedData: mergedResult })
+
+          // Update result for next iteration
+          modifiedResponse = mergedResult
+
+          log.debug(`Successfully applied overrides for address ${address}`)
+        }
+
+        log.debug('Successfully applied all overrides in queryFn')
+
+        return modifiedResponse
+      } catch (error) {
+        log.error(new Error('Unexpected error when trying to apply portfolio balance overrides', { cause: error }))
+        return apiResponse
+      }
+    },
+  })
+}
+
+/**
+ * Gets cached quantity for a specific token balance
+ * A targeted optimization to help avoid re-renders in TokenBalanceItem
+ */
+export function useRestTokenBalanceQuantityParts({
+  currencyId,
+  evmAddress,
+  svmAddress,
+  enabled = true,
+}: {
+  currencyId?: CurrencyId
+  evmAddress?: string
+  svmAddress?: string
+  enabled?: boolean
+}): UseQueryResult<TokenBalanceQuantityParts | undefined> {
+  const { chains: chainIds } = useEnabledChains()
+
+  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(enabled ? (evmAddress ?? svmAddress) : undefined)
+
+  const selectQuantityParts = useEvent((data: GetPortfolioResponse | undefined) => {
+    const balance = _findBalanceFromCurrencyId(data, currencyId)
+    return balance ? { quantity: balance.amount?.amount || 0 } : undefined
+  })
+
+  return useQuery({
+    ...getPortfolioQuery({ input: { evmAddress, svmAddress, chainIds, modifier } }),
+    select: selectQuantityParts,
+    enabled,
+  })
+}
+
+/**
+ * Gets cached value and price change data for a specific token balance
+ * A targeted optimization to help avoid re-renders in TokenBalanceItem
+ */
+export function useRestTokenBalanceMainParts({
+  currencyId,
+  evmAddress,
+  svmAddress,
+  enabled = true,
+}: {
+  currencyId?: CurrencyId
+  evmAddress?: string
+  svmAddress?: string
+  enabled?: boolean
+}): UseQueryResult<TokenBalanceMainParts | undefined> {
+  const { chains: chainIds } = useEnabledChains()
+
+  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(enabled ? (evmAddress ?? svmAddress) : undefined)
+
+  const selectMainParts = useEvent((data: GetPortfolioResponse | undefined) => {
+    const balance = _findBalanceFromCurrencyId(data, currencyId)
+
+    return balance
+      ? {
+          denominatedValue: { value: balance.valueUsd },
+          tokenProjectMarket: {
+            relativeChange24: { value: balance.pricePercentChange1d },
+          },
+        }
+      : undefined
+  })
+
+  return useQuery({
+    ...getPortfolioQuery({ input: { evmAddress, svmAddress, chainIds, modifier } }),
+    select: selectMainParts,
+    enabled,
+  })
+}
+
+function _findBalanceFromCurrencyId(
+  data: GetPortfolioResponse | undefined,
+  currencyId?: CurrencyId,
+): Balance | undefined {
+  if (!data?.portfolio?.balances || !currencyId) {
+    return undefined
+  }
+
+  const tokenAddress = currencyIdToAddress(currencyId)
+  const chainId = currencyIdToChain(currencyId)
+  const isNative = chainId && isNativeCurrencyAddress(chainId, tokenAddress)
+
+  return data.portfolio.balances.find((bal) => {
+    if (bal.token?.chainId !== chainId) {
+      return false
+    }
+
+    if (isNative) {
+      return isNativeCurrencyAddress(chainId, bal.token.address)
+    }
+
+    return areAddressesEqual({
+      addressInput1: { address: bal.token.address, chainId },
+      addressInput2: { address: tokenAddress, chainId },
+    })
+  })
+}
+
+/**
+ * Checks if a `GetPortfolio` query key matches the given address and platform.
+ * Used to find active queries that need to be updated after a transaction.
+ * Query key format (from api package): [GetPortfolio, { evmAddress?, svmAddress? }, queryCacheInputs]
+ */
+export function doesGetPortfolioQueryMatchAddress({
+  queryKey,
+  address,
+  platform,
+}: {
+  queryKey: readonly unknown[]
+  address: string
+  platform: Platform
+}): boolean {
+  const [key, addressKey] = queryKey
+
+  if (key !== ReactQueryCacheKey.GetPortfolio || typeof addressKey !== 'object' || addressKey === null) {
+    return false
+  }
+
+  const keyWithAddresses = addressKey as { evmAddress?: string; svmAddress?: string }
+  const queryAddress = platform === Platform.EVM ? keyWithAddresses.evmAddress : keyWithAddresses.svmAddress
+
+  if (!queryAddress) {
+    return false
+  }
+
+  return areAddressesEqual({
+    addressInput1: { address, platform },
+    addressInput2: { address: queryAddress, platform },
+  })
+}
+
+/**
+ * Finds all active `GetPortfolio` queries that match the given address and platform.
+ * Returns the array of matching queries to update.
+ */
+export function getPortfolioQueriesToUpdate({
+  address,
+  platform,
+}: {
+  address: string
+  platform: Platform
+}): Query<GetPortfolioResponse | undefined, Error>[] {
+  const activePortfolioQueries = SharedQueryClient.getQueryCache().findAll({
+    queryKey: [ReactQueryCacheKey.GetPortfolio],
+    type: 'active',
+  })
+
+  return activePortfolioQueries.filter((query) =>
+    doesGetPortfolioQueryMatchAddress({ queryKey: query.queryKey, address, platform }),
+  ) as Query<GetPortfolioResponse | undefined, Error>[]
+}

@@ -44,10 +44,6 @@ class MainActivity : ReactActivity() {
    * (aka React 18) with two boolean flags.
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate? {
-    return ReactActivityDelegateWrapper(
-      this,
-      BuildConfig.IS_NEW_ARCHITECTURE_ENABLED,
-      DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
-    )
+    return ReactActivityDelegateWrapper(this, BuildConfig.IS_NEW_ARCHITECTURE_ENABLED, DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled))
   }
 }

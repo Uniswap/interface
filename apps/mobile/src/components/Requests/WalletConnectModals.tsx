@@ -7,21 +7,21 @@ import { WalletConnectModal } from 'src/components/Requests/ScanSheet/WalletConn
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
-  WalletConnectRequest,
   removePendingSession,
   removeRequest,
   setDidOpenFromDeepLink,
+  WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { Flex, useSporeColors } from 'ui/src'
-import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import { iconSizes } from 'ui/src/theme'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { Flex } from 'ui/src'
+import { Eye } from 'ui/src/components/icons'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
+import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { useActiveAccount, useActiveAccountAddressWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 const WalletConnectModalName = {
@@ -43,8 +43,12 @@ export function WalletConnectModals(): JSX.Element {
    * opens Uniswap app via Spotlight search – we don't want `returnToPreviousApp` to return
    * to Spotlight search.
    * */
-  useAppStateTrigger('active', 'inactive', () => {
-    dispatch(setDidOpenFromDeepLink(undefined))
+  useAppStateTrigger({
+    from: 'active',
+    to: 'inactive',
+    callback: () => {
+      dispatch(setDidOpenFromDeepLink(undefined))
+    },
   })
 
   const currRequest = pendingRequests[0] ?? null
@@ -61,10 +65,10 @@ export function WalletConnectModals(): JSX.Element {
   // When WalletConnectModal is open and a WC QR code is scanned to add a pendingSession,
   // dismiss the scan modal in favor of showing PendingConnectionModal
   useEffect(() => {
-    if (modalState.isOpen && pendingSession) {
+    if (modalState.isOpen && (pendingSession || currRequest)) {
       dispatch(closeModal({ name: ModalName.WalletConnectScan }))
     }
-  }, [modalState.isOpen, pendingSession, dispatch])
+  }, [modalState.isOpen, pendingSession, currRequest, dispatch])
 
   return (
     <>
@@ -105,7 +109,7 @@ export function WalletConnectModals(): JSX.Element {
 }
 
 type RequestModalProps = {
-  currRequest: WalletConnectRequest
+  currRequest: WalletConnectSigningRequest
 }
 
 function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
@@ -113,7 +117,6 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const colors = useSporeColors()
 
   // TODO: Move returnToPreviousApp() call to onClose but ensure it is not called twice
   const onClose = (): void => {
@@ -121,7 +124,11 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   }
 
   const isRequestFromSignerAccount = signerAccounts.some((account) =>
-    areAddressesEqual(account.address, currRequest.account),
+    // TODO(WALL-7065): Update to support solana
+    areAddressesEqual({
+      addressInput1: { address: account.address, platform: Platform.EVM },
+      addressInput2: { address: currRequest.account, platform: Platform.EVM },
+    }),
   )
 
   if (!isRequestFromSignerAccount) {
@@ -129,9 +136,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
       <WarningModal
         caption={t('walletConnect.request.warning.message')}
         rejectText={t('common.button.dismiss')}
-        icon={
-          <EyeIcon color={colors.neutral1.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
-        }
+        icon={<Eye color="$neutral1" size="$icon.24" />}
         isOpen={!isRequestFromSignerAccount}
         modalName={ModalName.WCViewOnlyWarning}
         severity={WarningSeverity.None}
@@ -140,7 +145,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         onClose={onClose}
       >
         <Flex alignSelf="stretch" backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing16">
-          <AccountDetails address={currRequest.account} iconSize={iconSizes.icon24} />
+          <AccountDetails address={currRequest.account} />
         </Flex>
       </WarningModal>
     )

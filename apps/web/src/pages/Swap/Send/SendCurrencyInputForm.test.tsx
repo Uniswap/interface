@@ -1,20 +1,30 @@
-jest.mock('hooks/Tokens')
+vi.mock('~/hooks/Tokens')
 
-import { useCurrencyInfo } from 'hooks/Tokens'
-import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
-import { MultichainContext } from 'state/multichain/types'
-import { SendContext, SendContextType } from 'state/send/SendContext'
-import { SwapAndLimitContext } from 'state/swap/types'
-import { DAI_INFO } from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
-import { render, screen, waitFor } from 'test-utils/render'
+// Mock only what's needed for tests to pass
+vi.mock('uniswap/src/features/accounts/store/hooks', () => {
+  return {
+    useActiveAddresses: () => ({
+      evmAddress: undefined,
+      svmAddress: undefined,
+    }),
+  }
+})
+
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { useCurrencyInfo } from '~/hooks/Tokens'
+import SendCurrencyInputForm from '~/pages/Swap/Send/SendCurrencyInputForm'
+import { MultichainContext } from '~/state/multichain/types'
+import { SendContext, SendContextType } from '~/state/send/SendContext'
+import { SwapAndLimitContext } from '~/state/swap/types'
+import { DAI_INFO } from '~/test-utils/constants'
+import { mocked } from '~/test-utils/mocked'
+import { act, renderWithUniswapContext, screen } from '~/test-utils/render'
 
 const mockMultichainContextValue = {
-  reset: jest.fn(),
-  setSelectedChainId: jest.fn(),
-  setIsUserSelectedToken: jest.fn(),
+  reset: vi.fn(),
+  setSelectedChainId: vi.fn(),
+  setIsUserSelectedToken: vi.fn(),
   isSwapAndLimitContext: true,
   isUserSelectedToken: false,
   isMultichainContext: true,
@@ -25,10 +35,9 @@ const mockSwapAndLimitContextValue = {
     inputCurrency: DAI,
     outputCurrency: undefined,
   },
-  prefilledState: {},
-  setCurrencyState: jest.fn(),
+  setCurrencyState: vi.fn(),
   currentTab: SwapTab.Limit,
-  setCurrentTab: jest.fn(),
+  setCurrentTab: vi.fn(),
 }
 
 const mockedSendContextDefault: SendContextType = {
@@ -40,7 +49,7 @@ const mockedSendContextDefault: SendContextType = {
     inputInFiat: true,
   },
   derivedSendInfo: {},
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 const mockedSendContextFiatInput: SendContextType = {
@@ -54,7 +63,7 @@ const mockedSendContextFiatInput: SendContextType = {
   derivedSendInfo: {
     exactAmountOut: '100',
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 const mockedSendContextTokenInput: SendContextType = {
@@ -68,7 +77,7 @@ const mockedSendContextTokenInput: SendContextType = {
   derivedSendInfo: {
     exactAmountOut: '100',
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
 describe('SendCurrencyInputform', () => {
@@ -79,53 +88,58 @@ describe('SendCurrencyInputform', () => {
   })
 
   it('should render placeholder values', async () => {
-    const { container } = render(
-      <MultichainContext.Provider value={mockMultichainContextValue}>
-        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-          <SendContext.Provider value={mockedSendContextDefault}>
-            <SendCurrencyInputForm />
-          </SendContext.Provider>
-        </SwapAndLimitContext.Provider>
-      </MultichainContext.Provider>,
+    const { container } = await act(() =>
+      renderWithUniswapContext(
+        <MultichainContext.Provider value={mockMultichainContextValue}>
+          <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+            <SendContext.Provider value={mockedSendContextDefault}>
+              <SendCurrencyInputForm />
+            </SendContext.Provider>
+          </SwapAndLimitContext.Provider>
+        </MultichainContext.Provider>,
+      ),
     )
-    expect(await screen.getByPlaceholderText('0')).toBeVisible()
+
+    expect(screen.getByPlaceholderText('0')).toBeVisible()
     expect(screen.getByText('0 DAI')).toBeVisible()
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })
 
   it('renders input in fiat correctly', async () => {
-    const { container } = render(
-      <MultichainContext.Provider value={mockMultichainContextValue}>
-        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-          <SendContext.Provider value={mockedSendContextFiatInput}>
-            <SendCurrencyInputForm />
-          </SendContext.Provider>
-        </SwapAndLimitContext.Provider>
-      </MultichainContext.Provider>,
+    const { container } = await act(() =>
+      renderWithUniswapContext(
+        <MultichainContext.Provider value={mockMultichainContextValue}>
+          <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+            <SendContext.Provider value={mockedSendContextFiatInput}>
+              <SendCurrencyInputForm />
+            </SendContext.Provider>
+          </SwapAndLimitContext.Provider>
+        </MultichainContext.Provider>,
+      ),
     )
-    await waitFor(() => {
-      expect(screen.getByDisplayValue('1000')).toBeVisible()
-    })
+
+    expect(screen.getByDisplayValue('1000')).toBeVisible()
     expect(screen.getByText('100.00 DAI')).toBeVisible()
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })
 
   it('renders input in token amount correctly', async () => {
-    const { container } = render(
-      <MultichainContext.Provider value={mockMultichainContextValue}>
-        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-          <SendContext.Provider value={mockedSendContextTokenInput}>
-            <SendCurrencyInputForm />
-          </SendContext.Provider>
-        </SwapAndLimitContext.Provider>
-      </MultichainContext.Provider>,
+    const { container } = await act(() =>
+      renderWithUniswapContext(
+        <MultichainContext.Provider value={mockMultichainContextValue}>
+          <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+            <SendContext.Provider value={mockedSendContextTokenInput}>
+              <SendCurrencyInputForm />
+            </SendContext.Provider>
+          </SwapAndLimitContext.Provider>
+        </MultichainContext.Provider>,
+      ),
     )
-    await waitFor(() => {
-      expect(screen.getByDisplayValue('1')).toBeVisible()
-    })
-    expect(screen.getByText('$100.00 USD')).toBeVisible()
+
+    expect(screen.getByDisplayValue('1')).toBeVisible()
+    expect(screen.getByText('$100.00')).toBeVisible()
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })

@@ -1,12 +1,14 @@
-import { useCallback, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { CopyButton } from 'src/app/components/buttons/CopyButton'
 import { Flex, Separator, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { mnemonicUnlockedQuery } from 'wallet/src/features/wallet/Keyring/queries'
 
 function SeedPhraseColumnGroup({ recoveryPhraseArray }: { recoveryPhraseArray: string[] }): JSX.Element {
   const [largestIndexWidth, setLargestIndexWidth] = useState(0)
@@ -93,9 +95,7 @@ function SeedPhraseWord({
 export function SeedPhraseDisplay({ mnemonicId }: { mnemonicId: string }): JSX.Element {
   const placeholderWordArrayLength = 12
 
-  const recoveryPhraseString = useAsyncData(
-    useCallback(async () => Keyring.retrieveMnemonicUnlocked(mnemonicId), [mnemonicId]),
-  ).data
+  const { data: recoveryPhraseString } = useQuery(mnemonicUnlockedQuery(mnemonicId))
   const recoveryPhraseArray = recoveryPhraseString?.split(' ') ?? Array(placeholderWordArrayLength).fill('')
 
   const onCopyPress = async (): Promise<void> => {
@@ -109,6 +109,10 @@ export function SeedPhraseDisplay({ mnemonicId }: { mnemonicId: string }): JSX.E
       })
     }
   }
+
+  useEffect(() => {
+    sendAnalyticsEvent(WalletEventName.ViewRecoveryPhrase)
+  }, [])
 
   return (
     <Flex

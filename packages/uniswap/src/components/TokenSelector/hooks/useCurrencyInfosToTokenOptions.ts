@@ -1,12 +1,12 @@
 import { ApolloError } from '@apollo/client'
+import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
-import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
-import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
+import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { GqlResult } from 'uniswap/src/data/types'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {
@@ -21,8 +21,13 @@ export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> 
         return true
       }
 
-      const { address } = currencyInfo.currency
-      const bridgedAsset = BRIDGED_BASE_ADDRESSES.find((bridgedAddress) => areAddressesEqual(bridgedAddress, address))
+      const { address, chainId } = currencyInfo.currency
+      const bridgedAsset = BRIDGED_BASE_ADDRESSES.find((bridgedAddress) =>
+        areAddressesEqual({
+          addressInput1: { address: bridgedAddress, chainId },
+          addressInput2: { address, chainId },
+        }),
+      )
 
       if (!bridgedAsset) {
         return true
@@ -39,10 +44,20 @@ export function currencyInfosToTokenOptions(currencyInfos?: Maybe<CurrencyInfo>[
   return currencyInfos
     ?.filter((cI): cI is CurrencyInfo => Boolean(cI))
     .map((currencyInfo) => ({
+      type: OnchainItemListOptionType.Token,
       currencyInfo,
       quantity: null,
       balanceUSD: undefined,
     }))
+}
+
+export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOption {
+  return {
+    type: OnchainItemListOptionType.Token,
+    currencyInfo,
+    balanceUSD: null,
+    quantity: null,
+  }
 }
 
 export function useCurrencyInfosToTokenOptions({
@@ -69,9 +84,11 @@ export function useCurrencyInfosToTokenOptions({
         })
       : currencyInfos
 
-    return sortedCurrencyInfos.map(
-      (currencyInfo) =>
-        portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()] ?? createEmptyBalanceOption(currencyInfo),
-    )
+    return sortedCurrencyInfos.map((currencyInfo) => {
+      const portfolioBalance = portfolioBalancesById?.[normalizeCurrencyIdForMapLookup(currencyInfo.currencyId)]
+      return portfolioBalance
+        ? { type: OnchainItemListOptionType.Token, ...portfolioBalance }
+        : createEmptyBalanceOption(currencyInfo)
+    })
   }, [currencyInfos, portfolioBalancesById, sortAlphabetically])
 }

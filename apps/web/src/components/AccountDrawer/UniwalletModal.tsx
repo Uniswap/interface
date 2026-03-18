@@ -1,24 +1,25 @@
-import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
-import { useConnect } from 'hooks/useConnect'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import { openDownloadApp } from 'utils/openDownloadApp'
+import { useEvent } from 'utilities/src/react/hooks'
+import MobileAppLogo from '~/assets/svg/uniswap_app_logo.svg'
+import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
+import { openDownloadApp } from '~/utils/openDownloadApp'
 
 export default function UniwalletModal() {
   const { t } = useTranslation()
   const [uri, setUri] = useState<string>()
-  const connection = useConnect()
+
+  const { isConnecting, reset } = useConnectWallet()
 
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
   const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
-  const open = !onLaunchedMobilePlatform && !!uri && connection.isPending
+  const open = !onLaunchedMobilePlatform && !!uri && isConnecting
 
   useEffect(() => {
     function listener({ type, data }: { type: string; data?: unknown }) {
@@ -34,14 +35,14 @@ export default function UniwalletModal() {
     }
   }, [])
 
-  const close = useCallback(() => {
-    connection?.reset()
+  const close = useEvent(() => {
+    reset()
     setUri(undefined)
-  }, [connection])
+  })
 
   useEffect(() => {
     if (open) {
-      sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
+      sendAnalyticsEvent(InterfaceEventName.UniswapWalletConnectModalOpened)
     } else {
       setUri(undefined)
     }
@@ -79,14 +80,16 @@ export default function UniwalletModal() {
               {t('account.drawer.modal.body')}
             </Text>
           </Flex>
-
-          <DeprecatedButton
-            size="small"
-            onPress={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
-            height="fit-content"
-          >
-            {t('common.download')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button
+              size="small"
+              emphasis="primary"
+              variant="branded"
+              onPress={() => openDownloadApp({ element: ElementName.UniswapWalletModalDownloadButton })}
+            >
+              {t('common.download')}
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </Modal>

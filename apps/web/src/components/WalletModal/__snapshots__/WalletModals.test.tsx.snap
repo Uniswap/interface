@@ -1,0 +1,973 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EmbeddedWalletConnectionsModal > renders correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c0 :hover {
+  opacity: 0.6;
+}
+
+.c0 :active {
+  opacity: 0.4;
+}
+
+.c1 {
+  font-weight: 535;
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704925 _pb-t-space-pad1331704925 _pl-t-space-pad1331704925 _flexGrow-1 _gap-t-space-gap1573"
+      data-testid="wallet-modal"
+    >
+      <div>
+        <span
+          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        >
+          <div />
+        </span>
+        <div>
+          <div />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+          >
+            <div>
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334080 _pb-t-space-non101 _pt-t-space-spa1360334080 _pr-t-space-non101 _pl-t-space-non101"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _minHeight-t-size-spac100347366 _minWidth-t-size-spac100347366 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _mb-t-space-spa94665593 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                  style="background-color: rgba(19, 19, 19, 0.122);"
+                >
+                  <svg
+                    fill="currentColor"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <span
+                  class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection error
+                </span>
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection attempt failed. Please try again, following the steps to connect in your wallet.
+                </span>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _gap-t-space-spa1360334080 _pt-t-space-spa1360334047"
+                >
+                  <button
+                    class="is_Button  t_group_item"
+                    dd-action-name="Close"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Close
+                    </span>
+                  </button>
+                  <button
+                    class="is_Button  t_group_item"
+                    data-testid="confirm"
+                    dd-action-name="Try again"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_surface1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-surface1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Try again
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Connect a wallet
+          </span>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-flex-start"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _overflowX-hidden _overflowY-hidden _width-10037 _maxHeight-100vh _opacity-1 _transition-250msease-i1019171151"
+            data-testid="option-grid"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-2px _backgroundColor-surface1"
+            />
+            <div
+              class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _alignItems-center _width-10037 _justifyContent-space-betwe3241 _position-relative _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _cursor-pointer _opacity-1"
+            >
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap1569"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665591 _pr-t-space-spa94665591 _pb-t-space-spa94665591 _pl-t-space-spa94665591 _backgroundColor-accent2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002"
+                >
+                  <svg
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 20px; height: 20px; color: rgb(255, 55, 199);"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M4 4a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h16a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H4Zm-1 8.268V11c0-.552.448-1 1.001-1H20c.553 0 1.001.448 1.001 1v1.268A1.99 1.99 0 0 0 20 12h-4c-.552 0-1.007.528-1.236 1.103-.32.804-.975 1.754-2.764 1.754-1.71 0-2.518-.868-2.806-1.647-.228-.615-.695-1.21-1.28-1.21H4a1.99 1.99 0 0 0-1 .268ZM19.999 8c.35 0 .688.06 1.001.171V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v1.171C3.313 8.061 3.65 8 4.001 8H20Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _pt-t-space-spa94665593 _pb-t-space-spa94665593"
+                  data-disable-theme="true"
+                >
+                  Other wallets
+                </span>
+              </div>
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.35); transform: rotate(180deg);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _width-10037 _gap-t-space-gap1573 _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+        >
+          <div
+            class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          />
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315"
+            data-disable-theme="true"
+          >
+            or
+          </span>
+          <div
+            class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          />
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
+          >
+            <button
+              class="is_Button  t_group_item"
+              data-testid="create-account"
+              dd-action-name="Create account"
+              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
+              <span
+                class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                line-height-disabled="false"
+              >
+                Create account
+              </span>
+            </button>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
+          >
+            <button
+              class="is_Button  t_group_item"
+              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgb(255, 55, 199);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M16.4303 8.67684C16.2913 8.71327 16.1049 8.77702 16.0162 8.81648C15.4246 9.08059 14.8448 9.63916 14.5608 10.2281C14.2177 10.9324 14.1733 11.8886 14.4514 12.605C14.6969 13.2365 15.1406 13.7677 15.6878 14.0834L15.8978 14.2048L15.9008 16.4816L15.9067 18.7584L16.522 19.3807L17.1402 20L18.1607 18.9557C18.7228 18.3789 19.1813 17.8963 19.1813 17.878C19.1813 17.8629 18.9121 17.5714 18.5837 17.2345L17.9833 16.6182L18.3855 16.2023C18.9062 15.662 19.1813 15.3645 19.1813 15.3341C19.1813 15.322 18.986 15.1065 18.7464 14.8545C18.5068 14.6025 18.2938 14.3748 18.2761 14.3445C18.2436 14.299 18.2613 14.2807 18.421 14.1897C19.1043 13.8102 19.5569 13.3002 19.8261 12.6111C19.971 12.2377 20.0361 11.6336 19.9799 11.1266C19.8646 10.049 19.0807 9.08362 18.0365 8.72845C17.6135 8.58273 16.8562 8.55845 16.4303 8.67684ZM17.4153 9.92755C17.6934 10.0247 17.998 10.4922 17.9566 10.7593C17.93 10.9293 17.7673 11.2359 17.649 11.3361C17.4183 11.5334 17.0456 11.5729 16.7823 11.4333C16.3534 11.2056 16.2084 10.6379 16.4747 10.2433C16.5575 10.1188 16.7527 9.96701 16.8888 9.91541C17.0219 9.86683 17.2585 9.87291 17.4153 9.92755Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                  <path
+                    d="M9.36733 4.02012C9.28451 4.03529 9.10999 4.08386 8.98575 4.1294C7.82325 4.53011 6.87964 5.56832 6.55721 6.80385C6.48622 7.07706 6.4803 7.15296 6.47734 7.72367C6.47439 8.14563 6.48622 8.40063 6.51284 8.51295C6.85597 9.96705 7.83508 11.0265 9.19577 11.4181C9.41762 11.4819 9.54777 11.497 9.9826 11.5092C10.7961 11.5335 11.1362 11.4667 11.7781 11.154C12.3342 10.8808 12.7838 10.4953 13.1506 9.96705C13.3991 9.60884 13.5204 9.37509 13.6505 9.0017C13.8044 8.54634 13.8369 8.29135 13.8162 7.57796C13.7985 6.86457 13.7511 6.65207 13.4701 6.06921C13.0116 5.11297 12.2662 4.45726 11.2368 4.10815L10.941 4.00797L10.2311 4.0019C9.84062 3.99583 9.45312 4.00494 9.36733 4.02012Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M6.56435 13.4247C7.2654 13.0271 7.88954 12.8601 8.82724 12.8237C9.14374 12.8115 9.96312 12.8024 10.6464 12.8085C12.0722 12.8176 12.2615 12.8389 12.9685 13.0756L13.3678 13.2062L13.5482 13.528C13.7938 13.9651 13.9564 14.1746 14.3499 14.5753L14.6841 14.9153V19.5326H4.00566L4.0027 18.9163C3.99087 17.4622 4.01453 17.0828 4.14173 16.5879C4.48486 15.2522 5.36339 14.1047 6.56435 13.4247Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span
+                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454"
+                  data-disable-theme="true"
+                >
+                  Log in
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _textAlign-center"
+              data-disable-theme="true"
+            >
+              By connecting a wallet, you agree to Uniswap Labs’ 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/terms-of-service/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Terms of Service
+              </a>
+               and consent to its 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/privacy-policy"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Privacy Policy
+              </a>
+              .
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`OtherWalletsModal > renders correctly with EW disabled 1`] = `
+<DocumentFragment>
+  .c0 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c0 :hover {
+  opacity: 0.6;
+}
+
+.c0 :active {
+  opacity: 0.4;
+}
+
+.c1 {
+  font-weight: 535;
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pb-t-space-spa1360334051 _flexGrow-1 _gap-t-space-gap1573"
+      data-testid="other-wallet-modal"
+    >
+      <div>
+        <span
+          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        >
+          <div />
+        </span>
+        <div>
+          <div />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+          >
+            <div>
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334080 _pb-t-space-non101 _pt-t-space-spa1360334080 _pr-t-space-non101 _pl-t-space-non101"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _minHeight-t-size-spac100347366 _minWidth-t-size-spac100347366 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _mb-t-space-spa94665593 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                  style="background-color: rgba(19, 19, 19, 0.122);"
+                >
+                  <svg
+                    fill="currentColor"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <span
+                  class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection error
+                </span>
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection attempt failed. Please try again, following the steps to connect in your wallet.
+                </span>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _gap-t-space-spa1360334080 _pt-t-space-spa1360334047"
+                >
+                  <button
+                    class="is_Button  t_group_item"
+                    dd-action-name="Close"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Close
+                    </span>
+                  </button>
+                  <button
+                    class="is_Button  t_group_item"
+                    data-testid="confirm"
+                    dd-action-name="Try again"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_surface1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-surface1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Try again
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+      >
+        <svg
+          fill="none"
+          stroke-width="8"
+          style="width: 20px; height: 20px; margin-right: auto; opacity: 1; cursor: pointer; color: rgba(19, 19, 19, 0.63);"
+          viewBox="0 0 24 24"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M20 12C20 12.5523 19.5523 13 19 13L7.41421 13L12.7071 18.2929C13.0976 18.6834 13.0976 19.3166 12.7071 19.7071C12.3166 20.0976 11.6834 20.0976 11.2929 19.7071L4.29289 12.7071C3.90237 12.3166 3.90237 11.6834 4.29289 11.2929L11.2929 4.29289C11.6834 3.90237 12.3166 3.90237 12.7071 4.29289C13.0976 4.68342 13.0976 5.31658 12.7071 5.70711L7.41421 11H19C19.5523 11 20 11.4477 20 12Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </svg>
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-auto _mb-0px _ml--20px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Connect a wallet
+        </span>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1 _alignItems-flex-start"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _overflowX-hidden _overflowY-hidden _width-10037 _transition-125msease-i1019171151"
+            data-testid="option-grid"
+          />
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _textAlign-center"
+              data-disable-theme="true"
+            >
+              By connecting a wallet, you agree to Uniswap Labs’ 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/terms-of-service/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Terms of Service
+              </a>
+               and consent to its 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/privacy-policy"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Privacy Policy
+              </a>
+              .
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`OtherWalletsModal > renders correctly with EW enabled 1`] = `
+<DocumentFragment>
+  .c0 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c0 :hover {
+  opacity: 0.6;
+}
+
+.c0 :active {
+  opacity: 0.4;
+}
+
+.c1 {
+  font-weight: 535;
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pb-t-space-spa1360334051 _flexGrow-1 _gap-t-space-gap1573"
+      data-testid="other-wallet-modal"
+    >
+      <div>
+        <span
+          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        >
+          <div />
+        </span>
+        <div>
+          <div />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+          >
+            <div>
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334080 _pb-t-space-non101 _pt-t-space-spa1360334080 _pr-t-space-non101 _pl-t-space-non101"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _minHeight-t-size-spac100347366 _minWidth-t-size-spac100347366 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _mb-t-space-spa94665593 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                  style="background-color: rgba(19, 19, 19, 0.122);"
+                >
+                  <svg
+                    fill="currentColor"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <span
+                  class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection error
+                </span>
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection attempt failed. Please try again, following the steps to connect in your wallet.
+                </span>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _gap-t-space-spa1360334080 _pt-t-space-spa1360334047"
+                >
+                  <button
+                    class="is_Button  t_group_item"
+                    dd-action-name="Close"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Close
+                    </span>
+                  </button>
+                  <button
+                    class="is_Button  t_group_item"
+                    data-testid="confirm"
+                    dd-action-name="Try again"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_surface1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-surface1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Try again
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+      >
+        <svg
+          fill="none"
+          stroke-width="8"
+          style="width: 20px; height: 20px; margin-right: auto; opacity: 1; cursor: pointer; color: rgba(19, 19, 19, 0.63);"
+          viewBox="0 0 24 24"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M20 12C20 12.5523 19.5523 13 19 13L7.41421 13L12.7071 18.2929C13.0976 18.6834 13.0976 19.3166 12.7071 19.7071C12.3166 20.0976 11.6834 20.0976 11.2929 19.7071L4.29289 12.7071C3.90237 12.3166 3.90237 11.6834 4.29289 11.2929L11.2929 4.29289C11.6834 3.90237 12.3166 3.90237 12.7071 4.29289C13.0976 4.68342 13.0976 5.31658 12.7071 5.70711L7.41421 11H19C19.5523 11 20 11.4477 20 12Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </svg>
+        <span
+          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-auto _mb-0px _ml--20px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+          data-disable-theme="true"
+        >
+          Connect a wallet
+        </span>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1 _alignItems-flex-start"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _overflowX-hidden _overflowY-hidden _width-10037 _transition-125msease-i1019171151"
+            data-testid="option-grid"
+          />
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _textAlign-center"
+              data-disable-theme="true"
+            >
+              By connecting a wallet, you agree to Uniswap Labs’ 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/terms-of-service/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Terms of Service
+              </a>
+               and consent to its 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/privacy-policy"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Privacy Policy
+              </a>
+              .
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`StandardWalletModal > renders correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c0 :hover {
+  opacity: 0.6;
+}
+
+.c0 :active {
+  opacity: 0.4;
+}
+
+.c1 {
+  font-weight: 535;
+  color: rgba(19, 19, 19, 0.35);
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _pt-t-space-pad1331704925 _pr-t-space-pad1331704925 _pb-t-space-pad1331704925 _pl-t-space-pad1331704925 _flexGrow-1 _gap-t-space-gap1573"
+      data-testid="wallet-modal"
+    >
+      <div>
+        <span
+          class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        >
+          <div />
+        </span>
+        <div>
+          <div />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+          >
+            <div>
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334080 _pb-t-space-non101 _pt-t-space-spa1360334080 _pr-t-space-non101 _pl-t-space-non101"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _minHeight-t-size-spac100347366 _minWidth-t-size-spac100347366 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _mb-t-space-spa94665593 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                  style="background-color: rgba(19, 19, 19, 0.122);"
+                >
+                  <svg
+                    fill="currentColor"
+                    stroke-width="8"
+                    style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </div>
+                <span
+                  class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection error
+                </span>
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                  data-disable-theme="true"
+                >
+                  Connection attempt failed. Please try again, following the steps to connect in your wallet.
+                </span>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _gap-t-space-spa1360334080 _pt-t-space-spa1360334047"
+                >
+                  <button
+                    class="is_Button  t_group_item"
+                    dd-action-name="Close"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Close
+                    </span>
+                  </button>
+                  <button
+                    class="is_Button  t_group_item"
+                    data-testid="confirm"
+                    dd-action-name="Try again"
+                    style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                  >
+                    <span
+                      class="font_button _color-_groupitem-hover_surface1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-surface1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                      line-height-disabled="false"
+                    >
+                      Try again
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _width-10037"
+        >
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
+          >
+            Connect a wallet
+          </span>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-16px"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-8px"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _maxHeight-72px _width-10037 _backgroundColor-white _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px _position-relative"
+              data-testid="download-uniswap-wallet"
+            >
+              <div
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); opacity: 1; max-height: 72px; background: url(/images/extension_promo/background_connector.png); background-repeat: no-repeat; background-size: cover; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              />
+              <div
+                class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-transparent _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+              >
+                <div
+                  class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                  style="height: 40px; width: 40px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px;"
+                >
+                  <div
+                    class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                    style="background-image: url(/src/assets/wallets/uniswap-wallet-icon.png);"
+                  />
+                  <img
+                    alt=""
+                    class="css-accessibilityImage-9pa8cd"
+                    draggable="false"
+                    src="/src/assets/wallets/uniswap-wallet-icon.png"
+                  />
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-4px"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  >
+                    <span
+                      class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _whiteSpace-nowrap"
+                      data-disable-theme="true"
+                    >
+                      Get Uniswap Wallet
+                    </span>
+                    <span
+                      class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _whiteSpace-nowrap"
+                      data-disable-theme="true"
+                    >
+                      Available on iOS, Android, and Chrome
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 40px; height: 40px; min-width: 40px; background-color: rgba(255, 55, 199, 0.08); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px; color: rgb(255, 55, 199);"
+                viewBox="0 0 22 22"
+              >
+                <path
+                  d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.75"
+                />
+              </svg>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
+                  <span
+                    class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh507465454 _whiteSpace-nowrap"
+                    data-disable-theme="true"
+                  >
+                    Uniswap Mobile
+                  </span>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _whiteSpace-nowrap"
+                    data-disable-theme="true"
+                  >
+                    Scan QR code to connect
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-8px _pb-8px _userSelect-none _cursor-pointer"
+          style="transition: 100ms;"
+        >
+          <div
+            class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          />
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _mr-18px _ml-18px"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _whiteSpace-nowrap"
+              data-disable-theme="true"
+            >
+              Other wallets
+            </span>
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+              viewBox="0 0 28 28"
+            >
+              <path
+                d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
+                fill="currentColor"
+              />
+              <path
+                d="M14.0928 15C13.8115 15 13.5654 15.1318 13.2754 15.3604L7.34277 20.1592C7.13184 20.335 7 20.5986 7 20.9238C7 21.5215 7.4834 21.9609 8.03711 21.9609C8.29199 21.9609 8.54688 21.8643 8.80176 21.6621L14.1016 17.3906L19.3926 21.6621C19.6387 21.8643 19.9023 21.9609 20.1572 21.9609C20.7109 21.9609 21.1943 21.5215 21.1943 20.9238C21.1943 20.5986 21.0625 20.335 20.8516 20.1592L14.9102 15.3604C14.6289 15.1318 14.3828 15 14.0928 15Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div
+            class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          />
+        </div>
+      </div>
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
+      >
+        <div
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-flex-start"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _overflowX-hidden _overflowY-hidden _width-10037 _maxHeight-100vh _opacity-1 _transition-250msease-i1019171151"
+            data-testid="option-grid"
+          />
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa94665589 _pl-t-space-spa94665589"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315 _textAlign-center"
+              data-disable-theme="true"
+            >
+              By connecting a wallet, you agree to Uniswap Labs’ 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/terms-of-service/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Terms of Service
+              </a>
+               and consent to its 
+              <a
+                class="c0 c1"
+                href="https://uniswap.org/privacy-policy"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Privacy Policy
+              </a>
+              .
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

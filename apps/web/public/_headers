@@ -1,0 +1,30 @@
+# public allows this caching on the public cache (CDN) not just the browser
+# max-age=0 tells browsers to revalidate every time so they don't get a stale version pointing at outdated JS assets
+# s-maxage=60 tells CDN to cache for 1 minute
+# stale-while-revalidate allows us to serve the stale version while revalidating
+
+/index.html
+  Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=30
+
+
+
+# aggressively caches static unchanging assets on the CDN
+# as long as the filename doesn't change, cache for a while
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/static/media/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/static/js/*
+  Cache-Control: max-age=31536000, immutable
+
+/static/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/favicon.ico
+  Cache-Control: public, max-age=31536000, immutable

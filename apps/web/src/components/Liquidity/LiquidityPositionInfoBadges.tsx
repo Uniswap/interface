@@ -1,12 +1,18 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
-import { isDynamicFeeTierAmount } from 'components/Liquidity/utils'
-import { ZERO_ADDRESS } from 'constants/misc'
+import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CopyHelper } from 'theme/components'
-import { styled, Text } from 'ui/src'
+import { Flex, styled, Text, Tooltip } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
-import { isAddress, shortenAddress } from 'utilities/src/addresses'
+import { zIndexes } from 'ui/src/theme'
+import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { shortenAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { FeeData } from '~/components/Liquidity/Create/types'
+import { isDynamicFeeTier } from '~/components/Liquidity/utils/feeTiers'
+import { getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
+import { CopyHelper } from '~/theme/components/CopyHelper'
 
 const PositionInfoBadge = styled(Text, {
   display: 'flex',
@@ -50,47 +56,84 @@ function getPlacement(index: number, length: number): 'start' | 'middle' | 'end'
 
 interface BadgeData {
   label: string
+  tooltipContent?: string
   copyable?: boolean
   icon?: JSX.Element
+  iconAfter?: JSX.Element
+  onPress?: () => void
+}
+
+interface BadgeCta extends BadgeData {
+  onPress: () => void
 }
 
 export function LiquidityPositionInfoBadges({
-  versionLabel,
+  version,
   v4hook,
   feeTier,
   size = 'default',
+  cta,
 }: {
-  versionLabel?: string
+  version?: RestProtocolVersion | GraphQLApi.ProtocolVersion | string
   v4hook?: string
-  feeTier?: string | FeeAmount
+  feeTier?: FeeData
   size: 'small' | 'default'
+  cta?: BadgeCta
 }): JSX.Element {
   const { t } = useTranslation()
 
   const badges = useMemo(() => {
+    const versionLabel = version
+      ? typeof version === 'string'
+        ? version.toLowerCase()
+        : getProtocolVersionLabel(version)
+      : undefined
+
+    const isV2 = versionLabel === 'v2'
+    const feeTierLabel = feeTier
+      ? isDynamicFeeTier(feeTier)
+        ? { label: t('common.dynamic') }
+        : { label: `${feeTier.feeAmount / BIPS_BASE}%` }
+      : isV2
+        ? { label: `${V2_DEFAULT_FEE_TIER / BIPS_BASE}%` }
+        : undefined
+
     return [
       versionLabel ? { label: versionLabel } : undefined,
       v4hook && v4hook !== ZERO_ADDRESS
-        ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
+        ? {
+            label: v4hook,
+            tooltipContent: t('liquidity.hooks.address.tooltip', { address: v4hook }),
+            copyable: true,
+            icon: <DocumentList color="$neutral2" size={16} />,
+          }
         : undefined,
-      feeTier !== undefined && feeTier !== '' && (typeof feeTier === 'number' || !isNaN(Number(feeTier)))
-        ? isDynamicFeeTierAmount(feeTier)
-          ? { label: t('common.dynamic') }
-          : { label: `${Number(feeTier) / 10000}%` }
-        : undefined,
+      feeTierLabel,
+      cta,
     ].filter(Boolean) as BadgeData[]
-  }, [versionLabel, v4hook, feeTier, t])
+  }, [version, v4hook, feeTier, cta, t])
 
   return (
     <>
-      {badges.map(({ label, copyable, icon }, index) => {
-        const displayLabel = isAddress(label) ? shortenAddress(label) : label
-        return (
+      {badges.map((badge, index) => {
+        const { label, copyable, icon, iconAfter, tooltipContent } = badge
+        const displayLabel = isEVMAddress(label) ? shortenAddress({ address: label }) : label
+        const key = label + index
+        const content = (
           <PositionInfoBadge
-            cursor={copyable ? 'pointer' : 'unset'}
-            key={label + index}
+            gap="$spacing4"
+            cursor={copyable || badge.onPress ? 'pointer' : 'unset'}
+            color={badge.onPress ? '$neutral1' : '$neutral2'}
             placement={getPlacement(index, badges.length)}
             size={size}
+            onPress={
+              badge.onPress
+                ? (e) => {
+                    e.preventDefault()
+                    badge.onPress?.()
+                  }
+                : undefined
+            }
           >
             {icon}
             {copyable ? (
@@ -100,7 +143,24 @@ export function LiquidityPositionInfoBadges({
             ) : (
               displayLabel
             )}
+            {iconAfter}
           </PositionInfoBadge>
+        )
+
+        if (!tooltipContent) {
+          return <Flex key={key}>{content}</Flex>
+        }
+
+        return (
+          <Tooltip allowFlip stayInFrame placement="top" key={key}>
+            <Tooltip.Trigger>{content}</Tooltip.Trigger>
+            <Tooltip.Content maxWidth="fit-content" zIndex={zIndexes.overlay}>
+              <Tooltip.Arrow />
+              <Text variant="body4" color="$neutral2">
+                {tooltipContent}
+              </Text>
+            </Tooltip.Content>
+          </Tooltip>
         )
       })}
     </>

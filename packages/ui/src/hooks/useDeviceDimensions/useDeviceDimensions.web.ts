@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { DeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 const isClient = typeof window === 'object'
 
@@ -20,16 +20,16 @@ export const useDeviceDimensions = (): DeviceDimensions => {
 
   // handles interface resize
   useEffect(() => {
-    if (isExtension) {
-      return undefined
+    function handleResize(): void {
+      setDeviceDimensions(getDeviceDimensions())
+    }
+
+    if (isExtensionApp) {
+      handleResize()
     }
 
     if (!isClient) {
       return undefined
-    }
-
-    async function handleResize(): Promise<void> {
-      setDeviceDimensions(getDeviceDimensions())
     }
 
     window.addEventListener('resize', handleResize)
@@ -41,10 +41,10 @@ export const useDeviceDimensions = (): DeviceDimensions => {
   // handles extension resize
   const { width: extensionWidth, height: extensionHeight } = useWindowDimensions()
 
-  if (isExtension) {
+  if (isExtensionApp) {
     return {
-      fullHeight: extensionHeight ?? 0,
-      fullWidth: extensionWidth ?? 0,
+      fullHeight: extensionHeight,
+      fullWidth: extensionWidth,
     }
   }
 

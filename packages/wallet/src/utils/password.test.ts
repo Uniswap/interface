@@ -1,9 +1,9 @@
 import i18n from 'uniswap/src/i18n'
 import {
-  PasswordStrength,
   getPasswordStrength,
   getPasswordStrengthTextAndColor,
   isPasswordStrongEnough,
+  PasswordStrength,
 } from 'wallet/src/utils/password'
 
 describe(isPasswordStrongEnough, () => {
@@ -80,7 +80,7 @@ describe(getPasswordStrengthTextAndColor, () => {
     })
     expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.MEDIUM)).toEqual({
       text: 'Medium',
-      color: '$DEP_accentWarning',
+      color: '$statusWarning',
     })
     expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.STRONG)).toEqual({
       text: 'Strong',

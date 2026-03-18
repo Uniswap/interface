@@ -11,7 +11,7 @@ export function handleReduxAction({
   newState: unknown
   action: Action<unknown>
 }): { isAction: boolean; reduxStateToLog: GenericReduxState | undefined } {
-  const isAction = typeof action !== 'undefined' && action !== null
+  const isAction = typeof action !== 'undefined'
 
   if (shouldLogState) {
     const stateIsObject = typeof newState === 'object' && newState !== null

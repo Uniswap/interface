@@ -1,9 +1,11 @@
-import { GqlResult } from 'uniswap/src/data/types'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { GqlResult } from '@universe/api'
+import { useMemo } from 'react'
+import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 
 export function usePortfolioBalancesForAddressById(
-  address: Address | undefined,
+  addresses: AddressGroup,
 ): GqlResult<Record<Address, PortfolioBalance> | undefined> {
   const {
     data: portfolioBalancesById,
@@ -11,14 +13,17 @@ export function usePortfolioBalancesForAddressById(
     refetch,
     loading,
   } = usePortfolioBalances({
-    address,
+    ...addresses,
     fetchPolicy: 'cache-first', // we want to avoid re-renders when token selector is opening
   })
 
-  return {
-    data: portfolioBalancesById,
-    error,
-    refetch,
-    loading,
-  }
+  return useMemo(
+    () => ({
+      data: portfolioBalancesById,
+      error,
+      refetch,
+      loading,
+    }),
+    [portfolioBalancesById, error, refetch, loading],
+  )
 }

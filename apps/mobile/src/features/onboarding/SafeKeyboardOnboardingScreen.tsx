@@ -89,7 +89,7 @@ export function SafeKeyboardOnboardingScreen({
           pointerEvents="none"
           colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
           locations={[0.6, 0.8]}
-          style={[styles.gradient, { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) }]}
+          style={[styles.gradient, { height: headerHeight * responsiveGradientPadding }]}
         />
       }
       keyboardDismissMode={keyboardDismissMode}

@@ -1,10 +1,13 @@
+/* eslint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
-import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
+import { providers, Signer, UnsignedTransaction, utils } from 'ethers'
+import { Bytes } from 'ethers/lib/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 /**
@@ -30,8 +33,21 @@ export class NativeSigner extends Signer implements SignsTypedData {
     return Promise.resolve(this.address)
   }
 
+  // TODO(WALL-6927): Fix typing for signMessage here for web
   signMessage(message: string): Promise<string> {
     return Keyring.signMessageForAddress(this.address, message)
+  }
+
+  signHashForAddress(address: string, hash: string | Bytes, chainId: number): Promise<string> {
+    // Use type narrowing for safety
+    if (typeof hash === 'string') {
+      // Add 0x prefix if needed
+      const prefixedHash = hash.startsWith('0x') ? hash : `0x${hash}`
+      return Keyring.signHashForAddress(address, prefixedHash, chainId)
+    } else {
+      // Convert non-string (Bytes) to hex string
+      return Keyring.signHashForAddress(address, utils.hexlify(hash), chainId)
+    }
   }
 
   // reference: https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/wallet/src.ts/index.ts#L135
@@ -49,7 +65,7 @@ export class NativeSigner extends Signer implements SignsTypedData {
     return signature
   }
 
-  async signTransaction(transaction: providers.TransactionRequest): Promise<string> {
+  async signTransaction(transaction: providers.TransactionRequest): Promise<HexString> {
     const tx = await utils.resolveProperties(transaction)
 
     if (tx.chainId === undefined) {
@@ -57,7 +73,12 @@ export class NativeSigner extends Signer implements SignsTypedData {
     }
 
     if (tx.from != null) {
-      if (!areAddressesEqual(tx.from, this.address)) {
+      if (
+        !areAddressesEqual({
+          addressInput1: { address: tx.from, chainId: tx.chainId },
+          addressInput2: { address: this.address, chainId: tx.chainId },
+        })
+      ) {
         throw new Error(`Signing address does not match the tx 'from' address`)
       }
       delete tx.from
@@ -72,7 +93,12 @@ export class NativeSigner extends Signer implements SignsTypedData {
       tx.chainId || UniverseChainId.Mainnet,
     )
 
-    return utils.serializeTransaction(ut, signature)
+    const signedTx = utils.serializeTransaction(ut, signature)
+    if (!isValidHexString(signedTx)) {
+      throw new Error('Invalid signed transaction')
+    }
+
+    return signedTx
   }
 
   connect(provider: providers.Provider): NativeSigner {

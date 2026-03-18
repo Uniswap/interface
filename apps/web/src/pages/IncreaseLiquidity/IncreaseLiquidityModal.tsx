@@ -1,71 +1,61 @@
+import { useTranslation } from 'react-i18next'
+import { HeightAnimator } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
+import { useLPSlippageValue } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
+import { LiquidityModalHeader } from '~/components/Liquidity/LiquidityModalHeader'
+import { useModalState } from '~/hooks/useModalState'
 import {
   IncreaseLiquidityContextProvider,
   IncreaseLiquidityStep,
   useIncreaseLiquidityContext,
-} from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { IncreaseLiquidityReview } from 'components/IncreaseLiquidity/IncreaseLiquidityReview'
-import { IncreaseLiquidityTxContextProvider } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
-import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
-import { IncreaseLiquidityForm } from 'pages/IncreaseLiquidity/IncreaseLiquidityForm'
-import { useTranslation } from 'react-i18next'
-import { useCloseModal } from 'state/application/hooks'
-import { HeightAnimator } from 'ui/src'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
+} from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
+import { IncreaseLiquidityForm } from '~/pages/IncreaseLiquidity/IncreaseLiquidityForm'
+import { IncreaseLiquidityReview } from '~/pages/IncreaseLiquidity/IncreaseLiquidityReview'
+import { IncreaseLiquidityTxContextProvider } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
 
 function IncreaseLiquidityModalInner() {
   const { t } = useTranslation()
 
-  const { step, setStep } = useIncreaseLiquidityContext()
-  const onClose = useCloseModal(ModalName.AddLiquidity)
+  const { step, setStep, increaseLiquidityState } = useIncreaseLiquidityContext()
+  const { closeModal } = useModalState(ModalName.AddLiquidity)
+  const autoSlippageTolerance = useLPSlippageValue({
+    version: increaseLiquidityState.position?.version,
+    currencyA: increaseLiquidityState.position?.currency0Amount.currency,
+    currencyB: increaseLiquidityState.position?.currency1Amount.currency,
+  })
 
-  if (step === IncreaseLiquidityStep.Input) {
-    return (
-      <Modal name={ModalName.AddLiquidity} onClose={onClose} isDismissible gap="$gap24" padding="$padding16">
-        <LiquidityModalHeader title={t('common.addLiquidity')} closeModal={onClose} />
-        <HeightAnimator animation="fast">
-          <IncreaseLiquidityForm />
-        </HeightAnimator>
-      </Modal>
-    )
+  let modalContent
+  switch (step) {
+    case IncreaseLiquidityStep.Input:
+      modalContent = <IncreaseLiquidityForm />
+      break
+    case IncreaseLiquidityStep.Review:
+      modalContent = <IncreaseLiquidityReview onClose={closeModal} />
+      break
   }
 
   return (
-    <Modal
-      name={ModalName.AddLiquidity}
-      onClose={onClose}
-      isDismissible
-      gap="$gap12"
-      paddingX="$padding8"
-      paddingY="$padding12"
-      height="max-content"
-    >
-      <LiquidityModalHeader
-        title={t('common.addLiquidity')}
-        closeModal={onClose}
-        goBack={() => setStep(IncreaseLiquidityStep.Input)}
-      />
-      <HeightAnimator animation="fast">
-        <IncreaseLiquidityReview onClose={onClose} />
-      </HeightAnimator>
-    </Modal>
+    <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
+      <IncreaseLiquidityTxContextProvider>
+        <Modal name={ModalName.AddLiquidity} onClose={closeModal} isDismissible gap="$gap24" padding="$padding16">
+          <LiquidityModalHeader
+            title={t('common.addLiquidity')}
+            closeModal={closeModal}
+            goBack={step === IncreaseLiquidityStep.Review ? () => setStep(IncreaseLiquidityStep.Input) : undefined}
+          />
+          <HeightAnimator useInitialHeight>{modalContent}</HeightAnimator>
+        </Modal>
+      </IncreaseLiquidityTxContextProvider>
+    </LPTransactionSettingsStoreContextProvider>
   )
 }
 
 export function IncreaseLiquidityModal() {
   return (
     <IncreaseLiquidityContextProvider>
-      <TransactionSettingsContextProvider
-        settingKey={TransactionSettingKey.LP}
-        autoSlippageTolerance={MIN_AUTO_SLIPPAGE_TOLERANCE}
-      >
-        <IncreaseLiquidityTxContextProvider>
-          <IncreaseLiquidityModalInner />
-        </IncreaseLiquidityTxContextProvider>
-      </TransactionSettingsContextProvider>
+      <IncreaseLiquidityModalInner />
     </IncreaseLiquidityContextProvider>
   )
 }

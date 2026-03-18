@@ -2,12 +2,7 @@
 
 buildscript {
   ext {
-    buildToolsVersion = "35.0.0"
-    minSdkVersion = 28
-    compileSdkVersion = 35
-    targetSdkVersion = 35
-    ndkVersion = "26.1.10909125"
-    kotlinVersion = "1.9.24"
+    kotlinVersion = "2.0.21"
 
     appCompat = "1.6.1"
     compose = "1.4.3"
@@ -33,7 +28,16 @@ buildscript {
 
 plugins {
   id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlinVersion"
+  id 'org.jetbrains.kotlin.plugin.compose' version "$kotlinVersion" apply false
 }
+
+def reactNativeAndroidDir = new File(
+  providers.exec {
+    workingDir(rootDir)
+    commandLine("node", "--print", "require.resolve('react-native/package.json')")
+  }.standardOutput.asText.get().trim(),
+  "../android"
+)
 
 allprojects {
   project.pluginManager.withPlugin("com.facebook.react") {
@@ -44,11 +48,15 @@ allprojects {
   }
 
   repositories {
-    maven {
-      // expo-camera bundles a custom com.google.android:cameraview
-      url "$rootDir/../../../node_modules/expo-camera/android/maven"
-    }
+    google()
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
+    // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+    maven { url(reactNativeAndroidDir) }
+    // expo-camera bundles a custom com.google.android:cameraview
+    maven { url "$rootDir/../../../node_modules/expo-camera/android/maven" }
   }
 }
 
+apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"

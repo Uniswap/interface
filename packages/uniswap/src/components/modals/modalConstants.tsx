@@ -1,4 +1,4 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import type { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { ComponentProps } from 'react'
 import { Easing } from 'react-native-reanimated'
 import { isIOS } from 'utilities/src/platform'

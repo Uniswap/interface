@@ -1,0 +1,45 @@
+diff --git a/Users/tboba/Code/uniswap-universe/node_modules/@tamagui/portal/.bun-tag-de88d58b8fac55f8 b/.bun-tag-de88d58b8fac55f8
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/esm/GorhomPortal.mjs b/dist/esm/GorhomPortal.mjs
+index b26368fa9d56a42ba4487180e666a7763bb1024a..349c2ed8ab44a8186cb345fc84b0e851504a17d7 100644
+--- a/dist/esm/GorhomPortal.mjs
++++ b/dist/esm/GorhomPortal.mjs
+@@ -1,6 +1,6 @@
+-import { isWeb, useIsomorphicLayoutEffect } from "@tamagui/constants";
++import { isWeb } from "@tamagui/constants";
+ import { startTransition } from "@tamagui/start-transition";
+-import React, { createContext, memo, useCallback, useContext, useMemo, useReducer } from "react";
++import React, { createContext, memo, useCallback, useContext, useEffect, useMemo, useReducer, useState } from "react";
+ import { allPortalHosts, portalListeners } from "./constants.mjs";
+ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+ var ACTIONS = /* @__PURE__ */(ACTIONS2 => (ACTIONS2[ACTIONS2.REGISTER_HOST = 0] = "REGISTER_HOST", ACTIONS2[ACTIONS2.DEREGISTER_HOST = 1] = "DEREGISTER_HOST", ACTIONS2[ACTIONS2.ADD_UPDATE_PORTAL = 2] = "ADD_UPDATE_PORTAL", ACTIONS2[ACTIONS2.REMOVE_PORTAL = 3] = "REMOVE_PORTAL", ACTIONS2))(ACTIONS || {});
+@@ -124,14 +124,15 @@ const defaultRenderer = children => /* @__PURE__ */jsx(Fragment, {
+     });
+   });
+ function PortalHostWeb(props) {
+-  return useIsomorphicLayoutEffect(() => () => {
+-    allPortalHosts.delete(props.name);
+-  }, [props.name]), /* @__PURE__ */jsx("div", {
++  const [mounted, setMounted] = useState(!1);
++  return useEffect(() => (setMounted(!0), () => {
++    setMounted(!1), allPortalHosts.delete(props.name);
++  }), [props.name]), /* @__PURE__ */jsx("div", {
+     style: {
+       display: "contents"
+     },
+     ref: node => {
+-      node && (allPortalHosts.set(props.name, node), portalListeners[props.name]?.forEach(x => x(node)));
++      node && mounted && (allPortalHosts.set(props.name, node), portalListeners[props.name]?.forEach(x => x(node)));
+     }
+   });
+ }
+@@ -146,7 +147,7 @@ function PortalHostNonNative(props) {
+       registerHost: registerHost2,
+       deregisterHost: deregisterHost2
+     } = usePortal(props.name);
+-  return useIsomorphicLayoutEffect(() => {
++  return useEffect(() => {
+     if (!(typeof window > "u")) return registerHost2(), () => {
+       deregisterHost2();
+     };

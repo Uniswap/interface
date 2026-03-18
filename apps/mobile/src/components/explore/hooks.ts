@@ -1,28 +1,35 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent } from 'react-native'
-import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { SharedValue, StyleProps, interpolate, useAnimatedStyle } from 'react-native-reanimated'
+import type { NativeSyntheticEvent } from 'react-native'
+import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
+import type { SharedValue, StyleProps } from 'react-native-reanimated'
+import { interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
-import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ElementName, ModalName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/useSelectHasTokenFavorited'
+import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/useToggleFavoriteCallback'
+import type { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
+import type { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import type { CurrencyId } from 'uniswap/src/types/currency'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
   chainId: UniverseChainId
-  analyticsSection: SectionNameType
+  analyticsSection: SectionName
   // token, which are in favorite section would have it defined
   onEditFavorites?: () => void
+  tokenName?: string
 }
 
 // Provide context menu related data for token
@@ -31,6 +38,7 @@ export function useExploreTokenContextMenu({
   chainId,
   analyticsSection,
   onEditFavorites,
+  tokenName,
 }: TokenMenuParams): {
   menuActions: Array<ContextMenuAction & { onPress: () => void }>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
@@ -45,18 +53,17 @@ export function useExploreTokenContextMenu({
   // currencyId, where we have hardcoded addresses for native currencies
   const currencyAddress = currencyIdToAddress(currencyId)
 
-  const onPressReceive = useCallback(
-    () => dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })),
-    [dispatch],
+  const onPressReceive = useEvent(() =>
+    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })),
   )
 
-  const onPressShare = useCallback(async () => {
+  const onPressShare = useEvent(async () => {
     handleShareToken({ currencyId })
-  }, [currencyId, handleShareToken])
+  })
 
-  const toggleFavoriteToken = useToggleFavoriteCallback(currencyId, isFavorited)
+  const toggleFavoriteToken = useToggleFavoriteCallback({ id: currencyId, tokenName, isFavoriteToken: isFavorited })
 
-  const onPressSwap = useCallback(() => {
+  const onPressSwap = useEvent(() => {
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
       exactAmountToken: '',
@@ -67,22 +74,22 @@ export function useExploreTokenContextMenu({
         type: AssetType.Currency,
       },
     }
-    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+    navigate(ModalName.Swap, swapFormState)
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.Swap,
       section: analyticsSection,
     })
-  }, [analyticsSection, chainId, currencyAddress, dispatch])
+  })
 
-  const onPressToggleFavorite = useCallback(() => {
+  const onPressToggleFavorite = useEvent(() => {
     toggleFavoriteToken()
-  }, [toggleFavoriteToken])
+  })
 
   const menuActions = useMemo(
     () => [
       {
         title: isFavorited ? t('explore.tokens.favorite.action.remove') : t('explore.tokens.favorite.action.add'),
-        systemIcon: isFavorited ? 'heart.fill' : 'heart',
+        systemIcon: isFavorited ? 'heart.slash.fill' : 'heart.fill',
         onPress: onPressToggleFavorite,
       },
       ...(onEditFavorites

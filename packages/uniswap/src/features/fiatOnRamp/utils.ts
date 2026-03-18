@@ -1,9 +1,12 @@
+import type { SectionListData } from 'react-native'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
+  FiatOnRampCurrency,
   FORCurrencyOrBalance,
+  FORFilters,
+  FORFiltersMap,
   FORLogo,
   FORQuote,
-  FiatOnRampCurrency,
   InitialQuoteSelection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import { isAndroid, isIOS } from 'utilities/src/platform'
@@ -11,6 +14,15 @@ import { v4 as uuid } from 'uuid'
 
 const APPLE_PAY = 'Apple Pay'
 const GOOGLE_PAY = 'Google Pay'
+
+/**
+ * Validates that a currency code is a valid 3-letter ISO 4217 currency code.
+ * Must be exactly 3 alphabetic characters (case-insensitive).
+ * Used to validate sourceCurrency/fiatCurrency in on-ramp transactions.
+ */
+export function isValidIsoCurrencyCode(code: unknown): code is string {
+  return typeof code === 'string' && /^[A-Za-z]{3}$/.test(code)
+}
 
 export function transformPaymentMethods(paymentMethods: string[]): string[] {
   return paymentMethods.filter((pm) => !(pm === APPLE_PAY && isAndroid) && !(pm === GOOGLE_PAY && isIOS))
@@ -25,7 +37,7 @@ export interface FORApiError {
     statusCode: number
     errorName: string
     message: string
-    context: object | undefined
+    context: object | undefined | string
   }
 }
 
@@ -40,12 +52,40 @@ export interface InvalidRequestAmountTooLow extends FORApiError {
   }
 }
 
+export interface BadRequest extends FORApiError {
+  data: FORApiError['data'] & {
+    statusCode: 400
+    errorName: 'BadRequest'
+    context: string
+  }
+}
+
+export function isBadRequestAmountTooLow(error: FORApiError): error is BadRequest {
+  const e = error
+  return (
+    e.data.statusCode === 400 &&
+    e.data.errorName === 'BadRequest' &&
+    typeof e.data.context === 'string' &&
+    e.data.context.includes('Source amount is below the minimum allowed')
+  )
+}
+
+export function isBadRequestAmountTooHigh(error: FORApiError): error is BadRequest {
+  const e = error
+  return (
+    e.data.statusCode === 400 &&
+    e.data.errorName === 'BadRequest' &&
+    typeof e.data.context === 'string' &&
+    e.data.context.includes('Source amount is above the maximum allowed')
+  )
+}
+
 export function isInvalidRequestAmountTooLow(error: FORApiError): error is InvalidRequestAmountTooLow {
-  const e = error as InvalidRequestAmountTooLow
+  const e = error
   return (
     e.data.statusCode === 400 &&
     e.data.errorName === 'InvalidRequestAmountTooLow' &&
-    typeof e.data.context?.minimumAllowed === 'number'
+    typeof (e as InvalidRequestAmountTooLow).data.context.minimumAllowed === 'number'
   )
 }
 
@@ -61,11 +101,11 @@ export interface InvalidRequestAmountTooHigh extends FORApiError {
 }
 
 export function isInvalidRequestAmountTooHigh(error: FORApiError): error is InvalidRequestAmountTooHigh {
-  const e = error as InvalidRequestAmountTooHigh
+  const e = error
   return (
     e.data.statusCode === 400 &&
     e.data.errorName === 'InvalidRequestAmountTooHigh' &&
-    typeof e.data.context?.maximumAllowed === 'number'
+    typeof (e as InvalidRequestAmountTooHigh).data.context.maximumAllowed === 'number'
   )
 }
 
@@ -77,7 +117,7 @@ export interface NoQuotesError extends FORApiError {
 }
 
 export function isNoQuotesError(error: FORApiError): error is InvalidRequestAmountTooHigh {
-  const e = error as NoQuotesError
+  const e = error
   return e.data.statusCode === 400 && e.data.errorName === 'NoQuotes'
 }
 
@@ -86,6 +126,7 @@ export function isFiatOnRampApiError(error: unknown): error is FORApiError {
     const e = error as FORApiError
     return (
       typeof e.data === 'object' &&
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       e.data !== null &&
       typeof e.data.statusCode === 'number' &&
       typeof e.data.errorName === 'string'
@@ -102,9 +143,10 @@ export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): str
   return isDarkMode ? logos.darkLogo : logos.lightLogo
 }
 
-export function createOnRampTransactionId(serviceProvider?: string): string {
+export function createOnRampTransactionId(serviceProvider?: string, idSuffix?: string): string {
+  const id = idSuffix ? `${uuid().split('-')[0]}-${idSuffix}` : uuid()
   // The backend expects MoonPay transactions to have the MOONPAY prefix.
-  return `${serviceProvider?.toUpperCase() === 'MOONPAY' ? 'MOONPAY' : ''}${uuid()}`
+  return `${serviceProvider?.toUpperCase() === 'MOONPAY' ? 'MOONPAY' : ''}${id}`
 }
 
 export function selectInitialQuote(quotes: FORQuote[] | undefined): {
@@ -143,4 +185,43 @@ export function getUnsupportedFORTokensWithBalance(
   return Object.values(balancesById || {}).filter(
     (balance) => !offRampCurrencyIds.includes(balance.currencyInfo.currencyId),
   )
+}
+
+export function filterQuotesByPaymentMethod(quotes: Maybe<FORQuote[]>, paymentFilter?: FORFilters): Maybe<FORQuote[]> {
+  if (!quotes || !paymentFilter) {
+    return quotes
+  }
+
+  return quotes.filter((quote) => {
+    return (quote.serviceProviderDetails?.paymentMethods ?? []).some((paymentMethod) => {
+      const mappedFilter = FORFiltersMap[paymentMethod]
+      return mappedFilter === paymentFilter
+    })
+  })
+}
+
+type OrganizedQuoteSections = {
+  sections: SectionListData<FORQuote>[]
+  initialQuote: FORQuote
+}
+
+export function organizeQuotesIntoSections(quotes: Maybe<FORQuote[]>): OrganizedQuoteSections | undefined {
+  if (!quotes) {
+    return undefined
+  }
+
+  const { quote, type } = selectInitialQuote(quotes)
+  if (!quote) {
+    return undefined
+  }
+
+  let sections: SectionListData<FORQuote>[]
+  if (type === InitialQuoteSelection.MostRecent) {
+    const otherQuotes = quotes.filter((item) => item !== quote)
+    sections = [{ data: [quote], type }, ...(otherQuotes.length ? [{ data: otherQuotes }] : [])]
+  } else {
+    sections = [{ data: quotes, type }]
+  }
+
+  return { sections, initialQuote: quote }
 }

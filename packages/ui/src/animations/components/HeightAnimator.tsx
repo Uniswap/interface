@@ -1,30 +1,44 @@
-import { useState } from 'react'
-import { View, useEvent } from 'tamagui'
+import { useCallback, useState } from 'react'
+import { LayoutChangeEvent } from 'react-native'
+import { View, type ViewProps } from 'tamagui'
+import { type FlexProps } from 'ui/src/components/layout'
+import { isTestEnv } from 'utilities/src/environment/env'
 
-export const HeightAnimator = View.styleable<{ open?: boolean; useInitialHeight?: boolean }>((props, ref) => {
-  const { open = true, children, useInitialHeight, ...rest } = props
-  const [visibleHeight, setVisibleHeight] = useState(useInitialHeight ? children.height : 0)
+export interface HeightAnimatorProps {
+  open?: boolean
+  useInitialHeight?: boolean
+  animation?: FlexProps['animation']
+  styleProps?: FlexProps
+  animationDisabled?: boolean // we want to disable animation when inside of a bottom sheet
+}
 
-  const onLayout = useEvent(({ nativeEvent }) => {
-    if (nativeEvent.layout.height) {
-      setVisibleHeight(nativeEvent.layout.height)
-    }
-  })
+const enterStyle = { opacity: 0 } satisfies ViewProps['enterStyle']
+const exitStyle = { opacity: 0 } satisfies ViewProps['exitStyle']
 
-  return (
-    <View
-      ref={ref}
-      animation="fast"
-      enterStyle={{ opacity: 0 }}
-      exitStyle={{ opacity: 0 }}
-      height={open ? visibleHeight : 0}
-      overflow="hidden"
-      width="100%"
-      {...rest}
-    >
-      <View position="absolute" width="100%" onLayout={onLayout}>
-        {children}
+export const HeightAnimator = View.styleable<HeightAnimatorProps>(
+  ({ open = true, animationDisabled = false, children, useInitialHeight, animation = 'fast', styleProps }) => {
+    const [visibleHeight, setVisibleHeight] = useState(useInitialHeight ? children.height : 0)
+
+    const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
+      if (nativeEvent.layout.height) {
+        setVisibleHeight(nativeEvent.layout.height)
+      }
+    }, [])
+
+    return (
+      <View
+        animation={animationDisabled || isTestEnv() ? null : animation}
+        enterStyle={enterStyle}
+        exitStyle={exitStyle}
+        height={open ? visibleHeight : 0}
+        overflow="hidden"
+        width="100%"
+        {...styleProps}
+      >
+        <View position="absolute" width="100%" onLayout={onLayout}>
+          {children}
+        </View>
       </View>
-    </View>
-  )
-})
+    )
+  },
+)

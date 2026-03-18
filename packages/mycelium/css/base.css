@@ -1,0 +1,13 @@
+/* Base Layer Styles */
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  html,
+  body {
+    @apply bg-background text-foreground font-basel;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+}

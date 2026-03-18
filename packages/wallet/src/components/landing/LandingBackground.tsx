@@ -13,11 +13,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { Circle, Defs, Svg } from 'react-native-svg'
-import { Flex, FlexProps, Image, isWeb, useIsDarkMode } from 'ui/src'
+import { Flex, FlexProps, Image, useIsDarkMode } from 'ui/src'
 import { Jiggly } from 'ui/src/animations'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { imageSizes } from 'ui/src/theme'
+import { isWebPlatform } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import {
@@ -75,14 +76,19 @@ const OnboardingAnimation = ({
         easing: Easing.elastic(1.1),
       }),
     )
-  }, [uniswapLogoScale])
+  }, [])
 
   useTimeout(() => {
     setShowAnimatedElements(true)
   }, ANIMATED_ELEMENTS_DELAY)
 
   return (
-    <Flex grow justifyContent="center" style={{ transform: isWeb ? 'scale(0.9)' : undefined }} onLayout={onLayout}>
+    <Flex
+      grow
+      justifyContent="center"
+      style={{ transform: isWebPlatform ? 'scale(0.9)' : undefined }}
+      onLayout={onLayout}
+    >
       {showAnimatedElements ? (
         <Flex style={elementsStyle}>
           <AnimatedElements innerCircleSize={innerCircleSize} outerCircleSize={outerCircleSize} width={boxWidth} />
@@ -91,10 +97,10 @@ const OnboardingAnimation = ({
       <AnimatedFlex alignSelf="center" position="absolute" style={animatedStyle}>
         <Jiggly duration={75} offset={5}>
           <Image
-            height={isWeb ? LOGO_SIZE_WEB : imageSizes.image100}
+            height={isWebPlatform ? LOGO_SIZE_WEB : imageSizes.image100}
             resizeMode="contain"
             source={UNISWAP_LOGO}
-            width={isWeb ? LOGO_SIZE_WEB : imageSizes.image100}
+            width={isWebPlatform ? LOGO_SIZE_WEB : imageSizes.image100}
           />
         </Jiggly>
       </AnimatedFlex>
@@ -178,7 +184,7 @@ const AnimatedElements = ({
     )
     innerAnimation.value = withDelay(INNER_CIRCLE_SHOW_DELAY, withSpring(0.8))
     outerAnimation.value = withDelay(OUTER_CIRCLE_SHOW_DELAY, withSpring(0.8))
-  }, [innerAnimation, outerAnimation, rotation])
+  }, [])
 
   const innerCircleStyle = useAnimatedStyle(() => {
     return {

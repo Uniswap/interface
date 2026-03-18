@@ -1,11 +1,11 @@
-import { wordlists } from 'ethers'
+import { wordlists } from '@ethersproject/wordlists'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
-  TextInputFocusEventData,
-  TextInputKeyPressEventData,
+  type NativeSyntheticEvent,
+  type TextInputChangeEventData,
+  type TextInputFocusEventData,
+  type TextInputKeyPressEventData,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
@@ -13,7 +13,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { DeprecatedButton, Flex, FlexProps, Input, Square, Text, inputStyles } from 'ui/src'
+import { Button, Flex, Input, inputStyles, Square, Text } from 'ui/src'
 import { FileListLock, RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -76,7 +76,7 @@ export function ImportMnemonic(): JSX.Element {
     return () => {
       window.document.removeEventListener('paste', handlePaste)
     }
-  }, [setMnemonic])
+  }, [])
 
   const handleChange = useCallback(
     (index: number) =>
@@ -92,7 +92,7 @@ export function ImportMnemonic(): JSX.Element {
         newMnemonic[index] = word.trim()
         setMnemonic(newMnemonic)
       },
-    [mnemonic, setMnemonic],
+    [mnemonic],
   )
 
   const handleKeyPress = useCallback(
@@ -117,7 +117,7 @@ export function ImportMnemonic(): JSX.Element {
         if (!word) {
           return
         }
-        const wordInList = wordlists.en?.getWordIndex(word) !== -1
+        const wordInList = wordlists['en']?.getWordIndex(word) !== -1
         setErrors({ ...errors, [index]: !wordInList })
       },
     [errors],
@@ -187,7 +187,7 @@ export function ImportMnemonic(): JSX.Element {
               height={iconSizes.icon48}
               width={iconSizes.icon48}
             >
-              <FileListLock color="$neutral1" size={iconSizes.icon24} />
+              <FileListLock color="$neutral1" size="$icon.24" />
             </Square>
           }
           belowFrameContent={
@@ -227,42 +227,45 @@ export function ImportMnemonic(): JSX.Element {
             >
               {debouncedErrorMessageToDisplay ?? DUMMY_TEXT} {/* To prevent layout shift */}
             </Text>
-            <Flex>
-              <Flex row flexWrap="wrap" gap="$spacing16">
-                {mnemonic.map(
-                  (word, index) =>
-                    Boolean(expanded || (!expanded && index < 12)) && (
-                      <Flex key={index} position="relative" style={styles.recoveryPhraseWord}>
-                        <RecoveryPhraseWord
-                          key={index + 'input'}
-                          ref={(ref) => (inputRefs[index] = ref)}
-                          handleBlur={handleBlur}
-                          handleChange={handleChange}
-                          handleKeyPress={handleKeyPress}
-                          index={index}
-                          word={word}
-                          onSubmitEditing={onSubmit}
-                        />
-                      </Flex>
-                    ),
-                )}
-              </Flex>
-              <DeprecatedButton
-                backgroundColor="$transparent"
-                gap="$spacing4"
-                hoverStyle={{ backgroundColor: 'transparent' } as FlexProps}
+            <Flex row flexWrap="wrap" gap="$spacing16">
+              {mnemonic.map(
+                (word, index) =>
+                  Boolean(expanded || index < 12) && (
+                    <Flex key={index} style={styles.recoveryPhraseWord}>
+                      <RecoveryPhraseWord
+                        key={index + 'input'}
+                        ref={(ref) => {
+                          inputRefs[index] = ref
+                        }}
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        handleKeyPress={handleKeyPress}
+                        index={index}
+                        word={word}
+                        onSubmitEditing={onSubmit}
+                      />
+                    </Flex>
+                  ),
+              )}
+            </Flex>
+            <Flex row alignSelf="stretch">
+              <Button
                 mt="$spacing16"
-                mx="auto"
-                pressStyle={{ backgroundColor: 'transparent' } as FlexProps}
-                onPress={(): void => setExpanded(!expanded)}
+                mb="$spacing8"
+                icon={<RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} size="$icon.20" />}
+                iconPosition="after"
+                emphasis="text-only"
+                onPress={(): void => {
+                  if (expanded) {
+                    setMnemonic([...mnemonic.slice(0, 12), ...Array(12).fill('')])
+                  }
+                  setExpanded(!expanded)
+                }}
               >
-                <Text color="$neutral2" variant="body3">
-                  {expanded
-                    ? t('onboarding.importMnemonic.button.default')
-                    : t('onboarding.importMnemonic.button.longPhrase')}
-                </Text>
-                <RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} width={iconSizes.icon20} />
-              </DeprecatedButton>
+                {expanded
+                  ? t('onboarding.importMnemonic.button.default')
+                  : t('onboarding.importMnemonic.button.longPhrase')}
+              </Button>
             </Flex>
           </>
         </OnboardingScreen>
@@ -286,7 +289,7 @@ const RecoveryPhraseWord = forwardRef<
   ref,
 ): JSX.Element {
   const debouncedWord = useDebounce(word, 500)
-  const showError = isValidMnemonicWord(debouncedWord)
+  const showError = debouncedWord.length > 0 && !isValidMnemonicWord(debouncedWord)
 
   return (
     <Flex key={index} position="relative" width={130}>
@@ -321,7 +324,7 @@ const RecoveryPhraseWord = forwardRef<
         onKeyPress={handleKeyPress(index)}
         onSubmitEditing={onSubmitEditing}
         {...(showError && {
-          backgroundColor: '$DEP_accentCriticalSoft',
+          backgroundColor: '$statusCritical2',
           color: '$statusCritical',
         })}
       />

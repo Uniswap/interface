@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src/'
-import { TokenCard } from 'uniswap/src/components/TokenSelector/items/TokenCard'
+import { TokenCard } from 'uniswap/src/components/TokenSelector/items/tokens/TokenCard'
 import { HorizontalTokenListProps } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 
 const MAX_CARDS_PER_ROW = 5
@@ -24,7 +24,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
     : suggestedTokens
   const remainingCount = shouldShowExpansion ? suggestedTokens.length - MAX_CARDS_PER_ROW + 1 : 0
 
-  // Hack to animate the height of the container when the tokens get expanded
+  // biome-ignore lint/correctness/useExhaustiveDependencies: hack to animate the height of the container when the tokens get expanded
   useEffect(() => {
     if (containerRef.current) {
       setContainerHeight(containerRef.current.scrollHeight)
@@ -39,12 +39,12 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
       gap="$spacing4"
       flexWrap="wrap"
       py="$spacing8"
-      mx="$spacing16"
+      mx="$spacing20"
       animation={expanded ? '300ms' : undefined}
       height={containerHeight}
     >
       {visibleTokens.map((token) => (
-        <Flex style={styles.fiveTokenRowCard}>
+        <Flex key={token.currencyInfo.currencyId} style={styles.fiveTokenRowCard}>
           <TokenCard
             key={token.currencyInfo.currencyId}
             index={index}
@@ -55,7 +55,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
         </Flex>
       ))}
       {!expanded && remainingCount > 0 && (
-        <TouchableArea style={styles.fiveTokenRowCard} onPress={() => onExpand?.()}>
+        <TouchableArea style={styles.fiveTokenRowCard} onPress={() => onExpand?.(suggestedTokens)}>
           <Flex fill centered borderRadius="$rounded16" backgroundColor="$surface2">
             <Text variant="buttonLabel3" color="$neutral2">
               {remainingCount}+

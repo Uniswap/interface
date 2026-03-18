@@ -1,8 +1,8 @@
 import React from 'react'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OptionCard({
@@ -20,7 +20,7 @@ export function OptionCard({
   blurb: string
   icon: React.ReactNode
   onPress: () => void
-  elementName: ElementNameType
+  elementName: ElementName
   testID: TestIDType
   disabled?: boolean
   opacity?: number
@@ -46,9 +46,9 @@ export function OptionCard({
             alignItems="center"
             backgroundColor="$accent2"
             borderRadius="$roundedFull"
-            height={iconSizes.icon28}
+            height={iconSizes.icon32}
             justifyContent="center"
-            width={iconSizes.icon28}
+            width={iconSizes.icon32}
             {...(badgeText && { mt: '$spacing4' })}
           >
             {icon}
@@ -66,8 +66,8 @@ export function OptionCard({
                     centered
                     backgroundColor="$DEP_magentaDark"
                     borderRadius="$rounded8"
-                    p="$spacing8"
-                    alignSelf="flex-start"
+                    py="$spacing2"
+                    px="$spacing6"
                     maxWidth="30%"
                   >
                     <Text textAlign="center" color="$accent1" variant="buttonLabel3">

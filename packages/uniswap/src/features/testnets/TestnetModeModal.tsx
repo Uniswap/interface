@@ -12,6 +12,8 @@ type TestnetModeModalProps = {
   onClose: () => void
 }
 
+export type TestnetModeModalState = Omit<TestnetModeModalProps, 'onClose' | 'isOpen'>
+
 export function TestnetModeModal({
   isOpen,
   descriptionCopy,
@@ -24,11 +26,12 @@ export function TestnetModeModal({
     <InfoLinkModal
       title={unsupported ? t('common.notSupported') : t('settings.setting.wallet.testnetMode.title')}
       description={
-        descriptionCopy ?? unsupported ? t('testnet.unsupported') : t('settings.setting.wallet.testnetMode.description')
+        (descriptionCopy ?? unsupported)
+          ? t('testnet.unsupported')
+          : t('settings.setting.wallet.testnetMode.description')
       }
       isOpen={isOpen}
       buttonText={t('common.button.close')}
-      buttonTheme="secondary"
       name={ModalName.TestnetMode}
       icon={
         <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

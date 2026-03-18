@@ -1,0 +1,33 @@
+{
+  "data": {
+    "token": {
+      "id": "11155111-0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+      "decimals": 18,
+      "name": "Yay",
+      "chain": "ETHEREUM_SEPOLIA",
+      "address": "0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+      "symbol": "YAY",
+      "standard": "ERC20",
+      "market": {},
+      "project": {
+        "id": "11155111-0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+        "name": "Yay",
+        "description": "Test token on Sepolia",
+        "homepageUrl": "",
+        "twitterName": "",
+        "logoUrl": "",
+        "tokens": [
+          {
+            "id": "11155111-0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+            "chain": "ETHEREUM_SEPOLIA",
+            "address": "0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+            "__typename": "Token"
+          }
+        ],
+        "markets": [],
+        "__typename": "TokenProject"
+      },
+      "__typename": "Token"
+    }
+  }
+}

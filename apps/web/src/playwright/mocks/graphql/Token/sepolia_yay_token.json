@@ -1,0 +1,22 @@
+{
+  "data": {
+    "token": {
+      "id": "11155111-0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+      "address": "0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531",
+      "chain": "ETHEREUM_SEPOLIA",
+      "symbol": "YAY",
+      "name": "Yay",
+      "decimals": 18,
+      "project": {
+        "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX1NFUE9MSUFOMHM5N2RiYjc5NDI0NGUxYzI3YjZmZjY4OGZjOGVmNWZlOGQ4MGY1MzFfWWF5",
+        "name": "Yay",
+        "logo": null,
+        "safetyLevel": "VERIFIED",
+        "logoUrl": null,
+        "isSpam": false,
+        "__typename": "TokenProject"
+      },
+      "__typename": "Token"
+    }
+  }
+}

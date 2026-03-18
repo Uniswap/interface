@@ -1591,8 +1591,5 @@
     { "timestamp": 1659571200, "value": 1621.341 },
     { "timestamp": 1659635965, "value": 1598.371 }
   ],
-  "all": [
-    { "timestamp": 1438905600, "value": 2.831 },
-    { "timestamp": 1659635965, "value": 1598.371 }
-  ]
+  "all": [{ "timestamp": 1438905600, "value": 2.831 }, { "timestamp": 1659635965, "value": 1598.371 }]
 }

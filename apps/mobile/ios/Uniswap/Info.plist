@@ -23,9 +23,31 @@
 		<string>ja</string>
 		<string>pt</string>
 		<string>vi</string>
-		<string>es-ES</string>
-		<string>es-US</string>
+    <!-- Spanish locales that use `,` as the decimal separator -->
 		<string>es-419</string>
+		<string>es-BZ</string>
+		<string>es-CU</string>
+		<string>es-DO</string>
+		<string>es-GT</string>
+		<string>es-HN</string>
+		<string>es-MX</string>
+		<string>es-NI</string>
+		<string>es-PA</string>
+		<string>es-PE</string>
+		<string>es-PR</string>
+		<string>es-SV</string>
+    <string>es-US</string>
+    <!-- Spanish locales that use `.` as the decimal separator -->
+		<string>es-AR</string>
+		<string>es-BO</string>
+		<string>es-CL</string>
+		<string>es-CO</string>
+		<string>es-CR</string>
+		<string>es-EC</string>
+    <string>es-ES</string>
+		<string>es-PY</string>
+		<string>es-UY</string>
+		<string>es-VE</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>

@@ -1,6 +1,6 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Contract } from '@ethersproject/contracts'
-import { safeNamehash } from 'utils/safeNamehash'
+import { safeNamehash } from '~/utils/safeNamehash'
 
 const REGISTRAR_ABI = [
   {

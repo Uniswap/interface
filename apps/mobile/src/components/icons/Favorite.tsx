@@ -22,6 +22,7 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
 
   const [color, setColor] = useState(getColor())
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to recalculate this when isFavorited changes
   useEffect(() => {
     const timer = setTimeout(() => {
       setColor(getColor())
@@ -31,7 +32,6 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
 
   const scale = useDerivedValue(() => {
     return withSequence(withTiming(0, ANIMATION_CONFIG), withTiming(1, ANIMATION_CONFIG))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFavorited])
 
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])

@@ -1,7 +1,7 @@
 import { FlashList } from '@shopify/flash-list'
 import { default as React, useCallback, useMemo } from 'react'
-import { SETTINGS_ROW_HEIGHT, SettingsSection } from 'src/components/Settings/SettingsRow'
 import { SectionData, SectionInfo, SettingsListProps } from 'src/components/Settings/lists/types'
+import { SETTINGS_ROW_HEIGHT, SettingsSection } from 'src/components/Settings/SettingsRow'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'

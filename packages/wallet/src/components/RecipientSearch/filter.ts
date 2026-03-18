@@ -64,6 +64,7 @@ export function filterRecipientByNameAndAddress(
   // run both fuses and remove dupes
   return unique(
     [...filterRecipientsByAddress(searchPattern, list), ...filterRecipientsByName(searchPattern, list)],
+    // eslint-disable-next-line max-params
     (v, i, a) => a.findIndex((v2) => v2.data.address === v.data.address) === i,
   )
 }

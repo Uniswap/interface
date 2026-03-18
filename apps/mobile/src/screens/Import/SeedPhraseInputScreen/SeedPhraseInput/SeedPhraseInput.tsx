@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
-import { StyleSheet, UIManager, findNodeHandle } from 'react-native'
+import { findNodeHandle, StyleSheet, UIManager } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { NativeSeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/NativeSeedPhraseInput'
@@ -9,6 +9,7 @@ import {
   NativeSeedPhraseInputProps,
   NativeSeedPhraseInputRef,
 } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 
@@ -68,9 +69,10 @@ export const SeedPhraseInput = forwardRef<NativeSeedPhraseInputRef, SeedPhraseIn
 
   return (
     <NativeSeedPhraseInput
-      key={key}
       // @ts-expect-error - TODO: figure out how to properly type the ref of a custom native component
       ref={inputRef}
+      key={key}
+      testID={TestID.NativeSeedPhraseInput}
       style={calculatedStyle}
       onHeightMeasured={handleOnHeightMeasured}
       {...rest}

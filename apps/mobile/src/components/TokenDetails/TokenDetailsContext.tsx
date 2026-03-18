@@ -1,14 +1,19 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { createContext, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { AppStackParamList } from 'src/app/navigation/types'
 import { useTokenDetailsColors } from 'src/components/TokenDetails/useTokenDetailsColors'
+import { setHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { setClipboard } from 'utilities/src/clipboard/clipboard'
 
 type TokenDetailsContextState = {
   currencyId: string
@@ -24,12 +29,10 @@ type TokenDetailsContextState = {
   isTokenWarningModalOpen: boolean
   openTokenWarningModal: () => void
   closeTokenWarningModal: () => void
-  isTestnetWarningModalOpen: boolean
-  openTestnetWarningModal: () => void
-  closeTestnetWarningModal: () => void
-  isBuyNativeTokenModalOpen: boolean
-  openBuyNativeTokenModal: () => void
-  closeBuyNativeTokenModal: () => void
+  isContractAddressExplainerModalOpen: boolean
+  openContractAddressExplainerModal: () => void
+  closeContractAddressExplainerModal: (markViewed: boolean) => void
+  copyAddressToClipboard: (address: string) => Promise<void>
   error: unknown | undefined
   setError: (error: unknown | undefined) => void
 }
@@ -41,19 +44,38 @@ export function TokenDetailsContextProvider({
   currencyId,
   navigation,
 }: PropsWithChildren<Pick<TokenDetailsContextState, 'currencyId' | 'navigation'>>): JSX.Element {
+  const dispatch = useDispatch()
+
   const [error, setError] = useState<unknown>(undefined)
 
   const [isTokenWarningModalOpen, setIsTokenWarningModalOpen] = useState(false)
   const openTokenWarningModal = useCallback(() => setIsTokenWarningModalOpen(true), [])
   const closeTokenWarningModal = useCallback(() => setIsTokenWarningModalOpen(false), [])
 
-  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
-  const openTestnetWarningModal = useCallback(() => setIsTestnetWarningModalOpen(true), [])
-  const closeTestnetWarningModal = useCallback(() => setIsTestnetWarningModalOpen(false), [])
+  const [isContractAddressExplainerModalOpen, setIsContractAddressExplainerModalOpen] = useState(false)
+  const openContractAddressExplainerModal = useCallback(() => setIsContractAddressExplainerModalOpen(true), [])
+  const closeContractAddressExplainerModal = useCallback(
+    (markViewed: boolean) => {
+      if (markViewed) {
+        dispatch(setHasViewedContractAddressExplainer(true))
+      }
+      setIsContractAddressExplainerModalOpen(false)
+    },
+    [dispatch],
+  )
 
-  const [isBuyNativeTokenModalOpen, setIsBuyNativeTokenModalOpen] = useState(false)
-  const openBuyNativeTokenModal = useCallback(() => setIsBuyNativeTokenModalOpen(true), [])
-  const closeBuyNativeTokenModal = useCallback(() => setIsBuyNativeTokenModalOpen(false), [])
+  const copyAddressToClipboard = useCallback(
+    async (address: string): Promise<void> => {
+      await setClipboard(address)
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.ContractAddress,
+        }),
+      )
+    },
+    [dispatch],
+  )
 
   // Set if attempting to buy or sell, used for token warning modal.
   const [activeTransactionType, setActiveTransactionType] = useState<CurrencyField | undefined>(undefined)
@@ -88,33 +110,29 @@ export function TokenDetailsContextProvider({
       isTokenWarningModalOpen,
       openTokenWarningModal,
       closeTokenWarningModal,
-      isTestnetWarningModalOpen,
-      openTestnetWarningModal,
-      closeTestnetWarningModal,
-      isBuyNativeTokenModalOpen,
-      openBuyNativeTokenModal,
-      closeBuyNativeTokenModal,
+      isContractAddressExplainerModalOpen,
+      openContractAddressExplainerModal,
+      closeContractAddressExplainerModal,
+      copyAddressToClipboard,
       error,
       setError,
     }
   }, [
     activeTransactionType,
-    closeBuyNativeTokenModal,
-    closeTestnetWarningModal,
     closeTokenWarningModal,
+    closeContractAddressExplainerModal,
     currencyId,
     currencyInfo,
     enabledChains,
     error,
-    isBuyNativeTokenModalOpen,
-    isTestnetWarningModalOpen,
+    isContractAddressExplainerModalOpen,
     isTokenWarningModalOpen,
     navigation,
-    openBuyNativeTokenModal,
-    openTestnetWarningModal,
+    openContractAddressExplainerModal,
     openTokenWarningModal,
     tokenColor,
     tokenColorLoading,
+    copyAddressToClipboard,
   ])
 
   return <TokenDetailsContext.Provider value={state}>{children}</TokenDetailsContext.Provider>

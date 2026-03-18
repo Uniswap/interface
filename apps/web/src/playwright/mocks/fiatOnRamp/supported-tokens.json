@@ -1,0 +1,182 @@
+{
+  "supportedTokens": [
+    {
+      "cryptoCurrencyCode": "ETH",
+      "displayName": "Ethereum",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/ETH/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/USDC/symbol.png",
+      "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+    },
+    {
+      "cryptoCurrencyCode": "USDT",
+      "displayName": "Tether",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/USDT/symbol.png",
+      "address": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+    },
+    {
+      "cryptoCurrencyCode": "DAI",
+      "displayName": "Dai",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/DAI/symbol.png",
+      "address": "0x6b175474e89094c44da98b954eedeac495271d0f"
+    },
+    {
+      "cryptoCurrencyCode": "WETH",
+      "displayName": "Wrapped Ether (ERC-20)",
+      "cryptoCurrencyChain": "ethereum",
+      "chainId": "1",
+      "symbol": "",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+    },
+    {
+      "cryptoCurrencyCode": "ETH_UNICHAIN",
+      "displayName": "Ethereum",
+      "cryptoCurrencyChain": "Unichain",
+      "chainId": "130",
+      "symbol": "https://images-currency.meld.io/crypto/ETH_UNICHAIN/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_UNICHAIN",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Unichain",
+      "chainId": "130",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_UNICHAIN/symbol.png",
+      "address": "0x078D782b760474a361dDA0AF3839290b0EF57AD6"
+    },
+    {
+      "cryptoCurrencyCode": "ETH_BASE",
+      "displayName": "Ethereum",
+      "cryptoCurrencyChain": "Base",
+      "chainId": "8453",
+      "symbol": "https://images-currency.meld.io/crypto/ETH_BASE/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_BASE",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Base",
+      "chainId": "8453",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_BASE/symbol.png",
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+    },
+    {
+      "cryptoCurrencyCode": "ETH_ARBITRUM",
+      "displayName": "Ethereum",
+      "cryptoCurrencyChain": "Arbitrum",
+      "chainId": "42161",
+      "symbol": "https://images-currency.meld.io/crypto/ETH_ARBITRUM/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_ARBITRUM",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Arbitrum",
+      "chainId": "42161",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_ARBITRUM/symbol.png",
+      "address": "0xaf88d065e77c8cc2239327c5edb3a432268e5831"
+    },
+    {
+      "cryptoCurrencyCode": "SOL",
+      "displayName": "Solana",
+      "cryptoCurrencyChain": "Solana",
+      "chainId": "501000101",
+      "symbol": "https://images-currency.meld.io/crypto/SOL/symbol.png",
+      "address": "So11111111111111111111111111111111111111111"
+    },
+    {
+      "cryptoCurrencyCode": "USDT_SOLANA",
+      "displayName": "Tether",
+      "cryptoCurrencyChain": "Solana",
+      "chainId": "501000101",
+      "symbol": "https://images-currency.meld.io/crypto/USDT_SOLANA/symbol.png",
+      "address": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_SOLANA",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Solana",
+      "chainId": "501000101",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_SOLANA/symbol.png",
+      "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+    },
+    {
+      "cryptoCurrencyCode": "ETH_OPTIMISM",
+      "displayName": "Ethereum",
+      "cryptoCurrencyChain": "Optimism",
+      "chainId": "10",
+      "symbol": "https://images-currency.meld.io/crypto/ETH_OPTIMISM/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_OPTIMISM",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Optimism",
+      "chainId": "10",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_OPTIMISM/symbol.png",
+      "address": "0x0b2c639c533813f4aa9d7837caf62653d097ff85"
+    },
+    {
+      "cryptoCurrencyCode": "POL",
+      "displayName": "Polygon Ecosystem Token",
+      "cryptoCurrencyChain": "Polygon",
+      "chainId": "137",
+      "symbol": "https://images-currency.meld.io/crypto/POL/symbol.png",
+      "address": "0x0000000000000000000000000000000000001010"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_POLYGON",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Polygon",
+      "chainId": "137",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_POLYGON/symbol.png",
+      "address": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"
+    },
+    {
+      "cryptoCurrencyCode": "CELO",
+      "displayName": "Celo",
+      "cryptoCurrencyChain": "Celo",
+      "chainId": "42220",
+      "symbol": "https://images-currency.meld.io/crypto/CELO/symbol.png",
+      "address": "0x471ece3750da237f93b8e339c536989b8978a438"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_AVAXC",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "Avalanche C-Chain",
+      "chainId": "43114",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_AVAXC/symbol.png",
+      "address": "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e"
+    },
+    {
+      "cryptoCurrencyCode": "AVAXC",
+      "displayName": "Avalanche C-Chain",
+      "cryptoCurrencyChain": "Avalanche C-Chain",
+      "chainId": "43114",
+      "symbol": "https://images-currency.meld.io/crypto/AVAXC/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_BSC",
+      "displayName": "USD Coin",
+      "cryptoCurrencyChain": "BNB Smart Chain",
+      "chainId": "56",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_BSC/symbol.png",
+      "address": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
+    },
+    {
+      "cryptoCurrencyCode": "BLAST",
+      "displayName": "Blast",
+      "cryptoCurrencyChain": "Blast",
+      "chainId": "81457",
+      "symbol": "https://images-currency.meld.io/crypto/BLAST/symbol.png",
+      "address": "0xb1a5700fA2358173Fe465e6eA4Ff52E36e88E2ad"
+    }
+  ]
+}

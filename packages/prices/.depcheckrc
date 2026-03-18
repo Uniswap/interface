@@ -1,0 +1,14 @@
+ignores: [
+    # Dependencies that depcheck incorrectly marks as unused
+    "typescript",
+    "@typescript/native-preview",
+    "depcheck",
+
+    # Internal packages / workspaces
+    "prices",
+    "@universe/prices",
+
+    # TODO: remove once used in tests
+    "@testing-library/react",
+    "@vitest/coverage-v8",
+  ]

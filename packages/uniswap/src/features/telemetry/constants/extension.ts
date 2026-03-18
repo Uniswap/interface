@@ -16,11 +16,13 @@ export enum ExtensionEventName {
   OnboardingLoad = 'Onboarding Load',
   PasswordChanged = 'Password Changed',
   ProviderDirectMethodRequest = 'Provider Direct Method Request',
-  SidebarClosed = 'Sidebard Closed',
+  SidebarClosed = 'Sidebar Closed',
+  SidebarConnect = 'Sidebar Connect',
   SidebarDisconnect = 'Sidebar Disconnect',
   SidebarLoad = 'Sidebard Load',
   SidebarSwitchChain = 'Sidebar Switch Chain',
   UnknownMethodRequest = 'Unknown Method Request',
   UnsupportedMethodRequest = 'Unsupported Method Request',
   UnrecognizedMethodRequest = 'Unrecognized Method Request',
+  // alphabetize additional values.
 }

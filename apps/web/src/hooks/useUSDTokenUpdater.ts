@@ -1,25 +1,30 @@
 import { Currency } from '@uniswap/sdk-core'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { NumberType } from 'utilities/src/format/types'
+import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
 
-export function useUSDTokenUpdater(
-  isFiatInput: boolean,
-  exactAmount: string,
-  exactCurrency?: Currency,
-): {
+export function useUSDTokenUpdater({
+  isFiatInput,
+  exactAmount,
+  exactCurrency,
+}: {
+  isFiatInput: boolean
+  exactAmount?: string
+  exactCurrency?: Currency
+}): {
   formattedAmount?: string
   loading: boolean
 } {
   const { price, isLoading } = useUSDCPrice(exactCurrency)
-  const { convertToFiatAmount, formatCurrencyAmount } = useFormatter()
-  const conversionRate = convertToFiatAmount(1).amount
+  const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
+  const conversionRate = convertFiatAmount(1).amount
   const supportedChainId = useSupportedChainId(exactCurrency?.chainId)
 
   return useMemo(() => {
@@ -30,12 +35,12 @@ export function useUSDTokenUpdater(
     if (isFiatInput) {
       const exactAmountUSD = (parseFloat(exactAmount || '0') / conversionRate).toFixed(NUM_DECIMALS_USD)
       const stablecoinAmount = supportedChainId
-        ? tryParseCurrencyAmount(exactAmountUSD, getChainInfo(supportedChainId).spotPriceStablecoinAmount.currency)
+        ? tryParseCurrencyAmount(exactAmountUSD, getPrimaryStablecoin(supportedChainId))
         : undefined
 
-      const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
+      const currencyAmount = stablecoinAmount ? price.invert().quote(stablecoinAmount) : undefined
       const formattedCurrencyAmount = formatCurrencyAmount({
-        amount: currencyAmount,
+        value: currencyAmount,
         type: NumberType.SwapTradeAmount,
         placeholder: '',
       })
@@ -45,14 +50,14 @@ export function useUSDTokenUpdater(
 
     const exactCurrencyAmount = tryParseCurrencyAmount(exactAmount || '0', exactCurrency)
 
-    const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
-    const fiatPrice = convertToFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
+    const usdPrice = exactCurrencyAmount ? price.quote(exactCurrencyAmount) : undefined
+    const fiatPrice = convertFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
     const formattedFiatPrice = fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0'
 
     return { formattedAmount: formattedFiatPrice, loading: isLoading }
   }, [
     conversionRate,
-    convertToFiatAmount,
+    convertFiatAmount,
     exactAmount,
     exactCurrency,
     formatCurrencyAmount,

@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { DynamicConfigs, OnDeviceRecoveryConfigKey, useDynamicConfigValue } from '@universe/gating'
 import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,18 +14,17 @@ import {
   OnDeviceRecoveryWalletCardLoader,
 } from 'src/screens/Import/OnDeviceRecoveryWalletCard'
 import { RecoveryWalletInfo } from 'src/screens/Import/useOnDeviceRecoveryData'
-import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Image, Text, TouchableArea } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -32,8 +32,8 @@ import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.OnDeviceRecovery>
 
@@ -47,13 +47,12 @@ export function OnDeviceRecoveryScreen({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const { setRecoveredImportedAccounts } = useOnboardingContext()
-  const recoveryLoadingTimeoutMs = useDynamicConfigValue(
-    DynamicConfigs.OnDeviceRecovery,
-    OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
-    FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
-  )
+  const recoveryLoadingTimeoutMs = useDynamicConfigValue({
+    config: DynamicConfigs.OnDeviceRecovery,
+    key: OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
+    defaultValue: FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
+  })
   const hideSplashScreen = useHideSplashScreen()
 
   const [selectedMnemonicId, setSelectedMnemonicId] = useState<string>()
@@ -73,7 +72,7 @@ export function OnDeviceRecoveryScreen({
 
   const clearNonSelectedStoredMnemonics = async (): Promise<void> => {
     await Promise.all(
-      mnemonicIds.map(async (mnemonicId) => {
+      mnemonicIds.map(async (mnemonicId: string) => {
         if (mnemonicId !== selectedMnemonicId) {
           return Keyring.removeMnemonic(mnemonicId)
         }
@@ -86,7 +85,15 @@ export function OnDeviceRecoveryScreen({
     const storedAddresses = await Keyring.getAddressesForStoredPrivateKeys()
     await Promise.all(
       storedAddresses.map((address) => {
-        if (!selectedRecoveryWalletInfos.find((walletInfo) => areAddressesEqual(walletInfo.address, address))) {
+        if (
+          !selectedRecoveryWalletInfos.find((walletInfo) =>
+            // TODO(WALL-7065): Update to support solana
+            areAddressesEqual({
+              addressInput1: { address: walletInfo.address, platform: Platform.EVM },
+              addressInput2: { address, platform: Platform.EVM },
+            }),
+          )
+        ) {
           return Keyring.removePrivateKey(address)
         }
         return Promise.resolve()
@@ -202,10 +209,14 @@ export function OnDeviceRecoveryScreen({
                     screenLoading={screenLoading}
                     showAllWallets={showAllWallets}
                     onLoadComplete={onWalletLoad}
-                    onPressCard={(recoveryAddressesInfos) => {
+                    onPressCard={async (recoveryAddressesInfos) => {
                       setSelectedMnemonicId(mnemonicId)
                       setSelectedRecoveryWalletInfos(recoveryAddressesInfos)
-                      setShowConfirmationModal(true)
+                      if (mnemonicIds.length > 1) {
+                        setShowConfirmationModal(true)
+                      } else {
+                        await onPressConfirm()
+                      }
 
                       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
                         element: ElementName.OnDeviceRecoveryWallet,
@@ -253,7 +264,7 @@ export function OnDeviceRecoveryScreen({
             })}
             rejectText={t('common.button.back')}
             acknowledgeText={t('common.button.continue')}
-            icon={<PapersText color={colors.neutral1.get()} size="$icon.20" strokeWidth={1.5} />}
+            icon={<PapersText color="$neutral1" size="$icon.20" strokeWidth={1.5} />}
             isOpen={showConfirmationModal}
             modalName={ModalName.OnDeviceRecoveryConfirmation}
             severity={WarningSeverity.None}

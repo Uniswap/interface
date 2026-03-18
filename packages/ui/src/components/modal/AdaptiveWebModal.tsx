@@ -1,32 +1,96 @@
-import { RemoveScroll } from '@tamagui/remove-scroll'
-import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
-import { DimensionValue } from 'react-native'
-import { Adapt, Dialog, GetProps, Sheet, View, VisuallyHidden, styled, useIsTouchDevice, useMedia } from 'tamagui'
-import { CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
-import { Flex, FlexProps } from 'ui/src/components/layout'
+import { type PropsWithChildren, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import type { DimensionValue } from 'react-native'
+import {
+  Adapt,
+  Dialog,
+  type GetProps,
+  Sheet,
+  styled,
+  useIsTouchDevice,
+  useMedia,
+  type View,
+  VisuallyHidden,
+} from 'tamagui'
+import { type CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
+import { Flex, type FlexProps } from 'ui/src/components/layout'
+import { RemoveScroll } from 'ui/src/components/RemoveScroll/RemoveScroll'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
 
 export function ModalCloseIcon(props: CloseIconProps): JSX.Element {
   // hide close icon on bottom sheet on interface
   const sm = useMedia().sm
-  const hideCloseIcon = isInterface && sm
+  const hideCloseIcon = isWebApp && sm
   return hideCloseIcon ? <></> : <CloseIconWithHover {...props} />
 }
 
-export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element | null {
+const useIncrementTouchDeviceSheetKey = ({
+  isOpen,
+  isTouchDevice,
+}: {
+  isOpen: boolean
+  isTouchDevice: boolean
+}): number => {
+  const prevIsOpenRef = useRef(isOpen)
+  const [sheetKey, setSheetKey] = useState(0)
+
+  useEffect(() => {
+    if (!isTouchDevice) {
+      return
+    }
+    // Only increment sheetKey when transitioning from open to closed
+    if (prevIsOpenRef.current && !isOpen) {
+      setSheetKey((prev) => prev + 1)
+    }
+    prevIsOpenRef.current = isOpen
+  }, [isOpen, isTouchDevice])
+
+  return sheetKey
+}
+
+export function WebBottomSheet({
+  isOpen,
+  onClose,
+  children,
+  gap,
+  hideHandlebar,
+  snapPointsMode = 'fit',
+  snapPoints,
+  ...rest
+}: ModalProps): JSX.Element | null {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)
 
-  // TODO: https://linear.app/uniswap/issue/WEB-6258/token-selector-not-rendering-bottom-sheet-on-web
+  // TODO(INFRA-644): Remove this workaround once Tamagui sheet bug is fixed
+  // Force a new key to remount the Sheet on touch devices on sheet close
+  // This is a workaround for bug where sheet does not respect disableDrag value changes unless remounted
+  const touchDeviceSheetKey = useIncrementTouchDeviceSheetKey({ isOpen, isTouchDevice })
+
+  // TODO(WEB-6258): Token selector not rendering bottom sheet on web without this workaround
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Delay enabling overlay dismiss to prevent the same tap that opens the sheet from immediately closing it.
+  // On mobile web, a tap generates mousedown -> mouseup -> click in quick succession.
+  // Without this delay, the mouseup/click from the opening tap hits the overlay and triggers dismiss.
+  // We wait for the animation to complete before enabling dismiss.
+  const [canDismissOnOverlayPress, setCanDismissOnOverlayPress] = useState(false)
+  useEffect(() => {
+    if (isOpen) {
+      const timeout = setTimeout(() => {
+        setCanDismissOnOverlayPress(true)
+      }, ADAPTIVE_MODAL_ANIMATION_DURATION)
+      return () => clearTimeout(timeout)
+    }
+    setCanDismissOnOverlayPress(false)
+    return undefined
+  }, [isOpen])
 
   const handleClose = useCallback(
     (open: boolean) => {
@@ -44,13 +108,16 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
     minWidth: '100%',
   }
 
-  const sheetHeightStyles: FlexProps = {
-    flex: 1,
-    height: rest.$sm?.['$platform-web']?.height as DimensionValue,
-    maxHeight: isInterface
-      ? `calc(100vh - ${INTERFACE_NAV_HEIGHT}px)`
-      : ((rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh') as DimensionValue),
-  }
+  // Only calculate sheetHeightStyles if not using percent mode
+  const sheetHeightStyles: FlexProps | undefined =
+    snapPointsMode !== 'percent'
+      ? {
+          height: rest.$sm?.['$platform-web']?.height as DimensionValue,
+          maxHeight: (isWebApp
+            ? `calc(100vh - ${INTERFACE_NAV_HEIGHT}px)`
+            : (rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh')) as DimensionValue,
+        }
+      : undefined
 
   if (!mounted) {
     return null
@@ -59,49 +126,65 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
   return (
     <RemoveScroll enabled={isOpen}>
       <Sheet
-        dismissOnOverlayPress
+        key={touchDeviceSheetKey}
         dismissOnSnapToBottom
         modal
+        dismissOnOverlayPress={canDismissOnOverlayPress}
         animation="200ms"
         disableDrag={isTouchDevice && !isHandlePressed}
         open={isOpen}
-        snapPointsMode="fit"
-        zIndex={zIndexes.modal}
+        snapPointsMode={snapPointsMode}
+        // Must be spread because setting snapPoints to undefined still changes behavior
+        {...(snapPoints && { snapPoints })}
+        zIndex={rest.zIndex ?? zIndexes.modal}
         onOpenChange={handleClose}
       >
         <Sheet.Frame
+          flex={1}
           borderBottomWidth="$none"
           borderColor="$surface3"
           borderTopLeftRadius="$rounded16"
           borderTopRightRadius="$rounded16"
           borderWidth="$spacing1"
           px="$spacing8"
-          zIndex={zIndexes.modal}
           {...sheetOverrideStyles}
           {...sheetHeightStyles}
         >
-          <Sheet.Handle
-            justifyContent="center"
-            m={0}
-            pb="$spacing16"
-            pt="$spacing8"
-            width="100%"
-            backgroundColor="$transparent"
-            onMouseDown={() => setHandlePressed(true)}
-            onMouseUp={() => setHandlePressed(false)}
+          {!hideHandlebar && (
+            <Sheet.Handle
+              justifyContent="center"
+              m={0}
+              pb="$spacing16"
+              pt="$spacing8"
+              width="100%"
+              backgroundColor="$transparent"
+              onMouseDown={() => setHandlePressed(true)}
+              onMouseUp={() => setHandlePressed(false)}
+            >
+              <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
+            </Sheet.Handle>
+          )}
+          <Flex
+            flex={1}
+            gap={gap}
+            $platform-web={{ overflow: 'auto' }}
+            {...sheetHeightStyles}
+            onPress={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseUp={(e) => e.stopPropagation()}
           >
-            <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
-          </Sheet.Handle>
-          <Flex gap={gap} $platform-web={{ overflow: 'auto' }} {...sheetHeightStyles}>
             {children}
           </Flex>
         </Sheet.Frame>
         <Sheet.Overlay
+          zIndex={zIndexes.modalBackdrop}
           animation="lazy"
           backgroundColor="$scrim"
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
-          zIndex={zIndexes.modalBackdrop}
+          onPress={(e) => {
+            e.stopPropagation()
+          }}
         />
       </Sheet>
     </RemoveScroll>
@@ -116,12 +199,20 @@ const Overlay = styled(Dialog.Overlay, {
   exitStyle: { opacity: 0 },
 })
 
+Overlay.displayName = 'Overlay'
+
 type ModalProps = GetProps<typeof View> &
   PropsWithChildren<{
     isOpen: boolean
     onClose?: () => void
     adaptToSheet?: boolean
     alignment?: 'center' | 'top'
+    hideHandlebar?: boolean
+    snapPointsMode?: GetProps<typeof Sheet>['snapPointsMode']
+    snapPoints?: GetProps<typeof Sheet>['snapPoints']
+    overlayOpacity?: number
+    borderColor?: string
+    zIndex?: number
   }>
 
 /**
@@ -129,6 +220,7 @@ type ModalProps = GetProps<typeof View> &
  * On larger screens, it renders as a dialog modal.
  * On smaller screens (mobile devices), it adapts into a bottom sheet.
  */
+// eslint-disable-next-line complexity
 export function AdaptiveWebModal({
   isOpen,
   onClose,
@@ -141,9 +233,15 @@ export function AdaptiveWebModal({
   py,
   p,
   zIndex,
+  hideHandlebar,
+  borderWidth,
+  borderColor,
+  overlayOpacity,
+  snapPointsMode,
+  snapPoints,
   ...rest
 }: ModalProps): JSX.Element {
-  const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
+  const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) as typeof rest // Filter out undefined properties from rest
   const scrollbarStyles = useScrollbarStyles()
   const isTopAligned = alignment === 'top'
 
@@ -171,13 +269,16 @@ export function AdaptiveWebModal({
       </VisuallyHidden>
       {adaptToSheet &&
         !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
-          <Adapt when="sm">
+          <Adapt when="md">
             <WebBottomSheet
               isOpen={isOpen}
               gap={gap ?? '$spacing4'}
               px={px ?? p ?? '$spacing24'}
               py={py ?? p ?? '$spacing16'}
               style={style}
+              hideHandlebar={hideHandlebar}
+              snapPointsMode={snapPointsMode}
+              snapPoints={snapPoints}
               onClose={onClose}
               {...filteredRest}
             >
@@ -187,11 +288,10 @@ export function AdaptiveWebModal({
         )}
 
       <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
-        <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
-
+        <Overlay key="overlay" {...(overlayOpacity !== undefined && { opacity: overlayOpacity })} />
         <Flex
           grow
-          maxHeight="calc(100vh - 32px)"
+          maxHeight={filteredRest.maxHeight ?? 'calc(100vh - 32px)'}
           borderRadius="$rounded16"
           justifyContent="center"
           overflow="hidden"
@@ -199,14 +299,15 @@ export function AdaptiveWebModal({
         >
           <Dialog.Content
             key="content"
-            bordered
             elevate
+            bordered={borderWidth !== 0}
             animateOnly={['transform', 'opacity']}
-            animation={isOpen ? 'fastHeavy' : 'fastExitHeavy'}
-            borderColor="$surface3"
+            animation={isOpen ? 'fast' : 'fastExit'}
+            borderColor={borderColor ?? '$surface3'}
+            borderWidth={borderWidth}
             borderRadius="$rounded16"
-            enterStyle={{ x: 0, y: isTopAligned ? -20 : 20, opacity: 0 }}
-            exitStyle={{ x: 0, y: isTopAligned ? -20 : 10, opacity: 0 }}
+            enterStyle={{ x: 0, y: isTopAligned ? -12 : 12, opacity: 0 }}
+            exitStyle={{ x: 0, y: isTopAligned ? -12 : 10, opacity: 0 }}
             gap={gap ?? '$spacing4'}
             m="$spacing16"
             maxHeight="calc(100vh - 32px)"
@@ -216,7 +317,6 @@ export function AdaptiveWebModal({
             py={py ?? p ?? '$spacing16'}
             style={Object.assign({}, scrollbarStyles, style)}
             width="calc(100vw - 32px)"
-            zIndex={zIndexes.modal}
             {...filteredRest}
           >
             {children}
@@ -242,6 +342,12 @@ export function WebModalWithBottomAttachment({
   backgroundColor = '$surface1',
   gap,
   zIndex,
+  hideHandlebar,
+  borderWidth,
+  borderColor,
+  overlayOpacity,
+  snapPointsMode,
+  snapPoints,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -266,19 +372,27 @@ export function WebModalWithBottomAttachment({
       </VisuallyHidden>
       {adaptToSheet &&
         !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
-          <Adapt when="sm">
-            <WebBottomSheet isOpen={isOpen} style={style} onClose={onClose} {...filteredRest}>
+          <Adapt when="md">
+            <WebBottomSheet
+              isOpen={isOpen}
+              style={style}
+              hideHandlebar={hideHandlebar}
+              snapPointsMode={snapPointsMode}
+              snapPoints={snapPoints}
+              onClose={onClose}
+              {...filteredRest}
+            >
               <Adapt.Contents />
             </WebBottomSheet>
           </Adapt>
         )}
 
       <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
-        <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
+        <Overlay key="overlay" {...(overlayOpacity !== undefined && { opacity: overlayOpacity })} />
 
         <Dialog.Content
           key="content"
-          unstyled
+          elevate
           animateOnly={['transform', 'opacity']}
           animation={isOpen ? 'fastHeavy' : 'fastExitHeavy'}
           backgroundColor="$transparent"
@@ -290,15 +404,14 @@ export function WebModalWithBottomAttachment({
           p="$none"
           style={style}
           width="calc(100vw - 32px)"
-          zIndex={zIndexes.modal}
         >
           <Flex height="100%" width="100%" gap="$spacing8">
             <Flex
               {...shadowProps}
               backgroundColor={backgroundColor}
-              borderColor="$surface3"
+              borderColor={borderColor ?? '$surface3'}
               borderRadius="$rounded16"
-              borderWidth="$spacing1"
+              borderWidth={borderWidth ?? '$spacing1'}
               px="$spacing24"
               py="$spacing16"
               gap={gap ?? '$gap4'}

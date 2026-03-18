@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
-import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
-import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
+import { Deadline } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/deadline/Deadline/Deadline'
+import { Slippage } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/Slippage/Slippage'
+import { LPSettings } from '~/components/LPSettings'
 
 export function LiquidityModalHeader({
   title,
@@ -35,7 +35,7 @@ export function LiquidityModalHeader({
         {title}
       </Text>
       {!goBack ? (
-        <SwapFormSettings
+        <LPSettings
           adjustTopAlignment={false}
           settings={[Slippage, Deadline]}
           defaultTitle={t('pool.positions.transaction.settings')}

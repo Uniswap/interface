@@ -1,5 +1,5 @@
 import 'utilities/jest-package-mocks'
-import 'ui/jest-package-mocks'
+import 'config/jest-presets/ui/ui-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'wallet/jest-package-mocks'
 
@@ -13,7 +13,39 @@ jest.mock('uniswap/src/features/gas/hooks', () => ({
     priceInflationFactor: 1.5,
     percentileThresholdFor1559Fee: 75,
   }),
-  useShadowGasStrategies: jest.fn().mockReturnValue([]),
+}))
+
+// Mock getConfig to return test-safe native values
+jest.mock('uniswap/src/config', () => ({
+  config: {
+    alchemyApiKey: 'test-alchemy-key',
+    amplitudeProxyUrlOverride: '',
+    apiBaseUrlOverride: '',
+    apiBaseUrlV2Override: '',
+    appsflyerApiKey: 'test-appsflyer-key',
+    appsflyerAppId: 'test-appsflyer-id',
+    datadogClientToken: 'test-datadog-token',
+    datadogProjectId: 'test-datadog-project',
+    isE2ETest: false,
+    forApiUrlOverride: '',
+    graphqlUrlOverride: '',
+    includePrototypeFeatures: '',
+    infuraKey: 'test-infura-key',
+    onesignalAppId: 'test-onesignal-id',
+    quicknodeEndpointName: '',
+    quicknodeEndpointToken: '',
+    scantasticApiUrlOverride: '',
+    statsigApiKey: 'test-statsig-key',
+    statsigProxyUrlOverride: '',
+    tradingApiKey: 'test-trading-key',
+    tradingApiUrlOverride: '',
+    tradingApiWebTestEnv: '',
+    uniswapApiKey: 'test-uniswap-key',
+    unitagsApiUrlOverride: '',
+    walletConnectProjectId: 'test-wallet-connect-id',
+    walletConnectProjectIdBeta: 'test-wallet-connect-beta',
+    walletConnectProjectIdDev: 'test-wallet-connect-dev',
+  },
 }))
 
 // Use web unicon
@@ -32,6 +64,7 @@ jest.mock('ui/src/components/swipeablecards/ClickableWithinGesture', () => {
 })
 
 import crypto from "crypto"
+
 Object.defineProperty(global, "crypto", {
   value: {
     getRandomValues: (arr) => crypto.randomBytes(arr.length),
@@ -39,4 +72,15 @@ Object.defineProperty(global, "crypto", {
   },
 });
 
+// Use native locales
+jest.mock('utilities/src/device/locales', () => {
+  return jest.requireActual('utilities/src/device/locales.native.ts')
+})
 
+// Mock getConfig to use native implementation
+jest.mock('@universe/config', () => {
+  const { getConfig } = jest.requireActual('@universe/config/src/getConfig.native')
+  return {
+    getConfig
+  }
+})

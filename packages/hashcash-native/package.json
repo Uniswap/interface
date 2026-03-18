@@ -1,0 +1,72 @@
+{
+  "name": "@universe/hashcash-native",
+  "version": "0.0.1",
+  "description": "Native hashcash proof-of-work solver for React Native",
+  "author": "Uniswap Labs",
+  "license": "MIT",
+  "homepage": "https://github.com/Uniswap/universe",
+  "main": "lib/index",
+  "module": "lib/index",
+  "types": "lib/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
+  "files": [
+    "src",
+    "react-native.config.js",
+    "lib",
+    "nitrogen",
+    "android/build.gradle",
+    "android/gradle.properties",
+    "android/fix-prefab.gradle",
+    "android/CMakeLists.txt",
+    "android/src",
+    "ios/**/*.h",
+    "ios/**/*.m",
+    "ios/**/*.mm",
+    "ios/**/*.cpp",
+    "ios/**/*.swift",
+    "app.plugin.js",
+    "nitro.json",
+    "*.podspec",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "tsc || exit 0;",
+    "typecheck": "nx typecheck hashcash-native",
+    "typecheck:tsgo": "nx typecheck:tsgo hashcash-native",
+    "build": "nx build hashcash-native",
+    "clean": "nx clean hashcash-native",
+    "lint": "nx lint hashcash-native",
+    "lint:fix": "nx lint:fix hashcash-native",
+    "lint:biome": "nx lint:biome hashcash-native",
+    "lint:biome:fix": "nx lint:biome:fix hashcash-native",
+    "lint:eslint": "nx lint:eslint hashcash-native",
+    "lint:eslint:fix": "nx lint:eslint:fix hashcash-native",
+    "check:deps:usage": "nx check:deps:usage hashcash-native",
+    "lint-ci": "nx lint-ci hashcash-native",
+    "specs": "nx specs hashcash-native",
+    "codegen": "nx codegen hashcash-native",
+    "codegen:clean": "nx codegen:clean hashcash-native"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@typescript/native-preview": "7.0.0-dev.20260108.1",
+    "@uniswap/eslint-config": "workspace:^",
+    "eslint": "8.57.1",
+    "nitrogen": "0.31.10",
+    "react": "19.0.3",
+    "react-native": "0.79.5",
+    "react-native-nitro-modules": "0.31.10",
+    "typescript": "5.8.3"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-native": ">=0.79.0",
+    "react-native-nitro-modules": ">=0.31.0"
+  }
+}

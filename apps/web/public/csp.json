@@ -1,27 +1,31 @@
 {
-  "defaultSrc": [
-    "'self'"
-  ],
-  "scriptSrc": [
-    "'self'",
-    "data:",
-    "'wasm-unsafe-eval'"
-  ],
+  "defaultSrc": ["'self'"],
+  "scriptSrc": ["'self'", "'wasm-unsafe-eval'", "https://challenges.cloudflare.com"],
   "styleSrc": [
     "'self'",
-    "'unsafe-inline'"
+    "'unsafe-inline'",
+    "https://fonts.googleapis.com",
+    "https://fonts.gstatic.com",
+    "https://fonts.gstatic.com/s/inter/v18/*"
   ],
-  "imgSrc": [
-    "*",
-    "blob:",
-    "data:"
+  "fontSrc": [
+    "'self'",
+    "https://fonts.googleapis.com",
+    "https://fonts.gstatic.com",
+    "https://fonts.gstatic.com/s/inter/v18/*"
   ],
+  "imgSrc": ["*", "blob:", "data:"],
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
+    "https://challenges.cloudflare.com",
     "https://verify.walletconnect.com/",
-    "https://verify.walletconnect.org/"
+    "https://verify.walletconnect.org/",
+    "https://id.porto.sh",
+    "https://wrapped.uniswap.org"
   ],
+  "mediaSrc": ["self", "*"],
+  "formAction": ["'none'"],
   "connectSrc": [
     "'self'",
     "blob:",
@@ -42,6 +46,7 @@
     "https://*.twnodes.com",
     "https://*.uniswap.org",
     "https://*.walletconnect.com",
+    "https://*.walletconnect.org",
     "https://*.zerion.io",
     "https://alfajores-forno.celo-testnet.org",
     "https://api.avax.network/ext/bc/C/rpc",
@@ -69,7 +74,6 @@
     "https://ipv6-check-perf.radar.cloudflare.com/",
     "https://lh3.googleusercontent.com/",
     "https://mainnet.base.org/",
-    "https://o1037921.ingest.sentry.io",
     "https://browser-intake-datadoghq.com",
     "https://openseauserdata.com/",
     "https://performance.radar.cloudflare.com/",
@@ -79,12 +83,16 @@
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mumbai.maticvigil.com",
     "https://rpc.ankr.com",
+    "https://eth-mainnet.public.blastapi.io",
     "https://rpc.blast.io/",
     "https://rpc.degen.tips",
     "https://rpc.goerli.mudit.blog/",
     "https://rpc.mevblocker.io/",
     "https://rpc.scroll.io/",
     "https://rpc.sepolia.org/",
+    "https://rpc.soneium.org",
+    "https://sepolia.gateway.tenderly.co",
+    "https://ethereum-sepolia-rpc.publicnode.com",
     "https://rpc.zora.energy/",
     "https://sockjs-us3.pusher.com/",
     "https://sparrow.cloudflare.com/",
@@ -101,14 +109,22 @@
     "https://mainnet.era.zksync.io/",
     "https://8mr3mthjba.execute-api.us-east-2.amazonaws.com",
     "https://mainnet.unichain.org/",
+    "https://api.web3modal.org",
+    "https://api.statsig.com",
+    "https://featuregates.org",
+    "https://events.statsigapi.net",
+    "https://api.statsigcdn.com",
+    "https://featureassets.org",
+    "https://assetsconfigcdn.org",
+    "https://prodregistryv2.org",
+    "https://cloudflare-dns.com",
+    "https://beyondwickedmapping.org",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",
     "wss://ws-us3.pusher.com/",
-    "wss://www.walletlink.org"
+    "wss://www.walletlink.org",
+    "wss://nbstream.binance.com"
   ],
-  "workerSrc": [
-    "'self'",
-    "blob:"
-  ]
+  "workerSrc": ["'self'", "blob:"]
 }

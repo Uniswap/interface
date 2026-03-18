@@ -1,153 +1,113 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getSdkError } from '@walletconnect/utils'
-import React, { useCallback, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
-import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
-import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
-import { PendingConnectionSwitchAccountModal } from 'src/components/Requests/ScanSheet/PendingConnectionSwitchAccountModal'
-import { LinkButton } from 'src/components/buttons/LinkButton'
-import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
+import { ModalWithOverlay, ModalWithOverlayProps } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
-import { getSessionNamespaces } from 'src/features/walletConnect/utils'
+import { convertCapabilitiesToScopedProperties, getSessionNamespaces } from 'src/features/walletConnect/utils'
+import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
+import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
-  WalletConnectPendingSession,
   addSession,
   removePendingSession,
   setDidOpenFromDeepLink,
+  WalletConnectPendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { Check, RotatableChevron, X } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { Flex } from 'ui/src'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { formatDappURL } from 'utilities/src/format/urls'
+import { DappRequestType, WalletConnectEvent, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
+import { DappConnectionContent } from 'wallet/src/components/dappRequests/DappConnectionContent'
+import { DappRequestHeader } from 'wallet/src/components/dappRequests/DappRequestHeader'
+import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
+import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
+import { useDappConnectionConfirmation } from 'wallet/src/features/dappRequests/hooks/useDappConnectionConfirmation'
+import { DappConnectionInfo, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
+import { mergeVerificationStatuses } from 'wallet/src/features/dappRequests/verification'
 import {
-  useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
+  useHasSmartWalletConsent,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
-import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 type Props = {
   pendingSession: WalletConnectPendingSession
   onClose: () => void
 }
 
-enum PendingConnectionModalState {
-  Hidden = 0,
-  SwitchNetwork = 1,
-  SwitchAccount = 2,
-}
-
-const SitePermissions = (): JSX.Element => {
-  const { t } = useTranslation()
-
-  const infoTextSize = 'body3'
-
-  return (
-    <Flex
-      backgroundColor="$surface2"
-      borderColor="$surface3"
-      borderRadius="$rounded16"
-      borderWidth="$spacing1"
-      minHeight={44}
-      p="$spacing12"
-    >
-      <Flex centered row justifyContent="space-between">
-        <Text $short={{ variant: 'body3' }} allowFontScaling={false} color="$neutral2" variant="body3">
-          {t('walletConnect.permissions.title')}
-        </Text>
-      </Flex>
-      <Flex gap="$spacing8" pt="$spacing12">
-        <Flex centered row gap="$spacing4">
-          <Check color="$statusSuccess" size={iconSizes.icon16} />
-          <Text
-            $short={{ variant: infoTextSize }}
-            allowFontScaling={false}
-            color="$neutral1"
-            flexGrow={1}
-            variant={infoTextSize}
-          >
-            {t('walletConnect.permissions.option.viewWalletAddress')}
-          </Text>
-        </Flex>
-        <Flex centered row gap="$spacing4">
-          <Check color="$statusSuccess" size={iconSizes.icon16} />
-          <Text
-            $short={{ variant: infoTextSize }}
-            allowFontScaling={false}
-            color="$neutral1"
-            flexGrow={1}
-            variant={infoTextSize}
-          >
-            {t('walletConnect.permissions.option.viewTokenBalances')}
-          </Text>
-        </Flex>
-        <Flex centered row gap="$spacing4">
-          <X color="$statusCritical" size={iconSizes.icon16} />
-          <Text
-            $short={{ variant: infoTextSize }}
-            allowFontScaling={false}
-            color="$neutral1"
-            flexGrow={1}
-            variant={infoTextSize}
-          >
-            {t('walletConnect.permissions.option.transferAssets')}
-          </Text>
-        </Flex>
-      </Flex>
-    </Flex>
-  )
-}
-
-type SwitchAccountProps = {
-  activeAddress: string
-  setModalState: (state: PendingConnectionModalState.SwitchAccount) => void
-}
-
-const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps): JSX.Element => {
-  const signerAccounts = useSignerAccounts()
-  const accountIsSwitchable = signerAccounts.length > 1
-
-  const onPress = useCallback(() => {
-    setModalState(PendingConnectionModalState.SwitchAccount)
-  }, [setModalState])
-
-  return (
-    <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={TestID.WCDappSwitchAccount} onPress={onPress}>
-      <Flex row justifyContent="space-between">
-        <AddressFooter activeAccountAddress={activeAddress} px="$spacing8" />
-        {accountIsSwitchable && <RotatableChevron color="$neutral2" direction="down" height={16} width={16} />}
-      </Flex>
-    </TouchableArea>
-  )
-}
-
 export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.Element => {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
-  const activeAddress = useActiveAccountAddressWithThrow()
   const activeAccount = useActiveAccountWithThrow()
+  const activeAddress = activeAccount.address
+  const isViewOnly = activeAccount.type === AccountType.Readonly
+
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
+  const hasSmartWalletConsent = useHasSmartWalletConsent()
+  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods)
 
-  const [modalState, setModalState] = useState<PendingConnectionModalState>(PendingConnectionModalState.Hidden)
+  const [isConnecting, setIsConnecting] = useState(false)
 
-  const onPressSettleConnection = useCallback(
-    async (approved: boolean) => {
+  // Merge WalletConnect verification with Blockaid verification
+  const { verificationStatus: blockaidStatus } = useBlockaidVerification(pendingSession.dappRequestInfo.url)
+  const finalVerificationStatus = mergeVerificationStatuses(pendingSession.verifyStatus, blockaidStatus)
+
+  const { confirmedWarning, setConfirmedWarning, disableConfirm } = useDappConnectionConfirmation({
+    verificationStatus: finalVerificationStatus,
+    isViewOnly,
+    isLoading: isConnecting,
+  })
+
+  const signerAccounts = useSignerAccounts()
+  const defaultSelectedAccountAddresses = useMemo(() => {
+    return signerAccounts.map((account) => account.address)
+  }, [signerAccounts])
+
+  const [selectedAccountAddresses, setSelectedAccountAddresses] = useState<string[]>(defaultSelectedAccountAddresses)
+
+  // Sort the active account to the front of the list in the UI
+  const orderedAllAccountAddresses = useMemo(() => {
+    return [...signerAccounts.map((account) => account.address)].sort((a, b) => {
+      if (a === activeAddress) {
+        return -1
+      }
+      if (b === activeAddress) {
+        return 1
+      }
+      return 0
+    })
+  }, [signerAccounts, activeAddress])
+
+  // Sort the active account to the front of the list, so that when we construct namespaces, the active account is first,
+  // so that it appears as the active connection on the dapp
+  const orderedSelectedAccountAddresses = useMemo(() => {
+    return [...selectedAccountAddresses].sort((a, b) => {
+      return a === activeAddress ? -1 : b === activeAddress ? 1 : 0
+    })
+  }, [selectedAccountAddresses, activeAddress])
+
+  const onPressSettleConnection = useEvent(async (approved: boolean) => {
+    // Prevent multiple concurrent connection attempts
+    if (isConnecting) {
+      return
+    }
+
+    setIsConnecting(true)
+
+    try {
       sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
         request_type: WCEventType.SessionPending,
-        dapp_url: pendingSession.dapp.url,
-        dapp_name: pendingSession.dapp.name,
+        dapp_url: pendingSession.dappRequestInfo.url,
+        dapp_name: pendingSession.dappRequestInfo.name,
         wc_version: '2',
         connection_chain_ids: pendingSession.chains,
         outcome: approved ? WCRequestOutcome.Confirm : WCRequestOutcome.Reject,
@@ -155,27 +115,36 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
       // Handle WC 2.0 session request
       if (approved) {
-        const namespaces = getSessionNamespaces(activeAddress, pendingSession.proposalNamespaces)
+        const namespaces = getSessionNamespaces(orderedSelectedAccountAddresses, pendingSession.proposalNamespaces)
+        const capabilities = await getCapabilitiesCore({
+          address: activeAddress,
+          chainIds: pendingSession.chains,
+          hasSmartWalletConsent: hasSmartWalletConsent ?? false,
+        })
+
+        const scopedProperties = convertCapabilitiesToScopedProperties(capabilities)
 
         const session = await wcWeb3Wallet.approveSession({
           id: Number(pendingSession.id),
           namespaces,
+          ...(eip5792MethodsEnabled ? { scopedProperties } : {}),
         })
 
         dispatch(
           addSession({
             wcSession: {
               id: session.topic,
-              dapp: {
+              dappRequestInfo: {
                 name: session.peer.metadata.name,
                 url: session.peer.metadata.url,
                 icon: session.peer.metadata.icons[0] ?? null,
-                source: 'walletconnect',
+                requestType: DappRequestType.WalletConnectSessionRequest,
               },
               chains: pendingSession.chains,
               namespaces,
+              activeAccount: activeAddress,
+              ...(eip5792MethodsEnabled ? { capabilities } : {}),
             },
-            account: activeAddress,
           }),
         )
 
@@ -202,11 +171,28 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         await returnToPreviousApp()
         setDidOpenFromDeepLink(false)
       }
-    },
-    [activeAddress, dispatch, onClose, pendingSession, didOpenFromDeepLink],
-  )
+    } catch {
+      setIsConnecting(false)
+    } finally {
+      setIsConnecting(false)
+    }
+  })
 
-  const dappName = pendingSession.dapp.name || pendingSession.dapp.url || ''
+  const isThreat = finalVerificationStatus === DappVerificationStatus.Threat
+  const isThreatProps: Partial<ModalWithOverlayProps> = isThreat
+    ? {
+        cancelButtonText: t('walletConnect.pending.button.reject'),
+        cancelButtonProps: {
+          backgroundColor: '$statusCritical',
+          emphasis: 'primary',
+        },
+        confirmationButtonProps: {
+          variant: 'default',
+          emphasis: 'tertiary',
+          backgroundColor: '$surface3',
+        },
+      }
+    : {}
 
   return (
     <>
@@ -214,79 +200,81 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         confirmationButtonText={t('walletConnect.pending.button.connect')}
         name={ModalName.WCPendingConnection}
         scrollDownButtonText={t('walletConnect.pending.button.scrollDown')}
+        disableConfirm={disableConfirm}
+        confirmationLoading={isConnecting}
         onClose={onClose}
         onConfirm={(): Promise<void> => onPressSettleConnection(true)}
         onReject={(): Promise<void> => onPressSettleConnection(false)}
+        {...isThreatProps}
       >
         <PendingConnectionModalContent
-          activeAddress={activeAddress}
-          dappName={dappName}
+          isViewOnly={isViewOnly}
           pendingSession={pendingSession}
-          setModalState={setModalState}
+          verifyStatus={finalVerificationStatus}
+          allAccountAddresses={orderedAllAccountAddresses}
+          selectedAccountAddresses={selectedAccountAddresses}
+          setSelectedAccountAddresses={setSelectedAccountAddresses}
+          confirmedWarning={confirmedWarning}
+          onConfirmWarning={setConfirmedWarning}
         />
       </ModalWithOverlay>
-
-      {modalState === PendingConnectionModalState.SwitchAccount && (
-        <PendingConnectionSwitchAccountModal
-          activeAccount={activeAccount}
-          onClose={(): void => setModalState(PendingConnectionModalState.Hidden)}
-          onPressAccount={(account): void => {
-            dispatch(setAccountAsActive(account.address))
-            setModalState(PendingConnectionModalState.Hidden)
-          }}
-        />
-      )}
     </>
   )
 }
 
 type PendingConnectionModalContentProps = {
-  activeAddress: string
-  dappName: string
+  allAccountAddresses: string[]
+  selectedAccountAddresses: string[]
+  setSelectedAccountAddresses: (addresses: string[]) => void
   pendingSession: WalletConnectPendingSession
-  setModalState: (state: PendingConnectionModalState.SwitchAccount) => void
+  verifyStatus: DappVerificationStatus
+  isViewOnly: boolean
+  onConfirmWarning: (confirmed: boolean) => void
+  confirmedWarning: boolean
 }
 
 function PendingConnectionModalContent({
-  activeAddress,
-  dappName,
+  allAccountAddresses,
+  selectedAccountAddresses,
+  setSelectedAccountAddresses,
   pendingSession,
-  setModalState,
+  verifyStatus,
+  isViewOnly,
+  onConfirmWarning,
+  confirmedWarning,
 }: PendingConnectionModalContentProps): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
-
   const { animatedFooterHeight } = useBottomSheetInternal()
 
   const bottomSpacerStyle = useAnimatedStyle(() => ({
     height: animatedFooterHeight.value,
   }))
 
+  const dappInfo: DappConnectionInfo = {
+    name: pendingSession.dappRequestInfo.name,
+    url: pendingSession.dappRequestInfo.url,
+    icon: pendingSession.dappRequestInfo.icon,
+  }
+
   return (
     <>
-      <Flex alignItems="center" gap="$spacing8" justifyContent="flex-end" pb="$spacing4">
-        <DappHeaderIcon dapp={pendingSession.dapp} />
-        <Text textAlign="center" variant="heading3">
-          {t('walletConnect.pending.title', {
-            dappName,
-          })}
-        </Text>
-        <LinkButton
-          color={colors.accent1.val}
-          label={formatDappURL(pendingSession.dapp.url)}
-          mb="$spacing12"
-          px="$spacing8"
-          py="$spacing4"
-          showIcon={false}
-          textVariant="buttonLabel2"
-          url={pendingSession.dapp.url}
+      <Flex pb="$spacing24">
+        <DappRequestHeader
+          dappInfo={dappInfo}
+          title={t('dapp.request.connect.title')}
+          verificationStatus={verifyStatus}
         />
       </Flex>
-      <SitePermissions />
-      <Flex pb="$spacing12" pt="$spacing16" px="$spacing8">
-        <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
-      </Flex>
-      <Animated.View style={bottomSpacerStyle} />
+      <DappConnectionContent
+        verificationStatus={verifyStatus}
+        confirmedWarning={confirmedWarning}
+        allAccountAddresses={allAccountAddresses}
+        selectedAccountAddresses={selectedAccountAddresses}
+        setSelectedAccountAddresses={setSelectedAccountAddresses}
+        isViewOnly={isViewOnly}
+        bottomSpacing={<Animated.View style={bottomSpacerStyle} />}
+        onConfirmWarning={onConfirmWarning}
+      />
     </>
   )
 }

@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: Third-party types not available */
 import { StoreEnhancerStoreCreator } from 'redux'
 import { PlatformSplitStubError } from 'utilities/src/errors'
-import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
+import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
 
 export interface ReduxEnhancerConfig {
   shouldLogReduxState: (state: any) => boolean

@@ -18,7 +18,7 @@ export const UniconSampleSheet = ({ onClose }: { onClose: () => void }): JSX.Ele
         <Flex row alignItems="center" flexWrap="wrap" justifyContent="center" width="100%">
           {generateRandomEthereumAddresses(80).map((address) => {
             return (
-              <Flex>
+              <Flex key={address}>
                 <Unicon key={address} address={address} size={42} />
               </Flex>
             )

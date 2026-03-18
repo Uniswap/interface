@@ -1,0 +1,37 @@
+{
+  "extends": "../../config/tsconfig/app.json",
+  "include": [
+    "src/**/*.ts",
+    "src/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.json",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.mts"
+  ],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"],
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "paths": {
+      "@universe/api/*": ["./src/*"],
+      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb": [
+        "../../node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb",
+        "./stubs/privy-service-pb"
+      ]
+    },
+    "types": ["chrome", "node"]
+  },
+  "types": ["vitest/globals"],
+  "references": [
+    {
+      "path": "../utilities"
+    },
+    {
+      "path": "../sessions"
+    },
+    {
+      "path": "../config"
+    }
+  ]
+}

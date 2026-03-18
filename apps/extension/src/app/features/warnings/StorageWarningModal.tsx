@@ -4,13 +4,14 @@ import { useCheckLowStorage } from 'src/app/features/warnings/useCheckLowStorage
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { spacing } from 'ui/src/theme'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-export type StorageWarningModalProps = {
+type StorageWarningModalProps = {
   isOnboarding: boolean
 }
+
 export function StorageWarningModal({ isOnboarding }: StorageWarningModalProps): JSX.Element | null {
   const { t } = useTranslation()
   const { navigateTo } = useExtensionNavigation()
@@ -32,7 +33,7 @@ export function StorageWarningModal({ isOnboarding }: StorageWarningModalProps):
           ? undefined
           : (): void => {
               onStorageWarningClose()
-              navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)
+              navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)
             }
       }
     />

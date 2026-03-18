@@ -1,24 +1,24 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
+import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
-import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
-import { deleteUnitag } from 'wallet/src/features/unitags/api'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 export function DeleteUnitagModal({
   unitag,
@@ -32,9 +32,8 @@ export function DeleteUnitagModal({
   onSuccess?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const dispatch = useDispatch()
-  const { triggerRefetchUnitags } = useUnitagUpdater()
+  const resetUnitagsQueries = useResetUnitagsQueries()
   const account = useAccount(address)
   const signerManager = useWalletSigners()
   const [isDeleting, setIsDeleting] = useState(false)
@@ -53,30 +52,29 @@ export function DeleteUnitagModal({
   const onDelete = async (): Promise<void> => {
     try {
       setIsDeleting(true)
-      const { data: deleteResponse } = await deleteUnitag({
-        username: unitag,
-        account,
-        signerManager,
+      const deleteResponse = await UnitagsApiClient.deleteUnitag({
+        data: { username: unitag },
+        address: account.address,
+        signMessage: generateSignerFunc(account, signerManager),
       })
       setIsDeleting(false)
 
-      if (!deleteResponse?.success) {
+      if (!deleteResponse.success) {
         handleDeleteError()
         return
       }
 
-      if (deleteResponse?.success) {
-        sendAnalyticsEvent(UnitagEventName.UnitagRemoved)
-        triggerRefetchUnitags()
-        dispatch(
-          pushNotification({
-            type: AppNotificationType.Success,
-            title: t('unitags.notification.delete.title'),
-          }),
-        )
-        onSuccess?.()
-        onClose()
-      }
+      // Deletion was a success
+      sendAnalyticsEvent(UnitagEventName.UnitagRemoved)
+      resetUnitagsQueries()
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Success,
+          title: t('unitags.notification.delete.title'),
+        }),
+      )
+      onSuccess?.()
+      onClose()
     } catch (e) {
       logger.error(e, {
         tags: { file: 'DeleteUnitagModal', function: 'onDelete' },
@@ -87,11 +85,11 @@ export function DeleteUnitagModal({
 
   return (
     <Modal isDismissible name={ModalName.UnitagsDelete} onClose={onClose}>
-      {isExtension && <ModalBackButton onBack={onClose} />}
-      <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'} px="$spacing24">
+      {isExtensionApp && <ModalBackButton onBack={onClose} />}
+      <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtensionApp ? '$spacing24' : '$spacing12'} px="$spacing24">
         <Flex
           centered
-          backgroundColor="$DEP_accentCriticalSoft"
+          backgroundColor="$statusCritical2"
           borderRadius="$rounded12"
           height="$spacing48"
           mb="$spacing8"
@@ -102,22 +100,24 @@ export function DeleteUnitagModal({
         <Text textAlign="center" variant="subheading1">
           {t('unitags.delete.confirm.title')}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant={isExtension ? 'body3' : 'body2'}>
+        <Text color="$neutral2" textAlign="center" variant={isExtensionApp ? 'body3' : 'body2'}>
           {t('unitags.delete.confirm.subtitle')}
         </Text>
         <Flex py="$spacing24">
-          <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
+          <UnitagName animateText name={unitag} textProps={{ fontSize: fonts.heading3.fontSize }} />
         </Flex>
-        <Flex centered row width="100%">
-          <DeprecatedButton fill isDisabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
-            {isDeleting ? (
-              <Flex height={fonts.buttonLabel1.lineHeight}>
-                <ActivityIndicator color={colors.white.val} />
-              </Flex>
-            ) : (
-              t('common.button.delete')
-            )}
-          </DeprecatedButton>
+        <Flex row width="100%">
+          <Button
+            loading={isDeleting}
+            isDisabled={isDeleting}
+            testID={TestID.Remove}
+            variant="critical"
+            emphasis="secondary"
+            size="large"
+            onPress={onDelete}
+          >
+            {t('common.button.delete')}
+          </Button>
         </Flex>
       </Flex>
     </Modal>

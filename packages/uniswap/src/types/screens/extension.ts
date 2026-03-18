@@ -9,12 +9,14 @@ export enum ExtensionScreens {
   PopupOpenExtension = 'PopupOpenExtension',
   UnsupportedBrowserScreen = 'UnsupportedBrowserScreen',
   ManageDappConnectionsScreen = 'ManageDappConnectionsScreen',
+  Settings = 'Settings',
 }
 
 export enum ExtensionOnboardingFlow {
   New = 'New',
-  Import = 'Import',
+  Import = 'Import', // Import via seed phrase
   Scantastic = 'Scantastic',
+  Passkey = 'Passkey',
 }
 
 export enum ExtensionOnboardingScreens {
@@ -23,14 +25,15 @@ export enum ExtensionOnboardingScreens {
 
   // Shared Flows
   SetPassword = 'SetPassword',
+  SetUpBiometricUnlock = 'SetUpBiometricUnlock',
 
   // New Wallet Flow
   ClaimUnitag = 'ClaimUnitag',
-  NameWallet = 'NameWallet',
-  ViewSeedPhrase = 'ViewSeedPhrase',
-  ConfirmSeedPhrase = 'ConfirmSeedPhrase',
 
   // Import Flow
+  SelectImportMethod = 'SelectImportMethod',
+  InitiatePasskeyAuth = 'InitiatePasskeyAuth',
+  PasskeyImport = 'PasskeyImport',
   SeedPhraseInput = 'SeedPhraseInput',
   SelectWallet = 'SelectWallet',
 

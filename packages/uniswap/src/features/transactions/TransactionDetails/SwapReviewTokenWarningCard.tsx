@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
+import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils'
+import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils/getShouldDisplayTokenWarningCard'
 
 type SwapReviewTokenWarningCardProps = {
   checked: boolean

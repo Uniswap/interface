@@ -3,8 +3,8 @@ import { Linking } from 'react-native'
 import { BUNDLE_ID } from 'utilities/src/environment/env.native'
 import { isIOS } from 'utilities/src/platform'
 
-export function dismissInAppBrowser(): void {
-  WebBrowser.dismissBrowser()
+export async function dismissInAppBrowser(): Promise<void> {
+  await WebBrowser.dismissBrowser()
 }
 
 export async function openSettings(): Promise<void> {
@@ -18,5 +18,13 @@ export async function openNotificationSettings(): Promise<void> {
     await Linking.sendIntent('android.settings.APP_NOTIFICATION_SETTINGS', [
       { key: 'android.provider.extra.APP_PACKAGE', value: BUNDLE_ID },
     ])
+  }
+}
+
+export async function openSecuritySettings(): Promise<void> {
+  if (isIOS) {
+    await openSettings()
+  } else {
+    await Linking.sendIntent('android.settings.SECURITY_SETTINGS')
   }
 }

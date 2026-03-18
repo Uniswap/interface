@@ -1,8 +1,8 @@
 // until the web app needs all of tamagui, avoid heavy imports there
-// eslint-disable-next-line no-restricted-imports
-import { createFont, isAndroid, isWeb } from '@tamagui/core'
+// biome-ignore lint/style/noRestrictedImports: until the web app needs all of tamagui, avoid heavy imports there
+import { createFont, isAndroid } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts
@@ -33,7 +33,7 @@ const fontFamilyByPlatform = {
   },
 }
 
-const platform = isWeb ? 'web' : isAndroid ? 'android' : 'ios'
+const platform = isWebPlatform ? 'web' : isAndroid ? 'android' : 'ios'
 
 const fontFamily = {
   serif: 'serif',
@@ -45,19 +45,23 @@ const fontFamily = {
   },
 }
 
-const baselMedium = isWeb
+const baselMedium = isWebPlatform
   ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.medium
 
-const baselBook = isWeb
+const baselBook = isWebPlatform
   ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.book
+
+const monospaceFontFamily = isWebPlatform
+  ? 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Courier New", monospace'
+  : fontFamily.sansSerif.monospace
 
 type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif
 type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamilyKey]
 
 const platformFontFamily = (family: SansSerifFontFamilyKey): SansSerifFontFamilyKey | SansSerifFontFamilyValue => {
-  if (isWeb) {
+  if (isWebPlatform) {
     return family
   }
 
@@ -77,9 +81,9 @@ const MEDIUM_WEIGHT = '500'
 const MEDIUM_WEIGHT_WEB = '535'
 
 const defaultWeights = {
-  book: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  true: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  medium: isInterface ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
+  book: isWebApp ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  true: isWebApp ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  medium: isWebApp ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
 }
 
 // on native, the Basel font files render down a few px
@@ -90,23 +94,27 @@ export const fonts = {
   heading1: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(52),
-    lineHeight: 60,
+    lineHeight: adjustedSize(52) * 0.96,
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.2,
+    letterSpacing: '-2%',
   },
+
   heading2: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(36),
-    lineHeight: 44,
+    lineHeight: 40,
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.2,
+    letterSpacing: '-1%',
   },
   heading3: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(24),
-    lineHeight: 32,
+    lineHeight: adjustedSize(24) * 1.2,
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.2,
+    letterSpacing: '-0.5%',
   },
   subheading1: {
     family: platformFontFamily('book'),
@@ -118,28 +126,28 @@ export const fonts = {
   subheading2: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(16),
-    lineHeight: 24,
+    lineHeight: 20,
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   body1: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(18),
-    lineHeight: 24,
+    lineHeight: adjustedSize(18) * 1.3,
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   body2: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(16),
-    lineHeight: 24,
+    lineHeight: adjustedSize(16) * 1.3,
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   body3: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(14),
-    lineHeight: 20,
+    lineHeight: adjustedSize(14) * 1.3,
     fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
@@ -272,9 +280,29 @@ export const buttonFont = createFont({
   },
 })
 
+export const monospaceFont = createFont({
+  family: monospaceFontFamily,
+  size: {
+    micro: fonts.body4.fontSize,
+    small: fonts.body3.fontSize,
+    medium: fonts.body2.fontSize,
+    large: fonts.body1.fontSize,
+    true: fonts.body4.fontSize,
+  },
+  weight: defaultWeights,
+  lineHeight: {
+    micro: fonts.body4.lineHeight,
+    small: fonts.body3.lineHeight,
+    medium: fonts.body2.lineHeight,
+    large: fonts.body1.lineHeight,
+    true: fonts.body4.lineHeight,
+  },
+})
+
 export const allFonts = {
   heading: headingFont,
   subHeading: subHeadingFont,
   body: bodyFont,
   button: buttonFont,
+  monospace: monospaceFont,
 }

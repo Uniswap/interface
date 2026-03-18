@@ -1,23 +1,23 @@
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonLight } from 'components/Button/buttons'
-import { useAbbreviatedTimeString } from 'components/Table/utils'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
-import { useCurrency } from 'hooks/Tokens'
-import deprecatedStyled from 'lib/styled-components'
-import opacify from 'polished/lib/color/opacify'
+import { GraphQLApi } from '@universe/api'
 import { PropsWithChildren } from 'react'
-import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
-import { ClickableStyle, ClickableTamaguiStyle, EllipsisTamaguiStyle, ThemedText } from 'theme/components'
-import { Z_INDEX } from 'theme/zIndex'
-import { Anchor, Flex, Text, View, styled } from 'ui/src'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Link } from 'react-router'
+import { Anchor, Flex, FlexProps, styled, Text, TextProps } from 'ui/src'
+import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
+import { ArrowUp } from 'ui/src/components/icons/ArrowUp'
+import { breakpoints, IconSizeTokens, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { getTokenDetailsURL, unwrapToken } from '~/appGraphql/data/util'
+import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { Cell } from '~/components/Table/Cell'
+import { useTableSize } from '~/components/Table/TableSizeProvider'
+import { useAbbreviatedTimeString } from '~/components/Table/utils'
+import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { useCurrency } from '~/hooks/Tokens'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50
@@ -28,112 +28,155 @@ export const TableContainer = styled(Flex, {
   className: 'scrollbar-hidden',
 })
 
-export const TableHead = (props: PropsWithChildren<{ $isSticky: boolean; $top: number }>): JSX.Element => {
-  if (props.$isSticky) {
-    return (
-      <Flex
-        width="100%"
-        top={props.$top}
-        zIndex={Z_INDEX.under_dropdown}
-        justifyContent="flex-end"
-        backgroundColor="$surface1"
-        className="scrollbar-hidden"
-        $platform-web={{
-          position: 'sticky',
-        }}
-      >
-        {props.$isSticky && <div style={{ height: 12 }} />}
-        {props.children}
-      </Flex>
-    )
-  } else {
-    return (
-      <Flex
-        width="100%"
-        position="relative"
-        justifyContent="flex-end"
-        backgroundColor="$surface1"
-        className="scrollbar-hidden"
-      >
-        {props.children}
-      </Flex>
-    )
-  }
-}
+export const TableHead = (
+  props: PropsWithChildren<{ $isSticky: boolean; $top: number; mb?: FlexProps['mb'] }>,
+): JSX.Element => (
+  <Flex
+    width="100%"
+    zIndex={zIndexes.dropdown - 2}
+    top={props.$isSticky ? props.$top : 'unset'}
+    justifyContent="flex-end"
+    backgroundColor="$surface1"
+    className="scrollbar-hidden"
+    $platform-web={props.$isSticky ? { position: 'sticky' } : {}}
+    mb={props.mb}
+  >
+    {props.$isSticky && <Flex height={12} />}
+    {props.children}
+  </Flex>
+)
 
-export const TableBodyContainer = styled(View, {
+export const TableBodyContainer = styled(Flex, {
   width: '100%',
   position: 'relative',
   className: 'scrollbar-hidden',
   justifyContent: 'flex-start',
-  borderColor: '$surface3',
   borderStyle: 'solid',
-  borderWidth: 1,
-  borderTopWidth: 0,
-  borderBottomRightRadius: '$rounded20',
-  borderBottomLeftRadius: '$rounded20',
   '$platform-web': {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
-    overflowY: 'scroll',
+    overflowY: 'auto',
+  },
+  variants: {
+    v2: {
+      true: {
+        borderBottomRightRadius: '$rounded12',
+        borderBottomLeftRadius: '$rounded12',
+        borderWidth: 0,
+      },
+      false: {
+        borderBottomRightRadius: '$rounded20',
+        borderBottomLeftRadius: '$rounded20',
+        borderColor: '$surface3',
+        borderWidth: 1,
+        borderTopWidth: '$none',
+      },
+    },
+    hasHiddenRows: {
+      true: {
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderBottomWidth: 0,
+      },
+    },
   },
 })
 
-export const ReturnButton = deprecatedStyled(ButtonLight)`
-  font-size: 16px;
-  border-radius: 900px;
-  width: fit-content;
-  margin-top: 8px;
-  box-shadow: ${({ theme }) => `0px 10px 15px -3px ${opacify(54, theme.surface1)}, 0px 4px 6px -2px ${opacify(40, theme.surface1)}`};
-`
-
-export const ReturnIcon = deprecatedStyled(CornerLeftUp)`
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-`
-
-export const ReturnButtonContainer = styled(Flex, {
-  position: 'absolute',
-  justifyContent: 'center',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  width: 'max-content',
-})
-
-export const LoadingIndicatorContainer = styled(Flex, {
-  row: true,
-  alignItems: 'center',
-  justifyContent: 'center',
-  mt: -48,
+export const HiddenTableScrollContainer = styled(Flex, {
+  width: '100%',
+  position: 'relative',
+  className: 'scrollbar-hidden',
+  justifyContent: 'flex-start',
+  borderStyle: 'solid',
   '$platform-web': {
-    position: 'sticky',
+    overscrollBehaviorX: 'none',
+    overflowX: 'auto',
+    overflowY: 'visible', // Critical: allows sticky to work
+  },
+  variants: {
+    v2: {
+      true: {
+        borderBottomRightRadius: '$rounded12',
+        borderBottomLeftRadius: '$rounded12',
+        borderWidth: 0,
+      },
+      false: {
+        borderBottomRightRadius: '$rounded20',
+        borderBottomLeftRadius: '$rounded20',
+        borderColor: '$surface3',
+        borderWidth: 1,
+        borderTopWidth: 0,
+      },
+    },
   },
 })
 
-export const LoadingIndicator = styled(Flex, {
+export const TableSeparatorRow = styled(Flex, {
+  centered: true,
   row: true,
-  backgroundColor: '$accent2',
-  borderRadius: '$rounded8',
-  width: 'fit-content',
-  p: '$padding8',
-  gap: '$gap8',
-  height: 34,
-  zIndex: Z_INDEX.under_dropdown,
+  gap: '$spacing12',
+  py: '$spacing8',
+  px: '$spacing16',
+  borderStyle: 'solid',
+  width: '100%',
+  variants: {
+    v2: {
+      true: {
+        borderWidth: 0,
+      },
+      false: {
+        borderColor: '$surface3',
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
+      },
+    },
+    isExpanded: {
+      false: {
+        borderBottomWidth: 1,
+      },
+    },
+  } as const,
 })
 
 const TableRow = styled(Flex, {
   row: true,
   alignItems: 'center',
-  px: '$padding12',
   width: 'fit-content',
   minWidth: '100%',
-  minHeight: 64,
+  height: '100%',
+  transition: 'background-color 0.1s ease-in-out',
+  variants: {
+    v2: {
+      true: {
+        borderRadius: '$rounded12',
+      },
+      false: {
+        borderRadius: '$rounded20',
+      },
+    },
+  },
 })
 
 export const DataRow = styled(TableRow, {
-  hoverStyle: {
-    backgroundColor: '$surface3',
+  variants: {
+    v2: {
+      true: {
+        hoverStyle: {
+          backgroundColor: '$surface1Hovered',
+          transition: 'background-color 0ms',
+        },
+      },
+      false: {
+        hoverStyle: { backgroundColor: '$surface1Hovered' },
+      },
+    },
+    dimmed: {
+      true: {
+        opacity: 0.6,
+      },
+    },
   },
 })
 
@@ -142,16 +185,10 @@ export const NoDataFoundTableRow = styled(TableRow, {
 })
 
 export const HeaderRow = styled(TableRow, {
-  borderWidth: 1,
-  borderStyle: 'solid',
-  borderColor: '$surface3',
-  borderTopRightRadius: '$rounded20',
-  borderTopLeftRadius: '$rounded20',
   width: 'unset',
-  minHeight: 52,
-  backgroundColor: '$surface2',
   scrollbarWidth: 'none',
   className: 'scrollbar-hidden',
+  transition: 'unset',
 
   '$platform-web': {
     overscrollBehavior: 'none',
@@ -163,6 +200,22 @@ export const HeaderRow = styled(TableRow, {
         opacity: 0.4,
       },
     },
+    v2: {
+      true: {
+        backgroundColor: '$surface2',
+        borderRadius: '$rounded12',
+      },
+      false: {
+        backgroundColor: '$surface1Hovered',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '$surface3',
+        borderTopRightRadius: '$rounded20',
+        borderTopLeftRadius: '$rounded20',
+        borderBottomRightRadius: 'unset',
+        borderBottomLeftRadius: 'unset',
+      },
+    },
   } as const,
 })
 
@@ -171,45 +224,51 @@ export const CellContainer = styled(Flex, {
   className: 'first-child-flex-grow-0 last-child-justify-end',
 })
 
-export const StyledExternalLink = styled(Anchor, {
+const StyledExternalLink = styled(Anchor, {
   textDecorationLine: 'none',
   ...ClickableTamaguiStyle,
   color: '$neutral1',
   target: '_blank',
   rel: 'noopener noreferrer',
 })
-const StyledInternalLink = deprecatedStyled(Link)`
-  text-decoration: none;
-  ${ClickableStyle}
-  color: ${({ theme }) => theme.neutral1};
-`
+const StyledInternalLink = styled(Link, {
+  ...ClickableTamaguiStyle,
+  color: '$neutral1',
+  '$platform-web': {
+    textDecoration: 'none',
+  },
+})
 
-export const TableRowLink = deprecatedStyled(Link)`
-  color: none;
-  text-decoration: none;
-  cursor: pointer;
-`
+export const TableRowLink = styled(Link, {
+  cursor: 'pointer',
+  '$platform-web': {
+    textDecoration: 'none',
+  },
+})
 
 export const ClickableHeaderRow = styled(Flex, {
   row: true,
   alignItems: 'center',
   justifyContent: 'flex-end',
-  width: '100%',
-  gap: '$gap4',
 
   ...ClickableTamaguiStyle,
 })
 
-export const HeaderArrow = deprecatedStyled(ArrowDown)<{ direction: OrderDirection }>`
-  height: 16px;
-  width: 16px;
-  color: ${({ theme }) => theme.neutral1};
-  transform: ${({ direction }) => (direction === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)')};
-`
+export function HeaderArrow({
+  orderDirection,
+  size,
+}: {
+  orderDirection: 'asc' | 'desc'
+  size: IconSizeTokens
+}): JSX.Element {
+  const Icon = orderDirection === 'asc' ? ArrowUp : ArrowDown
+  return <Icon size={size} color="$neutral1" hoverStyle={{ opacity: 0.5 }} transition="opacity 0.08s ease-in-out" />
+}
 
 export const HeaderSortText = styled(Text, {
-  variant: 'body2',
+  variant: 'body3',
   color: '$neutral2',
+  whiteSpace: 'nowrap',
 
   variants: {
     active: {
@@ -225,8 +284,7 @@ export const FilterHeaderRow = styled(Flex, {
   alignItems: 'center',
   userSelect: 'none',
   gap: '$gap4',
-  animation: 'fast',
-
+  transition: 'all 0.1s ease-in-out',
   ...ClickableTamaguiStyle,
 
   variants: {
@@ -236,22 +294,45 @@ export const FilterHeaderRow = styled(Flex, {
   } as const,
 })
 
-const StyledTimestampRow = deprecatedStyled(StyledExternalLink)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-`
-const StyledExternalLinkIcon = deprecatedStyled(ExternalLinkIcon)`
-  display: none;
-  height: 16px;
-  width: 16px;
-  color: ${({ theme }) => theme.neutral2};
-  ${StyledTimestampRow}:hover & {
-    display: block;
+const StyledTimestampRow = styled(StyledExternalLink, {
+  group: true,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: '$gap8',
+  width: '100%',
+  whiteSpace: 'nowrap',
+  hoverStyle: {
+    opacity: 1,
+  },
+})
+
+export const TableText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
+  const { width: tableWidth } = useTableSize()
+
+  // Avoid rendering text until we have the table width to prevent layout flickering
+  if (!tableWidth) {
+    return <></>
   }
-`
+
+  return (
+    <Text color="$neutral1" variant={tableWidth <= breakpoints.lg ? 'body3' : 'body2'} {...props}>
+      {children}
+    </Text>
+  )
+}
+
+export const EllipsisText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
+  return (
+    <TableText {...props} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+      {children}
+    </TableText>
+  )
+}
+
+export const HeaderCell = styled(Cell, {
+  py: '$spacing12',
+})
 
 /**
  * Converts the given timestamp to an abbreviated format (s,m,h) for timestamps younger than 1 day
@@ -281,31 +362,27 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
   return (
     <StyledTimestampRow href={link}>
       <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
-        <ThemedText.BodySecondary>{abbreviatedTime}</ThemedText.BodySecondary>
+        <TableText>{abbreviatedTime}</TableText>
       </MouseoverTooltip>
-      <StyledExternalLinkIcon />
     </StyledTimestampRow>
   )
 }
-
-const TokenSymbolText = styled(Text, {
-  variant: 'body2',
-  color: '$neutral1',
-  ...EllipsisTamaguiStyle,
-})
 
 /**
  * Given a token displays the Token's Logo and Symbol with a link to its TDP
  * @param token
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
-export const TokenLinkCell = ({ token }: { token: Token }) => {
+export const TokenLinkCell = ({ token, hideLogo }: { token: GraphQLApi.Token; hideLogo?: boolean }) => {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
   const unwrappedToken = unwrapToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
+  const nativeCurrency = useCurrency({
+    address: NATIVE_CHAIN_ID,
+    chainId,
+  })
   return (
     <StyledInternalLink
       to={getTokenDetailsURL({
@@ -313,14 +390,17 @@ export const TokenLinkCell = ({ token }: { token: Token }) => {
         chain: token.chain,
       })}
     >
-      <Flex row gap="$gap4" maxWidth="68px">
-        <PortfolioLogo
-          chainId={chainId}
-          size={16}
-          images={isNative ? undefined : [token.project?.logo?.url]}
-          currencies={isNative ? [nativeCurrency] : undefined}
-        />
-        <TokenSymbolText>{unwrappedToken?.symbol ?? t('common.unknown').toUpperCase()}</TokenSymbolText>
+      <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
+        <EllipsisText>{unwrappedToken.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
+        {!hideLogo && (
+          <PortfolioLogo
+            chainId={chainId}
+            size={22}
+            images={isNative ? undefined : [token.project?.logo?.url]}
+            fallbackSymbols={[token.symbol]}
+            currencies={isNative ? [nativeCurrency] : undefined}
+          />
+        )}
       </Flex>
     </StyledInternalLink>
   )

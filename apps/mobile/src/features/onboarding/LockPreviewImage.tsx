@@ -62,7 +62,7 @@ export function LockPreviewImage({ height = DEFAULT_PREVIEW_HEIGHT }: { height?:
             p="$spacing12"
             top="$spacing24"
           >
-            <Lock color="$accent1" size="$icon.24" />
+            <Lock color="$neutral1" size="$icon.24" />
           </Flex>
         </Flex>
       </Flex>

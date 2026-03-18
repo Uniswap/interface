@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-imports */
 import type { ColorValue, FlexStyle } from 'react-native'
 import type { FlexProps } from 'ui/src'
 import { PlatformSplitStubError } from 'utilities/src/errors'

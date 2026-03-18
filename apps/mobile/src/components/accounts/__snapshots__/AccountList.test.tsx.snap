@@ -15,9 +15,6 @@ exports[`AccountList renders without error 1`] = `
     data={
       [
         {
-          "type": 0,
-        },
-        {
           "account": {
             "account": {
               "address": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
@@ -28,13 +25,14 @@ exports[`AccountList renders without error 1`] = `
               "mnemonicId": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
               "name": "Test Account",
               "pushNotificationsEnabled": true,
+              "smartWalletConsent": false,
               "timeImportedMs": 10,
               "type": "signerMnemonic",
             },
             "isPortfolioValueLoading": false,
             "portfolioValue": 55,
           },
-          "type": 1,
+          "type": 0,
         },
       ]
     }
@@ -58,58 +56,8 @@ exports[`AccountList renders without error 1`] = `
     scrollEventThrottle={0.0001}
     stickyHeaderIndices={[]}
     viewabilityConfigCallbackPairs={[]}
-    waitFor={
-      [
-        {
-          "current": null,
-        },
-        {
-          "current": null,
-        },
-      ]
-    }
   >
     <View>
-      <View
-        onFocusCapture={[Function]}
-        onLayout={[Function]}
-        style={null}
-      >
-        <View
-          style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "paddingBottom": 8,
-              "paddingLeft": 24,
-              "paddingRight": 24,
-              "paddingTop": 8,
-            }
-          }
-        >
-          <Text
-            allowFontScaling={true}
-            maxFontSizeMultiplier={1.4}
-            style={
-              {
-                "color": {
-                  "dynamic": {
-                    "dark": "#9B9B9B",
-                    "light": "#7D7D7D",
-                  },
-                },
-                "fontFamily": "Basel Grotesk",
-                "fontSize": 17,
-                "fontWeight": "400",
-                "lineHeight": 24,
-              }
-            }
-            suppressHighlighting={true}
-          >
-            Your other wallets
-          </Text>
-        </View>
-      </View>
       <View
         onFocusCapture={[Function]}
         onLayout={[Function]}
@@ -119,54 +67,49 @@ exports[`AccountList renders without error 1`] = `
           actions={
             [
               {
+                "onPress": [Function],
                 "systemIcon": "doc.on.doc",
-                "title": "Copy wallet address",
-              },
-              {
-                "systemIcon": "gearshape",
-                "title": "Wallet settings",
-              },
-              {
-                "destructive": true,
-                "systemIcon": "trash",
-                "title": "Remove wallet",
+                "title": "Copy address",
               },
             ]
           }
           onPress={[Function]}
         >
           <View
-            hitSlop={
-              {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
+            focusVisibleStyle={{}}
             onBlur={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
+            onLayout={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
+            role="button"
             style={
-              {
-                "flexDirection": "column",
-                "opacity": 1,
-                "paddingBottom": 12,
-                "paddingLeft": 24,
-                "paddingRight": 24,
-                "paddingTop": 8,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              }
+              [
+                {
+                  "backgroundColor": "transparent",
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
+                  "flexDirection": "column",
+                  "opacity": 1,
+                  "paddingBottom": 12,
+                  "paddingLeft": 24,
+                  "paddingRight": 24,
+                  "paddingTop": 8,
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                },
+                {},
+              ]
             }
           >
             <View
@@ -188,7 +131,6 @@ exports[`AccountList renders without error 1`] = `
                 }
               >
                 <View
-                  onLayout={[Function]}
                   style={
                     {
                       "alignItems": "center",
@@ -202,73 +144,120 @@ exports[`AccountList renders without error 1`] = `
                     style={
                       {
                         "flexDirection": "column",
-                        "position": "relative",
                       }
                     }
                   >
                     <View
                       style={
                         {
-                          "backgroundColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
-                          "borderBottomColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
-                          "borderBottomLeftRadius": 999999,
-                          "borderBottomRightRadius": 999999,
-                          "borderBottomWidth": 0,
-                          "borderLeftColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
-                          "borderLeftWidth": 0,
-                          "borderRightColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
-                          "borderRightWidth": 0,
-                          "borderStyle": "solid",
-                          "borderTopColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
-                          "borderTopLeftRadius": 999999,
-                          "borderTopRightRadius": 999999,
-                          "borderTopWidth": 0,
                           "flexDirection": "column",
                           "position": "relative",
                         }
                       }
-                      testID="account-icon"
                     >
                       <View
                         style={
                           {
+                            "backgroundColor": "transparent",
+                            "borderBottomColor": "transparent",
+                            "borderBottomLeftRadius": 999999,
+                            "borderBottomRightRadius": 999999,
+                            "borderBottomWidth": 0,
+                            "borderLeftColor": "transparent",
+                            "borderLeftWidth": 0,
+                            "borderRightColor": "transparent",
+                            "borderRightWidth": 0,
+                            "borderStyle": "solid",
+                            "borderTopColor": "transparent",
+                            "borderTopLeftRadius": 999999,
+                            "borderTopRightRadius": 999999,
+                            "borderTopWidth": 0,
                             "flexDirection": "column",
-                            "height": 36,
-                            "width": 36,
+                            "position": "relative",
                           }
                         }
-                      />
+                        testID="account-icon"
+                      >
+                        <View
+                          style={
+                            {
+                              "flexDirection": "column",
+                            }
+                          }
+                        >
+                          <View
+                            style={
+                              {
+                                "flexDirection": "column",
+                                "height": 32,
+                                "width": 32,
+                              }
+                            }
+                          >
+                            <View
+                              style={
+                                {
+                                  "height": 32,
+                                  "width": 32,
+                                }
+                              }
+                            >
+                              <skCircle
+                                color="#00C3A01F"
+                                cx={16}
+                                cy={16}
+                                r={16}
+                              />
+                              <skGroup
+                                transform={
+                                  [
+                                    {
+                                      "translateX": 5.333333333333334,
+                                    },
+                                    {
+                                      "translateY": 5.333333333333334,
+                                    },
+                                  ]
+                                }
+                              >
+                                <skGroup
+                                  transform={
+                                    [
+                                      {
+                                        "scale": 0.4444444444444444,
+                                      },
+                                    ]
+                                  }
+                                >
+                                  <skPath
+                                    clip-rule="evenodd"
+                                    color="#00C3A0"
+                                    end={1}
+                                    fillType="evenOdd"
+                                    path="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                                    start={0}
+                                    strokeWidth={1}
+                                  />
+                                  <skPath
+                                    clip-rule="evenodd"
+                                    color="#00C3A0"
+                                    end={1}
+                                    fillType="evenOdd"
+                                    path="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                                    start={0}
+                                    strokeWidth={1}
+                                  />
+                                </skGroup>
+                              </skGroup>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
                     </View>
                   </View>
                   <View
                     style={
                       {
-                        "alignItems": "flex-start",
                         "flexDirection": "column",
                         "flexShrink": 1,
                         "gap": 2,
@@ -278,20 +267,18 @@ exports[`AccountList renders without error 1`] = `
                     <View
                       style={
                         {
-                          "alignItems": "center",
                           "flexDirection": "row",
                           "gap": 12,
-                          "justifyContent": "center",
                         }
                       }
                     >
                       <View
                         style={
                           {
-                            "alignItems": "center",
                             "flexDirection": "row",
+                            "flexGrow": 1,
+                            "flexShrink": 1,
                             "gap": 4,
-                            "justifyContent": "center",
                           }
                         }
                       >
@@ -303,24 +290,60 @@ exports[`AccountList renders without error 1`] = `
                           numberOfLines={1}
                           style={
                             {
-                              "color": {
-                                "dynamic": {
-                                  "dark": "#FFFFFF",
-                                  "light": "#222222",
-                                },
-                              },
+                              "color": "#131313",
                               "flexShrink": 1,
                               "fontFamily": "Basel Grotesk",
                               "fontSize": 19,
                               "fontWeight": "400",
-                              "lineHeight": 24,
-                              "overflow": "hidden",
+                              "lineHeight": 24.7,
                             }
                           }
                           suppressHighlighting={true}
-                          testID="address-display/name/0x​82D5...3Fa6"
+                          testID="address-display/name/undefined"
+                        />
+                      </View>
+                    </View>
+                    <View
+                      style={
+                        {
+                          "flexDirection": "column",
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "alignItems": "center",
+                            "backgroundColor": "transparent",
+                            "borderBottomLeftRadius": 999999,
+                            "borderBottomRightRadius": 999999,
+                            "borderTopLeftRadius": 999999,
+                            "borderTopRightRadius": 999999,
+                            "flexDirection": "row",
+                            "gap": 4,
+                            "marginTop": 0,
+                            "paddingBottom": 0,
+                            "paddingLeft": 0,
+                            "paddingRight": 0,
+                            "paddingTop": 0,
+                          }
+                        }
+                      >
+                        <Text
+                          allowFontScaling={true}
+                          maxFontSizeMultiplier={1.4}
+                          style={
+                            {
+                              "color": "rgba(19, 19, 19, 0.63)",
+                              "fontFamily": "Basel Grotesk",
+                              "fontSize": 15,
+                              "fontWeight": "400",
+                              "lineHeight": 19.5,
+                            }
+                          }
+                          suppressHighlighting={true}
                         >
-                          0x​82D5...3Fa6
+                          0x​82D56A...373Fa6
                         </Text>
                       </View>
                     </View>
@@ -332,16 +355,11 @@ exports[`AccountList renders without error 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": {
-                      "dynamic": {
-                        "dark": "#9B9B9B",
-                        "light": "#7D7D7D",
-                      },
-                    },
+                    "color": "rgba(19, 19, 19, 0.63)",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",
-                    "lineHeight": 24,
+                    "lineHeight": 20,
                   }
                 }
                 suppressHighlighting={true}

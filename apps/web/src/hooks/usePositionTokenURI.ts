@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from 'hooks/useContract'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { Erc721 } from 'uniswap/src/abis/types/Erc721'
 import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from '~/hooks/useContract'
 
 type TokenId = number | JSBI | BigNumber
 
@@ -34,21 +34,25 @@ type UsePositionTokenURIResult =
 
 function useNFTPositionManagerContract(
   version: ProtocolVersion,
-  chainId?: UniverseChainId,
+  chainId?: EVMUniverseChainId,
 ): NonfungiblePositionManager | Erc721 | null {
   const v3Contract = useV3NFTPositionManagerContract(false, chainId)
   const v4Contract = useV4NFTPositionManagerContract(false, chainId)
   return version === ProtocolVersion.V3 ? v3Contract : v4Contract
 }
 
-export function usePositionTokenURI(
-  tokenId: TokenId | undefined,
-  chainId?: UniverseChainId,
-  version?: ProtocolVersion,
-): UsePositionTokenURIResult {
+export function usePositionTokenURI({
+  tokenId,
+  chainId,
+  version,
+}: {
+  tokenId?: TokenId
+  chainId?: EVMUniverseChainId
+  version?: ProtocolVersion
+}): UsePositionTokenURIResult {
   const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)
   const { data, isLoading, error } = useQuery({
-    queryKey: ['PositionTokenURI', tokenId, chainId, version],
+    queryKey: [ReactQueryCacheKey.PositionTokenURI, tokenId, chainId, version],
     queryFn: async () => {
       const input = tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)
       if (!input) {
@@ -93,7 +97,7 @@ export function usePositionTokenURI(
         loading: false,
         result: json,
       }
-    } catch (error) {
+    } catch {
       return { valid: false, loading: false }
     }
   }, [error, isLoading, data, tokenId])

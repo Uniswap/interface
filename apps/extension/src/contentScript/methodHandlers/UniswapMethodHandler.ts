@@ -1,18 +1,18 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { DappRequestType, DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
   contentScriptToBackgroundMessageChannel,
   dappResponseMessageChannel,
 } from 'src/background/messagePassing/messageChannels'
-import {
-  UniswapOpenSidebarRequest,
-  UniswapOpenSidebarRequestSchema,
-} from 'src/contentScript/WindowEthereumRequestTypes'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
 import { UniswapMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
 import { getPendingResponseInfo } from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest } from 'src/contentScript/types'
+import {
+  UniswapOpenSidebarRequest,
+  UniswapOpenSidebarRequestSchema,
+} from 'src/contentScript/WindowEthereumRequestTypes'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
@@ -22,14 +22,22 @@ import { logger } from 'utilities/src/logger/logger'
 export class UniswapMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private readonly requestIdToSourceMap: Map<string, PendingResponseInfo> = new Map()
 
-  constructor(
-    getChainId: () => string | undefined,
-    getProvider: () => JsonRpcProvider | undefined,
-    getConnectedAddresses: () => Address[] | undefined,
-    setChainIdAndMaybeEmit: (newChainId: string) => void,
-    setProvider: (newProvider: JsonRpcProvider) => void,
-    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void,
-  ) {
+  // eslint-disable-next-line max-params
+  constructor({
+    getChainId,
+    getProvider,
+    getConnectedAddresses,
+    setChainIdAndMaybeEmit,
+    setProvider,
+    setConnectedAddressesAndMaybeEmit,
+  }: {
+    getChainId: () => string | undefined
+    getProvider: () => JsonRpcProvider | undefined
+    getConnectedAddresses: () => Address[] | undefined
+    setChainIdAndMaybeEmit: (newChainId: string) => void
+    setProvider: (newProvider: JsonRpcProvider) => void
+    setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void
+  }) {
     super(
       getChainId,
       getProvider,
@@ -40,11 +48,11 @@ export class UniswapMethodHandler extends BaseMethodHandler<WindowEthereumReques
     )
 
     dappResponseMessageChannel.addMessageListener(DappResponseType.UniswapOpenSidebarResponse, (message) => {
-      const source = getPendingResponseInfo(
-        this.requestIdToSourceMap,
-        message.requestId,
-        DappResponseType.UniswapOpenSidebarResponse,
-      )?.source
+      const source = getPendingResponseInfo({
+        requestIdToSourceMap: this.requestIdToSourceMap,
+        requestId: message.requestId,
+        type: DappResponseType.UniswapOpenSidebarResponse,
+      })?.source
 
       source?.postMessage({
         requestId: message.requestId,

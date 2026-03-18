@@ -1,55 +1,65 @@
-import { renderHook } from '@testing-library/react-hooks'
-import { useDerivedSendInfo } from 'state/send/hooks'
-import { SendState } from 'state/send/SendContext'
+import { renderHook } from '@testing-library/react'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
-import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { getAddress } from 'viem'
+import type { Mock } from 'vitest'
+import { useDerivedSendInfo } from '~/state/send/hooks'
+import { SendState } from '~/state/send/SendContext'
 
-jest.mock('@web3-react/core', () => ({
+vi.mock('@web3-react/core', () => ({
   useWeb3React: () => ({
     chainId: 1,
     provider: {},
   }),
 }))
-jest.mock('hooks/useAccount', () => ({
+vi.mock('~/hooks/useAccount', () => ({
   useAccount: () => '0xYourAccountAddress',
 }))
-jest.mock('state/multichain/useMultichainContext', () => ({
-  ...jest.requireActual('state/multichain/useMultichainContext'),
-  useMultichainContext: () => ({
-    chainId: 1,
-  }),
-}))
-jest.mock('hooks/useTransactionGasFee', () => ({
-  ...jest.requireActual('hooks/useTransactionGasFee'),
-  useTransactionGasFee: () => ({
-    gasFee: {
-      value: '1000000',
+vi.mock('~/state/multichain/useMultichainContext', async () => {
+  const actual = await vi.importActual('~/state/multichain/useMultichainContext')
+  return {
+    ...actual,
+    useMultichainContext: () => ({
+      chainId: 1,
+    }),
+  }
+})
+vi.mock('~/hooks/useTransactionGasFee', async () => {
+  const actual = await vi.importActual('~/hooks/useTransactionGasFee')
+  return {
+    ...actual,
+    useTransactionGasFee: () => ({
+      gasFee: {
+        value: '1000000',
+      },
+    }),
+    GasSpeed: {
+      Normal: 'normal',
     },
-  }),
-  GasSpeed: {
-    Normal: 'normal',
-  },
-}))
-jest.mock('hooks/Tokens', () => ({
+  }
+})
+vi.mock('~/hooks/Tokens', () => ({
   useCurrency: () => undefined,
 }))
-jest.mock('hooks/useUSDTokenUpdater', () => ({
+vi.mock('~/hooks/useUSDTokenUpdater', () => ({
   useUSDTokenUpdater: () => ({ formattedAmount: '100' }),
 }))
-jest.mock('lib/hooks/useCurrencyBalance', () => ({
+vi.mock('~/lib/hooks/useCurrencyBalance', () => ({
   useCurrencyBalances: () => [undefined, undefined],
 }))
-jest.mock('utils/transfer', () => ({
+vi.mock('~/utils/transfer', () => ({
   useCreateTransferTransaction: () => undefined,
 }))
-jest.mock('uniswap/src/features/ens/api', () => ({
-  useENSName: jest.fn(),
-  useAddressFromEns: jest.fn(),
+vi.mock('uniswap/src/features/ens/api', () => ({
+  useENSName: vi.fn(),
+  useAddressFromEns: vi.fn(),
 }))
-jest.mock('uniswap/src/features/unitags/hooks', () => ({
-  useUnitagByAddress: jest.fn(),
-  useUnitagByName: jest.fn(),
+vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery', () => ({
+  useUnitagsAddressQuery: vi.fn(),
+}))
+vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery', () => ({
+  useUnitagsUsernameQuery: vi.fn(),
 }))
 
 describe('useDerivedSendInfo', () => {
@@ -63,18 +73,20 @@ describe('useDerivedSendInfo', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    ;(useENSName as jest.Mock).mockReturnValue({
+    vi.clearAllMocks()
+    ;(useENSName as Mock).mockReturnValue({
       data: undefined,
     })
-    ;(useAddressFromEns as jest.Mock).mockReturnValue({
+    ;(useAddressFromEns as Mock).mockReturnValue({
       data: null,
     })
-    ;(useUnitagByAddress as jest.Mock).mockReturnValue({
-      unitag: undefined,
+    ;(useUnitagsAddressQuery as Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
     })
-    ;(useUnitagByName as jest.Mock).mockReturnValue({
-      unitag: undefined,
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
     })
   })
 
@@ -116,7 +128,7 @@ describe('useDerivedSendInfo', () => {
     const validAddressWithENS = '0x123456789abcdef0000000000000000000000000'
     const ensName = 'my-reverse-ens.eth'
 
-    ;(useENSName as jest.Mock).mockReturnValue({
+    ;(useENSName as Mock).mockReturnValue({
       data: ensName,
     })
 
@@ -139,7 +151,7 @@ describe('useDerivedSendInfo', () => {
     const validAddressWithENS = '0x123456789abcdef0000000000000000000000000'
     const ensName = 'my-forward-ens.eth'
 
-    ;(useAddressFromEns as jest.Mock).mockReturnValue({
+    ;(useAddressFromEns as Mock).mockReturnValue({
       data: validAddressWithENS,
     })
 
@@ -162,8 +174,9 @@ describe('useDerivedSendInfo', () => {
     const validAddressWithUnitag = '0x123456789abcdef0000000000000000000000000'
     const unitagName = 'myunitag'
 
-    ;(useUnitagByName as jest.Mock).mockReturnValue({
-      unitag: { address: { address: validAddressWithUnitag }, username: unitagName },
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: { address: { address: validAddressWithUnitag }, username: unitagName },
+      isLoading: false,
     })
 
     const mockSendState: SendState = {
@@ -186,11 +199,13 @@ describe('useDerivedSendInfo', () => {
     const unitagName = 'myunitag'
     const fallbackUnitagName = 'myunitagfallackusername'
 
-    ;(useUnitagByName as jest.Mock).mockReturnValue({
-      unitag: { address: { address: validAddressWithUnitag } },
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: { address: { address: validAddressWithUnitag } },
+      isLoading: false,
     })
-    ;(useUnitagByAddress as jest.Mock).mockReturnValue({
-      unitag: { username: fallbackUnitagName },
+    ;(useUnitagsAddressQuery as Mock).mockReturnValue({
+      data: { username: fallbackUnitagName },
+      isLoading: false,
     })
 
     const mockSendState: SendState = {
@@ -213,14 +228,16 @@ describe('useDerivedSendInfo', () => {
     const fallbackUnitagName = 'myunitagfallackusername'
     const ensName = 'my-reverse-ens.eth'
 
-    ;(useENSName as jest.Mock).mockReturnValue({
+    ;(useENSName as Mock).mockReturnValue({
       data: ensName,
     })
-    ;(useUnitagByName as jest.Mock).mockReturnValue({
-      unitag: undefined,
+    ;(useUnitagsUsernameQuery as Mock).mockReturnValue({
+      data: undefined,
+      isLoading: false,
     })
-    ;(useUnitagByAddress as jest.Mock).mockReturnValue({
-      unitag: { username: fallbackUnitagName },
+    ;(useUnitagsAddressQuery as Mock).mockReturnValue({
+      data: { username: fallbackUnitagName },
+      isLoading: false,
     })
 
     const mockSendState: SendState = {

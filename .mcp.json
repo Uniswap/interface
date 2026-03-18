@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "nx-mcp": {
+      "type": "stdio",
+      "command": "bunx",
+      "args": [
+        "nx",
+        "mcp"
+      ]
+    },
+    "playwriter": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "playwriter@latest"
+      ]
+    }
+  }
+}

@@ -1,44 +1,52 @@
-import React, { PropsWithChildren, ReactElement, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { GraphQLApi } from '@universe/api'
+import React, { memo, PropsWithChildren, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
+import { Loader } from 'src/components/loading/loaders'
+import { CURSOR_INNER_SIZE, CURSOR_SIZE, TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import PriceExplorerAnimatedNumber from 'src/components/PriceExplorer/PriceExplorerAnimatedNumber'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
 import { DatetimeText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
-import { CURSOR_INNER_SIZE, CURSOR_SIZE, TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Loader } from 'src/components/loading/loaders'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, SegmentedControl, Text } from 'ui/src'
+import { useLayoutAnimationOnChange } from 'ui/src/animations'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { spacing } from 'ui/src/theme'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { isE2EMode } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 
+const DEFAULT_Y_PADDING = 20
+const LOW_VARIANCE_Y_PADDING = 100
+
 type PriceTextProps = {
   loading: boolean
-  relativeChange?: SharedValue<number>
+  relativeChange?: SharedValue<number | undefined>
   numberOfDigits: PriceNumberOfDigits
   spotPrice?: SharedValue<number>
+  startingPrice?: number
+  shouldTreatAsStablecoin?: boolean
 }
 
 const PriceTextSection = memo(function PriceTextSection({
   loading,
   numberOfDigits,
+  relativeChange,
   spotPrice,
+  startingPrice,
+  shouldTreatAsStablecoin,
 }: PriceTextProps): JSX.Element {
   const price = useLineChartPrice(spotPrice)
   const currency = useAppFiatCurrencyInfo()
@@ -60,9 +68,14 @@ const PriceTextSection = memo(function PriceTextSection({
         We want both the animated number skeleton and the relative change skeleton to hide at the exact same time.
         When multiple skeletons hide in different order, it gives the feeling of things being slower than they actually are.
         */}
-        <RelativeChangeText loading={loading || !isAnimatedNumberReady} />
-        <DatetimeText loading={loading || !isAnimatedNumberReady} />
+        <RelativeChangeText
+          loading={loading || !isAnimatedNumberReady}
+          spotRelativeChange={relativeChange}
+          startingPrice={startingPrice}
+          shouldTreatAsStablecoin={shouldTreatAsStablecoin}
+        />
       </Flex>
+      <DatetimeText loading={loading || !isAnimatedNumberReady} />
     </Flex>
   )
 })
@@ -70,16 +83,12 @@ const PriceTextSection = memo(function PriceTextSection({
 function TimeRangeTraceWrapper({
   children,
   elementName,
-}: PropsWithChildren<{ elementName: ElementNameType }>): ReactElement {
+}: PropsWithChildren<{ elementName: ElementName }>): ReactElement {
   return (
     <Trace logPress element={elementName}>
       {children}
     </Trace>
   )
-}
-
-export type LineChartPriceAndDateTimeTextProps = {
-  currencyId: CurrencyId
 }
 
 export const PriceExplorer = memo(function _PriceExplorer(): JSX.Element {
@@ -93,15 +102,15 @@ export const PriceExplorer = memo(function _PriceExplorer(): JSX.Element {
   return <PriceExplorerInner />
 })
 
-export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
+const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
   const { currencyId, tokenColor, navigation } = useTokenDetailsContext()
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
-  const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory(
+  const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory({
     currencyId,
-    HistoryDuration.Day,
-    !isScreenNavigationReady,
-  )
+    initialDuration: GraphQLApi.HistoryDuration.Day,
+    skip: !isScreenNavigationReady,
+  })
 
   // Log the number of points in the data
   useEffect(() => {
@@ -110,13 +119,13 @@ export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Eleme
         logger.warn('PriceExplorer.tsx', 'PriceExplorerInner', 'Missing token details data points', {
           currencyId,
           duration: selectedDuration,
-          dataLength: data?.priceHistory?.length,
+          dataLength: data.priceHistory.length,
         })
       }
       logger.info('PriceExplorer.tsx', 'PriceExplorerInner', 'Token details data length', {
         currencyId,
         duration: selectedDuration,
-        dataLength: data?.priceHistory?.length,
+        dataLength: data.priceHistory.length,
       })
     }
   }, [data?.priceHistory, selectedDuration, currencyId])
@@ -126,7 +135,7 @@ export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Eleme
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const shouldShowAnimatedDot =
-    (selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour) && !isE2EMode
+    selectedDuration === GraphQLApi.HistoryDuration.Day || selectedDuration === GraphQLApi.HistoryDuration.Hour
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
@@ -135,20 +144,35 @@ export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Eleme
         return { ...point, value: point.value * conversionRate }
       }) ?? []
 
-    const lastPoint = priceHistory ? priceHistory.length - 1 : 0
-
-    return { lastPricePoint: lastPoint, convertedPriceHistory: priceHistory }
+    return { lastPricePoint: priceHistory.length - 1, convertedPriceHistory: priceHistory }
   }, [data, conversionRate])
 
-  const convertedSpotValue = useDerivedValue(() => conversionRate * (data?.spot?.value?.value ?? 0))
+  useLayoutAnimationOnChange(convertedPriceHistory.length)
+
+  const convertedSpotValue = useDerivedValue(() => conversionRate * (data?.spot?.value.value ?? 0))
   const convertedSpot = useMemo((): TokenSpotData | undefined => {
     return (
       data?.spot && {
-        ...data?.spot,
+        ...data.spot,
         value: convertedSpotValue,
       }
     )
-  }, [data, convertedSpotValue])
+  }, [data])
+
+  // Zoom out y-axis for low variance assets
+  const shouldZoomOut = useMemo(() => {
+    if (convertedPriceHistory.length === 0) {
+      return false
+    }
+
+    const values = convertedPriceHistory.map((point) => point.value)
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+
+    return isLowVarianceRange({ min, max, duration: selectedDuration })
+  }, [convertedPriceHistory, selectedDuration])
+
+  const chartYGutter = shouldZoomOut ? LOW_VARIANCE_Y_PADDING : DEFAULT_Y_PADDING
 
   const segmentedControlOptions = useMemo(() => {
     return TIME_RANGES.map(([duration, label, elementName]) => ({
@@ -162,27 +186,33 @@ export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Eleme
     }))
   }, [])
 
-  if (!loading && (!convertedPriceHistory || (!convertedSpot && selectedDuration === HistoryDuration.Day))) {
-    return <PriceExplorerError showRetry={error !== undefined} onRetry={refetch} />
+  if (!loading && !convertedSpot && selectedDuration === GraphQLApi.HistoryDuration.Day) {
+    return <PriceExplorerError showRetry={error} onRetry={refetch} />
   }
 
+  // Get the starting price for fiat delta calculation
+  const startingPrice = convertedPriceHistory[0]?.value
+
   return (
-    <LineChartProvider data={convertedPriceHistory ?? []} onCurrentIndexChange={hapticFeedback.light}>
+    <LineChartProvider data={convertedPriceHistory} onCurrentIndexChange={hapticFeedback.light}>
       <Flex gap="$spacing8" overflow="hidden">
         <PriceTextSection
           loading={loading}
           numberOfDigits={numberOfDigits}
           relativeChange={convertedSpot?.relativeChange}
           spotPrice={convertedSpot?.value}
+          startingPrice={startingPrice}
+          shouldTreatAsStablecoin={shouldZoomOut}
         />
 
         <Flex animation="quick" enterStyle={{ opacity: isAndroid ? 0 : 1 }}>
-          {convertedPriceHistory?.length ? (
+          {convertedPriceHistory.length ? (
             <PriceExplorerChart
               additionalPadding={additionalPadding}
               lastPricePoint={lastPricePoint}
               shouldShowAnimatedDot={shouldShowAnimatedDot}
               tokenColor={tokenColor ?? undefined}
+              yGutter={chartYGutter}
             />
           ) : (
             <Flex my="$spacing24">
@@ -210,11 +240,13 @@ const PriceExplorerChart = memo(function PriceExplorerChart({
   additionalPadding,
   shouldShowAnimatedDot,
   lastPricePoint,
+  yGutter,
 }: {
   tokenColor?: string
   additionalPadding: number
   shouldShowAnimatedDot: boolean
   lastPricePoint: number
+  yGutter: number
 }): JSX.Element {
   const { chartHeight, chartWidth } = useChartDimensions()
   const isRTL = I18nManager.isRTL
@@ -228,7 +260,7 @@ const PriceExplorerChart = memo(function PriceExplorerChart({
       style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}
       testID={TestID.PriceExplorerChart}
     >
-      <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={20}>
+      <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={yGutter}>
         <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }}>
           {shouldShowAnimatedDot && (
             <LineChart.Dot

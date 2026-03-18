@@ -1,21 +1,23 @@
+import { FeatureFlags } from '@universe/gating'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Switch, Text } from 'ui/src'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
+import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapProtectionModal'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
-export const SwapProtection: SwapSettingConfig = {
+export const SwapProtection: TransactionSettingConfig = {
   renderTitle: (t) => t('swap.settings.protection.title'),
+  applicablePlatforms: [Platform.EVM],
   Description() {
     const { t } = useTranslation()
-    const chainId = useSwapFormContext().derivedSwapInfo.chainId
+    const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
     const privateRpcSupportedOnChain = isPrivateRpcSupportedOnChain(chainId)
     const chainName = getChainLabel(chainId)
     return (
@@ -28,7 +30,7 @@ export const SwapProtection: SwapSettingConfig = {
   },
   Control() {
     const dispatch = useDispatch()
-    const chainId = useSwapFormContext().derivedSwapInfo.chainId
+    const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
     const privateRpcSupportedOnChain = isPrivateRpcSupportedOnChain(chainId)
     const swapProtectionSetting = useSwapProtectionSetting()
 

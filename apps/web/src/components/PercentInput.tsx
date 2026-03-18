@@ -1,9 +1,9 @@
-import { InputProps, StyledInput, localeUsesComma } from 'components/NumericalInput'
-import { NumericalInputFontStyle } from 'pages/Swap/common/shared'
 import React, { forwardRef } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: styled-components needed for input component styling
 import styled from 'styled-components'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { InputProps, localeUsesComma, StyledInput } from '~/components/NumericalInput'
+import { NumericalInputFontStyle } from '~/pages/Swap/common/shared'
 
 const PercentInput = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, testId, maxDecimals = 2, ...rest }: InputProps, ref) => {

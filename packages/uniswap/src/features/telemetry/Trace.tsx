@@ -1,23 +1,18 @@
-import { PropsWithChildren, memo } from 'react'
-import {
-  ElementNameType,
-  InterfacePageNameType,
-  ModalNameType,
-  SectionNameType,
-} from 'uniswap/src/features/telemetry/constants'
+import { memo, PropsWithChildren } from 'react'
+import { ElementName, InterfacePageName, ModalNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { ExtensionScreen } from 'uniswap/src/types/screens/extension'
 import { MobileAppScreen } from 'uniswap/src/types/screens/mobile'
-// eslint-disable-next-line no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { TraceProps, Trace as UntypedTrace } from 'utilities/src/telemetry/trace/Trace'
 
 // Universe typed version of ITraceContext
 interface UniverseTraceContext {
-  page?: InterfacePageNameType
+  page?: InterfacePageName
   screen?: MobileAppScreen | ExtensionScreen
-  section?: SectionNameType
+  section?: SectionName
   modal?: ModalNameType
-  element?: ElementNameType
+  element?: ElementName
 }
 
 type BaseTraceProps = UniverseTraceContext & Omit<TraceProps, 'eventOnTrigger' | 'properties'>
@@ -60,4 +55,6 @@ function _Trace<EventName extends keyof UniverseEventProperties | undefined>({
 
 const typedMemo: <T>(c: T) => T = memo
 const Trace = typedMemo(_Trace)
+
+export { Trace }
 export default Trace

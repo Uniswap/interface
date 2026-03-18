@@ -1,75 +1,56 @@
-import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdown/index'
-import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { useKeyDown } from 'hooks/useKeyPress'
-import styled from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { Popover, Text } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { NavLink, useLocation } from 'react-router'
+import { Flex, Popover, styled, Text } from 'ui/src'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { NavDropdown, NavDropdownTabWrapper } from '~/components/NavBar/NavDropdown/index'
+import { TabsItem, TabsSection, useTabsContent } from '~/components/NavBar/Tabs/TabsContent'
 
-const ItemContainer = styled.div`
-  display: flex;
-  padding: 12px;
-  align-items: center;
-  gap: 8px;
-  align-self: stretch;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.surface2};
-  cursor: pointer;
-  height: 48px;
-  :hover {
-    background: ${({ theme }) => theme.surface3};
-  }
-`
-const TabText = styled(Text)`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &:hover {
-    color: ${({ theme }) => theme.neutral1} !important;
-  }
-`
-const QuickKey = styled.div`
-  display: flex;
-  width: 20px;
-  height: 20px;
-  padding: 0px 5px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 4px;
-  opacity: 0.54;
-  background: ${({ theme }) => theme.surface3};
-`
+const TabText = styled(Text, {
+  justifyContent: 'center',
+  alignItems: 'center',
+  m: '$padding8',
+  gap: '$gap4',
+  cursor: 'pointer',
+  userSelect: 'none',
+  color: '$neutral2',
+  hoverStyle: { color: '$neutral1' },
+  variants: {
+    isActive: {
+      true: { color: '$neutral1' },
+    },
+  },
+})
+
 interface TItemProps {
   icon?: JSX.Element
   label: string
-  quickKey: string
   path: string
   closeMenu: () => void
+  elementName: ElementName
 }
-function Item({ icon, label, quickKey, path, closeMenu }: TItemProps) {
-  const navHotkeysEnabled = useFeatureFlag(FeatureFlags.NavigationHotkeys)
-
+function Item({ icon, label, path, closeMenu, elementName }: TItemProps) {
   return (
-    <NavLink to={path} style={{ textDecoration: 'none' }} onClick={closeMenu}>
-      <ItemContainer>
-        {icon}
-        <Text variant="buttonLabel2" width="100%" color="$neutral2">
-          {label}
-        </Text>
-        {navHotkeysEnabled && (
-          <QuickKey>
-            <Text variant="body3" color="$neutral2">
-              {quickKey}
-            </Text>
-          </QuickKey>
-        )}
-      </ItemContainer>
-    </NavLink>
+    <Trace logPress element={elementName}>
+      <NavLink to={path} style={{ textDecoration: 'none' }} onClick={closeMenu}>
+        <Flex
+          row
+          alignItems="center"
+          p="$padding12"
+          gap="$gap8"
+          alignSelf="stretch"
+          borderRadius="$rounded12"
+          backgroundColor="$surface2"
+          height="$spacing48"
+          hoverStyle={{ backgroundColor: '$surface2Hovered' }}
+        >
+          {icon}
+          <Text variant="buttonLabel2" width="100%" color="$neutral2">
+            {label}
+          </Text>
+        </Flex>
+      </NavLink>
+    </Trace>
   )
 }
 
@@ -78,69 +59,52 @@ const Tab = ({
   isActive,
   path,
   items,
+  elementName,
 }: {
   label: string
   isActive?: boolean
   path: string
   items?: TabsItem[]
+  elementName: ElementName
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
   const popoverRef = useRef<Popover>(null)
   const location = useLocation()
-  const navHotkeysEnabled = useFeatureFlag(FeatureFlags.NavigationHotkeys)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +popoverRef
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
   }, [popoverRef])
+  // biome-ignore lint/correctness/useExhaustiveDependencies: location dependency is sufficient for this effect
   useEffect(() => closeMenu(), [location, closeMenu])
 
   const Label = (
-    <NavLink to={path} style={{ textDecoration: 'none' }}>
-      <TabText
-        variant="subheading1"
-        color={isActive || isOpen ? '$neutral1' : '$neutral2'}
-        m="8px"
-        gap="4px"
-        cursor="pointer"
-        userSelect="none"
-      >
-        {label}
-      </TabText>
-    </NavLink>
+    <Trace logPress element={elementName}>
+      <NavLink to={path} style={{ textDecoration: 'none' }}>
+        <TabText variant="subheading1" isActive={isActive || isOpen}>
+          {label}
+        </TabText>
+      </NavLink>
+    </Trace>
   )
-
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!items || !isOpen) {
-        return
-      }
-      const item = items.find((i) => i.quickKey.toUpperCase() === event.key || i.quickKey.toLowerCase() === event.key)
-      if (!item) {
-        return
-      }
-      if (item.internal) {
-        navigate(item.href)
-      } else {
-        window.location.href = item.href
-      }
-      closeMenu()
-    },
-    [items, navigate, closeMenu, isOpen],
-  )
-
-  useKeyDown({
-    callback: handleKeyDown,
-    keys: items?.map((i) => i.quickKey.toLowerCase()),
-    disabled: !navHotkeysEnabled || !isOpen,
-  })
 
   if (!items) {
     return Label
   }
 
   return (
-    <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
+    <Popover
+      ref={popoverRef}
+      placement="bottom"
+      hoverable={{
+        delay: { open: 75, close: 150 },
+        restMs: 50,
+        move: true,
+      }}
+      stayInFrame
+      allowFlip
+      onOpenChange={setIsOpen}
+    >
       <Popover.Trigger data-testid={`${label}-tab`}>{Label}</Popover.Trigger>
       <NavDropdown isOpen={isOpen} dataTestId={`${label}-menu`}>
         <NavDropdownTabWrapper>
@@ -149,9 +113,9 @@ const Tab = ({
               key={`${item.label}_${index}`}
               icon={item.icon}
               label={item.label}
-              quickKey={item.quickKey}
               path={item.href}
               closeMenu={closeMenu}
+              elementName={item.elementName}
             />
           ))}
         </NavDropdownTabWrapper>
@@ -164,8 +128,15 @@ export function Tabs() {
   const tabsContent: TabsSection[] = useTabsContent()
   return (
     <>
-      {tabsContent.map(({ title, isActive, href, items }, index) => (
-        <Tab key={`${title}_${index}`} label={title} isActive={isActive} path={href} items={items} />
+      {tabsContent.map(({ title, isActive, href, items, elementName }, index) => (
+        <Tab
+          key={`${title}_${index}`}
+          label={title}
+          isActive={isActive}
+          path={href}
+          items={items}
+          elementName={elementName}
+        />
       ))}
     </>
   )

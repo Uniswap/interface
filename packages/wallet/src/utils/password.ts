@@ -8,6 +8,7 @@ import zxcvbn from 'zxcvbn'
 export enum PasswordErrors {
   WeakPassword = 'WeakPassword',
   PasswordsDoNotMatch = 'PasswordsDoNotMatch',
+  SamePassword = 'SamePassword',
 }
 
 export enum PasswordStrength {
@@ -58,7 +59,7 @@ export function getPasswordStrengthTextAndColor(
     case PasswordStrength.MEDIUM:
       return {
         text: t('common.input.password.strength.medium'),
-        color: '$DEP_accentWarning',
+        color: '$statusWarning',
       }
     case PasswordStrength.STRONG:
       return { text: t('common.input.password.strength.strong'), color: '$statusSuccess' }

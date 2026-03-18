@@ -76,7 +76,7 @@ export const colors = {
   ...accentColors,
 
   uniswapXViolet: '#4673FA',
-  uniswapXPurple: '#9646FA',
+  uniswapXPurple: '#7D55FB',
 
   fiatOnRampBanner: '#FB36D0',
 }
@@ -139,12 +139,20 @@ export const networkColors = {
     dark: '#FCFF52',
   },
   monad: {
-    light: '#836EF9',
+    light: '#735BF8',
     dark: '#836EF9',
+  },
+  solana: {
+    light: '#9945FF',
+    dark: '#9945FF',
   },
   soneium: {
     light: '#000000',
     dark: '#FFFFFF',
+  },
+  xlayer: {
+    light: '#A7A7A747',
+    dark: '#A7A7A724',
   },
   worldchain: {
     light: '#222222',
@@ -169,44 +177,46 @@ const sporeLight = {
   black: colors.black,
   scrim: colors.scrim,
 
-  neutral1: '#222222',
-  neutral1Hovered: '#131313',
-  neutral2: '#7D7D7D',
-  neutral2Hovered: '#6B6B6B',
-  neutral3: '#BFBFBF',
-  neutral3Hovered: '#ADADAD',
+  neutral1: '#131313',
+  neutral1Hovered: 'rgba(19, 19, 19, 0.83)',
+  neutral2: 'rgba(19, 19, 19, 0.63)',
+  neutral2Hovered: 'rgba(19, 19, 19, 0.83)',
+  neutral3: 'rgba(19, 19, 19, 0.35)',
+  neutral3Hovered: 'rgba(19, 19, 19, 0.55)',
 
   surface1: colors.white,
-  surface1Hovered: '#F9F9F9',
+  surface1Hovered: '#FCFCFC',
   surface2: '#F9F9F9',
-  surface2Hovered: '#F5F5F5',
-  surface3: 'rgba(34,34,34,0.05)',
+  surface2Hovered: '#F2F2F2',
+  surface3: 'rgba(19, 19, 19, 0.08)',
   surface3Solid: '#F2F2F2',
-  surface3Hovered: 'rgba(34,34,34,0.09)',
-  surface4: 'rgba(255,255,255,0.64)',
+  surface3Hovered: 'rgba(19, 19, 19, 0.1)',
+  surface4: 'rgba(255, 255, 255, 0.64)',
   surface5: 'rgba(0,0,0,0.04)',
-
-  accent1: '#FC72FF',
-  accent1Hovered: '#FD3CFE',
-  accent2: '#FEF4FF',
-  accent2Hovered: '#FEEBFC',
+  surface5Hovered: 'rgba(0,0,0,0.06)',
+  accent1: '#FF37C7',
+  accent1Hovered: '#E500A5',
+  accent2: 'rgba(255, 55, 199, 0.08)',
+  accent2Hovered: 'rgba(255, 55, 199, 0.12)',
+  accent2Solid: '#FFF3FC',
   accent3: '#222222',
   accent3Hovered: colors.black,
 
   DEP_accentSoft: '#FC72FF33', //33 = 20%
   DEP_blue400: '#4C82FB',
 
-  statusSuccess: '#21C95E',
-  statusSuccessHovered: '#15863C',
-  statusSuccess2: '#EEFBF1',
+  statusSuccess: '#0C8911',
+  statusSuccessHovered: '#06742C',
+  statusSuccess2: 'rgba(15, 194, 68, 0.06)',
+  statusSuccess2Hovered: 'rgba(15, 194, 68, 0.12)',
   statusWarning: '#996F01',
   statusWarningHovered: '#7A5801',
-  statusWarning2: '#FFFBEB',
-  statusWarning2Hovered: '#FFFBD7',
-  statusCritical: '#FF5F52',
-  statusCriticalHovered: '#FF3931',
-  statusCritical2: '#FFF2F1',
-  statusCritical2Hovered: '#FFD5D4',
+  statusWarning2: 'rgba(255, 191, 23, 0.1)',
+  statusWarning2Hovered: 'rgba(255, 191, 23, 0.1)',
+  statusCritical: '#E10F0F',
+  statusCriticalHovered: '#BF0D0D',
+  statusCritical2: 'rgba(255, 0, 0, 0.05)',
+  statusCritical2Hovered: 'rgba(255, 0, 0, 0.1)',
 }
 
 const sporeDark = {
@@ -217,26 +227,28 @@ const sporeDark = {
   scrim: colors.scrim,
 
   neutral1: colors.white,
-  neutral1Hovered: '#F9F9F9',
-  neutral2: '#9B9B9B',
-  neutral2Hovered: '#ADADAD',
-  neutral3: '#5E5E5E',
-  neutral3Hovered: '#6B6B6B',
+  neutral1Hovered: 'rgba(255, 255, 255, 0.85)',
+  neutral2: 'rgba(255, 255, 255, 0.65)',
+  neutral2Hovered: 'rgba(255, 255, 255, 0.85)',
+  neutral3: 'rgba(255, 255, 255, 0.38)',
+  neutral3Hovered: 'rgba(255, 255, 255, 0.58)',
 
   surface1: '#131313',
-  surface1Hovered: 'rgba(24,24,24,1.00)',
-  surface2: '#1B1B1B',
-  surface2Hovered: 'rgba(36,36,36,1.00)',
+  surface1Hovered: '#1A1A1A',
+  surface2: '#1F1F1F',
+  surface2Hovered: '#242424',
   surface3: 'rgba(255,255,255,0.12)',
   surface3Solid: '#393939',
   surface3Hovered: 'rgba(255,255,255,0.16)',
   surface4: 'rgba(255,255,255,0.20)',
   surface5: 'rgba(0,0,0,0.04)',
+  surface5Hovered: 'rgba(0,0,0,0.06)',
+  accent1: '#FF37C7',
+  accent1Hovered: '#E500A5',
 
-  accent1: '#FC72FF',
-  accent1Hovered: '#FD3CFE',
-  accent2: '#361A37',
-  accent2Hovered: '#510D43',
+  accent2: 'rgba(255, 55, 199, 0.08)',
+  accent2Hovered: 'rgba(255, 55, 199, 0.12)',
+  accent2Solid: '#261621',
   accent3: colors.white,
   accent3Hovered: '#F5F5F5',
 
@@ -245,16 +257,16 @@ const sporeDark = {
 
   statusSuccess: '#21C95E',
   statusSuccessHovered: '#15863C',
-  statusSuccess2: '#0F2C1A',
+  statusSuccess2: 'rgba(33, 201, 94, 0.12)',
   statusSuccess2Hovered: '#093A16',
   statusWarning: '#FFBF17',
   statusWarningHovered: '#FFDD0D',
-  statusWarning2: '#1F1E02',
-  statusWarning2Hovered: '#302E03',
-  statusCritical: '#FF5F52',
-  statusCriticalHovered: '#FF3931',
-  statusCritical2: '#220D0C',
-  statusCritical2Hovered: '#470402',
+  statusWarning2: 'rgba(255, 191, 23, 0.08)',
+  statusWarning2Hovered: 'rgba(255, 191, 23, 0.16)',
+  statusCritical: '#FF593C',
+  statusCriticalHovered: '#FF401F',
+  statusCritical2: 'rgba(255, 89, 60, 0.12)',
+  statusCritical2Hovered: 'rgba(255, 89, 60, 0.2)',
 }
 
 export const colorsLight = {
@@ -280,10 +292,12 @@ export const colorsLight = {
   surface3Hovered: sporeLight.surface3Hovered,
   surface4: sporeLight.surface4,
   surface5: sporeLight.surface5,
-
+  surface5Hovered: sporeLight.surface5Hovered,
   accent1: sporeLight.accent1,
   accent1Hovered: sporeLight.accent1Hovered,
   accent2: sporeLight.accent2,
+  accent2Solid: sporeLight.accent2Solid,
+
   accent2Hovered: sporeLight.accent2Hovered,
   accent3: sporeLight.accent3,
   accent3Hovered: sporeLight.accent3Hovered,
@@ -292,25 +306,23 @@ export const colorsLight = {
   DEP_blue400: sporeLight.DEP_blue400,
 
   statusSuccess: sporeLight.statusSuccess,
+  statusSuccessHovered: sporeLight.statusSuccessHovered,
   statusSuccess2: sporeLight.statusSuccess2,
+  statusSuccess2Hovered: sporeLight.statusSuccess2Hovered,
   statusCritical: sporeLight.statusCritical,
   statusCriticalHovered: sporeLight.statusCriticalHovered,
   statusCritical2: sporeLight.statusCritical2,
   statusCritical2Hovered: sporeLight.statusCritical2Hovered,
   statusWarning: sporeLight.statusWarning,
+  statusWarningHovered: sporeLight.statusWarningHovered,
   statusWarning2: sporeLight.statusWarning2,
+  statusWarning2Hovered: sporeLight.statusWarning2Hovered,
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
 
-  DEP_accentWarning: DEP_accentColors.goldVibrant,
-
   DEP_accentBranded: DEP_accentColors.magentaVibrant,
   DEP_shadowBranded: DEP_accentColors.magentaVibrant,
-
-  DEP_accentSuccessSoft: opacifyRaw(24, DEP_accentColors.green400),
-  DEP_accentWarningSoft: opacifyRaw(24, DEP_accentColors.goldVibrant),
-  DEP_accentCriticalSoft: opacifyRaw(12, DEP_accentColors.red400),
 
   DEP_brandedAccentSoft: DEP_accentColors.magenta100,
   DEP_magentaDark: opacifyRaw(12, DEP_accentColors.magentaVibrant),
@@ -332,6 +344,9 @@ export const colorsLight = {
   chain_324: networkColors.zksync.light,
   chain_480: networkColors.worldchain.light,
   chain_1868: networkColors.soneium.light,
+  chain_196: networkColors.xlayer.light,
+  chain_501000101: networkColors.solana.light,
+  chain_143: networkColors.monad.light,
 
   // Testnets
   chain_11155111: networkColors.ethereum.light,
@@ -358,6 +373,7 @@ export const colorsDark = {
   surface3Hovered: sporeDark.surface3Hovered,
   surface4: sporeDark.surface4,
   surface5: sporeDark.surface5,
+  surface5Hovered: sporeDark.surface5Hovered,
 
   scrim: sporeDark.scrim,
 
@@ -371,6 +387,7 @@ export const colorsDark = {
   accent1: sporeDark.accent1,
   accent1Hovered: sporeDark.accent1Hovered,
   accent2: sporeDark.accent2,
+  accent2Solid: sporeDark.accent2Solid,
   accent2Hovered: sporeDark.accent2Hovered,
   accent3: sporeDark.accent3,
   accent3Hovered: sporeDark.accent3Hovered,
@@ -379,26 +396,24 @@ export const colorsDark = {
   DEP_blue400: sporeDark.DEP_blue400,
 
   statusSuccess: sporeDark.statusSuccess,
+  statusSuccessHovered: sporeDark.statusSuccessHovered,
   statusSuccess2: sporeDark.statusSuccess2,
+  statusSuccess2Hovered: sporeDark.statusSuccess2Hovered,
   statusCritical: sporeDark.statusCritical,
   statusCriticalHovered: sporeDark.statusCriticalHovered,
   statusCritical2: sporeDark.statusCritical2,
   statusCritical2Hovered: sporeDark.statusCritical2Hovered,
   statusWarning: sporeDark.statusWarning,
+  statusWarningHovered: sporeDark.statusWarningHovered,
   statusWarning2: sporeDark.statusWarning2,
+  statusWarning2Hovered: sporeDark.statusWarning2Hovered,
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),
 
-  DEP_accentWarning: colors.yellowVibrant,
-
   DEP_accentBranded: DEP_accentColors.magentaVibrant,
   // TODO(MOB-160): accommodate one-off color in cleaner way
   DEP_shadowBranded: '#B60ACF',
-
-  DEP_accentSuccessSoft: opacifyRaw(24, colors.greenVibrant),
-  DEP_accentWarningSoft: opacifyRaw(24, colors.yellowBase),
-  DEP_accentCriticalSoft: opacifyRaw(12, colors.redVibrant),
 
   DEP_brandedAccentSoft: '#46244F', // git blame Chelsy
   DEP_magentaDark: opacifyRaw(12, DEP_accentColors.magentaVibrant),
@@ -420,6 +435,9 @@ export const colorsDark = {
   chain_324: networkColors.zksync.dark,
   chain_480: networkColors.worldchain.dark,
   chain_1868: networkColors.soneium.dark,
+  chain_196: networkColors.xlayer.dark,
+  chain_501000101: networkColors.solana.dark,
+  chain_143: networkColors.monad.dark,
 
   // Testnets
   chain_11155111: networkColors.ethereum.dark,

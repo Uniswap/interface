@@ -1,8 +1,11 @@
-import { RankingType } from 'uniswap/src/data/types'
+import { RankingType } from '@universe/api'
 
 // only add fields that are persisted
 export const initialSchema = {
   dapp: {},
+  dappRequests: {
+    pending: [],
+  },
   favorites: {
     tokens: [],
     watchedAddresses: [],
@@ -43,12 +46,14 @@ export const initialSchema = {
     currentCurrency: 'USD',
   },
   behaviorHistory: {
+    hasViewedConnectionMigration: false,
     hasViewedReviewScreen: false,
     hasSubmittedHoldToSwap: false,
     hasSkippedUnitagPrompt: false,
     hasCompletedUnitagsIntroModal: false,
     extensionOnboardingState: 0,
   },
+  batchedTransactions: {},
 }
 
 const v0SchemaIntermediate = {
@@ -204,31 +209,79 @@ const v17SchemaIntermediate = {
 delete v17SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v17Schema = v17SchemaIntermediate
 
-const v18SchemaIntermediate = {
+export const v18Schema = v17Schema
+
+const v19SchemaIntermediate = {
   ...v17Schema,
   behaviorHistory: {
     ...v17Schema.behaviorHistory,
     hasViewedWelcomeWalletCard: undefined,
   },
 }
-delete v18SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
-export const v18Schema = v18SchemaIntermediate
+delete v19SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
+export const v19Schema = v19SchemaIntermediate
 
-const v19SchemaIntermediate = {
-  ...v18Schema,
+const v20SchemaIntermediate = {
+  ...v19Schema,
   visibility: {
     positions: {},
-    tokens: v18Schema.favorites.tokensVisibility,
-    nfts: v18Schema.favorites.nftsVisibility,
+    tokens: v19Schema.favorites.tokensVisibility,
+    nfts: v19Schema.favorites.nftsVisibility,
   },
   favorites: {
-    ...v18Schema.favorites,
+    ...v19Schema.favorites,
     tokensVisibility: undefined,
     nftsVisibility: undefined,
   },
 }
-delete v19SchemaIntermediate.favorites.tokensVisibility
-delete v19SchemaIntermediate.favorites.nftsVisibility
-export const v19Schema = v19SchemaIntermediate
+delete v20SchemaIntermediate.favorites.tokensVisibility
+delete v20SchemaIntermediate.favorites.nftsVisibility
+export const v20Schema = v20SchemaIntermediate
 
-export const getSchema = (): typeof v19Schema => v19Schema
+const v21SchemaIntermediate = {
+  ...v20Schema,
+  dappRequests: {
+    ...v20Schema.dappRequests,
+    pending: undefined,
+    requests: {},
+  },
+}
+delete v21SchemaIntermediate.dappRequests.pending
+export const v21Schema = v21SchemaIntermediate
+
+export const v22Schema = {
+  ...v21Schema,
+  batchedTransactions: {},
+}
+
+export const v23Schema = v22Schema
+
+const v24SchemaIntermediate = {
+  ...v23Schema,
+  appearanceSettings: {
+    ...v23Schema.appearanceSettings,
+    hapticsEnabled: undefined,
+  },
+  userSettings: {
+    ...v23Schema.userSettings,
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    hapticsEnabled: v23Schema.appearanceSettings.hapticsEnabled ?? false,
+  },
+}
+delete v24SchemaIntermediate.appearanceSettings.hapticsEnabled
+
+export const v24Schema = v24SchemaIntermediate
+
+export const v25Schema = { ...v24Schema }
+
+export const v26Schema = { ...v25Schema }
+
+export const v27Schema = { ...v26Schema }
+
+export const v29Schema = { ...v27Schema, visibility: { ...v27Schema.visibility, activity: {} } }
+
+export const v30Schema = { ...v29Schema }
+
+const v31Schema = { ...v30Schema }
+
+export const getSchema = (): typeof v31Schema => v31Schema

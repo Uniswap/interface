@@ -1,0 +1,20 @@
+{
+  "name": "datadog-dashboards-universe",
+  "version": "1.0.0",
+  "description": "Datadog dashboards for Universe services",
+  "main": "index.ts",
+  "scripts": {
+    "preview": "pulumi preview",
+    "up": "pulumi up",
+    "destroy": "pulumi destroy",
+    "refresh": "pulumi refresh"
+  },
+  "dependencies": {
+    "@pulumi/datadog": "4.60.0",
+    "@pulumi/pulumi": "3.207.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.1",
+    "typescript": "5.8.3"
+  }
+}

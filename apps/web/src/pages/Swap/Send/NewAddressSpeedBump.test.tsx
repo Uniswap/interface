@@ -1,7 +1,7 @@
-import { NewAddressSpeedBumpModal } from 'pages/Swap/Send/NewAddressSpeedBump'
-import { SendContext, SendContextType } from 'state/send/SendContext'
-import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { NewAddressSpeedBumpModal } from '~/pages/Swap/Send/NewAddressSpeedBump'
+import { SendContext, SendContextType } from '~/state/send/SendContext'
+import { render, screen } from '~/test-utils/render'
 
 const mockSendContext: SendContextType = {
   sendState: {
@@ -19,19 +19,21 @@ const mockSendContext: SendContextType = {
       address: '0x9984b4b4E408e8D618A879e5315BD30952c89103',
     },
   },
-  setSendState: jest.fn(),
+  setSendState: vi.fn(),
 }
 
-jest.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
-    useFeatureFlag: jest.fn(),
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
   }
 })
 
 describe('NewAddressSpeedBumpModal', () => {
-  it('should not render identicon if account has no ENS avatar/unitag pp', () => {
-    const mockOnCancel = jest.fn()
-    const mockOnConfirm = jest.fn()
+  it('should not render AccountIcon if account has no ENS avatar/unitag pp', () => {
+    const mockOnCancel = vi.fn()
+    const mockOnConfirm = vi.fn()
     render(
       <SendContext.Provider value={mockSendContext}>
         <NewAddressSpeedBumpModal isOpen onDismiss={mockOnCancel} onConfirm={mockOnConfirm} />
@@ -40,6 +42,6 @@ describe('NewAddressSpeedBumpModal', () => {
 
     expect(document.body).toMatchSnapshot()
     expect(screen.getByText('New address')).toBeInTheDocument()
-    expect(screen.queryByTestId('speedbump-identicon')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('speedbump-account-icon')).not.toBeInTheDocument()
   })
 })

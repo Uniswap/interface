@@ -1,9 +1,14 @@
 import { Tooltip as TamaguiTooltip, TooltipProps, withStaticProperties } from 'tamagui'
 import { PlatformSplitStubError } from 'utilities/src/errors'
+
 export type { TooltipProps } from 'tamagui'
 
 type TriggerProps = React.ComponentProps<typeof TamaguiTooltip.Trigger>
-type ContentProps = React.ComponentProps<typeof TamaguiTooltip.Content>
+export type TooltipContentProps = Omit<React.ComponentProps<typeof TamaguiTooltip.Content>, 'zIndex'> & {
+  animationDirection?: 'left' | 'right' | 'top' | 'bottom'
+  // zIndex is required to properly display components
+  zIndex: NonNullable<React.ComponentProps<typeof TamaguiTooltip.Content>['zIndex']>
+}
 type ArrowProps = React.ComponentProps<typeof TamaguiTooltip.Arrow>
 
 export const Tooltip = withStaticProperties(
@@ -14,7 +19,7 @@ export const Tooltip = withStaticProperties(
     Trigger: (_props: TriggerProps) => {
       throw new PlatformSplitStubError('Tooltip.Trigger')
     },
-    Content: (_props: ContentProps) => {
+    Content: (_props: TooltipContentProps) => {
       throw new PlatformSplitStubError('Tooltip.Content')
     },
     Arrow: (_props: ArrowProps) => {

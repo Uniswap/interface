@@ -1,0 +1,66 @@
+{
+  "data": {
+    "searchTokens": [
+      {
+        "id": "VG9rZW46RVRIRVJFVU1fMHhkYWMxN2Y5NThkMmVlNTIzYTIyMDYyMDY5OTQ1OTdjMTNkODMxZWM3",
+        "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+        "chain": "ETHEREUM",
+        "decimals": 6,
+        "name": "Tether USD",
+        "standard": "ERC20",
+        "symbol": "USDT",
+        "__typename": "Token",
+        "project": {
+          "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4ZGFjMTdmOTU4ZDJlZTUyM2EyMjA2MjA2OTk0NTk3YzEzZDgzMWVjN19UZXRoZXI=",
+          "isSpam": false,
+          "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png",
+          "name": "Tether",
+          "safetyLevel": "VERIFIED",
+          "__typename": "TokenProject",
+          "logo": {
+            "id": "SW1hZ2U6aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3RydXN0d2FsbGV0L2Fzc2V0cy9tYXN0ZXIvYmxvY2tjaGFpbnMvZXRoZXJldW0vYXNzZXRzLzB4ZEFDMTdGOTU4RDJlZTUyM2EyMjA2MjA2OTk0NTk3QzEzRDgzMWVjNy9sb2dvLnBuZw==",
+            "url": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png",
+            "__typename": "Image"
+          }
+        },
+        "feeData": {
+          "buyFeeBps": null,
+          "sellFeeBps": null,
+          "__typename": "FeeData"
+        },
+        "protectionInfo": {
+          "result": "BENIGN",
+          "attackTypes": [],
+          "blockaidFees": {
+            "buy": 0.0,
+            "sell": 0.0,
+            "transfer": 0.0,
+            "__typename": "BlockaidFees"
+          },
+          "__typename": "ProtectionInfo"
+        },
+        "market": {
+          "id": "VG9rZW5NYXJrZXQ6RVRIRVJFVU1fMHhkYWMxN2Y5NThkMmVlNTIzYTIyMDYyMDY5OTQ1OTdjMTNkODMxZWM3X1VTRA==",
+          "price": {
+            "id": "QW1vdW50OjFfVVNE",
+            "value": 1.0,
+            "currency": "USD",
+            "__typename": "Amount"
+          },
+          "pricePercentChange": {
+            "id": "QW1vdW50OjBfVVNE",
+            "value": 0.0,
+            "__typename": "Amount"
+          },
+          "volume24H": {
+            "id": "QW1vdW50OjMyMTY1NTc1Mi4zMzAzMjIyN19VU0Q=",
+            "value": 3.2165575233032227e8,
+            "currency": "USD",
+            "__typename": "Amount"
+          },
+          "__typename": "TokenMarket"
+        }
+      }
+    ]
+  }
+}

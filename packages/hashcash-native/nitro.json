@@ -1,0 +1,18 @@
+{
+  "$schema": "https://nitro.margelo.com/nitro.schema.json",
+  "cxxNamespace": ["hashcashnative"],
+  "ios": {
+    "iosModuleName": "NitroHashcashNative"
+  },
+  "android": {
+    "androidNamespace": ["hashcashnative"],
+    "androidCxxLibName": "NitroHashcashNative"
+  },
+  "autolinking": {
+    "Hashcash": {
+      "swift": "HybridHashcash",
+      "kotlin": "HybridHashcash"
+    }
+  },
+  "ignorePaths": ["**/node_modules"]
+}

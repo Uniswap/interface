@@ -1,14 +1,23 @@
+import { skipToken } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { useAddFiatOnRampTransaction } from 'state/fiatOnRampTransactions/hooks'
-import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
-import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
-import { FORCountry, FORQuote, FORServiceProvider, FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  useFiatOnRampAggregatorOffRampWidgetQuery,
+  useFiatOnRampAggregatorWidgetQuery,
+} from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
+import {
+  FiatCurrencyInfo,
+  FORCountry,
+  FORFilters,
+  FORQuote,
+  FORServiceProvider,
+  RampDirection,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { createOnRampTransactionId } from 'uniswap/src/features/fiatOnRamp/utils'
-import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
+import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useAddFiatOnRampTransaction } from '~/state/fiatOnRampTransactions/hooks'
+import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from '~/state/fiatOnRampTransactions/types'
 
 interface ProviderOptionProps {
   quote: FORQuote
@@ -19,6 +28,9 @@ interface ProviderOptionProps {
   walletAddress: string
   setConnectedProvider: (provider: FORServiceProvider) => void
   setErrorProvider: (provider: FORServiceProvider) => void
+  rampDirection: RampDirection
+  paymentMethodFilter?: FORFilters
+  hidden?: boolean
 }
 
 export function ProviderOption({
@@ -30,61 +42,123 @@ export function ProviderOption({
   walletAddress,
   setConnectedProvider,
   setErrorProvider,
+  rampDirection,
+  paymentMethodFilter,
+  hidden = false,
 }: ProviderOptionProps) {
   const addFiatOnRampTransaction = useAddFiatOnRampTransaction()
+  const externalSessionId = useMemo(
+    () => createOnRampTransactionId(quote.serviceProviderDetails?.serviceProvider),
+    [quote.serviceProviderDetails?.serviceProvider],
+  )
 
-  const widgetQueryParams = useMemo(() => {
+  const widgetOnRampQueryParams = useMemo(() => {
+    const redirectUrl = new URL('/buy', window.location.origin)
+
     return {
-      serviceProvider: quote.serviceProviderDetails.serviceProvider,
+      serviceProvider: quote.serviceProviderDetails?.serviceProvider ?? '',
       countryCode: selectedCountry.countryCode,
       destinationCurrencyCode: quoteCurrencyCode,
       sourceAmount: parseFloat(inputAmount),
       sourceCurrencyCode: meldSupportedFiatCurrency.code,
       walletAddress,
-      externalSessionId: createOnRampTransactionId(quote.serviceProviderDetails.serviceProvider),
-      redirectUrl: `${UNISWAP_WEB_URL}/buy`,
+      externalSessionId,
+      redirectUrl: redirectUrl.toString(),
     }
   }, [
+    externalSessionId,
     inputAmount,
     meldSupportedFiatCurrency.code,
-    quote.serviceProviderDetails.serviceProvider,
+    quote.serviceProviderDetails?.serviceProvider,
     quoteCurrencyCode,
     selectedCountry.countryCode,
     walletAddress,
   ])
 
-  // TODO(WEB-4417): use the widgetUrl from the /quote response instead of prefetching for every provider.
-  const { data, error, isLoading } = useFiatOnRampAggregatorWidgetQuery(widgetQueryParams)
+  const widgetOffRampQueryParams = useMemo(() => {
+    const redirectUrl = new URL('/sell', window.location.origin)
+    redirectUrl.searchParams.set('externalTransactionId', externalSessionId)
+
+    return {
+      serviceProvider: quote.serviceProviderDetails?.serviceProvider ?? '',
+      countryCode: selectedCountry.countryCode,
+      baseCurrencyCode: quoteCurrencyCode,
+      sourceAmount: parseFloat(inputAmount),
+      quoteCurrencyCode: meldSupportedFiatCurrency.code,
+      refundWalletAddress: walletAddress,
+      externalCustomerId: walletAddress,
+      externalSessionId,
+      redirectUrl: redirectUrl.toString(),
+    }
+  }, [
+    externalSessionId,
+    inputAmount,
+    meldSupportedFiatCurrency.code,
+    quote.serviceProviderDetails?.serviceProvider,
+    quoteCurrencyCode,
+    selectedCountry.countryCode,
+    walletAddress,
+  ])
+
+  const {
+    data: onRampWidgetData,
+    error: onRampWidgetError,
+    isLoading: onRampWidgetLoading,
+  } = useFiatOnRampAggregatorWidgetQuery(rampDirection === RampDirection.ON_RAMP ? widgetOnRampQueryParams : skipToken)
+
+  const {
+    data: offRampWidgetData,
+    error: offRampWidgetError,
+    isLoading: offRampWidgetLoading,
+  } = useFiatOnRampAggregatorOffRampWidgetQuery(
+    rampDirection === RampDirection.OFF_RAMP ? widgetOffRampQueryParams : skipToken,
+  )
+
+  const data = onRampWidgetData || offRampWidgetData
+  const error = onRampWidgetError || offRampWidgetError
+  const isLoading = onRampWidgetLoading || offRampWidgetLoading
 
   return (
     <FORQuoteItem
-      key={quote.serviceProviderDetails.serviceProvider}
+      key={quote.serviceProviderDetails?.serviceProvider}
       serviceProvider={quote.serviceProviderDetails}
-      hoverIcon={<ExternalLink position="absolute" right="$spacing12" size={20} />}
       isLoading={isLoading}
+      showPaymentMethods={!paymentMethodFilter}
+      isRecent={quote.isMostRecentlyUsedProvider}
+      hidden={hidden}
       onPress={async () => {
         if (data) {
           window.open(data.widgetUrl, '_blank')
-          setConnectedProvider(quote.serviceProviderDetails)
+
+          if (quote.serviceProviderDetails) {
+            setConnectedProvider(quote.serviceProviderDetails)
+          }
           addFiatOnRampTransaction({
-            externalSessionId: widgetQueryParams.externalSessionId,
+            externalSessionId,
             account: walletAddress,
             status: FiatOnRampTransactionStatus.INITIATED,
             forceFetched: false,
             addedAt: Date.now(),
-            type: FiatOnRampTransactionType.BUY,
+            type:
+              rampDirection === RampDirection.ON_RAMP ? FiatOnRampTransactionType.BUY : FiatOnRampTransactionType.SELL,
             syncedWithBackend: false,
-            provider: quote.serviceProviderDetails.serviceProvider,
+            provider: quote.serviceProviderDetails?.serviceProvider ?? '',
           })
-          sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
-            countryCode: selectedCountry.countryCode,
-            countryState: selectedCountry.state,
-            cryptoCurrency: quoteCurrencyCode,
-            externalTransactionId: widgetQueryParams.externalSessionId,
-            fiatCurrency: meldSupportedFiatCurrency.code,
-            serviceProvider: quote.serviceProviderDetails.serviceProvider,
-          })
-        } else if (error) {
+          sendAnalyticsEvent(
+            rampDirection === RampDirection.ON_RAMP
+              ? FiatOnRampEventName.FiatOnRampWidgetOpened
+              : FiatOffRampEventName.FiatOffRampWidgetOpened,
+            {
+              countryCode: selectedCountry.countryCode,
+              countryState: selectedCountry.state,
+              cryptoCurrency: quoteCurrencyCode,
+              externalTransactionId: externalSessionId,
+              fiatCurrency: meldSupportedFiatCurrency.code,
+              serviceProvider: quote.serviceProviderDetails?.serviceProvider ?? '',
+              paymentMethodFilter,
+            },
+          )
+        } else if (error && quote.serviceProviderDetails) {
           setErrorProvider(quote.serviceProviderDetails)
         }
       }}

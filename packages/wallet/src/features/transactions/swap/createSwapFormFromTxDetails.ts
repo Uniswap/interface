@@ -1,16 +1,13 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import {
-  TransactionDetails,
-  TransactionType,
-  isBridgeTypeInfo,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { isBridgeTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 
 interface Props {
   transactionDetails: TransactionDetails
@@ -26,17 +23,11 @@ export function createSwapFormFromTxDetails({
   inputCurrency,
   outputCurrency,
 }: Props): TransactionState | undefined {
-  const chainId = transactionDetails?.chainId
-
-  if (!chainId) {
-    return undefined
-  }
-
   try {
     const { typeInfo } = transactionDetails
     const isBridging = isBridgeTypeInfo(typeInfo)
 
-    if (typeInfo.type !== TransactionType.Swap && !isBridging) {
+    if (typeInfo.type !== TransactionType.Swap && !isBridging && typeInfo.type !== TransactionType.Plan) {
       throw new Error(
         `Tx with id ${transactionDetails.id}, hash ${transactionDetails.hash} does not correspond to a swap tx. It is of type ${typeInfo.type}`,
       )
@@ -49,7 +40,7 @@ export function createSwapFormFromTxDetails({
 
     const inputAsset: CurrencyAsset = {
       address: inputAddress,
-      chainId,
+      chainId: transactionDetails.chainId,
       type: AssetType.Currency,
     }
 
@@ -98,10 +89,10 @@ export function createWrapFormFromTxDetails({
   inputCurrency,
   outputCurrency,
 }: Props): TransactionState | undefined {
-  const txHash = transactionDetails?.hash
-  const chainId = transactionDetails?.chainId
+  const txHash = transactionDetails.hash
+  const chainId = transactionDetails.chainId
 
-  if (!chainId || !txHash || !inputCurrency || !outputCurrency) {
+  if (!txHash || !inputCurrency || !outputCurrency) {
     return undefined
   }
 

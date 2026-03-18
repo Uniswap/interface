@@ -1,10 +1,10 @@
 import { Result } from 'ethers/lib/utils'
 import { TransactionDescription } from 'no-yolo-signatures'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 
 export function useTransactionCurrencies(args: {
   chainId?: UniverseChainId
@@ -17,9 +17,7 @@ export function useTransactionCurrencies(args: {
   const addressesFound = [...(to ? [to] : []), ...addresses]
   const currencyIdsInvolved = chainId ? addressesFound.map((address) => buildCurrencyId(chainId, address)) : []
   const currenciesInvolved = useTokenProjects(currencyIdsInvolved)
-  const chainCurrencies = currenciesInvolved?.data?.filter(
-    (c) => c.currency.chainId === chainId && !c.currency.isNative,
-  )
+  const chainCurrencies = currenciesInvolved.data?.filter((c) => c.currency.chainId === chainId && !c.currency.isNative)
 
   return chainCurrencies || []
 }
@@ -33,7 +31,7 @@ function parseAddressesFromArgData(args?: Result): string[] {
       parseAddressesFromArgData(arg)
     }
 
-    if (typeof arg === 'string' && isAddress(arg)) {
+    if (typeof arg === 'string' && isEVMAddressWithChecksum(arg)) {
       if (!addresses.includes(arg)) {
         addresses.push(arg)
       }
