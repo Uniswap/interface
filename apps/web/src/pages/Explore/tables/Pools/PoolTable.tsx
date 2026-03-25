@@ -204,7 +204,7 @@ const TopPoolTable = memo(function TopPoolTable({
   const effectiveLoadMore = backendLoadMore ?? clientLoadMore
   const displayedPools = backendLoadMore
     ? topPools // Backend pagination: use all fetched pools
-    : topPools?.slice(0, page * pageSize) // Client-side: slice by page
+    : topPools?.slice(0, (page + 1) * pageSize) // Client-side: slice by page (page is 0-indexed)
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
