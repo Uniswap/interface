@@ -3,7 +3,10 @@ import { atomWithStorage } from 'jotai/utils'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 
 /** Wallets that require separate user consent for EVM vs SVM connections (currently just MetaMask). */
-const SEPARATE_PROMPT_WALLET_IDS = new Set<string>([CONNECTION_PROVIDER_IDS.METAMASK_RDNS])
+const SEPARATE_PROMPT_WALLET_IDS = new Set<string>([
+  CONNECTION_PROVIDER_IDS.METAMASK_RDNS,
+  CONNECTION_PROVIDER_IDS.HINKAL_RDNS,
+])
 
 export function getWalletRequiresSeparatePrompt(walletId: string) {
   return SEPARATE_PROMPT_WALLET_IDS.has(walletId)
