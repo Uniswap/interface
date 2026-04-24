@@ -1,5 +1,6 @@
 {
   "name": "datadog-dashboards-universe",
+  "private": true,
   "version": "1.0.0",
   "description": "Datadog dashboards for Universe services",
   "main": "index.ts",
