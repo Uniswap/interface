@@ -62,3 +62,11 @@ At the end of each development cycle:
 | `apps/`     | The home for each standalone application.                                      |
 | `config/`   | Shared infrastructure packages and configurations.                             |
 | `packages/` | Shared code packages covering UI, shared functionality, and shared utilities.  |
+
+## 💰 Bounty Contribution
+
+- **Task:** Feature request: support ERC-681 (EIP-681) QR scanning for native + ERC-20 trans
+- **Reward:** $1
+- **Source:** GitHub-Paid
+- **Date:** 2026-04-27
+
