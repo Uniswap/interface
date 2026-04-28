@@ -520,10 +520,11 @@ describe('getFeatureFlaggedHeaders', () => {
       expect(headers).toEqual(expectedHeaders)
     })
 
-    it(`Endpoint: ${path} should use UniversalRouterVersion 2.1.1 when UseUniversalRouterVersion211 flag is enabled`, async () => {
+    it(`Endpoint: ${path} should always use UniversalRouterVersion 2.0 even when UseUniversalRouterVersion211 flag is enabled`, async () => {
       mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UseUniversalRouterVersion211)
       const headers = await getFeatureFlaggedHeaders(path, toTradingApiSupportedChainId(UniverseChainId.Mainnet))
-      expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_1_1)
+      // RigoBlock: AUniswapDecoder.sol was compiled against UR V2.0 structs; always use V2.0.
+      expect(headers).toHaveProperty(TradingApiHeaders.UniversalRouterVersion, TradingApi.UniversalRouterVersion._2_0)
     })
 
     it(`Endpoint: ${path} should fall back to UniversalRouterVersion 2.0 on ZkSync even when flag is enabled`, async () => {

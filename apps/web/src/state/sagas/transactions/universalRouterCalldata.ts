@@ -6,6 +6,10 @@ const UNIVERSAL_ROUTER_COMMANDS = {
   SWEEP: 0x04,
   TRANSFER: 0x05,
   PAY_PORTION: 0x06,
+  // PAY_PORTION_FULL_PRECISION (0x07) was added as in universal-router upgrade. The RigoBlock AUniswapDecoder.sol does now support it until upgrade.
+  // Temporary fix: detect and downgrade to PAY_PORTION (0x06) with bips conversion.
+  // TODO: Remove once the AUniswapRouter adapter is upgraded to support the new UR.
+  PAY_PORTION_FULL_PRECISION: 0x07,
   BALANCE_CHECK_ERC20: 0x0e, // 14 in decimal - not supported on some chains/routers
   V4_SWAP: 0x10,
 }
@@ -49,15 +53,17 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
     const abiCoder = new AbiCoder()
     const decoded = abiCoder.decode(['bytes', 'bytes[]', 'uint256'], calldata)
 
-    const [commands, inputs, deadline] = decoded
+    let [commands, inputs, deadline] = decoded
 
     // Process commands to identify which inputs need modification
+    // Keep commandsBytes as the source of truth for command modifications
     const commandsBytes = commands.startsWith('0x')
       ? new Uint8Array(Buffer.from(commands.slice(2), 'hex'))
       : new Uint8Array(Buffer.from(commands, 'hex'))
 
     const modifiedInputs = [...inputs]
-    let wasModified = false
+    let commandsWasModified = false
+    let inputsWereModified = false
 
     // Process each command and its corresponding input
     for (let i = 0; i < commandsBytes.length && i < inputs.length; i++) {
@@ -75,7 +81,7 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
               [token, smartPoolAddress, amountMinimum],
             )
             modifiedInputs[i] = newInput
-            wasModified = true
+            inputsWereModified = true
           }
         } catch (error) {
           console.warn(`Failed to decode SWEEP command ${i}:`, error)
@@ -88,10 +94,32 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
           if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
             const newInput = abiCoder.encode(['address', 'address', 'uint256'], [token, smartPoolAddress, bips])
             modifiedInputs[i] = newInput
-            wasModified = true
+            inputsWereModified = true
           }
         } catch (error) {
           console.warn(`Failed to decode PAY_PORTION command ${i}:`, error)
+        }
+      } else if (command === UNIVERSAL_ROUTER_COMMANDS.PAY_PORTION_FULL_PRECISION) {
+        // PAY_PORTION_FULL_PRECISION (0x07) command: abi.encode(token, recipient, portion)
+        // where portion uses 1e18 precision (1e18 = 100%).
+        // Temporary fix pending AUniswapRouter adapter upgrade: the old UR does not recognise 0x07
+        // (it may skip or revert depending on ALLOW_REVERT flag). Downgrade to PAY_PORTION (0x06)
+        // so the fee is correctly routed on the old UR. Precision loss is at most 1 bip (~0.01%).
+        // TODO: remove once the AUniswapRouter adapter is upgraded to the new UR.
+        try {
+          const [token, recipient, portion] = abiCoder.decode(['address', 'address', 'uint256'], input)
+          const portionBigInt = BigInt(portion.toString())
+          // Convert from 1e18 precision to basis points (10000 = 100%)
+          const bips = (portionBigInt * BigInt(10000)) / BigInt('1000000000000000000')
+          const finalRecipient = shouldReplaceRecipient(recipient, smartPoolAddress) ? smartPoolAddress : recipient
+          const newInput = abiCoder.encode(['address', 'address', 'uint256'], [token, finalRecipient, bips])
+          modifiedInputs[i] = newInput
+          // IMPORTANT: Downgrade the command byte from 0x07 to 0x06
+          commandsBytes[i] = UNIVERSAL_ROUTER_COMMANDS.PAY_PORTION
+          commandsWasModified = true
+          inputsWereModified = true
+        } catch (error) {
+          console.warn(`Failed to decode PAY_PORTION_FULL_PRECISION command ${i}:`, error)
         }
       } else if (command === UNIVERSAL_ROUTER_COMMANDS.TRANSFER) {
         // TRANSFER command: abi.encode(token, recipient, amount)
@@ -103,7 +131,7 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
           if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
             const newInput = abiCoder.encode(['address', 'address', 'uint256'], [token, smartPoolAddress, amount])
             modifiedInputs[i] = newInput
-            wasModified = true
+            inputsWereModified = true
           }
         } catch (error) {
           console.warn(`Failed to decode TRANSFER command ${i}:`, error)
@@ -128,7 +156,6 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
             const actionType = actionsBytes[j]
 
             if (actionType === V4_ACTIONS.TAKE || actionType === V4_ACTIONS.TAKE_PORTION) {
-              // Decode the corresponding parameter
               const paramCalldata = params[j]
 
               if (actionType === V4_ACTIONS.TAKE) {
@@ -139,7 +166,6 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
                     paramCalldata,
                   )
 
-                  // Check if recipient should be replaced
                   if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
                     const newParams = abiCoder.encode(
                       ['address', 'address', 'uint256'],
@@ -156,7 +182,6 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
                 try {
                   const [currency, recipient, bips] = abiCoder.decode(['address', 'address', 'uint256'], paramCalldata)
 
-                  // Check if recipient should be replaced
                   if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
                     const newParams = abiCoder.encode(
                       ['address', 'address', 'uint256'],
@@ -176,7 +201,7 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
             // Re-encode this V4_SWAP input with modified params
             const modifiedInput = abiCoder.encode(['bytes', 'bytes[]'], [actions, modifiedParams])
             modifiedInputs[i] = modifiedInput
-            wasModified = true
+            inputsWereModified = true
           }
         } catch (error) {
           console.warn(`Failed to decode V4_SWAP command ${i}:`, error)
@@ -184,12 +209,16 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
       }
     }
 
-    if (!wasModified) {
+    // Only re-encode if something actually changed
+    if (!commandsWasModified && !inputsWereModified) {
       return calldata
     }
 
-    // Re-encode the entire calldata with modified inputs
-    return abiCoder.encode(['bytes', 'bytes[]', 'uint256'], [commands, modifiedInputs, deadline])
+    // Reconstruct the commands hex string ONCE at the end after all modifications
+    const finalCommands = commandsWasModified ? '0x' + Buffer.from(commandsBytes).toString('hex') : commands
+
+    // Re-encode the entire calldata with potentially modified commands and inputs
+    return abiCoder.encode(['bytes', 'bytes[]', 'uint256'], [finalCommands, modifiedInputs, deadline])
   } catch (error) {
     console.error('Error modifying V4 calldata:', error)
     throw error

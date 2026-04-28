@@ -58,9 +58,12 @@ export const getFeatureFlaggedHeaders = async (
 ): Promise<HeadersInit> => {
   await waitForStatsigReady()
   const chainId = tradingApiToUniverseChainId(tradingApiChainId)
-  const chainSupports211 =
-    chainId && getChainInfo(chainId).supportedURVersions.includes(TradingApi.UniversalRouterVersion._2_1_1)
-  const useUR211 = getFeatureFlag(FeatureFlags.UseUniversalRouterVersion211) && chainSupports211
+  // TODO: update when AUniswapRouter is upgraded in protocol to support UR V2.1.1.
+  // RigoBlock: AUniswapDecoder.sol was compiled against UR V2.0 struct layouts.
+  // UR V2.1.1 introduces `maxHopSlippage` in ExactInput(Single)Params which causes ABI
+  // misalignment on-chain, resulting in _handleAction(0x) reverts on all V4 swaps.
+  // Force V2.0 until the vault adapter is upgraded to support V2.1.1 structs.
+  const useUR211 = false
   const headers: Record<string, string> = {
     [TradingApiHeaders.UniversalRouterVersion]: useUR211
       ? TradingApi.UniversalRouterVersion._2_1_1
