@@ -476,6 +476,54 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator
           txRequest.data = strippedCalldata
         }
       }
+
+      // Estimate gas for the modified swap transaction.
+      // The TAPI estimate is for `to: UniversalRouter`; after redirecting `to: smartPoolAddress`
+      // the execution path is completely different (proxy overhead, NAV update, etc.).
+      // Estimating here also catches on-chain reverts BEFORE MetaMask shows the popup,
+      // so the user sees a meaningful error instead of a silent on-chain failure.
+      {
+        const swapChainId = trade.inputAmount.currency.chainId
+        const swapProvider = swapChainId in RPC_PROVIDERS
+          ? RPC_PROVIDERS[swapChainId as keyof typeof RPC_PROVIDERS]
+          : undefined
+
+        if (swapProvider) {
+          try {
+            const gasEstimate = yield* call([swapProvider, swapProvider.estimateGas], {
+              from: address,
+              to: smartPoolAddress,
+              data: typeof txRequest.data === 'string' ? txRequest.data : txRequest.data?.toString(),
+              value: '0',
+            })
+            // Add 20% safety margin
+            txRequest.gasLimit = gasEstimate.mul(120).div(100).toString()
+            logger.debug('swapSaga', 'handleSwapTransactionStep', 'Swap gas estimated', {
+              estimated: gasEstimate.toString(),
+              withMargin: txRequest.gasLimit,
+            })
+          } catch (gasError) {
+            const gasErrorMsg = gasError instanceof Error ? gasError.message : String(gasError)
+            if (
+              gasErrorMsg.includes('execution reverted') ||
+              gasErrorMsg.includes('UNPREDICTABLE_GAS_LIMIT') ||
+              gasErrorMsg.includes('cannot estimate gas')
+            ) {
+              // The swap would revert on-chain — block submission with a clear error.
+              // MetaMask would otherwise submit the transaction and fail silently.
+              throw new Error(
+                `Swap transaction would fail on-chain. The pool may have insufficient liquidity, ` +
+                `the price may have moved beyond your slippage tolerance, or a required token approval ` +
+                `is missing. Details: ${gasErrorMsg}`,
+              )
+            }
+            // Non-revert failures (network, RPC issues) — fall back to TAPI estimate + fixed overhead
+            logger.warn('swapSaga', 'handleSwapTransactionStep', 'Swap gas estimation failed (network error), using fallback', {
+              error: gasError,
+            })
+          }
+        }
+      }
     }
 
     txRequest.from = address
