@@ -51,7 +51,10 @@ function getWebAppSessionService(ctx: {
       getHeaders: () => ({ 'x-request-source': REQUEST_SOURCE }),
       interceptors: ctx.interceptors,
       options: {
-        credentials: 'include',
+        // RigoBlock: The CF gateway returns Access-Control-Allow-Origin: * which is incompatible
+        // with credentials: 'include'. Since RigoBlock does not use Uniswap session cookies,
+        // omit credentials so the CORS preflight is accepted by the wildcard origin header.
+        credentials: 'omit',
       },
     }),
   })

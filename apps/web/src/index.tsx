@@ -217,7 +217,14 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-const PRIVY_APP_ID = process.env.PRIVY_APP_ID
+// RigoBlock: Privy's auth iframe has a frame-ancestors CSP that only allows app.uniswap.org.
+// When running on app.rigoblock.com the iframe is blocked, producing a CSP console error and
+// ERR_FAILED for the auth resource. Only enable Privy on the Uniswap domain so the error
+// is suppressed on RigoBlock without requiring a separate Privy app configuration.
+const PRIVY_APP_ID =
+  process.env.PRIVY_APP_ID && window.location.hostname === 'app.uniswap.org'
+    ? process.env.PRIVY_APP_ID
+    : undefined
 
 function MaybePrivyProvider({ children }: { children: ReactNode }) {
   if (!PRIVY_APP_ID) {

@@ -69,6 +69,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
 
   const poolContract = usePoolExtendedContract(poolInfo?.pool.address)
   const [expectedMintAmount, setExpectedMintAmount] = useState<any>(undefined)
+  const [mintCallError, setMintCallError] = useState<string | undefined>()
 
   useEffect(() => {
     async function retrieveRealTimeMintAmount() {
@@ -93,14 +94,23 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
           mintAmount = await poolContract.callStatic['mint(address,uint256,uint256)'](...args, value ? { value } : {})
           mintAmountCache.set(cacheKey, mintAmount)
         }
-      } catch (error) {
+      } catch (e: unknown) {
         setExpectedMintAmount(undefined)
+        // Before approval the ERC-20 transferFrom inside mint() always reverts due to zero allowance.
+        // That is expected — suppress it. Only surface errors once the user has already approved,
+        // which means something in the contract logic itself is rejecting the call.
+        if (approval === ApprovalState.APPROVED) {
+          setMintCallError(e instanceof Error ? e.message : String(e))
+        } else {
+          setMintCallError(undefined)
+        }
         return
       }
       setExpectedMintAmount(mintAmount)
+      setMintCallError(undefined)
     }
     retrieveRealTimeMintAmount()
-  }, [poolContract, poolInfo?.recipient, parsedAmount?.quotient, userBaseTokenBalance?.currency.isNative])
+  }, [poolContract, poolInfo?.recipient, parsedAmount?.quotient, userBaseTokenBalance?.currency.isNative, approval])
 
   const { expectedPoolTokens, minimumAmount } = useMemo(() => {
     if (!parsedAmount || !poolInfo || !expectedMintAmount) {
@@ -124,7 +134,9 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     if (poolContract && parsedAmount && poolInfo /*&& deadline*/) {
       if (approval === ApprovalState.APPROVED) {
         const value = userBaseTokenBalance?.currency.isNative ? parsedAmount.quotient.toString() : null
-        const args = [poolInfo.recipient, parsedAmount.quotient.toString(), minimumAmount?.quotient.toString()]
+        // minimumAmount is guaranteed defined here: the Buy button is disabled until the callStatic
+        // succeeds and minimumAmount is set (see disabled condition on ButtonError below).
+        const args = [poolInfo.recipient, parsedAmount.quotient.toString(), minimumAmount!.quotient.toString()]
 
         // mint method not unique in interface
         return poolContract.estimateGas['mint(address,uint256,uint256)'](...args, value ? { value } : {}).then(
@@ -222,12 +234,17 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
               <Trans>Approve</Trans>
             </ButtonConfirmed>
             <ButtonError
-              disabled={!!error || approval !== ApprovalState.APPROVED}
+              disabled={!!error || approval !== ApprovalState.APPROVED || !minimumAmount}
               error={!!error && !!parsedAmount}
               onClick={onBuy}
             >
               {error ?? <Trans>Buy</Trans>}
             </ButtonError>
+            {mintCallError && approval === ApprovalState.APPROVED && (
+              <ThemedText.DeprecatedBody style={{ color: '#ff6b6b', wordBreak: 'break-all', fontSize: '12px' }}>
+                {mintCallError}
+              </ThemedText.DeprecatedBody>
+            )}
           </RowBetween>
           <ProgressCircles steps={[approval === ApprovalState.APPROVED]} disabled={true} />
         </ContentWrapper>
