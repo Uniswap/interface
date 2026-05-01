@@ -3,6 +3,8 @@ import { getAddress } from '@ethersproject/address'
 
 // Universal Router Command Constants
 const UNIVERSAL_ROUTER_COMMANDS = {
+  V3_SWAP_EXACT_IN: 0x00,
+  V3_SWAP_EXACT_OUT: 0x01,
   SWEEP: 0x04,
   TRANSFER: 0x05,
   PAY_PORTION: 0x06,
@@ -10,6 +12,16 @@ const UNIVERSAL_ROUTER_COMMANDS = {
   // Temporary fix: detect and downgrade to PAY_PORTION (0x06) with bips conversion.
   // TODO: Remove once the AUniswapRouter adapter is upgraded to support the new UR.
   PAY_PORTION_FULL_PRECISION: 0x07,
+  V2_SWAP_EXACT_IN: 0x08,
+  V2_SWAP_EXACT_OUT: 0x09,
+  // WRAP_ETH: sends ETH → WETH; recipient is normally ADDRESS_THIS so WETH stays in the router.
+  // Older AUniswapRouter deployments call an external function on every decoded recipient and
+  // therefore revert on the ADDRESS_THIS precompile (0x2). Replace it with the pool so the pool
+  // receives the WETH directly.  The downstream V3/V2 swap must then use payerIsUser=true so
+  // the UniversalRouter pulls WETH from the pool via Permit2 (AUniswapRouter sets up the
+  // allowance in _safeApproveTokensIn before forwarding to the UR).
+  WRAP_ETH: 0x0b,
+  UNWRAP_WETH: 0x0c,
   BALANCE_CHECK_ERC20: 0x0e, // 14 in decimal - not supported on some chains/routers
   V4_SWAP: 0x10,
 }
@@ -135,6 +147,113 @@ export function modifyV4ExecuteCalldata(calldata: string, smartPoolAddress: stri
           }
         } catch (error) {
           console.warn(`Failed to decode TRANSFER command ${i}:`, error)
+        }
+      } else if (command === UNIVERSAL_ROUTER_COMMANDS.WRAP_ETH) {
+        // WRAP_ETH: abi.encode(address recipient, uint256 amount)
+        // ActionConstants.ADDRESS_THIS (address(2)) and MSG_SENDER (address(1)) are explicitly
+        // accepted by AUniswapRouter._processRecipients — do not replace them.
+        // Only replace an unexpected user EOA that would be rejected.
+        try {
+          const [recipient, amount] = abiCoder.decode(['address', 'uint256'], input)
+          if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
+            const newInput = abiCoder.encode(['address', 'uint256'], [smartPoolAddress, amount])
+            modifiedInputs[i] = newInput
+            inputsWereModified = true
+          }
+        } catch (error) {
+          console.warn(`Failed to decode WRAP_ETH command ${i}:`, error)
+        }
+      } else if (command === UNIVERSAL_ROUTER_COMMANDS.UNWRAP_WETH) {
+        // UNWRAP_WETH: abi.encode(address recipient, uint256 amountMin)
+        try {
+          const [recipient, amountMin] = abiCoder.decode(['address', 'uint256'], input)
+          if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
+            const newInput = abiCoder.encode(['address', 'uint256'], [smartPoolAddress, amountMin])
+            modifiedInputs[i] = newInput
+            inputsWereModified = true
+          }
+        } catch (error) {
+          console.warn(`Failed to decode UNWRAP_WETH command ${i}:`, error)
+        }
+      } else if (command === UNIVERSAL_ROUTER_COMMANDS.V3_SWAP_EXACT_IN) {
+        // V3_SWAP_EXACT_IN: abi.encode(address recipient, uint256 amountIn, uint256 amountOutMin,
+        //                              bytes path, bool payerIsUser)
+        // AUniswapRouter._processRecipients only allows address(this) (the pool), MSG_SENDER
+        // (address(1)), and ADDRESS_THIS (address(2)). User EOA addresses are rejected.
+        // shouldReplaceRecipient already skips address(1) and address(2), so this correctly
+        // replaces only bare user addresses with the smart pool.
+        try {
+          const [recipient, amountIn, amountOutMin, path, payerIsUser] = abiCoder.decode(
+            ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+            input,
+          )
+          if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
+            const newInput = abiCoder.encode(
+              ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+              [smartPoolAddress, amountIn, amountOutMin, path, payerIsUser],
+            )
+            modifiedInputs[i] = newInput
+            inputsWereModified = true
+          }
+        } catch (error) {
+          console.warn(`Failed to decode V3_SWAP_EXACT_IN command ${i}:`, error)
+        }
+      } else if (command === UNIVERSAL_ROUTER_COMMANDS.V3_SWAP_EXACT_OUT) {
+        // V3_SWAP_EXACT_OUT: abi.encode(address recipient, uint256 amountOut, uint256 amountInMax,
+        //                               bytes path, bool payerIsUser)
+        try {
+          const [recipient, amountOut, amountInMax, path, payerIsUser] = abiCoder.decode(
+            ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+            input,
+          )
+          if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
+            const newInput = abiCoder.encode(
+              ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+              [smartPoolAddress, amountOut, amountInMax, path, payerIsUser],
+            )
+            modifiedInputs[i] = newInput
+            inputsWereModified = true
+          }
+        } catch (error) {
+          console.warn(`Failed to decode V3_SWAP_EXACT_OUT command ${i}:`, error)
+        }
+      } else if (command === UNIVERSAL_ROUTER_COMMANDS.V2_SWAP_EXACT_IN) {
+        // V2_SWAP_EXACT_IN: abi.encode(address recipient, uint256 amountIn, uint256 amountOutMin,
+        //                              address[] path, bool payerIsUser)
+        try {
+          const [recipient, amountIn, amountOutMin, path, payerIsUser] = abiCoder.decode(
+            ['address', 'uint256', 'uint256', 'address[]', 'bool'],
+            input,
+          )
+          if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
+            const newInput = abiCoder.encode(
+              ['address', 'uint256', 'uint256', 'address[]', 'bool'],
+              [smartPoolAddress, amountIn, amountOutMin, path, payerIsUser],
+            )
+            modifiedInputs[i] = newInput
+            inputsWereModified = true
+          }
+        } catch (error) {
+          console.warn(`Failed to decode V2_SWAP_EXACT_IN command ${i}:`, error)
+        }
+      } else if (command === UNIVERSAL_ROUTER_COMMANDS.V2_SWAP_EXACT_OUT) {
+        // V2_SWAP_EXACT_OUT: abi.encode(address recipient, uint256 amountOut, uint256 amountInMax,
+        //                               address[] path, bool payerIsUser)
+        try {
+          const [recipient, amountOut, amountInMax, path, payerIsUser] = abiCoder.decode(
+            ['address', 'uint256', 'uint256', 'address[]', 'bool'],
+            input,
+          )
+          if (shouldReplaceRecipient(recipient, smartPoolAddress)) {
+            const newInput = abiCoder.encode(
+              ['address', 'uint256', 'uint256', 'address[]', 'bool'],
+              [smartPoolAddress, amountOut, amountInMax, path, payerIsUser],
+            )
+            modifiedInputs[i] = newInput
+            inputsWereModified = true
+          }
+        } catch (error) {
+          console.warn(`Failed to decode V2_SWAP_EXACT_OUT command ${i}:`, error)
         }
       } else if (command === UNIVERSAL_ROUTER_COMMANDS.V4_SWAP) {
         // V4_SWAP command: process V4 actions within this input

@@ -227,3 +227,224 @@ describe('V4 action codes are preserved during recipient replacement', () => {
     expect(takeRecipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
   })
 })
+
+// --------------------------------------------------------------------------
+// WRAP_ETH + V3_SWAP_EXACT_IN (ETH → token, the failing Arbitrum case)
+// --------------------------------------------------------------------------
+
+const CMD_WRAP_ETH = 0x0b
+const CMD_UNWRAP_WETH = 0x0c
+const CMD_V3_SWAP_EXACT_IN = 0x00
+const CMD_V3_SWAP_EXACT_OUT = 0x01
+const CMD_V2_SWAP_EXACT_IN = 0x08
+const CMD_V2_SWAP_EXACT_OUT = 0x09
+const ADDRESS_THIS = '0x0000000000000000000000000000000000000002'
+const MSG_SENDER = '0x0000000000000000000000000000000000000001'
+const WETH = '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'
+const USDC = '0xaf88d065e77c8cc2239327c5edb3a432268e5831'
+// V3 path: WETH -0.05%- USDC (43 bytes)
+const V3_PATH = ('0x' + WETH.slice(2) + '000064' + USDC.slice(2)).toLowerCase()
+
+function buildWrapEthV3Calldata(
+  wrapRecipient: string,
+  swapRecipient: string,
+  payerIsUser: boolean,
+): string {
+  const wrapInput = abiCoder.encode(['address', 'uint256'], [wrapRecipient, '10000000000000000'])
+  const swapInput = abiCoder.encode(
+    ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+    [swapRecipient, '10000000000000000', '22826256', V3_PATH, payerIsUser],
+  )
+  const commands = Buffer.from([CMD_WRAP_ETH, CMD_V3_SWAP_EXACT_IN])
+  return abiCoder.encode(
+    ['bytes', 'bytes[]', 'uint256'],
+    ['0x' + commands.toString('hex'), [wrapInput, swapInput], DEADLINE],
+  )
+}
+
+describe('WRAP_ETH + V3_SWAP_EXACT_IN (ETH → token via smart pool)', () => {
+  it('leaves ADDRESS_THIS in WRAP_ETH untouched and replaces user address in V3', () => {
+    // Reproduces the failing Arbitrum tx: [WRAP_ETH(ADDRESS_THIS), V3_SWAP_EXACT_IN(user)]
+    // ADDRESS_THIS and MSG_SENDER are whitelisted by AUniswapRouter._processRecipients —
+    // only the user EOA recipient in V3 needs to be replaced.
+    const calldata = buildWrapEthV3Calldata(ADDRESS_THIS, FEE_RECIPIENT, false)
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+    expect(result).not.toBe(calldata)
+
+    const { inputs } = decodeOutputCalldata(result)
+
+    // WRAP_ETH: ADDRESS_THIS unchanged (it is whitelisted, WETH stays in the UR)
+    const [wrapRecipient] = abiCoder.decode(['address', 'uint256'], inputs[0]!)
+    expect(wrapRecipient.toLowerCase()).toBe(ADDRESS_THIS.toLowerCase())
+
+    // V3_SWAP_EXACT_IN: user address replaced with smart pool, payerIsUser untouched
+    const [swapRecipient, , , , payerIsUser] = abiCoder.decode(
+      ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+      inputs[1]!,
+    )
+    expect(swapRecipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+    expect(payerIsUser).toBe(false) // untouched — UR draws from its own WETH balance
+  })
+
+  it('leaves MSG_SENDER in WRAP_ETH untouched', () => {
+    const calldata = buildWrapEthV3Calldata(MSG_SENDER, FEE_RECIPIENT, false)
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+
+    const { inputs } = decodeOutputCalldata(result)
+    const [wrapRecipient] = abiCoder.decode(['address', 'uint256'], inputs[0]!)
+    expect(wrapRecipient.toLowerCase()).toBe(MSG_SENDER.toLowerCase())
+
+    // V3 recipient still replaced
+    const [swapRecipient] = abiCoder.decode(
+      ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+      inputs[1]!,
+    )
+    expect(swapRecipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+  })
+
+  it('replaces user address in WRAP_ETH when present', () => {
+    // Unusual but possible: WRAP_ETH with a user address recipient
+    const calldata = buildWrapEthV3Calldata(FEE_RECIPIENT, FEE_RECIPIENT, false)
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+
+    const { inputs } = decodeOutputCalldata(result)
+    const [wrapRecipient] = abiCoder.decode(['address', 'uint256'], inputs[0]!)
+    expect(wrapRecipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+  })
+})
+
+// --------------------------------------------------------------------------
+// V3_SWAP_EXACT_IN standalone (ERC20 → ERC20, user address recipient)
+// --------------------------------------------------------------------------
+
+describe('V3_SWAP_EXACT_IN recipient replacement', () => {
+  it('replaces user address recipient with smart pool', () => {
+    const input = abiCoder.encode(
+      ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+      [FEE_RECIPIENT, '1000', '900', V3_PATH, true],
+    )
+    const commands = Buffer.from([CMD_V3_SWAP_EXACT_IN])
+    const calldata = abiCoder.encode(
+      ['bytes', 'bytes[]', 'uint256'],
+      ['0x' + commands.toString('hex'), [input], DEADLINE],
+    )
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+    const { inputs } = decodeOutputCalldata(result)
+    const [recipient, , , , payerIsUser] = abiCoder.decode(
+      ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+      inputs[0]!,
+    )
+    expect(recipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+    expect(payerIsUser).toBe(true) // unchanged
+  })
+
+  it('does not replace ADDRESS_THIS or MSG_SENDER recipient', () => {
+    for (const specialAddr of [ADDRESS_THIS, MSG_SENDER]) {
+      const input = abiCoder.encode(
+        ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+        [specialAddr, '1000', '900', V3_PATH, false],
+      )
+      const commands = Buffer.from([CMD_V3_SWAP_EXACT_IN])
+      const calldata = abiCoder.encode(
+        ['bytes', 'bytes[]', 'uint256'],
+        ['0x' + commands.toString('hex'), [input], DEADLINE],
+      )
+      const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+      // calldata should be unchanged since recipient is a special constant
+      expect(result).toBe(calldata)
+    }
+  })
+})
+
+// --------------------------------------------------------------------------
+// V3_SWAP_EXACT_OUT recipient replacement
+// --------------------------------------------------------------------------
+
+describe('V3_SWAP_EXACT_OUT recipient replacement', () => {
+  it('replaces user address recipient with smart pool', () => {
+    const input = abiCoder.encode(
+      ['address', 'uint256', 'uint256', 'bytes', 'bool'],
+      [FEE_RECIPIENT, '1000', '1100', V3_PATH, true],
+    )
+    const commands = Buffer.from([CMD_V3_SWAP_EXACT_OUT])
+    const calldata = abiCoder.encode(
+      ['bytes', 'bytes[]', 'uint256'],
+      ['0x' + commands.toString('hex'), [input], DEADLINE],
+    )
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+    const { inputs } = decodeOutputCalldata(result)
+    const [recipient] = abiCoder.decode(['address', 'uint256', 'uint256', 'bytes', 'bool'], inputs[0]!)
+    expect(recipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+  })
+})
+
+// --------------------------------------------------------------------------
+// V2_SWAP_EXACT_IN / V2_SWAP_EXACT_OUT recipient replacement
+// --------------------------------------------------------------------------
+
+describe('V2 swap recipient replacement', () => {
+  const V2_PATH = [WETH, USDC]
+
+  it('replaces V2_SWAP_EXACT_IN recipient', () => {
+    const input = abiCoder.encode(
+      ['address', 'uint256', 'uint256', 'address[]', 'bool'],
+      [FEE_RECIPIENT, '1000', '900', V2_PATH, true],
+    )
+    const commands = Buffer.from([CMD_V2_SWAP_EXACT_IN])
+    const calldata = abiCoder.encode(
+      ['bytes', 'bytes[]', 'uint256'],
+      ['0x' + commands.toString('hex'), [input], DEADLINE],
+    )
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+    const { inputs } = decodeOutputCalldata(result)
+    const [recipient] = abiCoder.decode(['address', 'uint256', 'uint256', 'address[]', 'bool'], inputs[0]!)
+    expect(recipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+  })
+
+  it('replaces V2_SWAP_EXACT_OUT recipient', () => {
+    const input = abiCoder.encode(
+      ['address', 'uint256', 'uint256', 'address[]', 'bool'],
+      [FEE_RECIPIENT, '1000', '1100', V2_PATH, true],
+    )
+    const commands = Buffer.from([CMD_V2_SWAP_EXACT_OUT])
+    const calldata = abiCoder.encode(
+      ['bytes', 'bytes[]', 'uint256'],
+      ['0x' + commands.toString('hex'), [input], DEADLINE],
+    )
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+    const { inputs } = decodeOutputCalldata(result)
+    const [recipient] = abiCoder.decode(['address', 'uint256', 'uint256', 'address[]', 'bool'], inputs[0]!)
+    expect(recipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+  })
+})
+
+// --------------------------------------------------------------------------
+// UNWRAP_WETH recipient replacement
+// --------------------------------------------------------------------------
+
+describe('UNWRAP_WETH recipient replacement', () => {
+  it('replaces user address recipient with smart pool', () => {
+    const input = abiCoder.encode(['address', 'uint256'], [FEE_RECIPIENT, '5000'])
+    const commands = Buffer.from([CMD_UNWRAP_WETH])
+    const calldata = abiCoder.encode(
+      ['bytes', 'bytes[]', 'uint256'],
+      ['0x' + commands.toString('hex'), [input], DEADLINE],
+    )
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+    const { inputs } = decodeOutputCalldata(result)
+    const [recipient, amount] = abiCoder.decode(['address', 'uint256'], inputs[0]!)
+    expect(recipient.toLowerCase()).toBe(SMART_POOL.toLowerCase())
+    expect(amount.toString()).toBe('5000')
+  })
+
+  it('does not modify when recipient is already smart pool', () => {
+    const input = abiCoder.encode(['address', 'uint256'], [SMART_POOL, '5000'])
+    const commands = Buffer.from([CMD_UNWRAP_WETH])
+    const calldata = abiCoder.encode(
+      ['bytes', 'bytes[]', 'uint256'],
+      ['0x' + commands.toString('hex'), [input], DEADLINE],
+    )
+    const result = modifyV4ExecuteCalldata(calldata, SMART_POOL)
+    expect(result).toBe(calldata)
+  })
+})
