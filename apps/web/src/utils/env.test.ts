@@ -1,12 +1,15 @@
 import { isBetaEnv, isDevEnv, isProdEnv, isTestEnv } from 'utilities/src/environment/env'
 
 describe('env', () => {
+  // oxlint-disable-next-line eslint-js/no-restricted-syntax
   const ENV = process.env
   afterEach(() => {
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax
     process.env = ENV
   })
 
   function setEnv(env: Record<string, unknown>) {
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax
     process.env = {
       PUBLIC_URL: 'http://example.com',
       NODE_ENV: 'development',

@@ -20,6 +20,9 @@
       "path": "../../packages/api"
     },
     {
+      "path": "../../packages/config"
+    },
+    {
       "path": "../../packages/wallet"
     },
     {

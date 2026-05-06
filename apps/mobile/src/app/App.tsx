@@ -65,6 +65,7 @@ import {
   MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
 } from 'src/features/datadog/DatadogProviderWrapper'
 import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
+import { setupExpoImageMemoryWatcher } from 'src/features/images/expoImageCacheSetup'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
@@ -147,6 +148,8 @@ initOneSignal()
 initAppsFlyer()
 
 initializePortfolioQueryOverrides({ store })
+
+setupExpoImageMemoryWatcher()
 
 /**
  * Wrapper component that provides the app state resetter to ErrorBoundary.

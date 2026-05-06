@@ -6,7 +6,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { TokenDetailsPageSkeleton } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TokenDetailsContent } from '~/pages/TokenDetails/components/TokenDetails'
@@ -14,6 +13,7 @@ import { TDPStoreContextProvider } from '~/pages/TokenDetails/context/TDPStoreCo
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { getTokenPageDescription, getTokenPageTitle, getTokenStructuredData } from '~/pages/TokenDetails/pageMetadata'
 import { formatTokenMetatagTitleName } from '~/shared-cloud/metatags'
+import { ExploreTab } from '~/types/explore'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
 export default function TokenDetailsPage() {

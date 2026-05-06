@@ -25,18 +25,17 @@ import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { ErrorCallout } from '~/components/ErrorCallout'
-import { getLPBaseAnalyticsProperties } from '~/components/Liquidity/analytics'
-import { FormStepsWrapper, FormWrapper } from '~/components/Liquidity/Create/FormWrapper'
-import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useLPSlippageValue } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
-import { DEFAULT_POSITION_STATE, MigratingPosition, PositionFlowStep } from '~/components/Liquidity/Create/types'
-import { LiquidityPositionCard } from '~/components/Liquidity/LiquidityPositionCard'
-import { LoadingRow } from '~/components/Liquidity/Loader'
-import { ReviewModal } from '~/components/Liquidity/ReviewModal'
-import type { PositionInfo } from '~/components/Liquidity/types'
-import { getCurrencyForProtocol } from '~/components/Liquidity/utils/currency'
-import { parseRestPosition } from '~/components/Liquidity/utils/parseFromRest'
 import { LoadingRows } from '~/components/Loader/styled'
+import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
+import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
+import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
+import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
+import { DEFAULT_POSITION_STATE, MigratingPosition, PositionFlowStep } from '~/features/Liquidity/Create/types'
+import { LiquidityPositionCard } from '~/features/Liquidity/LiquidityPositionCard'
+import { LoadingRow } from '~/features/Liquidity/Loader'
+import { ReviewModal } from '~/features/Liquidity/ReviewModal'
+import { getCurrencyForProtocol } from '~/features/Liquidity/utils/currency'
+import { parseRestPosition } from '~/features/Liquidity/utils/parseFromRest'
 import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useAccount } from '~/hooks/useAccount'
 import { usePositionOwnerV2 } from '~/hooks/usePositionOwnerV2'
@@ -50,8 +49,10 @@ import {
 import { SharedCreateModals } from '~/pages/CreatePosition/CreatePosition'
 import useMigratingPosition from '~/pages/Migrate/hooks/useMigratingPosition'
 import { MigratePositionTxContextProvider, useMigrateTxContext } from '~/pages/Migrate/MigrateLiquidityTxContext'
+import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
+import type { PositionInfo } from '~/types/liquidity'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -89,6 +90,7 @@ function MigrateInner({
   const dispatch = useDispatch()
   const { txInfo, transactionError, refetch, setTransactionError, refundedAmounts } = useMigrateTxContext()
   const navigate = useNavigate()
+  const overrideBatchedTransactions = useSetOverrideOneClickSwapFlag()
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
 
@@ -136,6 +138,7 @@ function MigrateInner({
         liquidityTxContext: txInfo,
         setCurrentStep: setCurrentTransactionStep,
         setSteps: setTransactionSteps,
+        disableOneClickSwap: overrideBatchedTransactions,
         onSuccess: () => {
           onClose()
           navigate('/positions')
@@ -185,6 +188,7 @@ function MigrateInner({
     setTransactionError,
     currency0Amount.currency,
     currency1Amount.currency,
+    overrideBatchedTransactions,
   ])
 
   const priceRangeProps = useMemo(() => {

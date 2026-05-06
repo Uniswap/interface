@@ -15,7 +15,6 @@ import { fonts } from 'ui/src/theme'
 import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopAndBottomGradient'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import type { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -305,7 +304,6 @@ const StaticNumber = ({
           height: DIGIT_HEIGHT,
         },
       ]}
-      testID={TestID.PortfolioBalance}
     >
       {shouldFadeDecimals && amountOfCurrency?.length === 2 ? amountOfCurrency[0] : value}
       {shouldFadeDecimals && amountOfCurrency?.length === 2 && (
@@ -462,7 +460,7 @@ const ReanimatedNumber = ({
 
   return (
     <Flex overflow="hidden" onLayout={onContainerLayout}>
-      <Animated.View style={scaleWrapper} testID={TestID.PortfolioBalance}>
+      <Animated.View style={scaleWrapper}>
         <Flex
           group
           row

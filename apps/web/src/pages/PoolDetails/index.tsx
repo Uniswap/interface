@@ -13,12 +13,11 @@ import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { PoolData, usePoolData } from '~/appGraphql/data/pools/usePoolData'
 import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
-import { DetailsHeaderContainer } from '~/components/Explore/stickyHeader/DetailsHeaderContainer'
-import { LpIncentivesPoolDetailsRewardsDistribution } from '~/components/LpIncentives/LpIncentivesPoolDetailsRewardsDistribution'
+import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
+import { LpIncentivesPoolDetailsRewardsDistribution } from '~/features/Liquidity/LPIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useColor } from '~/hooks/useColor'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { useDynamicMetatags } from '~/pages/metatags'
 import ChartSection from '~/pages/PoolDetails/components/ChartSection'
 import { PoolDetailsApr } from '~/pages/PoolDetails/components/PoolDetailsApr'
@@ -30,6 +29,7 @@ import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDeta
 import { PoolDetailsTableTab } from '~/pages/PoolDetails/components/PoolDetailsTable'
 import { getPoolDetailPageTitle } from '~/pages/PoolDetails/utils'
 import { ThemeProvider } from '~/theme'
+import { ExploreTab } from '~/types/explore'
 
 const PageWrapper = styled(Flex, {
   row: true,
@@ -209,7 +209,7 @@ export default function PoolDetailsPage() {
         }}
       >
         <PoolDetailsBreadcrumb poolAddress={poolAddress} token0={token0} token1={token1} loading={loading} />
-        <DetailsHeaderContainer isCompact={isCompact}>
+        <StickyCollapsibleHeader isCompact={isCompact}>
           <PoolDetailsHeader
             chainId={chainInfo.id}
             poolAddress={poolAddress}
@@ -223,7 +223,7 @@ export default function PoolDetailsPage() {
             loading={loading}
             isCompact={isCompact}
           />
-        </DetailsHeaderContainer>
+        </StickyCollapsibleHeader>
         <PageWrapper>
           <LeftColumn>
             <Flex gap="$spacing20">

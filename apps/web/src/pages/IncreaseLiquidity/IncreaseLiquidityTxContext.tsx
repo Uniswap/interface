@@ -40,11 +40,12 @@ import { validatePermit, validateTransactionRequest } from 'uniswap/src/features
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useIncreasePositionDependentAmountFallback } from '~/components/Liquidity/hooks/useDependentAmountFallback'
-import { getTokenOrZeroAddress } from '~/components/Liquidity/utils/currency'
-import { getCheckLPApprovalRequestParams } from '~/components/Liquidity/utils/getCheckLPApprovalRequestParams'
-import { hasLPFoTTransferError } from '~/components/Liquidity/utils/hasLPFoTTransferError'
-import { getProtocols } from '~/components/Liquidity/utils/protocolVersion'
+import { useIsLiquidityApprovalSimulationEnabled } from '~/features/Liquidity/hooks/preEstimatedLiquidityGasUtils'
+import { useIncreasePositionDependentAmountFallback } from '~/features/Liquidity/hooks/useDependentAmountFallback'
+import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
+import { getCheckLPApprovalRequestParams } from '~/features/Liquidity/utils/getCheckLPApprovalRequestParams'
+import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
+import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
 import { useModalInitialState } from '~/hooks/useModalInitialState'
 import { useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { PositionField } from '~/types/position'
@@ -65,7 +66,8 @@ const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | u
 export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const positionInfo = useModalInitialState(ModalName.AddLiquidity)
 
-  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep } = useIncreaseLiquidityContext()
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, preEstimatedGasFee } =
+    useIncreaseLiquidityContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
     customSlippageTolerance: s.customSlippageTolerance,
@@ -171,6 +173,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       token1PermitTransaction,
     )
 
+  const isApprovalSimEnabled = useIsLiquidityApprovalSimulationEnabled(positionInfo?.currency0Amount.currency.chainId)
+
   const token0 = currencyAmounts?.TOKEN0?.currency
   const token1 = currencyAmounts?.TOKEN1?.currency
 
@@ -198,7 +202,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       }),
       slippageTolerance: customSlippageTolerance,
       deadline: getTradeSettingsDeadline(customDeadline),
-      simulateTransaction: !approvalsNeeded,
+      simulateTransaction: !approvalsNeeded || isApprovalSimEnabled,
+      includeApprovalSimulation: approvalsNeeded && isApprovalSimEnabled,
     })
   }, [
     accountAddress,
@@ -211,6 +216,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     customSlippageTolerance,
     exactField,
     customDeadline,
+    isApprovalSimEnabled,
   ])
 
   const currency0Info = useCurrencyInfo(currencyId(positionInfo?.currency0Amount.currency))
@@ -285,10 +291,13 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     return dependentToken?.amount
   }, [increaseCalldata, calldataError, fallbackDependentAmount, exactField])
 
-  const { displayValue: calculatedGasFee } = useTransactionGasFee({ tx: increase, skip: !!actualGasFee })
+  // Use pre-estimated gas fee as fallback until real estimate is available
+  const effectiveGasFee = actualGasFee ?? preEstimatedGasFee
+
+  const { displayValue: calculatedGasFee } = useTransactionGasFee({ tx: increase, skip: !!effectiveGasFee })
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     toSupportedChainId(increaseCalldata?.increase?.chainId) ?? undefined,
-    actualGasFee || calculatedGasFee,
+    effectiveGasFee || calculatedGasFee,
   )
 
   useEffect(() => {

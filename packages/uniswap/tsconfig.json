@@ -18,6 +18,9 @@
       "path": "../gating"
     },
     {
+      "path": "../encoding"
+    },
+    {
       "path": "../config"
     },
     {

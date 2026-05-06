@@ -1,3 +1,5 @@
+import { base64ToUint8, base64urlToBase64, uint8ToBase64 } from '@universe/encoding'
+
 interface DeviceSession {
   privateKey: CryptoKey // non-extractable, never leaves browser
   policyExpiresAt: number // Unix ms; session lasts 1 minute
@@ -146,27 +148,19 @@ export async function generateDeviceKeyPair(): Promise<{
     ['sign', 'verify'],
   )
   const spki = await crypto.subtle.exportKey('spki', keyPair.publicKey)
-  const publicKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(spki)))
+  const publicKeyBase64 = uint8ToBase64(new Uint8Array(spki))
   return { privateKey: keyPair.privateKey, publicKeyBase64 }
 }
 
 export async function signWithDeviceKey(privateKey: CryptoKey, signingPayloadBase64url: string): Promise<string> {
-  const payloadBytes = Uint8Array.from(atob(base64urlToBase64(signingPayloadBase64url)), (c) => c.charCodeAt(0))
+  const payloadBytes = base64ToUint8(base64urlToBase64(signingPayloadBase64url))
   const signatureBuffer = await crypto.subtle.sign(
     { name: 'ECDSA', hash: { name: 'SHA-256' } },
     privateKey,
     payloadBytes,
   )
   // return as standard base64
-  return btoa(String.fromCharCode(...new Uint8Array(signatureBuffer)))
-}
-
-export function base64urlToBase64(s: string): string {
-  return s.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (s.length % 4)) % 4)
-}
-
-export function base64ToBase64url(s: string): string {
-  return s.replace(/\+/g, '-').replace(/\//g, '_').replace(/[=]+$/, '')
+  return uint8ToBase64(new Uint8Array(signatureBuffer))
 }
 
 // Simplified JSON canonicalization (sorted keys, no whitespace)

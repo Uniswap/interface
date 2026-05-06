@@ -3,13 +3,13 @@ import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text } from 'ui/src'
 import { shortenHash } from 'utilities/src/addresses'
-import { FeeData } from '~/components/Liquidity/Create/types'
-import { LpIncentivesAprDisplay } from '~/components/LpIncentives/LpIncentivesAprDisplay'
+import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
 import { AnimatedDoubleLogo } from '~/pages/PoolDetails/components/PoolDetailsHeader/AnimatedDoubleLogo'
 import { PoolDetailsHeaderActions } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeaderActions'
 import { PoolDetailsHeaderSkeleton } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeaderSkeleton'
 import { PoolDetailsTitle } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsTitle'
 import { CopyHelper } from '~/theme/components/CopyHelper'
+import type { FeeData } from '~/types/liquidity'
 
 interface PoolDetailsHeaderProps {
   chainId?: number

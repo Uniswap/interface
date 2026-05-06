@@ -14,6 +14,7 @@ import type {
 import type {
   MigratePositionTransactionStep,
   MigratePositionTransactionStepAsync,
+  MigratePositionTransactionStepBatched,
 } from 'uniswap/src/features/transactions/liquidity/steps/migrate'
 import type { LiquidityAction, ValidatedLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
@@ -32,9 +33,9 @@ import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import { getLiquidityEventName } from '~/components/Liquidity/analytics'
 import { popupRegistry } from '~/components/Popups/registry'
 import { PopupType } from '~/components/Popups/types'
+import { getLiquidityEventName } from '~/state/sagas/liquidity/getLiquidityEventName'
 import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
 import {
   getDisplayableError,
@@ -163,7 +164,7 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
 }
 
 interface HandlePositionBatchedStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step: IncreasePositionTransactionStepBatched
+  step: IncreasePositionTransactionStepBatched | MigratePositionTransactionStepBatched
   disableOneClickSwap?: () => void
   action: LiquidityAction
   analytics?:
@@ -246,6 +247,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
           })
           break
         case TransactionStepType.IncreasePositionTransactionBatched:
+        case TransactionStepType.MigratePositionTransactionBatched:
           yield* call(handlePositionTransactionBatchedStep, {
             address: account.address,
             step,

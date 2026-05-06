@@ -2,7 +2,6 @@ import { useAuthorizationSignature, useLoginWithEmail, usePrivy } from '@privy-i
 import { fireEvent, waitFor } from '@testing-library/react'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { attemptPinDecryption, executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { RecoverWalletModal } from '~/components/Passkey/RecoverWalletModal'
 import { useModalState } from '~/hooks/useModalState'
 import { render, screen } from '~/test-utils/render'
@@ -37,9 +36,9 @@ vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
 }))
 
 vi.mock('uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient', () => ({
-  useUnitagsApiClient: () => ({
+  unitagsApiClient: {
     fetchAddress: vi.fn().mockResolvedValue({ username: null }),
-  }),
+  },
 }))
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
@@ -71,6 +70,10 @@ vi.mock('~/components/WalletModal/useWagmiConnectorWithId', () => ({
 
 vi.mock('~/components/Web3Provider/walletConnect', () => ({
   walletTypeToAmplitudeWalletType: vi.fn(() => 'embedded'),
+}))
+
+vi.mock('~/config', () => ({
+  getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id' })),
 }))
 
 const mockOnClose = vi.fn()
@@ -140,7 +143,6 @@ async function goToEnterPinStep() {
 describe('RecoverWalletModal', () => {
   beforeEach(() => {
     vi.resetAllMocks()
-    process.env.PRIVY_APP_ID = 'test-privy-app-id'
     sessionStorage.clear()
   })
 

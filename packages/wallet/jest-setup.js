@@ -39,7 +39,6 @@ jest.mock('uniswap/src/config', () => ({
     tradingApiUrlOverride: '',
     tradingApiWebTestEnv: '',
     uniswapApiKey: 'test-uniswap-key',
-    unitagsApiUrlOverride: '',
     walletConnectProjectId: 'test-wallet-connect-id',
     walletConnectProjectIdBeta: 'test-wallet-connect-beta',
     walletConnectProjectIdDev: 'test-wallet-connect-dev',

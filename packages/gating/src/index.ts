@@ -25,6 +25,8 @@ export {
   ExternallyConnectableExtensionConfigKey,
   ForceUpgradeConfigKey,
   HomeScreenExploreTokensConfigKey,
+  LiquidityApprovalSimulationConfigKey,
+  LiquidityGasPreEstimationConfigKey,
   LPConfigKey,
   NetworkRequestsConfigKey,
   OnDeviceRecoveryConfigKey,

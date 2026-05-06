@@ -185,6 +185,7 @@ export function buildMessage(opts: {
   readmeUrl: string
   dashboards: DashboardLink[]
   includeIncidentWebhook?: boolean
+  additionalSlackChannels?: string[]
 }): string {
   // Disable webhook if globally disabled or explicitly set to false
   const includeWebhook = opts.includeIncidentWebhook !== false && !settings.disablePaging
@@ -221,9 +222,14 @@ uniapp: {{uniapp.name}}, unistk: {{unistk.name}}, unienv: {{unienv.name}}, unigr
     message += `{{#is_alert_recovery}} ${settings.incidentWebhook} {{/is_alert_recovery}}\n\n`
   }
 
-  // Only include Slack channel if not globally disabled
+  // Only include Slack channels if not globally disabled
   if (!settings.disableSlack) {
     message += `${slackChannel}\n`
+    if (opts.additionalSlackChannels) {
+      for (const channel of opts.additionalSlackChannels) {
+        message += `${channel}\n`
+      }
+    }
   }
 
   if (opts.recoveryBody) {

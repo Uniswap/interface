@@ -79,14 +79,9 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
   }, [canShowChart])
 
   return (
-    <TouchableArea
-      disabled={!canShowChart}
-      testID={TestID.PortfolioChartToggle}
-      activeOpacity={1}
-      onPress={openPortfolioChartDetails}
-    >
-      <Flex py="$spacing20" px="$spacing24">
-        {canShowChart ? (
+    <Flex py="$spacing20" px="$spacing24">
+      {canShowChart ? (
+        <TouchableArea testID={TestID.PortfolioChartToggle} activeOpacity={1} onPress={openPortfolioChartDetails}>
           <Flex row alignItems="flex-start">
             <Flex flex={1}>
               <PortfolioBalance
@@ -107,10 +102,10 @@ export function PortfolioOverview({ evmAddress, chainIds, isPnLEnabled }: Portfo
               onChartPeriodChange={noop}
             />
           </Flex>
-        ) : (
-          <PortfolioBalance evmOwner={evmAddress} />
-        )}
-      </Flex>
-    </TouchableArea>
+        </TouchableArea>
+      ) : (
+        <PortfolioBalance evmOwner={evmAddress} />
+      )}
+    </Flex>
   )
 }

@@ -1,11 +1,18 @@
 {
   "name": "@universe/chains",
   "version": "0.0.0",
+  "dependencies": {
+    "@ethersproject/address": "5.7.0",
+    "@ethersproject/hash": "5.7.0",
+    "@ethersproject/units": "5.7.0",
+    "viem": "2.30.5"
+  },
   "devDependencies": {
+    "@ethersproject/constants": "5.7.0",
     "@types/node": "22.19.17",
-    "@typescript/native-preview": "7.0.0-dev.20260311.1",
-    "depcheck": "1.4.7",
-    "typescript": "5.8.3"
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.8.3",
+    "vitest": "3.2.1"
   },
   "scripts": {
     "typecheck": "nx typecheck chains",

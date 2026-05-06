@@ -8,6 +8,11 @@ import {
   devPortalAuthMonitors,
   devPortalGatewayMonitors,
   devPortalLogMonitors,
+  swapFeApiMonitors,
+  swapFeCiMonitors,
+  swapFeOnChainMonitors,
+  swapFeSolanaMonitors,
+  swapFeUniswapXMonitors,
 } from './monitors'
 import { MonitorDefinition } from './types'
 
@@ -31,6 +36,13 @@ const teamMonitors: Record<string, { monitors: MonitorDefinition[]; category: st
     { monitors: devPortalAuthMonitors, category: 'auth' },
     { monitors: devPortalGatewayMonitors, category: 'gateway' },
     { monitors: devPortalLogMonitors, category: 'logs' },
+  ],
+  'apps-pod-swap-fe': [
+    { monitors: swapFeApiMonitors, category: 'swap-api' },
+    { monitors: swapFeUniswapXMonitors, category: 'uniswap-x' },
+    { monitors: swapFeOnChainMonitors, category: 'on-chain' },
+    { monitors: swapFeSolanaMonitors, category: 'solana' },
+    { monitors: swapFeCiMonitors, category: 'ci' },
   ],
 }
 

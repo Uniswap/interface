@@ -6,15 +6,6 @@
   "exclude": ["node_modules", ".output", "wxt.config.ts", "oxlint.config.ts"],
   "references": [
     {
-      "path": "../../packages/wallet"
-    },
-    {
-      "path": "../../packages/utilities"
-    },
-    {
-      "path": "../../packages/uniswap"
-    },
-    {
       "path": "../../packages/ui"
     },
     {
@@ -27,7 +18,22 @@
       "path": "../../packages/gating"
     },
     {
+      "path": "../../packages/encoding"
+    },
+    {
       "path": "../../packages/api"
+    },
+    {
+      "path": "../../packages/config"
+    },
+    {
+      "path": "../../packages/wallet"
+    },
+    {
+      "path": "../../packages/uniswap"
+    },
+    {
+      "path": "../../packages/utilities"
     }
   ],
   "compilerOptions": {

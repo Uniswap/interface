@@ -7,11 +7,11 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
-import { HEADER_TRANSITION } from '~/components/Explore/stickyHeader/constants'
-import { getHeaderTitleVariant } from '~/components/Explore/stickyHeader/getHeaderLogoSize'
-import { FeeData } from '~/components/Liquidity/Create/types'
-import { LiquidityPositionInfoBadges } from '~/components/Liquidity/LiquidityPositionInfoBadges'
+import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
+import { getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
+import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import type { FeeData } from '~/types/liquidity'
 
 const StyledLink = styled(Link, {
   color: '$neutral1',

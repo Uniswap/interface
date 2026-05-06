@@ -2,7 +2,7 @@ import { ProfileMetadata } from '@universe/api/src/clients/unitags/types'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useUnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useInvalidateUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useInvalidateUnitagsQueries'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -59,7 +59,6 @@ export function useEditUnitagProfileState({
   const dispatch = useDispatch()
   const account = useAccount(address)
   const signerManager = useWalletSigners()
-  const unitagsApiClient = useUnitagsApiClient()
   const invalidateUnitagsQueries = useInvalidateUnitagsQueries()
 
   const { data: retrievedUnitag, isLoading: loading } = useUnitagsAddressQuery({

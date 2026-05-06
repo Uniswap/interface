@@ -2,7 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, Tooltip } from 'ui/src'
-import { DotLine } from 'ui/src/components/icons/DotLine'
 import { zIndexes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -226,6 +225,7 @@ function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBa
     <Flex row justifyContent="space-evenly" flex={1} position="relative" width="auto">
       <Flex
         alignItems="center"
+        justifyContent="center"
         position="absolute"
         width="100%"
         height="100%"
@@ -234,7 +234,7 @@ function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBa
         zIndex={1}
         opacity={0.5}
       >
-        <DotLine minWidth="100%" minHeight={26} />
+        <DottedLine />
       </Flex>
 
       {showBadge && (
@@ -249,6 +249,20 @@ function Route({ entry, showBadge = true }: { entry: RoutingDiagramEntry; showBa
           <HopBadge key={index} hop={hop} />
         ))}
       </Flex>
+    </Flex>
+  )
+}
+
+// Flex circles instead of an SVG strokeDasharray — the SVG path doesn't
+// size reliably under react-native-svg.
+const DOTS = Array.from({ length: 40 })
+
+function DottedLine(): JSX.Element {
+  return (
+    <Flex row width="100%" alignItems="center" justifyContent="space-between">
+      {DOTS.map((_, i) => (
+        <Flex key={i} width={2} height={2} borderRadius="$roundedFull" backgroundColor="$neutral2" />
+      ))}
     </Flex>
   )
 }

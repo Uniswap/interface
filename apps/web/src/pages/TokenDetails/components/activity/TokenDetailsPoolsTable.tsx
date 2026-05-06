@@ -7,9 +7,9 @@ import { usePoolsFromTokenAddress } from '~/appGraphql/data/pools/usePoolsFromTo
 import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
 import { OrderDirection } from '~/appGraphql/data/util'
 import { useUpdateManualOutage } from '~/hooks/useUpdateManualOutage'
-import { ExploreTablesFilterStoreContextProvider } from '~/pages/Explore/exploreTablesFilterStore'
 import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { PoolTableStoreContextProvider, usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
+import { ExploreTablesFilterStoreContextProvider } from '~/state/explore/exploreTablesFilterStore'
 
 const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl, PoolSortFields.RewardApr]
 

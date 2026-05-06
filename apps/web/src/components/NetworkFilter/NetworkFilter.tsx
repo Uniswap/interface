@@ -21,8 +21,8 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
+import { ExploreTab } from '~/types/explore'
 
 const NetworkLabel = styled(Flex, {
   flexDirection: 'row',

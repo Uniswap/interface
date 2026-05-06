@@ -19,6 +19,7 @@ import { Verified } from 'ui/src/components/icons/Verified'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -34,11 +35,6 @@ export type BridgedAssetModalProps = {
   currencyInfo1?: CurrencyInfo
   onContinue?: () => void
   modalName?: ModalNameType
-}
-
-export type BaseModalProps = {
-  isOpen: boolean
-  onClose: () => void
 }
 
 export const BridgedAssetModalAtom = atom<BridgedAssetModalProps | undefined>(undefined)

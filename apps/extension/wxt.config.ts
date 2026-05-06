@@ -35,7 +35,7 @@ const publicAssetsVariant = getPublicAssetsVariant()
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.72.0'
+const BASE_VERSION = '1.73.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -535,9 +535,11 @@ export default defineConfig({
   // See the README for more information.
   // https://wxt.dev/guide/essentials/config/browser-startup.html
   webExt: {
+    disabled: process.env.WXT_NO_OPEN_BROWSER === 'true',
+
     startUrls: ['https://app.uniswap.org'],
 
-    chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
+    chromiumArgs: [`--user-data-dir=${process.env.WXT_CHROME_USER_DATA_DIR ?? './.wxt/chrome-data'}`],
 
     // Optional: Open devtools in the browser automatically
     // openDevtools: true,

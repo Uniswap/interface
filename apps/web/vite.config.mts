@@ -14,7 +14,7 @@ import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { createEntryGatewayProxy } from './vite/entry-gateway-proxy'
+import { createEntryGatewayProxies } from './vite/entry-gateway-proxy'
 import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
@@ -514,7 +514,7 @@ export default defineConfig(({ mode }) => {
           secure: true,
           rewrite: (path) => path.replace(/^\/config/, '/v1/statsig-proxy'),
         },
-        ...(ENABLE_PROXY ? { '/entry-gateway': createEntryGatewayProxy({ getLogger }) } : {}),
+        ...(ENABLE_PROXY ? createEntryGatewayProxies({ getLogger }) : {}),
       },
     },
 

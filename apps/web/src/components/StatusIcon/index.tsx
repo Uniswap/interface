@@ -112,7 +112,7 @@ export default function StatusIcon({
 
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <AccountIcon address={addressToDisplay} size={size} transition={transition} />
+      <AccountIcon address={addressToDisplay} size={size} transition={transition} centered />
       {showConnectedIndicator ? <MiniConnectedIndicator /> : showMiniIcons && <MiniWalletIcon platform={platform} />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>

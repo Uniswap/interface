@@ -5,7 +5,6 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,7 +14,7 @@
     "isolatedModules": true,
     "lib": ["es2022", "dom"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitThis": true,
@@ -58,7 +57,9 @@
       "@universe/react-query/*": ["./packages/react-query/*"],
       "@universe/analytics/*": ["./packages/analytics/*"],
       "@universe/trpc/*": ["./packages/trpc/*"],
-      "@universe/chains/*": ["./packages/chains/*"]
+      "@universe/chains/*": ["./packages/chains/*"],
+      "@universe/encoding/*": ["./packages/encoding/*"],
+      "@universe/environment/*": ["./packages/environment/*"]
     }
   }
 }

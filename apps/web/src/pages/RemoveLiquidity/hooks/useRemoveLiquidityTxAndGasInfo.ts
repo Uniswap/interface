@@ -15,11 +15,11 @@ import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/fe
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import type { PositionInfo } from '~/components/Liquidity/types'
-import { getTokenOrZeroAddress } from '~/components/Liquidity/utils/currency'
-import { getProtocols } from '~/components/Liquidity/utils/protocolVersion'
+import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
+import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
 import { useRemoveLiquidityModalContext } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import type { RemoveLiquidityTxInfo } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
+import type { PositionInfo } from '~/types/liquidity'
 
 function buildCheckApprovalLPRequest({
   positionInfo,

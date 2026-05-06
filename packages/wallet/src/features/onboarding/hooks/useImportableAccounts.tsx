@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import { useQuery } from '@tanstack/react-query'
 import { GraphQLApi } from '@universe/api'
 import { useCallback, useMemo, useState } from 'react'
-import { useUnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -68,7 +68,6 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 } {
   const [refetchCount, setRefetchCount] = useState(0)
   const apolloClient = useApolloClient()
-  const unitagsApiClient = useUnitagsApiClient()
 
   const addressesArray = useMemo(() => (addresses ? addresses : []), [addresses])
 

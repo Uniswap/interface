@@ -18,10 +18,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { useOpenLimitOrders } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import {
-  useOpenOffchainActivityModal,
-  useOrderAmounts,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
+import { useOpenOffchainActivityModal, useOrderAmounts } from '~/components/modals/OffchainActivityModal'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell } from '~/components/Table/styled'

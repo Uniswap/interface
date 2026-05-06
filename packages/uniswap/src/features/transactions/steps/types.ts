@@ -49,6 +49,7 @@ export enum TransactionStepType {
   DecreasePositionTransaction = 'DecreasePositionTransaction',
   MigratePositionTransaction = 'MigratePositionTransaction',
   MigratePositionTransactionAsync = 'MigratePositionTransactionAsync',
+  MigratePositionTransactionBatched = 'MigratePositionTransactionBatched',
   CollectFeesTransactionStep = 'CollectFeesTransaction',
   CollectLpIncentiveRewardsTransactionStep = 'CollectLpIncentiveRewardsTransactionStep',
   ToucanBidTransactionStep = 'ToucanBidTransactionStep',

@@ -55,6 +55,7 @@ import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
 import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
 import { WebUniswapProvider } from '~/components/Web3Provider/WebUniswapContext'
+import { getConfig } from '~/config'
 import { AccountsStoreDevTool } from '~/features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
@@ -201,7 +202,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
       userID: getDeviceId(),
       customIDs: { address: account.address ?? '' },
       custom: {
-        appVersion: process.env.REACT_APP_VERSION_TAG ?? 'unknown',
+        appVersion: getConfig().versionTag || 'unknown',
       },
     }),
     [account.address],
@@ -231,7 +232,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-const PRIVY_APP_ID = process.env.PRIVY_APP_ID
+const PRIVY_APP_ID = getConfig().privyAppId
 
 function MaybePrivyProvider({ children }: { children: ReactNode }) {
   if (!PRIVY_APP_ID) {

@@ -103,6 +103,8 @@
     "https://ipv6-check-perf.radar.cloudflare.com/",
     "https://performance.radar.cloudflare.com/",
     "https://invalid.rpki.cloudflare.com/",
+    "https://dnssec-oracle.ens.domains/",
+    "https://ccip-v3.ens.xyz",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",

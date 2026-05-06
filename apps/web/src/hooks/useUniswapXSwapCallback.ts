@@ -20,6 +20,7 @@ import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useTotalBalancesUsdForAnalytics } from '~/appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
+import { getConfig } from '~/config'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
@@ -58,10 +59,7 @@ function isV2DutchAuctionOrderSuccess(response: any): response is V2DutchAuction
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
 
-const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
-if (UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
-}
+const UNISWAP_GATEWAY_DNS_URL = getConfig().uniswapGatewayDns
 
 // getUpdatedNonce queries the UniswapX service for the most up-to-date nonce for a user.
 // The `nonce` exists as part of the Swap quote response already, but if a user submits back-to-back

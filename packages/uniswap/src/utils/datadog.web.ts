@@ -16,7 +16,7 @@ import { config } from 'uniswap/src/config'
 import { TradingApiHeaders } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isBetaEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtensionApp, isWebApp } from 'utilities/src/platform'
@@ -119,8 +119,10 @@ export async function initializeDatadog(appName: string): Promise<void> {
     trackingConsent: undefined,
   }
 
+  // Dev + beta builds (extension and web) sample at 100% so internal testers produce
+  // full-fidelity RUM + logs for debugging. Prod keeps the configurable rate (default 10%).
   // oxlint-disable-next-line typescript/no-unnecessary-condition
-  const shouldUseFullSampleRate = localDevDatadogEnabled || (isWebApp && isBetaEnv())
+  const shouldUseFullSampleRate = localDevDatadogEnabled || isBetaEnv() || isDevEnv()
 
   datadogRum.init({
     ...sharedDatadogConfig,
@@ -169,7 +171,7 @@ export async function initializeDatadog(appName: string): Promise<void> {
     datadogRum.addFeatureFlagEvaluation(
       // Datadog has a limited set of accepted symbols in feature flags
       // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
-      flagKey.replaceAll('-', '_'),
+      flagKey.replaceAll('-', '_').replaceAll('.', '_'),
       getStatsigClient().checkGate(flagKey),
     )
   }
@@ -178,7 +180,7 @@ export async function initializeDatadog(appName: string): Promise<void> {
     datadogRum.addFeatureFlagEvaluation(
       // Datadog has a limited set of accepted symbols in feature flags
       // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
-      `experiment_${experiment.replaceAll('-', '_')}`,
+      `experiment_${experiment.replaceAll('-', '_').replaceAll('.', '_')}`,
       getStatsigClient().getExperiment(experiment).groupName,
     )
   }

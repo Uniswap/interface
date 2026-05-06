@@ -41,7 +41,6 @@ export enum ReactQueryCacheKey {
   LocalActivities = 'localActivities',
   MismatchAccountBulk = 'MismatchAccountBulk',
   MnemonicUnlocked = 'MnemonicUnlocked',
-  DelegatedWalletNativeAllowanceABI = 'DelegatedWalletNativeAllowanceABI',
   Notifications = 'Notifications',
   NotificationService = 'NotificationService',
   OnboardingRedirect = 'OnboardingRedirect',
@@ -73,21 +72,3 @@ export enum ReactQueryCacheKey {
   WalletGetCapabilities = 'WalletGetCapabilities',
   WrapTransactionRequest = 'WrapTransactionRequest',
 }
-
-/**
- * These queries will not be persisted to disk.
- *
- * Some reasons to not persist a query:
- * - The query response includes a non-serializable object.
- * - The query data includes sensitive information.
- *
- * Note that any query with `gcTime: 0` will not be persisted to disk even if it's not in this list.
- */
-export const DISABLE_CACHE_PERSISTENCE_TO_DISK: ReactQueryCacheKey[] = [
-  // This query returns a non-serializable react component (the biometric icon).
-  ReactQueryCacheKey.ExtensionBuiltInBiometricCapabilities,
-  // This ensures when a user switches mobile devices that the unique id will be reset
-  ReactQueryCacheKey.TokenPrice,
-  ReactQueryCacheKey.UniqueId,
-  ReactQueryCacheKey.Session,
-] as const

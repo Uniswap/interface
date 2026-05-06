@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 type DataApiOutageBannerProps = {
   onPress?: () => void
@@ -16,7 +16,7 @@ export function DataApiOutageBanner({ title, onPress }: DataApiOutageBannerProps
       row
       alignItems="center"
       backgroundColor="$surface2"
-      borderRadius={isWebPlatform ? '$rounded12' : undefined}
+      borderRadius={isWebApp ? '$rounded12' : undefined}
       gap="$spacing12"
       px="$spacing16"
       py="$spacing12"

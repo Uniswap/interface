@@ -25,9 +25,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
 import { PoolSortFields, TablePool } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, OrderDirection, unwrapToken } from '~/appGraphql/data/util'
-import { FeeData } from '~/components/Liquidity/Create/types'
-import LPIncentiveFeeStatTooltip from '~/components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
-import { isDynamicFeeTier } from '~/components/Liquidity/utils/feeTiers'
 import CurrencyLogo from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { Table } from '~/components/Table'
@@ -37,17 +34,20 @@ import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import LPIncentiveFeeStatTooltip from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
+import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 import { getChainUrlParam, useChainIdFromUrlParam } from '~/features/params/chainParams'
 import useSimplePagination from '~/hooks/useSimplePagination'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
 import {
   PoolTableStoreContextProvider,
   usePoolTableStore,
   usePoolTableStoreActions,
 } from '~/pages/Explore/tables/Pools/poolTableStore'
 import { TABLE_PAGE_SIZE } from '~/state/explore'
+import { useExploreTablesFilterStore } from '~/state/explore/exploreTablesFilterStore'
 import { useTopPools } from '~/state/explore/topPools/useTopPools'
 import { PoolStat } from '~/state/explore/types'
+import type { FeeData } from '~/types/liquidity'
 
 const TableWrapper = styled(Flex, {
   m: '0 auto',

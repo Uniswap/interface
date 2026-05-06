@@ -1,11 +1,3 @@
-beforeAll(() => {
-  vi.stubEnv('PRIVY_APP_ID', 'test-privy-app-id')
-})
-
-afterAll(() => {
-  vi.unstubAllEnvs()
-})
-
 import { fireEvent, waitFor } from '@testing-library/react'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
@@ -14,6 +6,10 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import PasskeyMenu from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
+
+vi.mock('~/config', () => ({
+  getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id' })),
+}))
 
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   listAuthenticators: vi.fn(),

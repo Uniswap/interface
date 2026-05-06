@@ -5,14 +5,13 @@
     "alwaysStrict": true,
     "composite": true,
     "declarationMap": false,
-    "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -65,7 +64,13 @@
       "path": "../../packages/gating"
     },
     {
+      "path": "../../packages/encoding"
+    },
+    {
       "path": "../../packages/config"
+    },
+    {
+      "path": "../../packages/chains"
     },
     {
       "path": "../../packages/ui"

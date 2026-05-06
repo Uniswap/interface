@@ -294,6 +294,7 @@ export const TestID = {
   TokenTableRowContextMenuButton: 'token-table-row-context-menu-button',
   TokenTableRowPrefix: 'token-table-row-',
   TokenWarningAccept: 'token-warning-accept',
+  TradePriceToggle: 'trade-price-toggle',
   TransactionDetailsModal: 'transaction-details-modal',
   TransactionSettings: 'transaction-settings',
   UKDisclaimer: 'uk-disclaimer',

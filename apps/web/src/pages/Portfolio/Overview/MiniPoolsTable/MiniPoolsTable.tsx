@@ -8,14 +8,14 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { PositionInfo } from '~/components/Liquidity/types'
-import { getPositionUrl } from '~/components/Liquidity/utils/getPositionUrl'
 import { Table } from '~/components/Table'
+import { getPositionUrl } from '~/features/Liquidity/utils/getPositionUrl'
 import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
 import { useMiniPoolsTableColumns } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableColumns'
 import { useMiniPoolsTableData } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableData'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
+import { PositionInfo } from '~/types/liquidity'
 
 const POOLS_TABLE_MAX_HEIGHT = 800
 const POOLS_TABLE_MAX_WIDTH = 1200

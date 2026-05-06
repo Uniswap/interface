@@ -2,7 +2,7 @@ import { type Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import type { FeeData } from '~/components/Liquidity/Create/types'
+import type { FeeData } from '~/types/liquidity'
 
 /**
  * Placeholder address for a token that is being created and does not have an address yet.

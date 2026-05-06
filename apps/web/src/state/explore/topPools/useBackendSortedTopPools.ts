@@ -14,8 +14,8 @@ import {
   PoolTableSortState,
 } from '~/appGraphql/data/pools/useTopPools'
 import { OrderDirection } from '~/appGraphql/data/util'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
 import { EXPLORE_API_PAGE_SIZE } from '~/state/explore/constants'
+import { useExploreTablesFilterStore } from '~/state/explore/exploreTablesFilterStore'
 import { useInfiniteLoadMore } from '~/state/explore/hooks/useInfiniteLoadMore'
 import { PoolStat } from '~/state/explore/types'
 

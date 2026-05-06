@@ -5,8 +5,8 @@ import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/features/params/chainParams'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { useExploreParams } from '~/pages/Explore/redirects'
+import { ExploreTab } from '~/types/explore'
 
 function buildExploreUrl(tabName: ExploreTab | undefined, chainId: UniverseChainId | undefined): string {
   const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''

@@ -14,7 +14,6 @@ import { TransactionStatus } from 'uniswap/src/features/transactions/types/trans
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { noop } from 'utilities/src/react/noop'
-import { useOpenOffchainActivityModal } from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import {
   getFORTransactionToActivityQueryOptions,
   getTransactionToActivityQueryOptions,
@@ -23,9 +22,10 @@ import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity
 import { PendingPortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PendingPortfolioLogo'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
+import { useOpenOffchainActivityModal } from '~/components/modals/OffchainActivityModal'
 import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
 import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'
-import { useOpenTransactionDetailsModal } from '~/components/TopLevelModals/TransactionDetailsModalDispatcher'
+import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'
 import { usePlanTransactions, useTransaction, useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import { isPendingTx } from '~/state/transactions/utils'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'

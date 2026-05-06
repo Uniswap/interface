@@ -9,7 +9,6 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { useOpenTransactionDetailsModal } from '~/components/TopLevelModals/TransactionDetailsModalDispatcher'
 import { ActivityFilters } from '~/pages/Portfolio/Activity/ActivityFilters'
 import { ActivityTable } from '~/pages/Portfolio/Activity/ActivityTable/ActivityTable'
 import { ActivityFilterType, TimePeriod } from '~/pages/Portfolio/Activity/Filters/utils'
@@ -19,6 +18,7 @@ import { PaginationSkeletonRow } from '~/pages/Portfolio/Activity/PaginationSkel
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { usePortfolioOutageContext } from '~/pages/Portfolio/PortfolioOutageContext'
+import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'
 
 export default function PortfolioActivity() {
   const trace = useTrace()

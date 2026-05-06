@@ -2,10 +2,11 @@ import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { DEFAULT_FEE_DATA, DYNAMIC_FEE_DATA } from '~/components/Liquidity/Create/types'
+import { DEFAULT_FEE_DATA } from '~/features/Liquidity/Create/types'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { stubTradingApiEndpoint } from '~/playwright/fixtures/tradingApi'
 import { createTestUrlBuilder } from '~/playwright/fixtures/urls'
+import { DYNAMIC_FEE_DATA } from '~/types/liquidity'
 
 const test = getTest()
 

@@ -38,6 +38,7 @@ test.describe(
       await page.getByTestId(TestID.Web3StatusConnected).waitFor()
 
       await page.getByTestId(TestID.ChooseInputToken).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('for-currency-list-wrapper').getByText('Ethereum').click()
     })
 
@@ -56,6 +57,7 @@ test.describe(
 
     test('change input token', async ({ page }) => {
       await page.getByTestId(TestID.ChooseInputToken).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('for-currency-list-wrapper').getByText('DAI').nth(1).click()
       await page.getByTestId(TestID.BuyFormAmountInput).fill('123')
       await page.getByRole('button', { name: 'Continue' }).click()

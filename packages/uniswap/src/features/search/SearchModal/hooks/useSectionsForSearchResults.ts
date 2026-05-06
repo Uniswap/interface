@@ -167,7 +167,7 @@ export function useSectionsForSearchResults({
       case SearchTab.All:
         return {
           data: !searchTokensLoading ? allSections : [],
-          loading: searchTokensLoading,
+          loading: searchTokensLoading || walletSearchResultsLoading,
           error: (!tokenOptions.length && searchTokensError) || undefined,
           refetch: refetchAll,
         }

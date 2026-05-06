@@ -5,9 +5,9 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
-import { PositionInfo } from '~/components/Liquidity/types'
-import { useLpIncentivesFormattedEarnings } from '~/hooks/useLpIncentivesFormattedEarnings'
+import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
+import { PositionInfo } from '~/types/liquidity'
 
 // Third column cell component - Fees in USD
 export const PoolFeesCell = memo(function PoolFeesCell({ position }: { position: PositionInfo }) {

@@ -58,4 +58,6 @@ export type CurrencyInputPanelProps = {
   /** Allow content to overflow the panel container (e.g., for tooltips in panelAccessory) */
   allowOverflow?: boolean
   balanceVariant?: TextProps['variant']
+  /** Gas fee in wei from backend simulation, used for accurate max amount in liquidity flows. */
+  actualGasFee?: string
 }

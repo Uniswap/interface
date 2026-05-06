@@ -1,5 +1,6 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Contract } from '@ethersproject/contracts'
+import { namehash } from '~/chains/utilities'
 import { safeNamehash } from '~/utils/safeNamehash'
 
 const REGISTRAR_ABI = [
@@ -61,7 +62,7 @@ function resolverContract(resolverAddress: string, provider: Provider): Contract
  */
 export default async function resolveENSContentHash(ensName: string, provider: Provider): Promise<string> {
   const ensRegistrarContract = new Contract(REGISTRAR_ADDRESS, REGISTRAR_ABI, provider)
-  const hash = safeNamehash(ensName)
+  const hash = safeNamehash(namehash, ensName)
   const resolverAddress = await ensRegistrarContract.resolver(hash)
   // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
   return resolverContract(resolverAddress, provider).contenthash(hash)

@@ -90,7 +90,10 @@ export type {
   HashcashWorkerChannel,
   HashcashWorkerChannelFactory,
 } from '@universe/sessions/src/challenge-solvers/hashcash/worker/types'
-export { createHashcashWorkerChannel } from '@universe/sessions/src/challenge-solvers/hashcash/worker/createHashcashWorkerChannel'
+export {
+  createHashcashWorkerChannel,
+  HashcashWorkerBootError,
+} from '@universe/sessions/src/challenge-solvers/hashcash/worker/createHashcashWorkerChannel'
 // Note: Web Worker factory is intentionally NOT exported from here — consumers must
 // create the Worker instance themselves via a `new Worker(new URL(..., import.meta.url))`
 // expression in their own source tree. Vite's worker URL transformation only fires when

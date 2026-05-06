@@ -2,7 +2,7 @@ import type { PlainMessage } from '@bufbuild/protobuf'
 import { Amount, PoolStats, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
-import { FeeData as CreatePositionFeeData } from '~/components/Liquidity/Create/types'
+import type { FeeData as CreatePositionFeeData } from '~/types/liquidity'
 
 type PricePoint = { timestamp: number; value: number }
 

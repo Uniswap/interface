@@ -6,7 +6,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { OrderDirection } from '~/appGraphql/data/util'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { EllipsisText } from '~/components/Table/shared/TableText'
-import { getAuctionMetadata } from '~/components/Toucan/Config/config'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
 import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 
 /**

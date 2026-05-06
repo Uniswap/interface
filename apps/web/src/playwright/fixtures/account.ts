@@ -1,5 +1,5 @@
 import { getPortfolio } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UnitagService } from '@universe/api'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { expect, type Page } from '~/playwright/fixtures'
@@ -7,10 +7,6 @@ import { Mocks } from '~/playwright/mocks/mocks'
 
 /**
  * Mocks the Unitag API response for a specific address
- * @param page The Playwright page
- * @param address The wallet address to mock unitag data for
-
- * @param unitag The unitag data to return (null for no unitag)
  */
 export async function mockUnitagResponse({
   page,
@@ -21,18 +17,29 @@ export async function mockUnitagResponse({
   address: string
   unitag: string | null
 }) {
-  await page.route(
-    // oxlint-disable-next-line security/detect-non-literal-regexp -- test fixture using known-safe URL constant
-    new RegExp(`${uniswapUrls.unitagsApiUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/address\\?address=${address}`),
-    async (route) => {
-      await route.fulfill({
-        body: JSON.stringify({
-          username: unitag,
-          address,
-        }),
-      })
-    },
-  )
+  await page.route(`**/${UnitagService.typeName}/${UnitagService.methods.getAddress.name}`, async (route) => {
+    const postData = route.request().postData()
+    try {
+      const requestedAddress = postData ? (JSON.parse(postData) as { address?: string }).address : undefined
+
+      // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
+      if (!requestedAddress || requestedAddress.toLowerCase() !== address.toLowerCase()) {
+        await route.continue()
+        return
+      }
+    } catch {
+      await route.continue()
+      return
+    }
+
+    await route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...(unitag ? { username: unitag } : {}),
+        address,
+      }),
+    })
+  })
 }
 
 /**

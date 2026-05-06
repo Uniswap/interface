@@ -1,38 +1,9 @@
-import { TFunction } from 'i18next'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { UNITAG_VALID_REGEX } from 'uniswap/src/features/unitags/constants'
+import { getUnitagFormatError } from 'uniswap/src/features/unitags/getUnitagFormatError'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-
-const MIN_UNITAG_LENGTH = 3
-const MAX_UNITAG_LENGTH = 20
-
-// Helper function to enforce unitag length and alphanumeric characters
-export const getUnitagFormatError = (unitag: string, t: TFunction): string | undefined => {
-  if (unitag.length < MIN_UNITAG_LENGTH) {
-    return t('unitags.username.error.min', {
-      number: MIN_UNITAG_LENGTH,
-    })
-  }
-
-  if (unitag.length > MAX_UNITAG_LENGTH) {
-    return t('unitags.username.error.max', {
-      number: MAX_UNITAG_LENGTH,
-    })
-  }
-
-  if (unitag !== unitag.toLowerCase()) {
-    return t('unitags.username.error.uppercase')
-  }
-
-  if (!UNITAG_VALID_REGEX.test(unitag)) {
-    return t('unitags.username.error.chars')
-  }
-
-  return undefined
-}
 
 export const useCanClaimUnitagName = (unitag: string | undefined): { error: string | undefined; loading: boolean } => {
   const { t } = useTranslation()

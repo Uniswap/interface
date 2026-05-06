@@ -27,6 +27,7 @@ import {
 import { useDigitInput } from '~/components/Passkey/BackupLoginComponents'
 import { OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
+import { getConfig } from '~/config'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
@@ -187,7 +188,7 @@ export function AddBackupLoginModal() {
         pin: firstPinRef.current,
         email: effectiveEmail,
         accessToken,
-        privyAppId: process.env.PRIVY_APP_ID ?? '',
+        privyAppId: getConfig().privyAppId ?? '',
       })
       // Guard against stale result if user navigated away during async work
       if (encryptionIdRef.current !== thisId) {

@@ -24,18 +24,18 @@ import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/f
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { LimitPriceInputPanel } from '~/components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
-import {
-  LimitPriceErrorType,
-  useCurrentPriceAdjustment,
-} from '~/components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import SwapCurrencyInputPanel from '~/components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import DelegationMismatchModal from '~/components/delegation/DelegationMismatchModal'
 import Column from '~/components/deprecated/Column'
 import { SwitchNetworkAction } from '~/components/Popups/types'
-import { ArrowContainer, ArrowWrapper, SwapSection } from '~/components/swap/styled'
 import { ZERO_PERCENT } from '~/constants/misc'
 import { useConnectionStatus } from '~/features/accounts/store/hooks'
+import { LimitPriceInputPanel } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
+import {
+  LimitPriceErrorType,
+  useCurrentPriceAdjustment,
+} from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
+import SwapCurrencyInputPanel from '~/features/Swap/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { ArrowContainer, ArrowWrapper, SwapSection } from '~/features/Swap/styled'
 import { useAccount } from '~/hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from '~/hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from '~/hooks/useSwapCallback'

@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import { useEffect } from 'react'
 import { DevSettings } from 'react-native'
-import { INCLUDE_PROTOTYPE_FEATURES, IS_E2E_TEST } from 'react-native-dotenv'
 import { useSelector } from 'react-redux'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
@@ -129,15 +128,14 @@ import { OnboardingContextProvider } from 'wallet/src/features/onboarding/Onboar
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 /**
- * Note that we need to explicitly check for the imports from 'react-native-dotenv'
- * in for the bundler to know to exclude this code from release builds.
+ * Uses process.env directly so the bundler can statically evaluate these
+ * to false in release builds and tree-shake prototype/e2e code paths.
+ * getConfig() is a function call that the bundler can't evaluate at build time.
  */
 const enabledInEnvOrDev =
-  INCLUDE_PROTOTYPE_FEATURES === 'true' ||
-  process.env.INCLUDE_PROTOTYPE_FEATURES === 'true' ||
-  IS_E2E_TEST === 'true' ||
-  process.env.IS_E2E_TEST === 'true' ||
-  __DEV__
+  // @ts-expect-error - process.env is not typed with these
+  // oxlint-disable-next-line eslint-js/no-restricted-syntax
+  process.env.INCLUDE_PROTOTYPE_FEATURES === 'true' || process.env.IS_E2E_TEST === 'true' || __DEV__
 
 const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()

@@ -10,13 +10,13 @@ import { XTwitter } from 'ui/src/components/icons/XTwitter'
 import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplorerIcon'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { deriveFromSections } from '~/components/Explore/stickyHeader/HeaderActions/deriveHeaderActions'
+import { deriveFromSections } from '~/components/StickyCollapsibleHeader/HeaderActions/deriveHeaderActions'
 import {
   type HeaderAction,
   type HeaderActionDropdownItem,
   type HeaderActionSection,
-} from '~/components/Explore/stickyHeader/HeaderActions/types'
-import { useShareAction } from '~/components/Explore/stickyHeader/HeaderActions/useShareAction'
+} from '~/components/StickyCollapsibleHeader/HeaderActions/types'
+import { useShareAction } from '~/components/StickyCollapsibleHeader/HeaderActions/useShareAction'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 
 type TokenDetailsHeaderActionsParams = {

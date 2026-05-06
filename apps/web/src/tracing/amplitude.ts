@@ -6,6 +6,7 @@ import { logger } from 'utilities/src/logger/logger'
 // oxlint-disable-next-line no-restricted-imports -- Need direct analytics import for Amplitude initialization
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+import { getConfig } from '~/config'
 import store from '~/state'
 import { setOriginCountry } from '~/state/user/reducer'
 
@@ -28,7 +29,7 @@ export function setupAmplitude() {
         debugBridge,
       }),
       allowed: allowAnalytics,
-      initHash: process.env.REACT_APP_GIT_COMMIT_HASH,
+      initHash: getConfig().gitCommitHash,
       debugBridge,
     })
   })

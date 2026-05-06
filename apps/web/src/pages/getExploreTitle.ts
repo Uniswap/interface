@@ -2,7 +2,7 @@ import { capitalize } from 'tsafe/capitalize'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { isChainUrlParam } from '~/features/params/chainParams'
-import { ExploreTab } from '~/pages/Explore/constants'
+import { ExploreTab } from '~/types/explore'
 
 export const getExploreTitle = (path?: string) => {
   const parts = path?.split('/').filter((part) => part !== '')

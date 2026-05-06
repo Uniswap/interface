@@ -142,11 +142,17 @@
       "cache": true
     },
     "check:deps:usage": {
-      "command": "depcheck",
+      "command": "knip-bun --include dependencies,devDependencies --no-progress --no-config-hints --workspace {projectRoot}",
       "options": {
-        "cwd": "{projectRoot}"
+        "cwd": "{workspaceRoot}"
       },
-      "inputs": ["sourceFiles", "{projectRoot}/package.json", "{projectRoot}/.depcheckrc"],
+      "inputs": [
+        "sourceFiles",
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/knip.json",
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/bun.lock"
+      ],
       "cache": true
     },
     "test": {

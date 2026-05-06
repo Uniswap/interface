@@ -72,9 +72,17 @@ test.describe(
       test('disconnected wallet settings should not be accessible', async ({ page }) => {
         // Go back to the main menu (beforeEach opened the settings submenu)
         await getVisibleDropdownElementByTestId(page, 'wallet-back').click()
-        // Disconnect the wallet
-        await getVisibleDropdownElementByTestId(page, TestID.WalletDisconnect).hover()
-        await page.getByTestId(TestID.WalletDisconnectInModal).click()
+        // Disconnect the wallet. When the Solana flag is enabled, `WalletDisconnect` is a tooltip
+        // trigger with no onPress and the actual disconnect row is `WalletDisconnectInModal`
+        // inside the tooltip. When disabled, clicking `WalletDisconnect` fires onDisconnect directly.
+        const disconnectButton = getVisibleDropdownElementByTestId(page, TestID.WalletDisconnect)
+        await disconnectButton.hover()
+        await disconnectButton.click() // triggers tooltip in the Solana-enabled case, disconnects otherwise
+        const disconnectInModal = page.getByTestId(TestID.WalletDisconnectInModal).first()
+        await Promise.race([
+          disconnectInModal.waitFor({ state: 'visible' }).then(() => disconnectInModal.click()),
+          page.getByTestId(TestID.NavConnectWalletButton).waitFor({ state: 'visible' }),
+        ])
         // Open the nav menu and verify settings are not visible
         await page.getByTestId(TestID.NavConnectWalletButton).click()
         await expect(getVisibleDropdownElementByTestId(page, TestID.WalletSettings)).not.toBeVisible()

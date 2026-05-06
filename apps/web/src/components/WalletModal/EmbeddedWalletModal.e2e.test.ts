@@ -11,9 +11,9 @@ const NOT_CONNECTED = 'eagerlyConnect=false'
 test.describe(
   'Embedded Wallet — connections panel',
   {
-    tag: '@team:apps-portfolio',
+    tag: '@team:apps-infra',
     annotation: [
-      { type: 'DD_TAGS[team]', description: 'apps-portfolio' },
+      { type: 'DD_TAGS[team]', description: 'apps-infra' },
       { type: 'DD_TAGS[test.type]', description: 'web-e2e' },
     ],
   },

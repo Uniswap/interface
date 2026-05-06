@@ -8,10 +8,9 @@ import type {
   RecoveryMethod,
   RegistrationOptions,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
+import { base64ToBase64url, base64urlToBase64 } from '@universe/encoding'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import {
-  base64ToBase64url,
-  base64urlToBase64,
   canonicalizeJSON,
   ensureNeckKeyPair,
   generateDeviceKeyPair,

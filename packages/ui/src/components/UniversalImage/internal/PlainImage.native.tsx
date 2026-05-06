@@ -49,14 +49,17 @@ const RESIZE_MODE_TO_CONTENT_FIT: Record<UniversalImageResizeMode, ImageContentF
 }
 
 export function PlainImageExpo({
+  autoplay,
   cacheInMemory,
   fallback,
   onError,
   onLoad,
+  priority,
   resizeMode,
   size,
   style,
   testID,
+  transitionMs,
   uri,
 }: PlainImageExpoProps): JSX.Element {
   const [hasError, setHasError] = useState(false)
@@ -69,8 +72,12 @@ export function PlainImageExpo({
 
   return (
     <ExpoImage
+      // recyclingKey lets expo-image dispose the previous bitmap if this component is reused
+      recyclingKey={uri}
+      autoplay={autoplay}
       cachePolicy={cacheInMemory ? 'memory-disk' : 'disk'}
       contentFit={contentFit}
+      priority={priority}
       source={{ uri }}
       style={{
         aspectRatio: size.aspectRatio,
@@ -79,7 +86,7 @@ export function PlainImageExpo({
         ...style,
       }}
       testID={testID}
-      transition={200}
+      transition={transitionMs ?? 200}
       onError={() => {
         setHasError(true)
         onError?.()

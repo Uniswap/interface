@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { GraphQLApi, TradingApi } from '@universe/api'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
-import { parseUnits } from 'ethers/lib/utils'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -9,6 +8,7 @@ import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
+import { parseUnits } from '~/chains/utilities'
 import { Activity, ActivityMap } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 
 interface ActivityGroup {

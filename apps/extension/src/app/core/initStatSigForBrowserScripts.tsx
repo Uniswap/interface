@@ -1,5 +1,5 @@
 import { StatsigClient, StatsigCustomAppValue, StatsigUser } from '@universe/gating'
-import { config } from 'uniswap/src/config'
+import { getConfig } from 'src/app/config'
 import { statsigBaseConfig } from 'uniswap/src/features/gating/statsigBaseConfig'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'
@@ -7,7 +7,7 @@ import { logger } from 'utilities/src/logger/logger'
 export function makeStatsigUser(userID: string): StatsigUser {
   return {
     userID,
-    appVersion: process.env.VERSION,
+    appVersion: getConfig().version,
     custom: {
       app: StatsigCustomAppValue.Extension,
     },
@@ -16,7 +16,7 @@ export function makeStatsigUser(userID: string): StatsigUser {
 
 export async function initStatSigForBrowserScripts(): Promise<void> {
   const uniqueId = await getUniqueId()
-  const statsigClient = new StatsigClient(config.statsigApiKey, makeStatsigUser(uniqueId), statsigBaseConfig)
+  const statsigClient = new StatsigClient(getConfig().statsigApiKey, makeStatsigUser(uniqueId), statsigBaseConfig)
   await statsigClient.initializeAsync().catch((error) => {
     logger.error(error, {
       tags: { file: 'initStatSigForBrowserScripts.tsx', function: 'initStatSigForBrowserScripts' },

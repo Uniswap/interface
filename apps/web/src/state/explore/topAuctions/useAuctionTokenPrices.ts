@@ -4,7 +4,7 @@ import {
   buildContractInputForAddress,
   type PriceMap,
   useTokenMarketPrices,
-} from '~/components/Toucan/hooks/useTokenMarketPrices'
+} from '~/features/Toucan/hooks/useTokenMarketPrices'
 import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 
 /**

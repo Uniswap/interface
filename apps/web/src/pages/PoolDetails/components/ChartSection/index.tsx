@@ -16,33 +16,34 @@ import { PoolData } from '~/appGraphql/data/pools/usePoolData'
 import { gqlToCurrency, TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
 import { Chart, refitChartContentAtom } from '~/components/Charts/ChartModel'
-import { ZoomButtons } from '~/components/Charts/D3LiquidityChartShared/components/ZoomButtons'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChartData, PriceChartModel } from '~/components/Charts/PriceChart'
 import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
 import { ChartQueryResult, ChartType, DataQuality, PriceChartType } from '~/components/Charts/utils'
 import { VolumeChart } from '~/components/Charts/VolumeChart'
 import { SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
-import { ChartActionsContainer } from '~/components/Explore/chart/ChartActionsContainer'
-import { ChartTypeToggle } from '~/components/Explore/chart/ChartTypeToggle'
+import { ChartActionsContainer } from '~/features/Explore/chart/ChartActionsContainer'
+import { ChartTypeToggle } from '~/features/Explore/chart/ChartTypeToggle'
 import {
   DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
   DISPLAYS,
   getTimePeriodFromDisplay,
   TimePeriodDisplay,
-} from '~/components/Explore/constants'
-import { usePoolPriceChartData } from '~/hooks/usePoolPriceChartData'
+} from '~/features/Explore/constants'
+import { ZoomButtons } from '~/features/Liquidity/charts/D3LiquidityChartShared/components/ZoomButtons'
+import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
 import {
   D3LiquidityPoolChart,
   D3LiquidityPoolChartZoomActions,
 } from '~/pages/PoolDetails/components/ChartSection/D3LiquidityPoolChart'
+import { DepthChart } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import { usePDPVolumeChartData } from '~/pages/PoolDetails/components/ChartSection/hooks'
 import { LiquidityChart } from '~/pages/PoolDetails/components/ChartSection/LiquidityChart'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const PDP_CHART_HEIGHT_PX = 356
-const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY] as const
+const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY, ChartType.DEPTH] as const
 
 export type PoolsDetailsChartType = (typeof PDP_CHART_SELECTOR_OPTIONS)[number]
 
@@ -50,11 +51,13 @@ const CHART_URL_VALUE_TO_TYPE: Record<string, PoolsDetailsChartType> = {
   volume: ChartType.VOLUME,
   price: ChartType.PRICE,
   liquidity: ChartType.LIQUIDITY,
+  depth: ChartType.DEPTH,
 }
 const CHART_TYPE_TO_URL_VALUE: Record<PoolsDetailsChartType, string> = {
   [ChartType.VOLUME]: 'volume',
   [ChartType.PRICE]: 'price',
   [ChartType.LIQUIDITY]: 'liquidity',
+  [ChartType.DEPTH]: 'depth',
 }
 const parseAsPDPChartType = createParser({
   parse: (query: string) => CHART_URL_VALUE_TO_TYPE[query.toLowerCase()] ?? null,
@@ -81,6 +84,7 @@ type TDPChartState = {
   timePeriod: TimePeriod
   setTimePeriod: (timePeriod: TimePeriod) => void
   setChartType: (chartType: PoolsDetailsChartType) => void
+  selectedChartType: PoolsDetailsChartType
   activeQuery: ActiveQuery
   dataQuality?: DataQuality
 }
@@ -97,7 +101,9 @@ function usePDPChartState({
   protocolVersion: GraphQLApi.ProtocolVersion
 }): TDPChartState {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
-  const [chartType, setChartType] = useQueryState('chart', parseAsPDPChartType)
+  const [selectedChartType, setChartType] = useQueryState('chart', parseAsPDPChartType)
+  // DEPTH is a different visualization of the same data as LIQUIDITY — share data fetching.
+  const chartType = selectedChartType === ChartType.DEPTH ? ChartType.LIQUIDITY : selectedChartType
 
   const isV2 = protocolVersion === GraphQLApi.ProtocolVersion.V2
   const isV3 = protocolVersion === GraphQLApi.ProtocolVersion.V3
@@ -131,9 +137,10 @@ function usePDPChartState({
       timePeriod,
       setTimePeriod,
       setChartType,
+      selectedChartType,
       activeQuery,
     }
-  }, [chartType, volumeQuery, priceQuery, timePeriod, setChartType])
+  }, [chartType, selectedChartType, volumeQuery, priceQuery, timePeriod, setChartType])
 }
 
 export default function ChartSection(props: ChartSectionProps) {
@@ -141,6 +148,7 @@ export default function ChartSection(props: ChartSectionProps) {
   const media = useMedia()
   const { t } = useTranslation()
   const isD3LiquidityChartEnabled = useFeatureFlag(FeatureFlags.LpPdpD3RangeChart)
+  const isLiquidityDepthChartEnabled = useFeatureFlag(FeatureFlags.LpPdpDepthChart)
   const [zoomActions, setZoomActions] = useState<D3LiquidityPoolChartZoomActions | null>(null)
 
   const [currencyA, currencyB] = [
@@ -148,7 +156,7 @@ export default function ChartSection(props: ChartSectionProps) {
     props.poolData?.token1 && gqlToCurrency(props.poolData.token1),
   ]
 
-  const { setChartType, timePeriod, setTimePeriod, activeQuery } = usePDPChartState({
+  const { setChartType, timePeriod, setTimePeriod, activeQuery, selectedChartType } = usePDPChartState({
     poolData: props.poolData,
     isReversed: props.isReversed,
     chain: props.chain ?? GraphQLApi.Chain.Ethereum,
@@ -183,6 +191,9 @@ export default function ChartSection(props: ChartSectionProps) {
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
     if (activeQuery.chartType === ChartType.LIQUIDITY) {
+      if (selectedChartType === ChartType.DEPTH) {
+        return <DepthChart {...selectedChartProps} onZoomActionsReady={setZoomActions} />
+      }
       if (isD3LiquidityChartEnabled) {
         return <D3LiquidityPoolChart {...selectedChartProps} onZoomActionsReady={setZoomActions} />
       }
@@ -232,14 +243,25 @@ export default function ChartSection(props: ChartSectionProps) {
   const disabledChartOption =
     props.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
 
+  const availableChartOptions = useMemo(
+    () =>
+      isLiquidityDepthChartEnabled
+        ? PDP_CHART_SELECTOR_OPTIONS
+        : PDP_CHART_SELECTOR_OPTIONS.filter((o) => o !== ChartType.DEPTH),
+    [isLiquidityDepthChartEnabled],
+  )
+
+  // When the depth flag is off but the URL still holds ?chart=depth, reflect it as liquidity in the toggle.
+  const displayChartType = isLiquidityDepthChartEnabled ? selectedChartType : activeQuery.chartType
+
   return (
     <Flex data-testid="pdp-chart-container">
       {ChartBody}
       <ChartActionsContainer>
         <Flex $md={{ width: '100%' }}>
           <ChartTypeToggle
-            availableOptions={PDP_CHART_SELECTOR_OPTIONS}
-            currentChartType={activeQuery.chartType}
+            availableOptions={availableChartOptions}
+            currentChartType={displayChartType}
             onChartTypeChange={(c: ChartType) => {
               if (c !== ChartType.LIQUIDITY) {
                 setZoomActions(null)
@@ -249,9 +271,15 @@ export default function ChartSection(props: ChartSectionProps) {
             disabledOption={disabledChartOption}
           />
         </Flex>
-        {activeQuery.chartType === ChartType.LIQUIDITY && isD3LiquidityChartEnabled && zoomActions ? (
-          <ZoomButtons onZoomIn={zoomActions.zoomIn} onZoomOut={zoomActions.zoomOut} onReset={zoomActions.resetView} />
-        ) : activeQuery.chartType !== ChartType.LIQUIDITY ? (
+        {activeQuery.chartType === ChartType.LIQUIDITY ? (
+          zoomActions && (isD3LiquidityChartEnabled || selectedChartType === ChartType.DEPTH) ? (
+            <ZoomButtons
+              onZoomIn={zoomActions.zoomIn}
+              onZoomOut={zoomActions.zoomOut}
+              onReset={zoomActions.resetView}
+            />
+          ) : null
+        ) : (
           <Flex $md={{ width: '100%' }}>
             <SegmentedControl
               fullWidth={media.md}
@@ -267,7 +295,7 @@ export default function ChartSection(props: ChartSectionProps) {
               }}
             />
           </Flex>
-        ) : null}
+        )}
       </ChartActionsContainer>
     </Flex>
   )

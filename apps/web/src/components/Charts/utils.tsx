@@ -13,6 +13,7 @@ export enum ChartType {
   VOLUME = 'Volume',
   TVL = 'TVL', // Locked value distributed by timestamp
   LIQUIDITY = 'Liquidity', // Locked value distributed by tick
+  DEPTH = 'Depth', // Cumulative liquidity depth (bid/ask)
 }
 
 export type ChartQueryResult<TDataType, TChartType extends ChartType> = {
@@ -57,6 +58,8 @@ const CHART_DURATION_STALE_THRESHOLD_MAP: Record<
   [ChartType.TVL]: CONSTANT_STALENESS,
   // Liquidity chart does not have a time axis
   [ChartType.LIQUIDITY]: undefined,
+  // Depth chart does not have a time axis
+  [ChartType.DEPTH]: undefined,
 }
 
 export function checkDataQuality({

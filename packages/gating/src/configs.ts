@@ -90,6 +90,8 @@ export enum DynamicConfigs {
   CreateAuction = 'create_auction_config',
   EmbeddedWalletBetaPassphrases = 'embedded_wallet_beta_passphrases',
   ExternallyConnectableExtension = 'externally_connectable_extension',
+  LiquidityApprovalSimulation = 'liquidity_approval_simulation',
+  LiquidityGasPreEstimation = 'liquidity_gas_pre_estimation',
   LPConfig = 'lp_config',
   OutageBannerChainId = 'outage_banner_chain_id',
   VerifiedAuctions = 'verified_auctions',
@@ -252,6 +254,14 @@ export enum CreateAuctionConfigKey {
   AllowedTokenCreationNetworks = 'allowedTokenCreationNetworks',
 }
 
+export enum LiquidityGasPreEstimationConfigKey {
+  EnabledChainIds = 'enabledChainIds',
+}
+
+export enum LiquidityApprovalSimulationConfigKey {
+  EnabledChainIds = 'enabledChainIds',
+}
+
 export enum EmbeddedWalletBetaPassphrasesKey {
   Passphrases = 'passphrases',
 }
@@ -281,6 +291,8 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.CreateAuction]: CreateAuctionConfigKey
   [DynamicConfigs.EmbeddedWalletBetaPassphrases]: EmbeddedWalletBetaPassphrasesKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
+  [DynamicConfigs.LiquidityApprovalSimulation]: LiquidityApprovalSimulationConfigKey
+  [DynamicConfigs.LiquidityGasPreEstimation]: LiquidityGasPreEstimationConfigKey
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.OutageBannerChainId]: OutageBannerChainIdConfigKey
   [DynamicConfigs.VerifiedAuctions]: VerifiedAuctionsConfigKey

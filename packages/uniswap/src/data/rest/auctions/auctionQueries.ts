@@ -1,4 +1,4 @@
-import { QueryKey, queryOptions } from '@tanstack/react-query'
+import { QueryKey } from '@tanstack/react-query'
 import {
   GetAuctionActivityRequest,
   GetAuctionActivityResponse,
@@ -20,13 +20,14 @@ import { UseQueryApiHelperHookArgs } from '@universe/api/src/hooks/shared/types'
 import { AuctionServiceClient as AuctionServiceClientInstance } from 'uniswap/src/data/rest/auctions/AuctionServiceClient'
 import { AUCTION_DEFAULT_RETRY, AuctionStaleTime } from 'uniswap/src/data/rest/auctions/queryTypes'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 function getAuctionQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<GetAuctionRequest, GetAuctionResponse>,
 ): QueryOptionsResult<GetAuctionResponse, Error, GetAuctionResponse, QueryKey> {
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getAuction', params],
     queryFn: async () => {
       if (!params) {
@@ -44,7 +45,7 @@ function getAuctionActivityQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<GetAuctionActivityRequest, GetAuctionActivityResponse>,
 ): QueryOptionsResult<GetAuctionActivityResponse, Error, GetAuctionActivityResponse, QueryKey> {
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getAuctionActivity', params],
     queryFn: async () => {
       if (!params) {
@@ -62,7 +63,7 @@ function getBidsQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<GetBidsRequest, GetBidsResponse>,
 ): QueryOptionsResult<GetBidsResponse, Error, GetBidsResponse, QueryKey> {
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getBids', params],
     queryFn: async () => {
       if (!params) {
@@ -80,7 +81,7 @@ function getBidsByWalletQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<GetBidsByWalletRequest, GetBidsByWalletResponse>,
 ): QueryOptionsResult<GetBidsByWalletResponse, Error, GetBidsByWalletResponse, QueryKey> {
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getBidsByWallet', params],
     queryFn: async () => {
       if (!params) {
@@ -98,7 +99,7 @@ function getClearingPriceHistoryQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<GetClearingPriceHistoryRequest, GetClearingPriceHistoryResponse>,
 ): QueryOptionsResult<GetClearingPriceHistoryResponse, Error, GetClearingPriceHistoryResponse, QueryKey> {
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getClearingPriceHistory', params],
     queryFn: async () => {
       if (!params) {
@@ -116,7 +117,7 @@ function getLatestCheckpointQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<GetLatestCheckpointRequest, GetLatestCheckpointResponse>,
 ): QueryOptionsResult<GetLatestCheckpointResponse, Error, GetLatestCheckpointResponse, QueryKey> {
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'getLatestCheckpoint', params],
     queryFn: async () => {
       if (!params) {
@@ -134,7 +135,7 @@ function getListTopAuctionsQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, ListTopAuctionsResponse>,
 ): QueryOptionsResult<ListTopAuctionsResponse, Error, ListTopAuctionsResponse, QueryKey> {
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.AuctionApi, 'listTopAuctions', params],
     queryFn: async () => {
       if (!params) {

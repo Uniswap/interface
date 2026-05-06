@@ -6,9 +6,9 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
 import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
-import { LiquidityPositionInfoBadges } from '~/components/Liquidity/LiquidityPositionInfoBadges'
-import { LPIncentiveRewardsBadge } from '~/components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
+import { LPIncentiveRewardsBadge } from '~/features/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
 import { PoolStat } from '~/state/explore/types'
 
 export function TopPoolsCard({ pool }: { pool: PoolStat }) {

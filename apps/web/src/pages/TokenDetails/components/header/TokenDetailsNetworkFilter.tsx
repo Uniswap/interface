@@ -6,8 +6,8 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
-import { HEADER_TRANSITION } from '~/components/Explore/stickyHeader/constants'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
+import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 
 interface TokenDetailsNetworkFilterProps {
   chainIds: UniverseChainId[]

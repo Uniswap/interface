@@ -10,6 +10,7 @@ export const MAX_FIAT_INPUT_DECIMALS = 2
 // Default settings for swap deadline thresholds
 export const DEFAULT_CUSTOM_DEADLINE = 30 // 30 minutes
 export const WARNING_DEADLINE_TOLERANCE = 60 // 1 hour
+export const MIN_CUSTOM_DEADLINE = 1 // 1 minute
 export const MAX_CUSTOM_DEADLINE = 3 * 24 * 60 // 3 days
 
 // Price impact thresholds are percentages (ex. 5 = 5% price impact)

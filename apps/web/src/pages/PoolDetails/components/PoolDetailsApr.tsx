@@ -2,8 +2,8 @@ import { Percent } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { LpIncentivesAprDisplay } from '~/components/LpIncentives/LpIncentivesAprDisplay'
-import { calculateTotalApr } from '~/components/LpIncentives/utils'
+import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
+import { calculateTotalApr } from '~/features/Liquidity/LPIncentives/utils'
 
 export const PoolDetailsApr = ({ poolApr, rewardsApr }: { poolApr: Percent; rewardsApr?: number }) => {
   const { t } = useTranslation()

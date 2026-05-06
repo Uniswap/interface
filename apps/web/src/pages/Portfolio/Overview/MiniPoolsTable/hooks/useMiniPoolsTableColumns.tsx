@@ -1,15 +1,15 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LiquidityPositionDropdownMenu } from '~/components/Liquidity/LiquidityPositionDropdownMenu'
-import { PositionInfo } from '~/components/Liquidity/types'
 import { HeaderCell } from '~/components/Table/styled'
+import { LiquidityPositionDropdownMenu } from '~/features/Liquidity/LiquidityPositionDropdownMenu'
 import { PoolBalanceCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Balance'
 import { ColumnHeader } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/ColumnHeader'
 import { PoolFeesCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Fees'
 import { PoolInfoCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Info'
 import { PositionCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/PositionCell'
 import { PoolStatusCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Status'
+import { PositionInfo } from '~/types/liquidity'
 
 export const useMiniPoolsTableColumns = ({ isLoading }: { isLoading: boolean }) => {
   const { t } = useTranslation()

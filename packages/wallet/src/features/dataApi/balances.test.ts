@@ -123,6 +123,29 @@ describe(usePortfolioValueModifiers, () => {
         { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_2, includeSpamTokens: false },
       ])
     })
+
+    it('returns includeSpamTokens true in testnet mode even when hideSpamTokens is true', () => {
+      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
+        preloadedState: {
+          userSettings: mockUserSettingsState({ hideSpamTokens: true, isTestnetModeEnabled: true }),
+        },
+      })
+
+      expect(result.current).toEqual([
+        {
+          ...sharedModifier,
+          ownerAddress: SAMPLE_SEED_ADDRESS_1,
+          includeSpamTokens: true,
+          includeSmallBalances: true,
+        },
+        {
+          ...sharedModifier,
+          ownerAddress: SAMPLE_SEED_ADDRESS_2,
+          includeSpamTokens: true,
+          includeSmallBalances: true,
+        },
+      ])
+    })
   })
 
   describe('token overrides', () => {

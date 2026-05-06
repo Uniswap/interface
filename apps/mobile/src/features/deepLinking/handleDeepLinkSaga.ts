@@ -9,6 +9,7 @@ import {
   isAllowedUwuLinkRequest,
   parseUwuLinkDataFromDeeplink,
 } from 'src/components/Requests/Uwulink/utils'
+import { getConfig } from 'src/config'
 import { getUwuLinkAllowlist } from 'src/features/deepLinking/configUtils'
 import {
   DeepLinkAction,
@@ -28,7 +29,6 @@ import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletConnectClient'
 import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
-import { config } from 'uniswap/src/config'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -334,7 +334,7 @@ function* handleUwuLinkDeepLink(uri: string): Generator {
 }
 
 function handleE2EOverrideGates({ enable }: { enable: string[] }): void {
-  if (!config.isE2ETest) {
+  if (!getConfig().isE2ETest) {
     return
   }
 

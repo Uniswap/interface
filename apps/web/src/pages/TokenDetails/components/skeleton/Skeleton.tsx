@@ -10,14 +10,14 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
-import { LoadingChart } from '~/components/Explore/chart/LoadingChart'
-import { ACTION_BUBBLE_SIZE } from '~/components/Explore/stickyHeader/constants'
-import { DetailsHeaderContainer } from '~/components/Explore/stickyHeader/DetailsHeaderContainer'
-import { getHeaderLogoSize, getHeaderTitleLineHeight } from '~/components/Explore/stickyHeader/getHeaderLogoSize'
-import { SwapSkeleton } from '~/components/swap/SwapSkeleton'
+import { ACTION_BUBBLE_SIZE } from '~/components/StickyCollapsibleHeader/constants'
+import { getHeaderLogoSize, getHeaderTitleLineHeight } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
+import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { LoadingChart } from '~/features/Explore/chart/LoadingChart'
 import { useChainIdFromUrlParam } from '~/features/params/chainParams'
+import { SwapSkeleton } from '~/features/Swap/SwapSkeleton'
 import { useCurrency } from '~/hooks/Tokens'
 import { StatsWrapper, StatWrapper } from '~/pages/TokenDetails/components/info/StatsSection'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
@@ -330,7 +330,7 @@ export function TokenDetailsPageSkeleton({ isCompact }: { isCompact: boolean }) 
           <NavBubble />
         </BreadcrumbNavContainer>
       </BreadcrumbWrapper>
-      <DetailsHeaderContainer isCompact={isCompact}>
+      <StickyCollapsibleHeader isCompact={isCompact}>
         <TokenInfoRow>
           <TokenNameCell>
             <TokenLogoBubble isCompact={isCompact} />
@@ -358,7 +358,7 @@ export function TokenDetailsPageSkeleton({ isCompact }: { isCompact: boolean }) 
             )}
           </Flex>
         </TokenInfoRow>
-      </DetailsHeaderContainer>
+      </StickyCollapsibleHeader>
       <TokenDetailsLayout>
         <LeftPanel gap="$spacing40" $lg={{ gap: '$gap32' }}>
           <TokenDetailsSkeleton />

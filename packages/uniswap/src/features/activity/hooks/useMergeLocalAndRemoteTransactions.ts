@@ -13,7 +13,11 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isFinalizedTx, isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
+import {
+  isBridgeTypeInfo,
+  isFinalizedTx,
+  isPlanTransactionDetails,
+} from 'uniswap/src/features/transactions/types/utils'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useStore } from 'zustand'
@@ -222,6 +226,19 @@ export function useMergeLocalAndRemoteTransactions({
         } else {
           deDupedTxs.push(localTx)
         }
+        continue
+      }
+
+      const shouldPreservePendingBridge =
+        isBridgeTypeInfo(localTx.typeInfo) &&
+        localTx.status === TransactionStatus.Pending &&
+        remoteTx.status === TransactionStatus.Success
+
+      if (shouldPreservePendingBridge) {
+        deDupedTxs.push({
+          ...localTx,
+          networkFee: remoteTx.networkFee ?? localTx.networkFee,
+        })
         continue
       }
 

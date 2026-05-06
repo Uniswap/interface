@@ -1,9 +1,9 @@
 import { type PartialMessage } from '@bufbuild/protobuf'
-import { queryOptions } from '@tanstack/react-query'
 import type { GetPortfolioRequest, GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { type DataApiServiceClient } from '@universe/api/src/clients/dataApi/createDataApiServiceClient'
 import { transformInput, type WithoutWalletAccount } from '@universe/api/src/connectRpc/utils'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 /**
@@ -60,7 +60,7 @@ export function getGetPortfolioQueryOptions(
     ...(input?.svmAddress && { svmAddress: input.svmAddress }),
   }
 
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.GetPortfolio, addressKey, queryCacheInputsSorted] as const,
     queryFn: async (): Promise<GetPortfolioResponse | undefined> => {
       if (!transformedInput) {

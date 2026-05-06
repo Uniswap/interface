@@ -103,6 +103,7 @@ export function usePortfolioValueModifiers(
     [addresses],
   )
   const currencyIdToTokenVisibility = useCurrencyIdToVisibility(addressArray)
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
@@ -129,9 +130,9 @@ export function usePortfolioValueModifiers(
       tokenIncludeOverrides,
       tokenExcludeOverrides,
       includeSmallBalances: !hideSmallBalances,
-      includeSpamTokens: !hideSpamTokens,
+      includeSpamTokens: isTestnetModeEnabled || !hideSpamTokens,
     }))
-  }, [addressArray, currencyIdToTokenVisibility, hideSmallBalances, hideSpamTokens])
+  }, [addressArray, currencyIdToTokenVisibility, hideSmallBalances, hideSpamTokens, isTestnetModeEnabled])
 
   return modifiers.length > 0 ? modifiers : undefined
 }

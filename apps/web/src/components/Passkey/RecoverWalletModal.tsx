@@ -1,5 +1,6 @@
 import { useAuthorizationSignature, useLoginWithEmail, usePrivy } from '@privy-io/react-auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { base64urlToBase64 } from '@universe/encoding'
 import { connect } from '@wagmi/core'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,9 +8,8 @@ import { useDispatch } from 'react-redux'
 import { Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { useUnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { base64urlToBase64 } from 'uniswap/src/features/passkey/deviceSession'
 import { registerNewPasskey } from 'uniswap/src/features/passkey/embeddedWallet'
 import { hashAuthMethodId } from 'uniswap/src/features/passkey/pinCrypto'
 import { attemptPinDecryption, executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
@@ -34,6 +34,7 @@ import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
 import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
 import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from '~/components/Web3Provider/walletConnect'
+import { getConfig } from '~/config'
 import { useCooldownTimer } from '~/hooks/useCooldownTimer'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
@@ -56,7 +57,6 @@ export function RecoverWalletModal() {
   const { t } = useTranslation()
   const { isOpen, onClose } = useModalState(ModalName.RecoverWallet)
   const queryClient = useQueryClient()
-  const unitagsApiClient = useUnitagsApiClient()
   const dispatch = useDispatch()
   const { ready: privyReady, getAccessToken } = usePrivy()
   const { generateAuthorizationSignature } = useAuthorizationSignature()
@@ -237,7 +237,7 @@ export function RecoverWalletModal() {
       return
     }
 
-    const privyAppId = process.env.PRIVY_APP_ID
+    const privyAppId = getConfig().privyAppId
     if (!privyAppId) {
       throw new Error('PRIVY_APP_ID environment variable is not configured')
     }

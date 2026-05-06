@@ -3,13 +3,13 @@ import { Flex, styled } from 'ui/src'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import useSimplePagination from '~/hooks/useSimplePagination'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
 import {
   TokenTableSortStoreContextProvider,
   useTokenTableSortStore,
 } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { TABLE_PAGE_SIZE } from '~/state/explore'
+import { useExploreTablesFilterStore } from '~/state/explore/exploreTablesFilterStore'
 import { useListTokens } from '~/state/explore/listTokens/useListTokens'
 import { useExploreBackendSortingEnabled } from '~/state/explore/useExploreBackendSortingEnabled'
 

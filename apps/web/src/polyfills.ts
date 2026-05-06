@@ -15,6 +15,7 @@ declare global {
 }
 
 if (!window.__DEV__) {
+  // oxlint-disable-next-line eslint-js/no-restricted-syntax
   window.__DEV__ = process.env.NODE_ENV === 'development'
 }
 

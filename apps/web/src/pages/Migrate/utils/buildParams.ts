@@ -10,10 +10,10 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { PositionState } from '~/components/Liquidity/Create/types'
-import { V2PairInfo, V3PositionInfo } from '~/components/Liquidity/types'
-import { getTokenOrZeroAddress } from '~/components/Liquidity/utils/currency'
-import { getProtocols } from '~/components/Liquidity/utils/protocolVersion'
+import { PositionState } from '~/features/Liquidity/Create/types'
+import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
+import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
+import { V2PairInfo, V3PositionInfo } from '~/types/liquidity'
 
 export function isV3ToV4MigrationPositionInfo(
   positionInfo: V2PairInfo | V3PositionInfo | undefined,
@@ -24,9 +24,11 @@ export function isV3ToV4MigrationPositionInfo(
 export function buildCheckLPApprovalRequestParams({
   positionInfo,
   address,
+  canBatchTransactions,
 }: {
   positionInfo: V2PairInfo | V3PositionInfo
   address: string
+  canBatchTransactions?: boolean
 }): LPApprovalRequest | undefined {
   const protocol = getProtocols(positionInfo.version)
 
@@ -72,6 +74,7 @@ export function buildCheckLPApprovalRequestParams({
         v3NftTokenId: Number(positionInfo.tokenId),
         action: LPAction.MIGRATE,
         simulateTransaction: true,
+        generatePermitAsTransaction: canBatchTransactions ?? false,
       })
     default:
       return undefined

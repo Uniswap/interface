@@ -9,8 +9,8 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { DetailsHeaderContainer } from '~/components/Explore/stickyHeader/DetailsHeaderContainer'
 import { MobileBottomBar, TDPActionTabs } from '~/components/NavBar/MobileBottomBar'
+import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { ActivitySection } from '~/pages/TokenDetails/components/activity/ActivitySection'
 import { BalanceSummary } from '~/pages/TokenDetails/components/balances/BalanceSummary'
@@ -70,9 +70,9 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
       }}
     >
       <TDPBreadcrumb />
-      <DetailsHeaderContainer isCompact={isCompact}>
+      <StickyCollapsibleHeader isCompact={isCompact}>
         <TokenDetailsHeader isCompact={isCompact} />
-      </DetailsHeaderContainer>
+      </StickyCollapsibleHeader>
       <TokenDetailsLayout>
         <LeftPanel gap="$spacing40" $lg={{ gap: '$gap32' }}>
           <ChartSection />

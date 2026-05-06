@@ -18,8 +18,8 @@ import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/features/params/chainParams'
 import { CHAIN_SEARCH_PARAM } from '~/features/params/chainQueryParam'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { TokenStat } from '~/state/explore/types'
+import { ExploreTab } from '~/types/explore'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
 export enum TimePeriod {

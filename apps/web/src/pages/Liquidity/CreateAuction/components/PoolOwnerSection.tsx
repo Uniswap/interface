@@ -1,8 +1,8 @@
-import { isAddress } from '@ethersproject/address'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme/fonts'
+import { isAddress } from '~/chains/utilities'
 
 export function isValidPoolOwner(value: string): boolean {
   return value === '' || isAddress(value)

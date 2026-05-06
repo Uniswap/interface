@@ -15,6 +15,7 @@ import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeriod'
 import i18next from 'uniswap/src/i18n'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { isWebPlatform } from 'utilities/src/platform'
 
@@ -87,7 +88,7 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   }, [loading, refetch])
 
   return (
-    <Flex gap="$spacing4">
+    <Flex gap="$spacing4" testID={TestID.PortfolioBalance}>
       <AnimatedNumber
         balance={displayBalanceUSD}
         colorIndicationDuration={overrideBalanceUSD !== undefined ? 0 : BALANCE_CHANGE_INDICATION_DURATION}

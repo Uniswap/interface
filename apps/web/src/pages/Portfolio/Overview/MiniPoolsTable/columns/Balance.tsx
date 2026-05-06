@@ -4,8 +4,8 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
-import { PositionInfo } from '~/components/Liquidity/types'
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
+import { PositionInfo } from '~/types/liquidity'
 
 // Fourth column cell component - Balance in USD
 export const PoolBalanceCell = memo(function PoolBalanceCell({ position }: { position: PositionInfo }) {

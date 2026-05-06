@@ -2,11 +2,9 @@ import { zIndexes } from 'ui/src/theme'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { type CreateConnectorFn, createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
+import { getConfig } from '~/config'
 
-if (process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID === undefined) {
-  throw new Error('REACT_APP_WALLET_CONNECT_PROJECT_ID must be a defined environment variable')
-}
-const WALLET_CONNECT_PROJECT_ID = <string>process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID
+const WALLET_CONNECT_PROJECT_ID = getConfig().walletConnectProjectId
 
 export function walletTypeToAmplitudeWalletType(connectionType?: string): string {
   switch (connectionType) {

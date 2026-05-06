@@ -123,6 +123,7 @@ export const uniswapUrls = {
     smartWalletDelegation: createHelpArticleUrl('36391987158797'),
     swapProtection: createHelpArticleUrl('18814993155853'),
     swapSlippage: createHelpArticleUrl('8643879653261-What-is-Price-Slippage-'),
+    swapDeadline: createHelpArticleUrl('45320061462797'),
     toucanBidHelp: createHelpArticleUrl(
       '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#bidding-in-an-auction',
     ),
@@ -199,8 +200,6 @@ export const uniswapUrls = {
     (isWebApp ? '/config' : getCloudflareApiBaseUrl({ flow: TrafficFlows.Gating, postfix: 'v1/statsig-proxy' })),
 
   // Feature service URL's
-  unitagsApiUrl:
-    config.unitagsApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.Unitags, postfix: 'v2/unitags' }),
   scantasticApiUrl:
     config.scantasticApiUrlOverride ||
     getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic, postfix: 'v2/scantastic' }),

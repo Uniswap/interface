@@ -27,6 +27,10 @@ import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constant
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
+import { DataApiOutageModalContent } from 'uniswap/src/features/dataApi/outage/DataApiOutageModalContent'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
@@ -86,6 +90,17 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
   const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
   const isNotificationServiceEnabled =
     getIsNotificationServiceLocalOverrideEnabled() || isNotificationServiceEnabledFlag
+
+  // Portfolio outage detection — shares the same React Query cache key as PortfolioBalance, no extra fetch
+  const { chains } = useEnabledChains()
+  const { error: portfolioError, dataUpdatedAt: portfolioDataUpdatedAt } = usePortfolioTotalValue({
+    evmAddress: address,
+    chainIds: chains,
+  })
+
+  const [isOutageModalOpen, setIsOutageModalOpen] = useState(false)
+  const handleOutageBannerPress = useEvent(() => setIsOutageModalOpen(true))
+  const handleOutageModalClose = useEvent(() => setIsOutageModalOpen(false))
 
   const handleDismissWrappedBanner = useCallback(() => {
     dispatch(setHasDismissedUniswapWrapped2025Banner(true))
@@ -188,125 +203,142 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
   }, [apolloClient, shouldRefetchNfts])
 
   return (
-    <Flex fill alignItems="center" backgroundColor="$surface1" p="$spacing12">
-      {address ? (
-        <Flex backgroundColor="$surface1" gap="$spacing12" width="100%">
-          {isPinRequestOpen && (
-            <Flex position="relative" width="100%">
-              <PinReminder style="popup" onClose={onClosePinRequest} />
-            </Flex>
-          )}
-          {shouldShowWrappedBanner && (
-            <Flex width="calc(100% + 24px)" ml={-12} mt={-12}>
-              <UniswapWrapped2025Banner
-                handleDismiss={handleDismissWrappedBanner}
-                handlePress={handlePressWrappedBanner}
-                bannerHeight={80}
-              />
-              <Flex
-                height="$spacing12"
-                width="100%"
-                mt={-12}
-                mb={-12}
-                backgroundColor="$surface1"
-                borderTopLeftRadius={24}
-                borderTopRightRadius={24}
-                flexShrink={0}
-                zIndex="$overlay"
-              />
-            </Flex>
-          )}
-          <Flex grow gap="$spacing8">
-            <Flex pl="$spacing4" position="relative" pt="$spacing4">
-              <PortfolioHeader address={address} />
-            </Flex>
-            <Flex pb="$spacing8" pl="$spacing4">
-              <PortfolioBalance evmOwner={address} />
-            </Flex>
-
-            <PortfolioActionButtons />
-
-            <ExtensionNotificationServiceManager />
-
-            {!isNotificationServiceEnabled && <HomeIntroCardStack />}
-
-            <Flex flex={1} width="100%">
-              <Flex row gap="$spacing16" px="$spacing4" py="$spacing8">
-                <TabButton isActive={selectedTab === HomeTabs.Tokens} onPress={() => setSelectedTab(HomeTabs.Tokens)}>
-                  {t('home.tokens.title')}
-                </TabButton>
-
-                <TabButton
-                  isActive={selectedTab === HomeTabs.NFTs}
-                  onPress={() => {
-                    setSelectedTab(HomeTabs.NFTs)
-                    maybeRefetchNfts()
-                  }}
-                >
-                  {t('home.nfts.title')}
-                </TabButton>
-
-                <TabButton
-                  showPendingNotificationBadge
-                  isActive={selectedTab === HomeTabs.Activity}
-                  onPress={() => setSelectedTab(HomeTabs.Activity)}
-                >
-                  {t('home.activity.title')}
-                </TabButton>
+    <>
+      {portfolioError && <DataApiOutageBanner onPress={handleOutageBannerPress} />}
+      <Flex
+        fill
+        alignItems="center"
+        backgroundColor="$surface1"
+        px="$spacing12"
+        py={portfolioError ? '$spacing4' : '$spacing12'}
+      >
+        {address ? (
+          <Flex backgroundColor="$surface1" gap="$spacing12" width="100%">
+            {isPinRequestOpen && (
+              <Flex position="relative" width="100%">
+                <PinReminder style="popup" onClose={onClosePinRequest} />
+              </Flex>
+            )}
+            {shouldShowWrappedBanner && (
+              <Flex width="calc(100% + 24px)" ml={-12} mt={-12}>
+                <UniswapWrapped2025Banner
+                  handleDismiss={handleDismissWrappedBanner}
+                  handlePress={handlePressWrappedBanner}
+                  bannerHeight={80}
+                />
+                <Flex
+                  height="$spacing12"
+                  width="100%"
+                  mt={-12}
+                  mb={-12}
+                  backgroundColor="$surface1"
+                  borderTopLeftRadius={24}
+                  borderTopRightRadius={24}
+                  flexShrink={0}
+                  zIndex="$overlay"
+                />
+              </Flex>
+            )}
+            <Flex grow gap="$spacing8">
+              <Flex pl="$spacing4" position="relative" pt="$spacing4">
+                <PortfolioHeader address={address} />
+              </Flex>
+              <Flex pb="$spacing8" pl="$spacing4">
+                <PortfolioBalance evmOwner={address} />
               </Flex>
 
-              <Flex row height="100%" width="100%">
-                {showTabs ? (
-                  <>
-                    <AnimatedTab hideLeft={selectedTab !== HomeTabs.Tokens} isActive={selectedTab === HomeTabs.Tokens}>
-                      <ExtensionTokenBalanceList owner={address} />
-                    </AnimatedTab>
+              <PortfolioActionButtons />
 
-                    <AnimatedTab
-                      hideLeft={selectedTab === HomeTabs.Activity}
-                      hideRight={selectedTab === HomeTabs.Tokens}
-                      isActive={selectedTab === HomeTabs.NFTs}
-                    >
-                      <NftsTab owner={address} skip={selectedTab !== HomeTabs.NFTs} />
-                    </AnimatedTab>
+              <ExtensionNotificationServiceManager />
 
-                    <AnimatedTab
-                      hideRight={selectedTab !== HomeTabs.Activity}
-                      isActive={selectedTab === HomeTabs.Activity}
-                    >
-                      <ActivityTab address={address} skip={selectedTab !== HomeTabs.Activity} />
-                    </AnimatedTab>
-                  </>
-                ) : (
-                  <Flex fill mx="$spacing8">
-                    <Loader.Token withPrice repeat={6} />
-                  </Flex>
-                )}
+              {!isNotificationServiceEnabled && <HomeIntroCardStack />}
+
+              <Flex flex={1} width="100%">
+                <Flex row gap="$spacing16" px="$spacing4" py="$spacing8">
+                  <TabButton isActive={selectedTab === HomeTabs.Tokens} onPress={() => setSelectedTab(HomeTabs.Tokens)}>
+                    {t('home.tokens.title')}
+                  </TabButton>
+
+                  <TabButton
+                    isActive={selectedTab === HomeTabs.NFTs}
+                    onPress={() => {
+                      setSelectedTab(HomeTabs.NFTs)
+                      maybeRefetchNfts()
+                    }}
+                  >
+                    {t('home.nfts.title')}
+                  </TabButton>
+
+                  <TabButton
+                    showPendingNotificationBadge
+                    isActive={selectedTab === HomeTabs.Activity}
+                    onPress={() => setSelectedTab(HomeTabs.Activity)}
+                  >
+                    {t('home.activity.title')}
+                  </TabButton>
+                </Flex>
+
+                <Flex row height="100%" width="100%">
+                  {showTabs ? (
+                    <>
+                      <AnimatedTab
+                        hideLeft={selectedTab !== HomeTabs.Tokens}
+                        isActive={selectedTab === HomeTabs.Tokens}
+                      >
+                        <ExtensionTokenBalanceList owner={address} />
+                      </AnimatedTab>
+
+                      <AnimatedTab
+                        hideLeft={selectedTab === HomeTabs.Activity}
+                        hideRight={selectedTab === HomeTabs.Tokens}
+                        isActive={selectedTab === HomeTabs.NFTs}
+                      >
+                        <NftsTab owner={address} skip={selectedTab !== HomeTabs.NFTs} />
+                      </AnimatedTab>
+
+                      <AnimatedTab
+                        hideRight={selectedTab !== HomeTabs.Activity}
+                        isActive={selectedTab === HomeTabs.Activity}
+                      >
+                        <ActivityTab address={address} skip={selectedTab !== HomeTabs.Activity} />
+                      </AnimatedTab>
+                    </>
+                  ) : (
+                    <Flex fill mx="$spacing8">
+                      <Loader.Token withPrice repeat={6} />
+                    </Flex>
+                  )}
+                </Flex>
               </Flex>
             </Flex>
           </Flex>
-        </Flex>
-      ) : (
-        <Text color="$statusCritical" variant="subheading1">
-          {t('home.extension.error')}
-        </Text>
-      )}
-      {isSmartWalletEnabled && !activeModal && (
-        <SmartWalletUpgradeModals
-          account={activeAccount}
-          video={<MemoizedVideo />}
-          onEnableSmartWallet={handleSmartWalletEnable}
-        />
-      )}
+        ) : (
+          <Text color="$statusCritical" variant="subheading1">
+            {t('home.extension.error')}
+          </Text>
+        )}
+        {isSmartWalletEnabled && !activeModal && (
+          <SmartWalletUpgradeModals
+            account={activeAccount}
+            video={<MemoizedVideo />}
+            onEnableSmartWallet={handleSmartWalletEnable}
+          />
+        )}
 
-      {isSmartWalletEnabledModalOpen && isSmartWalletEnabled ? (
-        <SmartWalletEnabledModal
-          isOpen
-          showReconnectDappPrompt={false}
-          onClose={() => setIsSmartWalletEnabledModalOpen(false)}
+        {isSmartWalletEnabledModalOpen && isSmartWalletEnabled ? (
+          <SmartWalletEnabledModal
+            isOpen
+            showReconnectDappPrompt={false}
+            onClose={() => setIsSmartWalletEnabledModalOpen(false)}
+          />
+        ) : undefined}
+        <DataApiOutageModalContent
+          isOpen={isOutageModalOpen}
+          lastUpdatedAt={portfolioDataUpdatedAt}
+          onClose={handleOutageModalClose}
         />
-      ) : undefined}
-    </Flex>
+      </Flex>
+    </>
   )
 })
 

@@ -100,6 +100,7 @@ export function buildFlagGroups(extras: {
       name: 'LP',
       flags: [
         { flag: FeatureFlags.LpPdpD3RangeChart, label: 'Enable LP PDP D3 Range Chart' },
+        { flag: FeatureFlags.LpPdpDepthChart, label: 'Enable LP PDP Depth Chart toggle' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
       ],
@@ -145,13 +146,10 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
-      name: 'Unitags',
-      flags: [{ flag: FeatureFlags.UnitagsServiceV2, label: 'New Unitags Service' }],
-    },
-    {
       name: 'Portfolio',
       flags: [
         { flag: FeatureFlags.PortfolioDefiTab, label: 'Enable Portfolio DeFi Tab' },
+        { flag: FeatureFlags.PortfolioPoolsBalances, label: 'Enable Portfolio Pools Balances' },
         { flag: FeatureFlags.ProfitLoss, label: 'Enable Profit/Loss' },
         { flag: FeatureFlags.SelfReportSpamNFTs, label: 'Report spam NFTs' },
       ],

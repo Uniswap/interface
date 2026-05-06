@@ -92,6 +92,9 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
 }: GetPortfolioInput<TSelectData>): GetPortfolioQuery<TSelectData> => {
   const baseOptions = getGetPortfolioQueryOptions(dataApiClient, { input })
 
+  // NOTE: `meta.persist: true` propagates from `baseOptions` (which comes from
+  // `getGetPortfolioQueryOptions` built via `persistableQueryOptions`) through
+  // the spread below. Covered by a test in `persistenceMigration.integration.test.ts`.
   return queryOptions({
     ...baseOptions,
     enabled,

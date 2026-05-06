@@ -27,7 +27,6 @@ declare module 'react-native-dotenv' {
   export const STATSIG_API_KEY: string
   export const STATSIG_PROXY_URL_OVERRIDE: string
   export const TRADING_API_URL_OVERRIDE: string
-  export const UNITAGS_API_URL_OVERRIDE: string
   export const UNISWAP_NOTIF_API_BASE_URL_OVERRIDE: string
   export const ENTRY_GATEWAY_API_URL_OVERRIDE: string
   export const INCLUDE_PROTOTYPE_FEATURES: string

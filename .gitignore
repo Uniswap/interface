@@ -86,6 +86,7 @@ CLAUDE.local.md
 .claude/settings.local.json
 .claude/local/
 .claude/worktrees/
+.claude/skills/*-workspace/
 **/*/.claude/user/*
 **/*/.claude/local/
 

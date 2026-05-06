@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { PositionInfo } from '~/components/Liquidity/types'
 import { PopupType } from '~/components/Popups/types'
 import { ReceiveCryptoModalInitialState } from '~/components/ReceiveCryptoModal/types'
+import type { PositionInfo } from '~/types/liquidity'
 
 export type LiquidityModalInitialState = PositionInfo
 

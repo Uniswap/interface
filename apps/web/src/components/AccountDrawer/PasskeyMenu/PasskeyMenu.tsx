@@ -27,13 +27,14 @@ import { MenuColumn } from '~/components/AccountDrawer/shared'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { AndroidLogo } from '~/components/Icons/AndroidLogo'
 import { AppleLogo } from '~/components/Icons/AppleLogo'
+import { getConfig } from '~/config'
 import { setOpenModal } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppDispatch } from '~/state/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 function getPrivyAppId(): string | undefined {
-  return process.env.PRIVY_APP_ID
+  return getConfig().privyAppId
 }
 
 export const LIST_AUTHENTICATORS_QUERY_KEY = 'listAuthenticators'

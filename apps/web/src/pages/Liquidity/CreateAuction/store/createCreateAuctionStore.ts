@@ -1,9 +1,9 @@
-import { AddressZero } from '@ethersproject/constants'
 import { type Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { isDevEnv } from 'utilities/src/environment/env'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import type { FeeData } from '~/components/Liquidity/Create/types'
+import { zeroAddress } from '~/chains/utilities'
 import {
   buildAuctionAmountsFromLiquidityPreview,
   getPostAuctionLiquidityAmountFromAllocation,
@@ -32,6 +32,8 @@ import {
   getRecommendedStrategy,
   isUnboundedTier,
 } from '~/pages/Liquidity/CreateAuction/utils'
+import type { FeeData } from '~/types/liquidity'
+
 // 100% of sold tokens seed LP (sale-side leg); an equal amount is reserved from the deposit. Deposit splits ½ sold / ½ reserve.
 export const BOOTSTRAP_POST_LIQUIDITY_PERCENT = new Percent(100, 100)
 // 50% of sold tokens seed LP; the other ½ of sold is fundraise; reserved leg = ⅓ of deposit (e.g. 100M deposit → ~33.33M each bucket at 50%).
@@ -355,7 +357,7 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
 
               if (tokenForm.mode === TokenMode.CREATE_NEW) {
                 const { network, symbol, name, totalSupply: formSupply } = tokenForm
-                const token = new Token(network, AddressZero, NEW_TOKEN_DECIMALS, symbol, name)
+                const token = new Token(network, zeroAddress, NEW_TOKEN_DECIMALS, symbol, name)
                 totalSupply = CurrencyAmount.fromRawAmount(token, formSupply.quotient)
               } else {
                 totalSupply = tokenForm.totalSupply
@@ -412,7 +414,7 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
       }),
       {
         name: 'createAuctionStore',
-        enabled: process.env.NODE_ENV === 'development',
+        enabled: isDevEnv(),
       },
     ),
   )

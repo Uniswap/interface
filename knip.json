@@ -1,3 +1,362 @@
 {
-  "ignore": ["**/*.native.ts", "**/*.web.ts", "**/*.native.tsx", "**/*.web.tsx"]
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": [
+    "**/*.native.ts",
+    "**/*.web.ts",
+    "**/*.native.tsx",
+    "**/*.web.tsx"
+  ],
+  "ignoreDependencies": [
+    "typescript",
+    "@typescript/native-preview",
+    "oxlint",
+    "@types/.+"
+  ],
+  "workspaces": {
+    ".": {
+      "ignoreDependencies": [
+        "@graphql-codegen/.+",
+        "@commitlint/.+",
+        "@nx/devkit",
+        "@nx/jest",
+        "@nx/js",
+        "@nx/plugin",
+        "@nx/workspace",
+        "@slack/types",
+        "@swc/helpers",
+        "@ethersproject/keccak256",
+        "bufferutil",
+        "utf-8-validate",
+        "clipanion",
+        "dd-trace",
+        "i18next",
+        "moti",
+        "react-router",
+        "semver",
+        "typanion",
+        "wrangler"
+      ]
+    },
+    "apps/cli": {
+      "ignoreDependencies": [
+        "ink",
+        "ink-box",
+        "ink-gradient",
+        "ink-select-input",
+        "ink-spinner",
+        "ink-text-input",
+        "react"
+      ]
+    },
+    "apps/dev-portal": {
+      "ignoreDependencies": [
+        "@babel/preset-typescript",
+        "babel-plugin-react-compiler"
+      ]
+    },
+    "apps/extension": {
+      "ignoreDependencies": [
+        "@svgr/webpack",
+        "@testing-library/dom",
+        "@wxt-dev/module-react",
+        "concurrently",
+        "css-loader",
+        "esbuild-loader",
+        "jest-environment-jsdom",
+        "react-native-web",
+        "serve",
+        "style-loader",
+        "swc-loader",
+        "tamagui-loader",
+        "vite",
+        "vite-plugin-commonjs",
+        "vite-plugin-node-polyfills",
+        "vite-plugin-svgr",
+        "vite-tsconfig-paths",
+        "webpack-cli"
+      ]
+    },
+    "apps/mission-control": {
+      "ignoreDependencies": [
+        "@radix-ui/.+",
+        "@universe/privacy",
+        "clsx"
+      ]
+    },
+    "apps/mobile": {
+      "metro": false,
+      "ignoreDependencies": [
+        "@react-native/metro-config",
+        "react-native-svg-transformer",
+        "@amplitude/analytics-react-native",
+        "@datadog/datadog-ci",
+        "@expo/fingerprint",
+        "@react-native-community/cli",
+        "@react-native-community/cli-platform-android",
+        "@react-native-community/cli-platform-ios",
+        "@react-native-masked-view/masked-view",
+        "@shopify/react-native-skia",
+        "@tamagui/babel-plugin",
+        "@uniswap/ethers-rs-mobile",
+        "babel-jest",
+        "babel-loader",
+        "babel-plugin-react-native-web",
+        "babel-plugin-transform-remove-console",
+        "cross-fetch",
+        "dotenv",
+        "eas-build-cache-provider",
+        "esbuild",
+        "expo-dev-client",
+        "expo-image",
+        "expo-linking",
+        "expo-localization",
+        "expo-modules-core",
+        "expo-secure-store",
+        "inquirer",
+        "madge",
+        "postinstall-postinstall",
+        "react-native-asset",
+        "react-native-clean-project",
+        "react-native-image-colors",
+        "react-native-passkey",
+        "react-native-restart",
+        "sp-react-native-in-app-updates",
+        "ts-jest",
+        "ts-node"
+      ]
+    },
+    "apps/web": {
+      "entry": [
+        "src/index.tsx",
+        "src/setupTests.ts",
+        "src/setupRive.ts",
+        "src/sideEffects.ts",
+        "src/polyfills.ts",
+        "src/tamagui.config.ts",
+        "functions/**/*.ts"
+      ],
+      "vite": false,
+      "ignoreDependencies": [
+        "@babel/preset-env",
+        "@cloudflare/vite-plugin",
+        "@tamagui/vite-plugin",
+        "vite-plugin-bundlesize",
+        "vite-plugin-commonjs",
+        "vite-plugin-node-polyfills",
+        "vite-plugin-svgr",
+        "@chromatic-com/storybook",
+        "@cloudflare/workers-types",
+        "@crowdin/cli",
+        "@datadog/datadog-ci",
+        "@ethersproject/.+",
+        "@graphql-codegen/.+",
+        "@hono/node-server",
+        "@rive-app/canvas",
+        "@storybook/.+",
+        "@svgr/webpack",
+        "@swc/core",
+        "@swc/plugin-styled-components",
+        "@testing-library/dom",
+        "@typechain/ethers-v5",
+        "@universe/config",
+        "@vercel/og",
+        "@vitest/coverage-v8",
+        "@walletconnect/ethereum-provider",
+        "@web3-react/eip1193",
+        "@web3-react/empty",
+        "ajv-formats",
+        "babel-plugin-react-compiler",
+        "browser-cache-mock",
+        "buffer",
+        "case-sensitive-paths-webpack-plugin",
+        "concurrently",
+        "dd-trace",
+        "detect-package-manager",
+        "dotenv-cli",
+        "esbuild-register",
+        "expo-crypto",
+        "hono",
+        "html-entities",
+        "http-server",
+        "jpeg-js",
+        "lint-staged",
+        "madge",
+        "mini-css-extract-plugin",
+        "playwright",
+        "png-ts",
+        "postinstall-postinstall",
+        "process",
+        "prop-types",
+        "react-compiler-runtime",
+        "react-scripts",
+        "resize-observer-polyfill",
+        "source-map-explorer",
+        "start-server-and-test",
+        "storybook-addon-pseudo-states",
+        "swc-loader",
+        "terser-webpack-plugin",
+        "ts-loader",
+        "wait-on",
+        "workbox-expiration",
+        "workbox-strategies",
+        "wrangler"
+      ]
+    },
+    "labs/sandbox": {
+      "ignoreDependencies": [
+        "@hookform/resolvers",
+        "@radix-ui/.+",
+        "@tanstack/react-virtual",
+        "autoprefixer",
+        "canvas-confetti",
+        "cmdk",
+        "date-fns",
+        "hono",
+        "input-otp",
+        "moti",
+        "party-js",
+        "react-day-picker",
+        "react-flip-numbers",
+        "react-hook-form",
+        "react-resizable-panels",
+        "rolldown",
+        "sonner",
+        "vaul",
+        "ws"
+      ]
+    },
+    "config/jest-presets": {
+      "ignoreDependencies": [
+        "@testing-library/jest-native",
+        "babel-jest",
+        "jest-svg-transformer",
+        "jest-transform-stub",
+        "ts-jest"
+      ]
+    },
+    "config/vitest-presets": {
+      "ignoreDependencies": [
+        "identity-obj-proxy"
+      ]
+    },
+    "packages/api": {
+      "ignoreDependencies": [
+        "expo-secure-store"
+      ]
+    },
+    "packages/docker-image-builder": {
+      "ignoreDependencies": [
+        "@pulumi/awsx",
+        "gts",
+        "vite",
+        "vitest"
+      ]
+    },
+    "packages/gating": {
+      "ignoreDependencies": [
+        "@statsig/react-native-bindings",
+        "react"
+      ]
+    },
+    "packages/mycelium": {
+      "ignoreDependencies": [
+        "tailwindcss"
+      ]
+    },
+    "packages/notifications": {
+      "ignoreDependencies": [
+        "@vitest/coverage-v8"
+      ]
+    },
+    "packages/prices": {
+      "ignoreDependencies": [
+        "@testing-library/react",
+        "@vitest/coverage-v8"
+      ]
+    },
+    "packages/sessions": {
+      "ignoreDependencies": [
+        "@bufbuild/protobuf",
+        "@tanstack/react-query",
+        "@vitest/coverage-v8",
+        "openapi-typescript-codegen"
+      ]
+    },
+    "packages/transactional": {
+      "ignoreDependencies": [
+        "@react-email/preview-server",
+        "@universe/mycelium"
+      ]
+    },
+    "packages/ui": {
+      "ignore": [
+        "src/components/icons/**",
+        "src/components/logos/**"
+      ],
+      "ignoreDependencies": [
+        "@react-native-masked-view/masked-view",
+        "@shopify/react-native-skia",
+        "@tamagui/animations-react-native",
+        "@tamagui/font-inter",
+        "@tamagui/theme-base",
+        "camelcase",
+        "cheerio",
+        "esbuild-register",
+        "expo-image",
+        "expo-linear-gradient",
+        "fs-extra",
+        "moti",
+        "react-native-keyboard-controller",
+        "react-native-webview",
+        "uppercamelcase"
+      ]
+    },
+    "packages/uniswap": {
+      "ignoreDependencies": [
+        "@cloudflare/.+",
+        "@graphql-codegen/.+",
+        "@noble/.+",
+        "@react-native-masked-view/masked-view",
+        "@redux-devtools/extension",
+        "@typechain/ethers-v5",
+        "expo-blur",
+        "expo-linear-gradient",
+        "i18next-resources-for-ts",
+        "react-native-appsflyer",
+        "react-native-context-menu-view",
+        "react-native-device-info",
+        "react-native-mmkv",
+        "react-native-passkey"
+      ]
+    },
+    "packages/utilities": {
+      "ignoreDependencies": [
+        "@amplitude/analytics-react-native",
+        "@datadog/mobile-react-native",
+        "expo-clipboard",
+        "promise"
+      ]
+    },
+    "packages/wallet": {
+      "ignoreDependencies": [
+        "jest-presets",
+        "react-native-context-menu-view",
+        "react-native-image-picker",
+        "react-native-restart",
+        "sp-react-native-in-app-updates"
+      ]
+    },
+    "packages/websocket": {
+      "ignoreDependencies": [
+        "@vitest/coverage-v8",
+        "partysocket"
+      ]
+    },
+    "tools/uniswap-nx": {
+      "ignoreDependencies": [
+        "@nx/devkit",
+        "tslib"
+      ]
+    }
+  }
 }

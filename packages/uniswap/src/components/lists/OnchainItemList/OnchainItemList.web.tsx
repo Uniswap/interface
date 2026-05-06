@@ -18,9 +18,11 @@ import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 
 const ITEM_ROW_HEIGHT = 64
+const HORIZONTAL_TOKEN_ROW_HEIGHT = 88
 
 type OnchainItemListRowInfo = {
   key: Key | undefined
+  measurementKey: string
 }
 type ListSectionRowInfo<T extends OnchainItemListOption> = SectionRowInfo &
   OnchainItemListRowInfo &
@@ -30,6 +32,11 @@ type ListItemRowInfo<T extends OnchainItemListOption> = ItemRowInfo<T> &
   Pick<OnchainItemListProps<T>, 'renderItem'>
 
 type OnchainItemListData<T extends OnchainItemListOption> = ListItemRowInfo<T> | ListSectionRowInfo<T>
+type RowHeightUpdate = {
+  index: number
+  measurementKey: string
+  height: number
+}
 
 function isSectionHeader<T extends OnchainItemListOption>(
   rowInfo: OnchainItemListData<T>,
@@ -55,7 +62,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
   const ref = useRef<List>(null)
   const listOuterRef = useRef<HTMLDivElement>(null)
 
-  const rowHeightMap = useRef<{ [key: number]: number }>({})
+  const rowHeightMap = useRef<Record<string, number>>({})
   const [firstVisibleIndex, setFirstVisibleIndex] = useState(-1)
   const { width: windowWidth } = useWindowDimensions()
 
@@ -83,11 +90,14 @@ export function OnchainItemList<T extends OnchainItemListOption>({
         const sectionInfo: ListSectionRowInfo<T> = {
           section: {
             sectionKey: section.sectionKey,
+            name: section.name,
             rightElement: section.rightElement,
             endElement: section.endElement,
             sectionHeader: section.sectionHeader,
+            sectionHeaderHeight: section.sectionHeaderHeight,
           },
           key: section.sectionKey,
+          measurementKey: `section-${section.sectionKey}`,
           renderSectionHeader,
         }
         rowIndex += 1
@@ -102,6 +112,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
             section,
             index,
             key: keyExtractor?.(item, index),
+            measurementKey: `item-${section.sectionKey}-${keyExtractor?.(item, index) ?? index}`,
             renderItem,
             expanded: expandedItems?.includes(keyExtractor?.(item, index) ?? '') ?? false,
           }
@@ -122,9 +133,9 @@ export function OnchainItemList<T extends OnchainItemListOption>({
     }, -1)
   }, [firstVisibleIndex, items])
 
-  const updateRowHeight = useCallback((index: number, height: number) => {
-    if (rowHeightMap.current[index] !== height) {
-      rowHeightMap.current[index] = height
+  const updateRowHeight = useCallback(({ index, measurementKey, height }: RowHeightUpdate) => {
+    if (rowHeightMap.current[measurementKey] !== height) {
+      rowHeightMap.current[measurementKey] = height
       ref.current?.resetAfterIndex(index)
     }
   }, [])
@@ -137,20 +148,25 @@ export function OnchainItemList<T extends OnchainItemListOption>({
         return 0
       }
 
+      if (isSectionHeader(item)) {
+        return item.section.sectionHeaderHeight ?? ITEM_SECTION_HEADER_ROW_HEIGHT
+      }
+
+      const measuredHeight = rowHeightMap.current[item.measurementKey]
+
       if (isHorizontalTokenRowInfo(item)) {
-        if (!isSectionHeader(item)) {
-          if (isArray(item.item) && !item.item.length) {
-            return 0
-          }
+        if (isArray(item.item) && !item.item.length) {
+          return 0
         }
 
-        const measuredHeight = rowHeightMap.current[index]
         if (measuredHeight) {
           return measuredHeight
         }
+
+        return HORIZONTAL_TOKEN_ROW_HEIGHT
       }
 
-      return isSectionHeader(item) ? ITEM_SECTION_HEADER_ROW_HEIGHT : ITEM_ROW_HEIGHT
+      return ITEM_ROW_HEIGHT
     },
     [items],
   )
@@ -248,8 +264,9 @@ export function OnchainItemList<T extends OnchainItemListOption>({
 
           // Prevent overfitting the list, resulting in showing double scroll bar
           const correctedHeight = height - 1
+          // pt=1 closes the sub-pixel gap react-window leaves above section headers
           return (
-            <Flex position="relative">
+            <Flex position="relative" pt={1}>
               <Flex position="absolute" top={0} width="100%" zIndex={zIndexes.sticky}>
                 {activeSessionIndex >= 0 && (
                   <OnchainItemListRow data={items} index={activeSessionIndex} windowWidth={windowWidth} />
@@ -261,6 +278,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
                 height={correctedHeight}
                 itemCount={items.length}
                 itemData={items}
+                itemKey={(index): string => items[index]?.measurementKey ?? `${index}`}
                 itemSize={getRowHeight}
                 width="100%"
                 onItemsRendered={({ visibleStartIndex }): void => {
@@ -288,7 +306,7 @@ function OnchainItemListRow<T extends OnchainItemListOption>({
   data: OnchainItemListData<T>[]
   style?: CSSProperties
   windowWidth: number
-  updateRowHeight?: (index: number, height: number) => void
+  updateRowHeight?: (params: RowHeightUpdate) => void
 }): JSX.Element {
   const itemData = data[index]
 
@@ -312,7 +330,7 @@ type RowProps<T extends OnchainItemListOption> = {
   itemData: ListItemRowInfo<T> | ListSectionRowInfo<T>
   style?: CSSProperties
   windowWidth: number
-  updateRowHeight?: (index: number, height: number) => void
+  updateRowHeight?: (params: RowHeightUpdate) => void
 }
 function RowInner<T extends OnchainItemListOption>({
   index,
@@ -325,6 +343,7 @@ function RowInner<T extends OnchainItemListOption>({
   useRowHeightObserver({
     ref: rowRef,
     index,
+    measurementKey: itemData.measurementKey,
     updateRowHeight,
     itemKey: itemData.key,
     needsDynamicHeight: isHorizontalTokenRowInfo(itemData),
@@ -339,7 +358,13 @@ function RowInner<T extends OnchainItemListOption>({
   }, [itemData])
 
   return (
-    <Flex key={itemData.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
+    <Flex
+      key={itemData.measurementKey}
+      grow
+      alignItems="center"
+      justifyContent={isSectionHeader(itemData) ? 'flex-start' : 'center'}
+      style={style}
+    >
       <Flex ref={rowRef} width="100%">
         {item}
       </Flex>

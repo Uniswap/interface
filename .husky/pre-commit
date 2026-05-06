@@ -61,23 +61,7 @@ call_lefthook()
     then
       devbox run lefthook "$@"
     else
-      # Fallback: lefthook not available (fresh worktree without `bun install`).
-      # Rather than silently skip every pre-commit check, run the security-
-      # critical ones directly — git-secrets and trufflehog are system binaries
-      # that don't need node_modules/. Skips fast-checks since `bun g:check:fast`
-      # genuinely requires deps. Mirrors backend's hand-written husky pre-commit,
-      # so worktree DX is symmetric across repos.
-      # NOTE: this branch is regenerated if `lefthook install` runs directly
-      # (bun install's postinstall re-patches it). Re-apply this edit if so.
-      echo "WARN: lefthook not available — running fallback security checks (fast-checks skipped; run 'bun install' to enable full pre-commit)." >&2
-      if command -v git-secrets >/dev/null 2>&1; then
-        git-secrets --register-aws >/dev/null
-        echo "Running git-secrets..."
-        git-secrets --pre_commit_hook -- "$@" || exit $?
-      fi
-      if command -v trufflehog >/dev/null 2>&1; then
-        git diff --cached --no-color | trufflehog stdin --only-verified --fail || exit $?
-      fi
+      echo "Can't find lefthook in PATH"
     fi
   fi
 }

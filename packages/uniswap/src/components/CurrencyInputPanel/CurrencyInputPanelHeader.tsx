@@ -24,6 +24,7 @@ interface CurrencyInputPanelHeaderProps {
   onSetPresetValue: (amount: string, percentage: PresetPercentage) => void
   showDefaultTokenOptions: boolean
   hidePresets?: boolean
+  actualGasFee?: string
 }
 
 export function CurrencyInputPanelHeader({
@@ -35,6 +36,7 @@ export function CurrencyInputPanelHeader({
   onSetPresetValue,
   showDefaultTokenOptions,
   hidePresets,
+  actualGasFee,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
   const renderPreset = useCallback(
     (preset: PresetPercentage) => (
@@ -45,10 +47,11 @@ export function CurrencyInputPanelHeader({
         currencyField={currencyField}
         elementName={ElementName.PresetPercentage}
         buttonProps={PRESET_BUTTON_PROPS}
+        actualGasFee={actualGasFee}
         onSetPresetValue={onSetPresetValue}
       />
     ),
-    [currencyAmount, currencyBalance, currencyField, onSetPresetValue],
+    [currencyAmount, currencyBalance, currencyField, onSetPresetValue, actualGasFee],
   )
 
   if (!headerLabel && !showDefaultTokenOptions) {

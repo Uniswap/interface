@@ -4,10 +4,10 @@ import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
 import { ErrorCallout } from '~/components/ErrorCallout'
-import { LiquidityModalDetailRows } from '~/components/Liquidity/LiquidityModalDetailRows'
-import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
-import { canUnwrapCurrency } from '~/components/Liquidity/utils/currency'
 import { StyledPercentInput } from '~/components/PercentInput'
+import { LiquidityModalDetailRows } from '~/features/Liquidity/LiquidityModalDetailRows'
+import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
+import { canUnwrapCurrency } from '~/features/Liquidity/utils/currency'
 import {
   DecreaseLiquidityStep,
   useRemoveLiquidityModalContext,

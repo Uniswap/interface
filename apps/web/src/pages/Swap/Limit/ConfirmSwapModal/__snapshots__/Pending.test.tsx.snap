@@ -11,33 +11,6 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   animation: hNFZXE 250ms ease-in-out;
 }
 
-.c8 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c14 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c14 :hover {
-  opacity: 0.6;
-}
-
-.c14 :active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: flex;
   flex-direction: column;
@@ -86,6 +59,33 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   padding: 0;
   align-items: center;
   justify-content: center;
+}
+
+.c8 {
+  color: #131313;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19, 19, 19, 0.63);
+  letter-spacing: -0.01em;
+}
+
+.c14 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c14 :hover {
+  opacity: 0.6;
+}
+
+.c14 :active {
+  opacity: 0.4;
 }
 
 .c2 {
@@ -245,33 +245,6 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   animation: hNFZXE 250ms ease-in-out;
 }
 
-.c8 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c14 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c14 :hover {
-  opacity: 0.6;
-}
-
-.c14 :active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: flex;
   flex-direction: column;
@@ -320,6 +293,33 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   padding: 0;
   align-items: center;
   justify-content: center;
+}
+
+.c8 {
+  color: #131313;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19, 19, 19, 0.63);
+  letter-spacing: -0.01em;
+}
+
+.c14 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c14 :hover {
+  opacity: 0.6;
+}
+
+.c14 :active {
+  opacity: 0.4;
 }
 
 .c2 {
@@ -478,31 +478,6 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   animation: bbnGid 250ms ease-in-out;
 }
 
-.c4 {
-  height: 16px;
-  width: 16px;
-}
-
-.c4 path {
-  stroke: rgba(19, 19, 19, 0.35);
-  background: rgba(19, 19, 19, 0.63);
-  fill: rgba(19, 19, 19, 0.35);
-}
-
-.c5 {
-  animation: 2s fvtopB linear infinite;
-}
-
-.c10 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   display: flex;
   flex-direction: column;
@@ -551,6 +526,31 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   padding: 0;
   align-items: center;
   justify-content: center;
+}
+
+.c4 {
+  height: 16px;
+  width: 16px;
+}
+
+.c4 path {
+  stroke: rgba(19, 19, 19, 0.35);
+  background: rgba(19, 19, 19, 0.63);
+  fill: rgba(19, 19, 19, 0.35);
+}
+
+.c5 {
+  animation: 2s fvtopB linear infinite;
+}
+
+.c10 {
+  color: #131313;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: rgba(19, 19, 19, 0.63);
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -702,16 +702,6 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   animation: hNFZXE 250ms ease-in-out;
 }
 
-.c8 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   display: flex;
   flex-direction: column;
@@ -744,6 +734,16 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.c8 {
+  color: #131313;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19, 19, 19, 0.63);
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -921,33 +921,6 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   animation: hNFZXE 250ms ease-in-out;
 }
 
-.c8 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c14 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c14 :hover {
-  opacity: 0.6;
-}
-
-.c14 :active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: flex;
   flex-direction: column;
@@ -996,6 +969,33 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   padding: 0;
   align-items: center;
   justify-content: center;
+}
+
+.c8 {
+  color: #131313;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: rgba(19, 19, 19, 0.63);
+  letter-spacing: -0.01em;
+}
+
+.c14 {
+  text-decoration: none;
+  cursor: pointer;
+  transition-duration: 125ms;
+  color: #FF37C7;
+  stroke: #FF37C7;
+  font-weight: 500;
+}
+
+.c14 :hover {
+  opacity: 0.6;
+}
+
+.c14 :active {
+  opacity: 0.4;
 }
 
 .c2 {
@@ -1192,31 +1192,6 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   animation: bbnGid 250ms ease-in-out;
 }
 
-.c4 {
-  height: 16px;
-  width: 16px;
-}
-
-.c4 path {
-  stroke: rgba(19, 19, 19, 0.35);
-  background: rgba(19, 19, 19, 0.63);
-  fill: rgba(19, 19, 19, 0.35);
-}
-
-.c5 {
-  animation: 2s fvtopB linear infinite;
-}
-
-.c10 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   display: flex;
   flex-direction: column;
@@ -1265,6 +1240,31 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   padding: 0;
   align-items: center;
   justify-content: center;
+}
+
+.c4 {
+  height: 16px;
+  width: 16px;
+}
+
+.c4 path {
+  stroke: rgba(19, 19, 19, 0.35);
+  background: rgba(19, 19, 19, 0.63);
+  fill: rgba(19, 19, 19, 0.35);
+}
+
+.c5 {
+  animation: 2s fvtopB linear infinite;
+}
+
+.c10 {
+  color: #131313;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: rgba(19, 19, 19, 0.63);
+  letter-spacing: -0.01em;
 }
 
 .c2 {

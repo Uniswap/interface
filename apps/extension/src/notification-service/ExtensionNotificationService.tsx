@@ -19,6 +19,7 @@ import {
   type NotificationService,
 } from '@universe/notifications'
 import ms from 'ms'
+import { getConfig } from 'src/app/config'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateUniswapInterfaceTab, focusOrCreateUnitagTab } from 'src/app/navigation/utils'
 import { createChromeStorageAdapter } from 'src/notification-service/createChromeStorageAdapter'
@@ -69,7 +70,7 @@ function provideExtensionNotificationService(ctx: {
         'Content-Type': 'application/json',
         'x-request-source': REQUEST_SOURCE,
         'x-uniswap-locale': backendLocale,
-        'x-app-version': (process.env.VERSION ?? '').split('.').slice(0, 3).join('.'),
+        'x-app-version': (getConfig().version ?? '').split('.').slice(0, 3).join('.'),
       }
     },
     getSessionService: () =>

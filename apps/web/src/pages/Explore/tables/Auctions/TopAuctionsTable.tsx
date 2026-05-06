@@ -19,16 +19,11 @@ import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
-import { formatCompactFromRaw } from '~/components/Toucan/Auction/utils/fixedPointFdv'
-import { buildTokenMarketPriceKey } from '~/components/Toucan/hooks/useTokenMarketPrices'
-import { computeProjectedFdvTableValue, ProjectedFdvTableValue } from '~/components/Toucan/utils/computeProjectedFdv'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
+import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/useTokenMarketPrices'
+import { computeProjectedFdvTableValue, ProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
 import useSimplePagination from '~/hooks/useSimplePagination'
-import {
-  AuctionStatusFilter,
-  AuctionVerificationFilter,
-  useExploreTablesFilterStore,
-} from '~/pages/Explore/exploreTablesFilterStore'
 import { TimeRemainingCell } from '~/pages/Explore/tables/Auctions/TimeRemainingCell'
 import {
   AuctionSortField,
@@ -36,6 +31,11 @@ import {
   TokenNameCell,
 } from '~/pages/Explore/tables/Auctions/TopAuctionsTableCells'
 import { TABLE_PAGE_SIZE } from '~/state/explore'
+import {
+  AuctionStatusFilter,
+  AuctionVerificationFilter,
+  useExploreTablesFilterStore,
+} from '~/state/explore/exploreTablesFilterStore'
 import { useAuctionTokenPrices } from '~/state/explore/topAuctions/useAuctionTokenPrices'
 import { auctionCommittedVolumeComparator, useTopAuctions } from '~/state/explore/topAuctions/useTopAuctions'
 import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'

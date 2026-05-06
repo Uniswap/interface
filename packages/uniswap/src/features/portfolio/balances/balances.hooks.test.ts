@@ -1,5 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { renderHook } from '@testing-library/react'
+import { SpamCode } from '@universe/api'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -183,6 +184,27 @@ describe(partitionMultichainTokensByVisibility, () => {
       chainTokens: [chainWithNullHidden],
       multichainIsHidden: false,
       isTestnetModeEnabled: false,
+      currencyIdToTokenVisibility: {},
+    })
+    expect(visible).toHaveLength(1)
+    expect(hidden).toHaveLength(0)
+  })
+
+  it('in testnet mode keeps all per-chain tokens visible regardless of isHidden and spamCode', () => {
+    const base = createMultichainBalance().tokens[0]!
+    const hiddenByApi = {
+      ...base,
+      chainId: 1,
+      isHidden: true,
+      currencyInfo: {
+        ...base.currencyInfo,
+        spamCode: SpamCode.HIGH,
+      },
+    } as PortfolioChainBalance
+    const { visible, hidden } = partitionMultichainTokensByVisibility({
+      chainTokens: [hiddenByApi],
+      multichainIsHidden: true,
+      isTestnetModeEnabled: true,
       currencyIdToTokenVisibility: {},
     })
     expect(visible).toHaveLength(1)
@@ -604,6 +626,40 @@ describe(useTokenBalancesGroupedByVisibility, () => {
     expect(result.current.shownTokens?.map((b) => b.id)).toEqual(['shown'])
     expect(result.current.hiddenTokens?.map((b) => b.id)).toEqual(['hidden'])
   })
+
+  describe('testnet mode', () => {
+    beforeEach(() => {
+      vi.mocked(useEnabledChains).mockReturnValue({ isTestnetModeEnabled: true } as ReturnType<typeof useEnabledChains>)
+    })
+
+    it('keeps API-hidden balances in shownTokens', () => {
+      const shown = createBalance({ id: 'shown', isHidden: false })
+      const apiHidden = createBalance({
+        id: 'apiHidden',
+        isHidden: true,
+        currencyInfo: {
+          ...createBalance().currencyInfo,
+          currencyId: 'hidden-id',
+          spamCode: SpamCode.HIGH,
+          currency: {
+            chainId: 1,
+            address: '0xhidden',
+            isToken: true,
+            symbol: 'H',
+            name: 'Hidden',
+            isNative: false,
+          } as PortfolioBalance['currencyInfo']['currency'],
+        } as PortfolioBalance['currencyInfo'],
+      })
+      const { result } = renderHook(() =>
+        useTokenBalancesGroupedByVisibility({
+          balancesById: { shown, apiHidden },
+        }),
+      )
+      expect(result.current.shownTokens?.map((b) => b.id).sort()).toEqual(['apiHidden', 'shown'])
+      expect(result.current.hiddenTokens).toBeUndefined()
+    })
+  })
 })
 
 describe(usePortfolioValueModifiers, () => {
@@ -611,6 +667,7 @@ describe(usePortfolioValueModifiers, () => {
     vi.mocked(useHideSmallBalancesSetting).mockReturnValue(false)
     vi.mocked(useHideSpamTokensSetting).mockReturnValue(false)
     vi.mocked(useCurrencyIdToVisibility).mockReturnValue({})
+    vi.mocked(useEnabledChains).mockReturnValue({ isTestnetModeEnabled: false } as ReturnType<typeof useEnabledChains>)
   })
 
   it('returns undefined when no addresses are provided', () => {
@@ -638,6 +695,20 @@ describe(usePortfolioValueModifiers, () => {
     })
     expect(result.current?.[0]?.tokenIncludeOverrides).toContainEqual(currencyIdToContractInput(visibleCid))
     expect(result.current?.[0]?.tokenExcludeOverrides).toContainEqual(currencyIdToContractInput(hiddenCid))
+  })
+
+  it('forces includeSpamTokens when testnet mode is enabled', () => {
+    vi.mocked(useEnabledChains).mockReturnValue({ isTestnetModeEnabled: true } as ReturnType<typeof useEnabledChains>)
+    vi.mocked(useCurrencyIdToVisibility).mockReturnValue({})
+    vi.mocked(useHideSmallBalancesSetting).mockReturnValue(true)
+    vi.mocked(useHideSpamTokensSetting).mockReturnValue(true)
+
+    const { result } = renderHook(() => usePortfolioValueModifiers('0xOwner'))
+
+    expect(result.current?.[0]).toMatchObject({
+      ownerAddress: '0xOwner',
+      includeSpamTokens: true,
+    })
   })
 })
 

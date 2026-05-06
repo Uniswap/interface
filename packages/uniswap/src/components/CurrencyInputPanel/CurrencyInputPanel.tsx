@@ -62,6 +62,7 @@ export const CurrencyInputPanel = memo(
         inputSuffix,
         allowOverflow,
         balanceVariant,
+        actualGasFee,
       } = props
 
       const isShortMobileDevice = useIsShortMobileDevice()
@@ -127,10 +128,11 @@ export const CurrencyInputPanel = memo(
             transactionType={transactionType}
             elementName={ElementName.PresetPercentage}
             buttonProps={PRESET_BUTTON_PROPS}
+            actualGasFee={actualGasFee}
             onSetPresetValue={handleSetPresetValue}
           />
         ),
-        [currencyAmount, currencyBalance, currencyField, handleSetPresetValue, transactionType],
+        [currencyAmount, currencyBalance, currencyField, handleSetPresetValue, transactionType, actualGasFee],
       )
 
       return (
@@ -156,6 +158,7 @@ export const CurrencyInputPanel = memo(
               currencyInfo={currencyInfo}
               showDefaultTokenOptions={showDefaultTokenOptions}
               hidePresets={hidePresets}
+              actualGasFee={actualGasFee}
               onSetPresetValue={handleSetPresetValue}
             />
             <CurrencyInputPanelInput
@@ -228,7 +231,9 @@ export const CurrencyInputPanel = memo(
                     hideBalance={!!hidePresets}
                     variant={balanceVariant}
                     onPressBalance={
-                      (isOutput || onSetPresetValue) && currencyBalance?.greaterThan(0) ? handlePressBalance : undefined
+                      !disabled && (isOutput || onSetPresetValue) && currencyBalance?.greaterThan(0)
+                        ? handlePressBalance
+                        : undefined
                     }
                   />
                   {/* Max button */}
@@ -242,6 +247,7 @@ export const CurrencyInputPanel = memo(
                       buttonProps={{
                         borderWidth: 0,
                       }}
+                      actualGasFee={actualGasFee}
                       onSetPresetValue={handleSetPresetValue}
                     />
                   )}

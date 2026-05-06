@@ -149,11 +149,7 @@ export {
   type ScreenResponse,
 } from '@universe/api/src/clients/compliance/createComplianceApiClient'
 
-// Old Unitags API (REST)
-export { ensureNewErrorCode } from '@universe/api/src/clients/unitags/types'
-export { createUnitagsApiClient } from '@universe/api/src/clients/unitags/createUnitagsApiClient'
-
-// New Unitags Service API
+// Unitags Service
 export {
   createUnitagServiceApiClient as createUnitagsServiceApiClient,
   type UnitagsServiceApiClient,
@@ -320,7 +316,12 @@ export { CustomRankingType, RankingType, SpamCode } from '@universe/api/src/clie
 
 export { getTransport } from '@universe/api/src/transport'
 
-export { getEntryGatewayUrl, getMigratedForApiUrl } from '@universe/api/src/getEntryGatewayUrl'
+export {
+  ENTRY_GATEWAY_PROXY_ENV_SEGMENT,
+  ENTRY_GATEWAY_PROXY_PATH,
+  getEntryGatewayUrl,
+  getMigratedForApiUrl,
+} from '@universe/api/src/getEntryGatewayUrl'
 
 export { getWebSocketUrl } from '@universe/api/src/getWebSocketUrl'
 

@@ -15,6 +15,7 @@ import {
 import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
 import { convertOrderStatusToTransactionStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { logger } from 'utilities/src/logger/logger'
+import { getConfig } from '~/config'
 import { useAccount } from '~/hooks/useAccount'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from '~/state/activity/types'
 import { usePendingUniswapXOrders } from '~/state/transactions/hooks'
@@ -30,10 +31,7 @@ export const QUICK_POLL_MAX_INTERVAL = ms('30s')
 export const QUICK_POLL_INITIAL_PHASE = ms('10s')
 export const QUICK_POLL_MEDIUM_PHASE = ms('200s')
 
-const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
-if (UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
-}
+const UNISWAP_GATEWAY_DNS_URL = getConfig().uniswapGatewayDns
 
 export function getQuickPollingInterval(orderStartTime: number) {
   const elapsedTime = Date.now() - orderStartTime

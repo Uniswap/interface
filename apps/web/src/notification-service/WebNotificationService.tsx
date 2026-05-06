@@ -33,6 +33,7 @@ import { getLogger } from 'utilities/src/logger/logger'
 import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
+import { getConfig } from '~/config'
 import useCurrentBlockTimestamp from '~/hooks/useCurrentBlockTimestamp'
 import useMachineTimeMs from '~/hooks/useMachineTime'
 import { createLocalStorageAdapter } from '~/notification-service/createLocalStorageAdapter'
@@ -69,7 +70,7 @@ function provideWebNotificationService(ctx: {
         'Content-Type': 'application/json',
         'x-request-source': REQUEST_SOURCE,
         'x-uniswap-locale': backendLocale,
-        'x-app-version': process.env.REACT_APP_VERSION_TAG ?? '',
+        'x-app-version': getConfig().versionTag,
       }
     },
     getSessionService: () =>

@@ -40,18 +40,13 @@
         "cwd": "{projectRoot}"
       }
     },
-    "check:deps:usage": {
-      "command": "./scripts/checkDepsUsage.sh",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "check:bundlesize": {
       "command": "./scripts/checkBundleSize.sh",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
+    "check:deps:usage": {},
     "clean": {
       "command": "react-native-clean-project",
       "options": {
@@ -66,12 +61,6 @@
     },
     "deduplicate": {
       "command": "echo 'Bun automatically deduplicates dependencies'",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "depcheck": {
-      "command": "depcheck",
       "options": {
         "cwd": "{projectRoot}"
       }

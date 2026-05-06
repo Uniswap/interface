@@ -105,7 +105,7 @@
       }
     },
     "start:absolute": {
-      "command": "bun run start:absolute:mac",
+      "command": "bun run scripts/startAbsolute.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -118,6 +118,12 @@
     },
     "start:absolute:windows": {
       "command": "WXT_ABSOLUTE_OUTDIR=C:/ProgramData/stretch wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute:linux": {
+      "command": "WXT_ABSOLUTE_OUTDIR=/var/tmp/stretch wxt",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -209,6 +215,12 @@
     "e2e:ui": {
       "command": "nx playwright:ui extension",
       "dependsOn": ["build:e2e"]
+    },
+    "diff:builds": {
+      "command": "bun run scripts/diffBuilds.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
     },
     "validate:build": {
       "command": "bun run scripts/validateBuildOutput.ts",

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 
@@ -13,7 +14,17 @@ interface TransactionSettingRowProps {
 }
 
 export function TransactionSettingRow({ setting, setSelectedSetting }: TransactionSettingRowProps): JSX.Element | null {
-  const { renderTitle, renderTooltip, Control, Description, Screen, InfoModal, featureFlag, Warning } = setting
+  const {
+    renderTitle,
+    renderTooltip,
+    tooltipLearnMoreUrl,
+    Control,
+    Description,
+    Screen,
+    InfoModal,
+    featureFlag,
+    Warning,
+  } = setting
   const { t } = useTranslation()
 
   const [showInfoModal, setShowInfoModal] = useState(false)
@@ -38,7 +49,17 @@ export function TransactionSettingRow({ setting, setSelectedSetting }: Transacti
                   {renderTitle(t)}
                 </Text>
                 {InfoModal && InfoIcon}
-                {!!renderTooltip && <InfoTooltip trigger={InfoIcon} text={renderTooltip(t)} />}
+                {!!renderTooltip && (
+                  <InfoTooltip
+                    trigger={InfoIcon}
+                    text={renderTooltip(t)}
+                    button={
+                      tooltipLearnMoreUrl ? (
+                        <LearnMoreLink url={tooltipLearnMoreUrl} textVariant="buttonLabel4" textColor="$neutral1" />
+                      ) : undefined
+                    }
+                  />
+                )}
               </Flex>
               {Description && (
                 <Text color="$neutral2" variant="body3">

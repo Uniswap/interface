@@ -1,0 +1,1 @@
+export const MOCK_USDC_BALANCE = 5000.12

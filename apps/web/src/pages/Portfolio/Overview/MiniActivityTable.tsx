@@ -17,7 +17,6 @@ import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { hasRow } from '~/components/Table/utils/hasRow'
-import { useOpenTransactionDetailsModal } from '~/components/TopLevelModals/TransactionDetailsModalDispatcher'
 import { ActivityAmountCell } from '~/pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ActivityAmountCell'
 import { TimeCell } from '~/pages/Portfolio/Activity/ActivityTable/TimeCell'
 import { filterTransactionDetailsFromActivityItems } from '~/pages/Portfolio/Activity/Filters/utils'
@@ -28,6 +27,7 @@ import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeade
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'
 
 interface MiniActivityTableProps {
   maxActivities?: number

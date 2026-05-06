@@ -4,9 +4,9 @@ import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
-import { PositionInfo } from '~/components/Liquidity/types'
-import { parseRestPosition } from '~/components/Liquidity/utils/parseFromRest'
+import { parseRestPosition } from '~/features/Liquidity/utils/parseFromRest'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
+import { PositionInfo } from '~/types/liquidity'
 
 interface UseMiniPoolsTableDataParams {
   account: string

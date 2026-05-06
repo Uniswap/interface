@@ -39,7 +39,7 @@ const getHTML = (svgContent: string): string => `
 </html>
 `
 
-export function SvgImage({ uri, size, autoplay, fallback }: SvgImageProps): JSX.Element | null {
+export function SvgImage({ uri, size, autoplay, fallback, onError }: SvgImageProps): JSX.Element | null {
   const svgData = useSvgData(uri, autoplay)
 
   if (!svgData?.content || !svgData.aspectRatio) {
@@ -70,6 +70,7 @@ export function SvgImage({ uri, size, autoplay, fallback }: SvgImageProps): JSX.
           width: '100%',
         }}
         useWebKit={false}
+        onError={onError}
       />
     </Flex>
   )

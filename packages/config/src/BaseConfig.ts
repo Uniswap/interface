@@ -33,12 +33,6 @@ export const BaseConfigValues = {
   quicknodeEndpointName: process.env.QUICKNODE_ENDPOINT_NAME ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken: process.env.QUICKNODE_ENDPOINT_TOKEN ?? process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN,
 
-  // Mobile (present in shared BaseConfig, unused by web)
-  // TODO(apps-infra): Move these to mobile
-  appsflyerApiKey: process.env.APPSFLYER_API_KEY,
-  appsflyerAppId: process.env.APPSFLYER_APP_ID,
-  onesignalAppId: process.env.ONESIGNAL_APP_ID,
-
   // Feature Flags
   enableEntryGatewayProxy: process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY ?? process.env.ENABLE_ENTRY_GATEWAY_PROXY,
   enableSessionService: process.env.ENABLE_SESSION_SERVICE,
@@ -60,7 +54,6 @@ export const BaseConfigValues = {
   tradingApiUrlOverride: process.env.TRADING_API_URL_OVERRIDE ?? process.env.REACT_APP_TRADING_API_URL_OVERRIDE,
   tradingApiWebTestEnv: process.env.REACT_APP_TRADING_API_TEST_ENV,
   uniswapNotifApiBaseUrlOverride: process.env.UNISWAP_NOTIF_API_BASE_URL_OVERRIDE,
-  unitagsApiUrlOverride: process.env.UNITAGS_API_URL_OVERRIDE,
 }
 
 const envEnum = z.enum(['development', 'staging', 'production', 'test'])
@@ -91,11 +84,6 @@ export const BaseConfigSchema = z.object({
   quicknodeEndpointName: optionalString.describe('QuickNode endpoint name'),
   quicknodeEndpointToken: optionalString.describe('QuickNode endpoint token'),
 
-  // Mobile
-  appsflyerApiKey: optionalString.describe('API key for AppsFlyer'),
-  appsflyerAppId: optionalString.describe('App ID for AppsFlyer'),
-  onesignalAppId: optionalString.describe('App ID for OneSignal'),
-
   // Feature Flags
   enableEntryGatewayProxy: boolFromString.describe('Is the entry gateway proxy enabled'),
   enableSessionService: boolFromString.describe('Is the session service enabled'),
@@ -115,7 +103,6 @@ export const BaseConfigSchema = z.object({
   tradingApiUrlOverride: optionalString.describe('Override URL for Trading API'),
   tradingApiWebTestEnv: optionalString.describe('Trading API test environment flag'),
   uniswapNotifApiBaseUrlOverride: optionalString.describe('Override URL for notification API'),
-  unitagsApiUrlOverride: optionalString.describe('Override URL for Unitags API'),
 })
 
 /** Type inferred from BaseConfigSchema */

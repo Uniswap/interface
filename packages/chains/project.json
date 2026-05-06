@@ -5,6 +5,12 @@
   "projectType": "library",
   "tags": [],
   "targets": {
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "typecheck": {},
     "typecheck:tsc": {},
     "typecheck:tsgo": {},

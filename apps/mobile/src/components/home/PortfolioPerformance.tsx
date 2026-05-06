@@ -12,6 +12,7 @@ import {
 } from 'uniswap/src/components/WalletProfitLoss/utils'
 import { WalletProfitLoss } from 'uniswap/src/components/WalletProfitLoss/WalletProfitLoss'
 import { useGetWalletProfitLossQuery } from 'uniswap/src/data/rest/getWalletProfitLoss'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -27,6 +28,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
   chainIds,
 }: PortfolioPerformanceProps): JSX.Element | null {
   const { t } = useTranslation()
+  const { isTestnetModeEnabled } = useEnabledChains()
   const [selectedPeriod, setSelectedPeriod] = useState<ProfitLossPeriod>(ProfitLossPeriod.ALL)
   const modifier = useRestPortfolioValueModifier(evmAddress)
 
@@ -97,7 +99,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
     [options, selectedPeriod, t],
   )
 
-  if (isError) {
+  if (isError || isTestnetModeEnabled) {
     return null
   }
 

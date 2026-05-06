@@ -1,7 +1,7 @@
 import { memo } from 'react'
-import { PositionInfo } from '~/components/Liquidity/types'
 import { Cell } from '~/components/Table/Cell'
 import { hasRow } from '~/components/Table/utils/hasRow'
+import { PositionInfo } from '~/types/liquidity'
 
 interface PositionCellProps {
   info: { row: { original: PositionInfo } }

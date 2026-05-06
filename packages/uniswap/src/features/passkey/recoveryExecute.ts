@@ -1,8 +1,8 @@
 import { hkdf } from '@noble/hashes/hkdf.js'
 import { sha256 } from '@noble/hashes/sha2.js'
+import { base64urlToBase64 } from '@universe/encoding'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
-import { base64urlToBase64 } from 'uniswap/src/features/passkey/deviceSession'
 import {
   AES_KEY_LENGTH,
   blindPin,

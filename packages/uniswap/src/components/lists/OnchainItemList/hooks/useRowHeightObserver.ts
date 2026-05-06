@@ -1,15 +1,23 @@
 import { Key, RefObject, useEffect, useLayoutEffect } from 'react'
 
+type RowHeightUpdate = {
+  index: number
+  measurementKey: string
+  height: number
+}
+
 type UseRowHeightObserverParams = {
   ref: RefObject<HTMLElement | null>
   index: number
-  updateRowHeight: ((index: number, height: number) => void) | undefined
+  measurementKey: string
+  updateRowHeight: ((update: RowHeightUpdate) => void) | undefined
   itemKey: Key | undefined
   needsDynamicHeight: boolean
 }
 export function useRowHeightObserver({
   ref,
   index,
+  measurementKey,
   updateRowHeight,
   itemKey,
   needsDynamicHeight,
@@ -21,7 +29,7 @@ export function useRowHeightObserver({
     }
     const height = ref.current.getBoundingClientRect().height
     if (height) {
-      updateRowHeight(index, height)
+      updateRowHeight({ index, measurementKey, height })
     }
   })
 
@@ -33,10 +41,10 @@ export function useRowHeightObserver({
       // borderBoxSize matches getBoundingClientRect().height used in the layout effect above
       const height = entry?.borderBoxSize[0]?.blockSize ?? entry?.contentRect.height
       if (height) {
-        updateRowHeight(index, height)
+        updateRowHeight({ index, measurementKey, height })
       }
     })
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [index, updateRowHeight, itemKey, needsDynamicHeight, ref])
+  }, [index, measurementKey, updateRowHeight, itemKey, needsDynamicHeight, ref])
 }

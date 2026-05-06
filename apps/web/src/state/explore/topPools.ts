@@ -10,8 +10,8 @@ import {
   PoolTableSortState,
 } from '~/appGraphql/data/pools/useTopPools'
 import { OrderDirection } from '~/appGraphql/data/util'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
 import { giveExploreStatDefaultValue, useExploreStats } from '~/state/explore'
+import { useExploreTablesFilterStore } from '~/state/explore/exploreTablesFilterStore'
 import { PoolStat } from '~/state/explore/types'
 
 function useFilteredPools(pools?: PoolStat[], enabled = true) {

@@ -157,6 +157,7 @@ function makeEthereum(): void {
 
 export default defineContentScript({
   matches:
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax allow process.env access
     __DEV__ || process.env.BUILD_ENV === 'dev'
       ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
       : ['https://*/*'],

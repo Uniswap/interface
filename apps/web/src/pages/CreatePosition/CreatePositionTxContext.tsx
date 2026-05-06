@@ -40,13 +40,13 @@ import { TransactionStepType } from 'uniswap/src/features/transactions/steps/typ
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logger } from 'utilities/src/logger/logger'
-import { useDepositInfo } from '~/components/Liquidity/Create/hooks/useDepositInfo'
-import { useDynamicNativeSlippage } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
-import { useCreatePositionDependentAmountFallback } from '~/components/Liquidity/hooks/useDependentAmountFallback'
-import { generateLiquidityServiceCreateCalldataQueryParams } from '~/components/Liquidity/utils/generateLiquidityServiceCreateCalldata'
-import { getCheckLPApprovalRequestParams } from '~/components/Liquidity/utils/getCheckLPApprovalRequestParams'
-import { isInvalidRange, isOutOfRange } from '~/components/Liquidity/utils/priceRangeInfo'
+import { useDynamicNativeSlippage } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
+import { useIsLiquidityApprovalSimulationEnabled } from '~/features/Liquidity/hooks/preEstimatedLiquidityGasUtils'
+import { useCreatePositionDependentAmountFallback } from '~/features/Liquidity/hooks/useDependentAmountFallback'
+import { generateLiquidityServiceCreateCalldataQueryParams } from '~/features/Liquidity/utils/generateLiquidityServiceCreateCalldata'
+import { getCheckLPApprovalRequestParams } from '~/features/Liquidity/utils/getCheckLPApprovalRequestParams'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { useCreatePositionDepositInfo } from '~/pages/CreatePosition/hooks/useCreatePositionDepositInfo'
 import { PositionField } from '~/types/position'
 
 /** @internal - exported for testing */
@@ -147,6 +147,7 @@ interface CreatePositionTxContextType {
   formattedAmounts?: { [field in PositionField]?: string }
   currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  preEstimatedGasFee?: string
 }
 
 const CreatePositionTxContext = createContext<CreatePositionTxContextType | undefined>(undefined)
@@ -166,40 +167,25 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     setRefetch,
   } = useCreateLiquidityContext()
   const evmAddress = useActiveAddress(Platform.EVM)
-  const { TOKEN0, TOKEN1 } = currencies.display
-  const { exactField } = depositState
-
-  const invalidRange = protocolVersion !== ProtocolVersion.V2 && isInvalidRange(ticks[0], ticks[1])
-  const depositInfoProps = useMemo(() => {
-    const [tickLower, tickUpper] = ticks
-    const outOfRange = isOutOfRange({
-      poolOrPair,
-      lowerTick: tickLower,
-      upperTick: tickUpper,
-    })
-
-    return {
-      protocolVersion,
-      poolOrPair,
-      address: evmAddress,
-      token0: TOKEN0,
-      token1: TOKEN1,
-      tickLower: protocolVersion !== ProtocolVersion.V2 ? (tickLower ?? undefined) : undefined,
-      tickUpper: protocolVersion !== ProtocolVersion.V2 ? (tickUpper ?? undefined) : undefined,
-      exactField,
-      exactAmounts: depositState.exactAmounts,
-      skipDependentAmount: protocolVersion === ProtocolVersion.V2 ? false : outOfRange || invalidRange,
-    }
-  }, [TOKEN0, TOKEN1, exactField, ticks, poolOrPair, depositState, evmAddress, protocolVersion, invalidRange])
 
   const {
     currencyMaxAmounts,
     currencyAmounts,
-    error: inputError,
+    inputError,
     formattedAmounts,
     currencyAmountsUSDValue,
     currencyBalances,
-  } = useDepositInfo(depositInfoProps)
+    preEstimatedGasFee,
+    invalidRange,
+  } = useCreatePositionDepositInfo({
+    evmAddress,
+    protocolVersion,
+    currencies,
+    ticks,
+    poolOrPair,
+    poolId,
+    depositState,
+  })
 
   const { customDeadline, customSlippageTolerance, isSlippageDirty } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
@@ -267,6 +253,8 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     return undefined
   }, [protocolVersion, currencyMaxAmounts])
 
+  const isApprovalSimEnabled = useIsLiquidityApprovalSimulationEnabled(poolOrPair?.chainId)
+
   const createCalldataQueryParams = useMemo(() => {
     return generateLiquidityServiceCreateCalldataQueryParams({
       address: evmAddress,
@@ -283,6 +271,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       customDeadline,
       nativeTokenBalance,
       poolId,
+      isApprovalSimEnabled,
     })
   }, [
     evmAddress,
@@ -300,6 +289,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     protocolVersion,
     customDeadline,
     nativeTokenBalance,
+    isApprovalSimEnabled,
   ])
 
   const isUserCommittedToCreate =
@@ -364,7 +354,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     exactField: depositState.exactField,
   })
 
-  const actualGasFee = createCalldata?.gasFee
+  const effectiveGasFee = createCalldata?.gasFee ?? preEstimatedGasFee
   const {
     token0Approval,
     token1Approval,
@@ -387,11 +377,11 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
   )
   const { displayValue: calculatedGasFee } = useTransactionGasFee({
     tx: createCalldata?.create,
-    skip: !!actualGasFee || needsApprovals,
+    skip: !!effectiveGasFee || needsApprovals,
   })
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     toSupportedChainId(createCalldata?.create?.chainId) ?? undefined,
-    actualGasFee || calculatedGasFee,
+    effectiveGasFee || calculatedGasFee,
   )
 
   const lastKnownGasFeeRef = useRef<CurrencyAmount<Currency> | undefined>(undefined)
@@ -465,6 +455,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       formattedAmounts,
       currencyAmountsUSDValue,
       currencyBalances,
+      preEstimatedGasFee,
     }),
     [
       txInfo,
@@ -476,6 +467,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       formattedAmounts,
       currencyAmountsUSDValue,
       currencyBalances,
+      preEstimatedGasFee,
     ],
   )
 

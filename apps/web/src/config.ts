@@ -1,3 +1,4 @@
+// oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access in these config files
 import type { BaseConfig } from '@universe/config'
 import { boolFromString, parseConfig } from '@universe/config'
 import { logger } from 'utilities/src/logger/logger'

@@ -3,11 +3,11 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, TouchableArea } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
-import { PositionInfo } from '~/components/Liquidity/types'
-import { parseRestPosition } from '~/components/Liquidity/utils/parseFromRest'
+import { parseRestPosition } from '~/features/Liquidity/utils/parseFromRest'
 import { useAccount } from '~/hooks/useAccount'
 import { PoolDetailsPositionsTable } from '~/pages/PoolDetails/components/PoolDetailsPositionsTable'
 import { PoolDetailsTransactionsTable } from '~/pages/PoolDetails/components/PoolDetailsTransactionsTable'
+import { PositionInfo } from '~/types/liquidity'
 
 enum PoolDetailsTableTabs {
   TRANSACTIONS = 'transactions',

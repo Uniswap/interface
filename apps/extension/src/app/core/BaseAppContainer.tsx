@@ -63,6 +63,13 @@ const provideSessionInitializationService = (): SessionInitializationService => 
         getWorkerChannel: () =>
           createHashcashWorkerChannel({
             getWorker: createHashcashWorker,
+            // Log worker boot failures (e.g. `importScripts` NetworkError from
+            // a broken Vite chunk path)
+            // to Datadog so a regression is visible before users report it.
+            onWorkerError: (error) =>
+              getLogger().error(error, {
+                tags: { file: 'BaseAppContainer.tsx', function: 'createHashcashWorkerChannel' },
+              }),
           }),
         onSolveCompleted: onHashcashSolveCompleted,
         getLogger,

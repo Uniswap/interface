@@ -40,6 +40,7 @@ test.describe(
 
     test('should automatically navigate to the new TDP (erc20)', async ({ page }) => {
       await page.getByTestId(OUTPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
 
       expect(page.url()).toContain(normalizeAddress(USDT.address, AddressStringFormat.Lowercase))
@@ -48,9 +49,11 @@ test.describe(
 
     test('should navigate to the new TDP with correct tokens selected', async ({ page }) => {
       await page.getByTestId(INPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
 
       await page.getByTestId(OUTPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-WBTC').first().click()
 
       await expect(page.getByTestId(INPUT_TOKEN_LABEL)).toContainText('USDT')
@@ -60,6 +63,7 @@ test.describe(
     test('should not share swap state with the main swap page', async ({ page }) => {
       await expect(page.getByTestId(OUTPUT_TOKEN_LABEL)).toContainText('UNI')
       await page.getByTestId(INPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
       await page.goto('/swap')
 
@@ -88,6 +92,7 @@ test.describe(
     test.describe('swap input', () => {
       test('should handle amount into input', async ({ page }) => {
         await page.getByTestId(INPUT_TOKEN_LABEL).click()
+        // oxlint-disable-next-line eslint-js/no-restricted-syntax
         await page.getByTestId('token-option-1-USDT').first().click()
 
         await page.getByTestId(TestID.AmountInputIn).clear()

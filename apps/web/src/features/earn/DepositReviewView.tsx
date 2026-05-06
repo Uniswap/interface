@@ -1,0 +1,150 @@
+import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { MessageQuestion } from 'ui/src/components/icons/MessageQuestion'
+import { iconSizes } from 'ui/src/theme'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
+import { Pill } from 'uniswap/src/components/pill/Pill'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { NumberType } from 'utilities/src/format/types'
+import type { MockEarnVault } from '~/features/earn/_fixtures/vaults'
+
+// TODO(CONS-1783): replace with dynamic gas estimate from VaultActionRequest quote.
+const NETWORK_COST_USD = 1.02
+
+interface DepositReviewViewProps {
+  vault: MockEarnVault
+  amount: string
+  onBack: () => void
+  onClose: () => void
+  onDeposit: () => void
+}
+
+export function DepositReviewView({ vault, amount, onBack, onClose, onDeposit }: DepositReviewViewProps): JSX.Element {
+  const { t } = useTranslation()
+  const colors = useSporeColors()
+  const { formatNumberOrString, formatPercent } = useLocalizationContext()
+  const currencyInfo = useCurrencyInfo(vault.currencyId)
+  const currency = currencyInfo?.currency
+  const symbol = currency?.symbol ?? 'USDC'
+
+  const [expanded, setExpanded] = useState(true)
+  const toggleExpanded = useCallback(() => setExpanded((prev) => !prev), [])
+
+  const parsedAmount = Number(amount) || 0
+  const projectedAnnualEarnings = parsedAmount * (vault.apyPercent / 100)
+  const tokenAmountLabel = formatNumberOrString({ value: parsedAmount, type: NumberType.TokenNonTx })
+
+  const formatFiat = useCallback(
+    (value: number): string => formatNumberOrString({ value, type: NumberType.FiatStandard }),
+    [formatNumberOrString],
+  )
+
+  return (
+    <Flex gap="$spacing16">
+      <Flex row alignItems="center" justifyContent="space-between">
+        <Flex row alignItems="center" gap="$spacing8">
+          <TouchableArea onPress={onBack}>
+            <BackArrow color="$neutral2" size="$icon.24" />
+          </TouchableArea>
+          <Text variant="subheading2" color="$neutral2">
+            {t('explore.earn.deposit.youreDepositing')}
+          </Text>
+        </Flex>
+        <Flex row alignItems="center" gap="$spacing12">
+          <TouchableArea
+            onPress={() => {
+              // TODO(CONS-1783): wire "Get help" to the help center destination.
+            }}
+          >
+            <Pill
+              backgroundColor="$surface1"
+              customBorderColor={colors.surface3.val}
+              foregroundColor={colors.neutral1.val}
+              icon={<MessageQuestion color="$neutral1" size="$icon.16" />}
+              label={t('explore.earn.deposit.getHelp')}
+              px="$spacing12"
+              py="$spacing4"
+              textVariant="buttonLabel4"
+            />
+          </TouchableArea>
+          <ModalCloseIcon onClose={onClose} />
+        </Flex>
+      </Flex>
+
+      <Flex alignItems="center" gap="$spacing12" py="$spacing32">
+        <Text variant="heading1" color="$neutral1">
+          {formatFiat(parsedAmount)}
+        </Text>
+        <Flex row alignItems="center" gap="$spacing8">
+          <TokenLogo
+            url={currencyInfo?.logoUrl}
+            size={iconSizes.icon24}
+            chainId={currency?.chainId}
+            symbol={symbol}
+            name={currency?.name}
+          />
+          <Text variant="body2" color="$neutral2">
+            {`${tokenAmountLabel} ${symbol}`}
+          </Text>
+        </Flex>
+      </Flex>
+
+      <ExpandoRow
+        isExpanded={expanded}
+        label={expanded ? t('explore.earn.deposit.showLess') : t('explore.earn.deposit.showMore')}
+        onPress={toggleExpanded}
+      />
+
+      {expanded && (
+        <Flex gap="$spacing12">
+          <SummaryRow
+            label={t('explore.earn.deposit.projectedEarnings')}
+            value={
+              <Text variant="body3" color="$neutral1">
+                {`+${formatFiat(projectedAnnualEarnings)} `}
+                <Text variant="body3" color="$neutral2">
+                  {t('explore.earn.deposit.perYear')}
+                </Text>
+              </Text>
+            }
+          />
+          <SummaryRow
+            label={t('explore.earn.deposit.rewardRate')}
+            value={
+              <Text variant="body3" color="$accent1">
+                {t('explore.earn.vault.rateValue', { apy: formatPercent(vault.rewardsAprPercent) })}
+              </Text>
+            }
+          />
+          <SummaryRow
+            label={t('common.networkCost')}
+            value={
+              <Text variant="body3" color="$neutral1">
+                {formatFiat(NETWORK_COST_USD)}
+              </Text>
+            }
+          />
+        </Flex>
+      )}
+
+      <Button variant="branded" size="large" py="$spacing24" onPress={onDeposit}>
+        {t('explore.earn.deposit.cta', { symbol })}
+      </Button>
+    </Flex>
+  )
+}
+
+function SummaryRow({ label, value }: { label: string; value: React.ReactNode }): JSX.Element {
+  return (
+    <Flex row alignItems="center" justifyContent="space-between">
+      <Text variant="body3" color="$neutral2">
+        {label}
+      </Text>
+      {value}
+    </Flex>
+  )
+}

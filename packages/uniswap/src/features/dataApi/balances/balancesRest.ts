@@ -235,8 +235,11 @@ export function useRestPortfolioValueModifiers(
 ): PartialMessage<RestPortfolioValueModifier>[] | undefined {
   const addressArray = useMemo(() => addresses ?? [], [addresses])
   const currencyIdToTokenVisibility = useCurrencyIdToVisibility(addressArray)
-  const includeSpamTokens = !useHideSpamTokensSetting()
-  const includeSmallBalances = !useHideSmallBalancesSetting()
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const hideSpamTokens = useHideSpamTokensSetting()
+  const hideSmallBalances = useHideSmallBalancesSetting()
+  const includeSpamTokens = isTestnetModeEnabled || !hideSpamTokens
+  const includeSmallBalances = !hideSmallBalances
 
   const modifiers = useMemo(() => {
     const { includeOverrides, excludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(

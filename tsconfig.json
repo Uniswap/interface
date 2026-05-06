@@ -90,6 +90,12 @@
     },
     {
       "path": "./packages/chains"
+    },
+    {
+      "path": "./packages/encoding"
+    },
+    {
+      "path": "./packages/environment"
     }
   ]
 }

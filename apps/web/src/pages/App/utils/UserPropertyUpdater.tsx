@@ -11,6 +11,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { Metric, onCLS, onFCP, onINP, onLCP } from 'web-vitals'
+import { getConfig } from '~/config'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useAppSelector } from '~/state/hooks'
 import { useRouterPreference } from '~/state/user/hooks'
@@ -45,7 +46,7 @@ export function UserPropertyUpdater() {
     setUserProperty(InterfaceUserPropertyName.Browser, getBrowser())
     setUserProperty(InterfaceUserPropertyName.ScreenResolutionHeight, window.screen.height)
     setUserProperty(InterfaceUserPropertyName.ScreenResolutionWidth, window.screen.width)
-    setUserProperty(InterfaceUserPropertyName.GitCommitHash, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
+    setUserProperty(InterfaceUserPropertyName.GitCommitHash, getConfig().gitCommitHash || 'unknown')
 
     // Service Worker analytics
     // This null check is necessary to avoid a crash on mobile browsers like Safari.

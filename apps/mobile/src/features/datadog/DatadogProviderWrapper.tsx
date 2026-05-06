@@ -15,8 +15,8 @@ import {
   getDynamicConfigValue,
 } from '@universe/gating'
 import { PropsWithChildren, default as React, useEffect, useState } from 'react'
+import { getConfig } from 'src/config'
 import { DatadogContext } from 'src/features/datadog/DatadogContext'
-import { config } from 'uniswap/src/config'
 import { datadogEnabledBuild, isTestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
@@ -39,9 +39,9 @@ const datadogAutoInstrumentation = {
 
 async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
   const datadogConfig: DatadogProviderConfiguration = {
-    clientToken: config.datadogClientToken,
+    clientToken: getConfig().datadogClientToken,
     env: getDatadogEnvironment(),
-    applicationId: config.datadogProjectId,
+    applicationId: getConfig().datadogProjectId,
     // @ts-expect-error - Favored getting types from DatadogProviderConfiguration over fixing ths type
     trackingConsent: undefined,
     site: 'US1',
@@ -80,7 +80,7 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
     })
   }
 
-  if (config.isE2ETest) {
+  if (getConfig().isE2ETest) {
     Object.assign(datadogConfig, {
       sessionSamplingRate: 100,
       trackingConsent: TrackingConsent.GRANTED,
@@ -91,7 +91,7 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
   await DatadogProvider.initialize(datadogConfig)
 
   setAttributesToDatadog({
-    isE2ETest: config.isE2ETest,
+    isE2ETest: getConfig().isE2ETest,
   }).catch(() => undefined)
 }
 
@@ -106,7 +106,7 @@ export function DatadogProviderWrapper({
   const [isInitialized, setInitialized] = useState(false)
 
   useEffect(() => {
-    if ((datadogEnabledBuild || config.isE2ETest) && sessionSampleRate !== undefined) {
+    if ((datadogEnabledBuild || getConfig().isE2ETest) && sessionSampleRate !== undefined) {
       initializeDatadog(sessionSampleRate).catch(() => undefined)
     }
   }, [sessionSampleRate])

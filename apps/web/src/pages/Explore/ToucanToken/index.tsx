@@ -16,28 +16,28 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants/trace/page'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { DetailsHeaderContainer } from '~/components/Explore/stickyHeader/DetailsHeaderContainer'
-import { ActivitySection } from '~/components/Toucan/Auction/ActivityTimeline/ActivitySection'
-import { AuctionDetailsModal } from '~/components/Toucan/Auction/ActivityTimeline/AuctionDetailsModal'
-import { BidDistributionChartTab } from '~/components/Toucan/Auction/AuctionChartShared'
-import { AuctionHeader } from '~/components/Toucan/Auction/AuctionHeader'
-import { AuctionInfo, AuctionStatsGrid } from '~/components/Toucan/Auction/AuctionStats/AuctionStats'
-import { AuctionIntroBanner } from '~/components/Toucan/Auction/Banners/AuctionIntro/AuctionIntroBanner'
-import { AuctionStatsBanner } from '~/components/Toucan/Auction/Banners/AuctionStatsBanner/AuctionStatsBanner'
-import { TokenLaunchedBanner } from '~/components/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBanner'
-import { AuctionChartContainer } from '~/components/Toucan/Auction/BidDistributionChart/AuctionChartContainer'
-import { BidForm } from '~/components/Toucan/Auction/BidForm/BidForm'
-import { AuctionGraduated } from '~/components/Toucan/Auction/Bids/AuctionGraduated'
-import { Bids } from '~/components/Toucan/Auction/Bids/Bids'
-import { WithdrawModal } from '~/components/Toucan/Auction/Bids/WithdrawModal/WithdrawModal'
-import { useBidFormState } from '~/components/Toucan/Auction/hooks/useBidFormState'
-import { useWithdrawButtonState } from '~/components/Toucan/Auction/hooks/useWithdrawButtonState'
-import { AuctionStoreProvider } from '~/components/Toucan/Auction/store/AuctionStoreContextProvider'
-import { AuctionProgressState, BidInfoTab } from '~/components/Toucan/Auction/store/types'
-import { useAuctionStore, useAuctionStoreActions } from '~/components/Toucan/Auction/store/useAuctionStore'
-import { ToucanActionButton } from '~/components/Toucan/Shared/ToucanActionButton'
-import { ToucanContainer } from '~/components/Toucan/Shared/ToucanContainer'
-import { ToucanIntroModal } from '~/components/Toucan/ToucanIntroModal'
+import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
+import { ActivitySection } from '~/features/Toucan/Auction/ActivityTimeline/ActivitySection'
+import { AuctionDetailsModal } from '~/features/Toucan/Auction/ActivityTimeline/AuctionDetailsModal'
+import { BidDistributionChartTab } from '~/features/Toucan/Auction/AuctionChartShared'
+import { AuctionHeader } from '~/features/Toucan/Auction/AuctionHeader'
+import { AuctionInfo, AuctionStatsGrid } from '~/features/Toucan/Auction/AuctionStats/AuctionStats'
+import { AuctionIntroBanner } from '~/features/Toucan/Auction/Banners/AuctionIntro/AuctionIntroBanner'
+import { AuctionStatsBanner } from '~/features/Toucan/Auction/Banners/AuctionStatsBanner/AuctionStatsBanner'
+import { TokenLaunchedBanner } from '~/features/Toucan/Auction/Banners/TokenLaunched/TokenLaunchedBanner'
+import { AuctionChartContainer } from '~/features/Toucan/Auction/BidDistributionChart/AuctionChartContainer'
+import { BidForm } from '~/features/Toucan/Auction/BidForm/BidForm'
+import { AuctionGraduated } from '~/features/Toucan/Auction/Bids/AuctionGraduated'
+import { Bids } from '~/features/Toucan/Auction/Bids/Bids'
+import { WithdrawModal } from '~/features/Toucan/Auction/Bids/WithdrawModal/WithdrawModal'
+import { useBidFormState } from '~/features/Toucan/Auction/hooks/useBidFormState'
+import { useWithdrawButtonState } from '~/features/Toucan/Auction/hooks/useWithdrawButtonState'
+import { AuctionStoreProvider } from '~/features/Toucan/Auction/store/AuctionStoreContextProvider'
+import { AuctionProgressState, BidInfoTab } from '~/features/Toucan/Auction/store/types'
+import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { ToucanActionButton } from '~/features/Toucan/Shared/ToucanActionButton'
+import { ToucanContainer } from '~/features/Toucan/Shared/ToucanContainer'
+import { ToucanIntroModal } from '~/features/Toucan/ToucanIntroModal'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
@@ -120,11 +120,11 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
           />
         )}
       </ToucanContainer>
-      <DetailsHeaderContainer isCompact={isCompact} px="$none" $lg={{ px: '$none' }}>
+      <StickyCollapsibleHeader isCompact={isCompact} px="$none" $lg={{ px: '$none' }}>
         <ToucanContainer>
           <AuctionHeader isCompact={isCompact} />
         </ToucanContainer>
-      </DetailsHeaderContainer>
+      </StickyCollapsibleHeader>
       <ToucanContainer mb="$spacing48">
         <AuctionStatsBanner />
         <TokenDetailsLayout justifyContent="flex-start" px="$none" $lg={{ px: '$none' }} gap={46}>

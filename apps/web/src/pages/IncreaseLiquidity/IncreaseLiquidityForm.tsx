@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ErrorCallout } from '~/components/ErrorCallout'
-import { DepositInputForm } from '~/components/Liquidity/DepositInputForm'
-import { useUpdatedAmountsFromDependentAmount } from '~/components/Liquidity/hooks/useDependentAmountFallback'
-import { LiquidityModalDetailRows } from '~/components/Liquidity/LiquidityModalDetailRows'
-import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
-import { canUnwrapCurrency } from '~/components/Liquidity/utils/currency'
-import { getFieldsDisabled } from '~/components/Liquidity/utils/priceRangeInfo'
+import { DepositInputForm } from '~/features/Liquidity/DepositInputForm'
+import { useUpdatedAmountsFromDependentAmount } from '~/features/Liquidity/hooks/useDependentAmountFallback'
+import { LiquidityModalDetailRows } from '~/features/Liquidity/LiquidityModalDetailRows'
+import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
+import { canUnwrapCurrency } from '~/features/Liquidity/utils/currency'
+import { getFieldsDisabled } from '~/features/Liquidity/utils/priceRangeInfo'
 import { IncreaseLiquidityStep, useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { PositionField } from '~/types/position'
@@ -24,6 +24,7 @@ export function IncreaseLiquidityForm() {
     setIncreaseLiquidityState,
     unwrapNativeCurrency,
     setUnwrapNativeCurrency,
+    preEstimatedGasFee,
   } = useIncreaseLiquidityContext()
   const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances, currencies, error } =
     derivedIncreaseLiquidityInfo
@@ -134,6 +135,7 @@ export function IncreaseLiquidityForm() {
           amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
           token0UnderCardComponent={canUnwrap0 ? UnwrapNativeCurrencyToggle : undefined}
           token1UnderCardComponent={canUnwrap1 ? UnwrapNativeCurrencyToggle : undefined}
+          actualGasFee={preEstimatedGasFee}
         />
       </Flex>
       <LiquidityModalDetailRows

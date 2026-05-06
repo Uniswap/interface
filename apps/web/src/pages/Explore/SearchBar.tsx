@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, IconButton, Input, useSporeColors } from 'ui/src'
+import { Flex, IconButton, Input } from 'ui/src'
+import { Search } from 'ui/src/components/icons/Search'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ReactComponent as SearchIcon } from '~/assets/svg/search.svg'
 import useDebounce from '~/hooks/useDebounce'
-import { ExploreTab } from '~/pages/Explore/constants'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
-} from '~/pages/Explore/exploreTablesFilterStore'
+} from '~/state/explore/exploreTablesFilterStore'
 import { transitions } from '~/theme/styles'
+import { ExploreTab } from '~/types/explore'
 
 export function SearchBar({ tab }: { tab?: string }) {
   const { t } = useTranslation()
@@ -21,8 +21,6 @@ export function SearchBar({ tab }: { tab?: string }) {
   const { setFilterString } = useExploreTablesFilterStoreActions()
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
   const [isOpen, setIsOpen] = useState(false)
-  const colors = useSporeColors()
-
   useEffect(() => {
     setLocalFilterString(currentString)
     if (currentString) {
@@ -67,13 +65,17 @@ export function SearchBar({ tab }: { tab?: string }) {
         }}
         centered
       >
-        <SearchIcon
-          fill={colors.neutral1.val}
-          style={{ position: 'absolute', left: '12px' }}
-          width={20}
-          height={20}
+        <Flex
+          position="absolute"
+          left="$spacing12"
+          top={0}
+          bottom={0}
+          alignItems="center"
+          justifyContent="center"
           pointerEvents="none"
-        />
+        >
+          <Search size="$icon.20" color="$neutral1" />
+        </Flex>
         <Input
           data-testid="explore-tokens-search-input"
           placeholder={placeholdersText[tab ?? ExploreTab.Tokens]}

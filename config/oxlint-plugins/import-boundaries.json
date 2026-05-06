@@ -1,0 +1,53 @@
+{
+  "boundaries": [
+    {
+      "id": "toucan-feature",
+      "mode": "importerAllowlist",
+      "importerInternalPathMarkers": ["/features/Toucan/"],
+      "allowedImporterPathMarkers": ["/pages/Explore/", "/state/explore/"],
+      "importPrefixes": ["~/features/Toucan/", "features/Toucan/"],
+      "bareModuleSources": ["~/features/Toucan", "features/Toucan"],
+      "message": "Toucan feature code may only be imported from pages/Explore/, state/explore/, or from within features/Toucan/."
+    },
+    {
+      "id": "liquidity-feature",
+      "mode": "importerAllowlist",
+      "importerInternalPathMarkers": ["/features/Liquidity/"],
+      "allowedImporterPathMarkers": [
+        "/pages/CreatePosition/",
+        "/pages/Explore/",
+        "/pages/IncreaseLiquidity/",
+        "/pages/LegacyPool/",
+        "/pages/Liquidity/",
+        "/pages/Migrate/",
+        "/pages/PoolDetails/",
+        "/pages/PoolFinder/",
+        "/pages/Portfolio/",
+        "/pages/Positions/",
+        "/pages/RemoveLiquidity/",
+        "/pages/App/TopLevelModals/"
+      ],
+      "importPrefixes": ["~/features/Liquidity/", "features/Liquidity/"],
+      "bareModuleSources": ["~/features/Liquidity", "features/Liquidity"],
+      "message": "Liquidity feature code may only be imported from the allowlisted page routes, D3LiquidityChartShared, TopLevelModals, or from within features/Liquidity/"
+    },
+    {
+      "id": "swap-feature",
+      "mode": "importerAllowlist",
+      "importerInternalPathMarkers": ["/features/Swap/"],
+      "allowedImporterPathMarkers": ["/pages/Swap/", "/pages/TokenDetails/"],
+      "importPrefixes": ["~/features/Swap/", "features/Swap/"],
+      "bareModuleSources": ["~/features/Swap", "features/Swap"],
+      "message": "The Swap feature may only be imported from pages/Swap/, pages/TokenDetails/, or from within features/Swap/."
+    },
+    {
+      "id": "explore-feature",
+      "mode": "importerAllowlist",
+      "importerInternalPathMarkers": ["/features/Explore/"],
+      "allowedImporterPathMarkers": ["/pages/Explore/", "/pages/PoolDetails/", "/pages/TokenDetails/"],
+      "importPrefixes": ["~/features/Explore/", "features/Explore/"],
+      "bareModuleSources": ["~/features/Explore", "features/Explore"],
+      "message": "The Explore feature may only be imported from pages/Explore/, pages/PoolDetails/, pages/TokenDetails/ or from within features/Explore/."
+    }
+  ]
+}

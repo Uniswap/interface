@@ -3,7 +3,11 @@ import { V1LiquidityServiceClient } from 'uniswap/src/data/apiClients/liquidityS
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { OnChainTransactionFields, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import {
+  OnChainTransactionFields,
+  OnChainTransactionFieldsBatched,
+  TransactionStepType,
+} from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { logger } from 'utilities/src/logger/logger'
@@ -17,6 +21,10 @@ export interface MigratePositionTransactionStepAsync {
   // Migrations that require permit
   type: TransactionStepType.MigratePositionTransactionAsync
   getTxRequest(signature: string): Promise<{ txRequest: ValidatedTransactionRequest | undefined }>
+}
+
+export interface MigratePositionTransactionStepBatched extends OnChainTransactionFieldsBatched {
+  type: TransactionStepType.MigratePositionTransactionBatched
 }
 
 export function createMigratePositionStep(txRequest: ValidatedTransactionRequest): MigratePositionTransactionStep {
@@ -66,5 +74,14 @@ export function createMigratePositionAsyncStep(
         throw e
       }
     },
+  }
+}
+
+export function createMigratePositionStepBatched(
+  txRequests: ValidatedTransactionRequest[],
+): MigratePositionTransactionStepBatched {
+  return {
+    type: TransactionStepType.MigratePositionTransactionBatched,
+    batchedTxRequests: txRequests,
   }
 }

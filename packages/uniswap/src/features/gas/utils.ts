@@ -279,15 +279,14 @@ export function extractGasFeeParams(estimate: GasEstimate): TransactionLegacyFee
 
 /**
  * Determines if gas estimation has failed for a transaction request.
- * Returns true when:
- * - The request is a transaction type that requires gas estimation
- * - Gas fee result has finished loading
- * - Either an error occurred OR no value was returned
+ *
+ * A missing `value` without an `error` is not a failure: React Query reports
+ * `isLoading: false` while a query is skipped (e.g. before the chainId resolves
+ * from an async hook), and treating that transient state as a failure flashes
+ * the error UI before the first real estimate resolves.
  */
 export function hasGasEstimationFailed(isTransactionRequest: boolean, gasFeeResult: GasFeeResult | undefined): boolean {
-  return (
-    isTransactionRequest && !!gasFeeResult && !gasFeeResult.isLoading && (!!gasFeeResult.error || !gasFeeResult.value)
-  )
+  return isTransactionRequest && !!gasFeeResult && !gasFeeResult.isLoading && !!gasFeeResult.error
 }
 
 // 20% gas buffer to avoid out-of-gas failures

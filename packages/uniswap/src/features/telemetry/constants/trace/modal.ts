@@ -60,6 +60,7 @@ export const ModalName = {
   Dialog: 'dialog-modal',
   DownloadApp: 'download-app-modal',
   DynamicFeeTierSpeedbump: 'dynamic-fee-tier-speedbump-modal',
+  EarnVault: 'earn-vault-modal',
   EditLabelSettingsModal: 'edit-label-settings-modal',
   EditProfileSettingsModal: 'edit-profile-settings-modal',
   EmbeddedWalletBeta: 'embedded-wallet-beta-modal',

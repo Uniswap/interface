@@ -80,6 +80,7 @@ export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
 
 export interface MigratePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Migrate
+  unsigned: boolean
   migratePositionRequestArgs: MigrateV3ToV4LPPositionRequest | undefined
 }
 
@@ -159,7 +160,10 @@ function validateLiquidityTxContext(
 
   const { action, txRequest, permit } = liquidityTxContext
   const unsigned =
-    (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
+    (liquidityTxContext.type === 'increase' ||
+      liquidityTxContext.type === 'create' ||
+      liquidityTxContext.type === 'migrate') &&
+    liquidityTxContext.unsigned
   if (unsigned) {
     if (!permit) {
       return undefined

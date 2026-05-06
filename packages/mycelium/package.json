@@ -48,8 +48,7 @@
   },
   "devDependencies": {
     "@types/node": "22.19.17",
-    "@typescript/native-preview": "7.0.0-dev.20260311.1",
-    "depcheck": "1.4.7",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "react": "19.0.3",
     "tailwindcss": "4.1.16",
     "typescript": "5.8.3"

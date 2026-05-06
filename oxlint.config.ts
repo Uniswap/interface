@@ -40,6 +40,7 @@ export const rootIgnorePatterns = [
   '**/.wxt/**',
   '**/wxt.config.*',
   // ── apps/mobile ──
+  'apps/mobile/metro.config.js',
   'apps/mobile/ReactotronConfig.ts',
   'apps/mobile/index.js',
   'apps/mobile/.storybook/**',
@@ -250,6 +251,63 @@ export function restrictedImportPatternsForUniversePackage(packageName: string) 
     },
   ]
 }
+
+// ── Shared no-restricted-syntax selectors ─────────────────────────────
+// Used in per-project overrides that customize no-restricted-syntax.
+// When a project override redefines no-restricted-syntax, oxlint replaces the
+// root definition entirely — so the override must spread these selectors.
+// sharedRestrictedSyntaxSelectors applies everywhere the rule is enabled.
+export const sharedRestrictedSyntaxSelectors = [
+  {
+    selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",
+    message: 'Avoid using z.any() in favor of more precise custom types.',
+  },
+] as const
+
+// TODO(apps-infra): Move processEnvRestrictedSyntaxSelector into sharedRestrictedSyntaxSelectors once all apps have migrated
+// off direct process.env access.
+export const processEnvRestrictedSyntaxSelector = {
+  selector: "MemberExpression[object.name='process'][property.name='env']",
+  message: 'Do not read `process.env` directly. Use getConfig() instead.',
+} as const
+
+// Shared across every apps/web/src override that redefines no-restricted-syntax
+// (e.g. the Portfolio override) — must be spread in, since rule options are not merged.
+const webRestrictedSyntaxSelectors = [
+  {
+    selector: ':matches(ExportAllDeclaration)',
+    message: 'Barrel exports bloat the bundle size by preventing tree-shaking.',
+  },
+  {
+    selector: ":matches(Literal[value='NATIVE'])",
+    message: "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
+  },
+  {
+    selector:
+      "ImportDeclaration[source.value='src/nft/components/icons'], ImportDeclaration[source.value='nft/components/icons']",
+    message: 'Please import icons from nft/components/iconExports instead of directly from icons.tsx',
+  },
+  {
+    selector:
+      "VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']",
+    message: "Do not use account directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' instead.",
+  },
+  {
+    selector:
+      "VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='chainId']",
+    message: 'Do not use chainId directly from useWeb3React. Use the useAccount hook instead.',
+  },
+  {
+    selector:
+      "VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useAccount'] > ObjectPattern > Property[key.name='address']",
+    message: 'Do not use address directly from useAccount. Access account.address instead.',
+  },
+  {
+    selector:
+      "TSTypeAssertion[typeAnnotation.typeName.name='Address'], TSAsExpression[typeAnnotation.typeName.name='Address']",
+    message: 'Do not use type assertions with Address. Use assumeOxAddress or isAddress/getAddress from viem.',
+  },
+] as const
 
 // ── Shared override fragments ────────────────────────────────────────
 
@@ -658,6 +716,8 @@ export default defineConfig({
         ...(!isFastLint && {
           'eslint-js/no-restricted-syntax': [
             'error',
+            ...sharedRestrictedSyntaxSelectors,
+            processEnvRestrictedSyntaxSelector,
             {
               selector:
                 "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='tabs'][callee.object.object.name='chrome']",
@@ -679,10 +739,6 @@ export default defineConfig({
               selector:
                 "CallExpression[callee.property.name='removeListener'][callee.object.property.name='onMessage'][callee.object.object.property.name='runtime'][callee.object.object.object.name='chrome']",
               message: 'Use a message channel instead of chrome.runtime.onMessage.removeListener.',
-            },
-            {
-              selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",
-              message: 'Avoid using z.any() in favor of more precise custom types.',
             },
           ],
         }),
@@ -810,10 +866,8 @@ export default defineConfig({
         ...(!isFastLint && {
           'eslint-js/no-restricted-syntax': [
             'error',
-            {
-              selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",
-              message: 'Avoid using z.any() in favor of more precise custom types.',
-            },
+            ...sharedRestrictedSyntaxSelectors,
+            processEnvRestrictedSyntaxSelector,
           ],
           'universe-custom/enum-member-naming': 'error',
           'universe-custom/no-transform-percentage-strings': 'error',
@@ -874,6 +928,7 @@ export default defineConfig({
                 'error' as const,
                 { allowSameFolder: false, rootDir: 'src' },
               ],
+              'universe-custom/import-boundary': 'error' as const,
             },
           },
         ]
@@ -881,58 +936,28 @@ export default defineConfig({
     ...(!isFastLint
       ? [
           {
-            files: ['apps/web/src/pages/Portfolio/**'],
-            rules: {
-              'eslint-js/no-restricted-syntax': [
-                'error' as const,
-                {
-                  selector: "CallExpression[callee.name='useAccount']",
-                  message:
-                    "Do not call 'useAccount' in portfolio pages. Use 'pages/Portfolio/hooks/usePortfolioAddress' instead.",
-                },
-              ],
-            },
-          },
-          {
             files: ['apps/web/src/**/*.ts', 'apps/web/src/**/*.tsx'],
             rules: {
               'eslint-js/no-restricted-syntax': [
                 'error' as const,
+                ...sharedRestrictedSyntaxSelectors,
+                processEnvRestrictedSyntaxSelector,
+                ...webRestrictedSyntaxSelectors,
+              ],
+            },
+          },
+          {
+            files: ['apps/web/src/pages/Portfolio/**'],
+            rules: {
+              'eslint-js/no-restricted-syntax': [
+                'error' as const,
+                ...sharedRestrictedSyntaxSelectors,
+                processEnvRestrictedSyntaxSelector,
+                ...webRestrictedSyntaxSelectors,
                 {
-                  selector: ':matches(ExportAllDeclaration)',
-                  message: 'Barrel exports bloat the bundle size by preventing tree-shaking.',
-                },
-                {
-                  selector: ":matches(Literal[value='NATIVE'])",
+                  selector: "CallExpression[callee.name='useAccount']",
                   message:
-                    "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
-                },
-                {
-                  selector:
-                    "ImportDeclaration[source.value='src/nft/components/icons'], ImportDeclaration[source.value='nft/components/icons']",
-                  message: 'Please import icons from nft/components/iconExports instead of directly from icons.tsx',
-                },
-                {
-                  selector:
-                    "VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']",
-                  message:
-                    "Do not use account directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' instead.",
-                },
-                {
-                  selector:
-                    "VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='chainId']",
-                  message: 'Do not use chainId directly from useWeb3React. Use the useAccount hook instead.',
-                },
-                {
-                  selector:
-                    "VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useAccount'] > ObjectPattern > Property[key.name='address']",
-                  message: 'Do not use address directly from useAccount. Access account.address instead.',
-                },
-                {
-                  selector:
-                    "TSTypeAssertion[typeAnnotation.typeName.name='Address'], TSAsExpression[typeAnnotation.typeName.name='Address']",
-                  message:
-                    'Do not use type assertions with Address. Use assumeOxAddress or isAddress/getAddress from viem.',
+                    "Do not call 'useAccount' in portfolio pages. Use 'pages/Portfolio/hooks/usePortfolioAddress' instead.",
                 },
               ],
             },
@@ -946,14 +971,6 @@ export default defineConfig({
                   selector: "CallExpression[callee.property.name='getByTestId'] > Literal",
                   message: 'Use TestID enum instead of string literals with getByTestId.',
                 },
-              ],
-            },
-          },
-          {
-            files: ['apps/web/**/*.e2e.test.ts'],
-            rules: {
-              'eslint-js/no-restricted-syntax': [
-                'error' as const,
                 {
                   selector:
                     "CallExpression[callee.name='getTest'] > ObjectExpression > Property[key.name='withAnvil'][value.value=true]",
@@ -962,6 +979,21 @@ export default defineConfig({
                 {
                   selector: "MemberExpression[object.name='anvil']",
                   message: 'Anvil fixture usage must be in *.anvil.e2e.test.ts files.',
+                },
+              ],
+            },
+          },
+          {
+            // Anvil files legitimately use `anvil.*` and `withAnvil: true` — drop those
+            // restrictions here. Must come after the broader e2e override above, since
+            // later overrides replace earlier rule options for overlapping files.
+            files: ['apps/web/**/*.anvil.e2e.test.ts'],
+            rules: {
+              'eslint-js/no-restricted-syntax': [
+                'error' as const,
+                {
+                  selector: "CallExpression[callee.property.name='getByTestId'] > Literal",
+                  message: 'Use TestID enum instead of string literals with getByTestId.',
                 },
               ],
             },
@@ -1284,7 +1316,6 @@ export default defineConfig({
         'prefer-const': 'off',
         'vitest/hoisted-apis-on-top': 'error',
         ...(!isFastLint && {
-          'eslint-js/no-restricted-syntax': 'off',
           'universe-custom/jsx-prop-order': 'off',
           'universe-custom/no-nested-component-definitions': 'off',
           'universe-custom/no-relative-import-paths': 'off',

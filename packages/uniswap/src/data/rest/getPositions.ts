@@ -2,9 +2,7 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError, createPromiseClient } from '@connectrpc/connect'
 import {
   InfiniteData,
-  infiniteQueryOptions,
   keepPreviousData,
-  queryOptions,
   UseInfiniteQueryResult,
   UseQueryResult,
   useInfiniteQuery,
@@ -25,6 +23,10 @@ import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
 import { deserializeToken } from 'uniswap/src/utils/currency'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import {
+  persistableInfiniteQueryOptions,
+  persistableQueryOptions,
+} from 'utilities/src/reactQuery/persistableQueryOptions'
 
 const positionsClient = createPromiseClient(DataApiService, uniswapPostTransport)
 
@@ -33,7 +35,7 @@ export function useGetPositionsQuery(
   disabled?: boolean,
 ): UseQueryResult<ListPositionsResponse, ConnectError> {
   return useQuery(
-    queryOptions({
+    persistableQueryOptions({
       queryKey: [ReactQueryCacheKey.ListPositions, input] as const,
       queryFn: () => positionsClient.listPositions(input ?? {}),
       enabled: !!input && !disabled,
@@ -47,7 +49,7 @@ export function useGetPositionsInfiniteQuery(
   disabled?: boolean,
 ): UseInfiniteQueryResult<InfiniteData<ListPositionsResponse>, ConnectError> {
   return useInfiniteQuery(
-    infiniteQueryOptions({
+    persistableInfiniteQueryOptions({
       queryKey: [ReactQueryCacheKey.ListPositions, 'infinite', input] as const,
       queryFn: ({ pageParam }: { pageParam?: string }) =>
         positionsClient.listPositions({
@@ -93,7 +95,7 @@ export function useGetPositionsForPairs(
               }
             : undefined
 
-          return queryOptions({
+          return persistableQueryOptions({
             queryKey: [ReactQueryCacheKey.GetPosition, requestInput] as const,
             queryFn: () => positionsClient.getPosition(requestInput ?? {}),
             enabled: !!requestInput,

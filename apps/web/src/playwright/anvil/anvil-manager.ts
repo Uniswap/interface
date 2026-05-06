@@ -1,3 +1,4 @@
+// oxlint-disable eslint-js/no-restricted-syntax
 import 'dotenv/config'
 import { type ChildProcess, spawn } from 'child_process'
 import * as fs from 'fs'

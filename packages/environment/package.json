@@ -1,0 +1,26 @@
+{
+  "name": "@universe/environment",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.8.3"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck environment",
+    "check": "nx check environment",
+    "check:fast": "nx check:fast environment",
+    "check:deps:usage": "nx check:deps:usage environment",
+    "format": "nx format environment",
+    "format:check": "nx format:check environment",
+    "lint": "nx lint environment",
+    "lint:fix": "nx lint:fix environment"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}
