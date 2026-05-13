@@ -5,6 +5,7 @@ import {
   provideSessionService,
   SharedQueryClient,
 } from '@universe/api'
+import { isDevEnv, REQUEST_SOURCE } from '@universe/environment'
 import { FeatureFlags, getIsSessionServiceEnabled, useFeatureFlag } from '@universe/gating'
 import type { TokenPriceMessage, TokenSubscriptionParams } from '@universe/prices'
 import {
@@ -20,9 +21,7 @@ import type { WebSocketClient } from '@universe/websocket'
 import { createWebSocketClient, createZustandConnectionStore } from '@universe/websocket'
 import type { ReactElement, ReactNode } from 'react'
 import { useState } from 'react'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 import { createRestPriceClient } from '~/state/livePrices/createRestPriceClient'
 
 function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, TokenPriceMessage['data']> | null {
@@ -51,7 +50,6 @@ function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, Toke
     }),
     getSessionService: () =>
       provideSessionService({ getBaseUrl: () => getEntryGatewayUrl(), getIsSessionServiceEnabled }),
-    defaultOptions: { credentials: 'include' },
   })
 
   const subscriptionHandler = createPriceSubscriptionHandler({

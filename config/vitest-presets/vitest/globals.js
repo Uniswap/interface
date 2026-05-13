@@ -2,6 +2,7 @@ process.env.TZ = 'America/New_York'
 
 module.exports = {
   globals: {
+    APP_ID: 'web',
     ALCHEMY_API_KEY: 'key',
     AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: 'key',
     AMPLITUDE_PROXY_URL_OVERRIDE: '',

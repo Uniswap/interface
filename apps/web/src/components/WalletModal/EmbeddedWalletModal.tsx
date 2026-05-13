@@ -58,7 +58,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
 
   const handleBackToConnect = useEvent(() => setShowLoginView(false))
 
-  const { ready: privyReady } = usePrivy()
+  const { ready: privyReady, user, logout } = usePrivy()
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
 
   const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
@@ -69,16 +69,21 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
     },
   })
 
-  const handleInitOAuth = useEvent((provider: 'google' | 'apple') => {
+  const handleInitOAuth = useEvent(async (provider: 'google' | 'apple'): Promise<void> => {
     if (!privyReady) {
       return
     }
+    // Privy's `initOAuth` throws "Already logged in" if an authenticated session
+    // exists. Drop the existing session so this sign-in starts from a clean state.
+    if (user) {
+      await logout()
+    }
     setOauthProvider(provider)
     sessionStorage.setItem(RECOVER_OAUTH_PENDING_KEY, provider)
-    // Note: initOAuth triggers a full page redirect — there is no onSuccess callback.
+    // Note: initOAuth triggers a full page redirect. There is no onSuccess callback.
     // Cleanup of RECOVER_OAUTH_PENDING_KEY happens post-redirect in useOAuthRedirectRouter
     // and useOAuthResult once the linked account is detected.
-    initOAuth({ provider })
+    await initOAuth({ provider })
   })
 
   const handleEmailRecovery = useEvent(() => {

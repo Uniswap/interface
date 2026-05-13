@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, TouchableArea } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -15,7 +16,6 @@ import { useMiniPoolsTableColumns } from '~/pages/Portfolio/Overview/MiniPoolsTa
 import { useMiniPoolsTableData } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableData'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
-import { PositionInfo } from '~/types/liquidity'
 
 const POOLS_TABLE_MAX_HEIGHT = 800
 const POOLS_TABLE_MAX_WIDTH = 1200

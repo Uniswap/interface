@@ -1,7 +1,7 @@
 import { Navigate, useParams } from 'react-router'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 
-export default function AddLiquidityV2WithTokenRedirects() {
+export function AddLiquidityV2WithTokenRedirects() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
 
   const url = new URL('/positions/create/v2', window.location.origin)
@@ -13,3 +13,5 @@ export default function AddLiquidityV2WithTokenRedirects() {
   }
   return <Navigate to={url.pathname + url.search} replace />
 }
+
+export default AddLiquidityV2WithTokenRedirects

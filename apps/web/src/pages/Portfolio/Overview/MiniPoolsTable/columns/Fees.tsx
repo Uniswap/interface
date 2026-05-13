@@ -3,11 +3,11 @@ import { memo } from 'react'
 import { EM_DASH, Text } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
 import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
 import { EmptyTableCell } from '~/pages/Portfolio/EmptyTableCell'
-import { PositionInfo } from '~/types/liquidity'
 
 // Third column cell component - Fees in USD
 export const PoolFeesCell = memo(function PoolFeesCell({ position }: { position: PositionInfo }) {

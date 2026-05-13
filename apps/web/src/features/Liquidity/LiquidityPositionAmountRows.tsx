@@ -8,8 +8,8 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
-import { getChainUrlParam } from '~/features/params/chainParams'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 type AmountRow = {
   currencyInfo: CurrencyInfo

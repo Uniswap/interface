@@ -10,12 +10,11 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { MenuItem } from '~/components/SearchModal/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { useTokenBalances } from '~/hooks/useTokenBalances'
 import { TokenFromList } from '~/state/lists/tokenFromList'
-import { ThemedText } from '~/theme/components'
 import { currencyKey } from '~/utils/currencyKey'
 
 function currencyListRowKey(data: Currency): string {
@@ -138,7 +137,11 @@ export function CurrencyRow({
     >
       <Wrapper
         style={style}
-        text={<ThemedText.Caption textAlign="center">{tooltip}</ThemedText.Caption>}
+        text={
+          <Text variant="body4" textAlign="center">
+            {tooltip}
+          </Text>
+        }
         size={TooltipSize.ExtraSmall}
       >
         {/* oxlint-disable-next-line react/forbid-elements -- Wrapper needs DOM props (onKeyDown, onClick, tabIndex) for a11y; MenuItem is Tamagui Flex and doesn't type them */}

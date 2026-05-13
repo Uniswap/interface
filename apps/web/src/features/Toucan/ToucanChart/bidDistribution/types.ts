@@ -29,6 +29,10 @@ export interface ToucanChartBarTooltipState {
   tickValue: number
   volumeAmount: number
   totalVolume: number
+  // Raw Q96 price string for the hovered bar, used by flag-gated tooltip rows that
+  // need precise BigInt matching against TickDetail.priceQ96. Undefined when the
+  // hovered bar has no Q96 provenance (shouldn't happen in practice, but optional).
+  tickQ96?: string
 }
 
 export interface ToucanBidDistributionChartZoomState {

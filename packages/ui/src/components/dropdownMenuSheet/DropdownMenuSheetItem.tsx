@@ -1,3 +1,4 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { type BaseSyntheticEvent, useMemo } from 'react'
 import { I18nManager, type Role } from 'react-native'
 import { Spacer, type YStackProps } from 'tamagui'
@@ -7,7 +8,6 @@ import { Flex, type FlexProps } from 'ui/src/components/layout'
 import { Text, type TextProps } from 'ui/src/components/text'
 import { TouchableArea } from 'ui/src/components/touchable'
 import { spacing } from 'ui/src/theme'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type DropdownMenuSheetItemProps = {

@@ -52,7 +52,7 @@ export function LocalCurrencyMenuItems() {
   )
 }
 
-export default function LocalCurrencyMenu({ onClose }: { onClose: () => void }) {
+export function LocalCurrencyMenu({ onClose }: { onClose: () => void }) {
   return (
     <SlideOutMenu title={<Trans i18nKey="common.currency" />} onClose={onClose}>
       <MenuColumn>

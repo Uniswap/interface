@@ -3,18 +3,19 @@ import { Flex } from 'ui/src'
 import { TransitionItem } from 'ui/src/animations'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import LanguageMenu from '~/components/AccountDrawer/LanguageMenu'
-import LocalCurrencyMenu from '~/components/AccountDrawer/LocalCurrencyMenu'
+import { LanguageMenu } from '~/components/AccountDrawer/LanguageMenu'
+import { LocalCurrencyMenu } from '~/components/AccountDrawer/LocalCurrencyMenu'
 import { MainMenu } from '~/components/AccountDrawer/MainMenu/MainMenu'
 import { MenuStateVariant, useMenuState, useSetMenuCallback } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import PasskeyMenu from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
-import PortfolioBalanceMenu from '~/components/AccountDrawer/PortfolioBalanceMenu'
-import SettingsMenu from '~/components/AccountDrawer/SettingsMenu'
-import StorageMenu from '~/components/AccountDrawer/StorageMenu'
+import { PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { PortfolioBalanceMenu } from '~/components/AccountDrawer/PortfolioBalanceMenu'
+import { RecoveryPhraseMenu } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu'
+import { SettingsMenu } from '~/components/AccountDrawer/SettingsMenu'
+import { StorageMenu } from '~/components/AccountDrawer/StorageMenu'
 import { OtherWalletsModal } from '~/components/WalletModal/OtherWalletsModal'
 import { SwitchWalletModal } from '~/components/WalletModal/SwitchWalletModal'
-import usePrevious from '~/hooks/usePrevious'
+import { usePrevious } from '~/hooks/usePrevious'
 
 export function DefaultMenu() {
   const { menuState } = useMenuState()
@@ -24,6 +25,7 @@ export function DefaultMenu() {
   const openLocalCurrencySettings = useSetMenuCallback(MenuStateVariant.LOCAL_CURRENCY_SETTINGS)
   const openPortfolioBalanceSettings = useSetMenuCallback(MenuStateVariant.PORTFOLIO_BALANCE_SETTINGS)
   const openPasskeySettings = useSetMenuCallback(MenuStateVariant.PASSKEYS)
+  const openRecoveryPhraseSettings = useSetMenuCallback(MenuStateVariant.RECOVERY_PHRASE)
   const openStorageSettings = useSetMenuCallback(MenuStateVariant.STORAGE_SETTINGS)
 
   const { isOpen: drawerOpen } = useAccountDrawer()
@@ -41,6 +43,7 @@ export function DefaultMenu() {
       [MenuStateVariant.LOCAL_CURRENCY_SETTINGS]: 2,
       [MenuStateVariant.PORTFOLIO_BALANCE_SETTINGS]: 2,
       [MenuStateVariant.PASSKEYS]: 2,
+      [MenuStateVariant.RECOVERY_PHRASE]: 2,
       [MenuStateVariant.STORAGE_SETTINGS]: 3,
     }
 
@@ -94,6 +97,7 @@ export function DefaultMenu() {
             openLanguageSettings={openLanguageSettings}
             openLocalCurrencySettings={openLocalCurrencySettings}
             openPasskeySettings={openPasskeySettings}
+            openRecoveryPhraseSettings={openRecoveryPhraseSettings}
             openPortfolioBalanceSettings={openPortfolioBalanceSettings}
             openStorageSettings={openStorageSettings}
           />
@@ -108,6 +112,8 @@ export function DefaultMenu() {
         return <StorageMenu onClose={openSettings} />
       case MenuStateVariant.PASSKEYS:
         return <PasskeyMenu onClose={openSettings} />
+      case MenuStateVariant.RECOVERY_PHRASE:
+        return <RecoveryPhraseMenu onClose={openSettings} />
       default:
         return null
     }
@@ -117,6 +123,7 @@ export function DefaultMenu() {
     openLocalCurrencySettings,
     openPortfolioBalanceSettings,
     openPasskeySettings,
+    openRecoveryPhraseSettings,
     openStorageSettings,
     openSettings,
     returnToMain,

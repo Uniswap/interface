@@ -32,14 +32,13 @@ import {
 } from '~/features/Explore/constants'
 import { ZoomButtons } from '~/features/Liquidity/charts/D3LiquidityChartShared/components/ZoomButtons'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import {
   D3LiquidityPoolChart,
   D3LiquidityPoolChartZoomActions,
 } from '~/pages/PoolDetails/components/ChartSection/D3LiquidityPoolChart'
 import { DepthChart } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import { usePDPVolumeChartData } from '~/pages/PoolDetails/components/ChartSection/hooks'
-import { LiquidityChart } from '~/pages/PoolDetails/components/ChartSection/LiquidityChart'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const PDP_CHART_HEIGHT_PX = 356
@@ -143,11 +142,10 @@ function usePDPChartState({
   }, [chartType, selectedChartType, volumeQuery, priceQuery, timePeriod, setChartType])
 }
 
-export default function ChartSection(props: ChartSectionProps) {
+export function ChartSection(props: ChartSectionProps) {
   const { defaultChainId } = useEnabledChains()
   const media = useMedia()
   const { t } = useTranslation()
-  const isD3LiquidityChartEnabled = useFeatureFlag(FeatureFlags.LpPdpD3RangeChart)
   const isLiquidityDepthChartEnabled = useFeatureFlag(FeatureFlags.LpPdpDepthChart)
   const [zoomActions, setZoomActions] = useState<D3LiquidityPoolChartZoomActions | null>(null)
 
@@ -194,10 +192,7 @@ export default function ChartSection(props: ChartSectionProps) {
       if (selectedChartType === ChartType.DEPTH) {
         return <DepthChart {...selectedChartProps} onZoomActionsReady={setZoomActions} />
       }
-      if (isD3LiquidityChartEnabled) {
-        return <D3LiquidityPoolChart {...selectedChartProps} onZoomActionsReady={setZoomActions} />
-      }
-      return <LiquidityChart {...selectedChartProps} />
+      return <D3LiquidityPoolChart {...selectedChartProps} onZoomActionsReady={setZoomActions} />
     }
     if (activeQuery.dataQuality === DataQuality.INVALID) {
       const errorText = loading ? undefined : t('chart.error.pools')
@@ -272,7 +267,7 @@ export default function ChartSection(props: ChartSectionProps) {
           />
         </Flex>
         {activeQuery.chartType === ChartType.LIQUIDITY ? (
-          zoomActions && (isD3LiquidityChartEnabled || selectedChartType === ChartType.DEPTH) ? (
+          zoomActions ? (
             <ZoomButtons
               onZoomIn={zoomActions.zoomIn}
               onZoomOut={zoomActions.zoomOut}

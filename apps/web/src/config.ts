@@ -1,6 +1,6 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access in these config files
 import type { BaseConfig } from '@universe/config'
-import { boolFromString, parseConfig } from '@universe/config'
+import { AppId, boolFromString, Environment, NodeEnv, parseConfig } from '@universe/config'
 import { logger } from 'utilities/src/logger/logger'
 import { z } from 'zod'
 
@@ -9,36 +9,12 @@ import { z } from 'zod'
  * Base config values are merged in automatically by parseConfig.
  */
 const webConfigValues = {
-  // #region Environment & Build Metadata
-
-  /** REACT_APP_STAGING — true when mode === 'staging' */
-  // TODO(apps-infra): Remove and replace with env util from web/src/utils/env.ts or /utilities/src/environment/env.ts
-  isStaging: process.env.REACT_APP_STAGING,
-
-  /** REACT_APP_WEB_BUILD_TYPE — always 'vite' */
-  webBuildType: process.env.REACT_APP_WEB_BUILD_TYPE,
-
-  /** REACT_APP_GIT_COMMIT_HASH — from `git rev-parse HEAD` */
-  gitCommitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
-
-  /** REACT_APP_VERSION_TAG — semver from git tags or CI */
-  versionTag: process.env.REACT_APP_VERSION_TAG,
-
-  /** REACT_APP_IS_UNISWAP_INTERFACE — platform detection in packages/utilities */
-  isUniswapInterface: process.env.REACT_APP_IS_UNISWAP_INTERFACE,
-
-  /** IS_UNISWAP_EXTENSION — set by Storybook config when extension mode is active */
-  isUniswapExtension: process.env.IS_UNISWAP_EXTENSION,
-
-  // #endregion
+  appId: AppId.Web,
 
   // #region API Keys
 
   /** Overrides base config — web requires this to be present (walletConnect.ts throws) */
   walletConnectProjectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID,
-
-  /** PRIVY_APP_ID — passkey/social login; PrivyProvider skipped if absent */
-  privyAppId: process.env.PRIVY_APP_ID,
 
   // #endregion
 
@@ -97,15 +73,15 @@ const webConfigValues = {
   /** ENABLE_ANVIL_SNAPSHOTS — use Anvil state snapshots in e2e tests */
   enableAnvilSnapshots: process.env.ENABLE_ANVIL_SNAPSHOTS,
 
-  /** REACT_APP_IS_PLAYWRIGHT_ENV — detected by packages/utilities isPlaywrightEnv() */
-  isPlaywrightEnv: process.env.REACT_APP_IS_PLAYWRIGHT_ENV,
-
   /** STORYBOOK_EXTENSION — enables extension mode in Storybook */
   storybookExtension: process.env.STORYBOOK_EXTENSION,
 
   // #endregion
 
   // #region Build Settings
+
+  /** REACT_APP_GIT_COMMIT_HASH — from `git rev-parse HEAD` */
+  gitCommitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
 
   /** DEPLOY_TARGET — determines build output format */
   deployTarget: process.env.DEPLOY_TARGET,
@@ -144,16 +120,10 @@ const webConfigValues = {
 /** Zod schema for web-specific config fields */
 const webConfigSchema = z.object({
   // Environment & Build Metadata
-  isStaging: boolFromString.describe('Is this a staging build'),
   webBuildType: z.string().default('vite').describe('Web build tool identifier'),
   gitCommitHash: z.string().default('').describe('Git commit hash at build time'),
-  versionTag: z.string().default('').describe('Semver version tag from git or CI'),
-  isUniswapInterface: boolFromString.describe('Is this the Uniswap web interface'),
-  isUniswapExtension: boolFromString.describe('Is this the Uniswap browser extension (used for Storybook)'),
-
   // API Keys
   walletConnectProjectId: z.string().min(1).describe('Project ID for WalletConnect'),
-  privyAppId: z.string().optional().describe('App ID for Privy passkey/social login'),
 
   // Endpoint URLs
   awsApiEndpoint: z.string().min(1).describe('URL for Apollo GraphQL API'),
@@ -174,7 +144,6 @@ const webConfigSchema = z.object({
   reportToSlack: boolFromString.describe('Should Playwright results post to Slack'),
   anvilPort: z.coerce.number().default(8545).describe('Port for local Anvil blockchain fork'),
   enableAnvilSnapshots: boolFromString.describe('Are Anvil state snapshots enabled for E2E'),
-  isPlaywrightEnv: boolFromString.describe('Is the app running in a Playwright test'),
   storybookExtension: boolFromString.describe('Is Storybook extension mode enabled'),
 
   // Build Settings
@@ -207,8 +176,17 @@ export const getConfig = (): Config => {
     values: webConfigValues,
     schema: webConfigSchema,
   })
-  if (cachedConfig.environment !== 'production' && cachedConfig.environment !== 'test') {
+  if (cachedConfig.environment !== Environment.Production && cachedConfig.nodeEnv !== NodeEnv.Test) {
     logger.debug('config.ts', 'getConfig', 'Using app config:', cachedConfig)
   }
   return cachedConfig
+}
+
+export function getPrivyConfig(isRequired = true): { appId: string; clientId: string } {
+  const { privyAppId, privyClientId } = getConfig()
+  // Web requires only appId to function
+  if (isRequired && !privyAppId) {
+    throw new Error('Privy is not configured: PRIVY_APP_ID must be set')
+  }
+  return { appId: privyAppId ?? '', clientId: privyClientId ?? '' }
 }

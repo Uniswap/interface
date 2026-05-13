@@ -1,10 +1,10 @@
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { Q96 } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import {
   computeCompletedAuctionMarketFdvUsd,
   computeProjectedFdvTableValue,
 } from '~/features/Toucan/utils/computeProjectedFdv'
-import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
 
 function createAuctionWithCurrencyInfo({
   tokenTotalSupply = '2500000',

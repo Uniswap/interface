@@ -7,6 +7,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReactElement, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
+import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useTokenSpotPrice } from 'uniswap/src/features/dataApi/tokenDetails/useTokenSpotPriceWrapper'
@@ -19,24 +20,26 @@ import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { SparklineMap } from '~/appGraphql/data/types'
 import { getTokenDetailsURL, OrderDirection, unwrapToken } from '~/appGraphql/data/util'
-import SparklineChart from '~/components/Charts/SparklineChart'
+import { SparklineChart } from '~/components/Charts/SparklineChart'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { TokenSortMethod } from '~/components/Tokens/constants'
-import { getChainIdFromChainUrlParam } from '~/features/params/chainParams'
+import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import { getExploreMultichainExpandRowMetrics } from '~/features/Explore/state/listTokens/utils/getExploreMultichainExpandRowMetrics'
+import { multichainTokenToDisplayToken } from '~/features/Explore/state/listTokens/utils/multichainTokenToDisplayToken'
+import { getChainIdsByVolume } from '~/features/Explore/state/listTokens/utils/multichainVolume'
 import { useExploreParams } from '~/pages/Explore/redirects'
 import { getTokenDescriptionColumnSize, TokenDescription } from '~/pages/Explore/tables/Tokens/TokenDescription'
 import { TokenTableHeader } from '~/pages/Explore/tables/Tokens/TokenTableHeader'
 import { useTokenTableSortStore } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { VolumeByNetworkPopover } from '~/pages/Explore/tables/Tokens/VolumeByNetworkPopover/VolumeByNetworkPopover'
-import { useExploreTablesFilterStore } from '~/state/explore/exploreTablesFilterStore'
-import { getExploreMultichainExpandRowMetrics } from '~/state/explore/listTokens/utils/getExploreMultichainExpandRowMetrics'
-import { multichainTokenToDisplayToken } from '~/state/explore/listTokens/utils/multichainTokenToDisplayToken'
-import { getChainIdsByVolume } from '~/state/explore/listTokens/utils/multichainVolume'
-import { TokenStat } from '~/state/explore/types'
+import { TokenStat } from '~/types/explore'
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+
+const VOLUME_INFO_ICON_WIDTH = 16
 
 interface TokenTableValue {
   index: number
@@ -287,7 +290,7 @@ export function TokenTable({
       }),
       columnHelper.accessor((row) => row.percentChange1d, {
         id: 'percentChange1d',
-        maxSize: 120,
+        maxSize: 140,
         header: () => (
           <HeaderCell justifyContent="flex-end">
             <TokenTableHeader
@@ -323,6 +326,7 @@ export function TokenTable({
       }),
       columnHelper.accessor((row) => row.volume, {
         id: 'volume',
+        meta: { overflowVisible: true },
         maxSize: 150,
         header: () => (
           <HeaderCell>
@@ -337,16 +341,39 @@ export function TokenTable({
           const row = volume.row?.original as TokenTableValue | undefined
           if (!row) {
             return (
-              <Cell loading={showLoadingSkeleton} grow testId={TestID.VolumeCell}>
+              <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
                 <EllipsisText>{volume.getValue?.()}</EllipsisText>
               </Cell>
             )
           }
+          const isMultichainAsset = (row.mcToken?.chainTokens.length ?? 0) > 1
+          const showMultichainVolumeInfoIcon = multichainTokenUxEnabled && isMultichainAsset
           return (
-            <Cell loading={showLoadingSkeleton} grow testId={TestID.VolumeCell}>
-              <VolumeByNetworkPopover mcToken={row.mcToken} timePeriod={timePeriod} volumeFormatted={row.volume}>
-                <EllipsisText>{volume.getValue?.()}</EllipsisText>
-              </VolumeByNetworkPopover>
+            <Cell loading={showLoadingSkeleton} grow overflow="visible" testId={TestID.VolumeCell}>
+              <Flex flex={1} minWidth={0} justifyContent="flex-end">
+                <VolumeByNetworkPopover mcToken={row.mcToken} timePeriod={timePeriod} volumeFormatted={row.volume}>
+                  <Flex position="relative">
+                    <EllipsisText textAlign="right">{volume.getValue?.()}</EllipsisText>
+                    {showMultichainVolumeInfoIcon ? (
+                      <Flex
+                        centered
+                        position="absolute"
+                        width={VOLUME_INFO_ICON_WIDTH}
+                        alignItems="flex-end"
+                        top={0}
+                        right={`-${VOLUME_INFO_ICON_WIDTH}px`}
+                        bottom={0}
+                        opacity={0}
+                        cursor="default"
+                        transition="opacity 0.15s ease"
+                        $group-hover={{ opacity: 1 }}
+                      >
+                        <InfoCircle color="$neutral3" size="$icon.12" />
+                      </Flex>
+                    ) : null}
+                  </Flex>
+                </VolumeByNetworkPopover>
+              </Flex>
             </Cell>
           )
         },
@@ -366,7 +393,7 @@ export function TokenTable({
     ]
 
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [orderDirection, multichainTokenUxEnabled, showLoadingSkeleton, sortMethod, media, t, timePeriod])
+  }, [multichainTokenUxEnabled, orderDirection, showLoadingSkeleton, sortMethod, media, t, timePeriod])
 
   return (
     <Table

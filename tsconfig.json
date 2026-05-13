@@ -96,6 +96,9 @@
     },
     {
       "path": "./packages/environment"
+    },
+    {
+      "path": "./packages/config-cli"
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
-import type { FeeData } from '~/types/liquidity'
 
 interface ParsedParams {
   // Current params

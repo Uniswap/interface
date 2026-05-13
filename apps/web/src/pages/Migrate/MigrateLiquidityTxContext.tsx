@@ -1,9 +1,9 @@
 import { createContext, PropsWithChildren, useContext } from 'react'
+import { V2PairInfo, V3PositionInfo } from 'uniswap/src/features/positions/types'
 import {
   MigratePositionTxContextType,
   useMigrateLPPositionTxInfo,
 } from '~/pages/Migrate/hooks/useMigrateLPPositionTxInfo'
-import { V2PairInfo, V3PositionInfo } from '~/types/liquidity'
 
 const MigratePositionTxContext = createContext<MigratePositionTxContextType | undefined>(undefined)
 

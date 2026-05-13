@@ -1,12 +1,13 @@
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
 import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
-import { attemptPinDecryption } from 'uniswap/src/features/passkey/recoveryExecute'
+import { attemptPinDecryption, executeRecoveryExport } from 'uniswap/src/features/passkey/recoveryExecute'
 
 vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
   EmbeddedWalletApiClient: {
     fetchOprfEvaluate: vi.fn(),
     fetchReportDecryptionResult: vi.fn(),
+    fetchExportSeedPhraseWithRecovery: vi.fn(),
   },
 }))
 
@@ -88,6 +89,10 @@ describe('attemptPinDecryption', () => {
 
     const result = await attemptPinDecryption({ pin: '1234', email, accessToken, encryptedKeyId, privyAppId })
     expect(result).toMatchObject({ success: false, error: 'rate_limited', errorMessage: 'too many attempts' })
+    expect(EmbeddedWalletApiClient.fetchOprfEvaluate).toHaveBeenCalledWith(
+      expect.objectContaining({ blindedElement: 'blinded', isRecovery: true, authMethodId: hashAuthMethodId(email) }),
+      accessToken,
+    )
   })
 
   it('returns rate_limited without errorMessage when OPRF returns no evaluatedElement', async () => {
@@ -209,5 +214,72 @@ describe('attemptPinDecryption', () => {
     ).rejects.toThrow()
     // Only called once (for the wrong PIN), not twice
     expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('executeRecoveryExport', () => {
+  const authMethodId = 'auth-method-1'
+  const encryptionKey = 'enc-key-1'
+
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
+
+  function validPayload(): string {
+    // Server sends a base64url JSON payload. Shape: `{ method, url, body, headers, version }`.
+    const body = JSON.stringify({ method: 'POST', url: '/export', body: {}, headers: {}, version: 1 })
+    return btoa(body).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  }
+
+  it('reads exportSigningPayload (camelCase) and returns the exported ciphertext', async () => {
+    const authPrivateKey = (await (await import('uniswap/src/features/passkey/pinCrypto')).generateAuthKeyPair())
+      .privateKey
+    vi.mocked(EmbeddedWalletApiClient.fetchReportDecryptionResult).mockResolvedValue({
+      exportSigningPayload: validPayload(),
+    } as never)
+    vi.mocked(EmbeddedWalletApiClient.fetchExportSeedPhraseWithRecovery).mockResolvedValue({
+      ciphertext: 'ct',
+      encapsulatedKey: 'ek',
+    } as never)
+    const generateAuthorizationSignature = vi.fn().mockResolvedValue({ signature: 'recovery-sig' })
+
+    const result = await executeRecoveryExport({
+      authPrivateKey,
+      authMethodId,
+      encryptionKey,
+      generateAuthorizationSignature,
+    })
+
+    expect(result).toEqual({ ciphertext: 'ct', encapsulatedKey: 'ek' })
+    expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledWith({
+      success: true,
+      authMethodId,
+      encryptionKey,
+    })
+    expect(generateAuthorizationSignature).toHaveBeenCalled()
+    expect(EmbeddedWalletApiClient.fetchExportSeedPhraseWithRecovery).toHaveBeenCalledWith(
+      expect.objectContaining({
+        authMethodId,
+        encryptionKey,
+        authKeySignature: expect.any(String),
+        recoveryAuthSignature: 'recovery-sig',
+      }),
+    )
+  })
+
+  it('throws when the server omits the export signing payload', async () => {
+    const authPrivateKey = (await (await import('uniswap/src/features/passkey/pinCrypto')).generateAuthKeyPair())
+      .privateKey
+    vi.mocked(EmbeddedWalletApiClient.fetchReportDecryptionResult).mockResolvedValue({} as never)
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await expect(
+      executeRecoveryExport({
+        authPrivateKey,
+        authMethodId,
+        encryptionKey,
+        generateAuthorizationSignature: vi.fn(),
+      }),
+    ).rejects.toThrow(/export signing payload/i)
   })
 })

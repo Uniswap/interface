@@ -1,23 +1,22 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
-import { TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { LIMIT_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 // oxlint-disable-next-line no-restricted-imports -- We need to import this directly so we can format with `en-US` locale
 import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { parseUnits } from '~/chains/utilities'
-import Row from '~/components/deprecated/Row'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from '~/components/NumericalInput'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import {
   LimitCustomMarketPriceButton,
   LimitPresetPriceButton,
@@ -26,11 +25,11 @@ import { LimitPriceInputLabel } from '~/features/Swap/CurrencyInputPanel/LimitPr
 import { useCurrentPriceAdjustment } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { InputPanel } from '~/features/Swap/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { formatCurrencySymbol } from '~/features/Swap/CurrencyInputPanel/utils'
+import { useLimitContext } from '~/features/Swap/state/limit/LimitContext'
+import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
+import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { useLimitContext } from '~/state/limit/LimitContext'
-import { CurrencyState } from '~/state/swap/types'
-import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
-import { ThemedText } from '~/theme/components'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableStyle } from '~/theme/components/styles'
 
 const Container = deprecatedStyled(InputPanel)`
@@ -214,7 +213,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
 
   return (
     <Container>
-      <Row justify="space-between">
+      <Flex row width="100%" justifyContent="space-between" alignItems="center">
         <LimitPriceInputLabel
           currency={baseCurrency}
           showCurrencyMessage={!!formattedLimitPriceOutputAmount}
@@ -223,7 +222,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         <TouchableArea onPress={onInvertLimitPrices}>
           <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
         </TouchableArea>
-      </Row>
+      </Flex>
       <TextInputRow>
         <StyledNumericalInput
           disabled={!(baseCurrency && quoteCurrency)}
@@ -235,18 +234,18 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         {quoteCurrency && (
           <OutputCurrencyContainer>
             <OutputCurrencyButton onClick={() => setCurrencySelectModalField('outputCurrency')}>
-              <Row gap="xs" width="unset">
+              <Flex row gap="$gap4" width="unset">
                 <CurrencyLogo currency={quoteCurrency} size={16} />
-                <ThemedText.BodyPrimary className="token-symbol-container">
+                <Text variant="body2" className="token-symbol-container">
                   {formatCurrencySymbol(quoteCurrency)}
-                </ThemedText.BodyPrimary>
-              </Row>
+                </Text>
+              </Flex>
             </OutputCurrencyButton>
           </OutputCurrencyContainer>
         )}
       </TextInputRow>
-      <Row marginTop="8px" justify="space-between">
-        <Row gap="sm">
+      <Flex row width="100%" mt="$spacing8" justifyContent="space-between" alignItems="center">
+        <Flex row gap="$gap8">
           <LimitCustomMarketPriceButton
             key="limit-price-market"
             customAdjustmentPercentage={(() => {
@@ -274,10 +273,11 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
               />
             )
           })}
-        </Row>
-      </Row>
+        </Flex>
+      </Flex>
       <CurrencySearchModal
         isOpen={Boolean(currencySelectModalField)}
+        swapTab={SwapTab.Limit}
         switchNetworkAction={SwitchNetworkAction.Limit}
         chainIds={LIMIT_SUPPORTED_CHAINS}
         onDismiss={() => setCurrencySelectModalField(undefined)}

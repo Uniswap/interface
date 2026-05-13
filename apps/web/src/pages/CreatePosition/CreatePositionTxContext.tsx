@@ -427,7 +427,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
 
   useDynamicNativeSlippage({
     nativeTokenBalance,
-    createCalldata: createCalldata instanceof CreatePositionResponse ? createCalldata : undefined,
+    slippage: createCalldata instanceof CreatePositionResponse ? createCalldata.slippage : undefined,
     isSlippageDirty,
   })
 

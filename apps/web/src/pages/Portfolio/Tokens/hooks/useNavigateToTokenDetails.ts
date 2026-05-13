@@ -4,7 +4,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
-import { getChainUrlParam } from '~/features/params/chainParams'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 /**
  * `Currency` is `NativeCurrency | Token`; `keyof Currency` omits `address` (native has no address), so

@@ -12,12 +12,13 @@ import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenExploreURL } from '~/appGraphql/data/util'
-import PoolNotFoundModal from '~/components/NotFoundModal/PoolNotFoundModal'
-import TokenNotFoundModal from '~/components/NotFoundModal/TokenNotFoundModal'
+import { PoolNotFoundModal } from '~/components/NotFoundModal/PoolNotFoundModal'
+import { TokenNotFoundModal } from '~/components/NotFoundModal/TokenNotFoundModal'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { EarnVaultsSection } from '~/features/earn/EarnVaultsSection'
+import { ExploreContextProvider } from '~/features/Explore/state'
+import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
 import { VolumeTimeFrameSelector } from '~/features/Explore/VolumeTimeFrameSelector'
-import { getChainUrlParam, useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { AuctionStatusFilter as AuctionStatusFilterComponent } from '~/pages/Explore/AuctionStatusFilter'
 import { AuctionVerificationFilter as AuctionVerificationFilterComponent } from '~/pages/Explore/AuctionVerificationFilter'
 import { ExploreStatsSection } from '~/pages/Explore/ExploreStatsSection'
@@ -31,11 +32,10 @@ import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { RecentTransactionsTable } from '~/pages/Explore/tables/RecentTransactions/RecentTransactions'
 import { TopTokensTable } from '~/pages/Explore/tables/Tokens/TopTokensTable'
 import { setOpenModal } from '~/state/application/reducer'
-import { ExploreContextProvider } from '~/state/explore'
-import { ExploreTablesFilterStoreContextProvider } from '~/state/explore/exploreTablesFilterStore'
 import { useManualChainOutageStore } from '~/state/outage/store'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { ExploreTab } from '~/types/explore'
+import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 interface Page {
   title: React.ReactNode
@@ -116,6 +116,7 @@ const HeaderTab = styled(Text, {
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { t } = useTranslation()
   const media = useMedia()
+  const isAddLiquidityRevampEnabled = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const tabNavRef = useRef<HTMLDivElement>(null)
   const Pages = usePages()
   const [params] = useSearchParams()
@@ -282,8 +283,12 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
                 {currentKey === ExploreTab.Pools && (
                   <Flex row>
-                    <Button size="small" icon={<Plus />} onPress={() => navigate('/positions/create')}>
-                      {media.sm ? t('common.add.label') : t('common.addLiquidity')}
+                    <Button
+                      size="small"
+                      icon={<Plus />}
+                      onPress={() => navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create')}
+                    >
+                      {media.sm ? t('common.new') : t('pool.newPosition.title')}
                     </Button>
                   </Flex>
                 )}

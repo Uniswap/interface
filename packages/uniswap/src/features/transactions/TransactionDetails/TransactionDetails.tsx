@@ -1,6 +1,7 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import type { GasFeeResult } from '@universe/api'
 import { TradingApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +27,6 @@ import type {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { isWebApp } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {
   banner?: ReactNode

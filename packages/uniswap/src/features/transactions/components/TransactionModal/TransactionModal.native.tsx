@@ -1,4 +1,5 @@
 import { BottomSheetFooter, BottomSheetView, KEYBOARD_STATE, useBottomSheetInternal } from '@gorhom/bottom-sheet'
+import { isAndroid } from '@universe/environment'
 import { useMemo, useState } from 'react'
 import { type StyleProp, TouchableWithoutFeedback, type ViewStyle } from 'react-native'
 import { Extrapolation, interpolate, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated'
@@ -20,7 +21,6 @@ import type {
 import { TransactionModalUpdateLogger } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalUpdateLogger'
 import { SwapFlowTimerContext } from 'uniswap/src/features/transactions/swap/utils/SwapFlowTimerContext'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isAndroid } from 'utilities/src/platform'
 
 export function TransactionModal({
   children,

@@ -1,7 +1,7 @@
 import { CellContext, flexRender, RowData } from '@tanstack/react-table'
 import { forwardRef, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, styled, Text } from 'ui/src'
+import { Flex, HeightAnimator, styled, Text } from 'ui/src'
 import { WifiError } from 'ui/src/components/icons/WifiError'
 import { breakpoints } from 'ui/src/theme'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
@@ -12,8 +12,6 @@ import { TableRow } from '~/components/Table/TableRow'
 import { useTableSize } from '~/components/Table/TableSizeProvider'
 import { TableBodyProps } from '~/components/Table/types'
 import { getColumnSizingStyles } from '~/components/Table/utils/getColumnSizingStyles'
-import { ThemedText } from '~/theme/components'
-
 const NoDataFoundTableRow = styled(TableRowBase, {
   justifyContent: 'center',
 })
@@ -89,28 +87,54 @@ function TableBodyInner<T extends RowData>(
   if (!rows.length) {
     return (
       <NoDataFoundTableRow py="$spacing20">
-        <ThemedText.BodySecondary>
+        <Text variant="body2" color="$neutral2">
           <Trans i18nKey="error.noData" />
-        </ThemedText.BodySecondary>
+        </Text>
       </NoDataFoundTableRow>
     )
   }
 
+  const topLevelRows = rows.filter((row) => row.depth === 0)
+  const rowGap = !hasPinnedColumns ? '$spacing2' : undefined
+
   return (
-    <Flex ref={ref} position="relative" gap={!hasPinnedColumns ? '$spacing2' : undefined}>
-      {rows.map((row) => (
-        <TableRow<T>
-          key={row.id}
-          row={row}
-          v2={v2}
-          rowWrapper={rowWrapper}
-          rowHeight={propRowHeight}
-          compactRowHeight={propCompactRowHeight}
-          subRowHeight={propSubRowHeight}
-          isExpanded={row.getCanExpand() ? row.getIsExpanded() : undefined}
-          dimmed={dimmed}
-        />
-      ))}
+    <Flex ref={ref} position="relative" gap={rowGap}>
+      {topLevelRows.map((row) => {
+        const subRows = row.subRows
+        const hasSubRows = subRows.length > 0
+        return (
+          <Flex key={row.id} width="100%">
+            <TableRow<T>
+              row={row}
+              v2={v2}
+              rowWrapper={rowWrapper}
+              rowHeight={propRowHeight}
+              compactRowHeight={propCompactRowHeight}
+              subRowHeight={propSubRowHeight}
+              isExpanded={row.getCanExpand() ? row.getIsExpanded() : undefined}
+              dimmed={dimmed}
+            />
+            {hasSubRows && (
+              <HeightAnimator open={row.getIsExpanded()} animation="quick" unmountChildrenWhenCollapsed>
+                <Flex gap={rowGap} paddingTop={rowGap}>
+                  {subRows.map((subRow) => (
+                    <TableRow<T>
+                      key={subRow.id}
+                      row={subRow}
+                      v2={v2}
+                      rowWrapper={rowWrapper}
+                      rowHeight={propRowHeight}
+                      compactRowHeight={propCompactRowHeight}
+                      subRowHeight={propSubRowHeight}
+                      dimmed={dimmed}
+                    />
+                  ))}
+                </Flex>
+              </HeightAnimator>
+            )}
+          </Flex>
+        )
+      })}
     </Flex>
   )
 }

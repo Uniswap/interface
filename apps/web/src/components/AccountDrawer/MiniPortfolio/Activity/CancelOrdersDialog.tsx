@@ -19,7 +19,6 @@ import { useCancelOrdersGasEstimate } from '~/components/AccountDrawer/MiniPortf
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { DetailLineItem } from '~/components/DetailLineItem'
 import { LoaderV3 } from '~/components/Icons/LoadingSpinner'
-import { ThemedText } from '~/theme/components'
 import { ExternalLink } from '~/theme/components/Links'
 
 const ModalHeader = styled(GetHelpHeader, {
@@ -127,9 +126,9 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
         <Container gap="lg">
           <ModalHeader closeModal={onCancel} />
           <LogoContainer>{icon}</LogoContainer>
-          <ThemedText.SubHeaderLarge width="100%" textAlign="center">
+          <Text variant="body1" width="100%" textAlign="center">
             {title}
-          </ThemedText.SubHeaderLarge>
+          </Text>
           <Flex row justifyContent="center" mt="$spacing32" minHeight={24}>
             {cancelSubmitted ? (
               <ExternalLink
@@ -149,7 +148,9 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
                 {t('common.viewOnExplorer')}
               </ExternalLink>
             ) : (
-              <ThemedText.BodySmall color="neutral2">{t('common.proceedInWallet')}</ThemedText.BodySmall>
+              <Text variant="body3" color="$neutral2">
+                {t('common.proceedInWallet')}
+              </Text>
             )}
           </Flex>
         </Container>

@@ -13,6 +13,8 @@ const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
 
 // if not set tamagui wont add nice data-at, data-in etc debug attributes
 process.env.NODE_ENV = NODE_ENV
+// Also required for Tamagui static extration
+process.env.APP_ID = 'extension'
 
 const isDevelopment = NODE_ENV === 'development'
 const isProduction = NODE_ENV === 'production'
@@ -134,7 +136,7 @@ const {
           writeToDisk: true,
         },
       },
-      devtool: 'cheap-module-source-map',
+      devtool: 'inline-cheap-module-source-map',
       plugins: [new ReactRefreshWebpackPlugin()],
     }
   : {
@@ -199,7 +201,7 @@ module.exports = (env) => {
     },
     output: {
       filename: '[name].js',
-      chunkFilename: '[name].js',
+      chunkFilename: 'chunks/[chunkhash].js',
       path: path.resolve(__dirname, dir),
       clean: true,
       publicPath: '',
@@ -341,7 +343,9 @@ module.exports = (env) => {
         'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
         'process.env.DEBUG': JSON.stringify(process.env.DEBUG || '0'),
         'process.env.VERSION': JSON.stringify(EXTENSION_VERSION),
-        'process.env.IS_UNISWAP_EXTENSION': '"true"',
+        // process.env.APP_ID is used by @universe/config. When that package's
+        // getConfig() function is removed, this define can be removed.
+        'process.env.APP_ID': '"extension"',
       }),
       new CleanWebpackPlugin(),
       new NodePolyfillPlugin(), // necessary to compile with reactnative-dotenv
@@ -370,7 +374,7 @@ module.exports = (env) => {
                   matches:
                     BUILD_ENV === 'prod'
                       ? ['https://app.uniswap.org/*']
-                      : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
+                      : ['https://app.uniswap.org/*', 'https://app.corn-staging.com/*', 'https://dev.ew.unihq.org/*'],
                 },
                 // Ensure content scripts are registered in the webpack build (WXT handles this automatically).
                 // These mirror the matches/runAt used in the TS entrypoints — localhost matches

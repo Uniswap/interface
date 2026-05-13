@@ -37,8 +37,8 @@ vi.mock('@universe/gating', async (importOriginal) => {
   }
 })
 
-vi.mock('~/features/params/chainParams', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('~/features/params/chainParams')>()
+vi.mock('~/utils/params/chainParams', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('~/utils/params/chainParams')>()
   return {
     ...actual,
     useChainIdFromUrlParam: vi.fn(() => UniverseChainId.Mainnet),

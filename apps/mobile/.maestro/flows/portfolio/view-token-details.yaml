@@ -48,9 +48,11 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 
-# Assert expected action buttons are shown for a native token
+# Assert TDP Buy/Sell (opened from a balance the wallet holds)
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
+- assertVisible:
+    id: ${output.testIds.TokenDetailsSellButton}
 
 # Note: Copy address button is present but disabled for native tokens
 
@@ -100,9 +102,11 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 
-# Assert expected action buttons are shown for a standard token
+# Assert multichain TDP Buy/Sell (opened from a balance the wallet holds)
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
+- assertVisible:
+    id: ${output.testIds.TokenDetailsSellButton}
 
 # Standard tokens have a contract address to copy
 - assertVisible:

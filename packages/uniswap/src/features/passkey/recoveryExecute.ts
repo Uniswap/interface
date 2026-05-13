@@ -51,11 +51,14 @@ export async function attemptPinDecryption({
 
     // 2. OPRF: blind → evaluate → finalize
     const { blindedElement, blindState } = await blindPin(pin)
-    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate({
-      blindedElement,
-      isRecovery: true,
-      authMethodId,
-    })
+    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate(
+      {
+        blindedElement,
+        isRecovery: true,
+        authMethodId,
+      },
+      accessToken,
+    )
 
     if (oprfResponse.errorMessage || !oprfResponse.evaluatedElement) {
       return { success: false, error: 'rate_limited', errorMessage: oprfResponse.errorMessage }
@@ -108,6 +111,21 @@ export async function attemptPinDecryption({
   }
 }
 
+// Server sends a base64url-encoded canonical JSON string. Fails loudly on malformed input
+// rather than falling back to raw UTF-8 — a decode failure here means the server response
+// is unexpectedly shaped and we want to surface that, not silently continue.
+function decodeSigningPayload(payload: string): { payloadBytes: Uint8Array; payloadObject: object } {
+  const payloadJson = atob(base64urlToBase64(payload))
+  const parsed: unknown = JSON.parse(payloadJson)
+  if (!parsed || typeof parsed !== 'object') {
+    throw new Error('Decoded signing payload is not a JSON object')
+  }
+  return {
+    payloadBytes: new TextEncoder().encode(payloadJson),
+    payloadObject: parsed,
+  }
+}
+
 export async function executeRecovery({
   authPrivateKey,
   authMethodId,
@@ -133,17 +151,7 @@ export async function executeRecovery({
       throw new Error('Server did not return a signing payload')
     }
 
-    // 2. Decode signing payload → canonical JSON string + bytes
-    // Server sends base64url-encoded canonical JSON; fall back to raw UTF-8 if not valid base64
-    let payloadJson: string
-    try {
-      payloadJson = atob(base64urlToBase64(reportResponse.signingPayload))
-    } catch {
-      // Payload is not base64url — treat as raw JSON string
-      payloadJson = reportResponse.signingPayload
-    }
-    const payloadBytes = new TextEncoder().encode(payloadJson)
-    const payloadObject = JSON.parse(payloadJson)
+    const { payloadBytes, payloadObject } = decodeSigningPayload(reportResponse.signingPayload)
 
     const authKeySignature = signWithAuthKey(authPrivateKey, payloadBytes) // sig2
     const { signature: recoveryAuthSignature } = await generateAuthorizationSignature(payloadObject) // sig1
@@ -164,6 +172,64 @@ export async function executeRecovery({
   } catch (error) {
     logger.error(error, {
       tags: { file: 'recoveryExecute.ts', function: 'executeRecovery' },
+    })
+    throw error
+  } finally {
+    zeroBuffers(authPrivateKey)
+  }
+}
+
+/**
+ * Graduation export: use the recovered PIN-derived auth key (from `attemptPinDecryption` —
+ * same `authPrivateKey` concept as `executeRecovery`) to export the seed phrase
+ * HPKE-encrypted to a caller-provided ephemeral public key. Caller is responsible for HPKE
+ * decryption. Used by mobile/extension graduation flows where the user doesn't have a
+ * passkey on the current device.
+ *
+ * Mirrors `executeRecovery`'s dual-signature pattern: PIN-derived authKey ECDSA (sig2) +
+ * Privy authorization (sig1). Zeros `authPrivateKey` on exit.
+ */
+export async function executeRecoveryExport({
+  authPrivateKey,
+  authMethodId,
+  encryptionKey,
+  generateAuthorizationSignature,
+}: {
+  authPrivateKey: Uint8Array
+  authMethodId: string
+  encryptionKey: string
+  generateAuthorizationSignature: (payload: object) => Promise<{ signature: string }>
+}): Promise<{ ciphertext: string; encapsulatedKey: string }> {
+  try {
+    const reportResponse = await EmbeddedWalletApiClient.fetchReportDecryptionResult({
+      success: true,
+      authMethodId,
+      encryptionKey,
+    })
+
+    // `exportSigningPayload` isn't in the generated proto types yet — read via cast until
+    // the proto package updates. TODO: remove cast once @uniswap/client-privy-embedded-wallet ships.
+    const raw = reportResponse as unknown as { exportSigningPayload?: string }
+    const exportSigningPayload = raw.exportSigningPayload
+
+    if (!exportSigningPayload) {
+      throw new Error('Server did not return an export signing payload')
+    }
+
+    const { payloadBytes, payloadObject } = decodeSigningPayload(exportSigningPayload)
+
+    const authKeySignature = signWithAuthKey(authPrivateKey, payloadBytes)
+    const { signature: recoveryAuthSignature } = await generateAuthorizationSignature(payloadObject)
+
+    return await EmbeddedWalletApiClient.fetchExportSeedPhraseWithRecovery({
+      authMethodId,
+      encryptionKey,
+      authKeySignature,
+      recoveryAuthSignature,
+    })
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'recoveryExecute.ts', function: 'executeRecoveryExport' },
     })
     throw error
   } finally {

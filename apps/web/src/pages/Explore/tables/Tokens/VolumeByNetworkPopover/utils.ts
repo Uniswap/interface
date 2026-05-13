@@ -3,11 +3,12 @@ import type { TFunction } from 'i18next'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { TimePeriod } from '~/appGraphql/data/util'
 import {
   sortMultichainTokenByVolume,
   TIME_PERIOD_TO_VOLUME_KEY,
-} from '~/state/explore/listTokens/utils/multichainVolume'
+} from '~/features/Explore/state/listTokens/utils/multichainVolume'
 
 export function getVolumeLabelForTimePeriod(t: TFunction, timePeriod: TimePeriod): string {
   switch (timePeriod) {
@@ -29,7 +30,7 @@ export function getVolumeLabelForTimePeriod(t: TFunction, timePeriod: TimePeriod
 }
 
 export function getChainLogoUrl(chainId: UniverseChainId | undefined): string | undefined {
-  if (chainId === undefined) {
+  if (chainId === undefined || !isUniverseChainId(chainId)) {
     return undefined
   }
   const networkName = getChainInfo(chainId).assetRepoNetworkName

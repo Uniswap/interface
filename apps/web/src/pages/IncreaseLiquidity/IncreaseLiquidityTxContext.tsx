@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { IncreasePositionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { LPAction, LPToken } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/types_pb'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
@@ -40,6 +41,7 @@ import { validatePermit, validateTransactionRequest } from 'uniswap/src/features
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useDynamicNativeSlippage } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
 import { useIsLiquidityApprovalSimulationEnabled } from '~/features/Liquidity/hooks/preEstimatedLiquidityGasUtils'
 import { useIncreasePositionDependentAmountFallback } from '~/features/Liquidity/hooks/useDependentAmountFallback'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
@@ -68,13 +70,14 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, preEstimatedGasFee } =
     useIncreaseLiquidityContext()
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
+  const { customDeadline, customSlippageTolerance, isSlippageDirty } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
     customSlippageTolerance: s.customSlippageTolerance,
+    isSlippageDirty: s.isSlippageDirty,
   }))
   const [transactionError, setTransactionError] = useState<string | boolean>(false)
 
-  const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
+  const { currencyAmounts, currencyMaxAmounts, error } = derivedIncreaseLiquidityInfo
   const { exactField } = increaseLiquidityState
 
   const accountAddress = useActiveAddress(Platform.EVM)
@@ -181,6 +184,16 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const token0Amount = currencyAmounts?.TOKEN0?.quotient.toString()
   const token1Amount = currencyAmounts?.TOKEN1?.quotient.toString()
 
+  const nativeTokenBalance = useMemo(() => {
+    if (positionInfo?.version !== ProtocolVersion.V4) {
+      return undefined
+    }
+    if (currencyMaxAmounts?.TOKEN0?.currency.isNative) {
+      return currencyMaxAmounts.TOKEN0.quotient.toString()
+    }
+    return undefined
+  }, [positionInfo?.version, currencyMaxAmounts])
+
   const increaseCalldataQueryParams = useMemo((): IncreasePositionRequest | undefined => {
     if (!positionInfo || !accountAddress || !token0 || !token1 || !token0Amount || !token1Amount) {
       return undefined
@@ -200,10 +213,11 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         tokenAddress: getTokenOrZeroAddress(independentToken),
         amount: independentAmount,
       }),
-      slippageTolerance: customSlippageTolerance,
+      slippageTolerance: nativeTokenBalance && !isSlippageDirty ? undefined : customSlippageTolerance,
       deadline: getTradeSettingsDeadline(customDeadline),
       simulateTransaction: !approvalsNeeded || isApprovalSimEnabled,
       includeApprovalSimulation: approvalsNeeded && isApprovalSimEnabled,
+      nativeTokenBalance,
     })
   }, [
     accountAddress,
@@ -214,9 +228,11 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     token1Amount,
     approvalsNeeded,
     customSlippageTolerance,
+    isSlippageDirty,
     exactField,
     customDeadline,
     isApprovalSimEnabled,
+    nativeTokenBalance,
   ])
 
   const currency0Info = useCurrencyInfo(currencyId(positionInfo?.currency0Amount.currency))
@@ -254,6 +270,12 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const increase = increaseCalldata?.increase
   const actualGasFee = increaseCalldata?.gasFee
+
+  useDynamicNativeSlippage({
+    nativeTokenBalance,
+    slippage: increaseCalldata?.slippage,
+    isSlippageDirty,
+  })
 
   if (calldataError) {
     const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' })

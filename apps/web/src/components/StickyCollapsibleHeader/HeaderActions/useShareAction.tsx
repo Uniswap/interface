@@ -5,7 +5,7 @@ import { Check } from 'ui/src/components/icons/Check'
 import { LinkHorizontalAlt } from 'ui/src/components/icons/LinkHorizontalAlt'
 import { ShareArrow } from 'ui/src/components/icons/ShareArrow'
 import type { HeaderActionWithDropdown } from '~/components/StickyCollapsibleHeader/HeaderActions/types'
-import useCopyClipboard from '~/hooks/useCopyClipboard'
+import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { openTwitterShareWindow } from '~/utils/sharing'
 
 type UseShareActionParams = {

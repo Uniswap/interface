@@ -5,16 +5,14 @@ import { DEP_accentColors } from 'ui/src/theme'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import Column from '~/components/deprecated/Column'
 import { Sign } from '~/components/Icons/Sign'
 import { Swap } from '~/components/Icons/Swap'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { useBlockConfirmationTime } from '~/features/Swap/hooks/useBlockConfirmationTime'
 import { useAccount } from '~/hooks/useAccount'
 import { useColor } from '~/hooks/useColor'
 import { SwapResult, useSwapTransactionStatus } from '~/hooks/useSwapCallback'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import useNativeCurrency from '~/lib/hooks/useNativeCurrency'
+import { useNativeCurrency } from '~/lib/hooks/useNativeCurrency'
 import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
 import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmSwapModal/Step'
 import { InterfaceTrade } from '~/state/routing/types'
@@ -22,12 +20,6 @@ import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from '~/state/
 import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import { Divider } from '~/theme/components/Dividers'
 import { SignatureExpiredError } from '~/utils/errors'
-
-const DividerContainer = deprecatedStyled(Column)`
-  height: 28px;
-  padding: 0px 16px;
-  justify-content: center;
-`
 
 type ProgressIndicatorStep = Extract<
   ConfirmModalState,
@@ -37,7 +29,7 @@ type ProgressIndicatorStep = Extract<
   | ConfirmModalState.WRAPPING
   | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
 >
-export default function ProgressIndicator({
+export function ProgressIndicator({
   steps,
   currentStep,
   trade,
@@ -169,9 +161,9 @@ export default function ProgressIndicator({
 
   return (
     <Flex>
-      <DividerContainer>
+      <Flex height="$spacing28" px="$spacing16" justifyContent="center">
         <Divider />
-      </DividerContainer>
+      </Flex>
       {steps.map((step, i) => {
         return (
           <Flex key={`progress-indicator-step-${i}`}>

@@ -12,7 +12,7 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersProvider } from '~/hooks/useEthersProvider'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useTransactionAdder } from '~/state/transactions/hooks'
 import { toReadableError, UserRejectedRequestError } from '~/utils/errors'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'

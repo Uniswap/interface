@@ -274,11 +274,12 @@ This section provides technical details for developers integrating these URLs in
 
 **Query Parameter Processing:**
 
-1. **Swap Parameters** (`state/swap/hooks.tsx`):
+1. **Swap / trade URL query helpers** (`state/swap/tradeQueryParams.ts`):
    - `queryParametersToCurrencyState()` - Parses currency addresses, chain IDs, amounts, and field
    - `parseCurrencyFromURLParameter()` - Validates and normalizes currency addresses
-   - `getParsedChainId()` - Extracts and validates chain ID from query string
-   - `useInitialCurrencyState()` - Main hook that processes URL parameters
+   - `serializeSwapStateToURLParameters()` / `serializeSwapAddressesToURLParameters()` - Build swap query strings
+   - `getParsedChainId()` - Extracts and validates chain ID from query string (`utils/params/chainParams.ts`)
+   - `useInitialCurrencyState()` - Hook in `state/swap/hooks.tsx` that uses the parsers above
 
 2. **Buy/Sell Parameters** (`pages/Swap/Buy/hooks.ts`):
    - `useSearchParams()` - React Router hook for accessing query parameters

@@ -99,7 +99,9 @@ export async function ensureNeckKeyPair(walletId: string): Promise<{
   return { privateKey, publicKeyBase64, isFresh: true }
 }
 
-// NECK metadata — stored in localStorage (JSON-serializable, small, non-sensitive)
+// NECK metadata — stored in localStorage (JSON-serializable, small, non-sensitive).
+// Web-only: NECK is the browser-session device-key concept and is never
+// engaged on mobile or extension (see call-site guards in `embeddedWallet.ts`).
 
 export interface NeckMetadata {
   publicKeyBase64: string

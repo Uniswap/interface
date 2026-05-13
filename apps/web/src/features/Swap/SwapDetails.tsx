@@ -8,10 +8,9 @@ import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { AutoRow, RowBetween } from '~/components/deprecated/Row'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
 import { SwapCallbackError, SwapShowAcceptChanges } from '~/features/Swap/styled'
-import SwapLineItem, { SwapLineItemType } from '~/features/Swap/SwapLineItem'
+import { SwapLineItem, SwapLineItemType } from '~/features/Swap/SwapLineItem'
 import { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
 import { SwapResult } from '~/hooks/useSwapCallback'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from '~/state/routing/types'
@@ -127,7 +126,7 @@ export function SwapDetails({
       </Flex>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">
-          <RowBetween>
+          <Flex row width="100%" justifyContent="space-between" alignItems="center">
             <Flex row gap="$gap8">
               <AlertTriangleFilled size={20} color="$accent1" />
               <Text variant="body2" color="$accent1">
@@ -139,10 +138,10 @@ export function SwapDetails({
                 {t('common.accept')}
               </Button>
             </Flex>
-          </RowBetween>
+          </Flex>
         </SwapShowAcceptChanges>
       ) : (
-        <AutoRow>
+        <Flex row flexWrap="wrap" width="100%">
           <Trace
             logPress
             element={ElementName.ConfirmSwapButton}
@@ -179,7 +178,7 @@ export function SwapDetails({
           </Trace>
 
           {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-        </AutoRow>
+        </Flex>
       )}
     </>
   )

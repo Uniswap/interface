@@ -11,7 +11,7 @@ import {
   AuctionVerificationFilter as AuctionVerificationFilterEnum,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
-} from '~/state/explore/exploreTablesFilterStore'
+} from '~/features/Explore/state/exploreTablesFilterStore'
 
 export function AuctionVerificationFilter() {
   const { t } = useTranslation()

@@ -2,6 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import { PercentNumberDecimals } from 'utilities/src/format/types'
 import { describe, expect, it } from 'vitest'
 import {
@@ -12,7 +13,6 @@ import {
   isDynamicFeeTier,
   mergeFeeTiers,
 } from '~/features/Liquidity/utils/feeTiers'
-import { DYNAMIC_FEE_DATA } from '~/types/liquidity'
 import { FeeTierData } from '~/types/liquidity'
 
 describe('calculateTickSpacingFromFeeAmount', () => {

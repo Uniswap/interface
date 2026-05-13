@@ -98,7 +98,6 @@ describe('authenticatorManagement', () => {
 
   afterEach(() => {
     clearDeviceSession()
-    delete process.env['PRIVY_APP_ID']
   })
 
   describe('listAuthenticators', () => {
@@ -161,12 +160,12 @@ describe('authenticatorManagement', () => {
           authenticatorAttachment: 0 as unknown as Parameters<
             typeof registerNewAuthenticator
           >[0]['authenticatorAttachment'],
+          privyAppId: 'test-app-id',
         }),
       ).rejects.toThrow('No active device session')
     })
 
     it('constructs canonical payload and signs with device key', async () => {
-      process.env['PRIVY_APP_ID'] = 'test-app-id'
       const { privateKey } = await generateDeviceKeyPair()
       setDeviceSession({
         privateKey,
@@ -199,6 +198,7 @@ describe('authenticatorManagement', () => {
         >[0]['authenticatorAttachment'],
         username: 'testuser',
         walletId: 'wallet-1',
+        privyAppId: 'test-app-id',
       })
 
       expect(mockRegisterPasskey).toHaveBeenCalledWith('reg-challenge-json')

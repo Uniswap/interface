@@ -11,11 +11,7 @@ interface ResetCreatePositionFormModalProps {
   onHandleReset: () => void
 }
 
-export default function ResetCreatePositionFormModal({
-  isOpen,
-  onClose,
-  onHandleReset,
-}: ResetCreatePositionFormModalProps) {
+export function ResetCreatePositionFormModal({ isOpen, onClose, onHandleReset }: ResetCreatePositionFormModalProps) {
   const { t } = useTranslation()
 
   const handleReset = () => {

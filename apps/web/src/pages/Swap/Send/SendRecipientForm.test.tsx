@@ -1,10 +1,10 @@
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
+import { SendContext, SendContextType } from '~/features/Swap/state/send/SendContext'
+import { SwapAndLimitContext } from '~/features/Swap/state/swap/types'
 import { SendRecipientForm } from '~/pages/Swap/Send/SendRecipientForm'
 import { MultichainContext } from '~/state/multichain/types'
-import { SendContext, SendContextType } from '~/state/send/SendContext'
-import { SwapAndLimitContext } from '~/state/swap/types'
 import { render, screen } from '~/test-utils/render'
 
 const mockMultichainContextValue = {
@@ -81,6 +81,7 @@ const mockedSendContextWithUnitag: SendContextType = {
     validatedRecipientData: {
       address: '0x9984b4b4E408e8D618A879e5315BD30952c89103',
       ensName: 'hayden.eth',
+      unitag: 'hayden',
     },
   },
   derivedSendInfo: {

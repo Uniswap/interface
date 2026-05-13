@@ -23,18 +23,20 @@ import i18n from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useSessionStoragePersistedQuery } from 'utilities/src/reactQuery/useSessionStoragePersistedQuery'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { MenuColumn } from '~/components/AccountDrawer/shared'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { AndroidLogo } from '~/components/Icons/AndroidLogo'
 import { AppleLogo } from '~/components/Icons/AppleLogo'
-import { getConfig } from '~/config'
+import { getPrivyConfig } from '~/config'
 import { setOpenModal } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppDispatch } from '~/state/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 function getPrivyAppId(): string | undefined {
-  return getConfig().privyAppId
+  return getPrivyConfig(false).appId || undefined
 }
 
 export const LIST_AUTHENTICATORS_QUERY_KEY = 'listAuthenticators'
@@ -47,7 +49,7 @@ enum AuthenticatorProvider {
   Other = 'Other',
 }
 
-type AuthenticatorDisplay = Pick<Authenticator, 'credentialId' | 'providerName' | 'createdAt' | 'aaguid'> & {
+export type AuthenticatorDisplay = Pick<Authenticator, 'credentialId' | 'providerName' | 'createdAt' | 'aaguid'> & {
   provider: AuthenticatorProvider
   label: string
 }
@@ -154,9 +156,11 @@ const OverflowMenu = ({ onRemove, testID }: { onRemove: () => void; testID?: str
 const AuthenticatorRow = ({
   authenticator,
   handleDeletePasskey,
+  isOnlyPasskey,
 }: {
   authenticator: AuthenticatorDisplay
   handleDeletePasskey: (authenticator: AuthenticatorDisplay) => void
+  isOnlyPasskey: boolean
 }) => {
   const createdAtDate = authenticator.createdAt ? new Date(Number(authenticator.createdAt)) : undefined
   const isValidDate = createdAtDate instanceof Date && !isNaN(createdAtDate.getTime())
@@ -186,7 +190,9 @@ const AuthenticatorRow = ({
           </Text>
         )}
       </Flex>
-      <OverflowMenu testID={TestID.DeletePasskey} onRemove={() => handleDeletePasskey(authenticator)} />
+      {!isOnlyPasskey && (
+        <OverflowMenu testID={TestID.DeletePasskey} onRemove={() => handleDeletePasskey(authenticator)} />
+      )}
     </Flex>
   )
 }
@@ -253,11 +259,19 @@ const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRem
   )
 }
 
-export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
+export function PasskeyMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const { walletId } = useEmbeddedWalletState()
-  const { data, isLoading } = useQuery({
+  // Mirror to sessionStorage so the cache survives the top-level OAuth redirect.
+  // Without this, the post-redirect refetch loses the in-memory NECK and re-prompts
+  // for the passkey to derive a fresh one.
+  useSessionStoragePersistedQuery({
+    queryKey: [LIST_AUTHENTICATORS_QUERY_KEY, walletId],
+    storageKey: `listAuth:${walletId ?? ''}`,
+    enabled: !!walletId,
+  })
+  const { data, isLoading, isError } = useQuery({
     queryKey: [LIST_AUTHENTICATORS_QUERY_KEY, walletId],
     queryFn: async () => {
       const result = await listAuthenticators(walletId ?? undefined)
@@ -270,9 +284,29 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
       return { authenticators: display, recoveryMethods: result.recoveryMethods }
     },
     enabled: !!walletId,
+    staleTime: 20 * ONE_MINUTE_MS,
   })
   const authenticators = data?.authenticators ?? []
   const recoveryMethods = data?.recoveryMethods ?? []
+
+  // Bail back to Settings if the listAuthenticators query errors or returns an
+  // empty response (no authenticators and no recovery methods). The passkey menu
+  // should never render with zero login methods, so empty == malformed here.
+  useEffect(() => {
+    if (isError) {
+      logger.error(new Error('PasskeyMenu: listAuthenticators query failed'), {
+        tags: { file: 'PasskeyMenu.tsx', function: 'PasskeyMenu' },
+      })
+      onClose()
+      return
+    }
+    if (!isLoading && data && authenticators.length + recoveryMethods.length === 0) {
+      logger.error(new Error('PasskeyMenu: malformed response with 0 authenticators and 0 recovery methods'), {
+        tags: { file: 'PasskeyMenu.tsx', function: 'PasskeyMenu' },
+      })
+      onClose()
+    }
+  }, [isError, isLoading, data, authenticators.length, recoveryMethods.length, onClose])
 
   const handleAddPasskey = useEvent(() => {
     dispatch(setOpenModal({ name: ModalName.AddPasskey }))
@@ -346,6 +380,7 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
                   key={authenticator.credentialId}
                   authenticator={authenticator}
                   handleDeletePasskey={handleDeletePasskey}
+                  isOnlyPasskey={authenticators.length === 1}
                 />
               ))}
               <Flex row alignSelf="stretch">

@@ -87,14 +87,11 @@ vi.mock('expo-secure-store', () => ({
 }))
 
 // Import shared mocks using relative paths
-// oxlint-disable-next-line universe-custom/no-relative-import-paths -- biome-parity: oxlint is stricter here
 import '../../config/vitest-presets/vitest/setup.js'
-// oxlint-disable-next-line universe-custom/no-relative-import-paths -- biome-parity: oxlint is stricter here
+import '../environment/vitest-package-mocks'
 import '../utilities/vitest-package-mocks'
-// oxlint-disable-next-line universe-custom/no-relative-import-paths -- biome-parity: oxlint is stricter here
 import './vitest-package-mocks'
 // Import from ui vitest-setup for React Native component mocks
-// oxlint-disable-next-line universe-custom/no-relative-import-paths -- biome-parity: oxlint is stricter here
 import '../ui/vitest-setup'
 
 // Mock i18n to avoid require() path resolution issues

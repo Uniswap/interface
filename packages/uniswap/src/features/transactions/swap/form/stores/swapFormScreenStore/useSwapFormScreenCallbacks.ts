@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import type { RefObject } from 'react'
 import { type MutableRefObject, useEffect, useRef } from 'react'
 import type { TextInputProps } from 'react-native'
@@ -11,7 +12,6 @@ import { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swa
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWebPlatform } from 'utilities/src/platform'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'

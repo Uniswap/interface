@@ -5,7 +5,7 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, styled, TouchableArea } from 'ui/src'
+import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -36,11 +36,10 @@ import {
 import { useCancelMultipleOrdersCallback } from '~/components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AmountHeader } from '~/components/AmountHeader'
-import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
+import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
 import { useCurrency } from '~/hooks/Tokens'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
-import { ThemedText } from '~/theme/components'
 import { Divider } from '~/theme/components/Dividers'
 
 type SelectedOrderInfo = {
@@ -232,10 +231,10 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
       <Flex row gap="$gap12">
         <PortfolioLogo chainId={amounts.inputAmount.currency.chainId} currencies={currencies} />
         <Flex>
-          <ThemedText.SubHeader fontWeight={500}>{orderTitle}</ThemedText.SubHeader>
-          <ThemedText.BodySmall color="neutral2" fontWeight={500}>
+          <Text variant="body2">{orderTitle}</Text>
+          <Text variant="body3" color="$neutral2">
             {createdAt}
-          </ThemedText.BodySmall>
+          </Text>
         </Flex>
       </Flex>
       <OffchainModalDivider />
@@ -281,12 +280,12 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
             <AlertTriangleFilled size="20px" />
           </AlertIconContainer>
           <Flex flex={1}>
-            <ThemedText.SubHeader lineHeight="24px">{t('common.insufficientBalance.error')}</ThemedText.SubHeader>
-            <ThemedText.SubHeaderSmall lineHeight="20px">
+            <Text variant="body2">{t('common.insufficientBalance.error')}</Text>
+            <Text variant="body3" color="$neutral2">
               {order.routing === TradingApi.Routing.DUTCH_LIMIT
                 ? t('account.portfolio.activity.signLimit')
                 : t('account.portfolio.activity.canceledBelow')}
-            </ThemedText.SubHeaderSmall>
+            </Text>
           </Flex>
         </InsufficientFundsCopyContainer>
       ) : order.routing === TradingApi.Routing.DUTCH_LIMIT ? (
@@ -380,7 +379,7 @@ function OffchainActivityModalContent({ order }: { order: UniswapXOrderDetails }
       >
         <Wrapper data-testid="offchain-activity-modal">
           <Flex row justifyContent="space-between">
-            <ThemedText.SubHeader fontWeight={500}>{t('common.transactionDetails')}</ThemedText.SubHeader>
+            <Text variant="body2">{t('common.transactionDetails')}</Text>
             <TouchableArea onPress={reset}>
               <X size="$icon.20" color="$neutral1" hoverColor="$neutral1Hovered" />
             </TouchableArea>
@@ -397,7 +396,7 @@ function OffchainActivityModalContent({ order }: { order: UniswapXOrderDetails }
   )
 }
 
-export function OffchainActivityModal() {
+export default function OffchainActivityModal() {
   const selectedOrderAtomValue = useAtomValue(selectedOrderAtom)
   const syncedSelectedOrder = useSyncedSelectedOrder()
 

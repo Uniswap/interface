@@ -1,3 +1,4 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { type PropsWithChildren, type ReactNode, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorValue } from 'react-native'
@@ -22,7 +23,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { SwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/createSwapFormStore'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

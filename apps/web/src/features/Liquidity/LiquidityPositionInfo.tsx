@@ -8,6 +8,7 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
@@ -19,7 +20,6 @@ import {
 import { TextLoader } from '~/features/Liquidity/Loader'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import { PositionInfo } from '~/types/liquidity'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 interface LiquidityPositionInfoProps {

@@ -1,5 +1,10 @@
 process.env.TZ = 'America/New_York'
 
+// process.env.APP_ID is used by @universe/config. Default to 'web' so jest tests
+// satisfy BaseConfigSchema validation; apps can override (e.g. extension's
+// jest.config.js sets 'extension').
+process.env.APP_ID = process.env.APP_ID ?? 'web'
+
 module.exports = {
   globals: {
     ALCHEMY_API_KEY: 'key',

@@ -9,7 +9,7 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import UniswapXRouterLabel, { UniswapXGradient } from '~/components/RouterLabel/UniswapXRouterLabel'
+import { UniswapXRouterLabel, UniswapXGradient } from '~/features/Swap/components/RouterLabel/UniswapXRouterLabel'
 import { InterfaceTrade } from '~/state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/state/routing/utils'
 import { Divider } from '~/theme/components/Dividers'

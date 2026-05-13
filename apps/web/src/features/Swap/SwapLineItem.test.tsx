@@ -1,5 +1,5 @@
 import '~/test-utils/tokens/mocks'
-import SwapLineItem, { SwapLineItemType } from '~/features/Swap/SwapLineItem'
+import { SwapLineItem, SwapLineItemType } from '~/features/Swap/SwapLineItem'
 import { InterfaceTrade } from '~/state/routing/types'
 import {
   LIMIT_ORDER_TRADE,

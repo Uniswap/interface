@@ -1,3 +1,4 @@
+import { isProdEnv } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -11,7 +12,6 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/slice/ty
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { PortfolioDataReportOption, submitPortfolioDataReport } from 'uniswap/src/features/reporting/reports'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 

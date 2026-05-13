@@ -1,7 +1,7 @@
 import { memo, Suspense } from 'react'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
-import ErrorBoundary from '~/components/ErrorBoundary'
+import { ErrorBoundary } from '~/components/ErrorBoundary'
 import { useModalState } from '~/hooks/useModalState'
 import { ModalRegistry, ModalWrapperProps } from '~/pages/App/TopLevelModals/types'
 import { useAppSelector } from '~/state/hooks'
@@ -13,19 +13,13 @@ const PendingWalletConnectionModal = createLazy(
   () => import('~/components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),
 )
 const UniwalletModal = createLazy(() => import('~/components/AccountDrawer/UniwalletModal'))
-const OffchainActivityModal = createLazy(() =>
-  import('~/components/modals/OffchainActivityModal').then((module) => ({
-    default: module.OffchainActivityModal,
-  })),
-)
+const OffchainActivityModal = createLazy(() => import('~/components/modals/OffchainActivityModal'))
 const TransactionDetailsModalDispatcher = createLazy(() =>
   import('~/pages/App/TopLevelModals/TransactionDetailsModalDispatcher').then((module) => ({
     default: module.TransactionDetailsModalDispatcher,
   })),
 )
-const UkDisclaimerModal = createLazy(() =>
-  import('~/pages/App/TopLevelModals/UkDisclaimerModal').then((module) => ({ default: module.UkDisclaimerModal })),
-)
+const UkDisclaimerModal = createLazy(() => import('~/pages/App/TopLevelModals/UkDisclaimerModal'))
 const TestnetModeModal = createLazy(() =>
   import('uniswap/src/features/testnets/TestnetModeModal').then((module) => ({ default: module.TestnetModeModal })),
 )

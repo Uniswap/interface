@@ -6,7 +6,7 @@ import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircle
 import { fonts } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { PercentButton } from '~/pages/Liquidity/CreateAuction/components/PercentButton'
 import {
   expandCompactNumberInput,

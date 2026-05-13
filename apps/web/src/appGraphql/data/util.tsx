@@ -16,11 +16,10 @@ import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/features/params/chainParams'
-import { CHAIN_SEARCH_PARAM } from '~/features/params/chainQueryParam'
-import { TokenStat } from '~/state/explore/types'
-import { ExploreTab } from '~/types/explore'
+import { ExploreTab, TokenStat } from '~/types/explore'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
+import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
+import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 export enum TimePeriod {
   HOUR = 'H',

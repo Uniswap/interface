@@ -3,10 +3,10 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { describe, expect, it } from 'vitest'
 import { getPositionUrl } from '~/features/Liquidity/utils/getPositionUrl'
 import { TEST_TOKEN_1, TEST_TOKEN_2 } from '~/test-utils/constants'
-import { PositionInfo } from '~/types/liquidity'
 
 const currency0Amount = CurrencyAmount.fromRawAmount(TEST_TOKEN_1, JSBI.BigInt(100))
 const currency1Amount = CurrencyAmount.fromRawAmount(TEST_TOKEN_2, JSBI.BigInt(100))

@@ -2,7 +2,7 @@ import { Flex, Text } from 'ui/src'
 import { LoadingRows } from '~/components/Loader/styled'
 import { LoadingRow } from '~/features/Liquidity/Loader'
 import { TopPoolsCard } from '~/pages/Positions/TopPoolsCard'
-import { PoolStat } from '~/state/explore/types'
+import { PoolStat } from '~/types/explore'
 
 export function TopPoolsSection({ pools, title, isLoading }: { pools: PoolStat[]; title: string; isLoading: boolean }) {
   if (isLoading) {

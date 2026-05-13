@@ -1,10 +1,10 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useMemo } from 'react'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { MigratingPosition } from '~/features/Liquidity/Create/types'
-import { PositionInfo } from '~/types/liquidity'
 import { unwrappedToken } from '~/utils/unwrappedToken'
 
-export default function useMigratingPosition(positionInfo?: PositionInfo): MigratingPosition | undefined {
+export function useMigratingPosition(positionInfo?: PositionInfo): MigratingPosition | undefined {
   return useMemo(() => {
     if (!positionInfo) {
       return undefined

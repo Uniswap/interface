@@ -1,4 +1,5 @@
 import type { Token } from '@uniswap/sdk-core'
+import { isMobileWeb } from '@universe/environment'
 import { useAtom } from 'jotai'
 import ms from 'ms'
 import { useEffect, useMemo } from 'react'
@@ -30,7 +31,6 @@ import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileWeb } from 'utilities/src/platform'
 import dottedBackgroundDark from '~/assets/images/dotted-grid-dark.png'
 import dottedBackground from '~/assets/images/dotted-grid.png'
 import tokenLogo from '~/assets/images/token-logo.png'
@@ -49,7 +49,7 @@ interface LpIncentiveRewardsCardProps {
 
 const FIVE_MINUTES_MS = ms('5m')
 
-function LpIncentiveRewardsCard({
+export function LpIncentiveRewardsCard({
   onCollectRewards,
   token = LP_INCENTIVES_REWARD_TOKEN,
   walletAddress,
@@ -285,5 +285,3 @@ function LpIncentiveRewardsCard({
     </Flex>
   )
 }
-
-export default LpIncentiveRewardsCard

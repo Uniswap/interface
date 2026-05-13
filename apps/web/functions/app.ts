@@ -1,3 +1,4 @@
+import { Environment } from '@universe/config'
 import { poolImageHandler } from 'functions/api/image/pools'
 import { positionImageHandler } from 'functions/api/image/positions'
 import { tokenImageHandler } from 'functions/api/image/tokens'
@@ -10,8 +11,6 @@ type Bindings = {
   ASSETS?: { fetch: typeof fetch } // Only present on Cloudflare Workers
 }
 
-export type EntryGatewayEnv = 'development' | 'staging' | 'production'
-
 /**
  * URL segment -> upstream env. The segment values match
  * `ENTRY_GATEWAY_PROXY_ENV_SEGMENT` exported from @universe/api.
@@ -19,12 +18,12 @@ export type EntryGatewayEnv = 'development' | 'staging' | 'production'
  * The mapping is the proxy's only piece of "knowledge" about envs — there is
  * no feature registry, just a path-segment match. Callers that need to pin
  * a request to a specific env declare it at their call site (e.g.
- * `getEntryGatewayUrl({ env: Environment.PROD })` produces `/entry-gateway/prod`).
+ * `getEntryGatewayUrl({ env: Environment.Production })` produces `/entry-gateway/prod`).
  */
-const ENTRY_GATEWAY_ENV_BY_SEGMENT: Record<string, EntryGatewayEnv> = {
-  dev: 'development',
-  staging: 'staging',
-  prod: 'production',
+const ENTRY_GATEWAY_ENV_BY_SEGMENT: Record<string, Environment> = {
+  dev: Environment.Development,
+  staging: Environment.Staging,
+  prod: Environment.Production,
 }
 
 /** Platform-specific dependencies injected by each entry point. */
@@ -35,7 +34,7 @@ interface AppConfig {
    * proxy is requesting the URL for that specific backend environment
    * regardless of the deployment default.
    */
-  getEntryGatewayUrl: (c: Context, env?: EntryGatewayEnv) => string
+  getEntryGatewayUrl: (c: Context, env?: Environment) => string
   getWebSocketUrl: (c: Context) => string
   getTrustedClientIp: (c: Context) => string | undefined
 }
@@ -84,7 +83,7 @@ function cacheControl(maxAge: number) {
  * returns `undefined` env and the original path so the deployment default
  * is used.
  */
-function resolveEnvFromPath(path: string): { env: EntryGatewayEnv | undefined; remainingPath: string } {
+function resolveEnvFromPath(path: string): { env: Environment | undefined; remainingPath: string } {
   const match = path.match(/^\/(prod|staging|dev)(?=\/|$)(.*)$/)
   if (!match) {
     return { env: undefined, remainingPath: path }

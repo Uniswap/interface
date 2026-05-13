@@ -22,12 +22,12 @@ import { gqlToCurrency } from '~/appGraphql/data/util'
 import { MobileBottomBar } from '~/components/NavBar/MobileBottomBar'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { getChainUrlParam } from '~/features/params/chainParams'
 import { useAccount } from '~/hooks/useAccount'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
 import { PositionInfo } from '~/pages/PoolDetails/Pools/cache'
-import useMultiChainPositions from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
+import { useMultiChainPositions } from '~/pages/PoolDetails/Pools/hooks/useMultiChainPositions'
 import { Swap } from '~/pages/Swap'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const PoolDetailsStatsButtonsRow = styled(Flex, {
   row: true,

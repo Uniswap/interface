@@ -1,3 +1,4 @@
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { Flex, getUniconColors, LinearGradient, Text, useExtractedColors, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
@@ -6,7 +7,6 @@ import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSelection'
 import { extensionNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
 import { ChoosePhotoOptionsModal } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'

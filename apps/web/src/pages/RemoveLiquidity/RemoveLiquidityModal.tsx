@@ -58,3 +58,5 @@ export function RemoveLiquidityModal() {
     </RemoveLiquidityModalContextProvider>
   )
 }
+
+export default RemoveLiquidityModal

@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Skeleton, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
@@ -17,13 +16,7 @@ enum ActivityTab {
 }
 
 export function ActivitySection() {
-  const isV2 = useFeatureFlag(FeatureFlags.AuctionDetailsV2)
   const auctionState = useAuctionStore((state) => state.progress.state)
-
-  // V1: just show BidActivities with no tabs
-  if (!isV2) {
-    return <BidActivities />
-  }
 
   if (auctionState === AuctionProgressState.UNKNOWN) {
     return (

@@ -3,7 +3,7 @@ import { sharedDehydrateOptions } from 'uniswap/src/data/apiClients/sharedDehydr
 
 // Mock isDevEnv so we can toggle the runtime JSON.stringify guard per-case.
 const isDevEnvMock = vi.fn()
-vi.mock('utilities/src/environment/env', () => ({
+vi.mock('@universe/environment', () => ({
   isDevEnv: () => isDevEnvMock(),
 }))
 

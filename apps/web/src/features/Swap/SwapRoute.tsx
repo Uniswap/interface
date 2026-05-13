@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text } from 'ui/src'
-import RouterLabel from '~/components/RouterLabel'
+import { RouterLabel } from '~/features/Swap/components/RouterLabel/RouterLabel'
 import { UniswapXDescription } from '~/features/Swap/GasBreakdownTooltip'
 import { SubmittableTrade } from '~/state/routing/types'
 
@@ -11,7 +11,7 @@ function RouteLabel({ trade }: { trade: SubmittableTrade }) {
       <Text variant="body3" color="$neutral2">
         {t('swap.orderRouting')}
       </Text>
-      <RouterLabel trade={trade} color="neutral1" />
+      <RouterLabel trade={trade} color="$neutral1" />
     </Flex>
   )
 }

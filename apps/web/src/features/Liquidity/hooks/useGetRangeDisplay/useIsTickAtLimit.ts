@@ -6,7 +6,7 @@ export enum Bound {
   UPPER = 'UPPER',
 }
 
-export default function useIsTickAtLimit({
+export function useIsTickAtLimit({
   tickSpacing,
   tickLower,
   tickUpper,

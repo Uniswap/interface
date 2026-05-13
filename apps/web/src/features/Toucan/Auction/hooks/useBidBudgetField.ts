@@ -6,7 +6,7 @@ import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCur
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCPrice, useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { useEvent } from 'utilities/src/react/hooks'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 
 // Used for rounding in conversion math
 const NUM_DECIMALS_FIAT_ROUNDING = 2

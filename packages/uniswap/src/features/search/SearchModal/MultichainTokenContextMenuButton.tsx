@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -31,7 +32,6 @@ import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 

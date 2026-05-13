@@ -1,6 +1,6 @@
 import { defaultShouldDehydrateQuery } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { isDevEnv } from 'utilities/src/environment/env'
+import { isDevEnv } from '@universe/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { jsonStringify } from 'utilities/src/serialization/json'
 

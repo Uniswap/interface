@@ -1,17 +1,26 @@
 {
   "name": "@universe/environment",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "@universe/config": "workspace:^",
+    "react-native": "0.79.5",
+    "react-native-device-info": "10.11.0"
+  },
   "devDependencies": {
+    "@types/chrome": "0.0.304",
     "@types/node": "22.19.17",
     "@typescript/native-preview": "7.0.0-dev.20260421.2",
-    "typescript": "5.8.3"
+    "@vitest/coverage-v8": "3.2.1",
+    "typescript": "5.8.3",
+    "vitest": "3.2.1",
+    "vitest-presets": "workspace:^"
   },
   "scripts": {
     "typecheck": "nx typecheck environment",
     "check": "nx check environment",
     "check:fast": "nx check:fast environment",
     "check:deps:usage": "nx check:deps:usage environment",
+    "test": "nx test environment",
     "format": "nx format environment",
     "format:check": "nx format:check environment",
     "lint": "nx lint environment",

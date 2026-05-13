@@ -38,8 +38,8 @@ vi.mock('~/features/wallet/connection/hooks/useOrderedWalletConnectors', () => (
   useOrderedWallets: vi.fn(() => []),
 }))
 
-vi.mock('~/components/Web3Provider/constants', async () => ({
-  ...(await vi.importActual('~/components/Web3Provider/constants')),
+vi.mock('~/connection/constants', async () => ({
+  ...(await vi.importActual('~/connection/constants')),
   useRecentConnectorId: vi.fn(() => undefined),
 }))
 

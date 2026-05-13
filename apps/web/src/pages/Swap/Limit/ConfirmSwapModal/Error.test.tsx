@@ -1,5 +1,5 @@
 import '~/test-utils/tokens/mocks'
-import Error, { PendingModalError } from '~/pages/Swap/Limit/ConfirmSwapModal/Error'
+import { Error, PendingModalError } from '~/pages/Swap/Limit/ConfirmSwapModal/Error'
 import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from '~/test-utils/constants'
 import { render, screen } from '~/test-utils/render'
 

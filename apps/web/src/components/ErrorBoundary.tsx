@@ -10,7 +10,6 @@ import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { persistor } from '~/state'
 import { useAppStateResetter } from '~/state/reset/appResetter'
-import { ThemedText } from '~/theme/components'
 import { CopyToClipboard } from '~/theme/components/CopyHelper'
 import { ExternalLink } from '~/theme/components/Links'
 
@@ -129,18 +128,15 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
   const [isExpanded, setExpanded] = useState(false)
   const isMobile = useIsMobile()
 
-  // @todo: ThemedText components should be responsive by default
-  const [Title, Description] = isMobile
-    ? [ThemedText.HeadlineSmall, ThemedText.BodySmall]
-    : [ThemedText.HeadlineLarge, ThemedText.BodySecondary]
-
   return (
     <>
       <Flex gap="$gap8" mb="$spacing8">
-        <Title textAlign="center">{t('common.card.error.description')}</Title>
-        <Description textAlign="center" color="neutral2">
+        <Text variant={isMobile ? 'body1' : 'heading2'} textAlign="center">
+          {t('common.card.error.description')}
+        </Text>
+        <Text variant={isMobile ? 'body3' : 'body2'} textAlign="center" color="$neutral2">
           {eventId ? t('error.request.provideId') : t('common.error.request')}
-        </Description>
+        </Text>
       </Flex>
       <Flex
         alignSelf="stretch"
@@ -150,9 +146,7 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
         borderRadius="$rounded24"
       >
         <Flex row gap="$gap16" alignItems="center" justifyContent="space-between">
-          <ThemedText.SubHeader>
-            {eventId ? t('error.id', { eventId }) : t('common.error.details')}
-          </ThemedText.SubHeader>
+          <Text variant="body2">{eventId ? t('error.id', { eventId }) : t('common.error.details')}</Text>
           <CopyToClipboard toCopy={eventId ?? errorDetails}>
             <CopyAlt color="$neutral2" size="$icon.24" />
           </CopyToClipboard>
@@ -163,9 +157,9 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
           <Separator />
         </Flex>
         <TouchableArea flexDirection="row" justifyContent="space-between" onPress={() => setExpanded((s) => !s)}>
-          <ThemedText.Link color="neutral2">
+          <Text variant="body3" color="$neutral2">
             {isExpanded ? t('common.showLess.button') : t('common.showMore.button')}
-          </ThemedText.Link>
+          </Text>
           <RotatableChevron size="$icon.20" direction={isExpanded ? 'up' : 'down'} />
         </TouchableArea>
       </Flex>
@@ -173,7 +167,7 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
   )
 }
 
-export default function ErrorBoundary({
+export function ErrorBoundary({
   children,
   fallback,
 }: PropsWithChildren & {

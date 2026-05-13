@@ -3,7 +3,7 @@ import { TFunction } from 'i18next'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, Text } from 'ui/src'
-import { PositionInfo } from '~/types/liquidity'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 
 const getStatusText = (status: PositionStatus, t: TFunction) => {
   switch (status) {

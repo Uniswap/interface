@@ -14,7 +14,7 @@ type ValuePropCardProps = FlexProps & {
   color?: string
 }
 
-export default function ValuePropCard(props: ValuePropCardProps) {
+export function ValuePropCard(props: ValuePropCardProps) {
   const { color, alignTextToBottom, href, to, title, children, bodyText, button, subtitle, ...rest } = props
   const navigate = useNavigate()
 

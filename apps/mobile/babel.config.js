@@ -6,6 +6,10 @@ const path = require('path')
 dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults') })
 dotenv.config({ path: path.resolve(__dirname, '../../.env.defaults.local'), override: true })
 
+// process.env.APP_ID is used by @universe/config. When that package's
+// getConfig() function is removed, this assignment can be removed.
+process.env.APP_ID = 'mobile'
+
 const { NODE_ENV } = process.env
 
 const inProduction = NODE_ENV === 'production'

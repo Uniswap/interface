@@ -16,8 +16,6 @@ import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from '~/constants/misc'
 import { useHandleUniswapXActivityUpdate } from '~/hooks/useHandleUniswapXActivityUpdate'
 import { usePollPendingBatchTransactions } from '~/state/activity/polling/batch'
@@ -27,6 +25,8 @@ import { useActivePlanTransactions, usePollPendingPlanTransactions } from '~/sta
 import { usePollPendingTransactions } from '~/state/activity/polling/transactions'
 import { type ActivityUpdate, ActivityUpdateTransactionType, type OnActivityUpdate } from '~/state/activity/types'
 import { useAppDispatch } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { logSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 export function ActivityStateUpdater() {
@@ -199,3 +199,5 @@ function useOnActivityUpdate(): OnActivityUpdate {
     [analyticsContext, dispatch, handleUniswapXActivityUpdate],
   )
 }
+
+export default ActivityStateUpdater

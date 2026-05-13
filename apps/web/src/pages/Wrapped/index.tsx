@@ -19,7 +19,7 @@ const MAX_CONTAINER_WIDTH = 1200
 const MAX_CONTAINER_HEIGHT = `calc(100% - ${INTERFACE_NAV_HEIGHT}px)`
 const CONTAINER_BACKGROUND_COLOR = '#361A37'
 
-export default function Wrapped() {
+export function Wrapped() {
   const { useParsedQueryString } = useUrlContext()
   const queryParams = useParsedQueryString()
   const walletAddressRef = useRef<string | undefined>(undefined)
@@ -166,3 +166,5 @@ export default function Wrapped() {
     </Flex>
   )
 }
+
+export default Wrapped

@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, IconButton, Text, useIsShortMobileDevice } from 'ui/src'
@@ -18,7 +19,6 @@ import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
 import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils/getShouldDisplayTokenWarningCard'
 import { SagaStatus, useMonitoredSagaStatus } from 'uniswap/src/utils/saga'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useStore } from 'zustand'
 
 export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | null {

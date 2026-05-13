@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { createCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/store/createCreateAuctionStore'
 import {
+  CustomPriceRangeBound,
+  CUSTOM_PRICE_RANGE_PRESETS,
+  MAX_CUSTOM_PRICE_RANGE_ENTRIES,
   MAX_POST_AUCTION_LIQUIDITY_TIERS,
   PostAuctionLiquidityAllocationType,
+  PriceRangeStrategy,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { percentOfSoldToLiquidityFromDepositAndLiquidityAmount } from '~/pages/Liquidity/CreateAuction/utils'
 
@@ -143,5 +147,105 @@ describe('createCreateAuctionStore', () => {
       throw new Error('expected tiered allocation')
     }
     expect(allocation.tiers).toHaveLength(MAX_POST_AUCTION_LIQUIDITY_TIERS)
+  })
+
+  it('initializes custom price ranges when selecting custom range', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setPriceRangeStrategy(PriceRangeStrategy.CUSTOM_RANGE)
+
+    const { customizePool } = store.getState()
+    expect(customizePool.priceRangeStrategy).toBe(PriceRangeStrategy.CUSTOM_RANGE)
+    expect(customizePool.customPriceRanges).toEqual([
+      {
+        id: 'custom-range-1',
+        liquidityPercent: 100,
+        minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
+        maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+      },
+    ])
+  })
+
+  it('adds custom range presets with remaining percent', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setPriceRangeStrategy(PriceRangeStrategy.CUSTOM_RANGE)
+    actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[0])
+
+    expect(store.getState().customizePool.customPriceRanges).toEqual([
+      {
+        id: 'custom-range-1',
+        liquidityPercent: 100,
+        minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
+        maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+      },
+      {
+        id: 'custom-range-2',
+        liquidityPercent: 0,
+        minPercentFromClearing: -50,
+        maxPercentFromClearing: 100,
+      },
+    ])
+  })
+
+  it('updates custom range percents while preserving a 100 percent total', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setPriceRangeStrategy(PriceRangeStrategy.CUSTOM_RANGE)
+    actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[0])
+    actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[2])
+    actions.updateCustomPriceRangeLiquidityPercent('custom-range-2', 25)
+
+    const percents = store.getState().customizePool.customPriceRanges.map((entry) => entry.liquidityPercent)
+    expect(percents).toEqual([75, 25, 0])
+    expect(percents.reduce((sum, percent) => sum + percent, 0)).toBe(100)
+  })
+
+  it('updates custom range bounds', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setPriceRangeStrategy(PriceRangeStrategy.CUSTOM_RANGE)
+    actions.updateCustomPriceRangeBounds('custom-range-1', {
+      minPercentFromClearing: -20,
+      maxPercentFromClearing: 25,
+    })
+
+    expect(store.getState().customizePool.customPriceRanges[0]).toMatchObject({
+      minPercentFromClearing: -20,
+      maxPercentFromClearing: 25,
+    })
+  })
+
+  it('removes custom range rows and transfers liquidity percent to the last remaining row', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setPriceRangeStrategy(PriceRangeStrategy.CUSTOM_RANGE)
+    actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[0])
+    actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[1])
+    actions.updateCustomPriceRangeLiquidityPercent('custom-range-2', 25)
+    actions.removeCustomPriceRange('custom-range-2')
+
+    expect(store.getState().customizePool.customPriceRanges.map((entry) => entry.liquidityPercent)).toEqual([75, 25])
+  })
+
+  it('limits custom price ranges to ten entries', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setPriceRangeStrategy(PriceRangeStrategy.CUSTOM_RANGE)
+    for (let i = 1; i < MAX_CUSTOM_PRICE_RANGE_ENTRIES; i++) {
+      actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[i % CUSTOM_PRICE_RANGE_PRESETS.length])
+    }
+
+    expect(store.getState().customizePool.customPriceRanges).toHaveLength(MAX_CUSTOM_PRICE_RANGE_ENTRIES)
+
+    actions.addCustomPriceRangePreset(CUSTOM_PRICE_RANGE_PRESETS[0])
+
+    expect(store.getState().customizePool.customPriceRanges).toHaveLength(MAX_CUSTOM_PRICE_RANGE_ENTRIES)
   })
 })

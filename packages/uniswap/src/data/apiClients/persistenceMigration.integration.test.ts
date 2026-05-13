@@ -37,7 +37,7 @@ vi.mock('idb-keyval', () => ({
 }))
 
 // Mock env so the dev-guard branch is exercised without depending on NODE_ENV.
-vi.mock('utilities/src/environment/env', () => ({
+vi.mock('@universe/environment', () => ({
   isDevEnv: () => true,
   isTestEnv: () => false,
 }))

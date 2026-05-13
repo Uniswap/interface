@@ -151,9 +151,11 @@ export function CreateNewTokenForm({ createNew }: { createNew: CreateNewTokenFor
               />
             ) : (
               <Flex row alignItems="center" justifyContent="space-between">
-                <Text variant="heading2" color={createNew.name ? '$neutral1' : '$neutral3'}>
-                  {createNew.name || t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
-                </Text>
+                <TouchableArea flex={1} minWidth={0} onPress={() => setIsEditingName(true)}>
+                  <Text variant="heading2" color={createNew.name ? '$neutral1' : '$neutral3'}>
+                    {createNew.name || t('toucan.createAuction.step.tokenInfo.namePlaceholder')}
+                  </Text>
+                </TouchableArea>
                 <TouchableArea
                   alignItems="center"
                   px="$spacing12"

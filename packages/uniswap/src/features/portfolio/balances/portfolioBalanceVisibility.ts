@@ -1,10 +1,10 @@
+import { isMobileApp } from '@universe/environment'
 import type {
   PortfolioBalance,
   PortfolioChainBalance,
   PortfolioMultichainBalance,
 } from 'uniswap/src/features/dataApi/types'
 import type { CurrencyIdToVisibility } from 'uniswap/src/features/visibility/slice'
-import { isMobileApp } from 'utilities/src/platform'
 
 /**
  * Determines whether a portfolio balance should be hidden from the user interface.

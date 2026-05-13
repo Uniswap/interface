@@ -1,5 +1,6 @@
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG, GqlResult } from '@universe/api'
+import { isMobileApp, isWebApp, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { usePoolStatsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolStatsToPoolOptions'
@@ -21,7 +22,6 @@ import {
 import { useMultichainTrendingTokenRankings } from 'uniswap/src/features/search/SearchModal/hooks/useMultichainTrendingTokenRankings'
 import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 export function useSectionsForNoQuerySearch({
   chainFilter,

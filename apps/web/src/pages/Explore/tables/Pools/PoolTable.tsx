@@ -18,6 +18,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -25,7 +26,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
 import { PoolSortFields, TablePool } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, OrderDirection, unwrapToken } from '~/appGraphql/data/util'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
@@ -34,20 +35,19 @@ import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import LPIncentiveFeeStatTooltip from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
+import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
+import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
+import { LPIncentiveFeeStatTooltip } from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
-import { getChainUrlParam, useChainIdFromUrlParam } from '~/features/params/chainParams'
-import useSimplePagination from '~/hooks/useSimplePagination'
+import { useSimplePagination } from '~/hooks/useSimplePagination'
 import {
   PoolTableStoreContextProvider,
   usePoolTableStore,
   usePoolTableStoreActions,
 } from '~/pages/Explore/tables/Pools/poolTableStore'
-import { TABLE_PAGE_SIZE } from '~/state/explore'
-import { useExploreTablesFilterStore } from '~/state/explore/exploreTablesFilterStore'
-import { useTopPools } from '~/state/explore/topPools/useTopPools'
-import { PoolStat } from '~/state/explore/types'
-import type { FeeData } from '~/types/liquidity'
+import { PoolStat } from '~/types/explore'
+import { getChainUrlParam, useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const TableWrapper = styled(Flex, {
   m: '0 auto',
@@ -229,6 +229,7 @@ export function PoolsTable({
   maxHeight,
   hiddenColumns,
   forcePinning,
+  getLink,
 }: {
   pools?: TablePool[] | PoolStat[]
   loading: boolean
@@ -238,6 +239,7 @@ export function PoolsTable({
   maxHeight?: number
   hiddenColumns?: PoolSortFields[]
   forcePinning?: boolean
+  getLink?: (chainId: UniverseChainId, poolIdOrHash: string) => string
 }) {
   const { t } = useTranslation()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
@@ -291,7 +293,9 @@ export function PoolsTable({
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
           rewardApr: pool.boostedApr,
-          link: `/explore/pools/${getChainUrlParam(chainId)}/${isGqlPool ? pool.hash : pool.id}`,
+          link:
+            getLink?.(chainId, isGqlPool ? pool.hash : pool.id) ??
+            `/explore/pools/${getChainUrlParam(chainId)}/${isGqlPool ? pool.hash : pool.id}`,
           token0CurrencyId: currency0Id,
           token1CurrencyId: currency1Id,
           analytics: {
@@ -311,7 +315,7 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [convertFiatAmountFormatted, defaultChainId, filterString, pools],
+    [convertFiatAmountFormatted, defaultChainId, filterString, getLink, pools],
   )
 
   const showLoadingSkeleton = loading || !!error

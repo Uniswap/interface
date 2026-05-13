@@ -7,7 +7,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import type { FeeData } from '~/types/liquidity'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 
 interface RewardsCampaign {
   id: string

@@ -3,7 +3,7 @@ import {
   computeFdvBidTokenRaw,
   formatCompactFromRaw,
 } from '~/features/Toucan/Auction/utils/fixedPointFdv'
-import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 
 export interface ProjectedFdvTableValue {
   raw: bigint // Raw FDV in bid token for computation

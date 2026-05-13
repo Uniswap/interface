@@ -48,24 +48,28 @@ vi.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: vi.fn(),
 }))
 
-vi.mock('utilities/src/platform', () => ({
-  isMobileApp: true,
-  isWebPlatform: false,
-  isExtensionApp: false,
-  isMobileWeb: false,
-  isWebApp: false,
-  isWebAppDesktop: false,
-  isAndroid: false,
-  isIOS: false,
-  isWebIOS: false,
-  isWebAndroid: false,
-  isTouchable: false,
-  isHoverable: false,
-  isChrome: false,
-  isSafari: false,
-  isMobileWebSafari: false,
-  isMobileWebAndroid: false,
-}))
+vi.mock('@universe/environment', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/environment')>()
+  return {
+    ...actual,
+    isMobileApp: true,
+    isWebPlatform: false,
+    isExtensionApp: false,
+    isMobileWeb: false,
+    isWebApp: false,
+    isWebAppDesktop: false,
+    isAndroid: false,
+    isIOS: false,
+    isWebIOS: false,
+    isWebAndroid: false,
+    isTouchable: false,
+    isHoverable: false,
+    isChrome: false,
+    isSafari: false,
+    isMobileWebSafari: false,
+    isMobileWebAndroid: false,
+  }
+})
 
 const ERC20_CURRENCY_ID = `${UniverseChainId.Mainnet}-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`
 

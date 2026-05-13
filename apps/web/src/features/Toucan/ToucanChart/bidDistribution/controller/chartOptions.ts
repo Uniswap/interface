@@ -12,12 +12,14 @@ export function createToucanBidDistributionChartOptions({
   colors,
   priceFormatter,
   showYAxis = true,
+  isDemandMode = false,
 }: {
   width: number
   height: number
   colors: ToucanBidDistributionChartControllerCreateParams['colors']
   priceFormatter: (price: number) => string
   showYAxis?: boolean
+  isDemandMode?: boolean
 }) {
   return {
     width,
@@ -33,6 +35,7 @@ export function createToucanBidDistributionChartOptions({
       horzLines: {
         color: colors.surface3Solid.val,
         style: LineStyle.SparseDotted,
+        visible: !isDemandMode,
       },
     },
     leftPriceScale: {

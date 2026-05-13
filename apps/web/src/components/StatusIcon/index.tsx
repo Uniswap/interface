@@ -5,7 +5,7 @@ import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import sockImg from '~/assets/svg/socks.svg'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/components/Web3Provider/constants'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
 import { useActiveAddresses, useActiveWallet } from '~/features/accounts/store/hooks'
 import { useHasSocks } from '~/hooks/useSocksBalance'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
@@ -91,7 +91,7 @@ function MiniConnectedIndicator() {
   )
 }
 
-export default function StatusIcon({
+export function StatusIcon({
   size = 16,
   showMiniIcons = true,
   showConnectedIndicator,

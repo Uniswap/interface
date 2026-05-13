@@ -20,7 +20,7 @@ vi.mock('react-router', () => ({
 }))
 
 vi.mock('~/hooks/useCopyClipboard', () => ({
-  default: vi.fn(() => [false, mockSetCopied]),
+  useCopyClipboard: vi.fn(() => [false, mockSetCopied]),
 }))
 
 vi.mock('~/utils/sharing', () => ({

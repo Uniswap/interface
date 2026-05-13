@@ -1,5 +1,6 @@
 import type { GasFeeResult } from '@universe/api'
 import { type TradingApi } from '@universe/api'
+import { isMobileApp, isMobileWeb } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, Text } from 'ui/src'
@@ -21,7 +22,6 @@ import type {
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 interface SwapDetailsProps {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>

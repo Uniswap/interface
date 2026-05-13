@@ -1,28 +1,24 @@
 import { Trans } from 'react-i18next'
-import { AutoColumn } from '~/components/deprecated/Column'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
-
-const TextWrapper = deprecatedStyled.div`
-  border: 1px solid ${({ theme }) => theme.neutral3};
-  padding: 16px 12px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
+import { Flex, Text } from 'ui/src'
 
 export function V2Unsupported() {
   return (
-    <AutoColumn gap="lg" justify="center">
-      <AutoColumn gap="md" style={{ width: '100%' }}>
-        <TextWrapper>
-          <ThemedText.BodySecondary color="neutral2" textAlign="center">
+    <Flex gap="$gap24" alignItems="center" width="100%">
+      <Flex gap="$gap12" width="100%" alignItems="center">
+        <Flex
+          alignItems="center"
+          borderColor="$neutral3"
+          borderRadius="$rounded12"
+          borderWidth={1}
+          justifyContent="center"
+          px="$spacing12"
+          py="$spacing16"
+        >
+          <Text color="$neutral2" textAlign="center" variant="body2">
             <Trans i18nKey="v2.notAvailable" />
-          </ThemedText.BodySecondary>
-        </TextWrapper>
-      </AutoColumn>
-    </AutoColumn>
+          </Text>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

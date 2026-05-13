@@ -1,3 +1,4 @@
+import { isExtensionApp, isWebApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
@@ -7,7 +8,6 @@ import { NetworkOption } from 'uniswap/src/components/network/NetworkOption'
 import { useNewChainIds } from 'uniswap/src/features/chains/hooks/useNewChainIds'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface NetworkFilterContentProps {

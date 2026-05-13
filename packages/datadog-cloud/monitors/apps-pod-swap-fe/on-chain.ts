@@ -1,5 +1,5 @@
 import { MonitorDefinition } from '../../types'
-import { SWAP_POD_RUNBOOK, TEAM, UNIVERSE_REPO_URL } from './constants'
+import { SWAP_FE_ADDITIONAL_SLACK_CHANNELS, SWAP_POD_RUNBOOK, TEAM, UNIVERSE_REPO_URL } from './constants'
 
 /**
  * Monitors for on-chain transaction failures.
@@ -22,5 +22,6 @@ export const swapFeOnChainMonitors: MonitorDefinition[] = [
     runbookUrl: SWAP_POD_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/packages/wallet`,
     dashboards: [],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
   },
 ]

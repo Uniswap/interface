@@ -10,6 +10,7 @@ import { currencyId as toCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL, gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const StyledInternalLink = styled(Link, {
   ...ClickableTamaguiStyle,
@@ -37,6 +38,7 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: GraphQLApi.Token; hi
       to={getTokenDetailsURL({
         address: unwrappedToken.address,
         chain: token.chain,
+        chainQueryParam: getChainUrlParam(chainId),
       })}
     >
       <Flex row gap="$gap8" maxWidth="100px" alignItems="center">

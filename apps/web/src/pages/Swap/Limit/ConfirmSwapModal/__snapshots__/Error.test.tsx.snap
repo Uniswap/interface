@@ -12,26 +12,6 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
   fill: rgba(19, 19, 19, 0.63);
 }
 
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c3 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -71,16 +51,14 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _justifyContent-center _alignItems-center"
       >
         <div
-          align="center"
-          class="c1 c2"
-          gap="sm"
-          justify="center"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap56 _width-10037"
         >
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 ABC
-          </div>
+          </span>
           <svg
             fill="none"
             stroke-width="8"
@@ -92,11 +70,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
               fill="currentColor"
             />
           </svg>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 DEF
-          </div>
+          </span>
         </div>
         <div
           class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
@@ -146,26 +125,6 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
   fill: rgba(19, 19, 19, 0.63);
 }
 
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c3 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -205,16 +164,14 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _justifyContent-center _alignItems-center"
       >
         <div
-          align="center"
-          class="c1 c2"
-          gap="sm"
-          justify="center"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap56 _width-10037"
         >
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 ABC
-          </div>
+          </span>
           <svg
             fill="none"
             stroke-width="8"
@@ -226,11 +183,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
               fill="currentColor"
             />
           </svg>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 DEF
-          </div>
+          </span>
         </div>
         <div
           class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
@@ -280,26 +238,6 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
   fill: rgba(19, 19, 19, 0.63);
 }
 
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c3 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -339,16 +277,14 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _justifyContent-center _alignItems-center"
       >
         <div
-          align="center"
-          class="c1 c2"
-          gap="sm"
-          justify="center"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap56 _width-10037"
         >
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 ABC
-          </div>
+          </span>
           <svg
             fill="none"
             stroke-width="8"
@@ -360,11 +296,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
               fill="currentColor"
             />
           </svg>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 DEF
-          </div>
+          </span>
         </div>
         <div
           class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
@@ -414,26 +351,6 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
   fill: rgba(19, 19, 19, 0.63);
 }
 
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c3 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -473,16 +390,14 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _justifyContent-center _alignItems-center"
       >
         <div
-          align="center"
-          class="c1 c2"
-          gap="sm"
-          justify="center"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap56 _width-10037"
         >
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 ABC
-          </div>
+          </span>
           <svg
             fill="none"
             stroke-width="8"
@@ -494,11 +409,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p classic t
               fill="currentColor"
             />
           </svg>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 DEF
-          </div>
+          </span>
         </div>
         <div
           class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
@@ -548,26 +464,6 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
   fill: rgba(19, 19, 19, 0.63);
 }
 
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c3 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -605,10 +501,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _justifyContent-center _alignItems-center"
       >
         <div
-          align="center"
-          class="c1 c2"
-          gap="sm"
-          justify="center"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap56 _width-10037"
         >
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
@@ -629,11 +522,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
               />
             </div>
           </div>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 DAI
-          </div>
+          </span>
           <svg
             fill="none"
             stroke-width="8"
@@ -664,11 +558,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
               />
             </div>
           </div>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             0.0001 USDC
-          </div>
+          </span>
         </div>
         <div
           class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"
@@ -718,26 +613,6 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
   fill: rgba(19, 19, 19, 0.63);
 }
 
-.c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c3 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -777,10 +652,7 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56 _justifyContent-center _alignItems-center"
       >
         <div
-          align="center"
-          class="c1 c2"
-          gap="sm"
-          justify="center"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-gap56 _width-10037"
         >
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
@@ -801,11 +673,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
               />
             </div>
           </div>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             &lt;0.00001 DAI
-          </div>
+          </span>
           <svg
             fill="none"
             stroke-width="8"
@@ -836,11 +709,12 @@ exports[`ConfirmSwapModal/Error > renders %p correctly, with error= %p limit ord
               />
             </div>
           </div>
-          <div
-            class="c3 css-142zc9n"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             0.0001 USDC
-          </div>
+          </span>
         </div>
         <div
           class="is_TouchableTextLink _transform-0active-scale11281 _containerType-_platformweb_normal _outlineColor-0focus-visible-neutral3 _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _cursor-pointer _outlineStyle-none _borderTopLeftRadius-t-radius-no3511 _borderTopRightRadius-t-radius-no3511 _borderBottomRightRadius-t-radius-no3511 _borderBottomLeftRadius-t-radius-no3511 t_group_item"

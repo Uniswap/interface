@@ -1,4 +1,5 @@
 import { GraphQLApi, isNonPollingRequestInFlight } from '@universe/api'
+import { isIOS } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { memo, useMemo } from 'react'
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native'
@@ -23,7 +24,6 @@ import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isIOS } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
 

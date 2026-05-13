@@ -5,8 +5,11 @@ import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from '
 import { Flex, useSporeColors } from 'ui/src'
 import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
 import { TickTooltipContent } from '~/features/Liquidity/charts/ActiveLiquidityChart/TickTooltip'
-import { createHorizontalLiquidityChartStore } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/createHorizontalLiquidityChartStore'
 import { useHorizontalLiquidityChartInteractions } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/hooks/useHorizontalLiquidityChartInteractions'
+import {
+  useHorizontalLiquidityChartSelector,
+  useHorizontalLiquidityChartStoreActions,
+} from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/useHorizontalLiquidityChartStore'
 import {
   createEntryFromBucket,
   findBucketForTick,
@@ -30,7 +33,6 @@ function D3HorizontalLiquidityChartInner({
   protocolVersion,
   height = DEFAULT_HEIGHT,
   onActionsReady,
-  onHoveredTickChange,
 }: {
   liquidityData: ChartEntry[]
   rawTicks: TickData[]
@@ -44,7 +46,6 @@ function D3HorizontalLiquidityChartInner({
   protocolVersion: ProtocolVersion
   height?: number
   onActionsReady?: (actions: { zoomIn: () => void; zoomOut: () => void; resetView: () => void }) => void
-  onHoveredTickChange?: (tick: ChartEntry | undefined) => void
 }) {
   const colors = useSporeColors()
   const chartId = useId()
@@ -54,18 +55,14 @@ function D3HorizontalLiquidityChartInner({
   const [hoveredY, setHoveredY] = useState<number | undefined>(undefined)
   const tooltipRef = useRef<HTMLDivElement | null>(null)
 
-  // Create store (stable reference — pool config is passed via renderingContext, not here)
-  const store = useMemo(() => createHorizontalLiquidityChartStore(), [])
-
   // Subscribe to store state
-  const zoomLevel = store((s) => s.zoomLevel)
-  const panX = store((s) => s.panX)
-  const hoveredTick = store((s) => s.hoveredTick)
-  const hoveredX = store((s) => s.hoveredX)
-  const renderedBuckets = store((s) => s.renderedBuckets)
-  const { initializeRenderers, drawAll, updateDimensions, setChartState, zoomIn, zoomOut, resetView } = store(
-    (s) => s.actions,
-  )
+  const zoomLevel = useHorizontalLiquidityChartSelector((s) => s.zoomLevel)
+  const panX = useHorizontalLiquidityChartSelector((s) => s.panX)
+  const hoveredTick = useHorizontalLiquidityChartSelector((s) => s.hoveredTick)
+  const hoveredX = useHorizontalLiquidityChartSelector((s) => s.hoveredX)
+  const renderedBuckets = useHorizontalLiquidityChartSelector((s) => s.renderedBuckets)
+  const { initializeRenderers, drawAll, updateDimensions, setChartState, zoomIn, zoomOut, resetView } =
+    useHorizontalLiquidityChartStoreActions()
 
   // Expose zoom actions to parent (ref avoids re-firing when parent passes unstable callback)
   const onActionsReadyRef = useRef(onActionsReady)
@@ -139,6 +136,13 @@ function D3HorizontalLiquidityChartInner({
     })
   }, [drawAll])
 
+  // Refs to dedupe hoveredTick/hoveredSegment writes when the cursor stays within the same bucket.
+  // Per-pixel mouse moves keep the same ChartEntry/segment identity, so subscribers (e.g. the
+  // header price display) only re-render when the hovered bucket actually changes.
+  const lastBucketStartTickRef = useRef<number | undefined>(undefined)
+  const lastEntryRef = useRef<ChartEntry | undefined>(undefined)
+  const lastSegmentRef = useRef<{ startTick: number; endTick: number } | undefined>(undefined)
+
   // Hover handlers
   const handleMouseMove = useCallback(
     (event: React.MouseEvent<SVGSVGElement>) => {
@@ -155,42 +159,63 @@ function D3HorizontalLiquidityChartInner({
       const bucket = findBucketForTick(hoveredTickValue, renderedBuckets)
 
       if (bucket) {
-        const entry = createEntryFromBucket({ bucket, tick: bucket.startTick })
-        const newSegment = { startTick: bucket.segmentStartTick, endTick: bucket.segmentEndTick }
+        const bucketChanged = bucket.startTick !== lastBucketStartTickRef.current
+        const prevSegment = lastSegmentRef.current
+        const segmentChanged =
+          !prevSegment ||
+          prevSegment.startTick !== bucket.segmentStartTick ||
+          prevSegment.endTick !== bucket.segmentEndTick
 
-        setChartState({
-          hoveredX: x,
-          hoveredTick: entry,
-          hoveredSegment: newSegment,
-          isChartHovered: true,
-        })
-        onHoveredTickChange?.(entry)
+        if (bucketChanged) {
+          lastEntryRef.current = createEntryFromBucket({ bucket, tick: bucket.startTick })
+          lastBucketStartTickRef.current = bucket.startTick
+        }
+        if (segmentChanged) {
+          lastSegmentRef.current = { startTick: bucket.segmentStartTick, endTick: bucket.segmentEndTick }
+        }
+
+        setChartState(
+          bucketChanged || segmentChanged
+            ? {
+                hoveredX: x,
+                hoveredTick: lastEntryRef.current,
+                hoveredSegment: lastSegmentRef.current,
+                isChartHovered: true,
+              }
+            : { hoveredX: x, isChartHovered: true },
+        )
         scheduleDraw()
       } else {
-        setChartState({
-          hoveredX: x,
-          hoveredTick: undefined,
-          hoveredSegment: undefined,
-          isChartHovered: true,
-        })
-        onHoveredTickChange?.(undefined)
+        const wasInBucket = lastBucketStartTickRef.current !== undefined
+        if (wasInBucket) {
+          lastBucketStartTickRef.current = undefined
+          lastEntryRef.current = undefined
+          lastSegmentRef.current = undefined
+        }
+        setChartState(
+          wasInBucket
+            ? { hoveredX: x, hoveredTick: undefined, hoveredSegment: undefined, isChartHovered: true }
+            : { hoveredX: x, isChartHovered: true },
+        )
         scheduleDraw()
       }
     },
-    [renderedBuckets, tickScale, setChartState, scheduleDraw, onHoveredTickChange],
+    [renderedBuckets, tickScale, setChartState, scheduleDraw],
   )
 
   const handleMouseLeave = useCallback(() => {
     setHoveredY(undefined)
+    lastBucketStartTickRef.current = undefined
+    lastEntryRef.current = undefined
+    lastSegmentRef.current = undefined
     setChartState({
       hoveredX: undefined,
       hoveredTick: undefined,
       hoveredSegment: undefined,
       isChartHovered: false,
     })
-    onHoveredTickChange?.(undefined)
     scheduleDraw()
-  }, [setChartState, scheduleDraw, onHoveredTickChange])
+  }, [setChartState, scheduleDraw])
 
   // Calculate current price for tooltip
   const currentPrice = useMemo(
@@ -313,6 +338,8 @@ function D3HorizontalLiquidityChartInner({
             quoteCurrency={quoteCurrency}
             baseCurrency={baseCurrency}
             tickSpacing={tickSpacing}
+            priceInverted={priceInverted}
+            protocolVersion={protocolVersion}
           />
         </Flex>
       )}

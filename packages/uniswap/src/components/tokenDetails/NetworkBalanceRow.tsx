@@ -1,3 +1,4 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { memo } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
@@ -8,7 +9,6 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 const NETWORK_LOGO_SIZE = 24
 

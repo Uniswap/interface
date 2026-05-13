@@ -1,3 +1,4 @@
+import { isMobileApp, isWebApp } from '@universe/environment'
 import { Accordion, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
@@ -14,7 +15,6 @@ import { TradeWarning } from 'uniswap/src/features/transactions/swap/form/SwapFo
 import { useDebouncedTrade } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/useDebouncedTrade'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
 
 // TradeInfoRow take `gasInfo` as a prop (rather than directly using useDebouncedGasInfo) because on mobile,
 // the parent needs to check whether to render an empty row based on `gasInfo` fields first.

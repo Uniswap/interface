@@ -901,9 +901,11 @@ const noToLowerCaseAddressCurrencyId = {
 }
 
 // ── import-boundary (JSON) ─────────────────────────────────────────────
-// Modes: importerAllowlist — only paths matching allowedImporterPathMarkers
-//        may import the module; imports from within importerInternalPathMarkers
-//        are always allowed.
+// Modes:
+//   importerAllowlist — only paths matching allowedImporterPathMarkers may import
+//     modules matching importPrefixes; imports from within importerInternalPathMarkers are always allowed.
+//   importerDenylist — if a module matches importPrefixes and the importer path matches
+//     deniedImporterPathMarkers, the import is forbidden (no allowlist).
 
 const __importBoundaryDir = dirname(fileURLToPath(import.meta.url))
 
@@ -943,24 +945,46 @@ function loadImportBoundaries() {
   }
   return boundaries.map((b, i) => {
     const id = b.id ?? `boundary[${i}]`
-    if (b.mode !== 'importerAllowlist') {
+    const mode = b.mode ?? 'importerAllowlist'
+    if (mode !== 'importerAllowlist' && mode !== 'importerDenylist') {
       throw new Error(
-        `import-boundaries.json: boundary "${id}" has unknown or missing "mode" (use "importerAllowlist")`,
+        `import-boundaries.json: boundary "${id}" has unknown "mode" "${mode}" (use "importerAllowlist" or "importerDenylist")`,
       )
-    }
-    for (const key of ['importerInternalPathMarkers', 'allowedImporterPathMarkers', 'importPrefixes', 'message']) {
-      if (b[key] == null || (Array.isArray(b[key]) && b[key].length === 0)) {
-        throw new Error(`import-boundaries.json: boundary "${id}" needs a non-empty "${key}"`)
-      }
-    }
-    if (!Array.isArray(b.bareModuleSources)) {
-      throw new Error(`import-boundaries.json: boundary "${id}" must set "bareModuleSources" (array, may be empty)`)
     }
     if (typeof b.message !== 'string' || !b.message.trim()) {
       throw new Error(`import-boundaries.json: boundary "${id}" needs a non-empty "message" string`)
     }
+    if (!Array.isArray(b.importPrefixes) || b.importPrefixes.length === 0) {
+      throw new Error(`import-boundaries.json: boundary "${id}" needs a non-empty "importPrefixes"`)
+    }
+    if (!Array.isArray(b.bareModuleSources)) {
+      throw new Error(`import-boundaries.json: boundary "${id}" must set "bareModuleSources" (array, may be empty)`)
+    }
+
+    if (mode === 'importerDenylist') {
+      if (!Array.isArray(b.deniedImporterPathMarkers) || b.deniedImporterPathMarkers.length === 0) {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (importerDenylist) needs non-empty "deniedImporterPathMarkers"`,
+        )
+      }
+      return {
+        id,
+        mode,
+        message: b.message,
+        deniedImporterPathMarkers: b.deniedImporterPathMarkers,
+        importPrefixes: b.importPrefixes,
+        bareModuleSources: b.bareModuleSources,
+      }
+    }
+
+    for (const key of ['importerInternalPathMarkers', 'allowedImporterPathMarkers']) {
+      if (b[key] == null || (Array.isArray(b[key]) && b[key].length === 0)) {
+        throw new Error(`import-boundaries.json: boundary "${id}" needs a non-empty "${key}"`)
+      }
+    }
     return {
       id,
+      mode,
       message: b.message,
       importerInternalPathMarkers: b.importerInternalPathMarkers,
       allowedImporterPathMarkers: b.allowedImporterPathMarkers,
@@ -985,16 +1009,23 @@ const importBoundary = {
     const physicalPath = getPhysicalFilenameForBoundary(context)
 
     function reportIfDisallowedImport(node, sourceValue) {
+      if (sourceValue === undefined || sourceValue === null) {
+        return
+      }
       for (const boundary of importBoundaryBoundaries) {
-        if (sourceValue === undefined || sourceValue === null) {
-          return
-        }
         const suffix = moduleImportSuffixForBoundary(sourceValue, boundary)
         if (suffix === null) {
           continue
         }
+        if (boundary.mode === 'importerDenylist') {
+          if (physicalPathHasMarker(physicalPath, boundary.deniedImporterPathMarkers)) {
+            context.report({ node, message: boundary.message })
+          }
+          continue
+        }
+        // importerAllowlist: imports of this feature are only allowed from internal + allowlisted paths.
         if (physicalPathHasMarker(physicalPath, boundary.importerInternalPathMarkers)) {
-          return
+          continue
         }
         if (physicalPathHasMarker(physicalPath, boundary.allowedImporterPathMarkers)) {
           return

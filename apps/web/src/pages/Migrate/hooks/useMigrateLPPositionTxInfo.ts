@@ -14,6 +14,7 @@ import { useCheckLPApprovalQuery } from 'uniswap/src/data/apiClients/liquiditySe
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import type { V2PairInfo, V3PositionInfo } from 'uniswap/src/features/positions/types'
 import type { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -36,7 +37,6 @@ import {
   buildMigrationRequest,
   isV3ToV4MigrationPositionInfo,
 } from '~/pages/Migrate/utils/buildParams'
-import type { V2PairInfo, V3PositionInfo } from '~/types/liquidity'
 
 export interface MigratePositionTxContextType {
   txInfo?: MigratePositionTxAndGasInfo

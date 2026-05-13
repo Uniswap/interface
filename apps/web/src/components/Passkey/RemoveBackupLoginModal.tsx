@@ -91,3 +91,5 @@ export function RemoveBackupLoginModal() {
     </Modal>
   )
 }
+
+export default RemoveBackupLoginModal

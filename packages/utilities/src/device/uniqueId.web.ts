@@ -1,4 +1,4 @@
-import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
+import { getChromeWithThrow } from '@universe/environment'
 import { v4 as uuidv4 } from 'uuid'
 
 export const USER_ID_KEY = 'USER_ID'

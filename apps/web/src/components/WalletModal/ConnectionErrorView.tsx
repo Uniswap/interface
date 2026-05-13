@@ -5,7 +5,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
 
-export default function ConnectionErrorView() {
+export function ConnectionErrorView() {
   const { t } = useTranslation()
   const { connectWallet, isConnecting, variables, reset, error } = useConnectWallet()
 

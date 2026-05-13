@@ -24,9 +24,7 @@ import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/f
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import DelegationMismatchModal from '~/components/delegation/DelegationMismatchModal'
-import Column from '~/components/deprecated/Column'
-import { SwitchNetworkAction } from '~/components/Popups/types'
+import { DelegationMismatchModal } from '~/components/delegation/DelegationMismatchModal'
 import { ZERO_PERCENT } from '~/constants/misc'
 import { useConnectionStatus } from '~/features/accounts/store/hooks'
 import { LimitPriceInputPanel } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
@@ -34,23 +32,24 @@ import {
   LimitPriceErrorType,
   useCurrentPriceAdjustment,
 } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import SwapCurrencyInputPanel from '~/features/Swap/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { SwapCurrencyInputPanel } from '~/features/Swap/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { getDefaultPriceInverted } from '~/features/Swap/state/limit/hooks'
+import { LimitContextProvider, useLimitContext } from '~/features/Swap/state/limit/LimitContext'
+import { useOnSwitchTokens } from '~/features/Swap/state/swap/hooks'
+import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
+import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
 import { ArrowContainer, ArrowWrapper, SwapSection } from '~/features/Swap/styled'
 import { useAccount } from '~/hooks/useAccount'
-import usePermit2Allowance, { AllowanceState } from '~/hooks/usePermit2Allowance'
+import { usePermit2Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from '~/hooks/useSwapCallback'
 import { ConfirmSwapModal } from '~/pages/Swap/Limit/ConfirmSwapModal'
 import { LimitExpirySection } from '~/pages/Swap/Limit/LimitExpirySection'
-import LimitOrdersNotSupportedBanner from '~/pages/Swap/Limit/LimitOrdersNotSupportedBanner'
+import { LimitOrdersNotSupportedBanner } from '~/pages/Swap/Limit/LimitOrdersNotSupportedBanner'
 import { LimitPriceError } from '~/pages/Swap/Limit/LimitPriceError'
 import { OpenLimitOrdersButton } from '~/pages/Swap/Limit/OpenLimitOrdersButton'
-import { getDefaultPriceInverted } from '~/state/limit/hooks'
-import { LimitContextProvider, useLimitContext } from '~/state/limit/LimitContext'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { LimitOrderTrade, TradeFillType } from '~/state/routing/types'
-import { useOnSwitchTokens } from '~/state/swap/hooks'
-import { CurrencyState } from '~/state/swap/types'
-import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
 import { maxAmountSpend } from '~/utils/maxAmountSpend'
 
 const CustomHeightSwapSection = styled(SwapSection, {
@@ -368,7 +367,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   }, [swapCallback])
 
   return (
-    <Column gap="xs">
+    <Flex gap="$gap4">
       <CustomHeightSwapSection>
         <LimitPriceInputPanel onCurrencySelect={onSelectCurrency} />
       </CustomHeightSwapSection>
@@ -530,7 +529,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       {displayDelegationMismatchModal && (
         <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />
       )}
-    </Column>
+    </Flex>
   )
 }
 

@@ -6,11 +6,13 @@ import { Button, Flex, Separator, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { iconSizes } from 'ui/src/theme'
+import { replaceSeparators } from 'uniswap/src/components/AmountInput/utils/replaceSeparators'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
@@ -68,6 +70,7 @@ function TokenInfo({
   logoUrl: Maybe<string>
 }) {
   const { formatCurrencyAmount } = useLocalizationContext()
+  const { decimalSeparator } = useAppFiatCurrencyInfo()
 
   return (
     currencyAmount &&
@@ -77,7 +80,11 @@ function TokenInfo({
           <Flex row gap="$gap8">
             <Text variant="body1">
               {formattedAmount
-                ? formattedAmount
+                ? replaceSeparators({
+                    value: formattedAmount,
+                    decimalSeparator: '.',
+                    decimalOverride: decimalSeparator,
+                  })
                 : formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })}
             </Text>
             <Text variant="body1">{currencyAmount.currency.symbol}</Text>

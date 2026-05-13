@@ -1,15 +1,6 @@
 // oxlint-disable-next-line typescript/triple-slash-reference
 /// <reference path="../../../index.d.ts" />
 
-declare global {
-  namespace NodeJS {
-    // All process.env values used by this package should be listed here
-    interface ProcessEnv {
-      NODE_ENV?: 'development' | 'production' | 'test'
-    }
-  }
-}
-
 import { config } from 'ui/src/tamagui.config'
 
 type Conf = typeof config

@@ -1,4 +1,4 @@
-import { Web3Provider as EthersWeb3Provider, ExternalProvider } from '@ethersproject/providers'
+import { ExternalProvider } from '@ethersproject/providers'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -18,14 +18,14 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 // oxlint-disable-next-line no-restricted-imports -- direct wagmi hooks needed so we can access user's chainId even if unsupported chain
 import { useAccount as useAccountWagmi } from 'wagmi'
-import { recentConnectorIdAtom } from '~/components/Web3Provider/constants'
-import { RPC_PROVIDERS } from '~/constants/providers'
+import { recentConnectorIdAtom } from '~/connection/constants'
+import { getRpcProvider } from '~/constants/providers'
 import { useActiveAddresses, useActiveWallet, useConnectionStatus } from '~/features/accounts/store/hooks'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
-import usePrevious from '~/hooks/usePrevious'
+import { usePrevious } from '~/hooks/usePrevious'
 import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
-import { getWalletMeta, WalletType } from '~/utils/walletMeta'
+import { getWalletMeta, getWalletMetaFromExternal, WalletType } from '~/utils/walletMeta'
 
 /** A component to run hooks under the WebAccountsStore contexts. */
 export function WebAccountsStoreUpdater() {
@@ -49,7 +49,10 @@ export function WebAccountsStoreUpdater() {
   /* Trace RPC calls (for debugging). */
   const shouldTrace = useFeatureFlag(FeatureFlags.TraceJsonRpc)
   const isSupportedChain = useIsSupportedChainId(account.chainId)
-  const networkProvider = isSupportedChain && account.chainId ? RPC_PROVIDERS[account.chainId] : undefined
+  // Only resolve the network provider when tracing is on — avoids touching the
+  // UniRPC gate (and its Statsig dependency) on every render in the common case.
+  const networkProvider =
+    shouldTrace && isSupportedChain && account.chainId ? getRpcProvider(account.chainId) : undefined
   useEffect(() => {
     if (shouldTrace) {
       provider?.on('debug', trace)
@@ -219,8 +222,10 @@ export function WebAccountsStoreUpdater() {
             .then((externalProvider) => {
               // oxlint-disable-next-line no-shadow
               const provider = externalProvider as ExternalProvider
-              // Lookup metadata from the wallet connect external provider
-              const meta = getWalletMeta(new EthersWeb3Provider(provider))
+              // Lookup metadata directly from the external provider — no Web3Provider
+              // wrap needed. The wrap looked like an RPC provider but only existed to
+              // satisfy getWalletMeta's signature and never made any chain calls.
+              const meta = getWalletMetaFromExternal(provider)
               const name = meta?.name ?? evmWalletName
               const agent = meta?.agent ?? peerWalletAgent
 
@@ -283,3 +288,5 @@ function trace(event: any) {
   const { method, id, params } = event.request
   logger.debug('WebAccountsStoreUpdater', 'provider', 'trace', { method, id, params })
 }
+
+export default WebAccountsStoreUpdater

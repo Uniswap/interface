@@ -2,7 +2,8 @@ import { getMinStartTime } from '~/pages/Liquidity/CreateAuction/components/Dura
 import { isValidPoolOwner } from '~/pages/Liquidity/CreateAuction/components/PoolOwnerSection'
 import { useCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { isPostAuctionLiquidityAllocationValid } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
-import { CreateAuctionStep, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
+import { CreateAuctionStep, PriceRangeStrategy, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
+import { isCustomPriceRangeAllocationValid } from '~/pages/Liquidity/CreateAuction/utils'
 
 export function useIsStepValid(step: CreateAuctionStep): boolean {
   return useCreateAuctionStore((state) => {
@@ -24,13 +25,15 @@ export function useIsStepValid(step: CreateAuctionStep): boolean {
         )
 
       case CreateAuctionStep.CONFIGURE_AUCTION: {
-        const { committed, floorPrice, postAuctionLiquidityAllocation, startTime } = configureAuction
+        const { committed, floorPrice, postAuctionLiquidityAllocation, startTime, endTime } = configureAuction
         if (!committed) {
           return false
         }
         const isStartTimeValid = !!startTime && startTime.getTime() >= getMinStartTime().getTime()
+        const isEndTimeValid = !!endTime && !!startTime && endTime.getTime() > startTime.getTime()
         return (
           isStartTimeValid &&
+          isEndTimeValid &&
           !committed.auctionSupplyAmount.equalTo(0) &&
           !!floorPrice &&
           isPostAuctionLiquidityAllocationValid(postAuctionLiquidityAllocation)
@@ -39,6 +42,12 @@ export function useIsStepValid(step: CreateAuctionStep): boolean {
 
       case CreateAuctionStep.CUSTOMIZE_POOL:
         if (!configureAuction.committed || !configureAuction.startTime) {
+          return false
+        }
+        if (
+          customizePool.priceRangeStrategy === PriceRangeStrategy.CUSTOM_RANGE &&
+          !isCustomPriceRangeAllocationValid(customizePool.customPriceRanges)
+        ) {
           return false
         }
         return isValidPoolOwner(customizePool.poolOwner)

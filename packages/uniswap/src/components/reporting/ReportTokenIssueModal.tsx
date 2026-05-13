@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { ReportAssetType, TokenReportEventType } from '@universe/api'
+import { isProdEnv } from '@universe/environment'
 import { atom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +17,6 @@ import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/const
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { currencyId, NATIVE_ANALYTICS_ADDRESS_VALUE } from 'uniswap/src/utils/currencyId'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 

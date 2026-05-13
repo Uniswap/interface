@@ -21,6 +21,12 @@ export interface UserTraits {
   utmMedium?: string
   utmCampaign?: string
   utmContent?: string
+  /** Backend user UUID — duplicated as a user property so it's queryable in Amplitude. */
+  userId?: string
+  /** Backend organization UUID. */
+  orgId?: string
+  /** Backend analytics UUID written on account creation. */
+  analyticsId?: string
 }
 
 export interface AnalyticsService<E extends string = string> {
@@ -87,6 +93,15 @@ export class AmplitudeAnalyticsService<E extends string = string> implements Ana
     }
     if (traits.utmContent) {
       identifyEvent.setOnce('utmContent', traits.utmContent)
+    }
+    if (traits.userId) {
+      identifyEvent.set('user_id', traits.userId)
+    }
+    if (traits.orgId) {
+      identifyEvent.set('org_id', traits.orgId)
+    }
+    if (traits.analyticsId) {
+      identifyEvent.set('analytics_id', traits.analyticsId)
     }
     amplitude.identify(identifyEvent, { user_id: userId })
   }

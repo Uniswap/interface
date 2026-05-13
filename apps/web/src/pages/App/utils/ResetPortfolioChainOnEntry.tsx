@@ -1,7 +1,7 @@
 import { memo, useLayoutEffect, useRef } from 'react'
 import { useLocation, useSearchParams } from 'react-router'
-import { CHAIN_SEARCH_PARAM } from '~/features/params/chainQueryParam'
 import { PageType } from '~/hooks/useIsPage'
+import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 /**
  * Resets Portfolio's `?chain=` filter when entering Portfolio from elsewhere (shared query key with TDP).

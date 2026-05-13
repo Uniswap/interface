@@ -1,6 +1,13 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, Row, RowData, Table as TanstackTable } from '@tanstack/react-table'
 
+/** Optional metadata on column definitions (read in TableRow, sizing helpers, etc.). */
+export interface TableColumnMeta {
+  flexGrow?: number
+  /** When true, the cell container uses overflow visible (e.g. popovers that extend past the cell). */
+  overflowVisible?: boolean
+}
+
 export type TableBodyProps<T extends RowData = unknown> = {
   table: TanstackTable<T>
   loading?: boolean

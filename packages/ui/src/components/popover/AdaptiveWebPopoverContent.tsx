@@ -1,9 +1,9 @@
+import { isWebApp } from '@universe/environment'
 import { ComponentProps, ReactNode, useContext, useMemo } from 'react'
 import { GetProps, Popover, useMedia } from 'tamagui'
 // oxlint-disable-next-line no-restricted-imports -- needed here
 import { EffectiveModalOrSheetZIndexContext, WebBottomSheet } from 'ui/src/components/modal/AdaptiveWebModal'
 import { zIndexes } from 'ui/src/theme'
-import { isWebApp } from 'utilities/src/platform'
 
 const ANIMATION_OFFSET = 10
 

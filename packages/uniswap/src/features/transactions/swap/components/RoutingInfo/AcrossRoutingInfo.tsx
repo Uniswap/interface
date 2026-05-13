@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
@@ -10,7 +11,6 @@ import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningI
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp } from 'utilities/src/platform'
 
 export function AcrossRoutingInfo(): JSX.Element {
   const { t } = useTranslation()

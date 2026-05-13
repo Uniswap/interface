@@ -6,13 +6,13 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPri
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
 }
 
-export default function TradePrice({ price }: TradePriceProps) {
+export function TradePrice({ price }: TradePriceProps) {
   const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
 
   const { value: showInverted, toggle } = useBooleanState(false)

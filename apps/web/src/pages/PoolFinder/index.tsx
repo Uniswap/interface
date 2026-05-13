@@ -17,8 +17,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { V2Unsupported } from '~/components/V2Unsupported'
 import { CurrencySelector } from '~/features/Liquidity/Create/SelectTokenStep'
 import { useAccount } from '~/hooks/useAccount'
@@ -26,10 +25,11 @@ import { useNetworkSupportsV2 } from '~/hooks/useNetworkSupportsV2'
 import { useTotalSupply } from '~/hooks/useTotalSupply'
 import { useV2Pair } from '~/hooks/useV2Pairs'
 import { useTokenBalance } from '~/state/connection/hooks'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { usePairAdder } from '~/state/user/hooks'
 import { PositionField } from '~/types/position'
 
-export default function PoolFinder() {
+export function PoolFinder() {
   const account = useAccount()
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
@@ -202,3 +202,5 @@ export default function PoolFinder() {
     </Trace>
   )
 }
+
+export default PoolFinder

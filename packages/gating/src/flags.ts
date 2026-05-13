@@ -1,5 +1,5 @@
+import { isWebApp } from '@universe/environment'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebApp } from 'utilities/src/platform'
 
 // only disable for this enum
 /**
@@ -45,6 +45,7 @@ export enum FeatureFlags {
   TurnstileSolverEnabled,
   TwoSecondSwapQuotePollingInterval,
   UniquoteEnabled,
+  UniRpcEnabled,
   UniswapWrapped2025,
   UniswapX,
   UniswapXPriorityOrdersBase,
@@ -75,14 +76,12 @@ export enum FeatureFlags {
 
   // Web
   AATestWeb,
-  AuctionDetailsV2,
-  AuctionDetailsV2ActivityOnEnded,
+  AddLiquidityRevamp,
   BatchedSwaps,
   DummyFlagTest,
   LimitsFees,
   LiquidityBatchedTransactions,
   LpIncentives,
-  LpPdpD3RangeChart,
   LpPdpDepthChart,
   NoUniswapInterfaceFeesNotification,
   PortfolioDefiTab,
@@ -90,6 +89,7 @@ export enum FeatureFlags {
   TDPTokenCarousel,
   ToucanAuctionKYC,
   ToucanLaunchAuction,
+  ToucanTickDetailsTooltip,
   TraceJsonRpc,
   UnificationCopy,
   UnirouteEnabled,
@@ -137,6 +137,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Tempo, 'tempo'],
   [FeatureFlags.TurnstileSolverEnabled, 'sessions_turnstile_solver_enabled'],
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
+  [FeatureFlags.UniRpcEnabled, 'unirpc_enabled'],
   [FeatureFlags.UniquoteEnabled, 'uniquote_enabled'],
   [FeatureFlags.UnirouteEnabled, 'uniroute_rollout'],
   [FeatureFlags.UniswapWrapped2025, 'uniswap_wrapped_2025'],
@@ -155,14 +156,12 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
   [FeatureFlags.AATestWeb, 'aatest_web'],
-  [FeatureFlags.AuctionDetailsV2, 'auction_details_v2'],
-  [FeatureFlags.AuctionDetailsV2ActivityOnEnded, 'auction_details_v2_activity_on_ended'],
+  [FeatureFlags.AddLiquidityRevamp, 'add_liquidity_revamp'],
   [FeatureFlags.BatchedSwaps, 'batched_swaps'],
   [FeatureFlags.DummyFlagTest, 'dummy_flag_test'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.LiquidityBatchedTransactions, 'liquidity_batched_transactions'],
   [FeatureFlags.LpIncentives, 'lp_incentives'],
-  [FeatureFlags.LpPdpD3RangeChart, 'lp_pdp_d3_range_chart'],
   [FeatureFlags.LpPdpDepthChart, 'lp_pdp_depth_chart'],
   [FeatureFlags.NoUniswapInterfaceFeesNotification, 'no_uniswap_interface_fees_notification'],
   [FeatureFlags.PortfolioDefiTab, 'portfolio_defi_tab'],
@@ -170,6 +169,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.TDPTokenCarousel, 'tdp_token_carousel'],
   [FeatureFlags.ToucanAuctionKYC, 'toucan_auction_kyc'],
   [FeatureFlags.ToucanLaunchAuction, 'toucan_launch_auction'],
+  [FeatureFlags.ToucanTickDetailsTooltip, 'toucan_tick_details_tooltip'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
   [FeatureFlags.UnificationCopy, 'unification_copy'],
   [FeatureFlags.UniversalSwap, 'universal_swap'],

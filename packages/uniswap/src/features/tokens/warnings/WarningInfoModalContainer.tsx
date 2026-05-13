@@ -1,5 +1,5 @@
+import { isMobileApp } from '@universe/environment'
 import { Flex, styled } from 'ui/src'
-import { isMobileApp } from 'utilities/src/platform'
 
 export const WarningModalInfoContainer = styled(Flex, {
   width: '100%',

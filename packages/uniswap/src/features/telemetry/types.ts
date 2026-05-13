@@ -1107,6 +1107,7 @@ export type UniverseEventProperties = {
     pnl_token_count: number
     portfolio_token_count: number
     coverage_rate: number
+    multichain_ux_enabled: boolean
   }
   [UniswapEventName.PnlPortfolioReport]: {
     unrealized_return_usd: number | undefined

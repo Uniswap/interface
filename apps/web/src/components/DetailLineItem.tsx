@@ -3,7 +3,7 @@ import { Flex, styled, Text } from 'ui/src'
 import { LoadingRow } from '~/components/Loader/styled'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
-import useHoverProps from '~/hooks/useHoverProps'
+import { useHoverProps } from '~/hooks/useHoverProps'
 
 export type LineItemData = {
   Label: React.FC

@@ -17,7 +17,7 @@ export interface TickProcessed {
 }
 
 // Computes the numSurroundingTicks above or below the active tick.
-export default function computeSurroundingTicks({
+export function computeSurroundingTicks({
   token0,
   token1,
   activeTickProcessed,

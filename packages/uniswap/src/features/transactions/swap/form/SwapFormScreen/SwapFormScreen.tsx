@@ -1,4 +1,5 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
+import { isExtensionApp, isWebApp } from '@universe/environment'
 import type { ComponentProps } from 'react'
 import { useEffect } from 'react'
 import type { FlexProps } from 'ui/src'
@@ -29,7 +30,6 @@ import {
 import { useSwapFlowTimer } from 'uniswap/src/features/transactions/swap/utils/SwapFlowTimerContext'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
 interface SwapFormScreenProps {
   hideContent: boolean

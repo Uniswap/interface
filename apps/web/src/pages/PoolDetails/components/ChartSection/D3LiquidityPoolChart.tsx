@@ -1,7 +1,7 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Shine, Text } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
@@ -12,6 +12,8 @@ import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { ChartType } from '~/components/Charts/utils'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { D3HorizontalLiquidityChart } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/D3HorizontalLiquidityChart'
+import { HorizontalLiquidityChartStoreProvider } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/HorizontalLiquidityChartStoreProvider'
+import { useHorizontalLiquidityChartSelector } from '~/features/Liquidity/charts/D3HorizontalLiquidityChart/useHorizontalLiquidityChartStore'
 import { useDensityChartData } from '~/features/Liquidity/charts/LiquidityRangeInput/hooks'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { useAllPoolTicks } from '~/features/Liquidity/hooks/usePoolTickData'
@@ -160,6 +162,37 @@ function computeDisplayValues({
   return { hasPriceData, displayPrice0, displayPrice1, isActiveRange }
 }
 
+// Subscribes to hoveredTick directly from the chart store so hover updates re-render
+// only the header DOM, not the parent D3LiquidityPoolChart tree.
+function PoolPriceHeader({
+  baseDescriptor,
+  quoteDescriptor,
+  activeTickEntry,
+  visualActiveTick,
+}: {
+  baseDescriptor: string
+  quoteDescriptor: string
+  activeTickEntry: ChartEntry | undefined
+  visualActiveTick: number | undefined
+}): JSX.Element {
+  const hoveredTick = useHorizontalLiquidityChartSelector((s) => s.hoveredTick)
+  const displayPoint = hoveredTick ?? activeTickEntry
+  const { hasPriceData, displayPrice0, displayPrice1, isActiveRange } = computeDisplayValues({
+    displayPoint,
+    visualActiveTick,
+  })
+  return (
+    <PriceHeader
+      baseDescriptor={baseDescriptor}
+      quoteDescriptor={quoteDescriptor}
+      hasPriceData={hasPriceData}
+      displayPrice0={displayPrice0}
+      displayPrice1={displayPrice1}
+      isActiveRange={isActiveRange}
+    />
+  )
+}
+
 function computeVisualTicks({
   currentTick,
   tickSpacing,
@@ -288,22 +321,11 @@ export function D3LiquidityPoolChart({
   const baseDescriptor = baseCurrency.symbol ?? baseCurrency.name ?? t('common.tokenA')
   const quoteDescriptor = quoteCurrency.symbol ?? quoteCurrency.name ?? t('common.tokenB')
 
-  const [hoveredEntry, setHoveredEntry] = useState<ChartEntry | undefined>(undefined)
-  const handleHoveredTickChange = useCallback((tick: ChartEntry | undefined) => {
-    setHoveredEntry(tick)
-  }, [])
-
   const { visualCurrentTick, visualActiveTick } = computeVisualTicks({ currentTick, tickSpacing, isReversed })
   const activeTickEntry = useMemo(
     () => sortedLiquidityData?.find((d) => d.tick === visualActiveTick),
     [sortedLiquidityData, visualActiveTick],
   )
-
-  const displayPoint = hoveredEntry ?? activeTickEntry
-  const { hasPriceData, displayPrice0, displayPrice1, isActiveRange } = computeDisplayValues({
-    displayPoint,
-    visualActiveTick,
-  })
 
   const hasError =
     !isLoading &&
@@ -340,34 +362,33 @@ export function D3LiquidityPoolChart({
   }
 
   return (
-    <Flex height={PDP_CHART_HEIGHT_PX} position="relative">
-      <ChartHeader
-        value={
-          <PriceHeader
-            baseDescriptor={baseDescriptor}
-            quoteDescriptor={quoteDescriptor}
-            hasPriceData={hasPriceData}
-            displayPrice0={displayPrice0}
-            displayPrice1={displayPrice1}
-            isActiveRange={isActiveRange}
-          />
-        }
-      />
-      <D3HorizontalLiquidityChart
-        liquidityData={sortedLiquidityData}
-        rawTicks={finalTickData}
-        currentTick={visualCurrentTick}
-        tickSpacing={tickSpacing}
-        token0Color={token0Color}
-        token1Color={token1Color}
-        baseCurrency={baseCurrency}
-        quoteCurrency={quoteCurrency}
-        priceInverted={isReversed}
-        protocolVersion={version}
-        height={PDP_CHART_HEIGHT_PX}
-        onActionsReady={onZoomActionsReady}
-        onHoveredTickChange={handleHoveredTickChange}
-      />
-    </Flex>
+    <HorizontalLiquidityChartStoreProvider>
+      <Flex height={PDP_CHART_HEIGHT_PX} position="relative">
+        <ChartHeader
+          value={
+            <PoolPriceHeader
+              baseDescriptor={baseDescriptor}
+              quoteDescriptor={quoteDescriptor}
+              activeTickEntry={activeTickEntry}
+              visualActiveTick={visualActiveTick}
+            />
+          }
+        />
+        <D3HorizontalLiquidityChart
+          liquidityData={sortedLiquidityData}
+          rawTicks={finalTickData}
+          currentTick={visualCurrentTick}
+          tickSpacing={tickSpacing}
+          token0Color={token0Color}
+          token1Color={token1Color}
+          baseCurrency={baseCurrency}
+          quoteCurrency={quoteCurrency}
+          priceInverted={isReversed}
+          protocolVersion={version}
+          height={PDP_CHART_HEIGHT_PX}
+          onActionsReady={onZoomActionsReady}
+        />
+      </Flex>
+    </HorizontalLiquidityChartStoreProvider>
   )
 }

@@ -260,7 +260,8 @@ export const areChartBarTooltipStatesEqual = (
   left.isVisible === right.isVisible &&
   left.tickValue === right.tickValue &&
   left.volumeAmount === right.volumeAmount &&
-  left.totalVolume === right.totalVolume
+  left.totalVolume === right.totalVolume &&
+  left.tickQ96 === right.tickQ96
 
 export interface BidDistributionChartRendererProps {
   chartData: ProcessedChartData

@@ -1,9 +1,9 @@
+import { isWebApp } from '@universe/environment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Popover } from 'ui/src'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
 import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
-import { isWebApp } from 'utilities/src/platform'
 
 export function SlippageEdit({
   onWalletSlippageEditPress: onSlippageEditPress,

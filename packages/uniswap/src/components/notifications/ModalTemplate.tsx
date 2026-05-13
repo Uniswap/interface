@@ -1,3 +1,4 @@
+import { isMobileApp, isWebApp } from '@universe/environment'
 import { ReactNode } from 'react'
 import {
   Button,
@@ -16,7 +17,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { parseCustomIconLink } from 'uniswap/src/components/notifications/iconUtils'
 import { ElementName, type ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
 
 const MODAL_MAX_WIDTH = 440
 

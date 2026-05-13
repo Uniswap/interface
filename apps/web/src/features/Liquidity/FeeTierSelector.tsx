@@ -6,11 +6,11 @@ import { Button, Flex, HeightAnimator, styled, Text, TouchableArea } from 'ui/sr
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { NumberType } from 'utilities/src/format/types'
 import { BIPS_BASE } from '~/constants/misc'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
 import { getFeeTierKey, isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
-import type { FeeData } from '~/types/liquidity'
 
 interface FeeTierOption {
   value: FeeData

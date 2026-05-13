@@ -11,7 +11,6 @@ import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { NumberType } from 'utilities/src/format/types'
-import { isAddress } from '~/chains/utilities'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
 import { getSortedCurrenciesForProtocol } from '~/features/Liquidity/Create/hooks/useDerivedPositionInfo'
@@ -20,6 +19,7 @@ import { FeeTierSelector } from '~/features/Liquidity/FeeTierSelector'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
 import { getDefaultFeeTiersWithData } from '~/features/Liquidity/utils/feeTiers'
 import { AdvancedSettingsSeparator } from '~/pages/Liquidity/CreateAuction/components/AdvancedSettingsSeparator'
+import { AutocompoundFeesSection } from '~/pages/Liquidity/CreateAuction/components/AutocompoundFeesSection'
 import { BuybackAndBurnSection } from '~/pages/Liquidity/CreateAuction/components/BuybackAndBurnSection'
 import { PoolOwnerSection } from '~/pages/Liquidity/CreateAuction/components/PoolOwnerSection'
 import { PriceRangeStrategySelector } from '~/pages/Liquidity/CreateAuction/components/PriceRangeStrategySelector'
@@ -39,8 +39,11 @@ import {
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
-
-const MS_PER_DAY = 24 * 60 * 60 * 1000
+import {
+  MS_PER_DAY,
+  defaultEndTimeFor,
+  formatReviewAuctionDuration,
+} from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 export function CustomizePoolStep() {
   const { t } = useTranslation()
@@ -52,12 +55,18 @@ export function CustomizePoolStep() {
     setStep,
     setFee,
     setPriceRangeStrategy,
+    addCustomPriceRangePreset,
+    updateCustomPriceRangeLiquidityPercent,
+    updateCustomPriceRangeBounds,
+    removeCustomPriceRange,
     setPoolOwner,
     setTimeLockEnabled,
+    setTimeLockPreset,
     setTimeLockDurationDays,
     setSendFeesEnabled,
     setFeesRecipientAddress,
     setBuybackAndBurnEnabled,
+    setAutocompoundFeesEnabled,
   } = useCreateAuctionStoreActions()
   const locale = useCurrentLocale()
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
@@ -66,7 +75,7 @@ export function CustomizePoolStep() {
   const configureAuction = useCreateAuctionStore((state) => state.configureAuction)
   const customizePool = useCreateAuctionStore((state) => state.customizePool)
   const [advancedSettingsExpanded, setAdvancedSettingsExpanded] = useState(
-    customizePool.sendFeesEnabled || customizePool.buybackAndBurnEnabled,
+    customizePool.sendFeesEnabled || customizePool.buybackAndBurnEnabled || customizePool.autocompoundFeesEnabled,
   )
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
   const isNextStepDisabled = !useIsStepValid(CreateAuctionStep.CUSTOMIZE_POOL)
@@ -114,19 +123,30 @@ export function CustomizePoolStep() {
     [chainId, feeTierData],
   )
 
-  const { committed, startTime, maxDurationDays, activeAuctionType } = configureAuction
-  const { timeLockEnabled, timeLockDurationDays, sendFeesEnabled, feesRecipientAddress, buybackAndBurnEnabled } =
-    customizePool
+  const { committed, startTime, endTime } = configureAuction
+  const {
+    timeLockEnabled,
+    timeLockPreset,
+    timeLockDurationDays,
+    feesRecipientAddress,
+    buybackAndBurnEnabled,
+    autocompoundFeesEnabled,
+  } = customizePool
 
-  const feesRecipientPlaceholder = useMemo(
-    () => (isAddress(customizePool.poolOwner) ? customizePool.poolOwner : (activeAddress ?? '')),
-    [customizePool.poolOwner, activeAddress],
+  const handleFeesRecipientAddressChange = useCallback(
+    (address: string) => {
+      setFeesRecipientAddress(address)
+      setSendFeesEnabled(address.trim().length > 0)
+    },
+    [setFeesRecipientAddress, setSendFeesEnabled],
   )
 
   const auctionEndDate = useMemo(() => {
-    const ref = startTime ?? new Date()
-    return new Date(ref.getTime() + maxDurationDays * MS_PER_DAY)
-  }, [startTime, maxDurationDays])
+    if (endTime) {
+      return endTime
+    }
+    return defaultEndTimeFor(startTime ?? new Date())
+  }, [startTime, endTime])
 
   const minUnlockDate = useMemo(() => new Date(auctionEndDate.getTime() + MS_PER_DAY), [auctionEndDate])
 
@@ -134,14 +154,6 @@ export function CustomizePoolStep() {
     () => new Date(auctionEndDate.getTime() + timeLockDurationDays * MS_PER_DAY),
     [auctionEndDate, timeLockDurationDays],
   )
-
-  const handleTimeLockDecrement = useCallback(() => {
-    setTimeLockDurationDays(Math.max(MIN_LOCK_DURATION_DAYS, timeLockDurationDays - 1))
-  }, [setTimeLockDurationDays, timeLockDurationDays])
-
-  const handleTimeLockIncrement = useCallback(() => {
-    setTimeLockDurationDays(timeLockDurationDays + 1)
-  }, [setTimeLockDurationDays, timeLockDurationDays])
 
   const handleUnlockDateChange = useCallback(
     (date: Date | undefined) => {
@@ -165,9 +177,9 @@ export function CustomizePoolStep() {
       placeholder: '0',
     }),
   })
-  const launchText = t('toucan.createAuction.tokenSummaryCard.launching', {
+  const launchText = t('toucan.createAuction.tokenSummaryCard.launchingWithDuration', {
     date: startTime.toLocaleDateString(locale, { month: '2-digit', day: '2-digit', year: '2-digit' }),
-    count: maxDurationDays,
+    duration: formatReviewAuctionDuration({ startTime, endTime: auctionEndDate }, t),
   })
 
   const auctionSummary = { auctionSupplyText, launchText, onEdit: handleEditAuction }
@@ -236,8 +248,12 @@ export function CustomizePoolStep() {
           <PriceRangeStrategySelector
             selectedStrategy={customizePool.priceRangeStrategy}
             onStrategySelect={setPriceRangeStrategy}
-            auctionType={activeAuctionType}
             histogramBarColor={tokenColor ?? colors.statusSuccess.val}
+            customPriceRanges={customizePool.customPriceRanges}
+            onAddCustomPriceRangePreset={addCustomPriceRangePreset}
+            onUpdateCustomPriceRangeLiquidityPercent={updateCustomPriceRangeLiquidityPercent}
+            onUpdateCustomPriceRangeBounds={updateCustomPriceRangeBounds}
+            onRemoveCustomPriceRange={removeCustomPriceRange}
           />
         </Flex>
 
@@ -250,9 +266,8 @@ export function CustomizePoolStep() {
         <TimeLockSection
           enabled={timeLockEnabled}
           onEnabledChange={setTimeLockEnabled}
-          lockDurationDays={timeLockDurationDays}
-          onLockDurationDecrement={handleTimeLockDecrement}
-          onLockDurationIncrement={handleTimeLockIncrement}
+          timeLockPreset={timeLockPreset}
+          onTimeLockPresetChange={setTimeLockPreset}
           unlockDate={unlockDate}
           onUnlockDateChange={handleUnlockDateChange}
           minUnlockDate={minUnlockDate}
@@ -268,13 +283,14 @@ export function CustomizePoolStep() {
             {advancedSettingsExpanded && (
               <>
                 <SendFeesToAddressSection
-                  enabled={sendFeesEnabled}
-                  onEnabledChange={setSendFeesEnabled}
                   value={feesRecipientAddress}
-                  onValueChange={setFeesRecipientAddress}
-                  placeholderAddress={feesRecipientPlaceholder}
+                  onValueChange={handleFeesRecipientAddressChange}
                 />
                 <BuybackAndBurnSection enabled={buybackAndBurnEnabled} onEnabledChange={setBuybackAndBurnEnabled} />
+                <AutocompoundFeesSection
+                  enabled={autocompoundFeesEnabled}
+                  onEnabledChange={setAutocompoundFeesEnabled}
+                />
               </>
             )}
           </>

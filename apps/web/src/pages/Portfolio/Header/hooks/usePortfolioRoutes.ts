@@ -5,10 +5,10 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PlatformAddress } from 'uniswap/src/features/platforms/types/PlatformSpecificAddress'
 import { getPlatformAddress } from 'uniswap/src/features/platforms/utils/addresses'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
-import { getChainFilterFromSearchParams } from '~/features/params/chainQueryParam'
 import { PageType } from '~/hooks/useIsPage'
 import { isPortfolioTab, PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl, pathToPortfolioTab } from '~/pages/Portfolio/utils/portfolioUrls'
+import { getChainFilterFromSearchParams } from '~/utils/params/chainQueryParam'
 
 /**
  * Parses portfolio URL segments to extract wallet address and tab

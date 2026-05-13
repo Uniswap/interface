@@ -8,11 +8,11 @@ import { TimePeriod } from '~/appGraphql/data/util'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { getTimePeriodLabel, ORDERED_TIMES, SOLANA_ORDERED_TIMES } from '~/features/Explore/constants'
 import { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
-import { getChainIdFromChainUrlParam } from '~/features/params/chainParams'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
-} from '~/state/explore/exploreTablesFilterStore'
+} from '~/features/Explore/state/exploreTablesFilterStore'
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 // TODO: change this to reflect data pipeline
 export function VolumeTimeFrameSelector() {

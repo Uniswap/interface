@@ -93,20 +93,30 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
   })
 
   useEffect(() => {
-    if (!tokenData || !tokenProfitLossData?.tokenProfitLosses) {
+    if (!tokenData || !tokenProfitLossData) {
       return
     }
 
-    const pnlCount = tokenProfitLossData.tokenProfitLosses.length
-    const portfolioCount = tokenData.length
+    // Coverage is counted per token-per-chain, not per collapsed multichain row. A user holding ETH
+    // on 5 chains with PnL on 3 of them counts as 3/5, not 1/1
+    const portfolioCount = tokenData.reduce((sum, row) => sum + row.tokens.length, 0)
+
+    const flatPnlCount = tokenProfitLossData.tokenProfitLosses.length
+    const multichainPnlCount = tokenProfitLossData.multichainTokenProfitLoss.reduce(
+      (sum, group) =>
+        sum + (group.chainBreakdown.length > 0 ? group.chainBreakdown.length : group.aggregated?.token ? 1 : 0),
+      0,
+    )
+    const pnlCount = flatPnlCount + multichainPnlCount
     const coverageRate = portfolioCount > 0 ? Math.min(pnlCount / portfolioCount, 1) : 0
 
     sendAnalyticsEvent(UniswapEventName.PnlCoverageReport, {
       pnl_token_count: pnlCount,
       portfolio_token_count: portfolioCount,
       coverage_rate: coverageRate,
+      multichain_ux_enabled: multichainTokenUxEnabled,
     })
-  }, [tokenData, tokenProfitLossData])
+  }, [tokenData, tokenProfitLossData, multichainTokenUxEnabled])
 
   // Filter tokens by search term at client level (chain filtering is handled at API level)
   const filteredTokenData = useMemo(() => {

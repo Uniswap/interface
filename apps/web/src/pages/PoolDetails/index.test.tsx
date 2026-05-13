@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { usePoolData } from '~/appGraphql/data/pools/usePoolData'
-import PoolDetails from '~/pages/PoolDetails'
+import { PoolDetailsPage as PoolDetails } from '~/pages/PoolDetails'
 import store from '~/state'
 import { mocked } from '~/test-utils/mocked'
 import { validParams, validPoolDataResponse } from '~/test-utils/pools/fixtures'
@@ -39,7 +39,8 @@ vi.mock('~/hooks/useColor', async () => {
 })
 
 vi.mock('~/pages/Swap', () => ({
-  default: () => React.createElement(React.Fragment),
+  SwapPage: () => React.createElement(React.Fragment),
+  Swap: () => React.createElement(React.Fragment),
 }))
 
 describe('PoolDetailsPage', () => {

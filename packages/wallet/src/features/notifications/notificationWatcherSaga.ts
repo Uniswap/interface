@@ -48,6 +48,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         txType: TransactionType.Approve,
         tokenAddress: typeInfo.tokenAddress,
         spender: typeInfo.spender,
+        tokenSymbol: typeInfo.tokenSymbol,
       }),
     )
   } else if (typeInfo.type === TransactionType.Bridge) {

@@ -20,10 +20,10 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { tryCatch } from 'utilities/src/errors'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import { signSolanaTransactionWithCurrentWallet } from '~/components/Web3Provider/signSolanaTransaction'
+import { signSolanaTransactionWithCurrentWallet } from '~/connection/signSolanaTransaction'
 import store from '~/state'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { getSwapTransactionInfo } from '~/state/sagas/transactions/utils'
 
 type JupiterSwapParams = {

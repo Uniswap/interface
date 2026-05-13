@@ -8,5 +8,12 @@
     "types": ["node"],
     "paths": {}
   },
-  "references": []
+  "references": [
+    {
+      "path": "../utilities"
+    },
+    {
+      "path": "../sessions"
+    }
+  ]
 }

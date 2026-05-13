@@ -1,4 +1,5 @@
 import { EventConsumer, EventMapBase } from '@react-navigation/core'
+import { isChrome, isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
@@ -28,7 +29,6 @@ import {
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isChrome, isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -316,7 +316,7 @@ export function ClaimUnitagContent({
                   // @ts-expect-error - field-sizing is a web CSS prop, not yet registered as a valid prop,
                   // that allows to automatically resize the input width to the content
                   style={supportsFieldSizing ? { fieldSizing: 'content' } : undefined}
-                  autoFocus={!isMobileApp}
+                  autoFocus={!isMobileApp && !isMobileWeb}
                   blurOnSubmit={!isWebPlatform}
                   autoCapitalize="none"
                   autoCorrect={false}

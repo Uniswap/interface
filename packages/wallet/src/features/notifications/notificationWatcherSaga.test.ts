@@ -76,6 +76,7 @@ describe(pushTransactionNotification, () => {
           txType: TransactionType.Approve,
           tokenAddress: approveTypeInfo.tokenAddress,
           spender: approveTypeInfo.spender,
+          tokenSymbol: approveTypeInfo.tokenSymbol,
           txId,
         }),
       )

@@ -1,7 +1,6 @@
 //! tamagui-ignore
 // tamagui-ignore
 import { KycVerificationStatus } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, useColorsFromTokenColor } from 'ui/src'
@@ -21,7 +20,6 @@ import { getAuctionBidInputtedAnalyticsProperties } from '~/features/Toucan/Auct
 import { AuctionAccessIndicators } from '~/features/Toucan/Auction/BidForm/AuctionAccessIndicators'
 import { BidBudgetInput } from '~/features/Toucan/Auction/BidForm/BidBudgetInput'
 import { BidFormWarningBanner } from '~/features/Toucan/Auction/BidForm/BidFormWarningBanner'
-import { BidMaxValuationInput } from '~/features/Toucan/Auction/BidForm/BidMaxValuationInput'
 import { BidMaxValuationInputV2 } from '~/features/Toucan/Auction/BidForm/BidMaxValuationInputV2'
 import { BidReceiveOutput } from '~/features/Toucan/Auction/BidForm/BidReceiveOutput'
 import { BidReviewModal } from '~/features/Toucan/Auction/BidForm/BidReviewModal/BidReviewModal'
@@ -58,7 +56,6 @@ interface BidFormProps {
 
 export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.Element {
   const { t } = useTranslation()
-  const isV2 = useFeatureFlag(FeatureFlags.AuctionDetailsV2)
   const trace = useTrace()
   const chainId = useAuctionStore((state) => state.auctionDetails?.chainId)
   const auctionContractAddress = useAuctionStore((state) => state.auctionAddress)
@@ -86,7 +83,6 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
     budgetField,
     maxValuationField,
     submitState,
-    totalSupply,
     auctionTokenDecimals,
     expectedReceiveAmount,
     minExpectedReceiveAmount,
@@ -226,24 +222,13 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
               <VerticalLineContainer>
                 <VerticalLine />
               </VerticalLineContainer>
-              {isV2 ? (
-                <BidMaxValuationInputV2
-                  label={t('toucan.bidDetails.label.maxFdv')}
-                  field={maxValuationField}
-                  auctionTokenDecimals={auctionTokenDecimals}
-                  tokenColor={validTokenColor ?? effectiveTokenColor}
-                  disabled={!isAuctionInProgress}
-                />
-              ) : (
-                <BidMaxValuationInput
-                  label={t('toucan.bidForm.maxTokenPrice')}
-                  field={maxValuationField}
-                  totalSupply={totalSupply}
-                  auctionTokenDecimals={auctionTokenDecimals}
-                  tokenColor={validTokenColor ?? effectiveTokenColor}
-                  disabled={!isAuctionInProgress}
-                />
-              )}
+              <BidMaxValuationInputV2
+                label={t('toucan.bidDetails.label.maxFdv')}
+                field={maxValuationField}
+                auctionTokenDecimals={auctionTokenDecimals}
+                tokenColor={validTokenColor ?? effectiveTokenColor}
+                disabled={!isAuctionInProgress}
+              />
               {!isAuctionEnded && (
                 <>
                   <VerticalLineContainer>

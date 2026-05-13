@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { submitToucanBidSaga } from '~/state/sagas/toucan/submitBidSaga'
 import { SubmitToucanBidParams } from '~/state/sagas/toucan/types'
 

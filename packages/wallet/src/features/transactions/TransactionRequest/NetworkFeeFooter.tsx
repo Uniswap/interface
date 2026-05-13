@@ -1,4 +1,5 @@
 import { GasFeeResult } from '@universe/api'
+import { isMobileApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -9,7 +10,6 @@ import { ContentRow } from 'uniswap/src/components/transactions/requests/Content
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestType, EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
-import { isMobileApp } from 'utilities/src/platform'
 
 interface NetworkFeeFooterProps {
   chainId: UniverseChainId

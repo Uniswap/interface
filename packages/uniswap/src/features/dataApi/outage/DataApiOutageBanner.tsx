@@ -1,7 +1,7 @@
+import { isWebApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { isWebApp } from 'utilities/src/platform'
 
 type DataApiOutageBannerProps = {
   onPress?: () => void

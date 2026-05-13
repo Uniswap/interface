@@ -1,3 +1,4 @@
+import { isExtensionApp, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +20,6 @@ import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/Token
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
 
 /**
  * IMPORTANT: if you modify the UI of this component, make sure to update the corresponding Skeleton component.

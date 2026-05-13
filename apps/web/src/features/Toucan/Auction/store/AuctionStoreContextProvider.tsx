@@ -1,17 +1,18 @@
 import { PropsWithChildren, useState } from 'react'
 import { useParams } from 'react-router'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import { getChainIdFromChainUrlParam } from '~/features/params/chainParams'
 import { useAuctionBlockPolling } from '~/features/Toucan/Auction/hooks/useAuctionBlockPolling'
 import { useComputeConcentrationBand } from '~/features/Toucan/Auction/hooks/useComputeConcentrationBand'
 import { useLoadAuctionDetails } from '~/features/Toucan/Auction/hooks/useLoadAuctionDetails'
 import { useLoadBidDistributionData } from '~/features/Toucan/Auction/hooks/useLoadBidDistributionData'
 import { useLoadCheckpointData } from '~/features/Toucan/Auction/hooks/useLoadCheckpointData'
+import { useLoadTickDetails } from '~/features/Toucan/Auction/hooks/useLoadTickDetails'
 import { useLoadUserBids } from '~/features/Toucan/Auction/hooks/useLoadUserBids'
 import { useUpdateTokenColor } from '~/features/Toucan/Auction/hooks/useUpdateTokenColor'
 import { AuctionStoreContext } from '~/features/Toucan/Auction/store/AuctionStoreContext'
 import { createAuctionStore } from '~/features/Toucan/Auction/store/createAuctionStore'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 /**
  * Inner provider component that manages all auction data loading
@@ -38,6 +39,13 @@ function AuctionStoreProviderInner({ children }: PropsWithChildren) {
   // Load bid distribution data (for stats banner and distribution chart)
   // This provides concentration band and total committed volume data
   useLoadBidDistributionData({
+    chainId,
+    auctionAddress,
+  })
+
+  // Load initialized-tick details for the ChartBarTooltip "Remaining" row.
+  // Gated on ToucanTickDetailsTooltip — no-op when flag is off.
+  useLoadTickDetails({
     chainId,
     auctionAddress,
   })

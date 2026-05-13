@@ -1,17 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`OrderContent > should render without error, filled order 1`] = `
-.c0 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 .c1 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c3 {
   text-decoration: none;
   cursor: pointer;
   transition-duration: 125ms;
@@ -20,15 +10,15 @@ exports[`OrderContent > should render without error, filled order 1`] = `
   font-weight: 500;
 }
 
-.c3 :hover {
+.c1 :hover {
   opacity: 0.6;
 }
 
-.c3 :active {
+.c1 :active {
   opacity: 0.4;
 }
 
-.c2 {
+.c0 {
   width: 100%;
   height: 1px;
   border-width: 0;
@@ -110,20 +100,22 @@ exports[`OrderContent > should render without error, filled order 1`] = `
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
         >
-          <div
-            class="c0 css-rjqmed"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+            data-disable-theme="true"
           >
             Order executed
-          </div>
-          <div
-            class="c1 css-1aekuku"
+          </span>
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             Mock Date
-          </div>
+          </span>
         </div>
       </div>
       <div
-        class="c2"
+        class="c0"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
@@ -243,7 +235,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
         </div>
       </div>
       <div
-        class="c2"
+        class="c0"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
@@ -313,7 +305,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
             data-disable-theme="true"
           >
             <a
-              class="c3"
+              class="c1"
               href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
               rel="noopener noreferrer"
               target="_blank"
@@ -332,17 +324,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
 `;
 
 exports[`OrderContent > should render without error, limit order 1`] = `
-.c0 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 .c1 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c3 {
   text-decoration: none;
   cursor: pointer;
   transition-duration: 125ms;
@@ -351,15 +333,15 @@ exports[`OrderContent > should render without error, limit order 1`] = `
   font-weight: 500;
 }
 
-.c3 :hover {
+.c1 :hover {
   opacity: 0.6;
 }
 
-.c3 :active {
+.c1 :active {
   opacity: 0.4;
 }
 
-.c2 {
+.c0 {
   width: 100%;
   height: 1px;
   border-width: 0;
@@ -441,20 +423,22 @@ exports[`OrderContent > should render without error, limit order 1`] = `
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
         >
-          <div
-            class="c0 css-rjqmed"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+            data-disable-theme="true"
           >
             Limit pending
-          </div>
-          <div
-            class="c1 css-1aekuku"
+          </span>
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             Mock Date
-          </div>
+          </span>
         </div>
       </div>
       <div
-        class="c2"
+        class="c0"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
@@ -574,7 +558,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
         </div>
       </div>
       <div
-        class="c2"
+        class="c0"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
@@ -663,7 +647,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
             data-disable-theme="true"
           >
             <a
-              class="c3"
+              class="c1"
               href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
               rel="noopener noreferrer"
               target="_blank"
@@ -709,7 +693,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
           data-disable-theme="true"
         >
           <a
-            class="c3"
+            class="c1"
             href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
             rel="noopener noreferrer"
             target="_blank"
@@ -727,17 +711,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
 `;
 
 exports[`OrderContent > should render without error, open order 1`] = `
-.c0 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
 .c1 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c3 {
   text-decoration: none;
   cursor: pointer;
   transition-duration: 125ms;
@@ -746,15 +720,15 @@ exports[`OrderContent > should render without error, open order 1`] = `
   font-weight: 500;
 }
 
-.c3 :hover {
+.c1 :hover {
   opacity: 0.6;
 }
 
-.c3 :active {
+.c1 :active {
   opacity: 0.4;
 }
 
-.c2 {
+.c0 {
   width: 100%;
   height: 1px;
   border-width: 0;
@@ -836,20 +810,22 @@ exports[`OrderContent > should render without error, open order 1`] = `
         <div
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
         >
-          <div
-            class="c0 css-rjqmed"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+            data-disable-theme="true"
           >
             Order pending
-          </div>
-          <div
-            class="c1 css-1aekuku"
+          </span>
+          <span
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+            data-disable-theme="true"
           >
             Mock Date
-          </div>
+          </span>
         </div>
       </div>
       <div
-        class="c2"
+        class="c0"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1569"
@@ -969,7 +945,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
         </div>
       </div>
       <div
-        class="c2"
+        class="c0"
       />
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
@@ -1058,7 +1034,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
             data-disable-theme="true"
           >
             <a
-              class="c3"
+              class="c1"
               href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
               rel="noopener noreferrer"
               target="_blank"

@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isMobileWeb } from '@universe/environment'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { Flex } from 'ui/src'
@@ -12,7 +13,6 @@ import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const COPY_CLOSE_DELAY = 750

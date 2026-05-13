@@ -16,7 +16,7 @@ function truncateValue(value: string, decimals: number): string {
  * Parses a CurrencyAmount from the passed string.
  * Returns the CurrencyAmount, or undefined if parsing fails.
  */
-export default function tryParseCurrencyAmount<T extends Currency>(
+export function tryParseCurrencyAmount<T extends Currency>(
   value?: string,
   currency?: Maybe<T>,
 ): CurrencyAmount<T> | undefined {

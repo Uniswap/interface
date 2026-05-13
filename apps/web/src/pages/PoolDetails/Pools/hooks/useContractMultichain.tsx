@@ -5,7 +5,7 @@ import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
-import { RPC_PROVIDERS } from '~/constants/providers'
+import { getRpcProvider } from '~/constants/providers'
 import { useAccount } from '~/hooks/useAccount'
 
 export type ContractMap<T extends BaseContract> = { [key: number]: T }
@@ -38,7 +38,7 @@ export function useContractMultichain<T extends BaseContract>({
         walletProvider && account.chainId === chainId
           ? walletProvider
           : isSupported
-            ? RPC_PROVIDERS[chainId]
+            ? getRpcProvider(chainId)
             : undefined
       if (provider) {
         acc[chainId] = getContract({ address: addressMap[chainId] ?? '', ABI, provider }) as T

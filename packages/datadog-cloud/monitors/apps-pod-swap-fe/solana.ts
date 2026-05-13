@@ -1,5 +1,5 @@
 import { MonitorDefinition } from '../../types'
-import { SWAP_POD_RUNBOOK, TEAM, UNIVERSE_REPO_URL } from './constants'
+import { SWAP_FE_ADDITIONAL_SLACK_CHANNELS, SWAP_POD_RUNBOOK, TEAM, UNIVERSE_REPO_URL } from './constants'
 
 /**
  * Solana-specific swap quoting monitors.
@@ -23,5 +23,6 @@ export const swapFeSolanaMonitors: MonitorDefinition[] = [
     runbookUrl: SWAP_POD_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/web`,
     dashboards: [],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
   },
 ]

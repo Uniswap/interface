@@ -1,47 +1,49 @@
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
-import { Trans } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { ChartType } from '~/components/Charts/utils'
-import Column from '~/components/deprecated/Column'
-import Row from '~/components/deprecated/Row'
 import { ChartBarCrossedWithBackground } from '~/components/Table/ErrorBox'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
-import { textFadeIn } from '~/theme/styles'
 
-const ChartErrorContainer = deprecatedStyled(Row)`
-  position: absolute;
-  width: max-content;
-  align-items: flex-start;
-  max-width: 320px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 20px;
-  border: 1.3px solid ${({ theme }) => theme.surface3};
-  background-color: ${({ theme }) => theme.surface1};
-  padding: 12px 20px 12px 12px;
-  gap: 12px;
-  ${textFadeIn};
-  z-index: 1;
-`
-const ErrorTextColumn = deprecatedStyled(Column)`
-  white-space: normal;
-`
+const ERROR_WIDTH = 320
 
 function ChartErrorView({ children }: PropsWithChildren) {
+  const { t } = useTranslation()
   return (
-    <ChartErrorContainer data-cy="chart-error-view">
+    <Flex
+      data-cy="chart-error-view"
+      row
+      alignItems="flex-start"
+      justifyContent="flex-start"
+      position="absolute"
+      width="max-content"
+      maxWidth={ERROR_WIDTH}
+      top="50%"
+      left="50%"
+      transform="translate(-50%, -50%)"
+      borderRadius="$rounded20"
+      borderWidth={1.3}
+      borderColor="$surface3"
+      backgroundColor="$surface1"
+      p="$spacing12"
+      pr="$spacing20"
+      gap="$gap12"
+      zIndex={1}
+      animation="125ms"
+      animateOnly={['opacity']}
+      enterStyle={{ opacity: 0 }}
+    >
       <ChartBarCrossedWithBackground />
-      <ErrorTextColumn gap="xs">
-        <ThemedText.SubHeader color="neutral1">
-          <Trans i18nKey="chart.missingData" />
-        </ThemedText.SubHeader>
-        <ThemedText.BodySmall color="neutral2">{children}</ThemedText.BodySmall>
-      </ErrorTextColumn>
-    </ChartErrorContainer>
+      <Flex shrink gap="$gap4">
+        <Text variant="subheading2" color="$neutral1">
+          {t('chart.missingData')}
+        </Text>
+        <Text variant="body3" color="$neutral2">
+          {children}
+        </Text>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -187,7 +189,7 @@ export function ChartSkeleton({
   const maskId = `mask-${type}-${height}`
 
   return (
-    <Row style={{ position: 'relative' }}>
+    <Flex row width="100%" alignItems="center" position="relative">
       <svg width="100%" height={height} xmlns="http://www.w3.org/2000/svg" fill="none">
         <ChartSkeletonAxes
           height={height}
@@ -202,6 +204,6 @@ export function ChartSkeleton({
         </g>
       </svg>
       {errorText && <ChartErrorView>{errorText}</ChartErrorView>}
-    </Row>
+    </Flex>
   )
 }

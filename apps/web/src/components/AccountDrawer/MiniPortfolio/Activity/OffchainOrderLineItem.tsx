@@ -11,7 +11,7 @@ import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/tr
 import { ellipseMiddle } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { DetailLineItem, LineItemData } from '~/components/DetailLineItem'
-import TradePrice from '~/components/TradePrice'
+import { TradePrice } from '~/components/TradePrice'
 import { ExternalLink } from '~/theme/components/Links'
 
 export enum OffchainOrderLineItemType {

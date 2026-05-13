@@ -26,7 +26,6 @@ import ExtensionIllustration from '~/assets/images/extensionIllustration.png'
 import PlayStoreBadge from '~/assets/images/play-store-badge.png'
 import WalletIllustration from '~/assets/images/walletIllustration.png'
 import { Wiggle } from '~/components/animations/Wiggle'
-import Column from '~/components/deprecated/Column'
 import { AndroidLogo } from '~/components/Icons/AndroidLogo'
 import { AppleLogo } from '~/components/Icons/AppleLogo'
 import { useAccount } from '~/hooks/useAccount'
@@ -65,7 +64,9 @@ const Illustration = deprecatedStyled.img`
   width: 100%;
   transition: ${({ theme }) => `transform ${theme.transition.timing.inOut} ${theme.transition.duration.medium}`};
 `
-const Card = deprecatedStyled(Column)`
+const Card = deprecatedStyled.div`
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
   &:hover {
     ${Illustration} {
@@ -104,7 +105,7 @@ function CardInfo({ title, details, children }: PropsWithChildren<{ title: strin
   return (
     <Flex row p="$spacing8" justifyContent="space-between" alignItems="center" width="100%">
       <Flex alignItems="flex-start">
-        <Text variant="body2" fontWeight="535">
+        <Text variant="body2" fontWeight="$medium">
           {title}
         </Text>
         <Text variant="body4" color="$neutral2">
@@ -179,7 +180,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
       >
         <Flex row gap="$spacing12" width="100%" alignItems="flex-start">
           <Card
-            flex="1 1 auto"
+            style={{ flex: '1 1 auto' }}
             onClick={() => {
               setPage(Page.DownloadMobile)
               onPressCard()

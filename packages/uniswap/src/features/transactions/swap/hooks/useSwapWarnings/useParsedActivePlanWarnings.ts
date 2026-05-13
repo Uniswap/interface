@@ -1,5 +1,6 @@
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import { isWebPlatform } from '@universe/environment'
 import type { TFunction } from 'i18next'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +20,6 @@ import { activePlanStore } from 'uniswap/src/features/transactions/swap/review/s
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useStore } from 'zustand'
 
 const APPROVAL_STEP_TYPES = new Set<TradingApi.PlanStepType>([

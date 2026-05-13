@@ -1,13 +1,12 @@
 import { TFunction } from 'i18next'
 import { ReactNode, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { LogoContainer } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
-import Column, { ColumnCenter } from '~/components/deprecated/Column'
-import Row from '~/components/deprecated/Row'
 import { OrderContent } from '~/components/modals/OffchainActivityModal'
 import { useAccount } from '~/hooks/useAccount'
 import { SwapResult, useSwapTransactionStatus } from '~/hooks/useSwapCallback'
@@ -25,16 +24,6 @@ import { isLimitTrade, isUniswapXTradeType } from '~/state/routing/utils'
 import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import { AnimationType } from '~/theme/components/FadePresence'
 import { ExternalLink } from '~/theme/components/Links'
-import { ThemedText } from '~/theme/components/text'
-
-const Container = deprecatedStyled(ColumnCenter)`
-  margin: 48px 0 8px;
-`
-const HeaderContainer = deprecatedStyled(ColumnCenter)<{ $disabled?: boolean }>`
-  ${({ $disabled }) => $disabled && `opacity: 0.5;`}
-  padding: 0 32px;
-  overflow: visible;
-`
 const AnimationWrapper = deprecatedStyled.div`
   position: relative;
   width: 100%;
@@ -42,13 +31,14 @@ const AnimationWrapper = deprecatedStyled.div`
   display: flex;
   flex-grow: 1;
 `
-const StepTitleAnimationContainer = deprecatedStyled(Column)<{ disableEntranceAnimation?: boolean }>`
+const StepTitleAnimationContainer = deprecatedStyled.div<{ disableEntranceAnimation?: boolean }>`
   position: absolute;
   width: 100%;
   height: 100%;
   align-items: center;
   display: flex;
   flex-direction: column;
+  gap: 12px;
   transition: display ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
   ${({ disableEntranceAnimation }) =>
     !disableEntranceAnimation &&
@@ -160,7 +150,7 @@ export function Pending({
   }
 
   return (
-    <Container gap="lg">
+    <Flex alignItems="center" width="100%" mt={48} mb="$spacing8" gap="$gap24">
       <LogoContainer>
         {/* Shown only during the final step under "success" conditions, and scales in */}
         {showSuccess && <AnimatedEntranceConfirmationIcon />}
@@ -170,29 +160,38 @@ export function Pending({
         {/* On the last step, appears while waiting for the transaction to be signed too */}
         {!showSuccess && !showSubmitted && <LoadingIndicatorOverlay />}
       </LogoContainer>
-      <HeaderContainer gap="md" $disabled={transactionPending && !limitPlaced}>
+      <Flex
+        alignItems="center"
+        width="100%"
+        px={32}
+        overflow="visible"
+        gap="$gap12"
+        opacity={transactionPending && !limitPlaced ? 0.5 : 1}
+      >
         <AnimationWrapper>
-          <StepTitleAnimationContainer gap="md" ref={currentStepContainerRef} disableEntranceAnimation>
-            <ThemedText.SubHeader width="100%" textAlign="center" data-testid="pending-modal-content-title">
+          <StepTitleAnimationContainer ref={currentStepContainerRef} disableEntranceAnimation>
+            <Text variant="body2" width="100%" textAlign="center" data-testid="pending-modal-content-title">
               {getTitle({ t, trade: initialTrade, swapPending, swapConfirmed })}
-            </ThemedText.SubHeader>
+            </Text>
             {initialTrade && (
-              <ThemedText.LabelSmall textAlign="center">
+              <Text variant="body3" color="$neutral2" textAlign="center">
                 <TradeSummary trade={initialTrade} />
-              </ThemedText.LabelSmall>
+              </Text>
             )}
           </StepTitleAnimationContainer>
         </AnimationWrapper>
         {/* Display while waiting for user to make final submission by confirming in wallet */}
         {!swapPending && !swapConfirmed && (
-          <Row justify="center" marginTop="32px" minHeight="24px">
-            <ThemedText.BodySmall color="neutral2">{t('common.proceedInWallet')}</ThemedText.BodySmall>
-          </Row>
+          <Flex row width="100%" justifyContent="center" alignItems="center" mt={32} minHeight={24}>
+            <Text variant="body3" color="$neutral2">
+              {t('common.proceedInWallet')}
+            </Text>
+          </Flex>
         )}
         {/* Display while UniswapX order is still pending */}
         {uniswapXOrder && uniswapXOrder.status === TransactionStatus.Pending && (
-          <Row justify="center" marginTop="32px" minHeight="24px">
-            <ThemedText.BodySmall color="neutral2">
+          <Flex row width="100%" justifyContent="center" alignItems="center" mt={32} minHeight={24}>
+            <Text variant="body3" color="$neutral2">
               <ExternalLink
                 href={
                   isLimitTrade(initialTrade)
@@ -206,20 +205,20 @@ export function Pending({
                   <Trans i18nKey="uniswapX.learnMore" />
                 )}
               </ExternalLink>
-            </ThemedText.BodySmall>
-          </Row>
+            </Text>
+          </Flex>
         )}
         {/* Display after submitting Classic swap or after filling UniswapX order */}
         {explorerLink && (
-          <Row justify="center" marginTop="32px" minHeight="24px">
-            <ThemedText.BodySmall color="neutral2">
+          <Flex row width="100%" justifyContent="center" alignItems="center" mt={32} minHeight={24}>
+            <Text variant="body3" color="$neutral2">
               <ExternalLink href={explorerLink} color="neutral2">
                 <Trans i18nKey="common.viewOnExplorer" />
               </ExternalLink>
-            </ThemedText.BodySmall>
-          </Row>
+            </Text>
+          </Flex>
         )}
-      </HeaderContainer>
-    </Container>
+      </Flex>
+    </Flex>
   )
 }

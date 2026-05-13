@@ -30,7 +30,7 @@ function AllocationOption({
       <TouchableArea
         px="$spacing12"
         py="$spacing8"
-        borderRadius="$rounded12"
+        borderRadius="$rounded16"
         hoverStyle={{ backgroundColor: '$surface2' }}
         onPress={onPress}
       >
@@ -83,12 +83,12 @@ export function PostAuctionLiquidityAllocationPopover({
         </TouchableArea>
       </Popover.Trigger>
       <Popover.Content
-        borderRadius="$rounded16"
+        maxWidth={280}
+        borderRadius="$rounded20"
         borderWidth="$spacing1"
         borderColor="$surface3"
         backgroundColor="$surface1"
         p="$spacing4"
-        width={252}
         elevate
         animation={['fast', { opacity: { overshootClamping: true } }]}
         animateOnly={['transform', 'opacity']}

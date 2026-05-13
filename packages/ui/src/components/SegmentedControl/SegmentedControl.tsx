@@ -1,9 +1,9 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { cloneElement, useState } from 'react'
 import { AnimatePresence, ColorTokens, SpaceTokens, styled, TabLayout, Tabs, TabsTabProps } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { assert } from 'utilities/src/errors'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 const TOGGLE_PADDING = 4
 

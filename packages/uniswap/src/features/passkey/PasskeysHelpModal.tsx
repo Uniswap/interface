@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
@@ -9,7 +10,6 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export enum PasskeysHelpModalTypes {
   Default = 'default',

@@ -1,5 +1,5 @@
+import { isDevEnv } from '@universe/environment'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
-import { isDevEnv } from 'utilities/src/environment/env'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -59,6 +59,8 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
         bidDistributionData: null,
         // Volume from bids excluded due to MAX_RENDERABLE_BARS cap
         excludedBidVolume: null,
+        // Initialized-tick details from GetTickDetails (null until first load)
+        tickDetails: null,
         // Callback to manually refetch user bids (used after withdrawal transactions)
         refetchUserBids: null,
         // Active tab in BidFormTabs - default to PLACE_A_BID
@@ -212,6 +214,9 @@ export const createAuctionStore = (auctionAddress?: string, chainId?: EVMUnivers
           },
           setBidDistributionData: (data, excludedVolume) => {
             set({ bidDistributionData: data, excludedBidVolume: excludedVolume ?? null })
+          },
+          setTickDetails: (ticks) => {
+            set({ tickDetails: ticks })
           },
           setRefetchUserBids: (refetchFn) => {
             set({ refetchUserBids: refetchFn })

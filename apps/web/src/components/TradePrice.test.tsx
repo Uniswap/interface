@@ -2,7 +2,7 @@ import 'utilities/src/logger/mocks'
 import { Price, WETH9 } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import TradePrice from '~/components/TradePrice'
+import { TradePrice } from '~/components/TradePrice'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
 const price = new Price(WETH9[1], USDC_MAINNET, 100000000000, 5)

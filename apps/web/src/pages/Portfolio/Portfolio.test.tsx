@@ -1,5 +1,5 @@
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
-import Portfolio from '~/pages/Portfolio/Portfolio'
+import { Portfolio } from '~/pages/Portfolio/Portfolio'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 

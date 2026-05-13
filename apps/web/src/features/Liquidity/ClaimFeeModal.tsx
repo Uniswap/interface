@@ -17,6 +17,7 @@ import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/l
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -43,10 +44,9 @@ import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
 import { useAccount } from '~/hooks/useAccount'
 import { useModalInitialState } from '~/hooks/useModalInitialState'
 import { useModalState } from '~/hooks/useModalState'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useAppDispatch } from '~/state/hooks'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
-import type { PositionInfo } from '~/types/liquidity'
 
 function getClaimLpFeesRequest({
   currency0,
@@ -349,3 +349,5 @@ export function ClaimFeeModal() {
     </Modal>
   )
 }
+
+export default ClaimFeeModal

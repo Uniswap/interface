@@ -1,6 +1,6 @@
-import { helpUrl } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { Flex, Switch, Text } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExternalLink } from '~/theme/components/Links'
 
 export function BuybackAndBurnSection({
@@ -15,12 +15,21 @@ export function BuybackAndBurnSection({
   return (
     <Flex row alignItems="flex-start" justifyContent="space-between" gap="$spacing12">
       <Flex flex={1}>
-        <Text variant="subheading1" color="$neutral1">
+        <Text variant="buttonLabel3" color="$neutral1" height={20} lineHeight={20}>
           {t('toucan.createAuction.step.customizePool.buybackAndBurn')}
         </Text>
-        <Text variant="body3" color="$neutral2">
+        <Text variant="body4" color="$neutral2">
           {t('toucan.createAuction.step.customizePool.buybackAndBurn.description.beforeLink')}
-          <ExternalLink href={helpUrl} style={{ color: 'inherit', fontWeight: '500' }}>
+          <ExternalLink
+            href={uniswapUrls.helpCenterUrl}
+            style={{
+              color: 'inherit',
+              display: 'inline',
+              fontWeight: 500,
+              textDecoration: 'underline',
+              textUnderlinePosition: 'from-font',
+            }}
+          >
             {t('toucan.createAuction.step.customizePool.buybackAndBurn.description.link')}
           </ExternalLink>
           .

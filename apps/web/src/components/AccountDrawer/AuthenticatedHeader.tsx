@@ -31,13 +31,13 @@ import { DisconnectButton } from '~/components/AccountDrawer/DisconnectButton'
 import { DownloadGraduatedWalletCard } from '~/components/AccountDrawer/DownloadGraduatedWalletCard'
 import { EmptyWallet } from '~/components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import MiniPortfolio from '~/components/AccountDrawer/MiniPortfolio/MiniPortfolio'
+import { MiniPortfolio } from '~/components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { ReceiveActionTile } from '~/components/ActionTiles/ReceiveActionTile'
 import { SendActionTile } from '~/components/ActionTiles/SendActionTile/SendActionTile'
 import { LimitedSupportBanner } from '~/components/Banner/LimitedSupportBanner'
-import DelegationMismatchModal from '~/components/delegation/DelegationMismatchModal'
+import { DelegationMismatchModal } from '~/components/delegation/DelegationMismatchModal'
 import { Settings } from '~/components/Icons/Settings'
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
 import { ExtensionRequestMethods, useUniswapExtensionRequest } from '~/components/WalletModal/useWagmiConnectorWithId'
 import { useAccountsStore } from '~/features/accounts/store/hooks'
 import { useDataApiOutageModal } from '~/hooks/useDataApiOutageModal'
@@ -46,7 +46,7 @@ import { useModalState } from '~/hooks/useModalState'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/state/claim/hooks'
 
-export default function AuthenticatedHeader({
+export function AuthenticatedHeader({
   evmAddress,
   svmAddress,
   openSettings,

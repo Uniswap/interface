@@ -11,6 +11,8 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
@@ -35,11 +37,9 @@ import { LiquidityPositionCard } from '~/features/Liquidity/LiquidityPositionCar
 import { LoadingRow } from '~/features/Liquidity/Loader'
 import { ReviewModal } from '~/features/Liquidity/ReviewModal'
 import { getCurrencyForProtocol } from '~/features/Liquidity/utils/currency'
-import { parseRestPosition } from '~/features/Liquidity/utils/parseFromRest'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useAccount } from '~/hooks/useAccount'
 import { usePositionOwnerV2 } from '~/hooks/usePositionOwnerV2'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import {
   CreateLiquidityContextProvider,
   DEFAULT_DEPOSIT_STATE,
@@ -47,12 +47,12 @@ import {
   useCreateLiquidityContext,
 } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { SharedCreateModals } from '~/pages/CreatePosition/CreatePosition'
-import useMigratingPosition from '~/pages/Migrate/hooks/useMigratingPosition'
+import { useMigratingPosition } from '~/pages/Migrate/hooks/useMigratingPosition'
 import { MigratePositionTxContextProvider, useMigrateTxContext } from '~/pages/Migrate/MigrateLiquidityTxContext'
 import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
-import type { PositionInfo } from '~/types/liquidity'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -330,7 +330,7 @@ function Toolbar({
 /**
  * The page for migrating any v3 LP position to v4.
  */
-export default function MigrateV3() {
+export function MigrateV3() {
   const { t } = useTranslation()
   const { chainName, tokenId } = useParams<{ tokenId: string; chainName: string }>()
   const { pairAddress } = useParams<{ pairAddress: string }>()
@@ -465,3 +465,5 @@ export default function MigrateV3() {
     </Trace>
   )
 }
+
+export default MigrateV3

@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -35,6 +36,8 @@ import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -43,7 +46,6 @@ import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hook
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
@@ -62,18 +64,16 @@ import { LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/co
 import { PositionNFT } from '~/features/Liquidity/PositionNFT'
 import { PositionPageActionButtons } from '~/features/Liquidity/PositionPageActionButtons'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
-import { parseRestPosition } from '~/features/Liquidity/utils/parseFromRest'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
 import { useSrcColor } from '~/hooks/useColor'
 import { useDynamicMetatags } from '~/pages/metatags'
-import NotFound from '~/pages/NotFound'
+import { NotFound } from '~/pages/NotFound'
 import { usePositionTokenURI } from '~/pages/Positions/usePositionTokenURI'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import type { PositionInfo } from '~/types/liquidity'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -102,7 +102,7 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
   }
 }
 
-export default function PositionPageWrapper() {
+export function PositionPageWrapper() {
   const chainId = useChainIdFromUrlParam()
 
   if (chainId && !isEVMChain(chainId)) {
@@ -115,6 +115,8 @@ export default function PositionPageWrapper() {
     </MultichainContextProvider>
   )
 }
+
+export default PositionPageWrapper
 
 // oxlint-disable-next-line complexity
 function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) {

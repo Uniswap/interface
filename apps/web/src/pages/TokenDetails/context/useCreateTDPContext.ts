@@ -12,10 +12,10 @@ import { buildCurrencyId, buildNativeCurrencyId, isNativeCurrencyAddress } from 
 import { gqlToCurrency } from '~/appGraphql/data/util'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useSrcColor } from '~/hooks/useColor'
 import type { LoadedTDPContext, MultiChainMap, PendingTDPContext } from '~/pages/TokenDetails/context/TDPContext'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const { tokenAddress } = useParams<{ tokenAddress: string; chainName: string }>()

@@ -7,6 +7,9 @@
   "references": [
     {
       "path": "../../config/vitest-presets"
+    },
+    {
+      "path": "../environment"
     }
   ]
 }

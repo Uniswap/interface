@@ -1,3 +1,4 @@
+import { isProdEnv } from '@universe/environment'
 import { useEffect, useState } from 'react'
 import { Outlet } from 'react-router'
 import { DevMenuModal } from 'src/app/core/DevMenuModal'
@@ -6,7 +7,6 @@ import { onboardingMessageChannel } from 'src/background/messagePassing/messageC
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { ONBOARDING_BACKGROUND_DARK, ONBOARDING_BACKGROUND_LIGHT } from 'src/public/assets'
 import { Flex, Image, useIsDarkMode } from 'ui/src'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 

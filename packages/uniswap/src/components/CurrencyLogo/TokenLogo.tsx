@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useState } from 'react'
 import {
@@ -17,7 +18,6 @@ import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { isMobileApp } from 'utilities/src/platform'
 
 interface TokenLogoProps {
   url?: string | null

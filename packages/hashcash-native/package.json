@@ -54,10 +54,10 @@
   },
   "devDependencies": {
     "@typescript/native-preview": "7.0.0-dev.20260421.2",
-    "nitrogen": "0.31.10",
+    "nitrogen": "0.33.2",
     "react": "19.0.3",
     "react-native": "0.79.5",
-    "react-native-nitro-modules": "0.31.10",
+    "react-native-nitro-modules": "0.33.2",
     "typescript": "5.8.3"
   },
   "peerDependencies": {

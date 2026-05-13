@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import type { MutableRefObject, ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { TextInputProps } from 'react-native'
@@ -27,7 +28,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileApp } from 'utilities/src/platform'
 import { useHasValueChanged } from 'utilities/src/react/useHasValueChanged'
 
 const useExactValueRef = (): MutableRefObject<string> => {

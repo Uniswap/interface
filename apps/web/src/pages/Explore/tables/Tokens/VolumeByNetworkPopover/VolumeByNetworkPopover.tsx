@@ -6,6 +6,7 @@ import { iconSizes, zIndexes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NetworkPile } from 'uniswap/src/components/network/NetworkPile/NetworkPile'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
@@ -50,7 +51,10 @@ export function VolumeByNetworkPopover({
   const { ref: barContainerRef, width: chartWidth } = useResizeObserver<HTMLElement>()
   const navigateToTokenDetails = useNavigateToTokenDetails()
 
-  const breakdown = useMemo(() => getVolumeBreakdownForPeriod(mcToken, timePeriod), [mcToken, timePeriod])
+  const breakdown = useMemo(
+    () => getVolumeBreakdownForPeriod(mcToken, timePeriod).filter((b) => isUniverseChainId(b.chainId)),
+    [mcToken, timePeriod],
+  )
   const totalVolume = useMemo(() => breakdown.reduce((sum, { volume }) => sum + volume, 0), [breakdown])
 
   const topChains = useMemo(
@@ -67,13 +71,12 @@ export function VolumeByNetworkPopover({
     const top = breakdown.slice(0, MAX_VISIBLE_NETWORKS)
     const rest = breakdown.slice(MAX_VISIBLE_NETWORKS)
     const items: PercentageAllocationItem[] = top.map(({ chainId, volume }, i) => {
-      const info = getChainInfo(chainId)
       const percentage = totalVolume === 0 ? 0 : (volume / totalVolume) * 100
       return {
         id: `chain-${chainId}`,
         percentage,
         color: networkColors[i],
-        label: info.name,
+        label: getChainInfo(chainId).name,
         icon: <NetworkLogo chainId={chainId} size={iconSizes.icon12} />,
       }
     })
@@ -119,7 +122,8 @@ export function VolumeByNetworkPopover({
       <Popover.Trigger>
         <Flex
           cursor="default"
-          display="inline-flex"
+          flex={1}
+          minWidth={0}
           onPressIn={(e) => e.stopPropagation()}
           onPressOut={(e) => e.stopPropagation()}
           onPress={(e) => e.stopPropagation()}

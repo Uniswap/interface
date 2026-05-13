@@ -12,7 +12,7 @@ import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddress
 
 const MAX_RECENT_ACTIVITY_ITEMS = 3
 
-export default function MiniPortfolio({
+export function MiniPortfolio({
   evmAddress,
   svmAddress,
   onActivityOutageChange,

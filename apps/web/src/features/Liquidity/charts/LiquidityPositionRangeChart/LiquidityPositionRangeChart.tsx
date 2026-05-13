@@ -5,6 +5,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { GraphQLApi } from '@universe/api'
+import { isMobileWeb } from '@universe/environment'
 import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useState } from 'react'
 import { ColorTokens, Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
@@ -18,7 +19,6 @@ import useResizeObserver from 'use-resize-observer'
 // Not using the formatters in a react context, so we need to import the formatter directly.
 // oxlint-disable-next-line no-restricted-imports -- Need direct formatter import for chart formatting outside React context
 import { formatNumber } from 'utilities/src/format/localeBased'
-import { isMobileWeb } from 'utilities/src/platform'
 import { BandsIndicator } from '~/components/Charts/BandsIndicator/bands-indicator'
 import { cloneReadonly } from '~/components/Charts/BandsIndicator/helpers/simple-clone'
 import {
@@ -30,7 +30,7 @@ import {
 } from '~/components/Charts/ChartModel'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { DataQuality, formatTickMarks, PriceChartType } from '~/components/Charts/utils'
-import ErrorBoundary from '~/components/ErrorBoundary'
+import { ErrorBoundary } from '~/components/ErrorBoundary'
 import { ActiveLiquidityChart } from '~/features/Liquidity/charts/ActiveLiquidityChart/ActiveLiquidityChart'
 import { getCrosshairProps, priceToNumber } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/utils'
 import { useDensityChartData } from '~/features/Liquidity/charts/LiquidityRangeInput/hooks'
@@ -657,6 +657,8 @@ function LiquidityPositionRangeChart({
             quoteCurrency={quoteCurrency}
             baseCurrency={baseCurrency}
             isMobile={isMobileWeb}
+            priceInverted={priceInverted}
+            protocolVersion={version}
           />
         </Flex>
       )}

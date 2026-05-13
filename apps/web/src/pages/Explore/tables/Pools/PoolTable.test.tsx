@@ -2,9 +2,9 @@ import '~/test-utils/tokens/mocks'
 import { Percent } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
+import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
+import { useTopPools } from '~/features/Explore/state/topPools/useTopPools'
 import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
-import { ExploreTablesFilterStoreContextProvider } from '~/state/explore/exploreTablesFilterStore'
-import { useTopPools } from '~/state/explore/topPools/useTopPools'
 import { mocked } from '~/test-utils/mocked'
 import { validRestPoolToken0, validRestPoolToken1 } from '~/test-utils/pools/fixtures'
 import { render, screen } from '~/test-utils/render'
@@ -13,7 +13,7 @@ function renderWithProvider(ui: React.ReactElement) {
   return render(<ExploreTablesFilterStoreContextProvider>{ui}</ExploreTablesFilterStoreContextProvider>)
 }
 
-vi.mock('~/state/explore/topPools/useTopPools')
+vi.mock('~/features/Explore/state/topPools/useTopPools')
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router')
   return {

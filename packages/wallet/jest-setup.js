@@ -1,3 +1,4 @@
+import '@universe/environment/jest-package-mocks'
 import 'utilities/jest-package-mocks'
 import 'config/jest-presets/ui/ui-package-mocks'
 import 'uniswap/jest-package-mocks'

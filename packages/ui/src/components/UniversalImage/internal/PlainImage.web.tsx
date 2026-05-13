@@ -1,7 +1,7 @@
+import { isTestEnv } from '@universe/environment'
 import { useState } from 'react'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { type PlainImageProps, UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
-import { isTestEnv } from 'utilities/src/environment/env'
 
 export function PlainImage({
   uri,

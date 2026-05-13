@@ -1,8 +1,8 @@
+import { isAndroid } from '@universe/environment'
 import { Flex, type FlexProps, TouchableArea } from 'ui/src'
 import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 import { ESTIMATED_NFT_LIST_ITEM_SIZE } from 'uniswap/src/features/nfts/constants'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
-import { isAndroid } from 'utilities/src/platform'
 
 export type NftViewProps = {
   item: NFTItem

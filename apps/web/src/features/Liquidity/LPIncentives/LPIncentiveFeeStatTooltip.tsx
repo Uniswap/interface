@@ -5,7 +5,7 @@ import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/constants'
 
 type LPIncentiveFeeStatTooltipProps = {
@@ -17,7 +17,7 @@ type LPIncentiveFeeStatTooltipProps = {
   chainId?: UniverseChainId
 }
 
-function LPIncentiveFeeStatTooltip({
+export function LPIncentiveFeeStatTooltip({
   currency0Info,
   currency1Info,
   poolApr,
@@ -85,8 +85,6 @@ function LPIncentiveFeeStatTooltip({
     </Flex>
   )
 }
-
-export default LPIncentiveFeeStatTooltip
 
 type TooltipRowProps = {
   children: React.ReactNode

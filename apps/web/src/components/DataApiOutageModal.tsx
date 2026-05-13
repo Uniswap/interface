@@ -17,3 +17,5 @@ export function DataApiOutageModal(): JSX.Element | null {
 
   return <DataApiOutageModalContent isOpen={isOpen} lastUpdatedAt={modalState?.dataUpdatedAt} onClose={onClose} />
 }
+
+export default DataApiOutageModal

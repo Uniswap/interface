@@ -89,22 +89,38 @@ target 'Uniswap' do
 
     # Xcode 26+ has a stricter module verifier that requires the consuming target
     # to resolve transitive C module dependencies. Argon2Swift depends on an internal
-    # 'argon2' C module — add its modulemap path so the Uniswap target (the only
-    # target declaring Argon2Swift) can find it.
+    # 'argon2' C module — add its modulemap path to every target that imports
+    # Argon2Swift (the main Uniswap aggregate + any pod target like RNArgon2 that
+    # pulls it in as a Swift dep).
     argon2_srcroot = installer.sandbox.pod_dir('Argon2Swift')
     argon2_module_paths = [
       "#{argon2_srcroot}/Sources/Modules",
       "#{argon2_srcroot}/Sources/Argon2",
       "#{argon2_srcroot}/Sources/Argon2/include",
     ]
+    argon2_swift_include_flag = argon2_module_paths.map { |p| "\"#{p}\"" }.join(' ')
+
     uniswap_aggregate = installer.aggregate_targets.find { |t| t.label == 'Pods-Uniswap' }
     if uniswap_aggregate
       uniswap_aggregate.xcconfigs.each do |config_name, xcconfig|
         existing = xcconfig.attributes['SWIFT_INCLUDE_PATHS'] || ''
-        new_paths = argon2_module_paths.map { |p| "\"#{p}\"" }.join(' ')
-        xcconfig.attributes['SWIFT_INCLUDE_PATHS'] = "$(inherited) #{new_paths} #{existing}".strip
+        xcconfig.attributes['SWIFT_INCLUDE_PATHS'] = "$(inherited) #{argon2_swift_include_flag} #{existing}".strip
         xcconfig_path = uniswap_aggregate.xcconfig_path(config_name)
         xcconfig.save_as(xcconfig_path)
+      end
+    end
+
+    # Propagate SWIFT_INCLUDE_PATHS to pod targets that link Argon2Swift (notably
+    # RNArgon2, whose Swift source does `import Argon2Swift`). Without this, Xcode's
+    # module verifier fails with "Unable to resolve module dependency: 'argon2'".
+    installer.pods_project.targets.each do |target|
+      next unless target.respond_to?(:name)
+      next unless target.name == 'RNArgon2'
+      target.build_configurations.each do |config|
+        existing = config.build_settings['SWIFT_INCLUDE_PATHS'] || '$(inherited)'
+        unless existing.include?(argon2_module_paths.first)
+          config.build_settings['SWIFT_INCLUDE_PATHS'] = "#{existing} #{argon2_swift_include_flag}"
+        end
       end
     end
   end

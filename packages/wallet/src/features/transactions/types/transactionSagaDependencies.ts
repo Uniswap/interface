@@ -1,4 +1,5 @@
 import type { TransactionRequest } from '@ethersproject/providers'
+import type { ViemClientManager } from '@universe/chains'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -6,7 +7,6 @@ import type { makeSelectAddressTransactions } from 'uniswap/src/features/transac
 import type { transactionActions } from 'uniswap/src/features/transactions/slice'
 import type { Logger } from 'utilities/src/logger/logger'
 import type { PublicClient } from 'viem'
-import type { ViemClientManager } from 'wallet/src/features/providers/ViemClientManager'
 import type { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import type { FeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagService'

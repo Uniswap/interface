@@ -21,7 +21,7 @@ import {
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PendingPortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PendingPortfolioLogo'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
+import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { useOpenOffchainActivityModal } from '~/components/modals/OffchainActivityModal'
 import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
 import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'

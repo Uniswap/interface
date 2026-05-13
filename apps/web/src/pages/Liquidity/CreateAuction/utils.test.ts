@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { PostAuctionLiquidityAllocationType, UNBOUNDED_TIER_ID } from '~/pages/Liquidity/CreateAuction/types'
 import {
+  CustomPriceRangeBound,
+  MAX_CUSTOM_PRICE_RANGE_ENTRIES,
+  PostAuctionLiquidityAllocationType,
+  UNBOUNDED_TIER_ID,
+} from '~/pages/Liquidity/CreateAuction/types'
+import {
+  addCustomPriceRangePreset,
+  createDefaultCustomPriceRangeEntry,
   createNextBoundedTier,
   expandCompactNumberInput,
   formatCompactNumberDisplay,
@@ -8,7 +15,12 @@ import {
   getMaxTieredPostAuctionLiquidityEffectivePercent,
   getPostAuctionLiquidityPreviewPercent,
   getPostAuctionLiquidityTierLpDollars,
+  isCustomPriceRangeAllocationValid,
+  isCustomPriceRangeEntryValid,
   isValidPartialPercentInput,
+  isValidPartialSignedPercentInput,
+  removeCustomPriceRangeEntry,
+  updateCustomPriceRangeLiquidityPercent,
 } from '~/pages/Liquidity/CreateAuction/utils'
 
 describe('formatCompactNumberInput', () => {
@@ -42,6 +54,146 @@ describe('isValidPartialPercentInput', () => {
 
   it('rejects multiple dots', () => {
     expect(isValidPartialPercentInput('1.2.3')).toBe(false)
+  })
+})
+
+describe('isValidPartialSignedPercentInput', () => {
+  it('allows signed partial values', () => {
+    expect(isValidPartialSignedPercentInput('-')).toBe(true)
+    expect(isValidPartialSignedPercentInput('+')).toBe(true)
+    expect(isValidPartialSignedPercentInput('-12.5')).toBe(true)
+    expect(isValidPartialSignedPercentInput('+25')).toBe(true)
+  })
+
+  it('rejects invalid signed values', () => {
+    expect(isValidPartialSignedPercentInput('--1')).toBe(false)
+    expect(isValidPartialSignedPercentInput('1.2.3')).toBe(false)
+    expect(isValidPartialSignedPercentInput('1.123456')).toBe(false)
+  })
+})
+
+describe('custom price range utilities', () => {
+  it('creates the default full-range row', () => {
+    expect(createDefaultCustomPriceRangeEntry()).toEqual({
+      id: 'custom-range-1',
+      liquidityPercent: 100,
+      minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
+      maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+    })
+  })
+
+  it('adds presets with remaining percent', () => {
+    const entries = addCustomPriceRangePreset([createDefaultCustomPriceRangeEntry()], {
+      minPercentFromClearing: -50,
+      maxPercentFromClearing: 100,
+    })
+
+    expect(entries).toHaveLength(2)
+    expect(entries[1]).toMatchObject({
+      id: 'custom-range-2',
+      liquidityPercent: 0,
+      minPercentFromClearing: -50,
+      maxPercentFromClearing: 100,
+    })
+  })
+
+  it('limits custom ranges to ten entries', () => {
+    const entries = Array.from({ length: MAX_CUSTOM_PRICE_RANGE_ENTRIES }, (_, index) => ({
+      id: `custom-range-${index + 1}`,
+      liquidityPercent: index === 0 ? 100 : 0,
+      minPercentFromClearing: -index,
+      maxPercentFromClearing: index + 1,
+    }))
+
+    expect(
+      addCustomPriceRangePreset(entries, {
+        minPercentFromClearing: -50,
+        maxPercentFromClearing: 100,
+      }),
+    ).toBe(entries)
+  })
+
+  it('keeps the edited percent and adjusts the last other row', () => {
+    const entries = [
+      createDefaultCustomPriceRangeEntry(),
+      { id: 'custom-range-2', liquidityPercent: 0, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
+      { id: 'custom-range-3', liquidityPercent: 0, minPercentFromClearing: -33, maxPercentFromClearing: 50 },
+    ]
+
+    expect(
+      updateCustomPriceRangeLiquidityPercent({
+        entries,
+        entryId: 'custom-range-2',
+        percent: 25,
+      }).map((entry) => entry.liquidityPercent),
+    ).toEqual([75, 25, 0])
+  })
+
+  it('coerces a single custom range row to 100 percent liquidity', () => {
+    expect(
+      updateCustomPriceRangeLiquidityPercent({
+        entries: [createDefaultCustomPriceRangeEntry()],
+        entryId: 'custom-range-1',
+        percent: 40,
+      }).map((entry) => entry.liquidityPercent),
+    ).toEqual([100])
+  })
+
+  it('cascades percent balancing when the last other row cannot absorb the delta', () => {
+    const entries = [
+      { id: 'custom-range-1', liquidityPercent: 50, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
+      { id: 'custom-range-2', liquidityPercent: 50, minPercentFromClearing: -33, maxPercentFromClearing: 50 },
+      { id: 'custom-range-3', liquidityPercent: 0, minPercentFromClearing: -20, maxPercentFromClearing: 25 },
+    ]
+
+    expect(
+      updateCustomPriceRangeLiquidityPercent({
+        entries,
+        entryId: 'custom-range-1',
+        percent: 100,
+      }).map((entry) => entry.liquidityPercent),
+    ).toEqual([100, 0, 0])
+  })
+
+  it('transfers removed row percent to the last remaining row', () => {
+    const entries = [
+      { id: 'custom-range-1', liquidityPercent: 25, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
+      { id: 'custom-range-2', liquidityPercent: 35, minPercentFromClearing: -33, maxPercentFromClearing: 50 },
+      { id: 'custom-range-3', liquidityPercent: 40, minPercentFromClearing: -20, maxPercentFromClearing: 25 },
+    ]
+
+    expect(removeCustomPriceRangeEntry(entries, 'custom-range-2').map((entry) => entry.liquidityPercent)).toEqual([
+      25, 75,
+    ])
+  })
+
+  it('validates finite and infinite bounds', () => {
+    expect(isCustomPriceRangeEntryValid(createDefaultCustomPriceRangeEntry())).toBe(true)
+    expect(
+      isCustomPriceRangeEntryValid({
+        id: 'custom-range-1',
+        liquidityPercent: 100,
+        minPercentFromClearing: 10,
+        maxPercentFromClearing: 10,
+      }),
+    ).toBe(false)
+    expect(
+      isCustomPriceRangeEntryValid({
+        id: 'custom-range-1',
+        liquidityPercent: 100,
+        minPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+        maxPercentFromClearing: 10,
+      }),
+    ).toBe(false)
+  })
+
+  it('requires custom range totals to equal 100', () => {
+    expect(isCustomPriceRangeAllocationValid([createDefaultCustomPriceRangeEntry()])).toBe(true)
+    expect(
+      isCustomPriceRangeAllocationValid([
+        { id: 'custom-range-1', liquidityPercent: 50, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
+      ]),
+    ).toBe(false)
   })
 })
 

@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
@@ -70,7 +69,6 @@ export function BidReceiveOutput({
   budgetAmount,
   bidTokenSymbol,
 }: BidReceiveOutputProps): JSX.Element {
-  const isV2 = useFeatureFlag(FeatureFlags.AuctionDetailsV2)
   const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -127,50 +125,7 @@ export function BidReceiveOutput({
     return formatAmount(budgetAmount / expectedAmount)
   }, [budgetAmount, expectedAmount])
 
-  const showExpandable = isV2 && !isEmpty && maxFdvFormatted && pricePerToken
-
-  if (!isV2) {
-    return (
-      <Container
-        isEmpty={isEmpty}
-        justifyContent="center"
-        flexDirection="column"
-        borderRadius="$rounded20"
-        borderColor="$surface2"
-      >
-        <Flex justifyContent="center" alignItems="flex-start">
-          <Text variant="body4" color="$neutral2">
-            {t('toucan.bidForm.receive')}
-          </Text>
-        </Flex>
-        <Flex
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="flex-start"
-          width="100%"
-          height={isEmpty ? 36 : undefined}
-          overflow="hidden"
-        >
-          {isEmpty ? (
-            <Text variant="body1" color="$neutral3" width="100%">
-              {t('toucan.bidForm.enterBudgetTokenPrice')}
-            </Text>
-          ) : (
-            <Flex flexDirection="row" gap="$spacing4" width="100%">
-              <Text variant="body1" color="$neutral1">
-                {formattedAmount}
-              </Text>
-              {tokenSymbol && (
-                <Text variant="body1" color="$neutral2">
-                  {tokenSymbol}
-                </Text>
-              )}
-            </Flex>
-          )}
-        </Flex>
-      </Container>
-    )
-  }
+  const showExpandable = !isEmpty && maxFdvFormatted && pricePerToken
 
   return (
     <Container isEmpty={isEmpty} justifyContent="space-between" flexDirection="column" borderRadius="$rounded12">

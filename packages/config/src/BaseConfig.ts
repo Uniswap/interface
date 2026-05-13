@@ -1,4 +1,7 @@
-import { boolFromOne, boolFromString, optionalString } from '@universe/config/src/commonSchemas'
+// oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access here
+import { AppId } from '@universe/config/src/AppId'
+import { boolIfDefined, boolFromOne, boolFromString, optionalString } from '@universe/config/src/commonSchemas'
+import { Environment, NodeEnv } from '@universe/config/src/Environment'
 import { z } from 'zod'
 
 /**
@@ -9,9 +12,21 @@ import { z } from 'zod'
  * dynamic access like process.env[key] does not work in production builds.
  */
 export const BaseConfigValues = {
+  // App metadata
+  appId: process.env.APP_ID,
+  // Note, for mobile, this is empty in this package's getConfig() result but
+  // set in the app's getConfig because DeviceInfo.getVersion() is not available here.
+  // When this package's getConfig() is removed, that will no longer be a concern.
+  appVersion: process.env.VERSION ?? process.env.REACT_APP_VERSION_TAG,
+
   // Environment
   nodeEnv: process.env.NODE_ENV,
-  environment: process.env.ENVIRONMENT ?? process.env.NODE_ENV,
+  // Falls back to NODE_ENV only when it identifies a real deployment
+  // env (production); otherwise defaults to development.
+  environment:
+    process.env.ENVIRONMENT ??
+    (process.env.NODE_ENV === NodeEnv.Production ? Environment.Production : Environment.Development),
+  isUnitTest: process.env.JEST_WORKER_ID ?? process.env.VITEST_WORKER_ID,
   isE2ETest: process.env.IS_E2E_TEST,
   isVercelEnvironment: process.env.VERCEL,
 
@@ -20,6 +35,8 @@ export const BaseConfigValues = {
   datadogClientToken: process.env.DATADOG_CLIENT_TOKEN ?? process.env.REACT_APP_DATADOG_CLIENT_TOKEN,
   datadogProjectId: process.env.DATADOG_PROJECT_ID ?? process.env.REACT_APP_DATADOG_PROJECT_ID,
   infuraKey: process.env.INFURA_KEY ?? process.env.REACT_APP_INFURA_KEY,
+  privyAppId: process.env.PRIVY_APP_ID,
+  privyClientId: process.env.PRIVY_CLIENT_ID,
   statsigApiKey: process.env.STATSIG_API_KEY ?? process.env.REACT_APP_STATSIG_API_KEY,
   tradingApiKey: process.env.TRADING_API_KEY ?? process.env.REACT_APP_TRADING_API_KEY,
   uniswapApiKey: process.env.UNISWAP_API_KEY,
@@ -56,13 +73,19 @@ export const BaseConfigValues = {
   uniswapNotifApiBaseUrlOverride: process.env.UNISWAP_NOTIF_API_BASE_URL_OVERRIDE,
 }
 
-const envEnum = z.enum(['development', 'staging', 'production', 'test'])
-
 /** Zod schema defining the shape and validation for base config fields */
 export const BaseConfigSchema = z.object({
+  // App metadata
+  appId: z.enum(AppId).describe('Identifies which app this config is for'),
+  appVersion: optionalString.describe('App version tag'),
+
   // Environment
-  nodeEnv: envEnum.default('development').describe('Node environment mode, defaults to development'),
-  environment: envEnum.default('development').describe('App environment, defaults to NODE_ENV'),
+  nodeEnv: z.enum(NodeEnv).default(NodeEnv.Development).describe('Node process runtime mode, defaults to development'),
+  environment: z
+    .enum(Environment)
+    .default(Environment.Development)
+    .describe('Backend deployment environment, defaults to development'),
+  isUnitTest: boolIfDefined.describe('Is the app running in a unit test (Jest or Vitest)'),
   isE2ETest: boolFromString.describe('Is the app running in E2E test mode'),
   isVercelEnvironment: boolFromOne.describe('Is the app deployed on Vercel'),
 
@@ -71,6 +94,8 @@ export const BaseConfigSchema = z.object({
   datadogClientToken: optionalString.describe('Client token for Datadog'),
   datadogProjectId: optionalString.describe('Project ID for Datadog'),
   infuraKey: optionalString.describe('API key for Infura'),
+  privyAppId: z.string().optional().describe('App ID for Privy integration'),
+  privyClientId: z.string().optional().describe('Client ID for Privy integration'),
   statsigApiKey: optionalString.describe('Client SDK key for Statsig'),
   tradingApiKey: optionalString.describe('API key for Trading API'),
   uniswapApiKey: optionalString.describe('API key for Uniswap API'),

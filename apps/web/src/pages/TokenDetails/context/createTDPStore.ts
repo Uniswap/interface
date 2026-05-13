@@ -1,4 +1,4 @@
-import { isDevEnv } from 'utilities/src/environment/env'
+import { isDevEnv } from '@universe/environment'
 import { create } from 'zustand'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { devtools } from 'zustand/middleware'

@@ -29,8 +29,8 @@ import { TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { FilterHeaderRow } from '~/components/Table/styled'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { ExternalLink } from '~/theme/components/Links'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const StyledExternalLink = styled(ExternalLink, {
   color: '$neutral2',

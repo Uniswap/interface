@@ -3,15 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { Flex, styled, Text } from 'ui/src'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/hooks/useFiatOnRampQueries'
-import { FiatOnRampCurrency, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
@@ -23,11 +21,8 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import useResizeObserver from 'use-resize-observer'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { popupRegistry } from '~/components/Popups/registry'
-import { SwitchNetworkAction } from '~/components/Popups/types'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
-import { getChainUrlParam } from '~/features/params/chainParams'
 import { PAGE_WRAPPER_MAX_WIDTH } from '~/features/Swap/styled'
 import { useAccount } from '~/hooks/useAccount'
 import { BuyFormButton } from '~/pages/Swap/Buy/BuyFormButton'
@@ -38,6 +33,7 @@ import { FiatOnRampCurrencyModal } from '~/pages/Swap/Buy/FiatOnRampCurrencyModa
 import { fallbackCurrencyInfo, useOffRampTransferDetailsRequest } from '~/pages/Swap/Buy/hooks'
 import { OffRampConfirmTransferModal } from '~/pages/Swap/Buy/OffRampConfirmTransferModal'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
+import { resolveInitialBuyFormToken } from '~/pages/Swap/Buy/resolveInitialBuyFormToken'
 import { formatFiatOnRampFiatAmount, getCountryFromLocale } from '~/pages/Swap/Buy/shared'
 import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import { SelectTokenPanel } from '~/pages/Swap/common/SelectTokenPanel'
@@ -47,6 +43,9 @@ import {
   NumericalInputWrapper,
   StyledNumericalInput,
 } from '~/pages/Swap/common/shared'
+import { popupRegistry } from '~/state/popups/registry'
+import { SwitchNetworkAction } from '~/state/popups/types'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 const InputWrapper = styled(Flex, {
@@ -164,46 +163,11 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   const parsedQs = useParsedQueryString()
 
   useEffect(() => {
-    let supportedToken: Maybe<FiatOnRampCurrency>
-    const currencyCode = parsedQs.currencyCode as string | undefined
-    const providers = (parsedQs.providers as string | undefined)?.split(',')
-    const hasProviders = providers && providers.length > 0
-    const currencyAmount = parsedQs.value as string | undefined
+    const supportedToken = resolveInitialBuyFormToken({ parsedQs, supportedTokens, initialCurrency })
     const isTokenInputMode = (parsedQs.isTokenInputMode as string | undefined) === 'true'
-
-    if (initialCurrency) {
-      const supportedNativeToken = supportedTokens?.find(
-        (meldToken) =>
-          meldToken.currencyInfo?.currency.chainId === initialCurrency.chainId &&
-          meldToken.currencyInfo.currency.isNative,
-      )
-      // Defaults the quote currency to the initial currency if supported
-      supportedToken =
-        supportedTokens?.find(
-          (meldToken) =>
-            meldToken.currencyInfo?.currency.chainId === initialCurrency.chainId &&
-            meldToken.currencyInfo.currency.isToken &&
-            meldToken.currencyInfo.currency.address === initialCurrency.address,
-        ) || supportedNativeToken
-    } else if (hasProviders && currencyCode) {
-      // We are using melds currency code here because the chain id will not be set because this is coming from an ad
-      supportedToken = supportedTokens?.find(
-        (meldToken) => meldToken.meldCurrencyCode?.toLowerCase() === currencyCode.toLowerCase(),
-      )
-    } else if (currencyCode) {
-      // Defaults the quote currency to the initial currency (from query params) if supported
-      const chainId = parsedQs.chainId ? Number(parsedQs.chainId) : UniverseChainId.Mainnet
-      supportedToken = supportedTokens?.find(
-        (meldToken) =>
-          meldToken.currencyInfo?.currency.symbol === currencyCode &&
-          meldToken.currencyInfo.currency.chainId === chainId,
-      )
-    } else {
-      supportedToken =
-        supportedTokens?.find((meldToken) =>
-          meldToken.currencyInfo?.currency.equals(nativeOnChain(UniverseChainId.Mainnet)),
-        ) ?? supportedTokens?.[0]
-    }
+    const providers = (parsedQs.providers as string | undefined)?.split(',')
+    const hasProviders = !!providers && providers.length > 0
+    const currencyAmount = parsedQs.value as string | undefined
 
     if (supportedToken) {
       const providerState: Partial<{ inputAmount: string; providers: string[] }> = {}
@@ -220,9 +184,10 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
       return
     }
     // If connected to a non-mainnet chain, default to the native chain of that token if supported.
-    const supportedNativeToken = supportedTokens?.find((meldToken) => {
-      return meldToken.currencyInfo?.currency.chainId === account.chainId && meldToken.currencyInfo?.currency.isNative
-    })
+    const supportedNativeToken = supportedTokens?.find(
+      (meldToken) =>
+        meldToken.currencyInfo?.currency.chainId === account.chainId && meldToken.currencyInfo?.currency.isNative,
+    )
     if (supportedNativeToken) {
       setBuyFormState((state) => ({
         ...state,

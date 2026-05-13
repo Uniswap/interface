@@ -7,7 +7,7 @@ import {
   brushHandlePath,
   OffScreenHandle,
 } from '~/features/Liquidity/charts/LiquidityRangeInput/svg'
-import usePrevious from '~/hooks/usePrevious'
+import { usePrevious } from '~/hooks/usePrevious'
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20

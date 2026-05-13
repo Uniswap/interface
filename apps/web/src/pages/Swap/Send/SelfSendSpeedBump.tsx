@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
+import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
 
 export const SelfSendSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {

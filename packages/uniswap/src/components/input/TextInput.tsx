@@ -1,6 +1,6 @@
+import { isWebApp } from '@universe/environment'
 import { forwardRef, useEffect } from 'react'
 import { Input, InputProps, Input as TextInputBase, useSporeColors } from 'ui/src'
-import { isWebApp } from 'utilities/src/platform'
 
 export type TextInputProps = InputProps
 

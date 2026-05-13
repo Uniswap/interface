@@ -1,5 +1,5 @@
 import './wdyr'
-import { isNonTestDev } from 'utilities/src/environment/constants'
+import { isNonTestDev } from '@universe/environment'
 
 if (isNonTestDev) {
   require('./ReactotronConfig')

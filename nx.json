@@ -142,7 +142,7 @@
       "cache": true
     },
     "check:deps:usage": {
-      "command": "knip-bun --include dependencies,devDependencies --no-progress --no-config-hints --workspace {projectRoot}",
+      "command": "bun --preload ./scripts/silence-deprecation-warnings.js ./node_modules/.bin/knip-bun --include dependencies,devDependencies --no-progress --no-config-hints --workspace {projectRoot}",
       "options": {
         "cwd": "{workspaceRoot}"
       },

@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src/components/layout'
@@ -6,7 +7,6 @@ import { RefreshButtonIcon } from 'ui/src/components/RefreshButton/RefreshButton
 import { Text } from 'ui/src/components/text'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
 import { zIndexes } from 'ui/src/theme'
-import { isWebPlatform } from 'utilities/src/platform'
 
 /**
  * A button component that allows users to refresh their balance with a visual indicator

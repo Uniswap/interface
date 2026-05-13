@@ -7,14 +7,14 @@ import { iconSizes, opacifyRaw } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { getChainUrlParam } from '~/features/params/chainParams'
 import { useAuctionTimeRemaining } from '~/features/Toucan/Auction/hooks/useAuctionTimeRemaining'
 import { formatCompactFromRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { getAuctionMetadata } from '~/features/Toucan/Config/config'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { computeProjectedFdvTableValue } from '~/features/Toucan/utils/computeProjectedFdv'
 import { createDottedBackgroundStyles } from '~/features/Toucan/utils/createDottedBackgroundStyles'
 import { useSrcColor } from '~/hooks/useColor'
-import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const DOT_OPACITY = 10
 const TOKEN_BACKGROUND_OPACITY = 8

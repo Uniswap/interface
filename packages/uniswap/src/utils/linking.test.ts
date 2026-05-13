@@ -1,5 +1,5 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, getFiatOnRampURL } from 'uniswap/src/utils/linking'
 
 describe(getExplorerLink, () => {
   it('handles different link cases', () => {
@@ -57,5 +57,29 @@ describe(getExplorerLink, () => {
       '',
     )
     expect(getExplorerLink({ chainId: unsupportedChainId, type: ExplorerDataType.ADDRESS })).toEqual('')
+  })
+})
+
+describe(getFiatOnRampURL, () => {
+  it('returns the base buy URL when no params are provided', () => {
+    expect(getFiatOnRampURL()).toEqual('/buy')
+  })
+
+  it('accepts a bare chainId for backwards compatibility', () => {
+    expect(getFiatOnRampURL(UniverseChainId.Unichain)).toEqual('/buy?chainId=130')
+  })
+
+  it('serializes chainId, currencyCode, and currencyId for prefilled FOR navigation', () => {
+    expect(
+      getFiatOnRampURL({
+        chainId: UniverseChainId.Unichain,
+        currencyCode: 'ETH',
+        currencyId: `${UniverseChainId.Unichain}-0x0000000000000000000000000000000000000000`,
+      }),
+    ).toEqual('/buy?chainId=130&currencyCode=ETH&currencyId=130-0x0000000000000000000000000000000000000000')
+  })
+
+  it('omits unset params from the query string', () => {
+    expect(getFiatOnRampURL({ currencyCode: 'ETH' })).toEqual('/buy?currencyCode=ETH')
   })
 })

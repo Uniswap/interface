@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { DatePickerCard } from '~/pages/Liquidity/CreateAuction/components/DatePickerCard'
-import { StepperCard } from '~/pages/Liquidity/CreateAuction/components/StepperCard'
+import { DateRangePickerCard } from '~/pages/Liquidity/CreateAuction/components/DatePicker/DateRangePickerCard'
 
 const MIN_START_TIME_OFFSET_MINUTES = 5
 
@@ -12,21 +11,18 @@ export function getMinStartTime(): Date {
 }
 
 export function DurationSection({
-  maxDurationDays,
   startTime,
-  onStartTimeChange,
-  onDecrement,
-  onIncrement,
+  endTime,
+  onChange,
 }: {
-  maxDurationDays: number
   startTime: Date | undefined
-  onStartTimeChange: (date: Date | undefined) => void
-  onDecrement: () => void
-  onIncrement: () => void
+  endTime: Date | undefined
+  onChange: (next: { startTime: Date | undefined; endTime: Date | undefined }) => void
 }) {
   const { t } = useTranslation()
   const minStartTime = getMinStartTime()
   const isStartTimeInvalid = startTime !== undefined && startTime.getTime() < minStartTime.getTime()
+  const isRangeInvalid = startTime !== undefined && endTime !== undefined && endTime.getTime() <= startTime.getTime()
 
   return (
     <Flex gap="$spacing12">
@@ -38,25 +34,26 @@ export function DurationSection({
           {t('toucan.createAuction.step.configureAuction.duration.description')}
         </Text>
       </Flex>
-      <Flex row gap="$spacing12">
-        <DatePickerCard
-          label={t('toucan.createAuction.step.configureAuction.duration.startTime')}
-          date={startTime}
-          minDate={minStartTime}
-          placeholder={t('toucan.createAuction.dateTimePlaceholder')}
-          onDateChange={onStartTimeChange}
-          ariaLabel={t('toucan.createAuction.step.configureAuction.duration.startTime')}
-        />
-        <StepperCard
-          label={t('toucan.createAuction.step.configureAuction.duration.maxDuration')}
-          value={t('common.day.count', { count: maxDurationDays })}
-          onDecrement={onDecrement}
-          onIncrement={onIncrement}
-        />
-      </Flex>
+      <DateRangePickerCard
+        startLabel={t('toucan.createAuction.step.configureAuction.duration.startDate')}
+        endLabel={t('toucan.createAuction.step.configureAuction.duration.endDate')}
+        startDate={startTime}
+        endDate={endTime}
+        minStartDate={minStartTime}
+        startPlaceholder={t('toucan.createAuction.step.configureAuction.duration.startDate.placeholder')}
+        endPlaceholder={t('toucan.createAuction.step.configureAuction.duration.endDate.placeholder')}
+        ariaLabelStart={t('toucan.createAuction.step.configureAuction.duration.startDate')}
+        ariaLabelEnd={t('toucan.createAuction.step.configureAuction.duration.endDate')}
+        onChange={(next) => onChange({ startTime: next.startDate, endTime: next.endDate })}
+      />
       {isStartTimeInvalid && (
         <Text variant="body4" color="$statusCritical" textAlign="center">
           {t('toucan.createAuction.step.configureAuction.duration.startTime.error')}
+        </Text>
+      )}
+      {!isStartTimeInvalid && isRangeInvalid && (
+        <Text variant="body4" color="$statusCritical" textAlign="center">
+          {t('toucan.createAuction.step.configureAuction.duration.range.error')}
         </Text>
       )}
     </Flex>

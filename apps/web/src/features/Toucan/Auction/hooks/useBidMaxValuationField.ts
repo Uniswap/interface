@@ -8,7 +8,7 @@ import { priceToQ96WithDecimals, q96ToPriceString } from '~/features/Toucan/Auct
 import { useFiatTokenConversion } from '~/features/Toucan/Auction/hooks/useFiatTokenConversion'
 import { evaluateMaxPrice, type MinValuationErrorDetails } from '~/features/Toucan/Auction/utils/evaluateMaxPrice'
 import { snapToNearestTick } from '~/features/Toucan/Auction/utils/ticks'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 
 export interface MaxValuationFieldState {
   currencyAmount: CurrencyAmount<Currency> | undefined

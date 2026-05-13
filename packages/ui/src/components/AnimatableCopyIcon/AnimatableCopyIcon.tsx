@@ -1,9 +1,9 @@
+import { isWebApp } from '@universe/environment'
 import { ColorTokens } from 'tamagui'
 import { TransitionItem } from 'ui/src/animations/components/AnimatePresencePager'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { Flex } from 'ui/src/components/layout'
-import { isWebApp } from 'utilities/src/platform'
 
 export interface CopyIconProps {
   isAnimated?: boolean

@@ -1,7 +1,7 @@
 import { createExtensionStorageDriver } from '@universe/api/src/storage/createExtensionStorageDriver'
 import { createWebStorageDriver } from '@universe/api/src/storage/createWebStorageDriver'
 import { type StorageDriver } from '@universe/api/src/storage/types'
-import { isExtensionApp } from 'utilities/src/platform'
+import { isExtensionApp } from '@universe/environment'
 
 export function getStorageDriver(): StorageDriver {
   if (isExtensionApp) {

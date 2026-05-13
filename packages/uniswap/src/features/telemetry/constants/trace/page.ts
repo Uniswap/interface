@@ -1,5 +1,6 @@
 export enum InterfacePageName {
   AboutPage = 'about-page',
+  AddLiquidity = 'add-liquidity-page',
   AuctionDetailsPage = 'auction-details-page',
   Buy = 'buy-page',
   CreatePosition = 'create-position-page',

@@ -73,6 +73,7 @@ export class ToucanBidDistributionChartController {
     isHoveringClearingPrice: boolean
   } | null = null
   private teardownFn: (() => void) | null = null
+  private setGlobalMaxValue: ((value: number) => void) | null = null
   private boundDocumentMouseMove: ((e: MouseEvent) => void) | null = null
   private isTrackingMouseLeave = false
   private hoverResetCooldownUntil = 0
@@ -359,6 +360,11 @@ export class ToucanBidDistributionChartController {
       }
     }
 
+    // For demand mode, pin the y-axis to the global max so bar heights stay fixed while panning.
+    if (this.createParams.chartMode === 'demand') {
+      this.setGlobalMaxValue?.(maxHistogramValue)
+    }
+
     const yAxisMinMove = getNiceStepForMaxLabels({
       minValue: 0,
       maxValue: maxHistogramValue,
@@ -572,6 +578,7 @@ export class ToucanBidDistributionChartController {
       this.teardownFn = result.teardown
       this.subscribeVisibleRangeChangesFn = result.subscribeVisibleRangeChanges
       this.unsubscribeVisibleRangeChangesFn = result.unsubscribeVisibleRangeChanges
+      this.setGlobalMaxValue = result.setGlobalMaxValue
     } catch (error) {
       logger.error(error, {
         tags: {

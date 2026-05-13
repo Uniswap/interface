@@ -11,6 +11,7 @@ import type {
   WrapQuoteResponse,
 } from '@universe/api'
 import { TradingApi } from '@universe/api'
+import { isExtensionApp, isMobileApp, isWebApp } from '@universe/environment'
 import type { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
@@ -55,7 +56,6 @@ import { SWAP_GAS_URGENCY_OVERRIDE } from 'uniswap/src/features/transactions/swa
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isMobileApp, isWebApp } from 'utilities/src/platform'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export interface TransactionRequestInfo {

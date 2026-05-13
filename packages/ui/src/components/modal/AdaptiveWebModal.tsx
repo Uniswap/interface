@@ -1,4 +1,5 @@
 import { ParentSheetContext } from '@tamagui/sheet'
+import { isWebApp } from '@universe/environment'
 import { type PropsWithChildren, type ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { createContext, useContext, useMemo } from 'react'
 import type { DimensionValue } from 'react-native'
@@ -19,7 +20,6 @@ import { RemoveScroll } from 'ui/src/components/RemoveScroll/RemoveScroll'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
-import { isWebApp } from 'utilities/src/platform'
 
 export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
 

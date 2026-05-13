@@ -8,10 +8,10 @@ import {
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import type { UniswapXOrderUpdate } from '~/state/activity/types'
 import { useAppDispatch } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { logUniswapXSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 interface HandleUniswapXActivityUpdateParams {

@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
-import { useExploreTablesFilterStore } from '~/state/explore/exploreTablesFilterStore'
+import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
 
 // Filters transactions in Explore by hash, token symbol, or token address
 export function useFilteredTransactions(transactions: GraphQLApi.PoolTxFragment[]) {

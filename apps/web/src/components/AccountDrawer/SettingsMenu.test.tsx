@@ -1,5 +1,5 @@
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import SettingsMenu from '~/components/AccountDrawer/SettingsMenu'
+import { SettingsMenu } from '~/components/AccountDrawer/SettingsMenu'
 import { useAccount } from '~/hooks/useAccount'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
@@ -22,6 +22,7 @@ const defaultProps = {
   openLanguageSettings: noop,
   openLocalCurrencySettings: noop,
   openPasskeySettings: noop,
+  openRecoveryPhraseSettings: noop,
   openPortfolioBalanceSettings: noop,
   openStorageSettings: noop,
 }

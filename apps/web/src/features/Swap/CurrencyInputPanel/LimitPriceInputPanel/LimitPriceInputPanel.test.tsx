@@ -9,9 +9,9 @@ import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { LimitPriceInputPanel } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
-import { LimitContext } from '~/state/limit/LimitContext'
+import { LimitContext } from '~/features/Swap/state/limit/LimitContext'
+import { SwapAndLimitContext } from '~/features/Swap/state/swap/types'
 import { MultichainContext } from '~/state/multichain/types'
-import { SwapAndLimitContext } from '~/state/swap/types'
 import { act, renderWithUniswapContext, screen } from '~/test-utils/render'
 
 const mockUseActiveAddresses = useActiveAddresses as ReturnType<typeof vi.fn>

@@ -11,9 +11,9 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 import { EllipsisText, TableText } from '~/components/Table/shared/TableText'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { getChainIdFromChainUrlParam } from '~/features/params/chainParams'
-import type { TokenStat } from '~/state/explore/types'
 import { CopyHelper } from '~/theme/components/CopyHelper'
+import type { TokenStat } from '~/types/explore'
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 const TokenDetailsContainer = styled(Flex, {
   flex: 1,

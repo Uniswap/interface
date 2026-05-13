@@ -16,7 +16,7 @@ import { formatTokenMetatagTitleName } from '~/shared-cloud/metatags'
 import { ExploreTab } from '~/types/explore'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
 
-export default function TokenDetailsPage() {
+export function TokenDetailsPage() {
   return (
     <TDPStoreContextProvider>
       <TDPPageContent />
@@ -88,3 +88,5 @@ function TDPPageContent() {
     </>
   )
 }
+
+export default TokenDetailsPage

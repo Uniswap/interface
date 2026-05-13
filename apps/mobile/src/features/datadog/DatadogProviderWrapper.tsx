@@ -8,6 +8,7 @@ import {
   UploadFrequency,
 } from '@datadog/mobile-react-native'
 import { type ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
+import { isUnitTestEnv, isDatadogEnabled, localDevDatadogEnabled } from '@universe/environment'
 import {
   DatadogIgnoredErrorsConfigKey,
   DatadogIgnoredErrorsValType,
@@ -17,7 +18,6 @@ import {
 import { PropsWithChildren, default as React, useEffect, useState } from 'react'
 import { getConfig } from 'src/config'
 import { DatadogContext } from 'src/features/datadog/DatadogContext'
-import { datadogEnabledBuild, isTestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -31,10 +31,11 @@ export const MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 // - Resource tracking: Traces network requests and API calls
 // Note: Can buffer up to 100 RUM events before SDK initialization
 // https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/react_native/advanced_configuration/#delaying-the-initialization
+const isEnabled = isDatadogEnabled()
 const datadogAutoInstrumentation = {
-  trackErrors: datadogEnabledBuild,
-  trackInteractions: datadogEnabledBuild,
-  trackResources: datadogEnabledBuild,
+  trackErrors: isEnabled,
+  trackInteractions: isEnabled,
+  trackResources: isEnabled,
 }
 
 async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
@@ -106,12 +107,12 @@ export function DatadogProviderWrapper({
   const [isInitialized, setInitialized] = useState(false)
 
   useEffect(() => {
-    if ((datadogEnabledBuild || getConfig().isE2ETest) && sessionSampleRate !== undefined) {
+    if ((isDatadogEnabled() || getConfig().isE2ETest) && sessionSampleRate !== undefined) {
       initializeDatadog(sessionSampleRate).catch(() => undefined)
     }
   }, [sessionSampleRate])
 
-  if (isTestRun) {
+  if (isUnitTestEnv()) {
     return <>{children}</>
   }
   logger.setDatadogEnabled(true)

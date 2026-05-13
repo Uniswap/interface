@@ -3,7 +3,7 @@ import { Button, Flex, Text } from 'ui/src'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
+import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { SwapResult } from '~/hooks/useSwapCallback'
 import { TradeSummary } from '~/pages/Swap/Limit/ConfirmSwapModal/TradeSummary'
 import { InterfaceTrade, TradeFillType } from '~/state/routing/types'
@@ -79,7 +79,7 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
   }
 }
 
-export default function Error({ errorType, trade, showTrade, swapResult, onRetry }: ErrorModalContentProps) {
+export function Error({ errorType, trade, showTrade, swapResult, onRetry }: ErrorModalContentProps) {
   const { title, message, supportArticleURL } = getErrorContent({ errorType, trade })
   const { t } = useTranslation()
 

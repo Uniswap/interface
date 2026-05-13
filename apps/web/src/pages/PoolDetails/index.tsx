@@ -15,11 +15,10 @@ import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/StickyCollapsibleHeader'
 import { LpIncentivesPoolDetailsRewardsDistribution } from '~/features/Liquidity/LPIncentives/LpIncentivesPoolDetailsRewardsDistribution'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useColor } from '~/hooks/useColor'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { useDynamicMetatags } from '~/pages/metatags'
-import ChartSection from '~/pages/PoolDetails/components/ChartSection'
+import { ChartSection } from '~/pages/PoolDetails/components/ChartSection'
 import { PoolDetailsApr } from '~/pages/PoolDetails/components/PoolDetailsApr'
 import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
 import { PoolDetailsHeader } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeader'
@@ -30,6 +29,7 @@ import { PoolDetailsTableTab } from '~/pages/PoolDetails/components/PoolDetailsT
 import { getPoolDetailPageTitle } from '~/pages/PoolDetails/utils'
 import { ThemeProvider } from '~/theme'
 import { ExploreTab } from '~/types/explore'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const PageWrapper = styled(Flex, {
   row: true,
@@ -104,7 +104,7 @@ function getUnwrappedPoolToken({
 }
 
 // oxlint-disable-next-line complexity
-export default function PoolDetailsPage() {
+export function PoolDetailsPage() {
   const { t } = useTranslation()
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
@@ -312,3 +312,5 @@ export default function PoolDetailsPage() {
     </ThemeProvider>
   )
 }
+
+export default PoolDetailsPage

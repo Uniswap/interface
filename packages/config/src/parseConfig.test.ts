@@ -191,7 +191,7 @@ describe('parseConfig', () => {
       })
 
       const custom: string = extended.custom
-      const nodeEnv: 'development' | 'staging' | 'production' | 'test' = extended.nodeEnv
+      const nodeEnv: 'development' | 'production' | 'test' = extended.nodeEnv
       expect(custom).toBe('hello')
       expect(typeof nodeEnv).toBe('string')
     })

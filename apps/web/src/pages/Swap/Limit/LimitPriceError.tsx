@@ -1,33 +1,32 @@
 import { Currency } from '@uniswap/sdk-core'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
+import { Flex, styled, Text } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
-import Column from '~/components/deprecated/Column'
-import Row from '~/components/deprecated/Row'
 import { LimitPriceErrorType } from '~/features/Swap/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
 import { FadePresence, FadePresenceAnimationType } from '~/theme/components/FadePresence'
 import { transitions } from '~/theme/styles'
 
-const Container = deprecatedStyled(Row)`
-  padding: 12px;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  border-radius: 16px;
-  margin-top: 4px;
-`
+const ErrorContainer = styled(Flex, {
+  row: true,
+  alignItems: 'center',
+  width: '100%',
+  gap: '$gap12',
+  p: '$spacing12',
+  borderWidth: 1,
+  borderColor: '$surface3',
+  borderRadius: '$rounded16',
+  mt: '$spacing4',
+})
 
-const LogoContainer = deprecatedStyled.div`
-  height: 40px;
-  width: 40px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.critical2};
-  flex-shrink: 0;
-`
+const LogoContainer = styled(Flex, {
+  centered: true,
+  width: 40,
+  height: 40,
+  borderRadius: '$rounded12',
+  backgroundColor: '$statusCritical2',
+  flexShrink: 0,
+})
 
 interface LimitPriceErrorProps {
   priceError: LimitPriceErrorType
@@ -84,15 +83,19 @@ export function LimitPriceError(props: LimitPriceErrorProps) {
       $delay={transitions.duration.fast}
       animationType={FadePresenceAnimationType.FadeAndTranslate}
     >
-      <Container gap="md">
+      <ErrorContainer>
         <LogoContainer>
           <AlertTriangle color="$statusCritical" size="$icon.20" strokeWidth={1} />
         </LogoContainer>
-        <Column>
-          <ThemedText.SubHeader>{getTitle(props)}</ThemedText.SubHeader>
-          <ThemedText.BodySmall color="neutral2">{getDescription(props)}</ThemedText.BodySmall>
-        </Column>
-      </Container>
+        <Flex gap="$gap8">
+          <Text variant="subheading2" color="$neutral1">
+            {getTitle(props)}
+          </Text>
+          <Text variant="body3" color="$neutral2">
+            {getDescription(props)}
+          </Text>
+        </Flex>
+      </ErrorContainer>
     </FadePresence>
   )
 }

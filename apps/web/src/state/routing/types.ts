@@ -1,6 +1,5 @@
 /* oxlint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
-import { AddressZero } from '@ethersproject/constants'
 import { PermitTransferFromData } from '@uniswap/permit2-sdk'
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
@@ -21,6 +20,7 @@ import {
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { zeroAddress } from '~/chains/utilities'
 import { ZERO_PERCENT } from '~/constants/misc'
 
 export enum TradeState {
@@ -836,14 +836,14 @@ export class LimitOrderTrade {
     swapper: string
   }): IDutchOrderTrade<Currency, Currency, TradeType> {
     const swapperOutput = {
-      token: this.amountOut.currency.isNative ? AddressZero : this.amountOut.currency.address,
+      token: this.amountOut.currency.isNative ? zeroAddress : this.amountOut.currency.address,
       recipient: options?.swapper ?? this.swapper,
       startAmount: BigNumber.from(this.amountOut.quotient.toString()),
       endAmount: BigNumber.from(this.amountOut.quotient.toString()),
     }
 
     const swapFee = this.swapFee && {
-      token: this.amountOut.currency.isNative ? AddressZero : this.amountOut.currency.address,
+      token: this.amountOut.currency.isNative ? zeroAddress : this.amountOut.currency.address,
       recipient: this.swapFee.recipient,
       startAmount: BigNumber.from(this.amountOut.multiply(this.swapFee.percent).quotient.toString()),
       endAmount: BigNumber.from(this.amountOut.multiply(this.swapFee.percent).quotient.toString()),
@@ -859,13 +859,13 @@ export class LimitOrderTrade {
         reactor: UNISWAPX_REACTOR,
         swapper: options?.swapper ?? this.swapper,
         deadline: (nowSecs + this.deadlineBufferSecs) * 1000,
-        additionalValidationContract: AddressZero,
+        additionalValidationContract: zeroAddress,
         additionalValidationData: '0x',
         nonce: options?.nonce ?? BigNumber.from(0),
         // decay timings don't matter at all
         decayStartTime: nowSecs,
         decayEndTime: nowSecs,
-        exclusiveFiller: AddressZero,
+        exclusiveFiller: zeroAddress,
         exclusivityOverrideBps: BigNumber.from(0),
         input: {
           token: this.amountIn.currency.address,

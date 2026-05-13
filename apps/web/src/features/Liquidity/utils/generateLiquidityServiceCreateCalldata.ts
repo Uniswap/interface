@@ -18,10 +18,10 @@ import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import type { NormalizedApprovalData } from 'uniswap/src/data/apiClients/liquidityService/normalizeApprovalResponse'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
+import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import { PositionState } from '~/features/Liquidity/Create/types'
 import { getTokenOrZeroAddress, validateCurrencyInput } from '~/features/Liquidity/utils/currency'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
-import { DYNAMIC_FEE_DATA } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 interface BaseValidatedInput {

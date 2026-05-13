@@ -1,3 +1,4 @@
+import { TRUSTED_CHROME_EXTENSION_IDS } from '@universe/environment'
 import type { DynamicConfigKeys } from '@universe/gating'
 import {
   DynamicConfigs,
@@ -17,7 +18,6 @@ import { Pin } from 'ui/src/components/icons/Pin'
 import { useLayerValue } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { FeatureFlagSelector } from '~/components/FeatureFlagModal/FeatureFlagSelector'
 import { buildFlagGroups } from '~/components/FeatureFlagModal/flagGroups'
@@ -239,7 +239,7 @@ const DynamicConfigDropdown = memo(function DynamicConfigDropdown<
   )
 })
 
-export default function FeatureFlagModal(): JSX.Element {
+export function FeatureFlagModal(): JSX.Element {
   const { isOpen, closeModal } = useModalState(ModalName.FeatureFlags)
   const externallyConnectableExtensionId = useExternallyConnectableExtensionId()
   const [searchQuery, setSearchQuery] = useState('')
@@ -368,6 +368,8 @@ export default function FeatureFlagModal(): JSX.Element {
     </Modal>
   )
 }
+
+export default FeatureFlagModal
 
 function NetworkRequestsConfig() {
   const currentValue = useDynamicConfigValue({

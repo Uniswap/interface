@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router'
 import { AppearanceSettingType, setSelectedAppearanceSettings } from 'uniswap/src/features/appearance/slice'
 
-export default function DarkModeQueryParamReader(): null {
+export function DarkModeQueryParamReader(): null {
   const { search } = useLocation()
   const dispatch = useDispatch()
 

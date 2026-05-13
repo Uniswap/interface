@@ -3,7 +3,7 @@ import { Flex } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { MultiBlockchainAddressDisplay } from '~/components/AccountDetails/MultiBlockchainAddressDisplay'
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 

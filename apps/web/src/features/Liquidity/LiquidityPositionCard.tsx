@@ -7,6 +7,7 @@ import { ArrowsLeftRight } from 'ui/src/components/icons/ArrowsLeftRight'
 import { zIndexes } from 'ui/src/theme'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { PositionInfo, PriceOrdering } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -16,8 +17,8 @@ import {
   CHART_HEIGHT,
   CHART_WIDTH,
   LiquidityPositionRangeChartLoader,
-  WrappedLiquidityPositionRangeChart,
 } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { WrappedLiquidityPositionSparkline } from '~/features/Liquidity/charts/LiquidityPositionSparkline'
 import { useGetRangeDisplay } from '~/features/Liquidity/hooks/useGetRangeDisplay/useGetRangeDisplay'
 import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
 import { LiquidityPositionDropdownMenu } from '~/features/Liquidity/LiquidityPositionDropdownMenu'
@@ -28,9 +29,8 @@ import {
 } from '~/features/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from '~/features/Liquidity/LiquidityPositionInfo'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
-import useHoverProps from '~/hooks/useHoverProps'
+import { useHoverProps } from '~/hooks/useHoverProps'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import { PositionInfo, PriceOrdering } from '~/types/liquidity'
 
 export function LiquidityPositionCardLoader() {
   return (
@@ -106,7 +106,7 @@ export function LiquidityPositionCard({
     }
   }, [liquidityPosition])
 
-  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(
+  const { baseCurrency } = getBaseAndQuoteCurrencies(
     {
       TOKEN0: liquidityPosition.currency0Amount.currency,
       TOKEN1: liquidityPosition.currency1Amount.currency,
@@ -199,15 +199,9 @@ export function LiquidityPositionCard({
               isMiniVersion={isSmallScreen}
               showMigrateButton={showMigrateButton}
             />
-            <WrappedLiquidityPositionRangeChart
+            <WrappedLiquidityPositionSparkline
               version={liquidityPosition.version}
               chainId={liquidityPosition.chainId}
-              quoteCurrency={quoteCurrency}
-              baseCurrency={baseCurrency}
-              sdkCurrencies={{
-                TOKEN0: liquidityPosition.currency0Amount.currency,
-                TOKEN1: liquidityPosition.currency1Amount.currency,
-              }}
               priceInverted={priceInverted}
               positionStatus={liquidityPosition.status}
               poolAddressOrId={liquidityPosition.poolId}

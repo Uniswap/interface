@@ -1,3 +1,4 @@
+import { isProdEnv } from '@universe/environment'
 import { colors } from 'ui/src/theme/color/colors'
 import { themes } from 'ui/src/theme/themes'
 import {
@@ -9,14 +10,18 @@ import {
 } from 'ui/src/theme/tokens'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
-// Mock the process.env.NODE_ENV for testing validColor behavior
-const originalNodeEnv = process.env.NODE_ENV
+vi.mock('@universe/environment', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/environment')>()
+  return { ...actual, isProdEnv: vi.fn(() => false) }
+})
+
+const mockIsProdEnv = vi.mocked(isProdEnv)
+
 beforeAll(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {})
 })
 
 afterAll(() => {
-  process.env.NODE_ENV = originalNodeEnv
   vi.restoreAllMocks()
 })
 
@@ -127,10 +132,10 @@ describe('validColor', () => {
   })
 
   it('should throw an error for invalid colors in development', () => {
-    process.env.NODE_ENV = 'production'
+    mockIsProdEnv.mockReturnValue(true)
     expect(() => validColor('invalid-color')).not.toThrow()
 
-    process.env.NODE_ENV = 'development'
+    mockIsProdEnv.mockReturnValue(false)
     expect(() => validColor('invalid-color')).toThrow()
   })
 })

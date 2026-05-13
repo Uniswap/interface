@@ -3,7 +3,7 @@ import {
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
 } from '@universe/api/src/clients/base/urls'
 import { getConfig } from '@universe/config'
-import { Environment, getCurrentEnv } from 'utilities/src/environment/getCurrentEnv'
+import { Environment, getCurrentEnv } from '@universe/environment'
 
 export const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
 
@@ -13,9 +13,9 @@ export const ENTRY_GATEWAY_PROXY_PATH = '/entry-gateway'
  * (see apps/web/functions/app.ts).
  */
 export const ENTRY_GATEWAY_PROXY_ENV_SEGMENT: Record<Environment, string> = {
-  [Environment.DEV]: 'dev',
-  [Environment.STAGING]: 'staging',
-  [Environment.PROD]: 'prod',
+  [Environment.Development]: 'dev',
+  [Environment.Staging]: 'staging',
+  [Environment.Production]: 'prod',
 }
 
 /**
@@ -43,11 +43,23 @@ interface GetEntryGatewayUrlOptions {
 
 /**
  * Returns the appropriate Entry Gateway API base URL based on the current environment.
- * When proxy is enabled, returns the proxy path. Otherwise returns the direct URL.
- * Can be overridden by setting ENTRY_GATEWAY_API_URL_OVERRIDE in environment variables.
+ * When proxy is enabled, returns the proxy path. Otherwise returns the direct
+ * URL. `ENTRY_GATEWAY_API_URL_OVERRIDE` is only honored when the proxy is
+ * disabled and the caller has not pinned a specific backend env.
  */
 export function getEntryGatewayUrl(options?: GetEntryGatewayUrlOptions): string {
   const config = getConfig()
+
+  // Use proxy path if enabled (local dev, Vercel previews, or explicit opt-in).
+  // This must take precedence over backend URL overrides so browser clients do
+  // not bypass the same-origin proxy and reintroduce CORS issues. Env-pinned
+  // calls still get a per-env subpath so the BFF can route them correctly.
+  if (config.enableEntryGatewayProxy) {
+    if (options?.env) {
+      return `${ENTRY_GATEWAY_PROXY_PATH}/${ENTRY_GATEWAY_PROXY_ENV_SEGMENT[options.env]}`
+    }
+    return ENTRY_GATEWAY_PROXY_PATH
+  }
 
   // Env-pinned calls bypass the override. The override is meant to redirect
   // *default* traffic to a chosen backend (e.g. corn-staging on a staging
@@ -61,22 +73,12 @@ export function getEntryGatewayUrl(options?: GetEntryGatewayUrlOptions): string 
     }
   }
 
-  // Use proxy path if enabled (local dev, Vercel previews, or explicit opt-in).
-  // An env-pinned call gets a per-env subpath so the BFF can forward to the
-  // matching backend without the client having to know upstream URLs.
-  if (config.enableEntryGatewayProxy) {
-    if (options?.env) {
-      return `${ENTRY_GATEWAY_PROXY_PATH}/${ENTRY_GATEWAY_PROXY_ENV_SEGMENT[options.env]}`
-    }
-    return ENTRY_GATEWAY_PROXY_PATH
-  }
-
   const environment = options?.env ?? getCurrentEnv({ isVercelEnvironment: config.isVercelEnvironment })
   switch (environment) {
-    case Environment.DEV: // Dev also currently uses staging builds, as for many features staging is more stable / less prone to breaking testing changes.
-    case Environment.STAGING:
+    case Environment.Development: // Dev also currently uses staging builds, as for many features staging is more stable / less prone to breaking testing changes.
+    case Environment.Staging:
       return STAGING_ENTRY_GATEWAY_API_BASE_URL
-    case Environment.PROD:
+    case Environment.Production:
       return PROD_ENTRY_GATEWAY_API_BASE_URL
     default:
       throw new Error(`Invalid environment: ${environment}`)

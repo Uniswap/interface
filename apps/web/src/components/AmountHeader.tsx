@@ -6,7 +6,7 @@ import { breakpoints } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { MouseoverTooltip } from '~/components/Tooltip'
 
 type ResponsiveHeadlineProps = PropsWithChildren<ComponentProps<typeof Text>>

@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
@@ -18,12 +19,12 @@ import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/nume
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { LiquidityEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { StyledPercentInput } from '~/components/PercentInput'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
@@ -37,7 +38,6 @@ import {
 } from '~/features/Liquidity/utils/feeTiers'
 import { NumericalInputMimic, NumericalInputSymbolContainer } from '~/pages/Swap/common/shared'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import type { FeeData } from '~/types/liquidity'
 
 const FeeTierPercentInput = styled(StyledPercentInput)`
   flex-grow: 0;

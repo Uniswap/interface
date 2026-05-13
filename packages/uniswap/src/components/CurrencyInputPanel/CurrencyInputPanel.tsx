@@ -1,3 +1,4 @@
+import { isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
 //! tamagui-ignore
 // tamagui-ignore
 /* oxlint-disable complexity */
@@ -19,7 +20,6 @@ import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtensionApp, isMobileWeb, isWebAppDesktop } from 'utilities/src/platform'
 
 export const CurrencyInputPanel = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(

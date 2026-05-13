@@ -115,6 +115,7 @@
         "inquirer",
         "madge",
         "postinstall-postinstall",
+        "react-native-argon2",
         "react-native-asset",
         "react-native-clean-project",
         "react-native-image-colors",
@@ -241,7 +242,8 @@
     },
     "packages/api": {
       "ignoreDependencies": [
-        "expo-secure-store"
+        "expo-secure-store",
+        "@vitest/coverage-v8"
       ]
     },
     "packages/docker-image-builder": {
@@ -250,6 +252,12 @@
         "gts",
         "vite",
         "vitest"
+      ]
+    },
+    "packages/environment": {
+      "ignoreDependencies": [
+        "react-native",
+        "react-native-device-info"
       ]
     },
     "packages/gating": {
@@ -323,6 +331,7 @@
         "expo-linear-gradient",
         "i18next-resources-for-ts",
         "react-native-appsflyer",
+        "react-native-argon2",
         "react-native-context-menu-view",
         "react-native-device-info",
         "react-native-mmkv",
@@ -334,7 +343,8 @@
         "@amplitude/analytics-react-native",
         "@datadog/mobile-react-native",
         "expo-clipboard",
-        "promise"
+        "promise",
+        "react-native-device-info"
       ]
     },
     "packages/wallet": {

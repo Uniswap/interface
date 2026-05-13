@@ -1,4 +1,5 @@
 import { GasEstimate, GasFeeResult, TradingApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import { ValidatedGasFeeResult, validateGasFeeResult } from 'uniswap/src/features/gas/utils'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import {
@@ -22,7 +23,6 @@ import {
   PopulatedTransactionRequestArray,
   ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { isWebApp } from 'utilities/src/platform'
 import { Prettify } from 'viem'
 
 export type SwapTxAndGasInfo =

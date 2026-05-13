@@ -6,12 +6,12 @@ import { createPriceKey } from '@universe/prices'
 
 // Route through the Entry Gateway (not the Cloudflare gateway) because
 // GetTokenPrices is only registered on EGW, not on the CF gateway.
-// Session cookies authenticate the request via the BFF proxy.
+// Use default `same-origin` credentials so cookies flow through the BFF
+// proxy but not cross-origin — staging and Vercel preview builds hit an
+// upstream with wildcard CORS, which the browser blocks when credentials
+// mode is 'include'.
 const dataApiTransport = getTransport({
   getBaseUrl: () => getEntryGatewayUrl(),
-  options: {
-    credentials: 'include',
-  },
 })
 
 const dataApiClient = createPromiseClient(DataApiService, dataApiTransport)

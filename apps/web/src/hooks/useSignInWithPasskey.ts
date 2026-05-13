@@ -13,8 +13,8 @@ import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnita
 import { logger } from 'utilities/src/logger/logger'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
-import { walletTypeToAmplitudeWalletType } from '~/components/Web3Provider/walletConnect'
+import { wagmiConfig } from '~/connection/wagmiConfig'
+import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
 import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
@@ -99,7 +99,9 @@ export function useSignInWithPasskey({
 
         return { walletAddress: walletData.address, walletId: walletData.walletId }
       } else {
-        const signInResponse = await signInWithPasskeyAPI(existingWalletId ?? undefined)
+        const signInResponse = await signInWithPasskeyAPI(existingWalletId ?? undefined, {
+          onWalletSignInFailureWithWalletId: () => setWalletId(null),
+        })
         if (!signInResponse || !signInResponse.walletAddress || !signInResponse.walletId) {
           throw new Error(`Failed to sign in with passkey`)
         }

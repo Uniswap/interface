@@ -16,11 +16,11 @@ import { StickyCollapsibleHeader } from '~/components/StickyCollapsibleHeader/St
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { LoadingChart } from '~/features/Explore/chart/LoadingChart'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { SwapSkeleton } from '~/features/Swap/SwapSkeleton'
 import { useCurrency } from '~/hooks/Tokens'
 import { StatsWrapper, StatWrapper } from '~/pages/TokenDetails/components/info/StatsSection'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const SWAP_COMPONENT_WIDTH = 360
 

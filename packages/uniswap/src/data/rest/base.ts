@@ -1,10 +1,9 @@
 import { Transport } from '@connectrpc/connect'
 import { ConnectTransportOptions } from '@connectrpc/connect-web'
 import { getEntryGatewayUrl, getTransport } from '@universe/api'
+import { isWebApp, Environment } from '@universe/environment'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
-import { Environment } from 'utilities/src/environment/getCurrentEnv'
-import { isWebApp } from 'utilities/src/platform'
 
 export function createConnectTransportWithDefaults({
   options = {},
@@ -68,5 +67,5 @@ export const entryGatewayPostTransport = createConnectTransportWithDefaults({
 export const entryGatewayProdPostTransport = createConnectTransportWithDefaults({
   // Web uses cookies (credentials: 'include'), while mobile/extension use session headers (via getTransport interceptor).
   options: isWebApp ? { credentials: 'include' } : undefined,
-  getBaseUrlOverride: () => getEntryGatewayUrl({ env: Environment.PROD }),
+  getBaseUrlOverride: () => getEntryGatewayUrl({ env: Environment.Production }),
 })

@@ -2,7 +2,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { useRecentConnectorId } from '~/connection/constants'
 import { createAccountsStoreGetters } from '~/features/accounts/store/getters'
 import { useAccountsStore } from '~/features/accounts/store/hooks'
 import { ExternalWallet } from '~/features/accounts/store/types'
@@ -12,8 +12,8 @@ import { renderHook } from '~/test-utils/render'
 
 // oxlint-disable-next-line no-var -- Testing variable hoisting behavior requires var
 var mockIsMobileWeb = false
-vi.mock('utilities/src/platform', async () => {
-  const actual = await vi.importActual('utilities/src/platform')
+vi.mock('@universe/environment', async () => {
+  const actual = await vi.importActual('@universe/environment')
   return {
     ...actual,
     get isMobileWeb() {
@@ -29,8 +29,8 @@ vi.mock('~/features/accounts/store/hooks', () => ({
   useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),
 }))
 
-vi.mock('~/components/Web3Provider/constants', async () => {
-  const actual = await vi.importActual('~/components/Web3Provider/constants')
+vi.mock('~/connection/constants', async () => {
+  const actual = await vi.importActual('~/connection/constants')
   return {
     ...actual,
     useRecentConnectorId: vi.fn(),

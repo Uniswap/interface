@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
@@ -6,7 +7,6 @@ import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWebPlatform } from 'utilities/src/platform'
 
 type DataApiOutageModalContentProps = {
   isOpen: boolean

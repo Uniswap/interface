@@ -298,7 +298,9 @@ export { createFetcher, objectToQueryString } from '@universe/api/src/clients/ba
 
 // Session API
 export { ApiInit, reinitializeSession, SESSION_INIT_QUERY_KEY } from '@universe/api/src/components/ApiInit'
+export { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService'
 export { provideSessionService } from '@universe/api/src/provideSessionService'
+export { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
 export { useIsSessionInitialized } from '@universe/api/src/hooks/useIsSessionInitialized'
 
 // Session Transport (pure factory, no platform detection)

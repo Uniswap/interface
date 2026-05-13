@@ -1,8 +1,8 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
-import { getChainUrlParam } from '~/features/params/chainParams'
 import { isPortfolioTab, PortfolioTab } from '~/pages/Portfolio/types'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 interface BuildPortfolioUrlOptions {
   tab?: PortfolioTab

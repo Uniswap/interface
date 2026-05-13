@@ -6,28 +6,25 @@ import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 
 vi.mock('~/components/claim/AddressClaimModal', () => ({
-  __esModule: true,
   default: () => <div data-testid="mock-address-claim-modal">Address Claim Modal</div>,
 }))
 
 vi.mock('~/components/ConnectedAccountBlocked', () => ({
-  __esModule: true,
   default: () => <div data-testid="mock-connected-account-blocked">Connected Account Blocked</div>,
 }))
 
 vi.mock('~/components/AccountDrawer/UniwalletModal', () => ({
-  __esModule: true,
   default: () => <div data-testid="mock-uniwallet-modal">Uniwallet Modal</div>,
 }))
 
 vi.mock('~/components/modals/OffchainActivityModal', () => ({
   __esModule: true,
-  OffchainActivityModal: () => <div data-testid="mock-offchain-activity-modal">Offchain Activity Modal</div>,
+  default: () => <div data-testid="mock-offchain-activity-modal">Offchain Activity Modal</div>,
 }))
 
 vi.mock('~/pages/App/TopLevelModals/UkDisclaimerModal', () => ({
   __esModule: true,
-  UkDisclaimerModal: () => <div data-testid="mock-uk-disclaimer-modal">UK Disclaimer Modal</div>,
+  default: () => <div data-testid="mock-uk-disclaimer-modal">UK Disclaimer Modal</div>,
 }))
 
 vi.mock('~/state/hooks', () => ({

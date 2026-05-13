@@ -42,6 +42,7 @@ export function handleToucanCrosshairMove({
       tickValue: 0,
       volumeAmount: 0,
       totalVolume: 0,
+      tickQ96: undefined,
     })
   }
 
@@ -151,5 +152,6 @@ export function handleToucanCrosshairMove({
     tickValue,
     volumeAmount,
     totalVolume: totalBidVolume,
+    tickQ96: data.tickQ96,
   })
 }

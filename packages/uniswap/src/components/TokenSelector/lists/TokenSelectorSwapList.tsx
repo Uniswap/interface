@@ -1,4 +1,5 @@
 import { GqlResult } from '@universe/api'
+import { isMobileApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { Flex } from 'ui/src'
@@ -20,7 +21,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
-import { isMobileApp } from 'utilities/src/platform'
 
 // Matches the default 40px section header plus the single-line outage banner and spacing on web.
 const PORTFOLIO_OUTAGE_SECTION_HEADER_ROW_HEIGHT = 104

@@ -6,6 +6,9 @@
   "exclude": ["node_modules", ".output", "wxt.config.ts", "oxlint.config.ts"],
   "references": [
     {
+      "path": "../../packages/environment"
+    },
+    {
       "path": "../../packages/ui"
     },
     {
@@ -21,10 +24,10 @@
       "path": "../../packages/encoding"
     },
     {
-      "path": "../../packages/api"
+      "path": "../../packages/config"
     },
     {
-      "path": "../../packages/config"
+      "path": "../../packages/api"
     },
     {
       "path": "../../packages/wallet"

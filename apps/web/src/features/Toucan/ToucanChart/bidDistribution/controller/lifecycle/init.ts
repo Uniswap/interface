@@ -30,6 +30,7 @@ export function initToucanBidDistributionChart(params: {
   teardown: () => void
   subscribeVisibleRangeChanges: () => void
   unsubscribeVisibleRangeChanges: () => void
+  setGlobalMaxValue: (value: number) => void
 } {
   const {
     createParams,
@@ -41,6 +42,16 @@ export function initToucanBidDistributionChart(params: {
     onBidOutOfRangeIndicatorClick,
   } = params
 
+  const isDemandMode = createParams.chartMode === 'demand'
+
+  // For demand mode, we keep the y-axis range pinned to the global max across ALL bars so that
+  // bar heights never change when the user pans left/right (lightweight-charts would otherwise
+  // auto-scale to only the currently visible bars).
+  const globalMaxRef = { value: 1 }
+  const setGlobalMaxValue = (value: number): void => {
+    globalMaxRef.value = value
+  }
+
   const chart = createChart(
     container,
     createToucanBidDistributionChartOptions({
@@ -48,7 +59,8 @@ export function initToucanBidDistributionChart(params: {
       height: createParams.height,
       colors: createParams.colors,
       priceFormatter: (price: number) => createParams.formatYAxisLabel(price),
-      showYAxis: createParams.chartMode !== 'demand',
+      showYAxis: !isDemandMode,
+      isDemandMode,
     }),
   )
 
@@ -57,20 +69,23 @@ export function initToucanBidDistributionChart(params: {
     priceScaleId: 'left',
     priceLineVisible: false,
     lastValueVisible: false,
-    // Constrain Y-axis to always start from 0 - price/volume data should never be negative
-    // Always return a valid range to prevent chart from using symmetric default behavior
-    autoscaleInfoProvider: (baseImpl: () => AutoscaleInfo | null) => {
-      const result = baseImpl()
-      // Always return a range starting at 0, with a fallback maxValue if no data
-      const maxValue = result ? result.priceRange.maxValue : 0
-      return {
-        priceRange: {
-          minValue: 0,
-          // Use a small positive fallback if no data, otherwise use actual max
-          maxValue: maxValue > 0 ? maxValue : 1,
+    autoscaleInfoProvider: isDemandMode
+      ? (_: () => AutoscaleInfo | null) => ({
+          priceRange: {
+            minValue: 0,
+            maxValue: globalMaxRef.value > 0 ? globalMaxRef.value : 1,
+          },
+        })
+      : (baseImpl: () => AutoscaleInfo | null) => {
+          const result = baseImpl()
+          const maxValue = result ? result.priceRange.maxValue : 0
+          return {
+            priceRange: {
+              minValue: 0,
+              maxValue: maxValue > 0 ? maxValue : 1,
+            },
+          }
         },
-      }
-    },
   })
 
   chart.priceScale('left').applyOptions({
@@ -153,5 +168,6 @@ export function initToucanBidDistributionChart(params: {
     teardown,
     subscribeVisibleRangeChanges,
     unsubscribeVisibleRangeChanges,
+    setGlobalMaxValue,
   }
 }

@@ -2,7 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { TFunction } from 'i18next'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
+import { Text, useSporeColors } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -15,7 +15,6 @@ import {
   CustomVolumeChartModelParams,
 } from '~/components/Charts/VolumeChart/CustomVolumeChartModel'
 import { getCumulativeVolume, SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
-import { ThemedText } from '~/theme/components'
 
 interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
@@ -100,7 +99,11 @@ function VolumeChartHeader({
 
   return (
     <ChartHeader
-      value={<ThemedText.HeadlineLarge color="inherit">{display.volume}</ThemedText.HeadlineLarge>}
+      value={
+        <Text variant="heading2" color="inherit">
+          {display.volume}
+        </Text>
+      }
       time={crosshairData?.time}
       timePlaceholder={formatHistoryDuration(t, toHistoryDuration(timePeriod))}
     />
@@ -114,11 +117,11 @@ function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeT
 
   return (
     <>
-      <ThemedText.BodySmall>
+      <Text variant="body3">
         {t(`token.chart.tooltip`, {
           amount: convertFiatAmountFormatted(fees, NumberType.FiatTokenStats),
         })}
-      </ThemedText.BodySmall>
+      </Text>
     </>
   )
 }

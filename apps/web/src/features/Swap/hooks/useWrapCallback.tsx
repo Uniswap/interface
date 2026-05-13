@@ -9,7 +9,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAccount } from '~/hooks/useAccount'
 import { useWETHContract } from '~/hooks/useContract'
 import { formatToDecimal, getTokenAddress } from '~/lib/utils/analytics'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { useCurrencyBalance } from '~/state/connection/hooks'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { useTransactionAdder } from '~/state/transactions/hooks'
@@ -30,7 +30,7 @@ enum WrapInputError {
  * @param outputCurrency the selected output currency
  * @param typedValue the user input value
  */
-export default function useWrapCallback({
+export function useWrapCallback({
   inputCurrency,
   outputCurrency,
   typedValue,

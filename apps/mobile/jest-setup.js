@@ -2,6 +2,7 @@
 import 'react-native-gesture-handler/jestSetup'
 // Other
 import 'core-js' // necessary so setImmediate works in tests
+import '@universe/environment/jest-package-mocks'
 import 'utilities/jest-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'wallet/jest-package-mocks'

@@ -4,9 +4,9 @@ import { Flex, useSporeColors } from 'ui/src'
 import { SparklineMap } from '~/appGraphql/data/types'
 import { PricePoint } from '~/appGraphql/data/util'
 import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
-import LineChart from '~/components/Charts/SparklineChart/LineChart'
+import { LineChart } from '~/components/Charts/SparklineChart/LineChart'
 import { LoadingBubble } from '~/components/Tokens/loading'
-import { TokenStat } from '~/state/explore/types'
+import { TokenStat } from '~/types/explore'
 
 interface SparklineChartProps {
   width: number
@@ -59,4 +59,4 @@ function SparklineChartInner({ width, height, tokenData, pricePercentChange, spa
   )
 }
 
-export default memo(SparklineChartInner)
+export const SparklineChart = memo(SparklineChartInner)

@@ -5,7 +5,7 @@ import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hook
 import { useAccount } from '~/hooks/useAccount'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from '~/hooks/usePermitAllowance'
 import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from '~/hooks/useTokenAllowance'
-import useInterval from '~/lib/hooks/useInterval'
+import { useInterval } from '~/lib/hooks/useInterval'
 import { TradeFillType } from '~/state/routing/types'
 import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from '~/state/transactions/hooks'
 
@@ -44,7 +44,7 @@ export type Allowance =
     }
   | AllowanceRequired
 
-export default function usePermit2Allowance({
+export function usePermit2Allowance({
   amount,
   spender,
   tradeFillType,

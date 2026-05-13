@@ -4,16 +4,17 @@
       "id": "toucan-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Toucan/"],
-      "allowedImporterPathMarkers": ["/pages/Explore/", "/state/explore/"],
+      "allowedImporterPathMarkers": ["/pages/Explore/", "/features/Explore/state"],
       "importPrefixes": ["~/features/Toucan/", "features/Toucan/"],
       "bareModuleSources": ["~/features/Toucan", "features/Toucan"],
-      "message": "Toucan feature code may only be imported from pages/Explore/, state/explore/, or from within features/Toucan/."
+      "message": "Toucan feature code may only be imported from pages/Explore/, features/explore/state, or from within features/Toucan/."
     },
     {
       "id": "liquidity-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Liquidity/"],
       "allowedImporterPathMarkers": [
+        "/pages/AddLiquidity/",
         "/pages/CreatePosition/",
         "/pages/Explore/",
         "/pages/IncreaseLiquidity/",
@@ -35,19 +36,41 @@
       "id": "swap-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Swap/"],
-      "allowedImporterPathMarkers": ["/pages/Swap/", "/pages/TokenDetails/"],
+      "allowedImporterPathMarkers": [
+        "/pages/Swap/",
+        "/pages/TokenDetails/",
+        "/pages/Landing/",
+        "/pages/App/WebUniswapContext",
+        "/features/Liquidity/Create/"
+      ],
       "importPrefixes": ["~/features/Swap/", "features/Swap/"],
       "bareModuleSources": ["~/features/Swap", "features/Swap"],
-      "message": "The Swap feature may only be imported from pages/Swap/, pages/TokenDetails/, or from within features/Swap/."
+      "message": "The Swap feature may only be imported from pages/Swap/, pages/TokenDetails/, pages/Landing/, pages/App/, features/Liquidity/Create/, or from within features/Swap/."
     },
     {
       "id": "explore-feature",
       "mode": "importerAllowlist",
       "importerInternalPathMarkers": ["/features/Explore/"],
-      "allowedImporterPathMarkers": ["/pages/Explore/", "/pages/PoolDetails/", "/pages/TokenDetails/"],
+      "allowedImporterPathMarkers": [
+        "/pages/AddLiquidity/",
+        "/pages/Explore/",
+        "/pages/Landing/",
+        "/pages/PoolDetails/",
+        "/pages/Positions/",
+        "/pages/TokenDetails/",
+        "/features/Toucan/"
+      ],
       "importPrefixes": ["~/features/Explore/", "features/Explore/"],
       "bareModuleSources": ["~/features/Explore", "features/Explore"],
-      "message": "The Explore feature may only be imported from pages/Explore/, pages/PoolDetails/, pages/TokenDetails/ or from within features/Explore/."
+      "message": "The Explore feature may only be imported from pages/AddLiquidity/, pages/Explore/, pages/Landing/, pages/PoolDetails/, pages/Positions/, pages/TokenDetails/, features/Toucan/ or from within features/Explore/."
+    },
+    {
+      "id": "web-state-import-denylist",
+      "mode": "importerDenylist",
+      "deniedImporterPathMarkers": ["/apps/web/src/state/"],
+      "importPrefixes": ["~/features/", "features/", "~/components/", "components/"],
+      "bareModuleSources": ["~/features", "features", "~/components", "components"],
+      "message": "apps/web `src/state` must not import from `~/features/` or `~/components/`"
     }
   ]
 }

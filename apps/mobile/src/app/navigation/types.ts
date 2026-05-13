@@ -121,6 +121,13 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
   [OnboardingScreens.WelcomeWallet]: OnboardingStackBaseParams
   [OnboardingScreens.PasskeyImport]: PasskeyImportParams & OnboardingStackBaseParams
+  [OnboardingScreens.RecoveryFlow]: OnboardingStackBaseParams & {
+    // 'passkey' keeps the Login step visible but auto-triggers the passkey ceremony on
+    // mount so the user lands directly on the native prompt; failure falls back to the
+    // email/OAuth tiles on the same view. OAuth redirects land here post-return, so the
+    // default initial step is driven by the hook itself (OAUTH_LOADING if pending, else EMAIL_ENTRY).
+    initialMethod?: 'passkey'
+  }
   [OnboardingScreens.Security]: OnboardingStackBaseParams
   [MobileScreens.ViewPrivateKeys]?: ViewPrivateKeysScreenState
 

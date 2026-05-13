@@ -1,4 +1,5 @@
 import type { Currency } from '@uniswap/sdk-core'
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,6 +14,7 @@ import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledC
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
+import { ShowGetStartedProvider } from 'uniswap/src/features/passkey/ShowGetStartedContext'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -32,12 +34,17 @@ import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/as
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { isMobileWeb } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { useSwapHandlers } from '~/features/Swap/hooks/useSwapHandlers/useSwapHandlers'
+import { useInitialCurrencyState } from '~/features/Swap/state/swap/hooks'
+import { SwapAndLimitContextProvider } from '~/features/Swap/state/swap/SwapContext'
+import { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
+import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
 import { PageWrapper } from '~/features/Swap/styled'
 import { SwapBottomCard } from '~/features/Swap/SwapBottomCard'
+import { useHasInjectedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
 import { useAccount } from '~/hooks/useAccount'
 import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
@@ -45,15 +52,11 @@ import { useModalState } from '~/hooks/useModalState'
 import { ReturnToAuctionBanner } from '~/pages/Swap/ReturnToAuctionBanner'
 import { useResetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from '~/pages/Swap/settings/useWebSwapSettings'
+import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
-import { useSwapHandlers } from '~/state/sagas/transactions/useSwapHandlers'
-import { useInitialCurrencyState } from '~/state/swap/hooks'
-import { SwapAndLimitContextProvider } from '~/state/swap/SwapContext'
-import type { CurrencyState } from '~/state/swap/types'
-import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
 import { isIFramed } from '~/utils/isIFramed'
 
-export default function SwapPage() {
+export function SwapPage() {
   const navigate = useNavigate()
   const location = useLocation()
   // (WEB-4737): Remove this line after completing A/A Test on Web
@@ -162,6 +165,11 @@ export function Swap({
   const isModeMismatch = useIsModeMismatch(initialInputChainId)
   const isSharedSwapDisabled = isModeMismatch && isExplorePage
 
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const hasInjectedWallets = useHasInjectedWallets()
+  const { walletAddress: embeddedWalletAddress } = useEmbeddedWalletState()
+  const showGetStarted = isEmbeddedWalletEnabled && !hasInjectedWallets && !embeddedWalletAddress
+
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
@@ -184,36 +192,38 @@ export function Swap({
   })
 
   return (
-    <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
-      <SwapTransactionSettingsStoreContextProvider>
-        <SwapAndLimitContextProvider
-          initialInputCurrency={initialInputCurrency}
-          initialOutputCurrency={initialOutputCurrency}
-        >
-          <PrefetchBalancesWrapper>
-            <SwapFormStoreContextProvider
-              prefilledState={prefilledState}
-              hideSettings={hideHeader}
-              hideFooter={hideFooter}
-            >
-              <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
-                {isSharedSwapDisabled && <DisabledSwapOverlay />}
-                <UniversalSwapFlow
-                  hideHeader={hideHeader}
-                  hideFooter={hideFooter}
-                  syncTabToUrl={syncTabToUrl}
-                  swapRedirectCallback={swapRedirectCallback}
-                  onCurrencyChange={onCurrencyChange}
-                  prefilledState={prefilledState}
-                  tokenColor={tokenColor}
-                  tdpCurrency={tdpCurrency}
-                />
-              </Flex>
-            </SwapFormStoreContextProvider>
-          </PrefetchBalancesWrapper>
-        </SwapAndLimitContextProvider>
-      </SwapTransactionSettingsStoreContextProvider>
-    </MultichainContextProvider>
+    <ShowGetStartedProvider value={showGetStarted}>
+      <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
+        <SwapTransactionSettingsStoreContextProvider>
+          <SwapAndLimitContextProvider
+            initialInputCurrency={initialInputCurrency}
+            initialOutputCurrency={initialOutputCurrency}
+          >
+            <PrefetchBalancesWrapper>
+              <SwapFormStoreContextProvider
+                prefilledState={prefilledState}
+                hideSettings={hideHeader}
+                hideFooter={hideFooter}
+              >
+                <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+                  {isSharedSwapDisabled && <DisabledSwapOverlay />}
+                  <UniversalSwapFlow
+                    hideHeader={hideHeader}
+                    hideFooter={hideFooter}
+                    syncTabToUrl={syncTabToUrl}
+                    swapRedirectCallback={swapRedirectCallback}
+                    onCurrencyChange={onCurrencyChange}
+                    prefilledState={prefilledState}
+                    tokenColor={tokenColor}
+                    tdpCurrency={tdpCurrency}
+                  />
+                </Flex>
+              </SwapFormStoreContextProvider>
+            </PrefetchBalancesWrapper>
+          </SwapAndLimitContextProvider>
+        </SwapTransactionSettingsStoreContextProvider>
+      </MultichainContextProvider>
+    </ShowGetStartedProvider>
   )
 }
 

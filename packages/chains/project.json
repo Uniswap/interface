@@ -23,6 +23,12 @@
     "lint:fix": {},
     "check": {},
     "check:fast": {},
-    "check:deps:usage": {}
+    "check:deps:usage": {},
+    "test:integration": {
+      "command": "vitest run --config vitest.integration.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
   }
 }

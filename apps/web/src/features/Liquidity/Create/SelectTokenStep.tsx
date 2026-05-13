@@ -26,6 +26,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
@@ -35,12 +36,11 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { ErrorCallout } from '~/components/ErrorCallout'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { AddHook } from '~/features/Liquidity/Create/AddHook'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
-import CreatingPoolInfo from '~/features/Liquidity/Create/CreatingPoolInfo'
+import { CreatingPoolInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { PoolParsingError } from '~/features/Liquidity/Create/PoolParsingError'
 import { DEFAULT_POSITION_STATE } from '~/features/Liquidity/Create/types'
@@ -51,12 +51,12 @@ import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpInce
 import { getDefaultFeeTiersWithData, getFeeTierKey } from '~/features/Liquidity/utils/feeTiers'
 import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
+import { serializeSwapStateToURLParameters } from '~/features/Swap/state/swap/tradeQueryParams'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/hooks/useNetworkSupportsV2'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { serializeSwapStateToURLParameters } from '~/state/swap/hooks'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import type { FeeData } from '~/types/liquidity'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
 
 interface WrappedNativeWarning {
@@ -123,7 +123,7 @@ export function SelectTokensStep({
 } & FlexProps) {
   const { loadingA, loadingB } = useLiquidityUrlState()
   const { t } = useTranslation()
-  const { setSelectedChainId } = useMultichainContext()
+  const { setSelectedChainId, setIsUserSelectedToken } = useMultichainContext()
   const trace = useTrace()
   const [hookModalOpen, setHookModalOpen] = useState(false)
   const [showWrappedNativeWarning, setShowWrappedNativeWarning] = useState(false)
@@ -266,6 +266,18 @@ export function SelectTokensStep({
         : undefined
   }, [protocolVersion, chains])
 
+  const handleOpenTokenSelector = useCallback(
+    (inputState: 'tokenA' | 'tokenB') => {
+      const otherToken = inputState === 'tokenA' ? token1 : token0
+      if (otherToken?.chainId) {
+        setSelectedChainId(otherToken.chainId)
+        setIsUserSelectedToken(true)
+      }
+      setCurrencySearchInputState(inputState)
+    },
+    [token0, token1, setSelectedChainId, setIsUserSelectedToken],
+  )
+
   const handleOnContinue = () => {
     if (wrappedNativeWarning) {
       setShowWrappedNativeWarning(true)
@@ -402,14 +414,14 @@ export function SelectTokensStep({
                     <CurrencySelector
                       loading={loadingA}
                       currencyInfo={token0CurrencyInfo}
-                      onPress={() => setCurrencySearchInputState('tokenA')}
+                      onPress={() => handleOpenTokenSelector('tokenA')}
                     />
                   </Flex>
                   <Flex row flex={1} flexBasis={0} $md={{ flexBasis: 'auto' }}>
                     <CurrencySelector
                       loading={loadingB}
                       currencyInfo={token1CurrencyInfo}
-                      onPress={() => setCurrencySearchInputState('tokenB')}
+                      onPress={() => handleOpenTokenSelector('tokenB')}
                     />
                   </Flex>
                 </Flex>

@@ -1,4 +1,4 @@
-import { isBetaEnv, isProdEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isProdEnv } from '@universe/environment'
 import { getConfig } from '~/config'
 
 function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {

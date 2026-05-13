@@ -20,7 +20,7 @@ import { DynamicFeeTierSpeedbump } from '~/features/Liquidity/Create/DynamicFeeT
 import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
-import ResetCreatePositionFormModal from '~/features/Liquidity/Create/ResetCreatePositionsFormModal'
+import { ResetCreatePositionFormModal } from '~/features/Liquidity/Create/ResetCreatePositionsFormModal'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from '~/features/Liquidity/Create/types'
 import { FeeTierSearchModal } from '~/features/Liquidity/FeeTierSearchModal'
 import { LPSettings } from '~/features/Liquidity/LPSettings'
@@ -295,7 +295,7 @@ function CreatePositionContent({
   )
 }
 
-export default function CreatePosition() {
+export function CreatePosition() {
   // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...&feeTier=...&hook=...`
   const { protocolVersion } = useParams<{
     protocolVersion: string
@@ -320,3 +320,5 @@ export default function CreatePosition() {
     />
   )
 }
+
+export default CreatePosition

@@ -4,7 +4,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { useAppStateResetter } from '~/state/reset/appResetter'
 
-export default function StorageMenu({ onClose }: { onClose: () => void }) {
+export function StorageMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
 
   const appStateResetter = useAppStateResetter()

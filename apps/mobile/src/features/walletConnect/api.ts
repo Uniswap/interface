@@ -1,8 +1,7 @@
+import { isAndroid, isTestEnv } from '@universe/environment'
 import { getConfig } from 'src/config'
 import { getOneSignalPushToken } from 'src/features/notifications/Onesignal'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 
 const WC_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${getConfig().walletConnectProjectId}`
 

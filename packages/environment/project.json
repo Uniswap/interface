@@ -17,6 +17,12 @@
     "lint:fix": {},
     "check": {},
     "check:fast": {},
-    "check:deps:usage": {}
+    "check:deps:usage": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
   }
 }

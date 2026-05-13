@@ -1,8 +1,9 @@
 import { memo, useMemo } from 'react'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { getBadgeBorderRadius, getBadgeOuterSize } from 'uniswap/src/components/CurrencyLogo/badgeSizeUtils'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { getDisplayChainIds } from 'uniswap/src/components/network/NetworkIconList/getDisplayChainIds'
+import { getNetworkIconListDisplay } from 'uniswap/src/components/network/NetworkIconList/getNetworkIconListDisplay'
 import { OverlapIconWrapper } from 'uniswap/src/components/network/NetworkIconList/OverlapIconWrapper'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -13,33 +14,45 @@ const DEFAULT_OVERLAP_RATIO = 0.3
 
 const CLIP_BORDER_RADIUS_RATIO = 0.42
 
+/** Optical vertical adjustment so the overflow digit sits centered in the pill. */
+const OVERFLOW_COUNT_TEXT_NUDGE_Y = 0.75
+
 interface NetworkIconListProps {
   chainIds: UniverseChainId[]
   size?: number
-  /** Horizontal overlap when stacked, as a ratio of outer size (e.g. 0.4 = 40%) */
   iconOverlap?: number
+  showNumberBadge?: boolean
 }
 
 export const NetworkIconList = memo(function NetworkIconList({
   chainIds,
   size = iconSizes.icon12,
   iconOverlap = DEFAULT_OVERLAP_RATIO,
+  showNumberBadge,
 }: NetworkIconListProps): JSX.Element | null {
   const { chains: enabledChainIds } = useEnabledChains()
-  const displayChainIds = useMemo(() => getDisplayChainIds(chainIds, enabledChainIds), [chainIds, enabledChainIds])
+  const { visibleChainIds, overflowCount } = useMemo(
+    () => getNetworkIconListDisplay(chainIds, enabledChainIds),
+    [chainIds, enabledChainIds],
+  )
 
-  if (displayChainIds.length === 0) {
+  if (visibleChainIds.length === 0 && overflowCount === 0) {
     return null
   }
 
   const outerSize = size * RING_RATIO
   const overlapPx = outerSize * iconOverlap
   const clipBorderRadius = outerSize * CLIP_BORDER_RADIUS_RATIO
+  /** Matches {@link NetworkLogo} default (borderWidth 0, square squircle). */
+  const logoOuterSize = getBadgeOuterSize(size, 0)
+  const logoBorderRadius = getBadgeBorderRadius(logoOuterSize, 'square')
   const stackedMarginLeft = (index: number): number => (index > 0 ? -overlapPx : 0)
+  const slotCount = visibleChainIds.length + (showNumberBadge && overflowCount > 0 ? 1 : 0)
+  const zIndexForSlot = (slotIndex: number): number => slotCount - slotIndex
 
   return (
     <Flex alignItems="center" flexDirection="row">
-      {displayChainIds.map((chainId, index) => {
+      {visibleChainIds.map((chainId, index) => {
         const showOverlapClip = index > 0
 
         const iconContent = (
@@ -58,7 +71,7 @@ export const NetworkIconList = memo(function NetworkIconList({
             width={outerSize}
             height={outerSize}
             borderRadius={clipBorderRadius}
-            zIndex={displayChainIds.length - index}
+            zIndex={zIndexForSlot(index)}
           >
             {showOverlapClip ? (
               <OverlapIconWrapper outerSize={outerSize} overlapPx={overlapPx} clipBorderRadius={clipBorderRadius}>
@@ -70,6 +83,43 @@ export const NetworkIconList = memo(function NetworkIconList({
           </Flex>
         )
       })}
+      {showNumberBadge && overflowCount > 0 ? (
+        <Flex
+          key="overflow-count-badge"
+          centered
+          testID="network-icon-list-overflow-badge"
+          backgroundColor="$transparent"
+          ml={stackedMarginLeft(visibleChainIds.length)}
+          overflow="hidden"
+          width={outerSize}
+          height={outerSize}
+          borderRadius={clipBorderRadius}
+          zIndex={zIndexForSlot(visibleChainIds.length)}
+        >
+          <Flex centered width={outerSize} height={outerSize}>
+            <Flex
+              centered
+              backgroundColor="$surface3"
+              borderRadius={logoBorderRadius}
+              height={logoOuterSize}
+              width={logoOuterSize}
+            >
+              <Text
+                allowFontScaling={false}
+                variant="buttonLabel4"
+                color="$neutral2"
+                $platform-native={{
+                  transform: [{ translateY: OVERFLOW_COUNT_TEXT_NUDGE_Y }],
+                  includeFontPadding: false,
+                }}
+                textAlign="center"
+              >
+                {overflowCount}
+              </Text>
+            </Flex>
+          </Flex>
+        </Flex>
+      ) : null}
     </Flex>
   )
 })

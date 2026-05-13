@@ -1,6 +1,6 @@
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import appsFlyer from 'react-native-appsflyer'
 import { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'

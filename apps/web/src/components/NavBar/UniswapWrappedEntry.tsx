@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +11,6 @@ import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useAppDispatch, useAppSelector } from '~/state/hooks'
 
 const snowflakeHoverKeyframes = `

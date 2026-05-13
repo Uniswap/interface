@@ -5,6 +5,9 @@
   "exclude": [".storybook/storybook.requires.ts", "oxlint.config.ts"],
   "references": [
     {
+      "path": "../../packages/environment"
+    },
+    {
       "path": "../../packages/sessions"
     },
     {
@@ -17,10 +20,10 @@
       "path": "../../packages/gating"
     },
     {
-      "path": "../../packages/api"
+      "path": "../../packages/config"
     },
     {
-      "path": "../../packages/config"
+      "path": "../../packages/api"
     },
     {
       "path": "../../packages/wallet"

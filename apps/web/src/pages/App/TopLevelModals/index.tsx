@@ -1,3 +1,4 @@
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import { useAtomValue } from 'jotai/utils'
 import { useTranslation } from 'react-i18next'
 import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
@@ -9,19 +10,18 @@ import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AnalyticsDebugOverlayLazy } from 'uniswap/src/features/telemetry/debug/AnalyticsDebugOverlayLazy'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { useEvent } from 'utilities/src/react/hooks'
 import { OAuthRedirectProvider } from '~/components/Passkey/OAuthRedirectContext'
 import { useOAuthRedirectRouter } from '~/components/Passkey/useOAuthRedirectRouter'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import useAccountRiskCheck from '~/hooks/useAccountRiskCheck'
+import { useAccountRiskCheck } from '~/hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { PasskeysHelpModalTypeAtom } from '~/hooks/usePasskeyAuthWithHelpModal'
 import { ModalRenderer } from '~/pages/App/TopLevelModals/modalRegistry'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
-export default function TopLevelModals() {
+export function TopLevelModals() {
   useOAuthRedirectRouter()
   const { t } = useTranslation()
   const isLandingPage = useIsPage(PageType.LANDING)

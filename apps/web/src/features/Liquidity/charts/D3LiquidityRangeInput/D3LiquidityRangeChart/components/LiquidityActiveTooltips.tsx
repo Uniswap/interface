@@ -67,6 +67,8 @@ export function LiquidityActiveTooltips({
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
           tickSpacing={tickSpacing}
+          priceInverted={priceInverted}
+          protocolVersion={protocolVersion}
         />
       ) : null}
 
@@ -83,6 +85,8 @@ export function LiquidityActiveTooltips({
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
           tickSpacing={tickSpacing}
+          priceInverted={priceInverted}
+          protocolVersion={protocolVersion}
         />
       ) : null}
 
@@ -99,6 +103,8 @@ export function LiquidityActiveTooltips({
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
           tickSpacing={tickSpacing}
+          priceInverted={priceInverted}
+          protocolVersion={protocolVersion}
         />
       ) : null}
     </>

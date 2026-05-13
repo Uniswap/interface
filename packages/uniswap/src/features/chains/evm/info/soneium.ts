@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { GraphQLApi, TradingApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import { ETH_LOGO, SONEIUM_LOGO } from 'ui/src/assets'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
 import {
@@ -18,7 +19,6 @@ import {
 } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { isWebApp } from 'utilities/src/platform'
 import { soneium } from 'wagmi/chains'
 
 const tokens = buildChainTokens({

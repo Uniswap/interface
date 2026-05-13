@@ -1,5 +1,4 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { CreatePositionResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { DynamicConfigs, LPConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { useEffect } from 'react'
@@ -43,25 +42,22 @@ export function useLPSlippageValue({
  */
 export function useDynamicNativeSlippage({
   nativeTokenBalance,
-  createCalldata,
+  slippage,
   isSlippageDirty,
 }: {
   nativeTokenBalance?: string
-  createCalldata?: CreatePositionResponse
+  slippage?: number
   isSlippageDirty: boolean
 }): void {
   const { setCustomSlippageTolerance } = useTransactionSettingsActions()
   const setAutoSlippageTolerance = useSetTransactionSettingsAutoSlippageTolerance()
 
   useEffect(() => {
-    if (!createCalldata || !nativeTokenBalance) {
+    if (!nativeTokenBalance || slippage === undefined || isSlippageDirty) {
       return
     }
-    const responseSlippage = createCalldata.slippage
-    if (responseSlippage !== undefined && !isSlippageDirty) {
-      const truncatedSlippage = Math.trunc(responseSlippage * 10000) / 10000
-      setCustomSlippageTolerance(truncatedSlippage)
-      setAutoSlippageTolerance(truncatedSlippage)
-    }
-  }, [nativeTokenBalance, createCalldata, isSlippageDirty, setCustomSlippageTolerance, setAutoSlippageTolerance])
+    const truncatedSlippage = Math.trunc(slippage * 10000) / 10000
+    setCustomSlippageTolerance(truncatedSlippage)
+    setAutoSlippageTolerance(truncatedSlippage)
+  }, [nativeTokenBalance, slippage, isSlippageDirty, setCustomSlippageTolerance, setAutoSlippageTolerance])
 }

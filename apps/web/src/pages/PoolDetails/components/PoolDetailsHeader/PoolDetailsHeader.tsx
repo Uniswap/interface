@@ -2,6 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Flex, Text } from 'ui/src'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { shortenHash } from 'utilities/src/addresses'
 import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpIncentivesAprDisplay'
 import { AnimatedDoubleLogo } from '~/pages/PoolDetails/components/PoolDetailsHeader/AnimatedDoubleLogo'
@@ -9,7 +10,6 @@ import { PoolDetailsHeaderActions } from '~/pages/PoolDetails/components/PoolDet
 import { PoolDetailsHeaderSkeleton } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeaderSkeleton'
 import { PoolDetailsTitle } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsTitle'
 import { CopyHelper } from '~/theme/components/CopyHelper'
-import type { FeeData } from '~/types/liquidity'
 
 interface PoolDetailsHeaderProps {
   chainId?: number

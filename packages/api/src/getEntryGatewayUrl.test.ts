@@ -2,28 +2,29 @@ import {
   PROD_ENTRY_GATEWAY_API_BASE_URL,
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
 } from '@universe/api/src/clients/base/urls'
-import type { Mock } from 'vitest'
+import { getConfig } from '@universe/config'
+import { Environment, getCurrentEnv } from '@universe/environment'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { ENTRY_GATEWAY_PROXY_PATH, getEntryGatewayUrl } from './getEntryGatewayUrl'
 
-vi.mock('@universe/config', () => ({
-  getConfig: vi.fn(),
-}))
-vi.mock('utilities/src/environment/getCurrentEnv', async () => {
-  const actual = await vi.importActual<typeof import('utilities/src/environment/getCurrentEnv')>(
-    'utilities/src/environment/getCurrentEnv',
-  )
+vi.mock('@universe/config', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/config')>()
+  return {
+    ...actual,
+    getConfig: vi.fn(() => ({ appId: actual.AppId.Web })),
+  }
+})
+
+vi.mock('@universe/environment', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/environment')>()
   return {
     ...actual,
     getCurrentEnv: vi.fn(),
   }
 })
 
-import { getConfig } from '@universe/config'
-import { Environment, getCurrentEnv } from 'utilities/src/environment/getCurrentEnv'
-import { ENTRY_GATEWAY_PROXY_PATH, getEntryGatewayUrl } from './getEntryGatewayUrl'
-
-const mockGetConfig = getConfig as unknown as Mock
-const mockGetCurrentEnv = getCurrentEnv as unknown as Mock
+const mockGetConfig = vi.mocked(getConfig)
+const mockGetCurrentEnv = vi.mocked(getCurrentEnv)
 
 interface MockConfig {
   entryGatewayApiUrlOverride?: string
@@ -43,7 +44,7 @@ function setConfig(overrides: MockConfig = {}) {
 describe('getEntryGatewayUrl', () => {
   beforeEach(() => {
     setConfig()
-    mockGetCurrentEnv.mockReturnValue(Environment.STAGING)
+    mockGetCurrentEnv.mockReturnValue(Environment.Staging)
   })
 
   afterEach(() => {
@@ -52,20 +53,20 @@ describe('getEntryGatewayUrl', () => {
 
   describe('proxy disabled', () => {
     it('returns the URL for the current env when no override is given', () => {
-      mockGetCurrentEnv.mockReturnValue(Environment.PROD)
+      mockGetCurrentEnv.mockReturnValue(Environment.Production)
       expect(getEntryGatewayUrl()).toBe(PROD_ENTRY_GATEWAY_API_BASE_URL)
     })
 
     it('forces the prod URL when env is pinned to PROD even from staging', () => {
-      mockGetCurrentEnv.mockReturnValue(Environment.STAGING)
-      expect(getEntryGatewayUrl({ env: Environment.PROD })).toBe(PROD_ENTRY_GATEWAY_API_BASE_URL)
+      mockGetCurrentEnv.mockReturnValue(Environment.Staging)
+      expect(getEntryGatewayUrl({ env: Environment.Production })).toBe(PROD_ENTRY_GATEWAY_API_BASE_URL)
     })
 
     it('returns staging URL for both DEV and STAGING current envs', () => {
-      mockGetCurrentEnv.mockReturnValue(Environment.DEV)
+      mockGetCurrentEnv.mockReturnValue(Environment.Development)
       expect(getEntryGatewayUrl()).toBe(STAGING_ENTRY_GATEWAY_API_BASE_URL)
 
-      mockGetCurrentEnv.mockReturnValue(Environment.STAGING)
+      mockGetCurrentEnv.mockReturnValue(Environment.Staging)
       expect(getEntryGatewayUrl()).toBe(STAGING_ENTRY_GATEWAY_API_BASE_URL)
     })
   })
@@ -80,17 +81,26 @@ describe('getEntryGatewayUrl', () => {
     })
 
     it('returns an env-suffixed proxy path so the BFF can route to that env', () => {
-      expect(getEntryGatewayUrl({ env: Environment.PROD })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/prod`)
-      expect(getEntryGatewayUrl({ env: Environment.STAGING })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/staging`)
-      expect(getEntryGatewayUrl({ env: Environment.DEV })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/dev`)
+      expect(getEntryGatewayUrl({ env: Environment.Production })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/prod`)
+      expect(getEntryGatewayUrl({ env: Environment.Staging })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/staging`)
+      expect(getEntryGatewayUrl({ env: Environment.Development })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/dev`)
+    })
+
+    it('prefers the proxy path over direct backend overrides for default traffic', () => {
+      setConfig({
+        entryGatewayApiUrlOverride: 'https://entry-gateway.api.corn-staging.com',
+        enableEntryGatewayProxy: true,
+      })
+      expect(getEntryGatewayUrl()).toBe(ENTRY_GATEWAY_PROXY_PATH)
+      expect(getCurrentEnv).not.toHaveBeenCalled()
     })
   })
 
   describe('explicit override', () => {
-    it('honors entryGatewayApiUrlOverride for default (non-env-pinned) calls', () => {
+    it('honors entryGatewayApiUrlOverride for default (non-env-pinned) calls when proxying is disabled', () => {
       setConfig({
         entryGatewayApiUrlOverride: 'https://example.test',
-        enableEntryGatewayProxy: true,
+        enableEntryGatewayProxy: false,
       })
       expect(getEntryGatewayUrl()).toBe('https://example.test')
     })
@@ -104,13 +114,13 @@ describe('getEntryGatewayUrl', () => {
         entryGatewayApiUrlOverride: 'https://entry-gateway.api.corn-staging.com',
         enableEntryGatewayProxy: true,
       })
-      expect(getEntryGatewayUrl({ env: Environment.PROD })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/prod`)
-      expect(getEntryGatewayUrl({ env: Environment.STAGING })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/staging`)
+      expect(getEntryGatewayUrl({ env: Environment.Production })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/prod`)
+      expect(getEntryGatewayUrl({ env: Environment.Staging })).toBe(`${ENTRY_GATEWAY_PROXY_PATH}/staging`)
     })
 
     it('bypasses the override when env is pinned, even with proxy disabled', () => {
       setConfig({ entryGatewayApiUrlOverride: 'https://example.test' })
-      expect(getEntryGatewayUrl({ env: Environment.PROD })).toBe(PROD_ENTRY_GATEWAY_API_BASE_URL)
+      expect(getEntryGatewayUrl({ env: Environment.Production })).toBe(PROD_ENTRY_GATEWAY_API_BASE_URL)
     })
   })
 })

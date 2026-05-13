@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import { fetchGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { useSmartWalletChains } from 'wallet/src/features/smartWallet/hooks/useSmartWalletChains'
 import { NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
 import { getRemoveDelegationTransaction } from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
+import { useProviderManager } from 'wallet/src/features/wallet/context'
 
 function hasEnoughNativeFunds(balance: bigint, gasFee?: { displayValue?: string }): boolean {
   const parsedGasFee = gasFee?.displayValue ? BigInt(gasFee.displayValue) : BigInt(0)
@@ -16,6 +16,7 @@ function hasEnoughNativeFunds(balance: bigint, gasFee?: { displayValue?: string 
 
 export const useNetworkBalances = (account?: Address): NetworkInfo[] => {
   const enabledChains = useSmartWalletChains()
+  const providerManager = useProviderManager()
   const { getDelegationDetails } = useWalletDelegationContext()
   const [networkInfos, setNetworkInfos] = useState<NetworkInfo[]>([])
   const { isStatsigReady } = useStatsigClientStatus()
@@ -32,9 +33,9 @@ export const useNetworkBalances = (account?: Address): NetworkInfo[] => {
 
         if (result?.latestDelegationAddress && result.isWalletDelegatedToUniswap) {
           try {
-            const provider = createEthersProvider({ chainId })
-            const balance = await provider?.getBalance(account)
-            const nativeBalance = balance ? BigInt(balance.toString()) : BigInt(0)
+            const provider = providerManager.getProvider(chainId)
+            const balance = await provider.getBalance(account)
+            const nativeBalance = BigInt(balance.toString())
             const chainInfo = getChainInfo(chainId)
 
             const gasAmount = await fetchGasFeeQuery({
@@ -68,7 +69,7 @@ export const useNetworkBalances = (account?: Address): NetworkInfo[] => {
     checkBalances().catch(() => {
       setNetworkInfos([])
     })
-  }, [account, enabledChains, getDelegationDetails, isStatsigReady])
+  }, [account, enabledChains, getDelegationDetails, isStatsigReady, providerManager])
 
   return networkInfos
 }

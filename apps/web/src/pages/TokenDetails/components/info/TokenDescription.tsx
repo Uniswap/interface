@@ -26,7 +26,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { FOTTooltipContent } from '~/features/Swap/SwapLineItem'
-import useCopyClipboard from '~/hooks/useCopyClipboard'
+import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { useSwapTaxes } from '~/hooks/useSwapTaxes'
 import {
   MultichainPillDropdown,

@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
+import { isWebPlatform } from '@universe/environment'
 import React, { memo, PropsWithChildren, ReactNode, useEffect, useId, useMemo } from 'react'
-import { isWebPlatform } from 'utilities/src/platform'
 // oxlint-disable-next-line no-restricted-imports -- Platform-specific implementation needs internal types
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'

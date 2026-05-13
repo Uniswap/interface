@@ -212,6 +212,7 @@
     "cli": "bun run --cwd apps/cli",
     "chains": "bun run --cwd packages/chains",
     "config": "bun run --cwd packages/config",
+    "config-cli": "bun run --cwd packages/config-cli",
     "dev-portal": "bun run --cwd apps/dev-portal",
     "encoding": "bun run --cwd packages/encoding",
     "environment": "bun run --cwd packages/environment",

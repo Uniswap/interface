@@ -1,7 +1,7 @@
 import { StatsigClient } from '@statsig/react-bindings'
 import { getConfig } from '@universe/config'
+import { isTestEnv } from '@universe/environment'
 import { LocalOverrideAdapterWrapper } from '@universe/gating/src/LocalOverrideAdapterWrapper'
-import { isTestEnv } from 'utilities/src/environment/env'
 
 export {
   StatsigClient,

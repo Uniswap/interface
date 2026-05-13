@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import dayjs from 'dayjs'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +19,6 @@ import { useIsCancelable } from 'uniswap/src/features/transactions/hooks/useIsCa
 import { useCanResumePlan } from 'uniswap/src/features/transactions/swap/plan/intermediaryState/useCanResumePlan'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export type TransactionDetailsOverviewProps = TransactionDetailsModalProps & {
   openPlanView: () => void

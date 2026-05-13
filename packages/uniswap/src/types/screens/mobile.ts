@@ -47,6 +47,9 @@ export enum OnboardingScreens {
   Notifications = 'OnboardingNotifications',
   WelcomeWallet = 'WelcomeWallet',
   PasskeyImport = 'PasskeyImport',
+  // Recovery-based graduation (email/OAuth + PIN). Shown when the user lacks a passkey
+  // on this device; rejoins the standard import flow after decrypting the seed phrase.
+  RecoveryFlow = 'OnboardingRecoveryFlow',
   Security = 'OnboardingSecurity',
 
   // import

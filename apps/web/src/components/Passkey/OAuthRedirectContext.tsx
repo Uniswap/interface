@@ -1,5 +1,5 @@
+import { isDevEnv } from '@universe/environment'
 import { createContext, useContext } from 'react'
-import { isDevEnv } from 'utilities/src/environment/env'
 
 const OAuthRedirectContext = createContext(false)
 

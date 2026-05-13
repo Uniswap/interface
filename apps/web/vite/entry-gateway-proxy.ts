@@ -17,10 +17,10 @@ function getDefaultProxyTarget(): string {
     return process.env.ENTRY_GATEWAY_API_URL_OVERRIDE
   }
 
-  const nodeEnv = process.env.NODE_ENV
-  const isBeta = process.env.REACT_APP_STAGING === 'true'
+  const isDev = process.env.NODE_ENV === 'development'
+  const isStaging = process.env.ENVIRONMENT === 'staging'
 
-  if (nodeEnv === 'development' || isBeta) {
+  if (isDev || isStaging) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
   } else {
     return PROD_ENTRY_GATEWAY_API_BASE_URL

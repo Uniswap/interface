@@ -1,9 +1,9 @@
+import { isExtensionApp } from '@universe/environment'
 import { useMemo } from 'react'
 import type { PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { buildExtensionMultichainBalancesListData } from 'uniswap/src/features/portfolio/balances/buildExtensionMultichainBalancesListData'
 import type { SortedPortfolioBalancesMultichain } from 'uniswap/src/features/portfolio/balances/types'
 import type { CurrencyIdToVisibility } from 'uniswap/src/features/visibility/slice'
-import { isExtensionApp } from 'utilities/src/platform'
 
 /**
  * Extension sidebar: derives list UI data via {@link buildExtensionMultichainBalancesListData}.

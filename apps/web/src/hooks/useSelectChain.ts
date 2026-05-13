@@ -5,11 +5,11 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { UserRejectedRequestError } from 'viem'
 import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import { useAccount } from '~/hooks/useAccount'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
-export default function useSelectChain() {
+export function useSelectChain() {
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const { switchChain } = useSwitchChainWagmi()
   const account = useAccount()

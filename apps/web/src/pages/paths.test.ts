@@ -11,7 +11,8 @@ import { routes } from '~/pages/RouteDefinitions'
 
 // Mock the actual components since they're not needed to test route definitions.
 vi.mock('~/pages/Swap', () => ({
-  default: () => React.createElement(React.Fragment),
+  SwapPage: () => React.createElement(React.Fragment),
+  Swap: () => React.createElement(React.Fragment),
 }))
 
 describe('Paths', () => {

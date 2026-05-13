@@ -1,15 +1,11 @@
 import { MonitorDefinition } from '../../types'
-import { TEAM, UNIVERSE_REPO_URL } from './constants'
+import { SWAP_FE_ADDITIONAL_SLACK_CHANNELS, TEAM, UNIVERSE_REPO_URL } from './constants'
 
 /**
  * CI test failure monitors.
  *
  * Ported from UI-managed monitor:
  *   - 238400608 Apps-Swap: Web E2E Test Failure (ci-tests alert)
- *
- * The legacy monitor notifies both @slack-apps-alerts-swap (the team default,
- * routed via ESC) and @slack-apps-alerts-swap-fe. The latter is added here
- * via `additionalSlackChannels`.
  */
 export const swapFeCiMonitors: MonitorDefinition[] = [
   {
@@ -27,7 +23,7 @@ export const swapFeCiMonitors: MonitorDefinition[] = [
     runbookUrl: 'https://www.notion.so/uniswaplabs/Playwright-Tests-1a8c52b2548b807787cec1fffbfa42a1',
     readmeUrl: `${UNIVERSE_REPO_URL}/actions/workflows/web_e2e_tests_playwright.yml`,
     dashboards: [],
-    additionalSlackChannels: ['@slack-apps-alerts-swap-fe'],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
     // Slack-only: CI test failures are informational, shouldn't page incident.io.
     enablePaging: false,
     includeIncidentWebhook: false,

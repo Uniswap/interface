@@ -9,7 +9,7 @@ import { useEffect } from 'react'
  *                if false, the callback will not be invoked until a first delay
  */
 // oxlint-disable-next-line max-params
-export default function useInterval(callback: () => void | Promise<void>, delay: null | number, leading = true) {
+export function useInterval(callback: () => void | Promise<void>, delay: null | number, leading = true) {
   useEffect(() => {
     if (delay === null) {
       return undefined

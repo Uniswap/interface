@@ -7,7 +7,7 @@ import { logger } from 'utilities/src/logger/logger'
 export function makeStatsigUser(userID: string): StatsigUser {
   return {
     userID,
-    appVersion: getConfig().version,
+    appVersion: getConfig().appVersion,
     custom: {
       app: StatsigCustomAppValue.Extension,
     },

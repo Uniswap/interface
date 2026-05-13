@@ -11,11 +11,11 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { USDT } from 'uniswap/src/constants/tokens'
 import type { NormalizedApprovalData } from 'uniswap/src/data/apiClients/liquidityService/normalizeApprovalResponse'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import { describe, expect, it } from 'vitest'
 import { PositionState } from '~/features/Liquidity/Create/types'
 import { generateLiquidityServiceCreateCalldataQueryParams } from '~/features/Liquidity/utils/generateLiquidityServiceCreateCalldata'
 import { ETH_MAINNET } from '~/test-utils/constants'
-import { DYNAMIC_FEE_DATA } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 const tickSpaceLimits = [

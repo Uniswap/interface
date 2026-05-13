@@ -12,14 +12,14 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { useEvent } from 'utilities/src/react/hooks'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import { useModalState } from '~/hooks/useModalState'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { useShowDemoView } from '~/pages/Portfolio/hooks/useShowDemoView'
 import { useNavigateToTokenDetails } from '~/pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 import { TokenData } from '~/pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokensMultichainParentContextMenu } from '~/pages/Portfolio/Tokens/Table/TokensMultichainParentContextMenu'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 /** Multichain aggregate row: per-chain actions only on child rows (hide, reports, data issue). */
 const MULTICHAIN_PARENT_MENU_EXCLUDED_ACTIONS: TokenMenuActionType[] = [

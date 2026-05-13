@@ -1,13 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { submitPoolSpamReport } from 'uniswap/src/features/reporting/reports'
-import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
+import { useReportPositionAction } from 'uniswap/src/features/positions/hooks/useReportPositionAction'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import { useAppDispatch } from '~/state/hooks'
-import { PositionInfo } from '~/types/liquidity'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 
 export function useReportPositionHandler({
   position,
@@ -18,46 +16,26 @@ export function useReportPositionHandler({
   isVisible: boolean
   navigateToPositions?: boolean
 }): () => void {
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { t } = useTranslation()
+
+  const reportAction = useReportPositionAction({
+    onSuccess: () => {
+      popupRegistry.addPopup(
+        { type: PopupType.Success, message: t('common.reported') },
+        'report-position-success',
+        POPUP_MEDIUM_DISMISS_MS,
+      )
+      if (navigateToPositions) {
+        void navigate('/positions')
+      }
+    },
+  })
 
   return useEvent(() => {
     if (!position) {
       return
     }
-
-    // Submit report
-    submitPoolSpamReport({
-      chainId: position.chainId,
-      poolId: position.poolId,
-      version: position.version,
-      token0: position.currency0Amount.currency,
-      token1: position.currency1Amount.currency,
-    })
-
-    // hide position if not already hidden
-    if (isVisible) {
-      dispatch(
-        setPositionVisibility({
-          poolId: position.poolId,
-          tokenId: position.tokenId,
-          chainId: position.chainId,
-          isVisible: false,
-        }),
-      )
-    }
-
-    // pop reported toast
-    popupRegistry.addPopup(
-      { type: PopupType.Success, message: t('common.reported') },
-      'report-position-success',
-      POPUP_MEDIUM_DISMISS_MS,
-    )
-
-    // navigate to position page
-    if (navigateToPositions) {
-      navigate('/positions')
-    }
+    reportAction({ position, isVisible })
   })
 }

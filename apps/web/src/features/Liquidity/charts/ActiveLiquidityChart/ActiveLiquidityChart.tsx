@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { max as getMax, scaleLinear } from 'd3'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -79,6 +80,8 @@ export function ActiveLiquidityChart({
   showDiffIndicators,
   isMobile,
   barColor,
+  priceInverted,
+  protocolVersion,
 }: {
   id?: string
   quoteCurrency: Currency
@@ -98,6 +101,8 @@ export function ActiveLiquidityChart({
   onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void
   isMobile?: boolean
   barColor?: string
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
 }) {
   const { formatPercent } = useLocalizationContext()
   const colors = useSporeColors()
@@ -157,6 +162,8 @@ export function ActiveLiquidityChart({
           axisLabelPaneWidth={axisLabelPaneWidth}
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
+          priceInverted={priceInverted}
+          protocolVersion={protocolVersion}
         />
       ) : null}
       {showDiffIndicators && (

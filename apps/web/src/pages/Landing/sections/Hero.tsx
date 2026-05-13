@@ -6,13 +6,12 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { ColumnCenter } from '~/components/deprecated/Column'
+import { serializeSwapStateToURLParameters } from '~/features/Swap/state/swap/tradeQueryParams'
 import { useCurrency } from '~/hooks/Tokens'
 import { Hover, RiseIn, RiseInText } from '~/pages/Landing/components/animations'
 import { TokenCloud } from '~/pages/Landing/components/TokenCloud'
-import useScrollParallax from '~/pages/Landing/sections/useScrollParallax'
+import { useScrollParallax } from '~/pages/Landing/sections/useScrollParallax'
 import { Swap } from '~/pages/Swap'
-import { serializeSwapStateToURLParameters } from '~/state/swap/hooks'
 
 interface HeroProps {
   scrollToRef: () => void
@@ -158,10 +157,10 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             width={500}
           >
             <Hover>
-              <ColumnCenter>
+              <Flex width="100%" alignItems="center">
                 <Text variant="body2">{t('hero.scroll')}</Text>
                 <RotatableChevron direction="down" />
-              </ColumnCenter>
+              </Flex>
             </Hover>
           </Flex>
         </RiseIn>

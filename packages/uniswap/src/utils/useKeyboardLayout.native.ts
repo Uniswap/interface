@@ -1,8 +1,8 @@
+import { isAndroid } from '@universe/environment'
 import { useEffect, useState } from 'react'
 // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { EmitterSubscription, Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
 import { KeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
-import { isAndroid } from 'utilities/src/platform'
 
 export function useKeyboardLayout(): KeyboardLayout {
   const window = useWindowDimensions()

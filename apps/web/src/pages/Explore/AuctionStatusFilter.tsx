@@ -10,7 +10,7 @@ import {
   AuctionStatusFilter as AuctionStatusFilterEnum,
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
-} from '~/state/explore/exploreTablesFilterStore'
+} from '~/features/Explore/state/exploreTablesFilterStore'
 export function AuctionStatusFilter() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)

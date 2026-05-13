@@ -9,13 +9,17 @@ import {
   authorizeAndCompleteRecovery,
   type EncryptedRecoveryState,
   encryptAndStoreRecovery,
+  RecoveryMethod,
   type RecoveryAuthMethodType,
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { validatePin } from 'uniswap/src/features/passkey/pinValidation'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { LIST_AUTHENTICATORS_QUERY_KEY } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import {
+  type AuthenticatorDisplay,
+  LIST_AUTHENTICATORS_QUERY_KEY,
+} from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { ConfirmPasscodeExtra, SuccessStep } from '~/components/Passkey/AddBackupLoginFinalSteps'
 import {
   EmailCodeStep,
@@ -27,7 +31,7 @@ import {
 import { useDigitInput } from '~/components/Passkey/BackupLoginComponents'
 import { OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { useOAuthResult } from '~/components/Passkey/useOAuthResult'
-import { getConfig } from '~/config'
+import { getPrivyConfig } from '~/config'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
@@ -66,7 +70,7 @@ export function AddBackupLoginModal() {
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
   const [oauthEmail, setOauthEmail] = useState<string | undefined>()
 
-  const { ready: privyReady, getAccessToken, user } = usePrivy()
+  const { ready: privyReady, getAccessToken, user, logout } = usePrivy()
 
   const oauthReturn = useOAuthResult(OAUTH_PENDING_KEY)
 
@@ -92,11 +96,20 @@ export function AddBackupLoginModal() {
     },
   })
 
+  // Privy's `sendCode` / `initOAuth` throw "Already logged in" if an authenticated
+  // session exists. Drop the existing session before starting a backup-login flow.
+  const ensureLoggedOut = useEvent(async (): Promise<void> => {
+    if (user) {
+      await logout()
+    }
+  })
+
   const sendCodeMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!privyReady) {
         throw new Error('Privy is not ready')
       }
+      await ensureLoggedOut()
       return sendCode({ email })
     },
     onSuccess: () => setStep(Step.EMAIL_CODE),
@@ -104,10 +117,11 @@ export function AddBackupLoginModal() {
   })
 
   const resendCodeMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!privyReady) {
         throw new Error('Privy is not ready')
       }
+      await ensureLoggedOut()
       return sendCode({ email })
     },
     onError: (e) => handleSendCodeError(e, 'handleResendCode'),
@@ -138,13 +152,14 @@ export function AddBackupLoginModal() {
       ? t('common.card.error.description')
       : undefined
 
-  const handleInitOAuth = useEvent((provider: 'google' | 'apple') => {
+  const handleInitOAuth = useEvent(async (provider: 'google' | 'apple'): Promise<void> => {
     if (!privyReady) {
       return
     }
+    await ensureLoggedOut()
     setOauthProvider(provider)
     sessionStorage.setItem(OAUTH_PENDING_KEY, provider)
-    initOAuth({ provider })
+    await initOAuth({ provider })
   })
 
   const handleSubmitCode = useEvent((code: string) => {
@@ -188,7 +203,7 @@ export function AddBackupLoginModal() {
         pin: firstPinRef.current,
         email: effectiveEmail,
         accessToken,
-        privyAppId: getConfig().privyAppId ?? '',
+        privyAppId: getPrivyConfig().appId,
       })
       // Guard against stale result if user navigated away during async work
       if (encryptionIdRef.current !== thisId) {
@@ -230,6 +245,23 @@ export function AddBackupLoginModal() {
         privyUserId: user.id,
         authMethodType,
       })
+
+      // Append rather than invalidate: a refetch after an OAuth redirect would re-prompt
+      // for the passkey to derive a fresh NECK. Synthesize the RecoveryMethod locally
+      // since SetupRecoveryResponse omits it; the next refetch overwrites this.
+      const newRecoveryMethod = new RecoveryMethod({
+        type: authMethodType,
+        identifier: effectiveEmail,
+        createdAt: BigInt(Date.now()),
+        status: 'ACTIVE',
+      })
+      queryClient.setQueryData<{
+        authenticators: AuthenticatorDisplay[]
+        recoveryMethods: RecoveryMethod[]
+      }>([LIST_AUTHENTICATORS_QUERY_KEY, walletId], (old) =>
+        old ? { ...old, recoveryMethods: [...old.recoveryMethods, newRecoveryMethod] } : old,
+      )
+
       setStep(Step.SUCCESS)
     } catch (signInError) {
       logger.error(signInError, { tags: { file: 'AddBackupLoginModal', function: 'handleSignInWithPasskey' } })
@@ -272,8 +304,7 @@ export function AddBackupLoginModal() {
     onClose()
   })
 
-  const handleDone = useEvent(async () => {
-    await queryClient.invalidateQueries({ queryKey: [LIST_AUTHENTICATORS_QUERY_KEY] })
+  const handleDone = useEvent(() => {
     handleClose()
   })
 
@@ -425,3 +456,5 @@ export function AddBackupLoginModal() {
     </Modal>
   )
 }
+
+export default AddBackupLoginModal

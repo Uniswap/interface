@@ -1,5 +1,5 @@
+import { TRUSTED_CHROME_EXTENSION_IDS } from '@universe/environment'
 import { DynamicConfigs, ExternallyConnectableExtensionConfigKey, useDynamicConfigValue } from '@universe/gating'
-import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 
 export function useExternallyConnectableExtensionId(): string {
   const extensionId = useDynamicConfigValue<

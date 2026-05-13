@@ -13,9 +13,9 @@ import { NumberType } from 'utilities/src/format/types'
 import { DetailLineItem, LineItemData } from '~/components/DetailLineItem'
 import { LoadingRow } from '~/components/Loader/styled'
 import { TooltipSize } from '~/components/Tooltip'
-import TradePrice from '~/components/TradePrice'
+import { TradePrice } from '~/components/TradePrice'
 import { GasBreakdownTooltip } from '~/features/Swap/GasBreakdownTooltip'
-import GasEstimateTooltip from '~/features/Swap/GasEstimateTooltip'
+import { GasEstimateTooltip } from '~/features/Swap/GasEstimateTooltip'
 import { RoutingTooltip } from '~/features/Swap/SwapRoute'
 import { InterfaceTrade, SubmittableTrade } from '~/state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/state/routing/utils'
@@ -155,7 +155,7 @@ interface SwapLineItemProps {
   animationDelay?: number
 }
 
-function SwapLineItem(props: SwapLineItemProps) {
+function SwapLineItemInner(props: SwapLineItemProps) {
   const { visible = true, animationDelay, syncing } = props
   const LineItem = useLineItem(props)
   if (!LineItem) {
@@ -177,4 +177,4 @@ function SwapLineItem(props: SwapLineItemProps) {
   )
 }
 
-export default React.memo(SwapLineItem)
+export const SwapLineItem = React.memo(SwapLineItemInner)

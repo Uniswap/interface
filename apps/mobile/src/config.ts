@@ -1,6 +1,7 @@
 // oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access
 import type { BaseConfig } from '@universe/config'
-import { optionalString, parseConfig } from '@universe/config'
+import { AppId, optionalString, parseConfig } from '@universe/config'
+import DeviceInfo from 'react-native-device-info'
 import { z } from 'zod'
 
 /**
@@ -9,6 +10,8 @@ import { z } from 'zod'
  * included automatically by parseConfig.
  */
 const mobileConfigValues = {
+  appId: AppId.Mobile,
+  appVersion: DeviceInfo.getVersion(),
   appsflyerApiKey: process.env.APPSFLYER_API_KEY,
   appsflyerAppId: process.env.APPSFLYER_APP_ID,
   onesignalAppId: process.env.ONESIGNAL_APP_ID,

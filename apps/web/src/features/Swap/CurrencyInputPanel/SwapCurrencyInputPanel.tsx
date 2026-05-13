@@ -4,7 +4,7 @@ import ms from 'ms'
 import type { ReactNode } from 'react'
 import { forwardRef, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Button, Flex, Text, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -15,22 +15,20 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { AutoColumn } from '~/components/deprecated/Column'
-import { RowBetween, RowFixed } from '~/components/deprecated/Row'
 import { LoadingOpacityContainer } from '~/components/Loader/styled'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { StyledNumericalInput } from '~/components/NumericalInput'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { FiatValue } from '~/features/Swap/CurrencyInputPanel/FiatValue'
 import { formatCurrencySymbol } from '~/features/Swap/CurrencyInputPanel/utils'
+import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
 import { useAccount } from '~/hooks/useAccount'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { useCurrencyBalance } from '~/state/connection/hooks'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { ThemedText } from '~/theme/components'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { flexColumnNoWrap, flexRowNoWrap } from '~/theme/styles'
 
 export const InputPanel = deprecatedStyled.div<{ hideInput?: boolean }>`
@@ -221,7 +219,7 @@ interface SwapCurrencyInputPanelProps {
   switchNetworkAction?: SwitchNetworkAction
 }
 
-const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPanelProps>(
+export const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPanelProps>(
   // oxlint-disable-next-line complexity
   (
     {
@@ -254,10 +252,10 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const account = useAccount()
+    const { currentTab } = useSwapAndLimitContext()
     const { chainId, isUserSelectedToken } = useMultichainContext()
     const chainAllowed = useIsSupportedChainId(chainId)
     const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
-    const colors = useSporeColors()
     const { formatCurrencyAmount } = useLocalizationContext()
     const { t } = useTranslation()
 
@@ -286,12 +284,12 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       <InputPanel id={id} hideInput={hideInput} {...rest}>
         {locked && (
           <FixedContainer>
-            <AutoColumn gap="sm" justify="center">
+            <Flex gap="$gap8" alignItems="center" width="100%">
               <Lock color="$neutral2" size="$icon.24" />
               <Text variant="body2" textAlign="center" px="$spacing12">
                 {t('swap.marketPrice.outsideRange.label')}
               </Text>
-            </AutoColumn>
+            </Flex>
           </FixedContainer>
         )}
 
@@ -338,7 +336,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                   animateShake={tooltipVisible}
                 >
                   <Aligner>
-                    <RowFixed>
+                    <Flex row position="relative" width="fit-content">
                       <AnimatePresence>
                         <Flex
                           row
@@ -373,7 +371,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                           )}
                         </Flex>
                       </AnimatePresence>
-                    </RowFixed>
+                    </Flex>
                     {onCurrencySelect && (
                       <CurrencySelectChevron>
                         <RotatableChevron direction="down" size="$icon.16" color={currency ? '$neutral1' : '$white'} />
@@ -386,21 +384,15 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
           </InputRow>
           {Boolean(!hideInput && !hideBalance) && (
             <FiatRow>
-              <RowBetween>
+              <Flex row width="100%" justifyContent="space-between" alignItems="center">
                 <LoadingOpacityContainer $loading={loading}>
                   {fiatValue && (
                     <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} testId={`fiat-value-${id}`} />
                   )}
                 </LoadingOpacityContainer>
                 {!initialCurrencyLoading ? (
-                  <RowFixed style={{ height: '16px' }}>
-                    <ThemedText.DeprecatedBody
-                      data-testid="balance-text"
-                      color={colors.neutral2.val}
-                      fontWeight={485}
-                      fontSize={14}
-                      style={{ display: 'inline' }}
-                    >
+                  <Flex row position="relative" width="fit-content" height={16}>
+                    <Text variant="body3" color="$neutral2" data-testid="balance-text" display="inline">
                       {!hideBalance && currency && selectedCurrencyBalance
                         ? renderBalance
                           ? renderBalance(selectedCurrencyBalance)
@@ -411,7 +403,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                               }),
                             })
                         : null}
-                    </ThemedText.DeprecatedBody>
+                    </Text>
                     {showMaxButton && selectedCurrencyBalance ? (
                       <Trace logPress element={ElementName.MaxTokenAmountButton}>
                         <Button
@@ -428,11 +420,11 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                         </Button>
                       </Trace>
                     ) : null}
-                  </RowFixed>
+                  </Flex>
                 ) : (
                   <span />
                 )}
-              </RowBetween>
+              </Flex>
             </FiatRow>
           )}
         </Container>
@@ -446,6 +438,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             otherSelectedCurrency={otherCurrency}
             chainIds={chainIds}
             switchNetworkAction={switchNetworkAction ?? SwitchNetworkAction.Swap}
+            swapTab={currentTab}
           />
         )}
       </InputPanel>
@@ -453,5 +446,3 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   },
 )
 SwapCurrencyInputPanel.displayName = 'SwapCurrencyInputPanel'
-
-export default SwapCurrencyInputPanel

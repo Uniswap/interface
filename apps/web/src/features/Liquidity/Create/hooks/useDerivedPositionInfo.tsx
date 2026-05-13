@@ -5,6 +5,8 @@ import { PoolParameters } from '@uniswap/client-liquidity/dist/uniswap/liquidity
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { liquidityQueries } from 'uniswap/src/data/apiClients/liquidityService/liquidityQueries'
+import { getSDKPoolFromPoolInformation } from 'uniswap/src/features/positions/parseRestPosition'
+import { DYNAMIC_FEE_DATA } from 'uniswap/src/features/positions/types'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,
@@ -15,9 +17,7 @@ import {
 import { getCurrencyWithWrap, getTokenOrZeroAddress, validateCurrencyInput } from '~/features/Liquidity/utils/currency'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
-import { getSDKPoolFromPoolInformation } from '~/features/Liquidity/utils/parseFromRest'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
-import { DYNAMIC_FEE_DATA } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 function getSortedCurrencies(a: Maybe<Currency>, b: Maybe<Currency>): { [field in PositionField]: Maybe<Currency> } {

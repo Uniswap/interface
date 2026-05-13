@@ -118,7 +118,7 @@
       }
     },
     "dev:e2e": {
-      "command": "REACT_APP_SKIP_CSP=1 REACT_APP_IS_PLAYWRIGHT_ENV=true vite dev",
+      "command": "REACT_APP_SKIP_CSP=1 IS_E2E_TEST=true vite dev",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -153,7 +153,7 @@
       }
     },
     "build:e2e": {
-      "command": "REACT_APP_SKIP_CSP=1 REACT_APP_IS_PLAYWRIGHT_ENV=true VITE_DISABLE_SOURCEMAP=true nx run web:build:production",
+      "command": "REACT_APP_SKIP_CSP=1 IS_E2E_TEST=true VITE_DISABLE_SOURCEMAP=true nx run web:build:production",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -276,7 +276,7 @@
       "cache": true
     },
     "test:set2": {
-      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/pages src/state",
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/pages src/state src/features/Swap/state",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -294,7 +294,7 @@
       "cache": true
     },
     "test:set4": {
-      "command": "NODE_OPTIONS='--no-deprecation' vitest run src --exclude 'src/components/**' --exclude 'src/pages/**' --exclude 'src/state/**' --exclude 'src/hooks/**' --exclude 'src/nft/**' --exclude 'src/utils/**'",
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src --exclude 'src/components/**' --exclude 'src/pages/**' --exclude 'src/state/**' --exclude 'src/features/Swap/state/**' --exclude 'src/hooks/**' --exclude 'src/nft/**' --exclude 'src/utils/**'",
       "options": {
         "cwd": "{projectRoot}"
       },

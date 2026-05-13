@@ -51,21 +51,17 @@ export async function listAuthenticators(
       await refreshNeckSession(devicePublicKey, resolvedWalletId)
     }
 
-    let challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
+    const challengeParams = {
       type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
       action: Action.LIST_AUTHENTICATORS,
       walletId: resolvedWalletId,
       devicePublicKey,
-    })
+    }
 
+    let challenge = await EmbeddedWalletApiClient.fetchChallengeRequest(challengeParams)
     if (!challenge.sessionActive) {
       await refreshNeckSession(devicePublicKey, resolvedWalletId)
-      challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
-        type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
-        action: Action.LIST_AUTHENTICATORS,
-        walletId: resolvedWalletId,
-        devicePublicKey,
-      })
+      challenge = await EmbeddedWalletApiClient.fetchChallengeRequest(challengeParams)
     }
 
     if (!challenge.signingPayload) {
@@ -153,10 +149,12 @@ export async function registerNewAuthenticator({
   authenticatorAttachment,
   username,
   walletId,
+  privyAppId,
 }: {
   authenticatorAttachment: AuthenticatorAttachment
   username?: string
   walletId?: string
+  privyAppId: string
 }): Promise<void> {
   const session = getDeviceSession()
   if (!session) {
@@ -191,10 +189,6 @@ export async function registerNewAuthenticator({
 
     // Construct Privy PATCH canonical payload and sign with device key
     const allKeys = [...challenge.existingPublicKeys, newPublicKey]
-    const privyAppId = process.env['PRIVY_APP_ID']
-    if (!privyAppId) {
-      throw new Error('PRIVY_APP_ID is not set')
-    }
     const payload = {
       body: { public_keys: allKeys },
       headers: { 'privy-app-id': privyAppId },

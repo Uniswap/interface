@@ -25,8 +25,8 @@ import {
   useConnectors as useWagmiConnectors,
   Connector as WagmiConnector,
 } from 'wagmi'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/components/Web3Provider/constants'
-import { walletTypeToAmplitudeWalletType } from '~/components/Web3Provider/walletConnect'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
+import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
 import { buildCAIP25Session } from '~/features/accounts/store/buildCAIP25Session'
 import { createAccountsStoreGetters } from '~/features/accounts/store/getters'
 import type {

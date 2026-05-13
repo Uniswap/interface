@@ -16,7 +16,7 @@ import { D3LiquidityChartHeader } from '~/features/Liquidity/charts/D3LiquidityR
 import { D3LiquidityMinMaxInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityMinMaxInput'
 import { DefaultPriceStrategies } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/DefaultPriceStrategies'
 import { LiquidityRangeActionButtons } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/LiquidityRangeActionButtons/LiquidityRangeActionButtons'
-import D3LiquidityRangeChart from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/D3LiquidityRangeChart'
+import { D3LiquidityRangeChart } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/D3LiquidityRangeChart'
 import { LiquidityChartStoreProvider } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreProvider'
 import { useDensityChartData } from '~/features/Liquidity/charts/LiquidityRangeInput/hooks'
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'

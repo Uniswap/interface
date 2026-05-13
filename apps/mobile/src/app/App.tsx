@@ -4,6 +4,7 @@ import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, type RenderPassReport } from '@shopify/react-native-performance'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
+import { isIOS, isTestEnv, isDatadogEnabled } from '@universe/environment'
 import {
   DatadogSessionSampleRateKey,
   DynamicConfigs,
@@ -69,6 +70,7 @@ import { setupExpoImageMemoryWatcher } from 'src/features/images/expoImageCacheS
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
+import { PrivyProviderWrapper } from 'src/features/passkey/PrivyProviderWrapper'
 import { createHashcashWorkerChannel } from 'src/features/sessions/createHashcashWorkerChannel'
 import { statsigMMKVStorageProvider } from 'src/features/statsig/statsigMMKVStorageProvider'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
@@ -102,13 +104,10 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n, { changeLanguage } from 'uniswap/src/i18n'
 import { type CurrencyId } from 'uniswap/src/types/currency'
-import { datadogEnabledBuild } from 'utilities/src/environment/constants'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { getLogger, logger } from 'utilities/src/logger/logger'
-import { isIOS } from 'utilities/src/platform'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 // oxlint-disable-next-line no-restricted-imports -- Required for Apollo client initialization at app root
@@ -301,7 +300,7 @@ function AppOuter(): JSX.Element | null {
    * RenderPassReport. We then forward this report to Datadog, Amplitude, etc.
    */
   const onReportPrepared = useCallback(async (report: RenderPassReport) => {
-    if (datadogEnabledBuild) {
+    if (isDatadogEnabled()) {
       const shouldLogJsBundleLoaded = report.timeToBootJsMillis && !jsBundleLoadedRef.current
       if (shouldLogJsBundleLoaded) {
         await DdRum.addAction(RumActionType.CUSTOM, DDRumAction.ApplicationStartJs, {
@@ -358,26 +357,28 @@ function AppOuter(): JSX.Element | null {
               <ImageSettingsProvider enableExpoImage={enableExpoImage}>
                 <GestureHandlerRootView style={flexStyles.fill}>
                   <WalletContextProvider>
-                    <NavigationContainer>
-                      <MobileWalletNavigationProvider>
-                        <NativeWalletProvider>
-                          <TokenPriceProvider>
-                            <WalletUniswapProvider>
-                              <AccountsStoreContextProvider>
-                                <DataUpdaters />
-                                <BottomSheetModalProvider>
-                                  <AppModals />
-                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                    <AppInner />
-                                  </PerformanceProfiler>
-                                </BottomSheetModalProvider>
-                                <NotificationToastWrapper />
-                              </AccountsStoreContextProvider>
-                            </WalletUniswapProvider>
-                          </TokenPriceProvider>
-                        </NativeWalletProvider>
-                      </MobileWalletNavigationProvider>
-                    </NavigationContainer>
+                    <PrivyProviderWrapper>
+                      <NavigationContainer>
+                        <MobileWalletNavigationProvider>
+                          <NativeWalletProvider>
+                            <TokenPriceProvider>
+                              <WalletUniswapProvider>
+                                <AccountsStoreContextProvider>
+                                  <DataUpdaters />
+                                  <BottomSheetModalProvider>
+                                    <AppModals />
+                                    <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                      <AppInner />
+                                    </PerformanceProfiler>
+                                  </BottomSheetModalProvider>
+                                  <NotificationToastWrapper />
+                                </AccountsStoreContextProvider>
+                              </WalletUniswapProvider>
+                            </TokenPriceProvider>
+                          </NativeWalletProvider>
+                        </MobileWalletNavigationProvider>
+                      </NavigationContainer>
+                    </PrivyProviderWrapper>
                   </WalletContextProvider>
                 </GestureHandlerRootView>
               </ImageSettingsProvider>

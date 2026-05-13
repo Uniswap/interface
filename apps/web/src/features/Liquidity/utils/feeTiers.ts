@@ -2,11 +2,11 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DYNAMIC_FEE_DATA, type DynamicFeeData, type FeeData } from 'uniswap/src/features/positions/types'
 import i18n from 'uniswap/src/i18n'
 import { PercentNumberDecimals } from 'utilities/src/format/types'
 import { BIPS_BASE } from '~/constants/misc'
 import { defaultFeeTiers } from '~/features/Liquidity/constants'
-import { DYNAMIC_FEE_DATA, type DynamicFeeData, type FeeData } from '~/types/liquidity'
 import { FeeTierData } from '~/types/liquidity'
 
 export const MAX_FEE_TIER_DECIMALS = 4

@@ -18,6 +18,11 @@ import { createEntryGatewayProxies } from './vite/entry-gateway-proxy'
 import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
+// process.env.APP_ID is sourced from apps/web/.env for browser-side substitution
+// (via envDefines below) and from this assignment for the Node-side Tamagui static
+// extractor — Vite's loadEnv() returns an env object without mutating process.env.
+process.env.APP_ID = 'web'
+
 // Get current file directory (ESM equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -230,10 +235,9 @@ export default defineConfig(({ mode }) => {
   const defines = {
     __DEV__: !isProduction,
     'process.env.NODE_ENV': JSON.stringify(mode),
+    'process.env.ENVIRONMENT': JSON.stringify(mode),
     'process.env.EXPO_OS': JSON.stringify('web'),
     'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash),
-    'process.env.REACT_APP_STAGING': JSON.stringify(mode === 'staging'),
-    'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('vite'),
     // Enable Tamagui's global z-index stacking to fix modal stacking issues
     'process.env.TAMAGUI_STACK_Z_INDEX_GLOBAL': JSON.stringify('true'),
     // So getConfig().isVercelEnvironment is true in the client on Vercel; enables direct staging WS URL to match EGW

@@ -6,11 +6,11 @@ import { Check } from 'ui/src/components/icons/Check'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import {
   useExploreTablesFilterStore,
   useExploreTablesFilterStoreActions,
-} from '~/state/explore/exploreTablesFilterStore'
+} from '~/features/Explore/state/exploreTablesFilterStore'
+import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 
 const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
 

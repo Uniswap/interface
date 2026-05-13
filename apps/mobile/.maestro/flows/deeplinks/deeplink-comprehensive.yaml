@@ -114,7 +114,7 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:

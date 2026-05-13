@@ -7,13 +7,13 @@ import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { DEFAULT_INACTIVE_LIST_URLS } from '~/constants/lists'
 import { useFetchListCallback } from '~/hooks/useFetchListCallback'
 import { useStateRehydrated } from '~/hooks/useStateRehydrated'
-import useInterval from '~/lib/hooks/useInterval'
+import { useInterval } from '~/lib/hooks/useInterval'
 import { useAppDispatch } from '~/state/hooks'
 import { acceptListUpdate } from '~/state/lists/actions'
 import { useAllLists } from '~/state/lists/hooks'
 
 // TODO(WEB-3839): delete this when lists are removed from redux
-export default function Updater(): null {
+export function Updater(): null {
   const { provider } = useWeb3React()
   const dispatch = useAppDispatch()
   const isWindowVisible = useIsWindowVisible()
@@ -85,3 +85,5 @@ export default function Updater(): null {
 
   return null
 }
+
+export default Updater

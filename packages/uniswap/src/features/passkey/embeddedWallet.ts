@@ -5,6 +5,7 @@ import {
   RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 import type { RegistrationOptions } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
+import { isWebApp } from '@universe/environment'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import {
   clearDeviceSession,
@@ -28,13 +29,11 @@ export {
   Action,
   AuthenticationTypes,
   AuthenticatorNameType,
+  RecoveryMethod,
   RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 
-export type {
-  Authenticator,
-  RecoveryMethod,
-} from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
+export type { Authenticator } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 
 export async function registerNewPasskey({
   username,
@@ -172,11 +171,21 @@ export async function authenticateWithPasskey(
   },
 ): Promise<string | undefined> {
   try {
+    logger.debug('embeddedWallet.ts', 'authenticateWithPasskey', `Starting action=${Action[action]}`, {
+      walletId: options?.walletId,
+      hasDevicePublicKey: Boolean(options?.devicePublicKey),
+      hasAuthenticatorId: Boolean(options?.authenticatorId),
+    })
+
     // Include devicePublicKey if provided or available from NECK metadata.
     // Do NOT generate a new key pair here — callers that need NECK persistence
     // (signInWithPasskey, signWithDeviceSessionOrPasskey) generate and persist
     // their own key pair before calling this function.
-    const neckMeta = loadNeckMetadata()
+    //
+    // NECK is a web-app-only concept (browser-session device key backed by
+    // localStorage + non-extractable CryptoKey). Skip the lookup on mobile and
+    // extension — they don't generate, register, or persist a NECK key.
+    const neckMeta = isWebApp ? loadNeckMetadata() : null
     const devicePublicKey = options?.devicePublicKey ?? neckMeta?.publicKeyBase64
 
     const challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
@@ -186,11 +195,17 @@ export async function authenticateWithPasskey(
       message: options?.message,
       transaction: options?.transaction,
       typedData: options?.typedData,
+      encryptionKey: options?.encryptionKey,
       authenticatorId: options?.authenticatorId,
       authorizationContractAddress: options?.authorizationContractAddress,
       authorizationChainId: options?.authorizationChainId,
       authorizationNonce: options?.authorizationNonce,
       devicePublicKey,
+    })
+
+    logger.debug('embeddedWallet.ts', 'authenticateWithPasskey', 'Challenge received', {
+      hasChallengeOptions: Boolean(challenge.challengeOptions),
+      challengeOptionsPreview: challenge.challengeOptions?.slice(0, 120),
     })
 
     // TODO[INFRA-1212]: if challengeOptions is defined but the action is a session action, it means the session has expired and we need to reauthenticate
@@ -200,16 +215,28 @@ export async function authenticateWithPasskey(
     if (!challenge.challengeOptions) {
       return undefined
     }
-    return await authenticatePasskey(challenge.challengeOptions)
+    const credential = await authenticatePasskey(challenge.challengeOptions)
+    logger.debug('embeddedWallet.ts', 'authenticateWithPasskey', 'Passkey ceremony completed', {
+      hasCredential: Boolean(credential),
+    })
+    return credential
   } catch (error: unknown) {
     if (error instanceof Error && error.name === 'AbortError') {
       logger.debug('embeddedWallet.ts', 'authenticateWithPasskey', 'User aborted the registration process')
       return undefined
     } else {
+      const errName = error instanceof Error ? error.name : 'unknown'
+      const errMessage = error instanceof Error ? error.message : String(error)
       logger.error(new Error('Error during authentication', { cause: error }), {
         tags: {
           file: 'embeddedWallet.ts',
           function: 'authenticateWithPasskey',
+        },
+        extra: {
+          action: Action[action],
+          errName,
+          errMessage,
+          walletId: options?.walletId,
         },
       })
       throw error
@@ -221,8 +248,13 @@ export async function authenticateWithPasskeyForSeedPhraseExport(walletId?: stri
   return await authenticateWithPasskey(Action.EXPORT_SEED_PHRASE, { walletId })
 }
 
+export async function authenticateWithPasskeyForWalletSignin(): Promise<string | undefined> {
+  return await authenticateWithPasskey(Action.WALLET_SIGNIN)
+}
+
 export async function signInWithPasskey(
   walletId?: string,
+  options?: { onWalletSignInFailureWithWalletId?: () => void },
 ): Promise<{ walletAddress: string; walletId: string; exported?: boolean } | undefined> {
   try {
     // Generate NECK key pair before sign-in so we can persist it after.
@@ -244,11 +276,31 @@ export async function signInWithPasskey(
       freshPrivateKey = keyPair.privateKey
     }
 
-    const credential = await authenticateWithPasskey(Action.WALLET_SIGNIN, { walletId, devicePublicKey })
+    let credential: string | undefined
+    let challengeIncludedWalletId = !!walletId
+    try {
+      credential = await authenticateWithPasskey(Action.WALLET_SIGNIN, { walletId, devicePublicKey })
+    } catch (challengeError) {
+      // Retry without the walletId hint when a hinted Challenge fails (e.g. backend "Wallet not found").
+      if (!walletId) {
+        throw challengeError
+      }
+      credential = await authenticateWithPasskey(Action.WALLET_SIGNIN, { walletId: undefined, devicePublicKey })
+      challengeIncludedWalletId = false
+    }
     if (!credential) {
       return undefined
     }
-    const signInRespJson = await EmbeddedWalletApiClient.fetchWalletSigninRequest({ credential })
+    let signInRespJson: Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchWalletSigninRequest>>
+    try {
+      signInRespJson = await EmbeddedWalletApiClient.fetchWalletSigninRequest({ credential })
+    } catch (signInError) {
+      // The credential is already consumed; signal callers so they can clear stale walletId hints.
+      if (challengeIncludedWalletId) {
+        options?.onWalletSignInFailureWithWalletId?.()
+      }
+      throw signInError
+    }
     if (signInRespJson.walletAddress && signInRespJson.walletId) {
       // Persist NECK so subsequent signing flows find it in memory
       if (freshPrivateKey) {
@@ -340,6 +392,7 @@ export {
   signTransactionWithPasskey,
   signTypedDataWithPasskey,
 } from 'uniswap/src/features/passkey/signing'
+export type { GetExportCredentialFn } from 'uniswap/src/features/passkey/signing'
 
 /** Result of the crypto phase — feed this into {@link authorizeAndCompleteRecovery}. */
 export interface EncryptedRecoveryState {

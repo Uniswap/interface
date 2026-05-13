@@ -2,7 +2,7 @@ import { Currency, Price } from '@uniswap/sdk-core'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { getPriceDifference } from '~/features/Liquidity/utils/getPriceDifference'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { ETH_MAINNET } from '~/test-utils/constants'
 
 function getInitialPrice(base: Currency, quote: Currency, input: string) {

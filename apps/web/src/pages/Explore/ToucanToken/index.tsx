@@ -1,6 +1,5 @@
 //! tamagui-ignore
 // tamagui-ignore
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
@@ -47,7 +46,6 @@ const TOUCAN_INTRO_MODAL_SESSION_KEY = 'toucan-intro-modal-seen-session'
 
 function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolean; onCloseModal: () => void }) {
   const { t } = useTranslation()
-  const isV2 = useFeatureFlag(FeatureFlags.AuctionDetailsV2)
   const { chainName, auctionAddress } = useParams<{ chainName: string; auctionAddress: string }>()
   const { auctionState, auctionDetails, tokenColor, isGraduated, currentBlockNumber } = useAuctionStore((state) => ({
     auctionState: state.progress.state,
@@ -80,15 +78,6 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
 
   const [chartActiveTab, setChartActiveTab] = useState<BidDistributionChartTab>(BidDistributionChartTab.ClearingPrice)
   const [showBidFormModal, setShowBidFormModal] = useState(false)
-
-  // In V2 combined mode, ClearingPrice tab already includes distribution data,
-  // so no auto-switch is needed. In V1, switch to the separate Distribution tab.
-  const handleBidFormInputChange = useCallback(() => {
-    const isAuctionInProgress = auctionState === AuctionProgressState.IN_PROGRESS
-    if (!isV2 && isAuctionInProgress && chartActiveTab === BidDistributionChartTab.ClearingPrice) {
-      setChartActiveTab(BidDistributionChartTab.Distribution)
-    }
-  }, [auctionState, chartActiveTab, isV2])
 
   // Sync activeBidFormTab to store so chart knows whether to render bid line
   const { setActiveBidFormTab } = useAuctionStoreActions()
@@ -164,7 +153,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
               display: 'none',
             }}
           >
-            {showAuctionGraduated ? <AuctionGraduated /> : <BidForm onInputChange={handleBidFormInputChange} />}
+            {showAuctionGraduated ? <AuctionGraduated /> : <BidForm />}
             {hasUserBids && <Bids />}
           </RightPanel>
         </TokenDetailsLayout>
@@ -208,7 +197,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
         maxWidth={420}
         padding="$spacing16"
       >
-        <BidForm onInputChange={handleBidFormInputChange} onBidSubmitted={() => setShowBidFormModal(false)} />
+        <BidForm onBidSubmitted={() => setShowBidFormModal(false)} />
       </Modal>
       {/* Withdraw modal - $sm only */}
       <WithdrawModal isOpen={isWithdrawModalOpen} onClose={() => setIsWithdrawModalOpen(false)} />
@@ -216,7 +205,7 @@ function ToucanTokenContent({ isModalOpen, onCloseModal }: { isModalOpen: boolea
   )
 }
 
-export default function ToucanToken() {
+export function ToucanToken() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const walletAddress = useActiveAddress(Platform.EVM)
   const dispatch = useAppDispatch()
@@ -279,3 +268,5 @@ export default function ToucanToken() {
     </AuctionStoreProvider>
   )
 }
+
+export default ToucanToken

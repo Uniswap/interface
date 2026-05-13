@@ -1,9 +1,8 @@
 import { Trans } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import Row from '~/components/deprecated/Row'
 import { css, deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
 import { ClickableStyle } from '~/theme/components/styles'
 
 interface LimitPriceButtonProps {
@@ -84,14 +83,14 @@ export function LimitPresetPriceButton({
       onClick={() => !disabled && onSelect(priceAdjustmentPercentage)}
     >
       {priceAdjustmentPercentage === 0 ? (
-        <ThemedText.BodySecondary fontWeight={535} color="inherit">
+        <Text variant="buttonLabel2" color="inherit">
           <Trans i18nKey="common.market.label" />
-        </ThemedText.BodySecondary>
+        </Text>
       ) : (
-        <ThemedText.BodySecondary fontWeight={535} color="inherit">
+        <Text variant="buttonLabel2" color="inherit">
           {sign}
           {formatPercent(Math.abs(priceAdjustmentPercentage))}
-        </ThemedText.BodySecondary>
+        </Text>
       )}
     </Container>
   )
@@ -112,7 +111,7 @@ export function LimitCustomMarketPriceButton({
   const onSetAdjustmentPercentage = () => !disabled && onSelect(0)
   const { formatPercent } = useLocalizationContext()
   return (
-    <Row width="unset" gap="1px">
+    <Flex row width="unset" gap={1}>
       <Container
         $selected={selected}
         $disabled={disabled}
@@ -120,14 +119,14 @@ export function LimitCustomMarketPriceButton({
         onClick={onSetAdjustmentPercentage}
       >
         {!customAdjustmentPercentage ? (
-          <ThemedText.BodySecondary color="inherit" fontWeight={535}>
+          <Text variant="buttonLabel2" color="inherit">
             <Trans i18nKey="common.market.label" />
-          </ThemedText.BodySecondary>
+          </Text>
         ) : (
-          <ThemedText.BodySecondary color="inherit" fontWeight={535}>
+          <Text variant="buttonLabel2" color="inherit">
             {customAdjustmentPercentage > 0 ? '+' : ''}
             {formatPercent(customAdjustmentPercentage)}
-          </ThemedText.BodySecondary>
+          </Text>
         )}
       </Container>
       {customAdjustmentPercentage && (
@@ -135,6 +134,6 @@ export function LimitCustomMarketPriceButton({
           <X size="$icon.16" />
         </HighlightedContainerXButton>
       )}
-    </Row>
+    </Flex>
   )
 }

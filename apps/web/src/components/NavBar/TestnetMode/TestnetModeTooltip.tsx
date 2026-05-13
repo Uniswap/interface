@@ -5,7 +5,7 @@ import { zIndexes } from 'ui/src/theme'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 
-export default function TestnetModeTooltip() {
+export function TestnetModeTooltip() {
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const setMenu = useSetMenu()

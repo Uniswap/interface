@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import { RefObject, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, styled, Text, useWindowDimensions } from 'ui/src'
@@ -11,7 +12,6 @@ import {
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useSnowflakeAnimation } from 'uniswap/src/hooks/useSnowflakeAnimation'
-import { isMobileWeb } from 'utilities/src/platform'
 import { MenuStateVariant, useSetMenuCallback } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'

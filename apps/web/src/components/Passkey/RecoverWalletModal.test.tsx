@@ -1,4 +1,4 @@
-import { useAuthorizationSignature, useLoginWithEmail, usePrivy } from '@privy-io/react-auth'
+import { useAuthorizationSignature, useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { fireEvent, waitFor } from '@testing-library/react'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { attemptPinDecryption, executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
@@ -9,6 +9,7 @@ import { render, screen } from '~/test-utils/render'
 vi.mock('@privy-io/react-auth', () => ({
   useAuthorizationSignature: vi.fn(),
   useLoginWithEmail: vi.fn(),
+  useLoginWithOAuth: vi.fn(),
   usePrivy: vi.fn(),
 }))
 
@@ -68,12 +69,13 @@ vi.mock('~/components/WalletModal/useWagmiConnectorWithId', () => ({
   useWagmiConnectorWithId: () => mockConnector,
 }))
 
-vi.mock('~/components/Web3Provider/walletConnect', () => ({
+vi.mock('~/connection/walletConnect', () => ({
   walletTypeToAmplitudeWalletType: vi.fn(() => 'embedded'),
 }))
 
 vi.mock('~/config', () => ({
   getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id' })),
+  getPrivyConfig: vi.fn(() => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' })),
 }))
 
 const mockOnClose = vi.fn()
@@ -90,6 +92,9 @@ function setupMocks() {
     sendCode: mockSendCode,
     loginWithCode: mockLoginWithCode,
   } as unknown as ReturnType<typeof useLoginWithEmail>)
+  vi.mocked(useLoginWithOAuth).mockReturnValue({
+    initOAuth: vi.fn(),
+  } as unknown as ReturnType<typeof useLoginWithOAuth>)
   vi.mocked(usePrivy).mockReturnValue({
     getAccessToken: mockGetAccessToken,
     ready: true,
@@ -112,8 +117,16 @@ function pasteIntoFirstInput(code: string) {
   })
 }
 
+async function selectEmailLogin() {
+  fireEvent.click(screen.getByText('Email'))
+  await waitFor(() => {
+    expect(screen.getByPlaceholderText('Recovery email')).toBeInTheDocument()
+  })
+}
+
 async function goToEmailCodeStep() {
   mockSendCode.mockResolvedValue(undefined)
+  await selectEmailLogin()
   typeEmail('test@example.com')
   fireEvent.click(screen.getByText('Continue'))
   await waitFor(() => {
@@ -146,10 +159,10 @@ describe('RecoverWalletModal', () => {
     sessionStorage.clear()
   })
 
-  it('renders email entry step by default when no OAuth pending', () => {
+  it('renders email entry step after selecting email login when no OAuth pending', async () => {
     setupMocks()
     render(<RecoverWalletModal />)
-    expect(screen.getByPlaceholderText('Recovery email')).toBeInTheDocument()
+    await selectEmailLogin()
     expect(screen.getByText('Continue')).toBeInTheDocument()
   })
 
@@ -182,14 +195,18 @@ describe('RecoverWalletModal', () => {
     expect(inputs).toHaveLength(4)
   })
 
-  it('back from email entry closes modal', () => {
+  it('back from email entry returns to login step', async () => {
     setupMocks()
     render(<RecoverWalletModal />)
-    expect(screen.getByPlaceholderText('Recovery email')).toBeInTheDocument()
+    await selectEmailLogin()
 
     fireEvent.click(screen.getByTestId('step-header-back'))
 
-    expect(mockOnClose).toHaveBeenCalled()
+    // Back from EmailEntry returns to Login (the method-selection screen), not the modal close
+    await waitFor(() => {
+      expect(screen.queryByPlaceholderText('Recovery email')).not.toBeInTheDocument()
+    })
+    expect(screen.getByText('Email')).toBeInTheDocument()
   })
 
   it('happy path: correct PIN advances to ADD_PASSKEY step', async () => {

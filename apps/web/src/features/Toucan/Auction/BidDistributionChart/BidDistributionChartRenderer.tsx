@@ -142,6 +142,7 @@ function BidDistributionChartRendererComponent({
     tickValue: 0,
     volumeAmount: 0,
     totalVolume: 0,
+    tickQ96: undefined,
   })
 
   // State to force tooltip stacking when clicking near clearing price
@@ -769,6 +770,7 @@ function BidDistributionChartRendererComponent({
           tickValue={chartBarTooltipState.tickValue}
           volumeAmount={chartBarTooltipState.volumeAmount}
           totalVolume={chartBarTooltipState.totalVolume}
+          tickQ96={chartBarTooltipState.tickQ96}
           bidTokenInfo={bidTokenInfo}
           totalSupply={totalSupply}
           auctionTokenDecimals={auctionTokenDecimals}

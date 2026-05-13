@@ -16,7 +16,6 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 type TokenBalanceListContextState = {
   balancesById: Record<string, PortfolioMultichainBalance> | undefined
   expandedCurrencyIds: Set<string>
-  /** True only in the browser extension; mobile never inserts multichain child rows. */
   multichainRowExpansionEnabled: boolean
   networkStatus: NetworkStatus
   refetch: (() => void) | undefined

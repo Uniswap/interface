@@ -14,12 +14,19 @@ export function easeInEaseOutLayoutAnimation(options?: LayoutAnimationOptions): 
     return
   }
 
+  if (typeof document === 'undefined') {
+    return
+  }
+
   // Apply a global CSS class to trigger animations
   const animationClass = getCssClassForPreset(mergedOptions.preset)
   document.body.classList.add(animationClass)
 
-  // Remove the class after the animation ends
+  // Timer can outlive the document (e.g. test teardown, page unload)
   setTimeout(() => {
+    if (typeof document === 'undefined') {
+      return
+    }
     document.body.classList.remove(animationClass)
   }, getAnimationDurationForPreset(mergedOptions.preset))
 }

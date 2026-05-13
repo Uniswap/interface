@@ -50,6 +50,17 @@ export function SelectImportMethod(): JSX.Element {
               </Flex>
             )}
             <OptionCard
+              Icon={Passkey}
+              title={t('nav.logIn.button')}
+              subtitle={t('onboarding.import.selectMethod.passkey.subtitle')}
+              onPress={(): void =>
+                navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.ImportPasskey}`, {
+                  replace: true,
+                  state: { importPasskey: true } satisfies InitiatePasskeyAuthLocationState,
+                })
+              }
+            />
+            <OptionCard
               Icon={PapersText}
               title={t('onboarding.import.selectMethod.recoveryPhrase.title')}
               subtitle={t('onboarding.import.selectMethod.recoveryPhrase.subtitle')}
@@ -57,25 +68,12 @@ export function SelectImportMethod(): JSX.Element {
                 navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}`, { replace: true })
               }
             />
-
             <OptionCard
               Icon={QrCode}
               title={t('onboarding.import.selectMethod.mobileApp.title')}
               subtitle={t('onboarding.import.selectMethod.mobileApp.subtitle')}
               onPress={(): void =>
                 navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Scan}`, { replace: true })
-              }
-            />
-
-            <OptionCard
-              Icon={Passkey}
-              title={t('onboarding.import.selectMethod.passkey.title')}
-              subtitle={t('onboarding.import.selectMethod.passkey.subtitle')}
-              onPress={(): void =>
-                navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.ImportPasskey}`, {
-                  replace: true,
-                  state: { importPasskey: true } satisfies InitiatePasskeyAuthLocationState,
-                })
               }
             />
           </Flex>

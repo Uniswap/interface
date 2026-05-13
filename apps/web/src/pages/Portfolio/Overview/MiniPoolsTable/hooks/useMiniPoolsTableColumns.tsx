@@ -1,6 +1,7 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { HeaderCell } from '~/components/Table/styled'
 import { LiquidityPositionDropdownMenu } from '~/features/Liquidity/LiquidityPositionDropdownMenu'
 import { PoolBalanceCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Balance'
@@ -9,7 +10,6 @@ import { PoolFeesCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/
 import { PoolInfoCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Info'
 import { PositionCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/PositionCell'
 import { PoolStatusCell } from '~/pages/Portfolio/Overview/MiniPoolsTable/columns/Status'
-import { PositionInfo } from '~/types/liquidity'
 
 export const useMiniPoolsTableColumns = ({ isLoading }: { isLoading: boolean }) => {
   const { t } = useTranslation()

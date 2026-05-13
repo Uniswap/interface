@@ -64,19 +64,6 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         signerManager,
         signAsString: method === EthMethod.PersonalSign,
       })
-
-      // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
-      if (
-        params.dappRequestInfo.requestType === DappRequestType.UwULink &&
-        params.dappRequestInfo.name === 'Uniswap Cafe'
-      ) {
-        yield* put(
-          pushNotification({
-            type: AppNotificationType.Success,
-            title: 'Checked in',
-          }),
-        )
-      }
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
       result = yield* call(signTypedDataMessage, { message: params.message, account, signerManager })
     } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {

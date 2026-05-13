@@ -91,7 +91,7 @@ export function RemoveLiquidityForm() {
             <Trans i18nKey="common.withdrawal.amount" />
           </Text>
           <Flex row alignItems="center" justifyContent="center" width="100%">
-            <NumericalInputWrapper width="100%">
+            <NumericalInputWrapper style={{ width: '100%' }}>
               <StyledPercentInput
                 value={percent}
                 onUserInput={(value: string) => {

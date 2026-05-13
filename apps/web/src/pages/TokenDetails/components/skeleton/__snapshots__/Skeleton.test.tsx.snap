@@ -2,21 +2,7 @@
 
 exports[`TDP Skeleton > should render correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -214,8 +200,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
         class="_gap-_lg_t-space-gap1631 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _width-10037 _flexGrow-1 _flexShrink-1 _gap-t-space-spa1360333989"
       >
         <div
-          class="c0 c1"
-          style="position: relative;"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _alignItems-center _position-relative"
         >
           <svg
             fill="none"

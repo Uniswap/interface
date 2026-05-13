@@ -1,8 +1,8 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { LiquidityPositionInfo } from '~/features/Liquidity/LiquidityPositionInfo'
 import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from '~/test-utils/constants'
 import { render } from '~/test-utils/render'
-import { PositionInfo } from '~/types/liquidity'
 
 vi.mock('~/features/Liquidity/utils')
 

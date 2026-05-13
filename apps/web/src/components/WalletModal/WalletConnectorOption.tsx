@@ -1,5 +1,6 @@
+import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
 import { BINANCE_WALLET_ICON, UNISWAP_LOGO } from 'ui/src/assets'
 import { Chevron } from 'ui/src/components/icons/Chevron'
@@ -14,25 +15,25 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import Loader from '~/components/Icons/LoadingSpinner'
+import { Loader } from '~/components/Icons/LoadingSpinner'
 import { DetectedBadge } from '~/components/WalletModal/shared'
-import { useRecentConnectorId } from '~/components/Web3Provider/constants'
+import { useRecentConnectorId } from '~/connection/constants'
 import { useIsInjectedWallet } from '~/features/accounts/store/hooks'
 import { ExternalWallet } from '~/features/accounts/store/types'
 import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
-import { ThemedText } from '~/theme/components'
 import { isIFramed } from '~/utils/isIFramed'
 
 function RecentBadge() {
+  const { t } = useTranslation()
+
   return (
     <Badge badgeVariant={BadgeVariant.SOFT} borderRadius={4} p={1} px={4}>
-      <ThemedText.LabelMicro color="accent1">
-        <Trans i18nKey="common.recent" />
-      </ThemedText.LabelMicro>
+      <Text variant="body4" color="$accent1">
+        {t('common.recent')}
+      </Text>
     </Badge>
   )
 }

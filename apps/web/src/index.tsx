@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
+import { isDevEnv, isTestEnv, localDevDatadogEnabled } from '@universe/environment'
 import type { StatsigUser } from '@universe/gating'
 import {
   getIsHashcashSolverEnabled,
@@ -43,8 +44,6 @@ import { LocalizationContextProvider } from 'uniswap/src/features/language/Local
 import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
-import { localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { getLogger } from 'utilities/src/logger/logger'
 // oxlint-disable-next-line no-restricted-imports -- custom useAccount hook requires statsig
 import { useAccount } from 'wagmi'
@@ -53,9 +52,8 @@ import { apolloClient } from '~/appGraphql/data/apollo/client'
 import { TokenBalancesProvider } from '~/appGraphql/data/apollo/TokenBalancesProvider'
 import { QueryClientPersistProvider } from '~/components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from '~/components/Web3Provider/createWeb3Provider'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
-import { WebUniswapProvider } from '~/components/Web3Provider/WebUniswapContext'
-import { getConfig } from '~/config'
+import { getConfig, getPrivyConfig } from '~/config'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { AccountsStoreDevTool } from '~/features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from '~/features/accounts/store/provider'
 import { ConnectWalletMutationProvider } from '~/features/wallet/connection/hooks/useConnectWalletMutation'
@@ -64,7 +62,8 @@ import { useDeferredComponent } from '~/hooks/useDeferredComponent'
 import { LanguageProvider } from '~/i18n/LanguageProvider'
 import { BlockNumberProvider } from '~/lib/hooks/useBlockNumber'
 import { WebNotificationServiceManager } from '~/notification-service/WebNotificationService'
-import App from '~/pages/App'
+import { App } from '~/pages/App'
+import { WebUniswapProvider } from '~/pages/App/WebUniswapContext'
 import { onHashcashSolveCompleted, onTurnstileSolveCompleted, sessionInitAnalytics } from '~/sessions/analytics'
 import store from '~/state'
 import { LivePricesProvider } from '~/state/livePrices/LivePricesProvider'
@@ -88,12 +87,10 @@ initializePortfolioQueryOverrides({ store })
 
 const loadListsUpdater = () => import('~/state/lists/updater')
 const loadApplicationUpdater = () => import('~/state/application/updater')
-const loadActivityStateUpdater = () =>
-  import('~/state/activity/updater').then((m) => ({ default: m.ActivityStateUpdater }))
+const loadActivityStateUpdater = () => import('~/state/activity/updater')
 const loadLogsUpdater = () => import('~/state/logs/updater')
 const loadFiatOnRampTransactionsUpdater = () => import('~/state/fiatOnRampTransactions/updater')
-const loadWebAccountsStoreUpdater = () =>
-  import('~/features/accounts/store/updater').then((m) => ({ default: m.WebAccountsStoreUpdater }))
+const loadWebAccountsStoreUpdater = () => import('~/features/accounts/store/updater')
 
 const provideSessionInitService = () => {
   // Create performance tracker with feature flag control
@@ -202,7 +199,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
       userID: getDeviceId(),
       customIDs: { address: account.address ?? '' },
       custom: {
-        appVersion: getConfig().versionTag || 'unknown',
+        appVersion: getConfig().appVersion || 'unknown',
       },
     }),
     [account.address],
@@ -232,14 +229,13 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-const PRIVY_APP_ID = getConfig().privyAppId
-
 function MaybePrivyProvider({ children }: { children: ReactNode }) {
-  if (!PRIVY_APP_ID) {
+  const { appId } = getPrivyConfig(false)
+  if (!appId) {
     return <>{children}</>
   }
   return (
-    <PrivyProvider appId={PRIVY_APP_ID} config={{ loginMethods: ['email', 'google', 'apple'] }}>
+    <PrivyProvider appId={appId} config={{ loginMethods: ['email', 'google', 'apple'] }}>
       {children}
     </PrivyProvider>
   )

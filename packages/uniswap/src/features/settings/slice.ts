@@ -1,11 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { isMobileApp } from '@universe/environment'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
 import { DEFAULT_DEVICE_ACCESS_TIMEOUT, type DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
 import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
 import { getWalletDeviceLanguage } from 'uniswap/src/i18n/utils'
-import { isMobileApp } from 'utilities/src/platform'
 // oxlint-disable-next-line no-restricted-imports -- legacy import will be migrated
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 

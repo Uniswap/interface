@@ -3,6 +3,7 @@ import { Button, Flex, Text } from 'ui/src'
 import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
+import { FileListLock } from 'ui/src/components/icons/FileListLock'
 import { Language } from 'ui/src/components/icons/Language'
 import { Power } from 'ui/src/components/icons/Power'
 import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
@@ -28,11 +29,12 @@ function SectionHeader({ title }: { title: string }) {
   )
 }
 
-export default function SettingsMenu({
+export function SettingsMenu({
   onClose,
   openLanguageSettings,
   openLocalCurrencySettings,
   openPasskeySettings,
+  openRecoveryPhraseSettings,
   openPortfolioBalanceSettings,
   openStorageSettings,
 }: {
@@ -40,6 +42,7 @@ export default function SettingsMenu({
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
   openPasskeySettings: () => void
+  openRecoveryPhraseSettings: () => void
   openPortfolioBalanceSettings: () => void
   openStorageSettings: () => void
 }) {
@@ -89,6 +92,14 @@ export default function SettingsMenu({
               testId={TestID.PasskeySettings}
             />
           )}
+          {connectedWithEmbeddedWallet && (
+            <SettingsButton
+              icon={<FileListLock size="$icon.24" color="$neutral2" />}
+              title={t('settings.setting.recoveryPhrase.title')}
+              onClick={openRecoveryPhraseSettings}
+              testId={TestID.WalletSettingsRecoveryPhrase}
+            />
+          )}
           <AnalyticsToggle />
         </Flex>
 
@@ -102,18 +113,20 @@ export default function SettingsMenu({
           <TestnetsToggle />
         </Flex>
 
-        <Trace logPress element={ElementName.SignOut}>
-          <Flex row alignSelf="stretch" display={connectedWithEmbeddedWallet ? 'flex' : 'none'} mb="$padding8">
-            <Button
-              size="medium"
-              emphasis="secondary"
-              icon={<Power size="$icon.20" color="$neutral2" />}
-              onPress={onLogOut}
-            >
-              {t('settings.logOut')}
-            </Button>
-          </Flex>
-        </Trace>
+        {connectedWithEmbeddedWallet && (
+          <Trace logPress element={ElementName.SignOut}>
+            <Flex row alignSelf="stretch" mb="$padding8">
+              <Button
+                size="medium"
+                emphasis="secondary"
+                icon={<Power size="$icon.20" color="$neutral2" />}
+                onPress={onLogOut}
+              >
+                {t('settings.logOut')}
+              </Button>
+            </Flex>
+          </Trace>
+        )}
       </Flex>
     </SlideOutMenu>
   )

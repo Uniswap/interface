@@ -68,6 +68,7 @@ describe('FlashbotsRpcClient', () => {
     client = createFlashbotsRpcClient({
       chain: mockChain,
       signerInfo,
+      areAddressesEqual: (a, b) => a.toLowerCase() === b.toLowerCase(),
     })
   })
 
@@ -80,6 +81,7 @@ describe('FlashbotsRpcClient', () => {
       const flashbotsClient = createFlashbotsRpcClient({
         chain: mockChain,
         signerInfo,
+        areAddressesEqual: (a, b) => a.toLowerCase() === b.toLowerCase(),
       })
 
       // Make a test request to trigger URL construction
@@ -116,6 +118,7 @@ describe('FlashbotsRpcClient', () => {
         chain: mockChain,
         signerInfo,
         refundPercent,
+        areAddressesEqual: (a, b) => a.toLowerCase() === b.toLowerCase(),
       })
 
       // Make a test request to trigger URL construction

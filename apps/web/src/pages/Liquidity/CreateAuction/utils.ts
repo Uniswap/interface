@@ -3,8 +3,6 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
-  AuctionType,
-  DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT_BY_AUCTION_TYPE,
   DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE,
   MAX_POST_AUCTION_LIQUIDITY_PERCENT,
   MIN_POST_AUCTION_LIQUIDITY_PERCENT,
@@ -30,13 +28,8 @@ const COMPACT_NUMBER_FORMATS = [
   { suffix: 'k', value: 1_000 },
 ] as const
 
-/**
- * Returns the recommended price range strategy for a given auction type.
- */
-export function getRecommendedStrategy(auctionType: AuctionType): PriceRangeStrategy {
-  return auctionType === AuctionType.BOOTSTRAP_LIQUIDITY
-    ? PriceRangeStrategy.CONCENTRATED_FULL_RANGE
-    : PriceRangeStrategy.FULL_RANGE
+export function getRecommendedStrategy(): PriceRangeStrategy {
+  return PriceRangeStrategy.CONCENTRATED_FULL_RANGE
 }
 
 export function clampPostAuctionLiquidityPercent(percent: number): number {
@@ -78,8 +71,13 @@ export function isValidPartialPercentInput(value: string): boolean {
   return intPart !== '' || fracPart !== '' || value === '.'
 }
 
-export function getDefaultPostAuctionLiquidityPercent(auctionType: AuctionType): number {
-  return DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT_BY_AUCTION_TYPE[auctionType]
+export function isValidPartialSignedPercentInput(value: string): boolean {
+  if (value === '' || value === '-' || value === '+' || value === '.' || value === '-.' || value === '+.') {
+    return true
+  }
+
+  const signless = value[0] === '-' || value[0] === '+' ? value.slice(1) : value
+  return isValidPartialPercentInput(signless)
 }
 
 export function isUnboundedTier(tier: PostAuctionLiquidityTier): boolean {
@@ -425,3 +423,15 @@ export function percentOfSoldToLiquidityFromDepositAndLiquidityAmount(
   }
   return amountToPercent(sold, postAuctionLiquidityAmount)
 }
+
+export {
+  addCustomPriceRangePreset,
+  clampCustomPriceRangeLiquidityPercent,
+  createDefaultCustomPriceRangeEntry,
+  getCustomPriceRangeLiquidityTotal,
+  isCustomPriceRangeAllocationValid,
+  isCustomPriceRangeEntryValid,
+  removeCustomPriceRangeEntry,
+  updateCustomPriceRangeBounds,
+  updateCustomPriceRangeLiquidityPercent,
+} from '~/pages/Liquidity/CreateAuction/customPriceRanges'

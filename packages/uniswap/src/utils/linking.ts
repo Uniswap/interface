@@ -243,9 +243,28 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
 }
 
-export function getFiatOnRampURL(chainId?: UniverseChainId): string {
-  const chainParam = chainId ? `?chain=${getChainInfo(chainId).urlParam}` : ''
-  return `/buy${chainParam}`
+type FiatOnRampURLParams = {
+  chainId?: UniverseChainId
+  currencyCode?: string
+  currencyId?: string
+}
+
+export function getFiatOnRampURL(chainIdOrParams?: UniverseChainId | FiatOnRampURLParams): string {
+  const params = typeof chainIdOrParams === 'number' ? { chainId: chainIdOrParams } : chainIdOrParams
+  const searchParams = new URLSearchParams()
+
+  if (params?.chainId) {
+    searchParams.set('chainId', String(params.chainId))
+  }
+  if (params?.currencyCode) {
+    searchParams.set('currencyCode', params.currencyCode)
+  }
+  if (params?.currencyId) {
+    searchParams.set('currencyId', params.currencyId)
+  }
+
+  const queryString = searchParams.toString()
+  return queryString ? `/buy?${queryString}` : '/buy'
 }
 
 export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {

@@ -1,5 +1,5 @@
+import { isDevEnv } from '@universe/environment'
 import type * as d3 from 'd3'
-import { isDevEnv } from 'utilities/src/environment/env'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'

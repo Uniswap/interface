@@ -78,6 +78,7 @@ import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { OnDeviceRecoveryScreen } from 'src/screens/Import/OnDeviceRecoveryScreen'
 import { OnDeviceRecoveryViewSeedPhraseScreen } from 'src/screens/Import/OnDeviceRecoveryViewSeedPhraseScreen'
 import { PasskeyImportScreen } from 'src/screens/Import/PasskeyImportScreen'
+import { RecoveryFlowScreen } from 'src/screens/Import/RecoveryFlowScreen'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
@@ -258,6 +259,7 @@ function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen component={ManualBackupScreen} name={OnboardingScreens.BackupManual} />
           <OnboardingStack.Screen component={WelcomeWalletScreen} name={OnboardingScreens.WelcomeWallet} />
           <OnboardingStack.Screen component={PasskeyImportScreen} name={OnboardingScreens.PasskeyImport} />
+          <OnboardingStack.Screen component={RecoveryFlowScreen} name={OnboardingScreens.RecoveryFlow} />
           <OnboardingStack.Screen
             component={CloudBackupProcessingScreen}
             name={OnboardingScreens.BackupCloudProcessing}

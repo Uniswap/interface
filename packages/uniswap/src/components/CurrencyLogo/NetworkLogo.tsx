@@ -1,3 +1,4 @@
+import { isMobileWeb } from '@universe/environment'
 import React from 'react'
 import type { ImageSourcePropType } from 'react-native'
 import { Flex, FlexProps, Image, Loader, useSporeColors } from 'ui/src'
@@ -6,7 +7,6 @@ import { iconSizes, zIndexes } from 'ui/src/theme'
 import { getBadgeBorderRadius, getBadgeOuterSize } from 'uniswap/src/components/CurrencyLogo/badgeSizeUtils'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isMobileWeb } from 'utilities/src/platform'
 
 type NetworkLogoProps = FlexProps & {
   chainId: UniverseChainId | null // null signifies this is the AllNetworks logo

@@ -18,9 +18,9 @@ import {
   TransactionStatus,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import {
   addTransactionBreadcrumb,
   getSwapTransactionInfo,

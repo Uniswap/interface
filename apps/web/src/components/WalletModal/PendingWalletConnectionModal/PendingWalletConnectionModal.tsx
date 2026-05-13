@@ -70,7 +70,7 @@ function useSolanaWalletToPrompt(applicablePendingWallet: ExternalWallet | undef
 }
 
 /** Modal for dual-VM wallets (MetaMask) that shows connection status and prompts for Solana opt-in. */
-export default function PendingWalletConnectionModal() {
+export function PendingWalletConnectionModal() {
   const applicablePendingWallet = useApplicablePendingWallet()
   const { reset: resetConnectionQuery } = useConnectWallet()
 
@@ -206,3 +206,5 @@ function UserInput(props: { solanaWalletToPrompt: ExternalWallet | undefined; re
     </AnimatePresence>
   )
 }
+
+export default PendingWalletConnectionModal

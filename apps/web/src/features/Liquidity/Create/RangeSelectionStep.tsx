@@ -7,6 +7,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { D3LiquidityRangeInput } from '~/features/Liquidity/charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
 import { useDefaultInitialPrice } from '~/features/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { useTokenControlOptions } from '~/features/Liquidity/Create/hooks/useTokenControlOptions'
@@ -21,7 +22,6 @@ import { getPriceDifference } from '~/features/Liquidity/utils/getPriceDifferenc
 import { isInvalidPrice, isInvalidRange } from '~/features/Liquidity/utils/priceRangeInfo'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { tryParsePrice } from '~/state/mint/v3/utils'
-import { PositionInfo } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 enum RangeSelection {

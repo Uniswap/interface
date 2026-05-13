@@ -14,15 +14,15 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { getTokenDetailsURL, gqlToCurrency } from '~/appGraphql/data/util'
 import { EtherscanLogo } from '~/components/Icons/Etherscan'
 import { ExplorerIcon } from '~/components/Icons/ExplorerIcon'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { getChainUrlParam } from '~/features/params/chainParams'
-import useCopyClipboard from '~/hooks/useCopyClipboard'
+import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { ExternalLink } from '~/theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/styles'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const TokenName = styled(Text, {
   display: 'none',

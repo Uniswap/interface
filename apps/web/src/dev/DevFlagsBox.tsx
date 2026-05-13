@@ -1,3 +1,4 @@
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import {
   getOverrideAdapter,
   getOverrides,
@@ -16,7 +17,6 @@ import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistor
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAnalyticsDebugStore } from 'uniswap/src/features/telemetry/debug/useAnalyticsDebugStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { useEvent } from 'utilities/src/react/hooks'
 import { GatingRowContent, GatingSwitch } from '~/components/FeatureFlagModal/FeatureFlagModal'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
@@ -92,7 +92,7 @@ const PinnedExperimentRow = memo(function PinnedExperimentRow({
   )
 })
 
-export default function DevFlagsBox() {
+export function DevFlagsBox() {
   const { client: statsigClient } = useContext(StatsigContext)
   const latest = getOverrides(statsigClient)
   const [displayOverrides, setDisplayOverrides] = useState(latest)
@@ -242,3 +242,5 @@ export default function DevFlagsBox() {
     </Flex>
   )
 }
+
+export default DevFlagsBox

@@ -21,7 +21,7 @@ import {
   getV3PriceRangeInfo,
   getV4PriceRangeInfo,
 } from '~/features/Liquidity/utils/priceRangeInfo'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { ETH_MAINNET } from '~/test-utils/constants'
 
 const WETH = nativeOnChain(UniverseChainId.Mainnet).wrapped

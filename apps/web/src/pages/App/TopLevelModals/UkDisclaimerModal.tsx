@@ -4,7 +4,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useModalState } from '~/hooks/useModalState'
 
-export function UkDisclaimerModal() {
+export default function UkDisclaimerModal() {
   const { t } = useTranslation()
   const { isOpen, closeModal } = useModalState(ModalName.UkDisclaimer)
 

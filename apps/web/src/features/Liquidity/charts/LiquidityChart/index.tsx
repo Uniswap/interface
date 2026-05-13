@@ -3,125 +3,15 @@ import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
-import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
+import { UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { ChartHoverData, ChartModel, ChartModelParams } from '~/components/Charts/ChartModel'
-import { LiquidityBarSeries } from '~/features/Liquidity/charts/LiquidityChart/liquidity-bar-series'
-import {
-  LiquidityBarData,
-  LiquidityBarProps,
-  LiquidityBarSeriesOptions,
-} from '~/features/Liquidity/charts/LiquidityChart/types'
+import { LiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart/types'
 import { calculateTokensLocked } from '~/features/Liquidity/charts/LiquidityChart/utils/calculateTokensLocked'
 import { usePoolActiveLiquidity } from '~/features/Liquidity/hooks/usePoolTickData'
 import { PositionField } from '~/types/position'
-
-interface LiquidityBarChartModelParams extends ChartModelParams<LiquidityBarData>, LiquidityBarProps {}
-
-export class LiquidityBarChartModel extends ChartModel<LiquidityBarData> {
-  protected series: ISeriesApi<'Custom'>
-  private activeTick?: number
-
-  constructor(chartDiv: HTMLDivElement, params: LiquidityBarChartModelParams) {
-    super(chartDiv, params)
-    this.series = this.api.addCustomSeries(new LiquidityBarSeries(params))
-
-    this.series.setData(this.data)
-
-    this.updateOptions(params)
-    this.fitContent()
-  }
-
-  updateOptions(params: LiquidityBarChartModelParams) {
-    super.updateOptions(params, {
-      localization: {
-        locale: params.locale,
-      },
-      rightPriceScale: {
-        visible: false,
-        borderVisible: false,
-        scaleMargins: {
-          top: 0.35,
-          bottom: 0,
-        },
-        autoScale: true,
-      },
-      timeScale: {
-        visible: false,
-        fixLeftEdge: true,
-        fixRightEdge: true,
-        borderVisible: false,
-      },
-      crosshair: {
-        horzLine: {
-          visible: false,
-          labelVisible: false,
-        },
-        vertLine: {
-          visible: false,
-          labelVisible: false,
-        },
-      },
-      grid: {
-        vertLines: {
-          visible: false,
-        },
-        horzLines: {
-          visible: false,
-        },
-      },
-    })
-    const { data, activeTick } = params
-
-    this.activeTick = activeTick
-
-    if (this.data !== data) {
-      this.data = data
-      this.series.setData(data)
-      this.fitContent()
-    }
-
-    this.series.applyOptions({
-      priceFormat: {
-        type: 'volume',
-      },
-      priceLineVisible: false,
-      lastValueVisible: false,
-    })
-
-    const seriesOptions: Partial<LiquidityBarSeriesOptions> = {
-      tokenAColor: params.tokenAColor,
-      tokenBColor: params.tokenBColor,
-      highlightColor: params.highlightColor,
-      activeTick: params.activeTick,
-      activeTickProgress: params.activeTickProgress,
-    }
-    this.series.applyOptions(seriesOptions)
-  }
-
-  override onSeriesHover(hoverData?: ChartHoverData<LiquidityBarData>) {
-    super.onSeriesHover(hoverData)
-    const updatedOptions: Partial<LiquidityBarSeriesOptions> = { hoveredTick: hoverData?.item.tick ?? this.activeTick }
-    this.series.applyOptions(updatedOptions)
-  }
-
-  activeTickIndex() {
-    return this.data.findIndex((bar) => bar.tick === this.activeTick)
-  }
-
-  fitContent() {
-    const length = this.data.length
-    const activeTickIndex = this.data.findIndex((bar) => bar.tick === this.activeTick)
-    const midPoint = activeTickIndex !== -1 ? activeTickIndex : length / 2
-
-    this.api
-      .timeScale()
-      .setVisibleLogicalRange({ from: Math.max(midPoint - 50, 0), to: Math.min(midPoint + 50, this.data.length) })
-  }
-}
 
 export function useLiquidityBarData({
   sdkCurrencies,

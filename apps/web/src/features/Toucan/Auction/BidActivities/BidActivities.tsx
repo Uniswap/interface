@@ -1,11 +1,10 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Unicon, useMedia } from 'ui/src'
 import { useColorHexFromThemeKey } from 'ui/src/hooks/useColorHexFromThemeKey'
-import { opacifyRaw, zIndexes } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -16,10 +15,8 @@ import { TableText } from '~/components/Table/shared/TableText'
 import { HeaderCell } from '~/components/Table/styled'
 import { q96ToRawAmount } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
 import { useAuctionStatsData } from '~/features/Toucan/Auction/hooks/useAuctionStatsData'
-import { useAuctionTokenColor } from '~/features/Toucan/Auction/hooks/useAuctionTokenColor'
 import { useBidTokenInfo } from '~/features/Toucan/Auction/hooks/useBidTokenInfo'
 import { useLoadBidActivities } from '~/features/Toucan/Auction/hooks/useLoadBidActivities'
-import { AuctionProgressState } from '~/features/Toucan/Auction/store/types'
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { useTimeAgo } from '~/features/Toucan/Shared/TimeCell'
 
@@ -65,21 +62,17 @@ function AnimatedBidRow({ children }: { children: React.ReactNode }) {
   )
 }
 
-// oxlint-disable-next-line complexity
 export const BidActivities = ({
   hideHeader = false,
 }: {
   hideHeader?: boolean
 } = {}) => {
   const { t } = useTranslation()
-  const isV2AuctionActivityOnEndedEnabled = useFeatureFlag(FeatureFlags.AuctionDetailsV2ActivityOnEnded)
   const { convertFiatAmount } = useLocalizationContext()
   const { symbol: currencySymbol } = useAppFiatCurrencyInfo()
-  const { auctionState, auctionDetails } = useAuctionStore((state) => ({
-    auctionState: state.progress.state,
+  const { auctionDetails } = useAuctionStore((state) => ({
     auctionDetails: state.auctionDetails,
   }))
-  const { effectiveTokenColor } = useAuctionTokenColor()
   const { totalBidCount } = useAuctionStatsData()
   const media = useMedia()
   const surface1 = useColorHexFromThemeKey('surface1')
@@ -137,20 +130,6 @@ export const BidActivities = ({
     bidTokenAddress: auctionDetails?.currency,
     chainId: auctionDetails?.chainId,
   })
-
-  const showPlaceholder =
-    !isV2AuctionActivityOnEndedEnabled &&
-    (auctionState === AuctionProgressState.NOT_STARTED || auctionState === AuctionProgressState.ENDED)
-
-  const placeholderBackground = useMemo(() => {
-    const dots = opacifyRaw(10, effectiveTokenColor)
-
-    return {
-      backgroundColor: 'transparent',
-      backgroundImage: `radial-gradient(circle at 1px 1px, ${dots} 1px, transparent 0)`,
-      backgroundSize: '10px 10px',
-    }
-  }, [effectiveTokenColor])
 
   // Extract values to ensure they're captured correctly in column closures
   const bidTokenDecimals = bidTokenInfo?.decimals ?? 18
@@ -329,92 +308,74 @@ export const BidActivities = ({
           )}
         </Flex>
       )}
-      {showPlaceholder ? (
-        <Flex
-          height={160}
-          justifyContent="center"
-          alignItems="center"
-          borderRadius="$rounded12"
-          borderWidth="$spacing1"
-          borderColor="$surface3"
-          style={placeholderBackground}
-        >
-          <Text textAlign="center" maxWidth="80%" variant="body2" color="$neutral2">
-            {auctionState === AuctionProgressState.NOT_STARTED
-              ? t('toucan.auction.notStarted')
-              : t('toucan.auction.ended')}
-          </Text>
-        </Flex>
-      ) : (
-        <Flex
-          position="relative"
-          minHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD || loading ? 450 : undefined}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <AnimatePresence mode="popLayout">
-            <Table
-              columns={columns}
-              data={formattedBidActivities}
-              loading={loading}
-              v2={true}
-              hideHeader={false}
-              maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
-              loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
-              loadingRowsCount={6}
-              rowHeight={ROW_HEIGHT}
-              getRowId={(row) => row.bidId}
-              rowWrapper={(_rowId, content) => <AnimatedBidRow>{content}</AnimatedBidRow>}
-              showScrollbar
-            />
-          </AnimatePresence>
-          {formattedBidActivities.length >= 6 && (
-            <Flex
-              position="absolute"
-              bottom={0}
-              left={0}
-              right={0}
-              height={216}
-              pointerEvents="none"
-              style={{
-                background: `linear-gradient(180deg, transparent 0%, ${surface1.val} 100%)`,
-              }}
-            />
-          )}
-          {isHovering && pendingNewBidCount > 0 && (
+      <Flex
+        position="relative"
+        minHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD || loading ? 450 : undefined}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <AnimatePresence mode="popLayout">
+          <Table
+            columns={columns}
+            data={formattedBidActivities}
+            loading={loading}
+            v2={true}
+            hideHeader={false}
+            maxHeight={formattedBidActivities.length >= FIXED_HEIGHT_THRESHOLD ? 450 : undefined}
+            loadMore={pendingNewBidCount > 0 ? undefined : loadMore}
+            loadingRowsCount={6}
+            rowHeight={ROW_HEIGHT}
+            getRowId={(row) => row.bidId}
+            rowWrapper={(_rowId, content) => <AnimatedBidRow>{content}</AnimatedBidRow>}
+            showScrollbar
+          />
+        </AnimatePresence>
+        {formattedBidActivities.length >= 6 && (
+          <Flex
+            position="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            height={216}
+            pointerEvents="none"
+            style={{
+              background: `linear-gradient(180deg, transparent 0%, ${surface1.val} 100%)`,
+            }}
+          />
+        )}
+        {isHovering && pendingNewBidCount > 0 && (
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="center"
+            height={ROW_HEIGHT}
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            zIndex={zIndexes.sticky}
+          >
             <Flex
               row
+              backgroundColor="$accent2Solid"
+              borderRadius="$rounded8"
+              width="fit-content"
+              p="$padding8"
+              gap="$gap8"
+              height={34}
+              cursor="pointer"
+              onPress={handleShowNewBids}
               alignItems="center"
-              justifyContent="center"
-              height={ROW_HEIGHT}
-              position="absolute"
-              top={0}
-              left={0}
-              right={0}
-              zIndex={zIndexes.sticky}
             >
-              <Flex
-                row
-                backgroundColor="$accent2Solid"
-                borderRadius="$rounded8"
-                width="fit-content"
-                p="$padding8"
-                gap="$gap8"
-                height={34}
-                cursor="pointer"
-                onPress={handleShowNewBids}
-                alignItems="center"
-              >
-                <Text variant="body3" color="$accent1">
-                  {t('toucan.bidActivities.newBids', {
-                    count: pendingNewBidCount,
-                  })}
-                </Text>
-              </Flex>
+              <Text variant="body3" color="$accent1">
+                {t('toucan.bidActivities.newBids', {
+                  count: pendingNewBidCount,
+                })}
+              </Text>
             </Flex>
-          )}
-        </Flex>
-      )}
+          </Flex>
+        )}
+      </Flex>
     </Flex>
   )
 }

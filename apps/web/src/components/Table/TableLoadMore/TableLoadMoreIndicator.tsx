@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, styled } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
-import Loader from '~/components/Icons/LoadingSpinner'
+import { Loader } from '~/components/Icons/LoadingSpinner'
 
 const LoadingIndicatorContainer = styled(Flex, {
   row: true,

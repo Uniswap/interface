@@ -12,6 +12,8 @@ import {
   GetClearingPriceHistoryResponse,
   GetLatestCheckpointRequest,
   GetLatestCheckpointResponse,
+  GetTickDetailsRequest,
+  GetTickDetailsResponse,
   ListTopAuctionsRequest,
   ListTopAuctionsResponse,
 } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
@@ -131,6 +133,24 @@ function getLatestCheckpointQueryOptions(
   })
 }
 
+function getTickDetailsQueryOptions(
+  client: AuctionServiceClient,
+  { params, ...rest }: UseQueryApiHelperHookArgs<GetTickDetailsRequest, GetTickDetailsResponse>,
+): QueryOptionsResult<GetTickDetailsResponse, Error, GetTickDetailsResponse, QueryKey> {
+  return persistableQueryOptions({
+    queryKey: [ReactQueryCacheKey.AuctionApi, 'getTickDetails', params],
+    queryFn: async () => {
+      if (!params) {
+        throw new Error('params required')
+      }
+      return client.getTickDetails(params)
+    },
+    staleTime: AuctionStaleTime.FAST,
+    retry: AUCTION_DEFAULT_RETRY,
+    ...rest,
+  })
+}
+
 function getListTopAuctionsQueryOptions(
   client: AuctionServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, ListTopAuctionsResponse>,
@@ -166,6 +186,9 @@ function provideAuctionQueries(client: AuctionServiceClient): {
   getLatestCheckpoint: (
     input: UseQueryApiHelperHookArgs<GetLatestCheckpointRequest, GetLatestCheckpointResponse>,
   ) => QueryOptionsResult<GetLatestCheckpointResponse, Error, GetLatestCheckpointResponse, QueryKey>
+  getTickDetails: (
+    input: UseQueryApiHelperHookArgs<GetTickDetailsRequest, GetTickDetailsResponse>,
+  ) => QueryOptionsResult<GetTickDetailsResponse, Error, GetTickDetailsResponse, QueryKey>
   listTopAuctions: (
     input: UseQueryApiHelperHookArgs<ListTopAuctionsRequest, ListTopAuctionsResponse>,
   ) => QueryOptionsResult<ListTopAuctionsResponse, Error, ListTopAuctionsResponse, QueryKey>
@@ -177,6 +200,7 @@ function provideAuctionQueries(client: AuctionServiceClient): {
     getBidsByWallet: (input) => getBidsByWalletQueryOptions(client, input),
     getClearingPriceHistory: (input) => getClearingPriceHistoryQueryOptions(client, input),
     getLatestCheckpoint: (input) => getLatestCheckpointQueryOptions(client, input),
+    getTickDetails: (input) => getTickDetailsQueryOptions(client, input),
     listTopAuctions: (input) => getListTopAuctionsQueryOptions(client, input),
   }
 }

@@ -24,7 +24,7 @@ import type { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import type { MigratingPosition } from '~/features/Liquidity/Create/types'
 
-const D3LiquidityRangeChart = ({
+export const D3LiquidityRangeChart = ({
   priceData,
   liquidityData,
   quoteCurrency,
@@ -230,5 +230,3 @@ const D3LiquidityRangeChart = ({
     </Flex>
   )
 }
-
-export default D3LiquidityRangeChart

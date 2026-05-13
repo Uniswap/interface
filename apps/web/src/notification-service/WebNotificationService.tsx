@@ -8,6 +8,7 @@ import {
   SESSION_INIT_QUERY_KEY,
   SharedQueryClient,
 } from '@universe/api'
+import { isE2eTestEnv, REQUEST_SOURCE } from '@universe/environment'
 import { getIsSessionServiceEnabled } from '@universe/gating'
 import {
   createApiNotificationTracker,
@@ -28,14 +29,12 @@ import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constant
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { getLogger } from 'utilities/src/logger/logger'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { getConfig } from '~/config'
-import useCurrentBlockTimestamp from '~/hooks/useCurrentBlockTimestamp'
-import useMachineTimeMs from '~/hooks/useMachineTime'
+import { useCurrentBlockTimestamp } from '~/hooks/useCurrentBlockTimestamp'
+import { useMachineTimeMs } from '~/hooks/useMachineTime'
 import { createLocalStorageAdapter } from '~/notification-service/createLocalStorageAdapter'
 import { createLegacyBannersNotificationDataSource } from '~/notification-service/data-sources/createLegacyBannersNotificationDataSource'
 import { createSystemAlertsDataSource } from '~/notification-service/data-sources/createSystemAlertsDataSource'
@@ -70,7 +69,7 @@ function provideWebNotificationService(ctx: {
         'Content-Type': 'application/json',
         'x-request-source': REQUEST_SOURCE,
         'x-uniswap-locale': backendLocale,
-        'x-app-version': getConfig().versionTag,
+        'x-app-version': getConfig().appVersion,
       }
     },
     getSessionService: () =>
@@ -191,7 +190,7 @@ function getNotificationServiceQueryOptions(ctx: {
         getMachineTime: ctx.getMachineTime,
         getPathname: ctx.getPathname,
       }),
-    enabled: !isPlaywrightEnv(),
+    enabled: !isE2eTestEnv(),
     staleTime: Infinity, // Never refetch while mounted
     gcTime: 0, // Don't persist in cache - NotificationService has methods that can't be serialized
   })

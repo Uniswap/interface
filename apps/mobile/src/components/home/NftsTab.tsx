@@ -1,4 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
+import { isAndroid } from '@universe/environment'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
@@ -13,7 +14,6 @@ import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
-import { isAndroid } from 'utilities/src/platform'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NftsTab = memo(

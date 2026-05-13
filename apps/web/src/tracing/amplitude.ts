@@ -1,7 +1,7 @@
 import { OriginApplication } from '@uniswap/analytics'
+import { isDevEnv, isE2eTestEnv, isTestEnv } from '@universe/environment'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createAnalyticsDebugBridge } from 'uniswap/src/features/telemetry/debug/analyticsDebugStore'
-import { isDevEnv, isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 // oxlint-disable-next-line no-restricted-imports -- Need direct analytics import for Amplitude initialization
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
@@ -11,7 +11,7 @@ import store from '~/state'
 import { setOriginCountry } from '~/state/user/reducer'
 
 export function setupAmplitude() {
-  if (isTestEnv() && !isPlaywrightEnv()) {
+  if (isTestEnv() && !isE2eTestEnv()) {
     // Want to skip Amplitude initialization in test envs
     // But not in playwright, since we have a Playwright fixture that intercepts Amplitude events
     logger.debug('amplitude.ts', 'setupAmplitude', 'Skipping Amplitude initialization in test environment')

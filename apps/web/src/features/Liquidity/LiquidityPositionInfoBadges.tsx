@@ -7,12 +7,12 @@ import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { zIndexes } from 'ui/src/theme'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { isDynamicFeeTier } from '~/features/Liquidity/utils/feeTiers'
 import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { CopyHelper } from '~/theme/components/CopyHelper'
-import type { FeeData } from '~/types/liquidity'
 
 const PositionInfoBadge = styled(Text, {
   display: 'flex',

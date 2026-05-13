@@ -346,7 +346,6 @@ export function useBidFormController({
     submitState,
     durationRemaining,
     glowColor,
-    totalSupply,
     auctionTokenDecimals,
     auctionTokenSymbol,
     auctionTokenName,

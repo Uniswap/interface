@@ -4,7 +4,7 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 
-function CreatingPoolInfo() {
+export function CreatingPoolInfo() {
   const { t } = useTranslation()
   const { creatingPoolOrPair, poolOrPairLoading } = useCreateLiquidityContext()
 
@@ -35,5 +35,3 @@ function CreatingPoolInfo() {
     </Flex>
   )
 }
-
-export default CreatingPoolInfo

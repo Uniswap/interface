@@ -6,7 +6,6 @@ import { AuctionAdvancedSettings } from '~/pages/Liquidity/CreateAuction/compone
 import { AuctionDistributionSection } from '~/pages/Liquidity/CreateAuction/components/AuctionDistributionSection'
 import { AuctionSupplySection } from '~/pages/Liquidity/CreateAuction/components/AuctionSupplySection'
 import { DurationSection } from '~/pages/Liquidity/CreateAuction/components/DurationSection'
-import { HookTile } from '~/pages/Liquidity/CreateAuction/components/HookTile'
 import { PostAuctionLiquiditySection } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquiditySection'
 import { PriceSettingsSection } from '~/pages/Liquidity/CreateAuction/components/PriceSettingsSection'
 import { TokenSummaryCard, useTokenSummaryCardProps } from '~/pages/Liquidity/CreateAuction/components/TokenSummaryCard'
@@ -18,7 +17,6 @@ import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hook
 import { useCreateAuctionTokenLogoNode } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenLogoNode'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import {
-  AuctionType,
   type ConfigureAuctionFormState,
   CreateAuctionStep,
   PostAuctionLiquidityAllocationType,
@@ -42,40 +40,27 @@ export function ConfigureAuctionStep() {
   const {
     goToPreviousStep,
     goToNextStep,
-    setAuctionType,
     addPostAuctionLiquidityTier,
     removePostAuctionLiquidityTier,
     setAuctionConfig,
     setSinglePostAuctionLiquidityPercent,
     setStartTime,
-    setMaxDurationDays,
+    setEndTime,
     setPostAuctionLiquidityAllocationType,
     setRaiseCurrency,
     setFloorPrice,
     updatePostAuctionLiquidityTier,
   } = useCreateAuctionStoreActions()
 
-  const {
-    startTime,
-    maxDurationDays,
-    activeAuctionType,
-    committed,
-    postAuctionLiquidityAllocation,
-    raiseCurrency,
-    floorPrice,
-  } = configureAuction
+  const { startTime, endTime, committed, postAuctionLiquidityAllocation, raiseCurrency, floorPrice } = configureAuction
   const isNextStepDisabled = !useIsStepValid(CreateAuctionStep.CONFIGURE_AUCTION)
 
-  const handleBootstrapLiquidity = useCallback(() => setAuctionType(AuctionType.BOOTSTRAP_LIQUIDITY), [setAuctionType])
-  const handleFundraise = useCallback(() => setAuctionType(AuctionType.FUNDRAISE), [setAuctionType])
-  const handleStartTimeChange = useCallback((date: Date | undefined) => setStartTime(date), [setStartTime])
-  const handleDecrement = useCallback(
-    () => setMaxDurationDays(Math.max(1, maxDurationDays - 1)),
-    [setMaxDurationDays, maxDurationDays],
-  )
-  const handleIncrement = useCallback(
-    () => setMaxDurationDays(maxDurationDays + 1),
-    [setMaxDurationDays, maxDurationDays],
+  const handleDurationChange = useCallback(
+    ({ startTime: nextStart, endTime: nextEnd }: { startTime: Date | undefined; endTime: Date | undefined }) => {
+      setStartTime(nextStart)
+      setEndTime(nextEnd)
+    },
+    [setStartTime, setEndTime],
   )
 
   const handleAuctionSupplyPercentChange = useCallback(
@@ -127,25 +112,6 @@ export function ConfigureAuctionStep() {
     <Flex gap="$spacing16">
       <TokenSummaryCard {...tokenSummaryCardProps} onEdit={goToPreviousStep} />
 
-      <Flex row gap="$spacing12">
-        <HookTile
-          selected={activeAuctionType === AuctionType.BOOTSTRAP_LIQUIDITY}
-          title={t('toucan.createAuction.step.configureAuction.auctionType.bootstrapLiquidity')}
-          titleVariant="buttonLabel2"
-          description={t('toucan.createAuction.step.configureAuction.auctionType.bootstrapLiquidity.description')}
-          descriptionVariant="body3"
-          onPress={handleBootstrapLiquidity}
-        />
-        <HookTile
-          selected={activeAuctionType === AuctionType.FUNDRAISE}
-          title={t('toucan.createAuction.step.configureAuction.auctionType.fundraise')}
-          titleVariant="buttonLabel2"
-          description={t('toucan.createAuction.step.configureAuction.auctionType.fundraise.description')}
-          descriptionVariant="body3"
-          onPress={handleFundraise}
-        />
-      </Flex>
-
       <Flex
         backgroundColor="$surface1"
         borderWidth="$spacing1"
@@ -159,13 +125,7 @@ export function ConfigureAuctionStep() {
         </Text>
 
         <Flex gap="$spacing40">
-          <DurationSection
-            maxDurationDays={maxDurationDays}
-            startTime={startTime}
-            onStartTimeChange={handleStartTimeChange}
-            onDecrement={handleDecrement}
-            onIncrement={handleIncrement}
-          />
+          <DurationSection startTime={startTime} endTime={endTime} onChange={handleDurationChange} />
 
           <AuctionSupplySection
             auctionSupplyAmount={auctionSupplyAmount}

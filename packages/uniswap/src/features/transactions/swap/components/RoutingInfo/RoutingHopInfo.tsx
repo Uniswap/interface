@@ -1,4 +1,5 @@
 import type { GasFeeResult } from '@universe/api'
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import type { PropsWithChildren } from 'react'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -23,7 +24,6 @@ import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { useRoutingEntries, useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 export function RoutingHopInfo({
   trade,

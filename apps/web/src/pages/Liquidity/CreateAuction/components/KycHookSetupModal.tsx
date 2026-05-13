@@ -1,4 +1,3 @@
-import { isAddress } from '@ethersproject/address'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -22,6 +21,7 @@ import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
+import { isAddress } from '~/chains/utilities'
 import { ExternalLink } from '~/theme/components/Links'
 
 const MOCK_KYC_HOOK_VALIDATION_ADDRESS = '0x1234567890123456789012345678901234567891'

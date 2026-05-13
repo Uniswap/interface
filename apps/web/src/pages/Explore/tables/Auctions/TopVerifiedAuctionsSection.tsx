@@ -7,9 +7,9 @@ import { zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/useTokenMarketPrices'
+import { useAuctionTokenPrices } from '~/features/Toucan/hooks/useTopAuctions/useAuctionTokenPrices'
+import { auctionCommittedVolumeComparator, useTopAuctions } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 import { AuctionChip } from '~/pages/Explore/tables/Auctions/AuctionChip'
-import { useAuctionTokenPrices } from '~/state/explore/topAuctions/useAuctionTokenPrices'
-import { auctionCommittedVolumeComparator, useTopAuctions } from '~/state/explore/topAuctions/useTopAuctions'
 
 const TWENTY_FOUR_HOURS_MS = 86400000
 const MAX_CHIPS = 8

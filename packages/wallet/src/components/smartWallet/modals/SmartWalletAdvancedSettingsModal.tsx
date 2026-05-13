@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { type ReactNode, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, type IconProps, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -8,7 +9,6 @@ import { Wrench } from 'ui/src/components/icons/Wrench'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp } from 'utilities/src/platform'
 
 const iconProps: IconProps = {
   color: '$neutral2',

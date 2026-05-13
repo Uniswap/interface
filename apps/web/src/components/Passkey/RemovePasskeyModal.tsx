@@ -24,7 +24,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from '~/components/AccountDetails/AddressDisplay'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { LIST_AUTHENTICATORS_QUERY_KEY } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
 import { useDisconnect } from '~/hooks/useDisconnect'
 import { useModalState } from '~/hooks/useModalState'
 import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
@@ -273,3 +273,5 @@ export function RemovePasskeyModal() {
     </Modal>
   )
 }
+
+export default RemovePasskeyModal

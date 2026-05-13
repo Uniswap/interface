@@ -1,11 +1,12 @@
-import { ENTRY_GATEWAY_URLS, createApp, type EntryGatewayEnv } from 'functions/app'
+import { Environment } from '@universe/config'
+import { ENTRY_GATEWAY_URLS, createApp } from 'functions/app'
 
 const mockHtml = `<!DOCTYPE html><html><head><title>Uniswap</title></head><body></body></html>`
 
 interface BuildAppOptions {
   fetchSpy?: typeof fetch
   /** Capture the env passed into the entry-gateway URL resolver per request. */
-  onResolveEntryGateway?: (env: EntryGatewayEnv | undefined) => void
+  onResolveEntryGateway?: (env: Environment | undefined) => void
 }
 
 function buildApp({ fetchSpy, onResolveEntryGateway }: BuildAppOptions = {}) {

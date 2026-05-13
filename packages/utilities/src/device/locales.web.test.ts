@@ -1,11 +1,6 @@
 import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG } from 'utilities/src/device/constants'
 import { getDeviceLocales } from 'utilities/src/device/locales.web'
-import { Mock, vi } from 'vitest'
-
-// Mock the chrome utilities to return the global chrome mock from vitest setup
-vi.mock('utilities/src/chrome/chrome', () => ({
-  getChromeWithThrow: (): typeof chrome => global.chrome,
-}))
+import { Mock } from 'vitest'
 
 describe(getDeviceLocales, () => {
   const MOCK_LANGUAGE = 'es-ES'

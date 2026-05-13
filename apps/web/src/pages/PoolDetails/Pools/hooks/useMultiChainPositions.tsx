@@ -66,7 +66,7 @@ type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean
  * @param chains - chains to fetch positions from
  * @returns positions, fees
  */
-export default function useMultiChainPositions(account: string): UseMultiChainPositionsData {
+export function useMultiChainPositions(account: string): UseMultiChainPositionsData {
   const { chains } = useEnabledChains()
 
   const pms = useV3ManagerContracts(chains)

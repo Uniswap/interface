@@ -1,4 +1,4 @@
-import { isDevEnv } from 'utilities/src/environment/env'
+import { isDevEnv } from '@universe/environment'
 import type { AnalyticsDebugBridge } from 'utilities/src/telemetry/analytics/analyticsDebugCapture'
 import { devtools } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'

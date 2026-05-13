@@ -1,5 +1,6 @@
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { GraphQLApi } from '@universe/api'
+import { isAndroid } from '@universe/environment'
 import { DynamicConfigs, HomeScreenExploreTokensConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +22,6 @@ import { isContractInputArrayType } from 'uniswap/src/features/gating/typeGuards
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'utilities/src/platform'
 import { selectHasUsedExplore } from 'wallet/src/features/behaviorHistory/selectors'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 

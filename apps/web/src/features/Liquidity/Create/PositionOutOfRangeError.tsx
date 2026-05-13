@@ -1,10 +1,10 @@
 import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ErrorCallout } from '~/components/ErrorCallout'
 import { setOpenModal } from '~/state/application/reducer'
-import { PositionInfo } from '~/types/liquidity'
 
 export function PositionOutOfRangeError({ positionInfo }: { positionInfo?: PositionInfo }) {
   const { t } = useTranslation()

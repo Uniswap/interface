@@ -135,6 +135,35 @@ globalThis.origin = 'https://app.uniswap.org'
   globalThis.performance.measure = vi.fn()
   globalThis.performance.mark = vi.fn()
 
+  // jsdom does not implement Canvas 2D (getContext('2d') logs console.error).
+  // DynamicSizeText and similar code need a minimal context with measureText.
+  const canvasProto = HTMLCanvasElement.prototype
+  const originalGetContext = canvasProto.getContext
+  const patchedGetContext = function (
+    this: HTMLCanvasElement,
+    contextId: string,
+    ...args: unknown[]
+  ): RenderingContext | null {
+    if (contextId === '2d') {
+      let font = ''
+      return {
+        get font(): string {
+          return font
+        },
+        set font(value: string) {
+          font = value
+        },
+        measureText(text: string): TextMetrics {
+          const match = /^(\d+)px/.exec(font)
+          const px = match ? Number.parseInt(match[1], 10) : 16
+          return { width: Math.max(1, text.length * px * 0.52) } as TextMetrics
+        },
+      } as unknown as CanvasRenderingContext2D
+    }
+    return originalGetContext.call(this, contextId, ...args) as RenderingContext | null
+  }
+  canvasProto.getContext = patchedGetContext as typeof originalGetContext
+
   globalThis.React = React
 }
 
@@ -223,8 +252,8 @@ vi.mock('utilities/src/telemetry/analytics/constants', () => ({
   __esModule: true,
 }))
 
-vi.mock('utilities/src/platform', async () => {
-  const actual = await vi.importActual('utilities/src/platform')
+vi.mock('@universe/environment', async () => {
+  const actual = await vi.importActual('@universe/environment')
   return {
     ...actual,
     isWebPlatform: true,

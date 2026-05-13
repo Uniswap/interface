@@ -1,5 +1,6 @@
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { type FormattedUniswapXGasFeeInfo, type GasFeeResult, type GasStrategy } from '@universe/api'
+import { isWebPlatform } from '@universe/environment'
 import { type GasStrategyType, useStatsigClientStatus } from '@universe/gating'
 import { BigNumber, type providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
@@ -27,7 +28,6 @@ import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/typ
 import { type UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isWebPlatform } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const SMART_WALLET_DELEGATION_GAS_FEE = 21500

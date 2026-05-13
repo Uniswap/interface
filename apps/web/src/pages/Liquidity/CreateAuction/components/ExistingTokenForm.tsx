@@ -9,8 +9,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useTotalSupply } from '~/hooks/useTotalSupply'
 import { NoWalletSection } from '~/pages/Liquidity/CreateAuction/components/NoWalletSection'
@@ -20,6 +19,7 @@ import { useCreateAuctionAllowedNetworks } from '~/pages/Liquidity/CreateAuction
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
 import { CreateAuctionStep, type ExistingTokenFormState } from '~/pages/Liquidity/CreateAuction/types'
+import { SwitchNetworkAction } from '~/state/popups/types'
 
 export function ExistingTokenForm({ existing }: { existing: ExistingTokenFormState }) {
   const { t } = useTranslation()

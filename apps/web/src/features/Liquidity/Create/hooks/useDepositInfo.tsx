@@ -15,7 +15,7 @@ import {
   getDependentAmountFromV3Position,
   getDependentAmountFromV4Position,
 } from '~/features/Liquidity/utils/getDependentAmount'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { DepositInfo } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 

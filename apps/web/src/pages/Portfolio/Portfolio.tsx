@@ -7,7 +7,7 @@ import { PortfolioPageInner } from '~/pages/Portfolio/PortfolioPageInner'
 
 const DEMO_BOTTOM_MARGIN = CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT - 40
 
-export default function Portfolio() {
+export function Portfolio() {
   const showDemoView = useShowDemoView()
   const { isExternalWallet } = usePortfolioRoutes()
 
@@ -23,3 +23,5 @@ export default function Portfolio() {
     </Trace>
   )
 }
+
+export default Portfolio

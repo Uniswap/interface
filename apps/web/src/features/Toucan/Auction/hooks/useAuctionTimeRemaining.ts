@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import useMachineTimeMs from '~/hooks/useMachineTime'
+import { useMachineTimeMs } from '~/hooks/useMachineTime'
 
 interface AuctionTimeRemainingData {
   durationString: string | undefined // Duration string: "1d 2h 3m" or "—"

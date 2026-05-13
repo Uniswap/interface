@@ -391,6 +391,21 @@ export class ToucanChartSeriesRenderer implements ICustomSeriesPaneRenderer {
         radii: BAR_STYLE.BORDER_RADIUS,
       })
 
+      // In demand mode, draw a lower-opacity extension of the bar color above the bar to the chart top.
+      // This creates a "ghost" column showing the remaining space above each bar.
+      if (isDemandMode && barBox.length > 0 && barBox.position > 0) {
+        ctx.fillStyle = barColor
+        ctx.globalAlpha = (shouldDim ? 0.4 : 1) * 0.15
+        roundRect({
+          ctx,
+          x: column.left + xMargin,
+          y: 0,
+          w: barWidth,
+          h: barBox.position,
+          radii: [BAR_STYLE.BORDER_RADIUS, BAR_STYLE.BORDER_RADIUS, 0, 0],
+        })
+      }
+
       // Draw diagonal stripes on user bid bar
       if (isUserBidBar && this._options.bidLineColors) {
         this._drawBarStripes({

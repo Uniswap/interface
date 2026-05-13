@@ -1,4 +1,3 @@
-/* oxlint-disable max-lines -- large config file */
 import fs from 'fs'
 import { createHash } from 'node:crypto'
 import path from 'path'
@@ -8,8 +7,11 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'wxt'
-// oxlint-disable-next-line universe-custom/no-relative-import-paths -- biome-parity: oxlint is stricter here
 import { getTsconfigAliases } from './config/getTsconfigAliases'
+
+// process.env.APP_ID is used by @universe/config. Set at the Node level so the
+// Tamagui static extractor can resolve it.
+process.env.APP_ID = 'extension'
 
 const icons = {
   16: 'assets/icon16.png',
@@ -251,7 +253,7 @@ export default defineConfig({
         matches:
           BUILD_ENV === 'prod'
             ? ['https://app.uniswap.org/*']
-            : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
+            : ['https://app.uniswap.org/*', 'https://app.corn-staging.com/*', 'https://dev.ew.unihq.org/*'],
       },
     }
   },
@@ -302,9 +304,10 @@ export default defineConfig({
       'process.env.VERSION': JSON.stringify(EXTENSION_VERSION),
       'process.env.IS_STATIC': '""',
       'process.env.EXPO_OS': '"web"',
+      // process.env.APP_ID is used by @universe/config. When that package's
+      // getConfig() function is removed, this define can be removed.
+      'process.env.APP_ID': '"extension"',
       ...envDefines,
-      'process.env.REACT_APP_IS_UNISWAP_INTERFACE': '"false"',
-      'process.env.IS_UNISWAP_EXTENSION': '"true"',
     }
 
     const cacheDir = path.resolve(__dirname, 'node_modules/.vite')

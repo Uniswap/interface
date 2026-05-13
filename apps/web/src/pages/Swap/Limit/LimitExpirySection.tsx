@@ -1,15 +1,17 @@
 import { TFunction } from 'i18next'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
-import Row from '~/components/deprecated/Row'
+import { useLimitContext } from '~/features/Swap/state/limit/LimitContext'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { useLimitContext } from '~/state/limit/LimitContext'
-import { ThemedText } from '~/theme/components'
 import { ClickableStyle } from '~/theme/components/styles'
 
-const ExpirySection = deprecatedStyled(Row)`
+const ExpirySection = deprecatedStyled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
   padding: 12px 16px;
   justify-content: space-between;
@@ -51,10 +53,10 @@ export function LimitExpirySection() {
 
   return (
     <ExpirySection>
-      <ThemedText.SubHeaderSmall>
-        <Trans i18nKey="common.expiry" />
-      </ThemedText.SubHeaderSmall>
-      <Row justify="flex-end" gap="xs">
+      <Text variant="body3" color="$neutral2">
+        {t('common.expiry')}
+      </Text>
+      <Flex row justifyContent="flex-end" gap="$gap4" alignItems="center">
         {EXPIRY_OPTIONS.map((expiry) => (
           <LimitExpiryButton
             key={expiry}
@@ -72,12 +74,12 @@ export function LimitExpirySection() {
               }))
             }}
           >
-            <ThemedText.LabelSmall color="inherit" fontWeight={535}>
+            <Text variant="buttonLabel3" color="inherit">
               {getExpiryLabelText(t, expiry)}
-            </ThemedText.LabelSmall>
+            </Text>
           </LimitExpiryButton>
         ))}
-      </Row>
+      </Flex>
     </ExpirySection>
   )
 }

@@ -341,6 +341,7 @@ export enum ElementName {
   UniswapWrappedNavbarButton = 'uniswap-wrapped-navbar-button',
   Unwrap = 'unwrap',
   ViewNativePrivateKeysOnCopied = 'view-native-private-keys-on-copied',
+  ViewRecoveryPhrase = 'view-recovery-phrase',
   WalletCard = 'wallet-card',
   WalletConnectScan = 'wallet-connect-scan',
   WalletQRCode = 'wallet-qr-code',

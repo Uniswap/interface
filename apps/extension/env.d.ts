@@ -5,7 +5,6 @@ declare global {
       NODE_ENV?: 'development' | 'production' | 'test'
       BUILD_ENV?: string
       CI?: string
-      VERSION?: string
       WDYR?: string
     }
   }

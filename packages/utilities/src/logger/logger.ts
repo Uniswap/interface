@@ -1,9 +1,15 @@
 /* oxlint-disable max-params */
-import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
+import {
+  isMobileApp,
+  isWebApp,
+  isWebPlatform,
+  isDevEnv,
+  isTestEnv,
+  isDatadogEnabled,
+  localDevDatadogEnabled,
+} from '@universe/environment'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { type LoggerErrorContext, type LogLevel } from 'utilities/src/logger/types'
-import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -90,7 +96,7 @@ function logMessage(
   }
 
   // don't log if datadog isn't enabled on the build or by the switch
-  if (!datadogEnabledBuild || !datadogEnabled) {
+  if (!isDatadogEnabled() || !datadogEnabled) {
     return
   }
 
@@ -120,7 +126,7 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   }
 
   // don't log if datadog isn't enabled on the build or by the switch
-  if (!datadogEnabledBuild || !datadogEnabled) {
+  if (!isDatadogEnabled() || !datadogEnabled) {
     return
   }
 

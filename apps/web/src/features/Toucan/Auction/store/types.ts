@@ -1,4 +1,4 @@
-import { Auction, Checkpoint } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
+import { Auction, Checkpoint, TickDetail } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { ChartMode } from '~/features/Toucan/ToucanChart/renderer'
@@ -170,6 +170,9 @@ interface AuctionState {
   bidDistributionData: BidDistributionData | null
   // Volume from bids excluded due to MAX_RENDERABLE_BARS cap (stored as raw string)
   excludedBidVolume: string | null
+  // Initialized-tick details from GetTickDetails API (sorted ascending by priceQ96).
+  // Null until first load; empty array means the auction has no initialized ticks.
+  tickDetails: TickDetail[] | null
   // Callback to manually refetch user bids (used after withdrawal transactions)
   refetchUserBids: (() => void) | null
   // Active tab in BidFormTabs - used to conditionally show bid line on chart
@@ -211,6 +214,7 @@ interface AuctionActions {
   setCustomBidTick: (tickValue: number | null) => void
   setConcentrationBand: (band: ConcentrationBand | null) => void
   setBidDistributionData: (data: BidDistributionData | null, excludedVolume?: string | null) => void
+  setTickDetails: (ticks: TickDetail[] | null) => void
   setRefetchUserBids: (refetchFn: (() => void) | null) => void
   setActiveBidFormTab: (tab: BidInfoTab) => void
   setOptimisticBid: (bid: OptimisticBid | null) => void

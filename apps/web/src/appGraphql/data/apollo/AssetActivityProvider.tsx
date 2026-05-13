@@ -7,7 +7,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
 import { createAdaptiveRefetchContext } from '~/appGraphql/data/apollo/AdaptiveRefetch'
 import { useAccount } from '~/hooks/useAccount'
-import usePrevious from '~/hooks/usePrevious'
+import { usePrevious } from '~/hooks/usePrevious'
 import { useFiatOnRampTransactions } from '~/state/fiatOnRampTransactions/hooks'
 
 const { Provider: AdaptiveAssetActivityProvider } = createAdaptiveRefetchContext<GraphQLApi.ActivityWebQueryResult>()

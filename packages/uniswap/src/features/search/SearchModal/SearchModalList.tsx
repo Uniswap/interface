@@ -1,6 +1,7 @@
 import { ContentStyle } from '@shopify/flash-list'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
+import { isHoverable, isWebPlatform } from '@universe/environment'
 import { memo, useState } from 'react'
 import { Flex } from 'ui/src'
 import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
@@ -29,7 +30,6 @@ import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/searc
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { useDelayedMenuClose } from 'uniswap/src/features/search/SearchModal/hooks/useDelayedMenuClose'
 import { MultichainTokenContextMenuButton } from 'uniswap/src/features/search/SearchModal/MultichainTokenContextMenuButton'
-import { isHoverable, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 // Context menu button components that manage their own state

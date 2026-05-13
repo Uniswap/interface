@@ -1,4 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
@@ -9,7 +10,6 @@ import { SlippageInfoProps } from 'uniswap/src/features/transactions/swap/compon
 import { useFormatSlippageAmount } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/useFormatSlippageAmount'
 import { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 function SlippageWarningText(): JSX.Element {
   const { t } = useTranslation()

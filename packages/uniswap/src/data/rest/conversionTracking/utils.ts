@@ -1,4 +1,5 @@
 import { namehash } from '@ethersproject/hash'
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import ms from 'ms'
 import {
   CONVERSION_LEADS_EXTERNAL_COOKIE_DOMAIN,
@@ -8,7 +9,6 @@ import {
   STAGING_CONVERSION_PROXY_API_BASE_URL,
 } from 'uniswap/src/data/rest/conversionTracking/constants'
 import { PlatformIdType } from 'uniswap/src/data/rest/conversionTracking/types'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 const JITTER_MIN_MS = ms('10d')
 const JITTER_MAX_MS = ms('14d')

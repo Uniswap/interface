@@ -15,7 +15,7 @@ import { useCancelMultipleOrdersCallback } from '~/components/AccountDrawer/Mini
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
 import { useFetchLimitOrders } from '~/hooks/useFetchLimitOrders'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { renderHook } from '~/test-utils/render'
 import { createMockUniswapXOrder } from '~/test-utils/transactions/fixtures'
 

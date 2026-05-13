@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
@@ -7,7 +8,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
 
 type PasskeyManagementModalProps = {
   isOpen: boolean

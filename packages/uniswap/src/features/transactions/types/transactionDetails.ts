@@ -383,6 +383,8 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
   // The id of the swap TransactionDetails object submitted after this approval on the current client, if applicable.
   swapTxId?: string
+  // Optional symbol override for tokens that can't be resolved via token service (e.g. LP tokens)
+  tokenSymbol?: string
 }
 
 export interface Permit2ApproveTransactionInfo extends BaseTransactionInfo {

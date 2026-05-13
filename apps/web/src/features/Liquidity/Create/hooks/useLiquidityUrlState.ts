@@ -58,9 +58,11 @@ const replaceStateParser = {
 // without re-rendering the component (only used in the function!)
 function getIsSyncing() {
   const isCreatePosition = getIsBrowserPage(PageType.CREATE_POSITION, MatchType.STARTS_WITH)
+  const isAddLiquidityNew = getIsBrowserPage(PageType.ADD_LIQUIDITY_NEW, MatchType.STARTS_WITH)
+  const isAddLiquidityPool = getIsBrowserPage(PageType.ADD_LIQUIDITY, MatchType.INCLUDES)
   const isMigrateV3 = getIsBrowserPage(PageType.MIGRATE_V3, MatchType.STARTS_WITH)
   const isMigrateV2 = getIsBrowserPage(PageType.MIGRATE_V2, MatchType.STARTS_WITH)
-  return isCreatePosition || isMigrateV3 || isMigrateV2
+  return isCreatePosition || isAddLiquidityNew || isAddLiquidityPool || isMigrateV3 || isMigrateV2
 }
 
 export function useLiquidityUrlState() {

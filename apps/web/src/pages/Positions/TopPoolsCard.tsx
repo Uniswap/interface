@@ -9,7 +9,7 @@ import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { LPIncentiveRewardsBadge } from '~/features/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
-import { PoolStat } from '~/state/explore/types'
+import { PoolStat } from '~/types/explore'
 
 export function TopPoolsCard({ pool }: { pool: PoolStat }) {
   const { defaultChainId } = useEnabledChains()

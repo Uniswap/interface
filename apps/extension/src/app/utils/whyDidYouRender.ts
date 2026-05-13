@@ -1,7 +1,7 @@
+import { isDevEnv } from '@universe/environment'
 import whyDidYouRender from '@welldone-software/why-did-you-render'
 import React from 'react'
 import { getConfig } from 'src/app/config'
-import { isDevEnv } from 'utilities/src/environment/env'
 
 if (isDevEnv() && getConfig().wdyr) {
   whyDidYouRender(React, {

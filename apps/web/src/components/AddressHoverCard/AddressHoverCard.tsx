@@ -21,7 +21,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import useCopyClipboard from '~/hooks/useCopyClipboard'
+import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 
 const iconButtonProps = {
   hitSlop: 8,

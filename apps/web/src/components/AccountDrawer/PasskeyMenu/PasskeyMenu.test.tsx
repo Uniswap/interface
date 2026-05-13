@@ -3,12 +3,13 @@ import type { PropsWithChildren, ReactNode } from 'react'
 import { listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import PasskeyMenu from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/config', () => ({
   getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id' })),
+  getPrivyConfig: vi.fn(() => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' })),
 }))
 
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
@@ -21,6 +22,7 @@ vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
     GOOGLE_PASSWORD_MANAGER: 1,
     WINDOWS_HELLO: 3,
   },
+  RecoveryMethod: vi.fn().mockImplementation((args: Record<string, unknown>) => args),
 }))
 
 vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
@@ -147,6 +149,28 @@ describe('PasskeyMenu', () => {
     expect(overflowButtons).toHaveLength(2)
   })
 
+  it('hides delete overflow menu when only one passkey exists', async () => {
+    vi.mocked(useEmbeddedWalletState).mockReturnValue({
+      walletId: 'test-wallet-single-passkey',
+    } as ReturnType<typeof useEmbeddedWalletState>)
+    vi.mocked(listAuthenticators).mockResolvedValue({
+      authenticators: [
+        {
+          credentialId: mockAuthenticatorsDisplay[0].credentialId,
+          providerName: mockAuthenticatorsDisplay[0].providerName,
+          createdAt: mockAuthenticatorsDisplay[0].createdAt,
+          aaguid: mockAuthenticatorsDisplay[0].aaguid,
+        },
+      ],
+      recoveryMethods: [],
+    } as never)
+
+    render(<PasskeyMenu onClose={vi.fn()} />)
+    await screen.findByText('iCloud')
+
+    expect(screen.queryByTestId(TestID.DeletePasskey)).not.toBeInTheDocument()
+  })
+
   it('dispatches setOpenModal(AddPasskey) when Add passkey button is pressed', async () => {
     vi.mocked(useEmbeddedWalletState).mockReturnValue({
       walletId: 'test-wallet-id',
@@ -192,7 +216,7 @@ describe('PasskeyMenu', () => {
 
   it('shows recovery method with correct label and identifier', async () => {
     vi.mocked(useEmbeddedWalletState).mockReturnValue({
-      walletId: 'test-wallet-id',
+      walletId: 'test-wallet-recovery-label',
     } as ReturnType<typeof useEmbeddedWalletState>)
     setupLoadedMock(mockRecoveryMethods)
 
@@ -253,7 +277,7 @@ describe('PasskeyMenu', () => {
 
   it('hides "Add a backup login" button when recovery methods exist', async () => {
     vi.mocked(useEmbeddedWalletState).mockReturnValue({
-      walletId: 'test-wallet-id',
+      walletId: 'test-wallet-hide-add-backup',
     } as ReturnType<typeof useEmbeddedWalletState>)
     setupLoadedMock(mockRecoveryMethods)
 

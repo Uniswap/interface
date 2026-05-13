@@ -9,10 +9,10 @@ import {
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { getRoutingForTransaction } from '~/state/activity/utils'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { getSigner, watchForInterruption } from '~/state/sagas/transactions/utils'
 import { handleGetCapabilities } from '~/state/walletCapabilities/lib/handleGetCapabilities'
 import { setCapabilitiesByChain } from '~/state/walletCapabilities/reducer'

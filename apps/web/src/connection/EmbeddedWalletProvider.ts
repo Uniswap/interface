@@ -12,12 +12,10 @@ import {
   sendDelegatedTransaction,
 } from 'uniswap/src/features/passkey/embeddedWalletDelegation'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { createObservableTransport } from 'uniswap/src/features/providers/observability/createObservableTransport'
-import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
-import { Account, createPublicClient, fallback, Hash, http, SignableMessage } from 'viem'
+import type { Account, Hash, PublicClient, SignableMessage } from 'viem'
 import { getEmbeddedWalletState, setChainId } from '~/state/embeddedWallet/store'
 
 export type Listener = (payload: any) => void
@@ -38,48 +36,28 @@ const safeJSONStringify = (param: any): any => {
 
 const NoWalletFoundError = new Error('Attempted embedded wallet function with no embedded wallet connected')
 
+/**
+ * Resolves a viem `PublicClient` for a given chain. Injected at the boundary
+ * (see `embeddedWalletProviderInstance.ts`) — this class never reaches for a
+ * module-scoped singleton, so the dependency is visible at the constructor
+ * signature and trivially stubbable in tests.
+ */
+export type GetViemClient = (chainId: UniverseChainId) => PublicClient
+
+export interface EmbeddedWalletProviderDeps {
+  getViemClient: GetViemClient
+}
+
 export class EmbeddedWalletProvider {
   listeners: Map<string, Set<Listener>>
   chainId: UniverseChainId
-  publicClient?: ReturnType<typeof createPublicClient>
-  static _instance: EmbeddedWalletProvider | undefined
+  private readonly getPublicClient: GetViemClient
 
-  private constructor() {
+  constructor(deps: EmbeddedWalletProviderDeps) {
     this.listeners = new Map()
     const { chainId } = getEmbeddedWalletState()
     this.chainId = chainId ?? 1
-    this.publicClient = undefined
-  }
-
-  public static getInstance(): EmbeddedWalletProvider {
-    if (!this._instance) {
-      this._instance = new EmbeddedWalletProvider()
-    }
-    return this._instance
-  }
-
-  private getPublicClient(chainId: UniverseChainId) {
-    if (!this.publicClient || this.publicClient.chain !== getChainInfo(chainId)) {
-      const chainInfo = getChainInfo(this.chainId)
-      const rpcUrls = chainInfo.rpcUrls
-      const observer = getRpcObserver()
-      const wrapHttp = (url: string | undefined) =>
-        createObservableTransport({
-          baseTransportFactory: http(url),
-          observer,
-          meta: { chainId: this.chainId, url: url ?? '' },
-        })
-      const fallbackTransports = rpcUrls.fallback?.http.map((url) => wrapHttp(url)) ?? []
-      this.publicClient = createPublicClient({
-        chain: chainInfo,
-        transport: fallback([
-          wrapHttp(rpcUrls.public?.http[0]), // generally quicknode
-          wrapHttp(rpcUrls.default.http[0]), // options here and below are usually public endpoints
-          ...fallbackTransports,
-        ]),
-      })
-    }
-    return this.publicClient
+    this.getPublicClient = deps.getViemClient
   }
 
   async request(args: RequestArgs) {
@@ -445,5 +423,3 @@ export class EmbeddedWalletProvider {
     return await account.signTypedData(JSON.parse(args.params[1]))
   }
 }
-
-export const embeddedWalletProvider = EmbeddedWalletProvider.getInstance()

@@ -1,4 +1,3 @@
-import Row from '~/components/deprecated/Row'
 import { Input, InputProps } from '~/components/NumericalInput'
 import { css, deprecatedStyled } from '~/lib/deprecated-styled'
 
@@ -9,7 +8,10 @@ export const NumericalInputFontStyle = css<{ $fontSize?: number }>`
   line-height: 60px;
 `
 
-export const NumericalInputWrapper = deprecatedStyled(Row)`
+export const NumericalInputWrapper = deprecatedStyled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   position: relative;
   max-width: 100%;
   width: max-content;

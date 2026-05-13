@@ -7,7 +7,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { LP_INCENTIVES_CHAIN_ID, LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/constants'
-import LPIncentiveFeeStatTooltip from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
+import { LPIncentiveFeeStatTooltip } from '~/features/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface LpIncentiveAprTooltipProps {

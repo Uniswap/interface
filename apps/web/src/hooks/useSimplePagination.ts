@@ -7,7 +7,7 @@ import { useCallback, useReducer } from 'react'
  * @returns {number} page - The current page number starting at 1.
  * @returns {Function} loadMore - A function to increment the page number. Accepts an optional onComplete callback.
  */
-const useSimplePagination = () => {
+export const useSimplePagination = () => {
   const [page, incrementPage] = useReducer((current: number) => current + 1, 1)
 
   const loadMore = useCallback(({ onComplete }: { onComplete?: () => void }) => {
@@ -17,5 +17,3 @@ const useSimplePagination = () => {
 
   return { page, loadMore }
 }
-
-export default useSimplePagination

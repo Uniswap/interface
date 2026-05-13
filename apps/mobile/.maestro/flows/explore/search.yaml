@@ -75,9 +75,9 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 
-# Verify swap button is visible for the token
+# Verify TDP Buy CTA (token may have no balance — Sell is optional)
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
 
 # Go back to main page
 - tapOn:

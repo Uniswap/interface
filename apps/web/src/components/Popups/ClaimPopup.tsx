@@ -22,7 +22,7 @@ const rotateKeyframe = `
   }
 `
 
-export default function ClaimPopup() {
+export function ClaimPopup() {
   const account = useAccount()
   const { t } = useTranslation()
   // dont store these in persisted state yet

@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { getChainUrlParam } from '~/features/params/chainParams'
-import { PositionInfo } from '~/types/liquidity'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 export function getPositionUrl(position: PositionInfo): string {
   const chainUrlParam = getChainUrlParam(position.chainId)

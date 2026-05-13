@@ -8,7 +8,7 @@ const StyledLink = deprecatedStyled(ExternalLink)`
   color: ${({ theme }) => theme.neutral3};
 `
 
-export default function PrivacyPolicyNotice() {
+export function PrivacyPolicyNotice() {
   return (
     <Text variant="body4" color="$neutral3" textAlign="center">
       <Trans

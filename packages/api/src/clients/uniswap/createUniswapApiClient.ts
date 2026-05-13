@@ -5,7 +5,7 @@ import {
   type GasFeeResultWithoutState,
   type GasStrategy,
 } from '@universe/api/src/clients/trading/types'
-import { isWebApp } from 'utilities/src/platform'
+import { isWebApp } from '@universe/environment'
 
 // TODO(app-infra), de-duplicate with uniswapUrls when other consumers are migrated to use this client
 const UNISWAP_API_PATHS = {

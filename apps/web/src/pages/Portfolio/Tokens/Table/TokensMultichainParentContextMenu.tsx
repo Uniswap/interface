@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import { memo, PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimateTransition, TouchableArea } from 'ui/src'
@@ -19,7 +20,6 @@ import {
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { isExtensionApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

@@ -1,3 +1,4 @@
+import { isDevEnv } from '@universe/environment'
 import { createContext, PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react'
 import type {
   AccountsData,
@@ -5,7 +6,6 @@ import type {
   AccountsState,
   AccountsStore,
 } from 'uniswap/src/features/accounts/store/types/AccountsState'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

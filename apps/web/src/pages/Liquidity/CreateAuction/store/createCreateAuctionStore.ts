@@ -1,5 +1,6 @@
-import { type Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { isDevEnv } from 'utilities/src/environment/env'
+import { type Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { isDevEnv } from '@universe/environment'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -12,32 +13,32 @@ import {
 } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import {
   type AuctionTokenAmounts,
+  type CustomPriceRangePreset,
   CreateAuctionStep,
   type CreateAuctionStoreState,
   DEFAULT_CREATE_AUCTION_STATE,
   DEFAULT_EXISTING_TOKEN_FORM,
+  DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT,
   MAX_POST_AUCTION_LIQUIDITY_TIERS,
   NEW_TOKEN_DECIMALS,
   PostAuctionLiquidityAllocationType,
   type PriceRangeStrategy,
+  TimeLockPreset,
+  TIMELOCK_PRESET_DURATION_DAYS,
   type TokenFormState,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
+  addCustomPriceRangePreset,
   createNextBoundedTier,
   createSinglePostAuctionLiquidityAllocation,
   createTieredPostAuctionLiquidityAllocation,
-  getDefaultPostAuctionLiquidityPercent,
   getPostAuctionLiquidityPreviewPercent,
-  getRecommendedStrategy,
   isUnboundedTier,
+  removeCustomPriceRangeEntry,
+  updateCustomPriceRangeBounds,
+  updateCustomPriceRangeLiquidityPercent,
 } from '~/pages/Liquidity/CreateAuction/utils'
-import type { FeeData } from '~/types/liquidity'
-
-// 100% of sold tokens seed LP (sale-side leg); an equal amount is reserved from the deposit. Deposit splits ½ sold / ½ reserve.
-export const BOOTSTRAP_POST_LIQUIDITY_PERCENT = new Percent(100, 100)
-// 50% of sold tokens seed LP; the other ½ of sold is fundraise; reserved leg = ⅓ of deposit (e.g. 100M deposit → ~33.33M each bucket at 50%).
-export const FUNDRAISE_POST_LIQUIDITY_PERCENT = new Percent(50, 100)
 
 /**
  * Re-wrap existing committed amounts with a new token, preserving raw values.
@@ -107,28 +108,6 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
           },
           setXVerification: (value) => {
             set({ xVerification: value })
-          },
-          setAuctionType: (activeAuctionType) => {
-            set((state) => {
-              const { committed, postAuctionLiquidityAllocation } = state.configureAuction
-              const nextAllocation =
-                postAuctionLiquidityAllocation.type === PostAuctionLiquidityAllocationType.SINGLE
-                  ? createSinglePostAuctionLiquidityAllocation(getDefaultPostAuctionLiquidityPercent(activeAuctionType))
-                  : postAuctionLiquidityAllocation
-
-              return {
-                configureAuction: {
-                  ...state.configureAuction,
-                  activeAuctionType,
-                  postAuctionLiquidityAllocation: nextAllocation,
-                  committed: updateCommittedPostAuctionLiquidity(committed, nextAllocation),
-                },
-                customizePool: {
-                  ...state.customizePool,
-                  priceRangeStrategy: getRecommendedStrategy(activeAuctionType),
-                },
-              }
-            })
           },
           setPostAuctionLiquidityAllocationType: (type) => {
             set((state) => {
@@ -274,9 +253,9 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
               configureAuction: { ...state.configureAuction, startTime },
             }))
           },
-          setMaxDurationDays: (maxDurationDays) => {
+          setEndTime: (endTime) => {
             set((state) => ({
-              configureAuction: { ...state.configureAuction, maxDurationDays },
+              configureAuction: { ...state.configureAuction, endTime },
             }))
           },
           setRaiseCurrency: (raiseCurrency) => {
@@ -317,7 +296,50 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
           },
           setPriceRangeStrategy: (priceRangeStrategy: PriceRangeStrategy) => {
             set((state) => ({
-              customizePool: { ...state.customizePool, priceRangeStrategy },
+              customizePool: {
+                ...state.customizePool,
+                priceRangeStrategy,
+              },
+            }))
+          },
+          addCustomPriceRangePreset: (preset: CustomPriceRangePreset) => {
+            set((state) => ({
+              customizePool: {
+                ...state.customizePool,
+                customPriceRanges: addCustomPriceRangePreset(state.customizePool.customPriceRanges, preset),
+              },
+            }))
+          },
+          updateCustomPriceRangeLiquidityPercent: (entryId: string, percent: number) => {
+            set((state) => ({
+              customizePool: {
+                ...state.customizePool,
+                customPriceRanges: updateCustomPriceRangeLiquidityPercent({
+                  entries: state.customizePool.customPriceRanges,
+                  entryId,
+                  percent,
+                }),
+              },
+            }))
+          },
+          updateCustomPriceRangeBounds: (entryId, bounds) => {
+            set((state) => ({
+              customizePool: {
+                ...state.customizePool,
+                customPriceRanges: updateCustomPriceRangeBounds({
+                  entries: state.customizePool.customPriceRanges,
+                  entryId,
+                  bounds,
+                }),
+              },
+            }))
+          },
+          removeCustomPriceRange: (entryId: string) => {
+            set((state) => ({
+              customizePool: {
+                ...state.customizePool,
+                customPriceRanges: removeCustomPriceRangeEntry(state.customizePool.customPriceRanges, entryId),
+              },
             }))
           },
           setPoolOwner: (poolOwner: string) => {
@@ -329,6 +351,33 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             set((state) => ({
               customizePool: { ...state.customizePool, timeLockEnabled },
             }))
+          },
+          setTimeLockPreset: (timeLockPreset: TimeLockPreset) => {
+            set((state) => {
+              const { customizePool } = state
+              if (timeLockPreset === TimeLockPreset.Custom) {
+                const permanentDays = TIMELOCK_PRESET_DURATION_DAYS[TimeLockPreset.Permanent]
+                const leavingPermanentDuration = customizePool.timeLockDurationDays === permanentDays
+                return {
+                  customizePool: {
+                    ...customizePool,
+                    timeLockPreset,
+                    ...(leavingPermanentDuration
+                      ? {
+                          timeLockDurationDays: TIMELOCK_PRESET_DURATION_DAYS[TimeLockPreset.OneYear],
+                        }
+                      : {}),
+                  },
+                }
+              }
+              return {
+                customizePool: {
+                  ...customizePool,
+                  timeLockPreset,
+                  timeLockDurationDays: TIMELOCK_PRESET_DURATION_DAYS[timeLockPreset],
+                },
+              }
+            })
           },
           setTimeLockDurationDays: (timeLockDurationDays: number) => {
             set((state) => ({
@@ -350,6 +399,11 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
               customizePool: { ...state.customizePool, buybackAndBurnEnabled },
             }))
           },
+          setAutocompoundFeesEnabled: (autocompoundFeesEnabled: boolean) => {
+            set((state) => ({
+              customizePool: { ...state.customizePool, autocompoundFeesEnabled },
+            }))
+          },
           commitTokenFormAndAdvance: () => {
             set((state) => {
               const { tokenForm } = state
@@ -367,18 +421,14 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
                 return {}
               }
 
-              const {
-                activeAuctionType,
-                committed: existingCommitted,
-                postAuctionLiquidityAllocation,
-              } = state.configureAuction
+              const { committed: existingCommitted, postAuctionLiquidityAllocation } = state.configureAuction
               const isSameSupply =
                 existingCommitted !== undefined &&
                 existingCommitted.totalSupply.currency.equals(totalSupply.currency) &&
                 existingCommitted.totalSupply.equalTo(totalSupply)
               const previewPercent = existingCommitted
                 ? getPostAuctionLiquidityPreviewPercent(postAuctionLiquidityAllocation)
-                : getDefaultPostAuctionLiquidityPercent(activeAuctionType)
+                : DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT
               const nextAllocation = existingCommitted
                 ? postAuctionLiquidityAllocation
                 : createSinglePostAuctionLiquidityAllocation(previewPercent)
@@ -401,20 +451,10 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             set({ tokenColor })
           },
           reset: () => {
-            set({
-              step: DEFAULT_CREATE_AUCTION_STATE.step,
-              tokenForm: DEFAULT_CREATE_AUCTION_STATE.tokenForm,
-              tokenColor: DEFAULT_CREATE_AUCTION_STATE.tokenColor,
-              configureAuction: DEFAULT_CREATE_AUCTION_STATE.configureAuction,
-              customizePool: DEFAULT_CREATE_AUCTION_STATE.customizePool,
-              xVerification: DEFAULT_CREATE_AUCTION_STATE.xVerification,
-            })
+            set(DEFAULT_CREATE_AUCTION_STATE)
           },
         },
       }),
-      {
-        name: 'createAuctionStore',
-        enabled: isDevEnv(),
-      },
+      { name: 'createAuctionStore', enabled: isDevEnv() },
     ),
   )

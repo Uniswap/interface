@@ -11,5 +11,9 @@
       "@universe/config/*": ["./src/*"]
     }
   },
-  "references": []
+  "references": [
+    {
+      "path": "../../config/vitest-presets"
+    }
+  ]
 }

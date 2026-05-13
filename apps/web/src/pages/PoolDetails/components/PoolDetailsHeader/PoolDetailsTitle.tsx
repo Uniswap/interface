@@ -6,12 +6,12 @@ import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { getHeaderTitleVariant } from '~/components/StickyCollapsibleHeader/getHeaderLogoSize'
 import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import type { FeeData } from '~/types/liquidity'
 
 const StyledLink = styled(Link, {
   color: '$neutral1',

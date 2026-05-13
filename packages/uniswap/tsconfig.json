@@ -3,6 +3,9 @@
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.mts", "env.d.ts"],
   "references": [
     {
+      "path": "../environment"
+    },
+    {
       "path": "../utilities"
     },
     {
@@ -25,6 +28,9 @@
     },
     {
       "path": "../api"
+    },
+    {
+      "path": "../chains"
     },
     {
       "path": "../../config/vitest-presets"

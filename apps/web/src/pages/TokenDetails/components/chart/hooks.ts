@@ -103,7 +103,8 @@ export function useTDPPriceChartData({
 
     // For line charts, prefer CoinGecko priceHistory but use PER-CHAIN current price
     // For candlestick charts, always use subgraph OHLC (only source)
-    const useCoinGeckoHistory = priceChartType === PriceChartType.LINE && coinGeckoPriceHistory && !variables.multichain
+    const useCoinGeckoHistory =
+      priceChartType === PriceChartType.LINE && coinGeckoPriceHistory?.length && !variables.multichain
     const priceHistory = useCoinGeckoHistory ? coinGeckoPriceHistory : subgraphPriceHistory
 
     // CRITICAL: Always use per-chain price from subgraph for multi-chain tokens

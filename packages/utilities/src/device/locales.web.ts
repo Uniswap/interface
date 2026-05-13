@@ -1,4 +1,4 @@
-import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
+import { getChromeWithThrow } from '@universe/environment'
 import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG, DeviceLocale } from 'utilities/src/device/constants'
 import { logger } from 'utilities/src/logger/logger'
 

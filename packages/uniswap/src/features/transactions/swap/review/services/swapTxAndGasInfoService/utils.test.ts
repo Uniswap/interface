@@ -65,8 +65,8 @@ describe('processWrapResponse (smart contract unwrap fallback)', () => {
     vi.resetModules()
 
     // Mock the platform module before importing
-    vi.doMock('utilities/src/platform', async () => {
-      const actual = await vi.importActual<typeof import('utilities/src/platform')>('utilities/src/platform')
+    vi.doMock('@universe/environment', async () => {
+      const actual = await vi.importActual<typeof import('@universe/environment')>('@universe/environment')
       return {
         ...actual,
         isWebApp: true,
@@ -107,7 +107,7 @@ describe('processWrapResponse (smart contract unwrap fallback)', () => {
 
     // Clean up by resetting mocks
     vi.resetModules()
-    vi.doUnmock('utilities/src/platform')
+    vi.doUnmock('@universe/environment')
   })
 })
 

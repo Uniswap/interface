@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useSelector } from 'react-redux'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -7,7 +8,6 @@ import {
   selectWalletHideSmallBalancesSetting,
   selectWalletHideSpamTokensSetting,
 } from 'uniswap/src/features/settings/selectors'
-import { isMobileApp } from 'utilities/src/platform'
 
 export function useHideSmallBalancesSetting(): boolean {
   const { isTestnetModeEnabled } = useEnabledChains()

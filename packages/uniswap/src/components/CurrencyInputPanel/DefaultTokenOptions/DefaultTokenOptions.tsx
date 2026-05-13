@@ -1,11 +1,11 @@
 // TODO: Move this to `packages/uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel.tsx`
 
+import { isHoverable, isWebAppDesktop } from '@universe/environment'
 import { memo } from 'react'
 import { Flex, ScrollView } from 'ui/src'
 import { extraMarginForHoverAnimation } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/constants'
 import { TokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/TokenOptions/TokenOptions'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isHoverable, isWebAppDesktop } from 'utilities/src/platform'
 
 function DefaultTokenOptionsInner({ currencyField }: { currencyField: CurrencyField }): JSX.Element {
   return (

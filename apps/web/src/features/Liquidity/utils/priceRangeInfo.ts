@@ -12,6 +12,7 @@ import {
 import { priceToClosestTick as priceToClosestV4Tick, Pool as V4Pool } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,
@@ -25,9 +26,8 @@ import {
   V4PriceRangeInfo,
 } from '~/features/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from '~/features/Liquidity/utils/currency'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 import { tryParsePrice } from '~/state/mint/v3/utils'
-import type { FeeData } from '~/types/liquidity'
 import { PositionField } from '~/types/position'
 
 export function getTicksAtLimit({

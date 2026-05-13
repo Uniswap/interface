@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isMobileApp } from '@universe/environment'
 import { useCallback, useMemo } from 'react'
 import { Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
@@ -9,7 +10,6 @@ import { sortBalancesByValue } from 'uniswap/src/components/tokenDetails/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isMobileApp } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 interface NetworkBalanceBreakdownProps {
@@ -62,7 +62,7 @@ export function NetworkBalanceBreakdown({
               {label}
             </Text>
             <Flex row alignItems="center" gap="$spacing8">
-              {!isExpanded && <NetworkIconList chainIds={chainIds} size={16} />}
+              {!isExpanded && <NetworkIconList showNumberBadge chainIds={chainIds} size={16} />}
               {isExpanded ? (
                 <ChevronsIn color="$neutral2" size={chevronSize} />
               ) : (

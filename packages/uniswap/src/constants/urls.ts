@@ -8,13 +8,12 @@ import {
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   TrafficFlows,
 } from '@universe/api'
+import { isWebApp, isBetaEnv, isDevEnv, isE2eTestEnv } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { config } from 'uniswap/src/config'
-import { isBetaEnv, isDevEnv, isPlaywrightEnv } from 'utilities/src/environment/env'
-import { isWebApp } from 'utilities/src/platform'
 
 function getComplianceApiBaseUrl(): string {
-  if (isPlaywrightEnv()) {
+  if (isE2eTestEnv()) {
     return PROD_ENTRY_GATEWAY_API_BASE_URL
   }
   // Dev and staging both use the staging compliance backend
@@ -25,10 +24,19 @@ function getComplianceApiBaseUrl(): string {
 }
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
-const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
+function getEmbeddedWalletHostname(): string {
+  if (isE2eTestEnv() || isDevEnv()) {
+    return 'dev.ew.unihq.org'
+  }
+  if (isBetaEnv()) {
+    return 'app.corn-staging.com'
+  }
+  return UNISWAP_WEB_HOSTNAME
+}
+const EMBEDDED_WALLET_HOSTNAME = getEmbeddedWalletHostname()
 
 function getPrivyEmbeddedWalletUrl(): string {
-  if (isPlaywrightEnv()) {
+  if (isE2eTestEnv()) {
     return PROD_ENTRY_GATEWAY_API_BASE_URL
   } else if (isBetaEnv()) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
@@ -251,6 +259,10 @@ export const uniswapUrls = {
   appBaseUrl: UNISWAP_APP_URL,
   redirectUrlBase: UNISWAP_MOBILE_REDIRECT_URL,
   requestOriginUrl: UNISWAP_WEB_URL,
+
+  // Privy REST endpoints
+  // Docs: https://docs.privy.io/guide/api/encrypted-authorization-keys
+  privyEncryptedAuthorizationKeysUrl: 'https://auth.privy.io/api/v1/encrypted_authorization_keys',
 
   // Web Interface Urls
   webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,

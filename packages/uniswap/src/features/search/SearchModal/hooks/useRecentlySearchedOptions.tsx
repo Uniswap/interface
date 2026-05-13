@@ -1,3 +1,4 @@
+import { isMobileApp, isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
@@ -28,7 +29,6 @@ import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId, currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
 
 function dedupeCurrencyIds(ids: string[]): string[] {
   const seen = new Set<string>()

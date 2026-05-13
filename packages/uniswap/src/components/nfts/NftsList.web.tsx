@@ -1,6 +1,7 @@
 import { NetworkStatus } from '@apollo/client'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import { isNonPollingRequestInFlight } from '@universe/api'
+import { isMobileWeb } from '@universe/environment'
 import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Loader, styled, Text, View } from 'ui/src'
@@ -24,7 +25,6 @@ import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isMobileWeb } from 'utilities/src/platform'
 
 const estimateRowSize = (): number => NFT_GRID_ROW_HEIGHT
 

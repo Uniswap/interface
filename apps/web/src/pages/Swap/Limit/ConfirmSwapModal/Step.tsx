@@ -1,10 +1,9 @@
 import { ReactElement, useEffect, useState } from 'react'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { CheckMark } from '~/components/Icons/CheckMark'
 import { LoaderV3 } from '~/components/Icons/LoadingSpinner'
 import { deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
 import { ExternalLink } from '~/theme/components/Links'
 
 export const ICON_SIZE = 24
@@ -91,33 +90,45 @@ function Title({
 }) {
   switch (stepStatus) {
     case StepStatus.Preview:
-      return <ThemedText.LabelSmall>{stepDetails.previewTitle}</ThemedText.LabelSmall>
+      return (
+        <Text variant="body3" color="$neutral2">
+          {stepDetails.previewTitle}
+        </Text>
+      )
     case StepStatus.Active:
       return (
-        <ThemedText.BodySmall>
-          {isTimeRemaining ? stepDetails.actionRequiredTitle : stepDetails.delayedStartTitle}
-        </ThemedText.BodySmall>
+        <Text variant="body3">{isTimeRemaining ? stepDetails.actionRequiredTitle : stepDetails.delayedStartTitle}</Text>
       )
     case StepStatus.InProgress:
-      return <ThemedText.BodySmall>{isTimeRemaining ? stepDetails.inProgressTitle : null}</ThemedText.BodySmall>
+      return <Text variant="body3">{isTimeRemaining ? stepDetails.inProgressTitle : null}</Text>
     case StepStatus.Complete:
-      return <ThemedText.LabelSmall>{stepDetails.previewTitle}</ThemedText.LabelSmall>
+      return (
+        <Text variant="body3" color="$neutral2">
+          {stepDetails.previewTitle}
+        </Text>
+      )
     default:
       return null
   }
 }
 
-const MonospacedTimer = deprecatedStyled(ThemedText.LabelSmall)`
-  font-variant-numeric: tabular-nums;
-  padding-right: 8px;
-`
 function Timer({ secondsRemaining }: { secondsRemaining: number }) {
   const minutes = Math.floor(secondsRemaining / 60)
   const seconds = secondsRemaining % 60
   const minutesText = minutes < 10 ? `0${minutes}` : minutes
   const secondsText = seconds < 10 ? `0${seconds}` : seconds
   const timerText = `${minutesText}:${secondsText}`
-  return <MonospacedTimer data-testid="step-timer">{timerText}</MonospacedTimer>
+  return (
+    <Text
+      variant="body3"
+      color="$neutral2"
+      paddingRight="$spacing8"
+      data-testid="step-timer"
+      style={{ fontVariantNumeric: 'tabular-nums' }}
+    >
+      {timerText}
+    </Text>
+  )
 }
 
 const StyledExternalLink = deprecatedStyled(ExternalLink)`

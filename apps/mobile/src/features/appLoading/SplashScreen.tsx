@@ -1,9 +1,9 @@
+import { isAndroid } from '@universe/environment'
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { isAndroid } from 'utilities/src/platform'
 
 export const SPLASH_SCREEN_IMAGE_SIZE = 150
 

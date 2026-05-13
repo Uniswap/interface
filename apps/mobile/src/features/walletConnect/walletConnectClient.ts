@@ -1,9 +1,9 @@
 import '@walletconnect/react-native-compat'
 import { IWalletKit, WalletKit } from '@reown/walletkit'
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import { Core } from '@walletconnect/core'
 import { getConfig } from 'src/config'
 import { registerWCClientForPushNotifications } from 'src/features/walletConnect/api'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 
 // Export the wallet instance that will be initialized

@@ -6,7 +6,8 @@ import type { Sign7702AuthorizationResult, SignAuth } from '@universe/api'
 import { SharedQueryClient } from '@universe/api'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { ensureNeckKeyPair, loadNeckMetadata, signWithDeviceKey } from 'uniswap/src/features/passkey/deviceSession'
-import { authenticateWithPasskey, refreshNeckSession } from 'uniswap/src/features/passkey/embeddedWallet'
+import { refreshNeckSession } from 'uniswap/src/features/passkey/embeddedWallet'
+import { authenticatePasskey } from 'uniswap/src/features/passkey/passkey'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -15,15 +16,11 @@ async function signWithDeviceSessionOrPasskey<T>({
   walletId,
   challengeParams,
   signRequest,
-  // Override for actions whose proto fields aren't in the typed client yet (e.g. 7702).
-  // When provided, this is called instead of EmbeddedWalletApiClient.fetchChallengeRequest.
-  rawChallenge,
 }: {
   action: Action
   walletId?: string
   challengeParams: Record<string, string>
   signRequest: (auth: SignAuth) => Promise<T>
-  rawChallenge?: (params: Record<string, unknown>) => Promise<{ signingPayload?: string; sessionActive?: boolean }>
 }): Promise<T> {
   const neckMeta = loadNeckMetadata()
   const resolvedWalletId = walletId ?? neckMeta?.walletId
@@ -31,10 +28,6 @@ async function signWithDeviceSessionOrPasskey<T>({
     throw new Error('No walletId available for device auth')
   }
 
-  // Ensure we have both metadata AND the in-memory private key. If either is
-  // missing (e.g. window was closed since last session), this regenerates a fresh
-  // pair; we then MUST refresh the server-side NECK registration to bind the new
-  // pub key, since Challenge(sessionActive) doesn't verify pub-key match.
   const {
     privateKey: neckPrivateKey,
     publicKeyBase64: devicePublicKey,
@@ -45,7 +38,6 @@ async function signWithDeviceSessionOrPasskey<T>({
     await refreshNeckSession(devicePublicKey, resolvedWalletId)
   }
 
-  // 1. Call Challenge for the actual action
   const challengeBaseParams = {
     type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
     action,
@@ -54,19 +46,12 @@ async function signWithDeviceSessionOrPasskey<T>({
     ...challengeParams,
   }
 
-  let challenge = rawChallenge
-    ? await rawChallenge(challengeBaseParams)
-    : await EmbeddedWalletApiClient.fetchChallengeRequest(challengeBaseParams)
-
-  // Update React Query cache so UI reflects current session state
+  let challenge = await EmbeddedWalletApiClient.fetchChallengeRequest(challengeBaseParams)
   SharedQueryClient.setQueryData([ReactQueryCacheKey.PasskeyAuthStatus, true], challenge.sessionActive)
 
-  // 2. If not sessioned, refresh NECK via WALLET_SIGNIN passkey flow, then re-fetch a fresh challenge
   if (!challenge.sessionActive) {
     await refreshNeckSession(devicePublicKey, resolvedWalletId)
-    challenge = rawChallenge
-      ? await rawChallenge(challengeBaseParams)
-      : await EmbeddedWalletApiClient.fetchChallengeRequest(challengeBaseParams)
+    challenge = await EmbeddedWalletApiClient.fetchChallengeRequest(challengeBaseParams)
     SharedQueryClient.setQueryData([ReactQueryCacheKey.PasskeyAuthStatus, true], challenge.sessionActive)
   }
 
@@ -74,7 +59,6 @@ async function signWithDeviceSessionOrPasskey<T>({
     throw new Error('Challenge did not return a signing payload')
   }
 
-  // 3. Sign the fresh signingPayload with the in-memory NECK key
   const deviceSignature = await signWithDeviceKey(neckPrivateKey, challenge.signingPayload)
   return signRequest({
     case: 'deviceAuth',
@@ -92,9 +76,7 @@ export async function signMessageWithPasskey(message: string, walletId?: string)
     })
     return result.signatures[0]
   } catch (error) {
-    logger.error(error, {
-      tags: { file: 'signing.ts', function: 'signMessageWithPasskey' },
-    })
+    logger.error(error, { tags: { file: 'signing.ts', function: 'signMessageWithPasskey' } })
     throw error
   }
 }
@@ -110,9 +92,7 @@ export async function signTransactionWithPasskey(transaction: string, walletId?:
     })
     return result.signatures[0]
   } catch (error) {
-    logger.error(error, {
-      tags: { file: 'signing.ts', function: 'signTransactionWithPasskey' },
-    })
+    logger.error(error, { tags: { file: 'signing.ts', function: 'signTransactionWithPasskey' } })
     throw error
   }
 }
@@ -127,17 +107,11 @@ export async function signTypedDataWithPasskey(typedData: string, walletId?: str
     })
     return result.signatures[0]
   } catch (error) {
-    logger.error(error, {
-      tags: { file: 'signing.ts', function: 'signTypedDataWithPasskey' },
-    })
+    logger.error(error, { tags: { file: 'signing.ts', function: 'signTypedDataWithPasskey' } })
     throw error
   }
 }
 
-/**
- * Signs an EIP-7702 authorization via the privy-embedded-wallet backend.
- * Uses device session (silent) or passkey fallback, same as other signing operations.
- */
 export async function sign7702AuthorizationWithPasskey(params: {
   contractAddress: string
   chainId: number
@@ -193,12 +167,11 @@ export async function sign7702TransactionWithPasskey(params: {
       walletId,
       challengeParams: { transaction: transactionForChallenge },
       signRequest: (auth) =>
-        EmbeddedWalletApiClient.fetchSign7702TransactionRequest({
-          ...txParams,
-          ...authorizationParams,
-          auth,
-        }),
+        EmbeddedWalletApiClient.fetchSign7702TransactionRequest({ ...txParams, ...authorizationParams, auth }),
     })
+    if (!result.signedTransaction) {
+      throw new Error('No signed transaction returned from backend')
+    }
     return result.signedTransaction
   } catch (error) {
     logger.error(error, { tags: { file: 'signing.ts', function: 'sign7702TransactionWithPasskey' } })
@@ -206,21 +179,52 @@ export async function sign7702TransactionWithPasskey(params: {
   }
 }
 
-export async function exportEncryptedSeedPhrase(encryptionKey: string, walletId?: string): Promise<string | undefined> {
+/**
+ * Callback used by {@link exportEncryptedSeedPhrase} to obtain the signed credential for the
+ * EXPORT_SEED_PHRASE ceremony. Mobile/web pass `authenticatePasskey` directly; the Extension
+ * delegates to a web-app popup because WebAuthn can't run from a chrome-extension:// origin.
+ */
+export type GetExportCredentialFn = (params: {
+  challengeOptions: string
+  walletAddress?: string
+}) => Promise<string | undefined>
+
+const defaultGetExportCredential: GetExportCredentialFn = ({ challengeOptions }) =>
+  authenticatePasskey(challengeOptions)
+
+export async function exportEncryptedSeedPhrase({
+  encryptionKey,
+  walletId,
+  getCredential = defaultGetExportCredential,
+  walletAddress,
+}: {
+  encryptionKey: string
+  walletId?: string
+  getCredential?: GetExportCredentialFn
+  walletAddress?: string
+}): Promise<{ ciphertext: string; encapsulatedKey: string } | undefined> {
   try {
-    const credential = await authenticateWithPasskey(Action.EXPORT_SEED_PHRASE, { walletId, encryptionKey })
+    const challengeResp = await EmbeddedWalletApiClient.fetchChallengeRequest({
+      type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
+      action: Action.EXPORT_SEED_PHRASE,
+      walletId,
+      encryptionKey,
+    })
+    const challengeOptions = challengeResp.challengeOptions
+    if (!challengeOptions) {
+      return undefined
+    }
+    const credential = await getCredential({ challengeOptions, walletAddress })
     if (!credential) {
       return undefined
     }
-    const seedPhraseResp = await EmbeddedWalletApiClient.fetchExportSeedPhraseRequest({
+    const { ciphertext, encapsulatedKey } = await EmbeddedWalletApiClient.fetchExportEncryptedSeedPhraseRequest({
       encryptionKey,
       credential,
     })
-    return seedPhraseResp.encryptedSeedPhrase
+    return { ciphertext, encapsulatedKey }
   } catch (error) {
-    logger.error(error, {
-      tags: { file: 'signing.ts', function: 'exportEncryptedSeedPhrase' },
-    })
+    logger.error(error, { tags: { file: 'signing.ts', function: 'exportEncryptedSeedPhrase' } })
     throw error
   }
 }

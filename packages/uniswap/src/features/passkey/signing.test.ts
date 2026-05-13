@@ -16,16 +16,20 @@ vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
     fetchSignTransactionsRequest: vi.fn(),
     fetchSignTypedDataRequest: vi.fn(),
     fetchExportSeedPhraseRequest: vi.fn(),
+    fetchExportEncryptedSeedPhraseRequest: vi.fn(),
     fetchSign7702AuthorizationRequest: vi.fn(),
     fetchSign7702TransactionRequest: vi.fn(),
   },
 }))
 
-const mockAuthenticateWithPasskey = vi.fn()
 const mockRefreshNeckSession = vi.fn()
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
-  authenticateWithPasskey: (...args: unknown[]) => mockAuthenticateWithPasskey(...args),
   refreshNeckSession: (...args: unknown[]) => mockRefreshNeckSession(...args),
+}))
+
+const mockAuthenticatePasskey = vi.fn()
+vi.mock('uniswap/src/features/passkey/passkey', () => ({
+  authenticatePasskey: (...args: unknown[]) => mockAuthenticatePasskey(...args),
 }))
 
 const mockLoadNeckMetadata = vi.fn()
@@ -78,9 +82,10 @@ const mockFetchSignTransactionsRequest = EmbeddedWalletApiClient.fetchSignTransa
 const mockFetchSignTypedDataRequest = EmbeddedWalletApiClient.fetchSignTypedDataRequest as MockedFunction<
   typeof EmbeddedWalletApiClient.fetchSignTypedDataRequest
 >
-const mockFetchExportSeedPhraseRequest = EmbeddedWalletApiClient.fetchExportSeedPhraseRequest as MockedFunction<
-  typeof EmbeddedWalletApiClient.fetchExportSeedPhraseRequest
->
+const mockFetchExportEncryptedSeedPhraseRequest =
+  EmbeddedWalletApiClient.fetchExportEncryptedSeedPhraseRequest as MockedFunction<
+    typeof EmbeddedWalletApiClient.fetchExportEncryptedSeedPhraseRequest
+  >
 const mockFetchSign7702Auth = EmbeddedWalletApiClient.fetchSign7702AuthorizationRequest as MockedFunction<
   typeof EmbeddedWalletApiClient.fetchSign7702AuthorizationRequest
 >
@@ -296,27 +301,79 @@ describe('signing', () => {
   })
 
   describe('exportEncryptedSeedPhrase', () => {
-    it('returns encrypted seed phrase on success', async () => {
-      mockAuthenticateWithPasskey.mockResolvedValue('export-cred')
-      mockFetchExportSeedPhraseRequest.mockResolvedValue({
-        encryptedSeedPhrase: 'encrypted-data-123',
-      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchExportSeedPhraseRequest>>)
+    it('challenges, runs the default getCredential, and returns ciphertext + encapsulatedKey', async () => {
+      mockFetchChallengeRequest.mockResolvedValue({
+        challengeOptions: 'opts-1',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
+      mockAuthenticatePasskey.mockResolvedValue('export-cred')
+      mockFetchExportEncryptedSeedPhraseRequest.mockResolvedValue({
+        ciphertext: 'ct',
+        encapsulatedKey: 'ek',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchExportEncryptedSeedPhraseRequest>>)
 
-      const result = await exportEncryptedSeedPhrase('enc-key-1')
+      const result = await exportEncryptedSeedPhrase({ encryptionKey: 'enc-key-1', walletId: 'wallet-1' })
 
-      expect(result).toBe('encrypted-data-123')
-      expect(mockAuthenticateWithPasskey).toHaveBeenCalledWith(MOCK_ACTION.EXPORT_SEED_PHRASE, {
+      expect(result).toEqual({ ciphertext: 'ct', encapsulatedKey: 'ek' })
+      expect(mockFetchChallengeRequest).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: MOCK_ACTION.EXPORT_SEED_PHRASE,
+          walletId: 'wallet-1',
+          encryptionKey: 'enc-key-1',
+        }),
+      )
+      expect(mockFetchExportEncryptedSeedPhraseRequest).toHaveBeenCalledWith({
         encryptionKey: 'enc-key-1',
+        credential: 'export-cred',
       })
     })
 
-    it('returns undefined when no credential', async () => {
-      mockAuthenticateWithPasskey.mockResolvedValue(undefined)
+    it('delegates to a custom getCredential callback (extension bridge)', async () => {
+      mockFetchChallengeRequest.mockResolvedValue({
+        challengeOptions: 'opts-1',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
+      mockFetchExportEncryptedSeedPhraseRequest.mockResolvedValue({
+        ciphertext: 'ct',
+        encapsulatedKey: 'ek',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchExportEncryptedSeedPhraseRequest>>)
+      const getCredential = vi.fn().mockResolvedValue('popup-cred')
 
-      const result = await exportEncryptedSeedPhrase('enc-key-1')
+      const result = await exportEncryptedSeedPhrase({
+        encryptionKey: 'enc-key-1',
+        walletId: 'wallet-1',
+        getCredential,
+        walletAddress: '0xabc',
+      })
+
+      expect(result).toEqual({ ciphertext: 'ct', encapsulatedKey: 'ek' })
+      expect(getCredential).toHaveBeenCalledWith({ challengeOptions: 'opts-1', walletAddress: '0xabc' })
+      expect(mockAuthenticatePasskey).not.toHaveBeenCalled()
+    })
+
+    it('returns undefined when the challenge produces no challengeOptions', async () => {
+      mockFetchChallengeRequest.mockResolvedValue({
+        challengeOptions: '',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
+
+      const result = await exportEncryptedSeedPhrase({ encryptionKey: 'enc-key-1' })
 
       expect(result).toBeUndefined()
-      expect(mockFetchExportSeedPhraseRequest).not.toHaveBeenCalled()
+      expect(mockFetchExportEncryptedSeedPhraseRequest).not.toHaveBeenCalled()
+    })
+
+    it('returns undefined when getCredential returns no credential', async () => {
+      mockFetchChallengeRequest.mockResolvedValue({
+        challengeOptions: 'opts-1',
+      } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
+      const getCredential = vi.fn().mockResolvedValue(undefined)
+
+      const result = await exportEncryptedSeedPhrase({
+        encryptionKey: 'enc-key-1',
+        walletId: 'wallet-1',
+        getCredential,
+      })
+
+      expect(result).toBeUndefined()
+      expect(mockFetchExportEncryptedSeedPhraseRequest).not.toHaveBeenCalled()
     })
   })
 

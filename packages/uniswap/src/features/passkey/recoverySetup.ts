@@ -56,10 +56,13 @@ export async function encryptAndStoreRecovery({
     // 3. OPRF: blind → evaluate → finalize
     onProgress?.('oprf')
     const { blindedElement, blindState } = await blindPin(pin)
-    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate({
-      blindedElement,
-      isRecovery: false,
-    })
+    const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate(
+      {
+        blindedElement,
+        isRecovery: false,
+      },
+      accessToken,
+    )
     if (!oprfResponse.evaluatedElement) {
       throw new Error(oprfResponse.errorMessage ?? 'OPRF evaluation failed')
     }

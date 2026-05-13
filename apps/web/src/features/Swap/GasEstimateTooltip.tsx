@@ -5,14 +5,14 @@ import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/const
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType } from 'utilities/src/format/types'
 import { LoadingOpacityContainer } from '~/components/Loader/styled'
-import { UniswapXGradient, UniswapXRouterIcon } from '~/components/RouterLabel/UniswapXRouterLabel'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
+import { UniswapXGradient, UniswapXRouterIcon } from '~/features/Swap/components/RouterLabel/UniswapXRouterLabel'
 import { GasBreakdownTooltip } from '~/features/Swap/GasBreakdownTooltip'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SubmittableTrade } from '~/state/routing/types'
 import { isUniswapXTrade } from '~/state/routing/utils'
 
-export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
+export function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
   const { chainId } = useMultichainContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 

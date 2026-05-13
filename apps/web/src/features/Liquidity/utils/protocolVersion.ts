@@ -1,5 +1,6 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Protocols } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { GraphQLApi } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
@@ -38,6 +39,19 @@ export function getProtocolStatusLabel(status: PositionStatus, t: AppTFunction):
       return t('common.closed')
   }
   return undefined
+}
+
+export function gqlToRestProtocolVersion(version: GraphQLApi.ProtocolVersion | undefined): ProtocolVersion | undefined {
+  switch (version) {
+    case GraphQLApi.ProtocolVersion.V2:
+      return ProtocolVersion.V2
+    case GraphQLApi.ProtocolVersion.V3:
+      return ProtocolVersion.V3
+    case GraphQLApi.ProtocolVersion.V4:
+      return ProtocolVersion.V4
+    default:
+      return undefined
+  }
 }
 
 export function poolEnabledProtocolVersion(

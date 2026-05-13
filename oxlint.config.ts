@@ -39,6 +39,7 @@ export const rootIgnorePatterns = [
   '**/webpack-plugins/**',
   '**/.wxt/**',
   '**/wxt.config.*',
+  '**/tailwind-config.*',
   // ── apps/mobile ──
   'apps/mobile/metro.config.js',
   'apps/mobile/ReactotronConfig.ts',
@@ -124,6 +125,10 @@ export const sharedRestrictedImportPaths = [
     name: 'react-native-device-info',
     importNames: ['getUniqueId'],
     message: 'Not supported for web/extension, use `getUniqueId` from `utilities/src/device/getUniqueId` instead.',
+  },
+  {
+    name: 'react-native-dotenv',
+    message: 'Do not import env vars from react-native-dotenv. Use getConfig() instead.',
   },
   {
     name: 'wallet/src/data/apollo/usePersistedApolloClient',
@@ -264,8 +269,9 @@ export const sharedRestrictedSyntaxSelectors = [
   },
 ] as const
 
-// TODO(apps-infra): Move processEnvRestrictedSyntaxSelector into sharedRestrictedSyntaxSelectors once all apps have migrated
-// off direct process.env access.
+// Kept separate so apps that legitimately read `process.env` (e.g. mission-control,
+// dev-portal) can opt out of just this selector while keeping the rest of the
+// shared selectors enabled.
 export const processEnvRestrictedSyntaxSelector = {
   selector: "MemberExpression[object.name='process'][property.name='env']",
   message: 'Do not read `process.env` directly. Use getConfig() instead.',
@@ -579,6 +585,11 @@ export default defineConfig({
       // Not implemented natively by oxlint; provided via oxlint-plugin-eslint.
       'eslint-js/no-octal-escape': 'warn',
       'eslint-js/no-undef-init': 'warn',
+      'eslint-js/no-restricted-syntax': [
+        'error',
+        ...sharedRestrictedSyntaxSelectors,
+        processEnvRestrictedSyntaxSelector,
+      ],
       // custom rules (from universe-custom plugin)
       'universe-custom/no-unwrapped-t': [
         'error',
@@ -654,6 +665,11 @@ export default defineConfig({
       rules: {
         'no-console': 'off',
         'typescript/explicit-function-return-type': 'off',
+        // cli legitimately reads process.env directly; redefine the rule
+        // without processEnvRestrictedSyntaxSelector.
+        ...(!isFastLint && {
+          'eslint-js/no-restricted-syntax': ['error', ...sharedRestrictedSyntaxSelectors],
+        }),
       },
     },
     ...(!isFastLint
@@ -681,6 +697,11 @@ export default defineConfig({
         'typescript/consistent-return': 'off',
         'typescript/no-floating-promises': 'off',
         'typescript/no-unnecessary-condition': 'off',
+        // dev-portal legitimately reads process.env at the SSR boundary; redefine
+        // the rule without processEnvRestrictedSyntaxSelector.
+        ...(!isFastLint && {
+          'eslint-js/no-restricted-syntax': ['error', ...sharedRestrictedSyntaxSelectors],
+        }),
       },
     },
     ...(!isFastLint
@@ -803,6 +824,11 @@ export default defineConfig({
         'max-params': 'off',
         'max-lines': 'off',
         'jest/no-disabled-tests': 'off',
+        // mission-control legitimately reads process.env at the SSR boundary;
+        // redefine the rule without processEnvRestrictedSyntaxSelector.
+        ...(!isFastLint && {
+          'eslint-js/no-restricted-syntax': ['error', ...sharedRestrictedSyntaxSelectors],
+        }),
       },
     },
     {
@@ -864,11 +890,6 @@ export default defineConfig({
           },
         ],
         ...(!isFastLint && {
-          'eslint-js/no-restricted-syntax': [
-            'error',
-            ...sharedRestrictedSyntaxSelectors,
-            processEnvRestrictedSyntaxSelector,
-          ],
           'universe-custom/enum-member-naming': 'error',
           'universe-custom/no-transform-percentage-strings': 'error',
         }),
@@ -962,42 +983,6 @@ export default defineConfig({
               ],
             },
           },
-          {
-            files: ['apps/web/**/*.e2e.test.ts'],
-            rules: {
-              'eslint-js/no-restricted-syntax': [
-                'error' as const,
-                {
-                  selector: "CallExpression[callee.property.name='getByTestId'] > Literal",
-                  message: 'Use TestID enum instead of string literals with getByTestId.',
-                },
-                {
-                  selector:
-                    "CallExpression[callee.name='getTest'] > ObjectExpression > Property[key.name='withAnvil'][value.value=true]",
-                  message: 'Anvil tests must be in *.anvil.e2e.test.ts files.',
-                },
-                {
-                  selector: "MemberExpression[object.name='anvil']",
-                  message: 'Anvil fixture usage must be in *.anvil.e2e.test.ts files.',
-                },
-              ],
-            },
-          },
-          {
-            // Anvil files legitimately use `anvil.*` and `withAnvil: true` — drop those
-            // restrictions here. Must come after the broader e2e override above, since
-            // later overrides replace earlier rule options for overlapping files.
-            files: ['apps/web/**/*.anvil.e2e.test.ts'],
-            rules: {
-              'eslint-js/no-restricted-syntax': [
-                'error' as const,
-                {
-                  selector: "CallExpression[callee.property.name='getByTestId'] > Literal",
-                  message: 'Use TestID enum instead of string literals with getByTestId.',
-                },
-              ],
-            },
-          },
         ]
       : []),
     {
@@ -1052,7 +1037,7 @@ export default defineConfig({
                   'Please import icons directly from their respective files to avoid importing the entire icons folder.',
               },
               {
-                name: 'utilities/src/platform',
+                name: '@universe/environment',
                 importNames: ['isIOS', 'isAndroid'],
                 message: 'Use isWebIOS and isWebAndroid instead.',
               },
@@ -1219,10 +1204,6 @@ export default defineConfig({
           },
         ]
       : []),
-    {
-      files: ['packages/utilities/src/chrome/**'],
-      rules: { 'no-restricted-globals': 'off' },
-    },
 
     // ── packages/datadog-cloud ────────────────────────────────────────
     {
@@ -1324,10 +1305,56 @@ export default defineConfig({
           'universe-custom/custom-map-sort': 'off',
           'universe-custom/no-hex-string-casting': 'off',
           'security/detect-non-literal-regexp': 'off',
+          'eslint-js/no-restricted-syntax': 'off',
           '@jambit/typed-redux-saga/use-typed-effects': 'off',
           '@jambit/typed-redux-saga/delegate-effects': 'off',
         }),
       },
     },
+
+    // ═══════════════════════════════════════════════════════════════════
+    // E2E TEST OVERRIDES — must come AFTER the test override so their
+    // no-restricted-syntax selectors aren't wiped out by the test override.
+    // ═══════════════════════════════════════════════════════════════════
+    ...(!isFastLint
+      ? [
+          {
+            files: ['apps/web/**/*.e2e.test.ts'],
+            rules: {
+              'eslint-js/no-restricted-syntax': [
+                'error' as const,
+                {
+                  selector: "CallExpression[callee.property.name='getByTestId'] > Literal",
+                  message: 'Use TestID enum instead of string literals with getByTestId.',
+                },
+                {
+                  selector:
+                    "CallExpression[callee.name='getTest'] > ObjectExpression > Property[key.name='withAnvil'][value.value=true]",
+                  message: 'Anvil tests must be in *.anvil.e2e.test.ts files.',
+                },
+                {
+                  selector: "MemberExpression[object.name='anvil']",
+                  message: 'Anvil fixture usage must be in *.anvil.e2e.test.ts files.',
+                },
+              ],
+            },
+          },
+          {
+            // Anvil files legitimately use `anvil.*` and `withAnvil: true` — drop those
+            // restrictions here. Must come after the broader e2e override above, since
+            // later overrides replace earlier rule options for overlapping files.
+            files: ['apps/web/**/*.anvil.e2e.test.ts'],
+            rules: {
+              'eslint-js/no-restricted-syntax': [
+                'error' as const,
+                {
+                  selector: "CallExpression[callee.property.name='getByTestId'] > Literal",
+                  message: 'Use TestID enum instead of string literals with getByTestId.',
+                },
+              ],
+            },
+          },
+        ]
+      : []),
   ],
 })

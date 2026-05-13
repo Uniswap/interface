@@ -20,7 +20,7 @@ import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddre
 import { usePortfolioOutageContext } from '~/pages/Portfolio/PortfolioOutageContext'
 import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'
 
-export default function PortfolioActivity() {
+export function PortfolioActivity() {
   const trace = useTrace()
   const [selectedTransactionType, setSelectedTransactionType] = useState<string>(ActivityFilterType.All)
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<string>(TimePeriod.All)

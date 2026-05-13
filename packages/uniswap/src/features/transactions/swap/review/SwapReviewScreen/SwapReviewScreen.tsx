@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { memo } from 'react'
 import { Flex } from 'ui/src'
@@ -39,7 +40,6 @@ import { TransactionWarning } from 'uniswap/src/features/transactions/Transactio
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { isWebPlatform } from 'utilities/src/platform'
 
 interface SwapReviewScreenProps {
   hideContent: boolean

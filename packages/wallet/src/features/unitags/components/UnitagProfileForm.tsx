@@ -1,9 +1,9 @@
+import { isExtensionApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, type InputProps, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { isExtensionApp } from 'utilities/src/platform'
 
 interface UnitagProfileFormProps {
   address: string

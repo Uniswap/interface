@@ -1,6 +1,6 @@
+import { isE2eTestEnv } from '@universe/environment'
 import { FeatureFlags } from '@universe/gating'
 import type { ReactNode } from 'react'
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
 
 export interface FlagDef {
   flag: FeatureFlags
@@ -99,7 +99,6 @@ export function buildFlagGroups(extras: {
     {
       name: 'LP',
       flags: [
-        { flag: FeatureFlags.LpPdpD3RangeChart, label: 'Enable LP PDP D3 Range Chart' },
         { flag: FeatureFlags.LpPdpDepthChart, label: 'Enable LP PDP Depth Chart toggle' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
@@ -110,10 +109,9 @@ export function buildFlagGroups(extras: {
       flags: [
         { flag: FeatureFlags.ToucanAuctionKYC, label: 'Enable Toucan Auction KYC' },
         { flag: FeatureFlags.ToucanLaunchAuction, label: 'Enable Toucan Launch Auction' },
-        { flag: FeatureFlags.AuctionDetailsV2, label: 'Enable Auction Details V2' },
         {
-          flag: FeatureFlags.AuctionDetailsV2ActivityOnEnded,
-          label: 'Show auction activity on ended auctions in Auction Details V2',
+          flag: FeatureFlags.ToucanTickDetailsTooltip,
+          label: 'Show Remaining (currency required) on chart-bar tooltip',
         },
       ],
     },
@@ -136,13 +134,15 @@ export function buildFlagGroups(extras: {
       extra: extras.networkRequestsConfig,
     },
     {
+      name: 'RPC',
+      flags: [{ flag: FeatureFlags.UniRpcEnabled, label: 'Route chain RPC through UniRPC proxy' }],
+    },
+    {
       name: 'Debug',
       flags: [
         { flag: FeatureFlags.TraceJsonRpc, label: 'Enables JSON-RPC tracing' },
         { flag: FeatureFlags.AATestWeb, label: 'A/A Test for Web' },
-        ...(isPlaywrightEnv()
-          ? [{ flag: FeatureFlags.DummyFlagTest, label: 'Dummy Flag Test' } satisfies FlagDef]
-          : []),
+        ...(isE2eTestEnv() ? [{ flag: FeatureFlags.DummyFlagTest, label: 'Dummy Flag Test' } satisfies FlagDef] : []),
       ],
     },
     {

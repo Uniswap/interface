@@ -16,7 +16,7 @@ import {
   getStatsigClient,
 } from '@universe/gating'
 import JSBI from 'jsbi'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   CHAIN_GAS_STRATEGY_OVERRIDES,
   DEFAULT_GAS_STRATEGY,
@@ -25,9 +25,12 @@ import {
   URGENT_GAS_STRATEGY,
 } from 'uniswap/src/features/gas/consts'
 import { hasSufficientFundsIncludingTempoGas } from 'uniswap/src/features/gas/tempo'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
+import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
+import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { type Prettify } from 'viem'
+
+const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
 
 export enum GasSpeed {
   Normal = 'normal',
@@ -242,7 +245,7 @@ export async function estimateGasWithClientSideProvider({
     if (!tx.chainId) {
       throw new Error('No chainId for clientside gas estimation')
     }
-    const provider = createEthersProvider({ chainId: tx.chainId })
+    const provider = createProvider({ chainId: tx.chainId, rpcType: RPCType.Public })
     if (!provider) {
       throw new Error('No provider for clientside gas estimation')
     }

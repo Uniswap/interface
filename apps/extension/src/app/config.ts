@@ -1,6 +1,6 @@
 // oxlint-disable eslint-js/no-restricted-syntax allow process.env access
 import type { BaseConfig } from '@universe/config'
-import { boolFromString, parseConfig } from '@universe/config'
+import { AppId, boolFromString, parseConfig } from '@universe/config'
 import { z } from 'zod'
 
 /**
@@ -8,14 +8,13 @@ import { z } from 'zod'
  * Base config values are merged in automatically by parseConfig.
  */
 const extensionConfigValues = {
-  version: process.env.VERSION,
+  appId: AppId.Extension,
   buildEnv: process.env.BUILD_ENV,
   wdyr: process.env.WDYR,
 }
 
 /** Zod schema for extension-specific config fields */
 const extensionConfigSchema = z.object({
-  version: z.string().optional().describe('Extension version string'),
   buildEnv: z.string().optional().describe('Extension build environment'),
   wdyr: boolFromString.describe('Is why-did-you-render enabled'),
 })

@@ -1,5 +1,5 @@
 import { MonitorDefinition } from '../../types'
-import { SWAP_POD_RUNBOOK, TEAM, UNIVERSE_REPO_URL } from './constants'
+import { SWAP_FE_ADDITIONAL_SLACK_CHANNELS, SWAP_POD_RUNBOOK, TEAM, UNIVERSE_REPO_URL } from './constants'
 
 /**
  * Monitors for swap/quote API reliability across web, wallet/mobile/extension.
@@ -29,6 +29,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     runbookUrl: SWAP_POD_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/web`,
     dashboards: [],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
   },
   {
     id: 'swap_fe_mobile_unknown_gas_sim_error_rate',
@@ -45,6 +46,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     runbookUrl: SWAP_POD_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/mobile`,
     dashboards: [],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
   },
   {
     id: 'swap_fe_web_api_failure_swap_quote',
@@ -66,6 +68,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     runbookUrl: SWAP_POD_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/web`,
     dashboards: [],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
     variables: {
       eventQueries: [
         {
@@ -125,6 +128,7 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     runbookUrl: SWAP_POD_RUNBOOK,
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/packages/wallet`,
     dashboards: [],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
     variables: {
       eventQueries: [
         {

@@ -6,7 +6,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { PriceDifference } from '~/features/Liquidity/Create/types'
 
-export default function ConfirmCreatePositionModal({
+export function ConfirmCreatePositionModal({
   isOpen,
   onClose,
   onContinue,

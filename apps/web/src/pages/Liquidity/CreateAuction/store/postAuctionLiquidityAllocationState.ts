@@ -1,5 +1,6 @@
-import { type Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
+  DEFAULT_AUCTION_SUPPLY_PERCENT,
   MIN_POST_AUCTION_LIQUIDITY_PERCENT,
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
@@ -15,8 +16,6 @@ import {
   parseCompactNumberInput,
   postAuctionLiquidityTokenAmountFromDepositedAndUiPercent,
 } from '~/pages/Liquidity/CreateAuction/utils'
-
-const DEFAULT_AUCTION_SUPPLY_PERCENT = new Percent(25, 100)
 
 export function buildAuctionAmountsFromLiquidityPreview(
   totalSupply: CurrencyAmount<Currency>,

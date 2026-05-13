@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { ActionCannotBeCompletedContent } from 'src/components/Requests/RequestModal/ActionCannotBeCompletedContent'
 import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
-import { KidSuperCheckinModal } from 'src/components/Requests/RequestModal/KidSuperCheckinModal'
 import { UwULinkErc20SendModal } from 'src/components/Requests/RequestModal/UwULinkErc20SendModal'
 import {
   getDoesMethodCostGas,
@@ -295,13 +294,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   if (enablePermitMismatchUx && hasMismatch && isSignTypedDataRequest(request)) {
     return <ActionCannotBeCompletedContent request={request} onReject={onReject} />
-  }
-
-  // KidSuper Uniswap Cafe check-in screen
-  if (request.type === EthMethod.PersonalSign && request.dappRequestInfo.name === 'Uniswap Cafe') {
-    return (
-      <KidSuperCheckinModal request={request} onClose={handleClose} onConfirm={onConfirmPress} onReject={onReject} />
-    )
   }
 
   return (

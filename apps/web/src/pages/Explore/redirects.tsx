@@ -7,7 +7,7 @@ const Explore = lazy(() => import('~/pages/Explore'))
 
 export { useExploreParams } from '~/features/Explore/hooks/useExploreParams'
 
-export default function RedirectExplore() {
+export function RedirectExplore() {
   const { tab, chainName, tokenAddress } = useExploreParams()
   const isLegacyUrl = !useLocation().pathname.includes('explore')
 
@@ -27,3 +27,5 @@ export default function RedirectExplore() {
     </Suspense>
   )
 }
+
+export default RedirectExplore

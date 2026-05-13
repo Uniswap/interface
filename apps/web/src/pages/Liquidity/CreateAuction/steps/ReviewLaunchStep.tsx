@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Edit } from 'ui/src/components/icons/Edit'
@@ -27,16 +27,13 @@ import {
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
 import {
   CreateAuctionStep,
-  PostAuctionLiquidityAllocationType,
   PriceRangeStrategy,
   RaiseCurrency,
+  TimeLockPreset,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
-import {
-  formatCompactNumberLabel,
-  isUnboundedTier,
-  percentOfSoldToLiquidityFromDepositAndLiquidityAmount,
-} from '~/pages/Liquidity/CreateAuction/utils'
+import { amountToPercent } from '~/pages/Liquidity/CreateAuction/utils'
+import { formatReviewAuctionDuration } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 const TOKEN_LOGO_SIZE = 60
 const CURRENCY_LOGO_SIZE = iconSizes.icon20
@@ -80,7 +77,7 @@ function SectionHeader({ title, onEdit }: { title: string; onEdit?: () => void }
   )
 }
 
-function ReviewRow({ label, children }: { label: string; children: ReactNode }) {
+function ReviewRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <Flex row justifyContent="space-between" alignItems="center">
       <Text variant="body1" color="$neutral2">
@@ -175,20 +172,22 @@ export function ReviewLaunchStep() {
   const poolOwnerDisplay = shortenAddress({ address: resolvedPoolOwner, chars: 6 })
   const feesRecipientDisplay = shortenAddress({ address: resolvedFeesRecipient, chars: 6 })
 
-  const priceRangeDisplay =
-    customizePool.priceRangeStrategy === PriceRangeStrategy.CONCENTRATED_FULL_RANGE
-      ? t('toucan.createAuction.step.customizePool.priceRange.concentratedFullRange')
-      : t('toucan.createAuction.step.customizePool.priceRange.fullRange')
+  const priceRangeDisplay = (() => {
+    if (customizePool.priceRangeStrategy === PriceRangeStrategy.CONCENTRATED_FULL_RANGE) {
+      return t('toucan.createAuction.step.customizePool.priceRange.concentratedFullRange')
+    }
+    if (customizePool.priceRangeStrategy === PriceRangeStrategy.CUSTOM_RANGE) {
+      return t('common.customRange')
+    }
+    return t('toucan.createAuction.step.customizePool.priceRange.fullRange')
+  })()
 
   if (!committed || !raiseCurrencyInfo) {
     return null
   }
 
   const postAuctionLiquidityPercentDisplay = Math.round(
-    percentOfSoldToLiquidityFromDepositAndLiquidityAmount(
-      committed.auctionSupplyAmount,
-      committed.postAuctionLiquidityAmount,
-    ),
+    amountToPercent(committed.auctionSupplyAmount, committed.postAuctionLiquidityAmount),
   )
 
   return (
@@ -265,7 +264,15 @@ export function ReviewLaunchStep() {
 
           <ReviewRow label={t('toucan.createAuction.step.configureAuction.duration')}>
             <Text variant="body1" color="$neutral1">
-              {t('common.day.count', { count: configureAuction.maxDurationDays })}
+              {configureAuction.startTime && configureAuction.endTime
+                ? formatReviewAuctionDuration(
+                    {
+                      startTime: configureAuction.startTime,
+                      endTime: configureAuction.endTime,
+                    },
+                    t,
+                  )
+                : t('common.day.count', { count: 0 })}
             </Text>
           </ReviewRow>
 
@@ -300,43 +307,23 @@ export function ReviewLaunchStep() {
           </ReviewRow>
 
           <ReviewRow label={t('toucan.createAuction.step.configureAuction.postAuctionLiquidity')}>
-            {configureAuction.postAuctionLiquidityAllocation.type === PostAuctionLiquidityAllocationType.SINGLE ? (
-              <Text variant="body1" color="$neutral1">
-                {formatPercent(postAuctionLiquidityPercentDisplay)}
-              </Text>
-            ) : (
-              <Flex gap="$spacing4" alignItems="flex-end">
-                <Text variant="body1" color="$neutral1">
-                  {t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.tieredAllocation')}
-                </Text>
-                {configureAuction.postAuctionLiquidityAllocation.tiers.map((tier) => (
-                  <Text key={tier.id} variant="body4" color="$neutral2">
-                    {isUnboundedTier(tier)
-                      ? t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.noLimit')
-                      : formatCompactNumberLabel(tier.raiseMilestone)}{' '}
-                    {configureAuction.raiseCurrency} • {formatPercent(tier.percent)}
-                  </Text>
-                ))}
-              </Flex>
-            )}
+            <Text variant="body1" color="$neutral1">
+              {formatPercent(postAuctionLiquidityPercentDisplay)}
+            </Text>
           </ReviewRow>
 
-          {configureAuction.postAuctionLiquidityAllocation.type === PostAuctionLiquidityAllocationType.SINGLE && (
-            <TokenDistributionBar
-              auctionSupplyAmount={committed.auctionSupplyAmount}
-              postAuctionLiquidityAmount={committed.postAuctionLiquidityAmount}
-              tokenSymbol={tokenSymbol}
-              chainId={chainId}
-              raiseCurrency={configureAuction.raiseCurrency}
-              tokenColor={tokenColor}
-            />
-          )}
+          <TokenDistributionBar
+            auctionSupplyAmount={committed.auctionSupplyAmount}
+            postAuctionLiquidityAmount={committed.postAuctionLiquidityAmount}
+            tokenSymbol={tokenSymbol}
+            chainId={chainId}
+            raiseCurrency={configureAuction.raiseCurrency}
+            tokenColor={tokenColor}
+          />
 
           <ReviewRow label={t('toucan.details.kyc')}>
             <Text variant="body1" color="$neutral1">
-              {configureAuction.kycValidationHookAddress
-                ? shortenAddress({ address: configureAuction.kycValidationHookAddress, chars: 6 })
-                : t('toucan.createAuction.step.reviewLaunch.kycDisabled')}
+              {t('toucan.createAuction.step.reviewLaunch.kycDisabled')}
             </Text>
           </ReviewRow>
         </Flex>
@@ -371,7 +358,9 @@ export function ReviewLaunchStep() {
           {customizePool.timeLockEnabled ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.timeLock')}>
               <Text variant="body1" color="$neutral1">
-                {t('common.day.count', { count: customizePool.timeLockDurationDays })}
+                {customizePool.timeLockPreset === TimeLockPreset.Permanent
+                  ? t('toucan.createAuction.step.customizePool.timeLock.preset.permanent')
+                  : t('common.day.count', { count: customizePool.timeLockDurationDays })}
               </Text>
             </ReviewRow>
           ) : null}
@@ -386,6 +375,14 @@ export function ReviewLaunchStep() {
 
           {customizePool.timeLockEnabled && customizePool.buybackAndBurnEnabled ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.buybackAndBurn')}>
+              <Text variant="body1" color="$neutral1">
+                {t('toucan.createAuction.step.reviewLaunch.enabled')}
+              </Text>
+            </ReviewRow>
+          ) : null}
+
+          {customizePool.timeLockEnabled && customizePool.autocompoundFeesEnabled ? (
+            <ReviewRow label={t('toucan.createAuction.step.customizePool.autocompoundFees')}>
               <Text variant="body1" color="$neutral1">
                 {t('toucan.createAuction.step.reviewLaunch.enabled')}
               </Text>

@@ -13,7 +13,7 @@ import { useFiatTokenConversion } from '~/features/Toucan/Auction/hooks/useFiatT
 import { useAuctionStore } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { computeFdvBidTokenRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 import { ValuationInputType } from '~/features/Toucan/Shared/ValuationSlider'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
+import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
 
 interface BidMaxValuationInputV2Props {
   label: string

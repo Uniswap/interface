@@ -1,5 +1,6 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, View } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -11,8 +12,7 @@ import { logger } from 'utilities/src/logger/logger'
 import Circle from '~/assets/images/blue-loader.svg'
 import tokenLogo from '~/assets/images/token-logo.png'
 import { isAddress } from '~/chains/utilities'
-import AddressInputPanel from '~/components/AddressInputPanel'
-import { AutoColumn } from '~/components/deprecated/Column'
+import { AddressInputPanel } from '~/components/AddressInputPanel'
 import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection } from '~/components/earn/styled'
 import { useAccount } from '~/hooks/useAccount'
 import { ModalState } from '~/hooks/useModalState'
@@ -23,6 +23,7 @@ import { UniTokenAnimated } from '~/theme/components/icons/uniTokenAnimated'
 import { ExternalLink } from '~/theme/components/Links'
 
 export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
+  const { t } = useTranslation()
   const account = useAccount()
   const { chainId } = account
   // state for smart contract input
@@ -76,8 +77,6 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' })
   const unclaimedUni = unclaimedAmount?.toFixed(0, { groupSeparator: ',' })
 
-  // Avoiding translating because the structure for "Claiming UNI for address" is wrong but this modal is rarely used
-  // and ran into difficulties with testing it
   return (
     <Modal name={ModalName.AddressClaim} isModalOpen={isOpen} onClose={wrappedOnDismiss} padding={0}>
       {!attempting && (
@@ -92,26 +91,25 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
           >
             <CardBGImage />
             <CardNoise />
-            <CardSection gap="md">
+            <CardSection gap="$gap12">
               <Flex row justifyContent="space-between" alignItems="center">
                 <Text color="$white" fontWeight="$medium">
-                  Claim UNI token
+                  {t('addressClaim.title')}
                 </Text>
-                <CloseIconWithHover onClose={wrappedOnDismiss} />
+                <CloseIconWithHover onClose={wrappedOnDismiss} color="$white" hoverColor="$neutral3" />
               </Flex>
               <Text color="$white" fontWeight="$medium" fontSize={36}>
-                {amount} UNI
+                {t('addressClaim.amountUni', { amount: amount ?? '' })}
               </Text>
             </CardSection>
             <Break />
           </Flex>
-          <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+          <Flex gap="$gap12" px="$spacing16" pb="$spacing16" pt={0} alignItems="stretch" width="100%">
             <Text variant="subheading1" color="$white">
-              Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
-              submission.
+              {t('addressClaim.description')}
             </Text>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
-            {parsedAddress && !hasAvailableClaim && <Text color="$statusCritical">Address has no available claim</Text>}
+            {parsedAddress && !hasAvailableClaim && <Text color="$statusCritical">{t('addressClaim.noClaim')}</Text>}
             <Flex row>
               <Button
                 variant="branded"
@@ -121,10 +119,10 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
                 mt="$spacing16"
                 onPress={onClaim}
               >
-                Claim UNI
+                {t('addressClaim.cta')}
               </Button>
             </Flex>
-          </AutoColumn>
+          </Flex>
         </Flex>
       )}
       {(attempting || claimConfirmed) && (
@@ -145,24 +143,26 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
           </Flex>
           <Flex justifyContent="center" alignItems="center" py={60}>
             {!claimConfirmed ? (
-              <CustomLightSpinner src={Circle} alt="loader" size="90px" />
+              <CustomLightSpinner src={Circle} alt={t('addressClaim.loaderAlt')} size="90px" />
             ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI logo" />
+              <UniTokenAnimated width="72px" src={tokenLogo} alt={t('addressClaim.uniLogoAlt')} />
             )}
           </Flex>
           <Flex gap={100} justifyContent="center">
             <Flex gap="$gap8" justifyContent="center" alignItems="center">
-              <Text variant="heading1" color="$black">
-                {claimConfirmed ? 'Claimed' : 'Claiming'}
+              <Text variant="heading1" color="$black" textAlign="center">
+                {claimConfirmed ? t('addressClaim.claimed') : t('addressClaim.claiming')}
               </Text>
               {!claimConfirmed && (
-                <Text fontSize={36} color="#ff007a" fontWeight="$medium">
-                  {unclaimedUni} UNI
+                <Text fontSize={36} color="#ff007a" fontWeight="$medium" textAlign="center">
+                  {t('addressClaim.amountUni', { amount: unclaimedUni ?? '' })}
                 </Text>
               )}
               {parsedAddress && (
-                <Text variant="subheading1" color="$black">
-                  for {shortenAddress({ address: parsedAddress })}
+                <Text variant="subheading1" color="$black" textAlign="center">
+                  {t('addressClaim.forAddress', {
+                    address: shortenAddress({ address: parsedAddress }),
+                  })}
                 </Text>
               )}
             </Flex>
@@ -172,8 +172,9 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
-                  {'Welcome to team Unicorn :) '}
+                  {t('addressClaim.welcome')}
                   <span role="img" aria-label="party-hat">
+                    {' '}
                     🎉
                   </span>
                 </Text>
@@ -181,7 +182,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
             )}
             {attempting && !hash && (
               <Text variant="subheading1" color="$black" mb="$spacing16">
-                Confirm this transaction in your wallet
+                {t('addressClaim.confirmWallet')}
               </Text>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
@@ -189,7 +190,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
                 href={getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })}
                 style={{ zIndex: 99 }}
               >
-                View transaction on Explorer
+                {t('addressClaim.viewExplorer')}
               </ExternalLink>
             )}
           </Flex>

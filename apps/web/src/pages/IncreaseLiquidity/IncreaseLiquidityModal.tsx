@@ -59,3 +59,5 @@ export function IncreaseLiquidityModal() {
     </IncreaseLiquidityContextProvider>
   )
 }
+
+export default IncreaseLiquidityModal

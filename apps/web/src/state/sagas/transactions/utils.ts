@@ -71,12 +71,12 @@ import { noop } from 'utilities/src/react/noop'
 import { hexlifyTransaction } from 'utilities/src/transactions/hexlifyTransaction'
 import type { Transaction } from 'viem'
 import { getConnectorClient, getTransaction } from 'wagmi/actions'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { DEFAULT_TXN_DISMISS_MS } from '~/constants/misc'
 import { clientToProvider } from '~/hooks/useEthersProvider'
 import { getRoutingForTransaction } from '~/state/activity/utils'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import type { TransactionDetails, TransactionInfo, VitalTxFields } from '~/state/transactions/types'
 import { isPendingTx } from '~/state/transactions/utils'
 import { signTypedData } from '~/utils/signing'
@@ -389,11 +389,15 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
 function getApprovalTransactionInfo(
   approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep | Permit2TransactionStep,
 ): ApproveTransactionInfo {
+  const pair = 'pair' in approvalStep ? approvalStep.pair : undefined
+  const tokenSymbol = pair ? `${pair[0].symbol}-${pair[1].symbol}` : undefined
+
   return {
     type: TransactionType.Approve,
     tokenAddress: approvalStep.tokenAddress,
     spender: approvalStep.spender,
     approvalAmount: approvalStep.amount,
+    tokenSymbol,
   }
 }
 

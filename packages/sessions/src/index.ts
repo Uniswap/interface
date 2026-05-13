@@ -140,3 +140,12 @@ export {
   createCookieJar,
   createLocalCookieTransport,
 } from '@universe/sessions/src/test-utils/createLocalCookieTransport'
+export { createLocalHeaderTransport } from '@universe/sessions/src/test-utils/createLocalHeaderTransport'
+
+// Composable test session factory
+export { createTestSessionContext } from '@universe/sessions/src/testing'
+export type {
+  TestSessionContext,
+  TestSessionPlatform,
+  CreateTestSessionContextOptions,
+} from '@universe/sessions/src/testing'

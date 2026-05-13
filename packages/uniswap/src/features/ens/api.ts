@@ -1,16 +1,19 @@
 /* oxlint-disable typescript/explicit-function-return-type */
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { providers } from 'ethers/lib/ethers'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ENS_TUNNELING_BATCH_GATEWAY } from 'uniswap/src/features/ens/constants'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
+import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
+import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { sanitizeAvatarUrl } from 'utilities/src/format/urls'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+
+const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
 
 export enum EnsLookupType {
   Name = 'name',
@@ -77,7 +80,7 @@ async function getTextFetch({
 async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | null> {
   const { type, nameOrAddress } = params
 
-  const provider = createEthersProvider({ chainId: UniverseChainId.Mainnet })
+  const provider = createProvider({ chainId: UniverseChainId.Mainnet, rpcType: RPCType.Public })
 
   if (!provider) {
     return null

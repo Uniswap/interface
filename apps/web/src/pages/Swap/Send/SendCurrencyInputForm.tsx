@@ -15,21 +15,21 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { isInputGreaterThanDecimals } from '~/components/NumericalInput'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
+import { SendInputError } from '~/features/Swap/state/send/hooks'
+import { useSendContext } from '~/features/Swap/state/send/SendContext'
+import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
 import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import { NumericalInputMimic, NumericalInputSymbolContainer, StyledNumericalInput } from '~/pages/Swap/common/shared'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { SendInputError } from '~/state/send/hooks'
-import { useSendContext } from '~/state/send/SendContext'
-import { type CurrencyState } from '~/state/swap/types'
-import { ThemedText } from '~/theme/components'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { maxAmountSpend } from '~/utils/maxAmountSpend'
 
@@ -109,7 +109,7 @@ const InputError = () => {
   )
 }
 
-export default function SendCurrencyInputForm({
+export function SendCurrencyInputForm({
   disabled = false,
   onCurrencyChange,
 }: {
@@ -308,17 +308,15 @@ export default function SendCurrencyInputForm({
                 )}
                 <Flex row width="100%">
                   <Flex>
-                    <ThemedText.BodyPrimary lineHeight="24px">
-                      {inputCurrency?.symbol ?? inputCurrency?.name}
-                    </ThemedText.BodyPrimary>
+                    <Text variant="body2">{inputCurrency?.symbol ?? inputCurrency?.name}</Text>
                     <Flex row gap="$gap4" width="100%">
                       {currencyBalance && (
-                        <ThemedText.LabelMicro lineHeight="16px">{`Balance: ${formattedBalance}`}</ThemedText.LabelMicro>
+                        <Text variant="body4" color="$neutral2">{`Balance: ${formattedBalance}`}</Text>
                       )}
                       {Boolean(fiatBalanceValue) && (
-                        <ThemedText.LabelMicro lineHeight="16px" color="neutral3">
+                        <Text variant="body4" color="$neutral3">
                           {`(${convertFiatAmountFormatted(fiatBalanceValue?.toExact(), NumberType.FiatTokenPrice)})`}
-                        </ThemedText.LabelMicro>
+                        </Text>
                       )}
                     </Flex>
                   </Flex>
@@ -347,6 +345,7 @@ export default function SendCurrencyInputForm({
         selectedCurrency={inputCurrency}
         switchNetworkAction={SwitchNetworkAction.Send}
         variation={TokenSelectorVariation.BalancesOnly}
+        swapTab={SwapTab.Send}
       />
     </Wrapper>
   )

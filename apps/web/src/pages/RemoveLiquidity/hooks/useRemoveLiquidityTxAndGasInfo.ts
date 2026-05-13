@@ -8,6 +8,7 @@ import { useCheckLPApprovalQuery } from 'uniswap/src/data/apiClients/liquiditySe
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import type { PositionInfo } from 'uniswap/src/features/positions/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
@@ -19,7 +20,6 @@ import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
 import { useRemoveLiquidityModalContext } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import type { RemoveLiquidityTxInfo } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
-import type { PositionInfo } from '~/types/liquidity'
 
 function buildCheckApprovalLPRequest({
   positionInfo,

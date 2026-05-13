@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { isProdEnv } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom } from 'jotai'
 import { useMemo } from 'react'
@@ -15,7 +16,6 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { submitTokenDataReport, TokenDataReportOption } from 'uniswap/src/features/reporting/reports'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NATIVE_ANALYTICS_ADDRESS_VALUE } from 'uniswap/src/utils/currencyId'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 

@@ -99,7 +99,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance({
     [options, selectedPeriod, t],
   )
 
-  if (isError || isTestnetModeEnabled) {
+  if (isError || isTestnetModeEnabled || (data && !profitLoss)) {
     return null
   }
 

@@ -19,6 +19,7 @@ import {
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LIST_AUTHENTICATORS_QUERY_KEY } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { getPrivyConfig } from '~/config'
 import { useAccount } from '~/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
 import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
@@ -63,6 +64,7 @@ export function AddPasskeyModal() {
         authenticatorAttachment,
         username: newPasskeyUsername,
         walletId: walletId ?? undefined,
+        privyAppId: getPrivyConfig().appId,
       })
     },
     {
@@ -182,3 +184,5 @@ export function AddPasskeyModal() {
     </Modal>
   )
 }
+
+export default AddPasskeyModal

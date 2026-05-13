@@ -24,6 +24,7 @@
     "@uniswap/analytics": "1.7.2",
     "@uniswap/analytics-events": "2.43.0",
     "@uniswap/sdk-core": "7.12.1",
+    "@universe/environment": "workspace:^",
     "dayjs": "1.11.7",
     "expo-clipboard": "7.1.5",
     "expo-localization": "16.1.6",

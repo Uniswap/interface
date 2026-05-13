@@ -12,6 +12,7 @@ export enum MenuStateVariant {
   PORTFOLIO_BALANCE_SETTINGS = 'portfolio_balance_settings',
   LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
   PASSKEYS = 'passkeys',
+  RECOVERY_PHRASE = 'recovery_phrase',
   OTHER_WALLETS = 'other_wallets',
   STORAGE_SETTINGS = 'storage_settings',
 }

@@ -1,10 +1,10 @@
+import { isMobileApp } from '@universe/environment'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { InformationBanner } from 'uniswap/src/components/banners/InformationBanner'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
-import { isMobileApp } from 'utilities/src/platform'
 
 function HiddenTokensRowInner({ onPressLearnMore }: { onPressLearnMore: () => void }): JSX.Element {
   const { t } = useTranslation()

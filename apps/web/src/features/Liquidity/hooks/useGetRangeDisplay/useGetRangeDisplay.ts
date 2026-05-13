@@ -1,8 +1,8 @@
 import { Currency, Price } from '@uniswap/sdk-core'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { PriceOrdering } from 'uniswap/src/features/positions/types'
 import { NumberType } from 'utilities/src/format/types'
-import useIsTickAtLimit, { Bound } from '~/features/Liquidity/hooks/useGetRangeDisplay/useIsTickAtLimit'
-import { PriceOrdering } from '~/types/liquidity'
+import { Bound, useIsTickAtLimit } from '~/features/Liquidity/hooks/useGetRangeDisplay/useIsTickAtLimit'
 
 function calculateInvertedValues({
   priceLower,

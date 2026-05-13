@@ -4,7 +4,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import type { FeeData } from '~/types/liquidity'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { PositionField } from '~/types/position'
 
 export enum PositionFlowStep {

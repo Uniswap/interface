@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import React from 'react'
 import { OSDynamicCloudIcon, PaperStack, Passkey } from 'ui/src/components/icons'
 import { AppTFunction } from 'ui/src/i18n/types'
@@ -5,7 +6,6 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'utilities/src/platform'
 
 type ImportMethodScreens =
   | OnboardingScreens.SeedPhraseInput
@@ -28,7 +28,7 @@ export interface ImportMethodOption<T extends ImportMethodScreens = ImportMethod
  * Sign in with Passkey
  */
 export const passKeySignInOption: ImportMethodOption<OnboardingScreens.PasskeyImport> = {
-  title: (t: AppTFunction) => t('onboarding.import.selectMethod.passkey.title'),
+  title: (t: AppTFunction) => t('nav.logIn.button'),
   blurb: (t: AppTFunction) => t('onboarding.import.selectMethod.passkey.subtitle'),
   icon: <Passkey color="$accent1" size="$icon.18" />,
   nav: OnboardingScreens.PasskeyImport,

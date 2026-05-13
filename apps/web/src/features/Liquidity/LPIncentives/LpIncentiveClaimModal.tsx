@@ -20,7 +20,7 @@ import { LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/co
 import { useFormattedTokenRewards } from '~/features/Liquidity/LPIncentives/hooks/useFormattedTokenRewards'
 import { useLpIncentiveClaimButtonConfig } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveClaimButtonConfig'
 import { useAccount } from '~/hooks/useAccount'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { lpIncentivesClaimSaga } from '~/state/sagas/lp_incentives/lpIncentivesSaga'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 

@@ -11,7 +11,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import {
   BidProgressIndicator,

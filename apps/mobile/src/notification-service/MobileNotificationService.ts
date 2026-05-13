@@ -8,6 +8,7 @@ import {
   provideSessionService,
   SharedQueryClient,
 } from '@universe/api'
+import { isDevEnv, REQUEST_SOURCE } from '@universe/environment'
 import { getIsSessionServiceEnabled } from '@universe/gating'
 import {
   createApiNotificationTracker,
@@ -36,8 +37,6 @@ import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
-import { isDevEnv } from 'utilities/src/environment/env'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'

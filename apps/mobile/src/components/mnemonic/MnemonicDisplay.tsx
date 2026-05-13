@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, requireNativeComponent, StyleSheet, ViewProps } from 'react-native'
@@ -7,7 +8,6 @@ import { Flex, flexStyles, HiddenFromScreenReaders, Text } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 

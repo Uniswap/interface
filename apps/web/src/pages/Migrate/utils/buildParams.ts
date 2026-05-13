@@ -10,10 +10,10 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { V2PairInfo, V3PositionInfo } from 'uniswap/src/features/positions/types'
 import { PositionState } from '~/features/Liquidity/Create/types'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
 import { getProtocols } from '~/features/Liquidity/utils/protocolVersion'
-import { V2PairInfo, V3PositionInfo } from '~/types/liquidity'
 
 export function isV3ToV4MigrationPositionInfo(
   positionInfo: V2PairInfo | V3PositionInfo | undefined,

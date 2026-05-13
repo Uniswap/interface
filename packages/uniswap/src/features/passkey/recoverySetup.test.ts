@@ -70,6 +70,25 @@ describe('encryptAndStoreRecovery', () => {
     expect(result.encryptedKeyId).toBe('encrypted-key-id')
   })
 
+  it('forwards the access token to fetchOprfEvaluate', async () => {
+    vi.mocked(blindPin).mockResolvedValue({
+      blindedElement: 'blinded',
+      blindState: {} as Parameters<typeof finalizeOprf>[0],
+    })
+    vi.mocked(EmbeddedWalletApiClient.fetchOprfEvaluate).mockResolvedValue({
+      evaluatedElement: 'eval',
+    } as never)
+    vi.mocked(finalizeOprf).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(deriveArgon2InWorker).mockResolvedValue(crypto.getRandomValues(new Uint8Array(32)))
+    vi.mocked(storeEncryptedBlob).mockResolvedValue({ keyId: 'encrypted-key-id' })
+
+    await encryptAndStoreRecovery(params)
+    expect(EmbeddedWalletApiClient.fetchOprfEvaluate).toHaveBeenCalledWith(
+      expect.objectContaining({ blindedElement: 'blinded', isRecovery: false }),
+      params.accessToken,
+    )
+  })
+
   it('calls onProgress with expected steps', async () => {
     const onProgress = vi.fn()
     vi.mocked(blindPin).mockResolvedValue({

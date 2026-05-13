@@ -1,7 +1,7 @@
-import { ChangeEvent, ForwardedRef, forwardRef, KeyboardEvent, useCallback, useRef, useState } from 'react'
+import { ChangeEvent, ForwardedRef, forwardRef, KeyboardEvent, MouseEvent, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { capitalize } from 'tsafe'
-import { Flex, Popover, Text, Tooltip, TouchableArea, TouchableAreaEvent, styled as UIStyled } from 'ui/src'
+import { Flex, Popover, styled, Text, Tooltip, TouchableArea, TouchableAreaEvent } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
@@ -9,29 +9,32 @@ import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/u
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { shortenAddress } from 'utilities/src/addresses'
-import Column, { AutoColumn } from '~/components/deprecated/Column'
-import Row from '~/components/deprecated/Row'
 import { useGroupedRecentTransfers } from '~/features/Swap/hooks/useGroupedRecentTransfers'
+import { RecipientData } from '~/features/Swap/state/send/hooks'
+import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 import { useUnmountingAnimation } from '~/hooks/useUnmountingAnimation'
 import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
-import { RecipientData } from '~/state/send/hooks'
-import { useSendContext } from '~/state/send/SendContext'
-import { ThemedText } from '~/theme/components'
 import { AnimationType } from '~/theme/components/FadePresence'
-import { ClickableStyle } from '~/theme/components/styles'
+import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-const StyledConfirmedRecipientRow = deprecatedStyled(Row)`
-  padding: 6px 0px;
-  justify-content: space-between;
-`
+const StyledConfirmedRecipientRow = styled(Flex, {
+  row: true,
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  py: '$spacing6',
+})
 
-const StyledConfirmedRecipientDisplayRow = deprecatedStyled(Row)`
-  ${ClickableStyle}
-`
+const StyledConfirmedRecipientDisplayRow = styled(Flex, {
+  row: true,
+  alignItems: 'center',
+  gap: '$gap12',
+  ...ClickableTamaguiStyle,
+})
 
-const RecipientWrapper = UIStyled(Flex, {
+const RecipientWrapper = styled(Flex, {
   position: 'relative',
   backgroundColor: '$surface2',
   borderRadius: '$rounded16',
@@ -88,7 +91,9 @@ const slideOutAnimation = css`
   animation: ${slideOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
-const MenuFlyout = deprecatedStyled(AutoColumn)`
+const MenuFlyout = deprecatedStyled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   background-color: ${({ theme }) => theme.surface1};
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -106,14 +111,6 @@ const MenuFlyout = deprecatedStyled(AutoColumn)`
   &.${AnimationType.EXITING} {
     ${slideOutAnimation}
   }
-`
-
-const StyledTransferText = deprecatedStyled(ThemedText.BodySecondary)`
-  flex-shrink: 0;
-`
-
-const StyledAutocompleteRow = deprecatedStyled(Row)`
-  ${ClickableStyle}
 `
 
 const AutocompleteRow = ({
@@ -148,49 +145,60 @@ const AutocompleteRow = ({
   )
 
   return (
-    <StyledAutocompleteRow justify="space-between" padding="8px 0px" onClick={boundSelectRecipient}>
-      <Row gap="sm">
-        <AccountIcon address={address} size={36} />
-        <Column>
-          <Row gap="xs">
-            {shouldShowAddress ? (
+    <Popover.Close asChild>
+      <TouchableArea
+        row
+        width="100%"
+        alignItems="center"
+        justifyContent="space-between"
+        p="$spacing8"
+        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
+        onMouseDown={(e: MouseEvent) => e.preventDefault()}
+        onPress={boundSelectRecipient}
+      >
+        <Flex row gap="$gap8" alignItems="center">
+          <AccountIcon address={address} size={36} />
+          <Flex gap="$gap4">
+            <Flex row gap="$gap4" alignItems="center">
+              {shouldShowAddress ? (
+                <Tooltip placement="top-start">
+                  <Tooltip.Trigger>
+                    <Text variant="subheading2">{formattedAddress}</Text>
+                  </Tooltip.Trigger>
+                  <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
+                    <Text variant="body4">{address}</Text>
+                  </Tooltip.Content>
+                </Tooltip>
+              ) : (
+                <Text variant="body2">{unitag?.username ?? cachedEnsName}</Text>
+              )}
+              {unitag?.username && (
+                <Flex pt="$spacing2">
+                  <Unitag size={18} />
+                </Flex>
+              )}
+            </Flex>
+            {!shouldShowAddress && (
               <Tooltip placement="top-start">
                 <Tooltip.Trigger>
-                  <Text variant="subheading2">{formattedAddress}</Text>
+                  <Text variant="body3" color="$neutral2">
+                    {formattedAddress}
+                  </Text>
                 </Tooltip.Trigger>
                 <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
                   <Text variant="body4">{address}</Text>
                 </Tooltip.Content>
               </Tooltip>
-            ) : (
-              <ThemedText.BodyPrimary lineHeight="24px">{unitag?.username ?? cachedEnsName}</ThemedText.BodyPrimary>
             )}
-            {unitag?.username && (
-              <Flex pt="$spacing2">
-                <Unitag size={18} />
-              </Flex>
-            )}
-          </Row>
-          {!shouldShowAddress && (
-            <Tooltip placement="top-start">
-              <Tooltip.Trigger>
-                <Text variant="body3" color="$neutral2">
-                  {formattedAddress}
-                </Text>
-              </Tooltip.Trigger>
-              <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
-                <Text variant="body4">{address}</Text>
-              </Tooltip.Content>
-            </Tooltip>
-          )}
-        </Column>
-      </Row>
-      {account.isConnected && (
-        <StyledTransferText>
-          {numberOfTransfers} {t('common.transfer', { count: numberOfTransfers })}
-        </StyledTransferText>
-      )}
-    </StyledAutocompleteRow>
+          </Flex>
+        </Flex>
+        {account.isConnected && (
+          <Text variant="body2" color="$neutral2" flexShrink={0}>
+            {numberOfTransfers} {t('common.transfer', { count: numberOfTransfers })}
+          </Text>
+        )}
+      </TouchableArea>
+    </Popover.Close>
   )
 }
 
@@ -223,7 +231,9 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
 
   return (
     <MenuFlyout ref={ref}>
-      <ThemedText.SubHeaderSmall>{t('sendRecipientForm.recentAddresses.label')}</ThemedText.SubHeaderSmall>
+      <Text variant="body3" color="$neutral2">
+        {t('sendRecipientForm.recentAddresses.label')}
+      </Text>
       {Object.keys(transfers)
         .slice(0, 3)
         .map((address) => (
@@ -244,7 +254,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { t } = useTranslation()
   const account = useAccount()
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
-  const { recipient } = sendState
+  const { recipient, validatedRecipientData } = sendState
   const { recipientData } = derivedSendInfo
 
   const { transfers: recentTransfers } = useGroupedRecentTransfers(account.address)
@@ -256,6 +266,8 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const inputNode = useRef<HTMLInputElement | null>(null)
   const inputWrapperNode = useRef<HTMLDivElement | null>(null)
   const popoverContentRef = useRef<HTMLDivElement | null>(null)
+  /** When true, ignore blur-driven commit — `blur()` runs before validatedRecipientData flushes from select/Enter. */
+  const skipBlurRecipientCommitRef = useRef(false)
   useOnClickOutside({
     node: inputWrapperNode,
     handler: isFocusing ? () => handleFocus(false) : undefined,
@@ -271,7 +283,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       setSendState((prev) => ({
         ...prev,
         recipient: value?.address ?? '',
-        validatedRecipient: value,
+        validatedRecipientData: value,
       }))
     },
     [setSendState],
@@ -284,7 +296,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       setSendState((prev) => ({
         ...prev,
         recipient: inputWithoutSpaces,
-        validatedRecipient: undefined,
+        validatedRecipientData: undefined,
       }))
     },
     [setSendState],
@@ -292,14 +304,15 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
 
   const selectValidatedRecipient = useCallback(
     (value: RecipientData) => {
-      if (!recipientData) {
-        handleInputValidatedRecipient(value)
-      }
-
-      handleFocus(false)
+      skipBlurRecipientCommitRef.current = true
+      handleInputValidatedRecipient(value)
       inputNode.current?.blur()
+      handleFocus(false)
+      queueMicrotask(() => {
+        skipBlurRecipientCommitRef.current = false
+      })
     },
-    [handleFocus, handleInputValidatedRecipient, recipientData],
+    [handleFocus, handleInputValidatedRecipient],
   )
 
   const clearValidatedRecipient = useCallback(
@@ -318,24 +331,30 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
 
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        if (recipientData) {
-          inputNode.current?.blur()
-          handleFocus(false)
-        }
+      if (e.key !== 'Enter' || !recipientData) {
+        return
       }
+      e.preventDefault()
+      selectValidatedRecipient(recipientData)
     },
-    [handleFocus, recipientData],
+    [recipientData, selectValidatedRecipient],
   )
 
-  const showInputField = !recipientData || isFocusing || isForcingFocus
+  const handleRecipientInputBlur = useCallback(() => {
+    if (!skipBlurRecipientCommitRef.current && !validatedRecipientData && recipientData) {
+      handleInputValidatedRecipient(recipientData)
+    }
+    handleFocus(false)
+  }, [handleFocus, handleInputValidatedRecipient, recipientData, validatedRecipientData])
+
+  const showInputField = !validatedRecipientData || isFocusing || isForcingFocus
 
   return (
     <RecipientWrapper isDisabled={disabled} isFocused={isFocusing}>
       <Popover open={isFocusing} placement="bottom-start" offset={{ crossAxis: -16 }}>
-        <Popover.Trigger>
+        <Popover.Anchor ref={inputWrapperNode}>
           {showInputField ? (
-            <Flex ref={inputWrapperNode}>
+            <Flex>
               <Text variant="body3" userSelect="none" color="$neutral2">
                 {capitalize(t('common.to'))}
               </Text>
@@ -349,6 +368,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                 placeholder={recipientData ? '' : t('common.addressOrENS')}
                 pattern="^(0x[a-fA-F0-9]{40})$"
                 onChange={handleInput}
+                onBlur={handleRecipientInputBlur}
                 onFocus={() => handleFocus(true)}
                 value={recipient}
                 onKeyDown={handleEnter}
@@ -357,35 +377,36 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
             </Flex>
           ) : (
             <StyledConfirmedRecipientRow>
-              <StyledConfirmedRecipientDisplayRow gap="md" onClick={editValidatedRecipient}>
-                <AccountIcon address={recipientData.address} size={36} />
-                <Column>
-                  <Row gap="xs">
-                    <ThemedText.BodyPrimary lineHeight="24px">
-                      {recipientData.unitag ??
-                        recipientData.ensName ??
-                        shortenAddress({ address: recipientData.address })}
-                    </ThemedText.BodyPrimary>
-                    {recipientData.unitag && (
+              <StyledConfirmedRecipientDisplayRow onPress={editValidatedRecipient}>
+                <AccountIcon address={validatedRecipientData.address} size={36} />
+                <Flex gap="$gap4">
+                  <Flex row gap="$gap4" alignItems="center">
+                    <Text variant="body2">
+                      {validatedRecipientData.unitag ??
+                        validatedRecipientData.ensName ??
+                        shortenAddress({ address: validatedRecipientData.address })}
+                    </Text>
+                    {validatedRecipientData.unitag && (
                       <Flex pt="$spacing2">
                         <Unitag size={18} />
                       </Flex>
                     )}
-                  </Row>
-                  {Boolean(recipientData.ensName) && (
-                    <ThemedText.LabelMicro lineHeight="16px">
-                      {shortenAddress({ address: recipientData.address })}
-                    </ThemedText.LabelMicro>
+                  </Flex>
+                  {Boolean(validatedRecipientData.ensName) && (
+                    <Text variant="body4" color="$neutral2">
+                      {shortenAddress({ address: validatedRecipientData.address })}
+                    </Text>
                   )}
-                </Column>
+                </Flex>
               </StyledConfirmedRecipientDisplayRow>
               <TouchableArea onPress={clearValidatedRecipient}>
                 <X size="$icon.20" color="$neutral3" />
               </TouchableArea>
             </StyledConfirmedRecipientRow>
           )}
-        </Popover.Trigger>
+        </Popover.Anchor>
         <Popover.Content
+          disableFocusScope
           zIndex={zIndexes.overlay}
           background="transparent"
           width={(inputNode.current?.clientWidth ?? 0) + 32}

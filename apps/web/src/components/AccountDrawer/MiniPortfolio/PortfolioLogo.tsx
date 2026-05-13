@@ -8,7 +8,7 @@ import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { ReactComponent as UnknownStatus } from '~/assets/svg/contract-interaction.svg'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 
 interface PortfolioLogoProps {

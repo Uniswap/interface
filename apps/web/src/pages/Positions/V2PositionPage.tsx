@@ -12,6 +12,7 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -22,14 +23,13 @@ import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPool
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from '~/features/Liquidity/LiquidityPositionInfo'
 import { TextLoader } from '~/features/Liquidity/Loader'
 import { PositionPageActionButtons } from '~/features/Liquidity/PositionPageActionButtons'
-import { parseRestPosition } from '~/features/Liquidity/utils/parseFromRest'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useAccount } from '~/hooks/useAccount'
 import { usePositionOwnerV2 } from '~/hooks/usePositionOwnerV2'
 import { useDynamicMetatags } from '~/pages/metatags'
-import NotFound from '~/pages/NotFound'
+import { NotFound } from '~/pages/NotFound'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -63,7 +63,7 @@ function RowLoader({ withIcon }: { withIcon?: boolean }) {
   )
 }
 
-export default function V2PositionPageWrapper() {
+export function V2PositionPageWrapper() {
   const chainId = useChainIdFromUrlParam()
 
   if (chainId && !isEVMChain(chainId)) {
@@ -76,6 +76,8 @@ export default function V2PositionPageWrapper() {
     </MultichainContextProvider>
   )
 }
+
+export default V2PositionPageWrapper
 
 function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()

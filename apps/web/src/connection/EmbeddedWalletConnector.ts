@@ -9,7 +9,8 @@ import {
   UserRejectedRequestError,
 } from 'viem'
 import { ChainNotConfiguredError, createConnector } from 'wagmi'
-import { EmbeddedWalletProvider, embeddedWalletProvider, Listener } from '~/connection/EmbeddedWalletProvider'
+import { EmbeddedWalletProvider, Listener } from '~/connection/EmbeddedWalletProvider'
+import { embeddedWalletProvider } from '~/connection/embeddedWalletProviderInstance'
 import { getEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface EmbeddedWalletParameters {

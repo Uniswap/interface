@@ -1,8 +1,11 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Dispatch, SetStateAction, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Flex, HeightAnimator, Text, useMedia } from 'ui/src'
+import { useLocation, useNavigate } from 'react-router'
+import { AnimatePresence, Flex, HeightAnimator, Text, TouchableArea, useMedia } from 'ui/src'
+import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -30,6 +33,7 @@ const WIDTH = {
 
 export function FormStepsWrapper({
   isMigration = false,
+  hideEditStepOnDesktop = false,
   currencyInputs,
   setCurrencyInputs,
   selectSectionName = SectionName.CreatePositionSelectTokensStep,
@@ -38,6 +42,7 @@ export function FormStepsWrapper({
   onSelectTokensContinue,
 }: {
   isMigration?: boolean
+  hideEditStepOnDesktop?: boolean
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
   selectSectionName?: SectionName
@@ -46,28 +51,35 @@ export function FormStepsWrapper({
   onSelectTokensContinue: () => void
 }) {
   const { step } = useCreateLiquidityContext()
+  const media = useMedia()
+
+  const hideEditStep = hideEditStepOnDesktop && !media.xl
+  const showEditStep = (step === PositionFlowStep.PRICE_RANGE || step === PositionFlowStep.DEPOSIT) && !hideEditStep
+  const showSelectStep = step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER
 
   return (
     <>
-      <Container>
-        <HeightAnimator animation="200ms">
-          <AnimatePresence>
-            {step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER && (
-              <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
-                <Trace logImpression section={selectSectionName}>
-                  <SelectTokensStep
-                    tokensLocked={isMigration}
-                    currencyInputs={currencyInputs}
-                    onContinue={onSelectTokensContinue}
-                    setCurrencyInputs={setCurrencyInputs}
-                  />
-                </Trace>
-              </Flex>
-            )}
-          </AnimatePresence>
-          {(step === PositionFlowStep.PRICE_RANGE || step === PositionFlowStep.DEPOSIT) && <EditSelectTokensStep />}
-        </HeightAnimator>
-      </Container>
+      {(showSelectStep || showEditStep) && (
+        <Container>
+          <HeightAnimator animation="200ms">
+            <AnimatePresence>
+              {showSelectStep && (
+                <Flex animation="125ms" exitStyle={{ opacity: 0 }}>
+                  <Trace logImpression section={selectSectionName}>
+                    <SelectTokensStep
+                      tokensLocked={isMigration}
+                      currencyInputs={currencyInputs}
+                      onContinue={onSelectTokensContinue}
+                      setCurrencyInputs={setCurrencyInputs}
+                    />
+                  </Trace>
+                </Flex>
+              )}
+            </AnimatePresence>
+            {showEditStep && <EditSelectTokensStep />}
+          </HeightAnimator>
+        </Container>
+      )}
 
       <AnimatePresence>
         {(step === PositionFlowStep.PRICE_RANGE || step === PositionFlowStep.DEPOSIT) && (
@@ -100,17 +112,23 @@ export function FormWrapper({
   toolbar,
   isMigration = false,
   currentBreadcrumb,
+  sidebar,
   children,
 }: {
   title?: string
   toolbar: JSX.Element
   isMigration?: boolean
   currentBreadcrumb?: JSX.Element
+  sidebar?: React.ReactNode
   children: React.ReactNode
 }) {
   const { t } = useTranslation()
   const media = useMedia()
   const { setStep, creatingPoolOrPair, protocolVersion, step, setPriceRangeState } = useCreateLiquidityContext()
+  const navigate = useNavigate()
+  const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
+  const { pathname } = useLocation()
+  const showPoolsBreadcrumb = isAddLiquidityRevamp && pathname.startsWith('/positions/add/')
 
   const poolProgressSteps = useMemo(() => {
     const createStep = ({
@@ -180,10 +198,21 @@ export function FormWrapper({
       }}
     >
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-        <BreadcrumbNavLink to="/positions">
-          {t('pool.positions.title')} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
-        </BreadcrumbNavLink>
-        {currentBreadcrumb || <Text color="$neutral2">{t('pool.newPosition.title')}</Text>}
+        {showPoolsBreadcrumb ? (
+          <>
+            <BreadcrumbNavLink to="/explore/pools">
+              {t('common.pools')} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
+            </BreadcrumbNavLink>
+            <Text color="$neutral1">{t('common.addLiquidity')}</Text>
+          </>
+        ) : (
+          <>
+            <BreadcrumbNavLink to="/positions">
+              {t('pool.positions.title')} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
+            </BreadcrumbNavLink>
+            {currentBreadcrumb || <Text color="$neutral2">{t('pool.newPosition.title')}</Text>}
+          </>
+        )}
       </BreadcrumbNavContainer>
       <Flex
         row
@@ -196,12 +225,19 @@ export function FormWrapper({
         mb={media.xl ? '$spacing16' : '$spacing32'}
         $md={{ flexDirection: 'column', alignItems: 'stretch' }}
       >
-        <Text variant="heading2">{title || t('position.new')}</Text>
+        <Flex row alignItems="center" gap="$spacing8">
+          {showPoolsBreadcrumb && (
+            <TouchableArea onPress={() => navigate('/positions/add')}>
+              <ArrowLeft size="$icon.24" color="$neutral1" />
+            </TouchableArea>
+          )}
+          <Text variant="heading2">{title || t('position.new')}</Text>
+        </Flex>
         {toolbar}
       </Flex>
-      {media.xl && <PoolProgressIndicatorHeader steps={poolProgressSteps} />}
+      {!sidebar && media.xl && <PoolProgressIndicatorHeader steps={poolProgressSteps} />}
       <Flex row gap="$spacing20" justifyContent="space-between" width="100%">
-        {!media.xl && <PoolProgressIndicator steps={poolProgressSteps} />}
+        {!media.xl && (sidebar ?? <PoolProgressIndicator steps={poolProgressSteps} />)}
         <Flex gap="$spacing24" flex={1} maxWidth={WIDTH.positionCard} mb="$spacing28" $xl={{ maxWidth: '100%' }}>
           {children}
         </Flex>

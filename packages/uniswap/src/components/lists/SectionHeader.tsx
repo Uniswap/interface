@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementAfterText, Flex } from 'ui/src'
@@ -11,7 +12,6 @@ import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { TrendUp } from 'ui/src/components/icons/TrendUp'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isAndroid } from 'utilities/src/platform'
 
 export type SectionHeaderProps = {
   sectionKey: OnchainItemSectionName

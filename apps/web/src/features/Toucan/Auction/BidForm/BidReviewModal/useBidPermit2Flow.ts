@@ -15,7 +15,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { AuctionDetails } from '~/features/Toucan/Auction/store/types'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersProvider } from '~/hooks/useEthersProvider'
-import usePermit2Allowance, { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
+import { usePermit2Allowance, Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
 import { usePermitAllowance } from '~/hooks/usePermitAllowance'
 import { useHasPendingPermit2Approval } from '~/state/transactions/hooks'
 

@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
+import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 
 interface LimitOrdersNotSupportedBannerProps {
   onMoreDetails: () => void
 }
 
-function LimitOrdersNotSupportedBanner({ onMoreDetails }: LimitOrdersNotSupportedBannerProps) {
+export function LimitOrdersNotSupportedBanner({ onMoreDetails }: LimitOrdersNotSupportedBannerProps) {
   const { t } = useTranslation()
 
   return (
@@ -25,5 +25,3 @@ function LimitOrdersNotSupportedBanner({ onMoreDetails }: LimitOrdersNotSupporte
     </Flex>
   )
 }
-
-export default LimitOrdersNotSupportedBanner

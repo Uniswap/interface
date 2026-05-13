@@ -3,7 +3,7 @@ import { getScrollY, subscribe } from '~/state/scroll/scrollStore'
 
 // Drives Hero parallax via direct DOM style mutations using refs instead of React state, so scroll events don't trigger a component re-render.
 
-export default function useScrollParallax(enabled: boolean) {
+export function useScrollParallax(enabled: boolean) {
   const outerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const chevronRef = useRef<HTMLDivElement>(null)

@@ -1,5 +1,6 @@
 import type { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { isWarmLoadingStatus } from '@universe/api'
+import { isWebPlatform } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, RefreshButton, Shine, Text, useIsDarkMode } from 'ui/src'
@@ -17,7 +18,6 @@ import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeri
 import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { isWebPlatform } from 'utilities/src/platform'
 
 interface PortfolioBalanceProps {
   evmOwner?: Address

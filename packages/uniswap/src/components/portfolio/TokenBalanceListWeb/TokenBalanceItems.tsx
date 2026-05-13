@@ -1,28 +1,25 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { isExtensionApp } from '@universe/environment'
 import { type MouseEvent, memo, useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Flex, Loader, TouchableArea } from 'ui/src'
+import { Flex, HeightAnimator, Loader, TouchableArea } from 'ui/src'
 import { HiddenTokensRow } from 'uniswap/src/components/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItem'
 import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItem/TokenBalanceItemContextMenu'
 import { ChainBalanceRow } from 'uniswap/src/components/portfolio/TokenBalanceListWeb/ChainBalanceRow'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { PortfolioBalance, PortfolioChainBalance, PortfolioMultichainBalance } from 'uniswap/src/features/dataApi/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { multichainChainTokenRowSuffix } from 'uniswap/src/features/portfolio/balances/flattenMultichainToSingleChainRows'
+import { sortPortfolioChainBalances } from 'uniswap/src/features/portfolio/balances/sortPortfolioBalances'
 import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
-import {
-  isChainRowId,
-  isHiddenTokenBalancesRow,
-  parseChainRowId,
-  TokenBalanceListRow,
-} from 'uniswap/src/features/portfolio/types'
+import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { isExtensionApp } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 function multichainToPortfolioBalanceForMenu(
@@ -84,6 +81,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
 }) {
   const { balancesById, expandedCurrencyIds, isWarmLoading, toggleExpanded, multichainRowExpansionEnabled } =
     useTokenBalanceListContext()
+  const { isTestnetModeEnabled } = useEnabledChains()
   const trace = useTrace()
   const dispatch = useDispatch()
 
@@ -97,23 +95,17 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
     setModalVisible(false)
   }, [])
 
-  const { parentBalance, isChildRow, chainToken } = useMemo(() => {
-    if (isChainRowId(item)) {
-      const { currencyId: cid, chainCurrencyId } = parseChainRowId(item)
-      const balance = balancesById?.[cid]
-      const chain = balance?.tokens.find((t) => multichainChainTokenRowSuffix(t) === chainCurrencyId)
-      return {
-        parentBalance: balance,
-        isChildRow: true,
-        chainToken: chain,
-      }
+  const parentBalance = balancesById?.[item]
+
+  const orderedChainTokens = useMemo(() => {
+    if (!parentBalance || parentBalance.tokens.length <= 1) {
+      return []
     }
-    return {
-      parentBalance: balancesById?.[item],
-      isChildRow: false,
-      chainToken: undefined,
-    }
-  }, [balancesById, item])
+    return sortPortfolioChainBalances({
+      tokens: parentBalance.tokens,
+      isTestnetModeEnabled,
+    })
+  }, [parentBalance, isTestnetModeEnabled])
 
   const toggleMultichainRow = useCallback(() => {
     if (!parentBalance) {
@@ -179,37 +171,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
     )
   }
 
-  if (isChildRow) {
-    if (!chainToken || !parentBalance) {
-      return (
-        <Flex px="$spacing8">
-          <Loader.Token />
-        </Flex>
-      )
-    }
-    const portfolioBalanceForMenu = multichainToPortfolioBalanceForMenu(parentBalance, chainToken)
-    return (
-      <TokenBalanceItemContextMenu
-        portfolioBalance={portfolioBalanceForMenu}
-        isMultichainAsset={parentBalance.tokens.length > 1}
-        copyAddressToClipboard={copyAddressToClipboard}
-        openReportTokenModal={() =>
-          openReportTokenModal(
-            portfolioBalanceForMenu.currencyInfo.currency,
-            portfolioBalanceForMenu.currencyInfo.isSpam,
-          )
-        }
-      >
-        <ChainBalanceRow
-          chainId={chainToken.chainId}
-          symbol={chainToken.currencyInfo.currency.symbol}
-          quantity={chainToken.quantity}
-          valueUsd={chainToken.valueUsd ?? undefined}
-        />
-      </TokenBalanceItemContextMenu>
-    )
-  }
-
   if (!parentBalance || !portfolioBalance || !parentCurrencyInfo) {
     return (
       <Flex px="$spacing8">
@@ -230,10 +191,39 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   )
 
   if (expandOnPrimaryClick) {
+    const isMultichainExpanded = expandedCurrencyIds.has(parentBalance.id)
     return (
       // oxlint-disable-next-line react/forbid-elements -- web only, need div to suppress context menu
       <div role="presentation" style={{ width: '100%' }} onContextMenu={suppressContextMenu}>
         <TouchableArea onPress={toggleMultichainRow}>{tokenBalanceItem}</TouchableArea>
+        <HeightAnimator unmountChildrenWhenCollapsed open={isMultichainExpanded} animation="quick">
+          <Flex gap="$spacing4" pt="$spacing4" px="$spacing8" width="100%">
+            {orderedChainTokens.map((chainToken) => {
+              const portfolioBalanceForMenu = multichainToPortfolioBalanceForMenu(parentBalance, chainToken)
+              return (
+                <TokenBalanceItemContextMenu
+                  key={multichainChainTokenRowSuffix(chainToken)}
+                  portfolioBalance={portfolioBalanceForMenu}
+                  isMultichainAsset={parentBalance.tokens.length > 1}
+                  copyAddressToClipboard={copyAddressToClipboard}
+                  openReportTokenModal={() =>
+                    openReportTokenModal(
+                      portfolioBalanceForMenu.currencyInfo.currency,
+                      portfolioBalanceForMenu.currencyInfo.isSpam,
+                    )
+                  }
+                >
+                  <ChainBalanceRow
+                    chainId={chainToken.chainId}
+                    symbol={chainToken.currencyInfo.currency.symbol}
+                    quantity={chainToken.quantity}
+                    valueUsd={chainToken.valueUsd ?? undefined}
+                  />
+                </TokenBalanceItemContextMenu>
+              )
+            })}
+          </Flex>
+        </HeightAnimator>
       </div>
     )
   }

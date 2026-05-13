@@ -26,6 +26,12 @@ vi.mock('~/state/embeddedWallet/store', () => ({
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   encryptAndStoreRecovery: vi.fn(),
   authorizeAndCompleteRecovery: vi.fn(),
+  RecoveryMethod: vi.fn().mockImplementation((args: Record<string, unknown>) => args),
+}))
+
+vi.mock('~/config', () => ({
+  getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id', privyClientId: 'test-privy-client-id' })),
+  getPrivyConfig: vi.fn(() => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' })),
 }))
 
 const mockOnClose = vi.fn()
@@ -47,6 +53,9 @@ function setupMocks({ oauthLoading = false }: { oauthLoading?: boolean } = {}) {
     user: { id: 'privy-user-123' },
     ready: true,
     authenticated: false,
+    // `ensureLoggedOut` (called before sendCode / resendCode / initOAuth) awaits `logout()`
+    // when `user` is truthy; tests need this to resolve or the mutation path short-circuits.
+    logout: vi.fn().mockResolvedValue(undefined),
   } as unknown as ReturnType<typeof usePrivy>)
   vi.mocked(useLoginWithOAuth).mockReturnValue({
     initOAuth: mockInitOAuth,
@@ -279,18 +288,22 @@ describe('AddBackupLoginModal', () => {
   })
 
   describe('OAuth flow', () => {
-    it('calls initOAuth with google when Google is clicked', () => {
+    it('calls initOAuth with google when Google is clicked', async () => {
       setupMocks()
       render(<AddBackupLoginModal />)
       fireEvent.click(screen.getByText('Google'))
-      expect(mockInitOAuth).toHaveBeenCalledWith({ provider: 'google' })
+      await waitFor(() => {
+        expect(mockInitOAuth).toHaveBeenCalledWith({ provider: 'google' })
+      })
     })
 
-    it('calls initOAuth with apple when Apple is clicked', () => {
+    it('calls initOAuth with apple when Apple is clicked', async () => {
       setupMocks()
       render(<AddBackupLoginModal />)
       fireEvent.click(screen.getByText('Apple'))
-      expect(mockInitOAuth).toHaveBeenCalledWith({ provider: 'apple' })
+      await waitFor(() => {
+        expect(mockInitOAuth).toHaveBeenCalledWith({ provider: 'apple' })
+      })
     })
 
     it('navigates to passcode intro on OAuth completion with Google', async () => {
@@ -301,6 +314,7 @@ describe('AddBackupLoginModal', () => {
         ready: true,
         authenticated: true,
         user: { google: { email: 'user@gmail.com' } },
+        logout: vi.fn().mockResolvedValue(undefined),
       } as unknown as ReturnType<typeof usePrivy>)
 
       render(<AddBackupLoginModal />)
@@ -329,31 +343,38 @@ describe('AddBackupLoginModal', () => {
       expect(screen.getByText('user@icloud.com')).toBeInTheDocument()
     })
 
-    it('stores provider in sessionStorage when initiating Google OAuth', () => {
+    it('stores provider in sessionStorage when initiating Google OAuth', async () => {
       setupMocks()
       render(<AddBackupLoginModal />)
       fireEvent.click(screen.getByText('Google'))
 
-      expect(sessionStorage.getItem('addBackupLogin:oauthProvider')).toBe('google')
+      // `ensureLoggedOut()` runs before `sessionStorage.setItem` + `initOAuth`.
+      await waitFor(() => {
+        expect(sessionStorage.getItem('addBackupLogin:oauthProvider')).toBe('google')
+      })
       expect(mockInitOAuth).toHaveBeenCalledWith({ provider: 'google' })
     })
 
-    it('stores provider in sessionStorage when initiating Apple OAuth', () => {
+    it('stores provider in sessionStorage when initiating Apple OAuth', async () => {
       setupMocks()
       render(<AddBackupLoginModal />)
       fireEvent.click(screen.getByText('Apple'))
 
-      expect(sessionStorage.getItem('addBackupLogin:oauthProvider')).toBe('apple')
+      await waitFor(() => {
+        expect(sessionStorage.getItem('addBackupLogin:oauthProvider')).toBe('apple')
+      })
       expect(mockInitOAuth).toHaveBeenCalledWith({ provider: 'apple' })
     })
 
-    it('handleClose resets OAuth sessionStorage', () => {
+    it('handleClose resets OAuth sessionStorage', async () => {
       setupMocks()
       render(<AddBackupLoginModal />)
 
       // Start OAuth flow to set sessionStorage
       fireEvent.click(screen.getByText('Google'))
-      expect(sessionStorage.getItem('addBackupLogin:oauthProvider')).toBe('google')
+      await waitFor(() => {
+        expect(sessionStorage.getItem('addBackupLogin:oauthProvider')).toBe('google')
+      })
 
       // Navigate to email step (which has a StepHeader with back + close buttons)
       fireEvent.click(screen.getByText('Email'))

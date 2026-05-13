@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { ForceUpgradeTranslations } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +8,6 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { Language, Locale } from 'uniswap/src/features/language/constants'
 import { getLocale, parseLocale } from 'uniswap/src/features/language/navigatorLocale'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
-import { isWebApp } from 'utilities/src/platform'
 
 export type LanguageInfo = {
   displayName: string

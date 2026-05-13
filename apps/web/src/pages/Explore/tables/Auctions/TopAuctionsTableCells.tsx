@@ -7,7 +7,7 @@ import { OrderDirection } from '~/appGraphql/data/util'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import { getAuctionMetadata } from '~/features/Toucan/Config/config'
-import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 
 /**
  * Sort fields for auction table

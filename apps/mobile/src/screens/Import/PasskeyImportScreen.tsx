@@ -11,7 +11,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { PasskeyImportLoading } from 'wallet/src/features/onboarding/PasskeyImportLoading'
 import { WelcomeSplash } from 'wallet/src/features/onboarding/WelcomeSplash'
-import { fetchSeedPhrase } from 'wallet/src/features/passkeys/passkeys'
+import { exportSeedPhraseForGraduation } from 'wallet/src/features/passkeys/passkeys'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
@@ -32,11 +32,11 @@ export function PasskeyImportScreen({ navigation, route: { params } }: Props): J
 
   useEffect(() => {
     const importAndGenerateAccount = async (): Promise<void> => {
-      const mnemonic = await fetchSeedPhrase(params.passkeyCredential)
+      const mnemonic = await exportSeedPhraseForGraduation(params.passkeyCredential)
       const importedAddress = await Keyring.importMnemonic(mnemonic)
       await generateImportedAccounts({ mnemonicId: importedAddress, backupType: BackupType.Passkey })
       if (!importedAddress) {
-        throw new Error(`Failed to generate account for mnemonic ${mnemonic}`)
+        throw new Error('Failed to generate account for mnemonic')
       }
 
       setAddress(importedAddress)

@@ -43,13 +43,15 @@ export function formApproveNotificationTitle({
   currency,
   tokenAddress,
   spender,
+  tokenSymbol,
 }: {
   txStatus: TransactionStatus
   currency: Maybe<Currency>
   tokenAddress: Address
   spender: Address
+  tokenSymbol?: string
 }): string {
-  const currencyDisplayText = getCurrencyDisplayText(currency, tokenAddress)
+  const currencyDisplayText = tokenSymbol ?? getCurrencyDisplayText(currency, tokenAddress)
   const address = shortenAddress({ address: spender })
   return txStatus === TransactionStatus.Success
     ? i18n.t('notification.transaction.approve.success', {

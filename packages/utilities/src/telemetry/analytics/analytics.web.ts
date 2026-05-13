@@ -1,6 +1,6 @@
 import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
-import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
+import { getChromeWithThrow } from '@universe/environment'
 // oxlint-disable-next-line no-restricted-imports -- platform implementation file
 import {
   Analytics,

@@ -1,5 +1,5 @@
 import { SearchBar } from '~/components/NavBar/SearchBar'
-import mockMediaSize from '~/test-utils/mockMediaSize'
+import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('tamagui', async () => {

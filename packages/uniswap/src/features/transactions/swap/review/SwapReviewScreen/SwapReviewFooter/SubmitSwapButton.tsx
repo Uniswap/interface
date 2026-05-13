@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ButtonVariant } from 'ui/src'
@@ -21,7 +22,6 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapT
 import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWebApp } from 'utilities/src/platform'
 
 interface SubmitSwapButtonProps {
   disabled: boolean

@@ -1,3 +1,4 @@
+import { isTestEnv } from '@universe/environment'
 import { ReactElement, useMemo, useState } from 'react'
 import {
   AnimatePresence,
@@ -10,7 +11,6 @@ import { Check } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { SporeComponentVariant } from 'ui/src/components/types'
 import { IconSizeTokens } from 'ui/src/theme'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { v4 as uuid } from 'uuid'
 
 type CheckboxSizes = {

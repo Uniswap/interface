@@ -3,10 +3,10 @@ import { Flex, TouchableArea, useIsTouchDevice } from 'ui/src'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useLiquidityPositionDropdownOptions } from '~/features/Liquidity/hooks/useLiquidityPositionDropdownOptions'
-import { PositionInfo } from '~/types/liquidity'
 
 const ICON_BUTTON_SIZE = 28
 

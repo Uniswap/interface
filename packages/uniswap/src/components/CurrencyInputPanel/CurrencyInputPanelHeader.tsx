@@ -1,4 +1,5 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { isExtensionApp, isWebAppDesktop, isWebPlatform } from '@universe/environment'
 import { useCallback } from 'react'
 import { Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme/spacing'
@@ -13,7 +14,6 @@ import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/D
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtensionApp, isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 
 interface CurrencyInputPanelHeaderProps {
   headerLabel?: string
