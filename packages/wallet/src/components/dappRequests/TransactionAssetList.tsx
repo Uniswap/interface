@@ -118,14 +118,31 @@ function formatAmountWithLocale(
   asset: TransactionAsset,
   formatNumberOrString: LocalizationContextState['formatNumberOrString'],
 ): string {
+  // For NFTs, prefer the Blockaid summary (e.g. "BAYC #8817") or construct
+  // a label from symbol/name + token ID so users can identify the specific item.
   if (!asset.amount) {
-    return asset.symbol ?? asset.name ?? ''
+    if (asset.summary) {
+      return asset.summary
+    }
+    const label = asset.symbol ?? asset.name ?? ''
+    if (asset.tokenId) {
+      return label ? `${label} #${asset.tokenId}` : `#${asset.tokenId}`
+    }
+    return label
   }
 
   const formattedAmount = formatNumberOrString({
     value: asset.amount,
     type: NumberType.TokenNonTx,
   })
+
+  // For ERC1155 with quantity and token ID, show both
+  if (asset.tokenId) {
+    const label = asset.symbol ?? asset.name ?? ''
+    return label
+      ? `${formattedAmount} ${label} #${asset.tokenId}`
+      : `${formattedAmount} #${asset.tokenId}`
+  }
 
   return `${formattedAmount} ${asset.symbol ?? ''}`
 }

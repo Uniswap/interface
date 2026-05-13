@@ -235,7 +235,102 @@ describe('blockaidUtils', () => {
     })
   })
 
-  describe('parseReceivingAssets', () => {
+
+    it('should parse ERC721 sending assets with token_id and summary', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'ERC721',
+            symbol: 'BAYC',
+            name: 'Bored Ape Yacht Club',
+            address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+            logo_url: 'https://example.com/bayc.png',
+            chain_id: 1,
+          },
+          out: [
+            {
+              token_id: '8817',
+              summary: 'BAYC #8817',
+              usd_price: '50000',
+            },
+          ],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result).not.toBeNull()
+      expect(result?.type).toBe(TransactionSectionType.Sending)
+      expect(result?.assets).toHaveLength(1)
+      expect(result?.assets[0]).toEqual({
+        type: 'ERC721',
+        symbol: 'BAYC',
+        name: 'Bored Ape Yacht Club',
+        amount: undefined,
+        usdValue: '50000',
+        logoUrl: 'https://example.com/bayc.png',
+        address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+        chainId: TEST_CHAIN_ID,
+        tokenId: '8817',
+        summary: 'BAYC #8817',
+      })
+    })
+
+    it('should parse ERC1155 sending assets with token_id and value', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'ERC1155',
+            symbol: 'ITEMS',
+            name: 'Game Items',
+            address: '0x1155contract',
+            logo_url: 'https://example.com/items.png',
+            chain_id: 1,
+          },
+          out: [
+            {
+              value: '3',
+              token_id: '42',
+              usd_price: '150',
+            },
+          ],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets[0]?.tokenId).toBe('42')
+      expect(result?.assets[0]?.amount).toBe('3')
+    })
+
+    it('should not add tokenId for ERC20 assets even if token_id is present in response', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'ERC20',
+            symbol: 'USDC',
+            name: 'USD Coin',
+            address: '0xusdc',
+            chain_id: 1,
+          },
+          out: [
+            {
+              value: '100',
+              token_id: 'unexpected',
+            },
+          ],
+          in: [],
+        },
+      ] as any
+
+      const result = parseSendingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets[0]?.tokenId).toBeUndefined()
+    })
+
+    describe('parseReceivingAssets', () => {
     it('should return null when no assets are being received', () => {
       const assetsDiffs = [
         {
@@ -339,7 +434,66 @@ describe('blockaidUtils', () => {
     })
   })
 
-  describe('parseApprovals', () => {
+
+    it('should parse ERC721 receiving assets with token_id and summary', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'ERC721',
+            symbol: 'PUNK',
+            name: 'CryptoPunks',
+            address: '0xpunks',
+            logo_url: 'https://example.com/punk.png',
+            chain_id: 1,
+          },
+          out: [],
+          in: [
+            {
+              token_id: '3100',
+              summary: 'CryptoPunk #3100',
+              usd_price: '75000',
+            },
+          ],
+        },
+      ] as any
+
+      const result = parseReceivingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result).not.toBeNull()
+      expect(result?.type).toBe(TransactionSectionType.Receiving)
+      expect(result?.assets[0]?.tokenId).toBe('3100')
+      expect(result?.assets[0]?.summary).toBe('CryptoPunk #3100')
+      expect(result?.assets[0]?.amount).toBeUndefined()
+    })
+
+    it('should parse ERC1155 receiving assets with token_id and value', () => {
+      const assetsDiffs = [
+        {
+          asset: {
+            type: 'ERC1155',
+            symbol: 'LAND',
+            name: 'Sandbox Land',
+            address: '0xland',
+            chain_id: 1,
+          },
+          out: [],
+          in: [
+            {
+              value: '5',
+              token_id: '99',
+              usd_price: '500',
+            },
+          ],
+        },
+      ] as any
+
+      const result = parseReceivingAssets(assetsDiffs, TEST_CHAIN_ID)
+
+      expect(result?.assets[0]?.tokenId).toBe('99')
+      expect(result?.assets[0]?.amount).toBe('5')
+    })
+
+    describe('parseApprovals', () => {
     it('should return null when no exposures exist', () => {
       const exposures = [] as any
 

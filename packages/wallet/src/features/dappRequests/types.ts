@@ -120,6 +120,10 @@ export interface TransactionAsset {
   logoUrl?: string
   /** Spender address (for approvals) */
   spenderAddress?: string
+  /** NFT token ID from Blockaid scan (ERC721/ERC1155) */
+  tokenId?: string
+  /** Human-readable summary from Blockaid scan (e.g. "BAYC #8817") */
+  summary?: string
 }
 
 /**

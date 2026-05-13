@@ -239,6 +239,8 @@ export function parseSendingAssets(assetsDiffs: AssetDiffs, chainId: UniverseCha
       }
       const asset = assetDiff.asset
 
+      const isNft = asset.type === 'ERC721' || asset.type === 'ERC1155'
+
       sendingAssets.push({
         type: asset.type,
         symbol: asset.symbol,
@@ -248,6 +250,8 @@ export function parseSendingAssets(assetsDiffs: AssetDiffs, chainId: UniverseCha
         logoUrl: asset.logo_url,
         address: getAssetAddress(asset),
         chainId,
+        ...(isNft && outAmount.token_id ? { tokenId: String(outAmount.token_id) } : {}),
+        ...(isNft && outAmount.summary ? { summary: outAmount.summary } : {}),
       })
     }
   })
@@ -276,6 +280,8 @@ export function parseReceivingAssets(assetsDiffs: AssetDiffs, chainId: UniverseC
       }
       const asset = assetDiff.asset
 
+      const isNft = asset.type === 'ERC721' || asset.type === 'ERC1155'
+
       receivingAssets.push({
         type: asset.type,
         symbol: asset.symbol,
@@ -285,6 +291,8 @@ export function parseReceivingAssets(assetsDiffs: AssetDiffs, chainId: UniverseC
         logoUrl: asset.logo_url,
         address: getAssetAddress(asset),
         chainId,
+        ...(isNft && inAmount.token_id ? { tokenId: String(inAmount.token_id) } : {}),
+        ...(isNft && inAmount.summary ? { summary: inAmount.summary } : {}),
       })
     }
   })
