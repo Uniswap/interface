@@ -26,11 +26,40 @@ import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { useDelayedMenuClose } from 'uniswap/src/features/search/SearchModal/hooks/useDelayedMenuClose'
 import { MultichainTokenContextMenuButton } from 'uniswap/src/features/search/SearchModal/MultichainTokenContextMenuButton'
+import { isAddressTokenSearchQuery } from 'uniswap/src/features/search/utils'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+
+/**
+ * Resolves `?chain=` for TDP: recents override, then search network filter, then (only for **address** searches)
+ * the row’s chain so symbol/name searches still open the aggregated multichain view.
+ */
+function tdpChainFilterForTokenRow({
+  searchChainFilter,
+  rowCurrency,
+  explicitTdpChain,
+  searchQuery,
+}: {
+  searchChainFilter: UniverseChainId | null
+  rowCurrency: Currency
+  explicitTdpChain?: UniverseChainId
+  searchQuery?: string
+}): UniverseChainId | undefined {
+  if (explicitTdpChain != null) {
+    return explicitTdpChain
+  }
+  if (searchChainFilter != null) {
+    return searchChainFilter
+  }
+  if (isAddressTokenSearchQuery(searchQuery)) {
+    return isUniverseChainId(rowCurrency.chainId) ? rowCurrency.chainId : undefined
+  }
+  return undefined
+}
 
 // Context menu button components that manage their own state
 const TokenRowContextMenuButton = memo(function TokenRowContextMenuButton({
@@ -197,9 +226,14 @@ export const SearchModalList = memo(function SearchModalListInner({
               ) : undefined
             }
             onPress={() => {
-              registerSearchItem(item, { tdpChainFilter: searchFilters.searchChainFilter })
+              const tdpChain = tdpChainFilterForTokenRow({
+                searchChainFilter: searchFilters.searchChainFilter,
+                rowCurrency: item.currencyInfo.currency,
+                searchQuery: searchFilters.query,
+              })
+              registerSearchItem(item, { tdpChainFilter: tdpChain })
 
-              navigateToTokenDetails(item.currencyInfo.currencyId, searchFilters.searchChainFilter)
+              navigateToTokenDetails(item.currencyInfo.currencyId, tdpChain)
 
               sendSearchOptionItemClickedAnalytics({
                 item,
@@ -244,12 +278,15 @@ export const SearchModalList = memo(function SearchModalListInner({
               ) : undefined
             }
             onPress={() => {
-              registerSearchItem(item, { tdpChainFilter: searchFilters.searchChainFilter })
+              const tdpChain = tdpChainFilterForTokenRow({
+                searchChainFilter: searchFilters.searchChainFilter,
+                rowCurrency: item.primaryCurrencyInfo.currency,
+                explicitTdpChain: item.tdpChainFilter,
+                searchQuery: searchFilters.query,
+              })
+              registerSearchItem(item, { tdpChainFilter: tdpChain })
 
-              navigateToTokenDetails(
-                item.primaryCurrencyInfo.currencyId,
-                item.tdpChainFilter ?? searchFilters.searchChainFilter,
-              )
+              navigateToTokenDetails(item.primaryCurrencyInfo.currencyId, tdpChain)
 
               sendSearchOptionItemClickedAnalytics({
                 item,
