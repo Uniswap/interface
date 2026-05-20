@@ -227,6 +227,27 @@ describe('parseRestPosition', () => {
     expect(parseRestPosition(undefined)).toBeUndefined()
   })
 
+  it('returns undefined if the nested position payload is missing', () => {
+    const position = {
+      ...MOCK_REST_V3_POSITION,
+      position: undefined,
+    } as unknown as RestPosition
+
+    expect(parseRestPosition(position)).toBeUndefined()
+  })
+
+  it('returns undefined if the nested position payload value is missing', () => {
+    const position = {
+      ...MOCK_REST_V3_POSITION,
+      position: {
+        ...MOCK_REST_V3_POSITION.position,
+        value: undefined,
+      },
+    } as unknown as RestPosition
+
+    expect(parseRestPosition(position)).toBeUndefined()
+  })
+
   it('parses v2Pair position', () => {
     const result = parseRestPosition(MOCK_REST_V2_POSITION)
     expect(result).toEqual({

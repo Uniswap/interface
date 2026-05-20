@@ -1,12 +1,7 @@
 import { isAndroid } from '@universe/environment'
 import { forwardRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type {
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  TextInput as NativeTextInput,
-  TextInputFocusEventData,
-} from 'react-native'
+import type { LayoutChangeEvent, TextInput as NativeTextInput } from 'react-native'
 import {
   AnimatePresence,
   ColorTokens,
@@ -132,7 +127,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onCancel?.()
     })
 
-    const onTextInputFocus = useEvent((e: NativeSyntheticEvent<TextInputFocusEventData>): void => {
+    const onTextInputFocus = useEvent((e: Parameters<NonNullable<InputProps['onFocus']>>[0]): void => {
       onFocus?.(e)
       setIsFocus(true)
     })

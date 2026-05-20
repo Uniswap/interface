@@ -2,8 +2,9 @@ import {
   type CustomPriceRangeEntry,
   type CustomPriceRangePreset,
   type CustomPriceRangeValue,
-  CustomPriceRangeBound,
+  CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   MAX_CUSTOM_PRICE_RANGE_ENTRIES,
+  MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
 } from '~/pages/Liquidity/CreateAuction/types'
 const CUSTOM_PRICE_RANGE_ID_PREFIX = 'custom-range-'
 const CUSTOM_PRICE_RANGE_PERCENT_PRECISION = 10 ** 5
@@ -23,8 +24,8 @@ export function createDefaultCustomPriceRangeEntry(): CustomPriceRangeEntry {
   return {
     id: `${CUSTOM_PRICE_RANGE_ID_PREFIX}1`,
     liquidityPercent: 100,
-    minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
-    maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+    minPercentFromClearing: MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
+    maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   }
 }
 
@@ -40,38 +41,13 @@ export function getCustomPriceRangeLiquidityTotal(entries: CustomPriceRangeEntry
   return roundCustomPriceRangePercent(entries.reduce((sum, entry) => sum + entry.liquidityPercent, 0))
 }
 
-function rebalanceCustomPriceRangePercents(
-  entries: CustomPriceRangeEntry[],
-  preferredEntryId: string,
-): CustomPriceRangeEntry[] {
-  const nextEntries = entries.map((entry) => ({
-    ...entry,
-    liquidityPercent: clampCustomPriceRangeLiquidityPercent(entry.liquidityPercent),
-  }))
-
-  if (nextEntries.length === 1) {
-    return nextEntries.map((entry) => ({ ...entry, liquidityPercent: 100 }))
+/** Removes rows with no liquidity allocated. Sum of remaining percents is unchanged. */
+export function stripZeroPercentCustomPriceRangeEntries(entries: CustomPriceRangeEntry[]): CustomPriceRangeEntry[] {
+  const filtered = entries.filter((entry) => clampCustomPriceRangeLiquidityPercent(entry.liquidityPercent) > 0)
+  if (filtered.length === entries.length || filtered.length === 0) {
+    return entries
   }
-
-  let delta = roundCustomPriceRangePercent(100 - getCustomPriceRangeLiquidityTotal(nextEntries))
-  for (let i = nextEntries.length - 1; i >= 0 && delta !== 0; i--) {
-    const entry = nextEntries[i]!
-    if (entry.id === preferredEntryId) {
-      continue
-    }
-
-    if (delta > 0) {
-      const increase = Math.min(100 - entry.liquidityPercent, delta)
-      entry.liquidityPercent = roundCustomPriceRangePercent(entry.liquidityPercent + increase)
-      delta = roundCustomPriceRangePercent(delta - increase)
-    } else {
-      const decrease = Math.min(entry.liquidityPercent, Math.abs(delta))
-      entry.liquidityPercent = roundCustomPriceRangePercent(entry.liquidityPercent - decrease)
-      delta = roundCustomPriceRangePercent(delta + decrease)
-    }
-  }
-
-  return nextEntries
+  return filtered
 }
 
 export function addCustomPriceRangePreset(
@@ -103,20 +79,9 @@ export function updateCustomPriceRangeLiquidityPercent({
   entryId: string
   percent: number
 }): CustomPriceRangeEntry[] {
-  if (!entries.some((entry) => entry.id === entryId)) {
-    return entries
-  }
-
-  const nextEntries = entries.map((entry) =>
-    entry.id === entryId
-      ? {
-          ...entry,
-          liquidityPercent: clampCustomPriceRangeLiquidityPercent(percent),
-        }
-      : entry,
+  return entries.map((entry) =>
+    entry.id === entryId ? { ...entry, liquidityPercent: clampCustomPriceRangeLiquidityPercent(percent) } : entry,
   )
-
-  return rebalanceCustomPriceRangePercents(nextEntries, entryId)
 }
 
 export function updateCustomPriceRangeBounds({
@@ -164,11 +129,11 @@ function isFiniteCustomPriceRangeValue(value: CustomPriceRangeValue): value is n
 }
 
 function isValidMinimumPriceRangeValue(value: CustomPriceRangeValue): boolean {
-  return value === CustomPriceRangeBound.NegativeInfinity || isFiniteCustomPriceRangeValue(value)
+  return isFiniteCustomPriceRangeValue(value) && value >= MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING && value <= 0
 }
 
 function isValidMaximumPriceRangeValue(value: CustomPriceRangeValue): boolean {
-  return value === CustomPriceRangeBound.PositiveInfinity || isFiniteCustomPriceRangeValue(value)
+  return value === CUSTOM_PRICE_RANGE_POSITIVE_INFINITY || (isFiniteCustomPriceRangeValue(value) && value >= 0)
 }
 
 export function isCustomPriceRangeEntryValid(entry: CustomPriceRangeEntry): boolean {

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
@@ -57,7 +57,7 @@ export function RemoveLiquidityForm() {
         px="$padding16"
       >
         <Text variant="body3" color="$neutral2">
-          <Trans i18nKey="pool.withdrawAs" values={{ nativeWrappedSymbol: nativeCurrency.symbol }} />
+          {t('pool.withdrawAs', { nativeWrappedSymbol: nativeCurrency.symbol })}
         </Text>
         <Switch
           id="add-as-weth"
@@ -68,7 +68,7 @@ export function RemoveLiquidityForm() {
         />
       </Flex>
     )
-  }, [canUnwrap, nativeCurrency, unwrapNativeCurrency, setUnwrapNativeCurrency])
+  }, [canUnwrap, nativeCurrency, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
   return (
     <Flex gap="$gap24">
@@ -88,7 +88,7 @@ export function RemoveLiquidityForm() {
           gap="$gap12"
         >
           <Text variant="body3" color="$neutral2">
-            <Trans i18nKey="common.withdrawal.amount" />
+            {t('common.withdrawal.amount')}
           </Text>
           <Flex row alignItems="center" justifyContent="center" width="100%">
             <NumericalInputWrapper style={{ width: '100%' }}>
@@ -100,7 +100,7 @@ export function RemoveLiquidityForm() {
                   }
                 }}
                 placeholder="0"
-                $width={percent && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
+                fieldWidth={percent && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
                 maxDecimals={0}
                 maxLength={3}
               />

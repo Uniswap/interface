@@ -1,7 +1,8 @@
 import { type Currency } from '@uniswap/sdk-core'
-import { useCallback, useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { Button, type ButtonProps, Flex, styled, Text } from 'ui/src'
+import type { TFunction } from 'i18next'
+import { type ElementRef, useCallback, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button, type ButtonProps, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useCurrencyInputFontSize } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
 import { TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/types'
@@ -10,10 +11,12 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import useResizeObserver from 'use-resize-observer'
@@ -31,7 +34,6 @@ import { NumericalInputMimic, NumericalInputSymbolContainer, StyledNumericalInpu
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
-import { maxAmountSpend } from '~/utils/maxAmountSpend'
 
 const Wrapper = styled(Flex, {
   opacity: 1,
@@ -79,20 +81,28 @@ const ErrorContainer = styled(Flex, {
   bottom: '32px',
 })
 
+function getSendInputErrorMessage(t: TFunction, inputError: SendInputError): string {
+  switch (inputError) {
+    case SendInputError.INSUFFICIENT_FUNDS:
+      return t('common.insufficient.funds')
+    case SendInputError.INSUFFICIENT_FUNDS_FOR_GAS:
+      return t('common.insufficientFundsForNetworkFee.error')
+    default:
+      return ''
+  }
+}
+
 const MaxButton = ({ onPress }: { onPress: ButtonProps['onPress'] }) => {
+  const { t } = useTranslation()
   return (
     <Button variant="branded" emphasis="secondary" size="xxsmall" onPress={onPress}>
-      <Trans i18nKey="common.max" />
+      {t('common.max')}
     </Button>
   )
 }
 
-const InputErrorLookup = {
-  [SendInputError.INSUFFICIENT_FUNDS]: <Trans i18nKey="common.insufficient.funds" />,
-  [SendInputError.INSUFFICIENT_FUNDS_FOR_GAS]: <Trans i18nKey="common.insufficientFundsForNetworkFee.error" />,
-}
-
 const InputError = () => {
+  const { t } = useTranslation()
   const { derivedSendInfo } = useSendContext()
   const { inputError } = derivedSendInfo
 
@@ -103,7 +113,7 @@ const InputError = () => {
   return (
     <ErrorContainer>
       <Text variant="body4" color="$statusCritical">
-        {InputErrorLookup[inputError]}
+        {getSendInputErrorMessage(t, inputError)}
       </Text>
     </ErrorContainer>
   )
@@ -128,7 +138,10 @@ export function SendCurrencyInputForm({
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { inputInFiat, exactAmountToken, exactAmountFiat, inputCurrency } = sendState
   const { currencyBalance, exactAmountOut, parsedTokenAmount } = derivedSendInfo
-  const maxInputAmount = maxAmountSpend(currencyBalance)
+  const maxInputAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalance,
+    txType: TransactionType.Send,
+  })
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedTokenAmount?.equalTo(maxInputAmount))
 
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
@@ -147,8 +160,16 @@ export function SendCurrencyInputForm({
   const displayValue = inputInFiat ? exactAmountFiat : exactAmountToken
   const hiddenObserver = useResizeObserver<HTMLElement>()
   const prefixObserver = useResizeObserver<HTMLElement>()
+  const amountInputRef = useRef<ElementRef<typeof StyledNumericalInput>>(null)
 
-  const { fontSize, lineHeight, onLayout } = useCurrencyInputFontSize({
+  const focusAmountInput = useCallback(() => {
+    if (disabled) {
+      return
+    }
+    amountInputRef.current?.focus()
+  }, [disabled])
+
+  const { fontSize, lineHeight, onLayout, onExtraElementLayout } = useCurrencyInputFontSize({
     value: displayValue,
     focus: undefined,
     options: {
@@ -244,53 +265,63 @@ export function SendCurrencyInputForm({
   return (
     <Wrapper disabled={disabled}>
       <InputWrapper>
-        <Flex width="100%" pt="$spacing16" px="$spacing16">
-          <Text>{t('send.youAreSending')}</Text>
-        </Flex>
-        <Flex px="$spacing16" py="$spacing60" gap="$spacing16" width="100%" alignItems="center">
-          <Flex row maxWidth="100%" position="relative" width="max-content">
-            {inputInFiat && (
-              <NumericalInputSymbolContainer
-                ref={prefixObserver.ref}
-                showPlaceholder={!displayValue}
-                style={{ lineHeight: `${lineHeight}px`, fontSize: `${fontSize}px` }}
-              >
-                {fiatSymbol}
-              </NumericalInputSymbolContainer>
+        <Flex width="100%" alignItems="center">
+          <TouchableArea width="100%" cursor="text" disabled={disabled} onPress={focusAmountInput}>
+            <Flex width="100%" pt="$spacing16" px="$spacing16">
+              <Text>{t('send.youAreSending')}</Text>
+            </Flex>
+            <Flex px="$spacing16" pt="$spacing60" width="100%" alignItems="center" onLayout={onLayout}>
+              <Flex row maxWidth="100%" position="relative" width="max-content">
+                {inputInFiat && (
+                  <Flex onLayout={onExtraElementLayout}>
+                    <NumericalInputSymbolContainer
+                      ref={prefixObserver.ref}
+                      showPlaceholder={!displayValue}
+                      numericalFontSize={fontSize}
+                      style={{ lineHeight: `${lineHeight}px`, fontSize: `${fontSize}px` }}
+                    >
+                      {fiatSymbol}
+                    </NumericalInputSymbolContainer>
+                  </Flex>
+                )}
+                <StyledNumericalInput
+                  ref={amountInputRef}
+                  value={displayValue}
+                  disabled={disabled}
+                  onUserInput={handleUserInput}
+                  placeholder="0"
+                  hasPrefix={inputInFiat}
+                  fieldWidth={adjustedWidth}
+                  maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
+                  numericalFontSize={fontSize}
+                  lineHeight={lineHeight}
+                  prefixWidth={prefixObserver.width}
+                  testId={TestID.SendFormAmountInput}
+                />
+                <NumericalInputMimic
+                  ref={hiddenObserver.ref}
+                  numericalFontSize={fontSize}
+                  style={{ lineHeight: `${lineHeight}px`, fontSize: `${fontSize}px` }}
+                >
+                  {displayValue}
+                </NumericalInputMimic>
+              </Flex>
+            </Flex>
+          </TouchableArea>
+          <Flex px="$spacing16" pt="$spacing16" pb="$spacing60" gap="$spacing16" width="100%" alignItems="center">
+            {isTestnetModeEnabled ? null : (
+              <Trace logPress element={ElementName.SendFiatToggle}>
+                <AlternateCurrencyDisplay
+                  inputCurrency={inputCurrency}
+                  inputInFiat={inputInFiat}
+                  exactAmountOut={exactAmountOut}
+                  disabled={fiatCurrencyEqualsTransferCurrency}
+                  onToggle={toggleFiatInputAmountEnabled}
+                />
+              </Trace>
             )}
-            <StyledNumericalInput
-              value={displayValue}
-              disabled={disabled}
-              onUserInput={handleUserInput}
-              placeholder="0"
-              $hasPrefix={inputInFiat}
-              $width={adjustedWidth}
-              maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
-              $fontSize={fontSize}
-              style={{ lineHeight: `${lineHeight}px` }}
-              $prefixWidth={prefixObserver.width}
-              testId={TestID.SendFormAmountInput}
-            />
-            <NumericalInputMimic
-              ref={hiddenObserver.ref}
-              style={{ lineHeight: `${lineHeight}px`, fontSize: `${fontSize}px` }}
-            >
-              {displayValue}
-            </NumericalInputMimic>
-            <Flex onLayout={onLayout} position="absolute" opacity={0} width="100%" height={20} zIndex={-1} />
+            <InputError />
           </Flex>
-          {isTestnetModeEnabled ? null : (
-            <Trace logPress element={ElementName.SendFiatToggle}>
-              <AlternateCurrencyDisplay
-                inputCurrency={inputCurrency}
-                inputInFiat={inputInFiat}
-                exactAmountOut={exactAmountOut}
-                disabled={fiatCurrencyEqualsTransferCurrency}
-                onToggle={toggleFiatInputAmountEnabled}
-              />
-            </Trace>
-          )}
-          <InputError />
         </Flex>
       </InputWrapper>
       <PrefetchBalancesWrapper>
@@ -311,7 +342,9 @@ export function SendCurrencyInputForm({
                     <Text variant="body2">{inputCurrency?.symbol ?? inputCurrency?.name}</Text>
                     <Flex row gap="$gap4" width="100%">
                       {currencyBalance && (
-                        <Text variant="body4" color="$neutral2">{`Balance: ${formattedBalance}`}</Text>
+                        <Text variant="body4" color="$neutral2">
+                          {t('swap.balance.amount', { amount: formattedBalance })}
+                        </Text>
                       )}
                       {Boolean(fiatBalanceValue) && (
                         <Text variant="body4" color="$neutral3">

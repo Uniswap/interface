@@ -1,6 +1,5 @@
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { deriveArgon2InWorker } from 'uniswap/src/features/passkey/deriveArgon2InWorker'
-import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import { attemptPinDecryption, executeRecoveryExport } from 'uniswap/src/features/passkey/recoveryExecute'
 
 vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
@@ -9,10 +8,6 @@ vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
     fetchReportDecryptionResult: vi.fn(),
     fetchExportSeedPhraseWithRecovery: vi.fn(),
   },
-}))
-
-vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
-  fetchEncryptedBlob: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/passkey/deriveArgon2InWorker', () => ({
@@ -60,22 +55,12 @@ async function buildValidBlob(pin: string): Promise<{ blob: string; authPrivateK
 describe('attemptPinDecryption', () => {
   const email = 'test@example.com'
   const accessToken = 'tok'
-  const privyAppId = 'test-privy-app-id'
-  const encryptedKeyId = 'key123'
 
   beforeEach(() => {
     vi.resetAllMocks()
   })
 
-  it('returns no_blobs when fetchEncryptedBlob throws', async () => {
-    vi.mocked(fetchEncryptedBlob).mockRejectedValue(new Error('not found'))
-
-    const result = await attemptPinDecryption({ pin: '1234', email, accessToken, encryptedKeyId, privyAppId })
-    expect(result).toMatchObject({ success: false, error: 'no_blobs' })
-  })
-
   it('returns rate_limited when OPRF evaluation returns error', async () => {
-    vi.mocked(fetchEncryptedBlob).mockResolvedValue('someblob')
     vi.mocked(blindPin).mockResolvedValue({
       blindedElement: 'blinded',
       blindState: {
@@ -87,7 +72,12 @@ describe('attemptPinDecryption', () => {
       errorMessage: 'too many attempts',
     } as never)
 
-    const result = await attemptPinDecryption({ pin: '1234', email, accessToken, encryptedKeyId, privyAppId })
+    const result = await attemptPinDecryption({
+      pin: '1234',
+      email,
+      accessToken,
+      encryptedBlob: 'someblob',
+    })
     expect(result).toMatchObject({ success: false, error: 'rate_limited', errorMessage: 'too many attempts' })
     expect(EmbeddedWalletApiClient.fetchOprfEvaluate).toHaveBeenCalledWith(
       expect.objectContaining({ blindedElement: 'blinded', isRecovery: true, authMethodId: hashAuthMethodId(email) }),
@@ -96,7 +86,6 @@ describe('attemptPinDecryption', () => {
   })
 
   it('returns rate_limited without errorMessage when OPRF returns no evaluatedElement', async () => {
-    vi.mocked(fetchEncryptedBlob).mockResolvedValue('someblob')
     vi.mocked(blindPin).mockResolvedValue({
       blindedElement: 'blinded',
       blindState: {
@@ -106,7 +95,12 @@ describe('attemptPinDecryption', () => {
     })
     vi.mocked(EmbeddedWalletApiClient.fetchOprfEvaluate).mockResolvedValue({} as never)
 
-    const result = await attemptPinDecryption({ pin: '1234', email, accessToken, encryptedKeyId, privyAppId })
+    const result = await attemptPinDecryption({
+      pin: '1234',
+      email,
+      accessToken,
+      encryptedBlob: 'someblob',
+    })
     expect(result).toMatchObject({ success: false, error: 'rate_limited' })
     if (!result.success) {
       expect(result.errorMessage).toBeUndefined()
@@ -120,7 +114,6 @@ describe('attemptPinDecryption', () => {
       fakeOprfOutput: Uint8Array
     }
 
-    vi.mocked(fetchEncryptedBlob).mockResolvedValue(blob)
     vi.mocked(blindPin).mockResolvedValue({
       blindedElement: 'blinded',
       blindState: {} as unknown as import('uniswap/src/features/passkey/pinCrypto').OprfBlindState,
@@ -136,7 +129,7 @@ describe('attemptPinDecryption', () => {
       errorMessage: 'Wrong PIN',
     } as never)
 
-    const result = await attemptPinDecryption({ pin: '9999', email, accessToken, encryptedKeyId, privyAppId })
+    const result = await attemptPinDecryption({ pin: '9999', email, accessToken, encryptedBlob: blob })
     expect(result).toMatchObject({ success: false, error: 'wrong_pin' })
     expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledWith({
       success: false,
@@ -150,7 +143,6 @@ describe('attemptPinDecryption', () => {
       fakeOprfOutput: Uint8Array
     }
 
-    vi.mocked(fetchEncryptedBlob).mockResolvedValue(blob)
     vi.mocked(blindPin).mockResolvedValue({
       blindedElement: 'blinded',
       blindState: {} as unknown as import('uniswap/src/features/passkey/pinCrypto').OprfBlindState,
@@ -163,7 +155,7 @@ describe('attemptPinDecryption', () => {
       errorMessage: 'Too many attempts',
     } as never)
 
-    const result = await attemptPinDecryption({ pin: '9999', email, accessToken, encryptedKeyId, privyAppId })
+    const result = await attemptPinDecryption({ pin: '9999', email, accessToken, encryptedBlob: blob })
     expect(result).toMatchObject({ success: false, error: 'wrong_pin', cooldownSeconds: 60 })
   })
 
@@ -174,7 +166,6 @@ describe('attemptPinDecryption', () => {
       fakeOprfOutput: Uint8Array
     }
 
-    vi.mocked(fetchEncryptedBlob).mockResolvedValue(blob)
     vi.mocked(blindPin).mockResolvedValue({
       blindedElement: 'blinded',
       blindState: {} as unknown as import('uniswap/src/features/passkey/pinCrypto').OprfBlindState,
@@ -185,7 +176,7 @@ describe('attemptPinDecryption', () => {
       new Error('Argon2 worker crashed — device may not have enough memory'),
     )
 
-    await expect(attemptPinDecryption({ pin: '1234', email, accessToken, encryptedKeyId, privyAppId })).rejects.toThrow(
+    await expect(attemptPinDecryption({ pin: '1234', email, accessToken, encryptedBlob: blob })).rejects.toThrow(
       'Argon2 worker crashed',
     )
     expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).not.toHaveBeenCalled()
@@ -198,7 +189,6 @@ describe('attemptPinDecryption', () => {
       fakeOprfOutput: Uint8Array
     }
 
-    vi.mocked(fetchEncryptedBlob).mockResolvedValue(blob)
     vi.mocked(blindPin).mockResolvedValue({
       blindedElement: 'blinded',
       blindState: {} as unknown as import('uniswap/src/features/passkey/pinCrypto').OprfBlindState,
@@ -209,9 +199,7 @@ describe('attemptPinDecryption', () => {
     vi.mocked(EmbeddedWalletApiClient.fetchReportDecryptionResult).mockRejectedValue(new Error('network'))
 
     // Should propagate, not silently eat the error — report failing is an unexpected error
-    await expect(
-      attemptPinDecryption({ pin: '9999', email, accessToken, encryptedKeyId, privyAppId }),
-    ).rejects.toThrow()
+    await expect(attemptPinDecryption({ pin: '9999', email, accessToken, encryptedBlob: blob })).rejects.toThrow()
     // Only called once (for the wrong PIN), not twice
     expect(EmbeddedWalletApiClient.fetchReportDecryptionResult).toHaveBeenCalledTimes(1)
   })

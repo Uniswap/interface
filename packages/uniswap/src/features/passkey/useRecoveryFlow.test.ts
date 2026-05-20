@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import React, { type PropsWithChildren } from 'react'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
+import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import { attemptPinDecryption } from 'uniswap/src/features/passkey/recoveryExecute'
 import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
 import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
@@ -11,6 +12,10 @@ vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
   EmbeddedWalletApiClient: {
     fetchGetRecoveryConfig: vi.fn(),
   },
+}))
+
+vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
+  fetchEncryptedBlob: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/passkey/recoveryExecute', () => ({
@@ -41,6 +46,7 @@ function wrapper(): ({ children }: PropsWithChildren) => React.ReactElement {
 describe('useRecoveryFlow', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.mocked(fetchEncryptedBlob).mockResolvedValue('blob-fixture')
   })
 
   it('starts on Login when no OAuth is pending', () => {
@@ -183,7 +189,9 @@ describe('useRecoveryFlow', () => {
       act(() => result.current.passcodeInput.handleChange(i, '0'))
     }
 
-    await waitFor(() => expect(result.current.pinError).toBe('Nope'))
+    // Wrong-PIN always shows the i18n string, ignoring the server's `errorMessage`,
+    // so the user sees consistent product copy instead of generic SDK wording.
+    await waitFor(() => expect(result.current.pinError).toBe('account.passkey.recovery.wrongPin'))
     expect(onPinDecryptSuccess).not.toHaveBeenCalled()
     expect(result.current.step).toBe(RecoveryStep.EnterPin)
   })
@@ -213,5 +221,95 @@ describe('useRecoveryFlow', () => {
       await result.current.initOAuth('google')
     })
     expect(privy.initOAuth).not.toHaveBeenCalled()
+  })
+
+  it('mobile flow: initOAuth + matching oauthReturn advances from Login to EnterPin', async () => {
+    vi.mocked(EmbeddedWalletApiClient.fetchGetRecoveryConfig).mockResolvedValue({
+      encryptedKeyId: 'key-id-1',
+      walletAddress: '0xabc',
+    } as never)
+
+    // Mobile reports `pending: false`, so step starts and stays at Login. The effect
+    // must advance once Privy reports the linked provider, gated on local `oauthProvider`.
+    const { result, rerender } = renderHook(
+      ({ privy }: { privy: RecoveryPrivyAuth }) =>
+        useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError: vi.fn() }),
+      { wrapper: wrapper(), initialProps: { privy: buildPrivy() } },
+    )
+    expect(result.current.step).toBe(RecoveryStep.Login)
+
+    await act(async () => {
+      await result.current.initOAuth('google')
+    })
+    expect(result.current.step).toBe(RecoveryStep.Login)
+    expect(result.current.oauthProvider).toBe('google')
+
+    rerender({
+      privy: buildPrivy({
+        oauthReturn: { pending: false, provider: 'google', providerEmail: 'user@example.com' },
+      }),
+    })
+
+    await waitFor(() => expect(result.current.step).toBe(RecoveryStep.EnterPin))
+    expect(result.current.recoveryWalletAddress).toBe('0xabc')
+  })
+
+  it('OAuth path: surfaces fetchEncryptedBlob failure via setOauthError and stays out of EnterPin', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.mocked(EmbeddedWalletApiClient.fetchGetRecoveryConfig).mockResolvedValue({
+      encryptedKeyId: 'key-id-1',
+      walletAddress: '0xabc',
+    } as never)
+    vi.mocked(fetchEncryptedBlob).mockRejectedValueOnce(new Error('rate limited'))
+
+    const setOauthError = vi.fn()
+    const { result, rerender } = renderHook(
+      ({ privy }: { privy: RecoveryPrivyAuth }) =>
+        useRecoveryFlow({ privy, privyAppId: 'app-id', onPinDecryptSuccess: vi.fn(), setOauthError }),
+      { wrapper: wrapper(), initialProps: { privy: buildPrivy() } },
+    )
+
+    await act(async () => {
+      await result.current.initOAuth('google')
+    })
+
+    rerender({
+      privy: buildPrivy({
+        oauthReturn: { pending: false, provider: 'google', providerEmail: 'user@example.com' },
+      }),
+    })
+
+    await waitFor(() => expect(setOauthError).toHaveBeenCalledWith('rate limited'))
+    expect(result.current.step).not.toBe(RecoveryStep.EnterPin)
+  })
+
+  it('does not auto-advance from Login when Privy reports a linked account the user did not just initiate', async () => {
+    const fetchGetRecoveryConfig = vi.mocked(EmbeddedWalletApiClient.fetchGetRecoveryConfig).mockResolvedValue({
+      encryptedKeyId: 'key-id-1',
+      walletAddress: '0xabc',
+    } as never)
+
+    // Stale Privy session (linked account from a prior flow). Without a fresh
+    // `initOAuth` to set local `oauthProvider`, the effect must NOT advance.
+    const { result } = renderHook(
+      () =>
+        useRecoveryFlow({
+          privy: buildPrivy({
+            oauthReturn: { pending: false, provider: 'google', providerEmail: 'stale@example.com' },
+          }),
+          privyAppId: 'app-id',
+          onPinDecryptSuccess: vi.fn(),
+          setOauthError: vi.fn(),
+        }),
+      { wrapper: wrapper() },
+    )
+
+    // Flush microtasks so any erroneous effect would have fired.
+    await act(async () => {
+      await Promise.resolve()
+    })
+
+    expect(result.current.step).toBe(RecoveryStep.Login)
+    expect(fetchGetRecoveryConfig).not.toHaveBeenCalled()
   })
 })

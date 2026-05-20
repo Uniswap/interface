@@ -8,6 +8,8 @@ import { Flex } from 'ui/src'
 import { ChevronLeft } from 'ui/src/components/icons/ChevronLeft'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { darkenHex, hexToRgba } from '~/pages/Liquidity/CreateAuction/components/DatePicker/datePickerCardShared'
+import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 
 function startOfLocalDay(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -78,6 +80,8 @@ export type CreateAuctionDayPickerProps = (SingleVariantProps | RangeVariantProp
    * only mounts while open (unmounting already resets internal month state).
    */
   calendarOpen?: boolean
+  /** Hex color (e.g. `#02D497`) extracted from the token image. When provided, drives the calendar's accent fill, soft tint, and hover. */
+  tokenColor?: TokenAccentHex
 }
 
 /**
@@ -98,39 +102,43 @@ export function CreateAuctionDayPicker(props: CreateAuctionDayPickerProps) {
         minDate?: Date
         pickerMode: 'date' | 'datetime-local'
         calendarOpen?: boolean
+        tokenColor?: TokenAccentHex
       })}
     />
   )
 }
 
-function useShellStyle(): CSSProperties {
+function useShellStyle(tokenColor?: TokenAccentHex): CSSProperties {
   const colors = useSporeColors()
-  return useMemo(
-    () =>
-      ({
-        '--auction-calendar-accent-color': colors.accent1.val,
-        '--auction-calendar-default-hover-bg': colors.surface3.val,
-        '--auction-calendar-text-primary': colors.neutral1.val,
-        '--auction-calendar-text-secondary': colors.neutral2.val,
-        '--auction-calendar-text-tertiary': colors.neutral3.val,
-        '--auction-calendar-accent-strong': colors.accent1.val,
-        '--auction-calendar-accent-strong-hovered': colors.accent1Hovered.val,
-        '--auction-calendar-accent-soft': colors.accent2.val,
-        '--auction-calendar-surface1': colors.surface1.val,
-        '--auction-calendar-surface2': colors.surface2.val,
-      }) as CSSProperties,
-    [
-      colors.accent1.val,
-      colors.accent1Hovered.val,
-      colors.accent2.val,
-      colors.neutral1.val,
-      colors.neutral2.val,
-      colors.neutral3.val,
-      colors.surface1.val,
-      colors.surface2.val,
-      colors.surface3.val,
-    ],
-  )
+  return useMemo(() => {
+    const accentStrong = tokenColor ?? colors.accent1.val
+    const accentStrongHovered =
+      (tokenColor && darkenHex({ hex: tokenColor, amount: 0.12 })) ?? colors.accent1Hovered.val
+    const accentSoft = (tokenColor && hexToRgba({ hex: tokenColor, alpha: 0.08 })) ?? colors.accent2.val
+    return {
+      '--auction-calendar-accent-color': accentStrong,
+      '--auction-calendar-default-hover-bg': colors.surface3.val,
+      '--auction-calendar-text-primary': colors.neutral1.val,
+      '--auction-calendar-text-secondary': colors.neutral2.val,
+      '--auction-calendar-text-tertiary': colors.neutral3.val,
+      '--auction-calendar-accent-strong': accentStrong,
+      '--auction-calendar-accent-strong-hovered': accentStrongHovered,
+      '--auction-calendar-accent-soft': accentSoft,
+      '--auction-calendar-surface1': colors.surface1.val,
+      '--auction-calendar-surface2': colors.surface2.val,
+    } as CSSProperties
+  }, [
+    tokenColor,
+    colors.accent1.val,
+    colors.accent1Hovered.val,
+    colors.accent2.val,
+    colors.neutral1.val,
+    colors.neutral2.val,
+    colors.neutral3.val,
+    colors.surface1.val,
+    colors.surface2.val,
+    colors.surface3.val,
+  ])
 }
 
 function SingleDayPicker({
@@ -139,7 +147,13 @@ function SingleDayPicker({
   pickerMode,
   onSelect,
   calendarOpen,
-}: SingleVariantProps & { minDate?: Date; pickerMode: 'date' | 'datetime-local'; calendarOpen?: boolean }) {
+  tokenColor,
+}: SingleVariantProps & {
+  minDate?: Date
+  pickerMode: 'date' | 'datetime-local'
+  calendarOpen?: boolean
+  tokenColor?: TokenAccentHex
+}) {
   const disabled = useMemo(() => buildDisabledMatcher({ minDate, pickerMode }), [minDate, pickerMode])
   const [month, setMonth] = useState<Date>(() => displayAnchorMonth(selected, minDate))
   const prevCalendarOpenRef = useRef(calendarOpen)
@@ -155,7 +169,7 @@ function SingleDayPicker({
     }
   }, [calendarOpen, selected, minDate])
 
-  const shellStyle = useShellStyle()
+  const shellStyle = useShellStyle(tokenColor)
 
   return (
     <Flex className="auction-day-picker-shell" style={shellStyle}>
@@ -195,7 +209,13 @@ function RangeDayPicker({
   minDate,
   pickerMode,
   calendarOpen,
-}: RangeVariantProps & { minDate?: Date; pickerMode: 'date' | 'datetime-local'; calendarOpen?: boolean }) {
+  tokenColor,
+}: RangeVariantProps & {
+  minDate?: Date
+  pickerMode: 'date' | 'datetime-local'
+  calendarOpen?: boolean
+  tokenColor?: TokenAccentHex
+}) {
   const [hoveredDate, setHoveredDate] = useState<Date | undefined>(undefined)
 
   const anchorDate = activeMode === 'end' ? rangeEnd : rangeStart
@@ -284,7 +304,7 @@ function RangeDayPicker({
 
   const handleDayMouseLeave = useCallback(() => setHoveredDate(undefined), [])
 
-  const shellStyle = useShellStyle()
+  const shellStyle = useShellStyle(tokenColor)
 
   return (
     <Flex className="auction-day-picker-shell auction-day-picker-shell--range" style={shellStyle}>

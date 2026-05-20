@@ -32,6 +32,7 @@ export interface QuoteRequestResult {
   tokenOutChainId: number
   type: TradingApi.TradeType
   urgency?: TradingApi.Urgency
+  walletExecutionContext?: TradingApi.WalletExecutionContext
   routingParams: QuoteRoutingParamsResult
   slippageParams: QuoteSlippageParamsResult
 }
@@ -49,6 +50,7 @@ export interface ValidatedTradeInput {
   tokenOutAddress: string
   generatePermitAsTransaction?: boolean
   isUSDQuote?: boolean
+  walletExecutionContext?: TradingApi.WalletExecutionContext
 }
 
 interface BuildQuoteRequestContext {
@@ -84,6 +86,7 @@ export function createBuildQuoteRequest(
       tokenOutChainId: validatedInput.tokenOutChainId,
       type: validatedInput.requestTradeType,
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
+      walletExecutionContext: validatedInput.walletExecutionContext,
       routingParams,
       slippageParams,
     }
@@ -117,6 +120,7 @@ export interface ParsedTradeInput {
   tokenOutAddress?: string
   generatePermitAsTransaction?: boolean
   isUSDQuote?: boolean
+  walletExecutionContext?: TradingApi.WalletExecutionContext
 }
 
 export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTradeInput {
@@ -133,6 +137,7 @@ export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTr
     tokenOutAddress: getTokenAddressForApi(currencyOut),
     generatePermitAsTransaction: input.generatePermitAsTransaction,
     isUSDQuote: input.isUSDQuote ?? false,
+    walletExecutionContext: input.walletExecutionContext,
   }
 }
 
@@ -168,6 +173,7 @@ export function validateParsedInput(input: ParsedTradeInput): ValidatedTradeInpu
     tokenOutAddress: input.tokenOutAddress,
     generatePermitAsTransaction: input.generatePermitAsTransaction,
     isUSDQuote: input.isUSDQuote,
+    walletExecutionContext: input.walletExecutionContext,
   }
 }
 

@@ -202,7 +202,7 @@ import {
 import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
-import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
+import { initialWalletCallTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -291,7 +291,7 @@ describe('Redux state migrations', () => {
     // Add new slices here!
     const initialState = {
       appearanceSettings: initialAppearanceSettingsState,
-      batchedTransactions: initialBatchedTransactionsState,
+      batchedTransactions: initialWalletCallTransactionsState,
       biometricSettings: initialBiometricsSettingsState,
       blocks: { byChainId: {} },
       chains: {

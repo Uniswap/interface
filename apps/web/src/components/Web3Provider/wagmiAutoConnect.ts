@@ -1,6 +1,6 @@
 import { isE2eTestEnv } from '@universe/environment'
-import { isAddress } from 'viem'
 import { connect } from 'wagmi/actions'
+import { isAddress } from '~/chains'
 import { PLAYWRIGHT_CONNECT_ADDRESS } from '~/connection/constants'
 import { createRejectableMockConnector } from '~/connection/rejectableConnector'
 import { wagmiConfig } from '~/connection/wagmiConfig'

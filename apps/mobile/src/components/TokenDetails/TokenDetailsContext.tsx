@@ -27,6 +27,7 @@ type TokenDetailsContextState = {
   address: Address
   chainId: UniverseChainId
   currencyInfo?: CurrencyInfo
+  initialIsMultichainAsset: boolean
   tokenColor: string | null
   tokenColorLoading: boolean
   isChainEnabled: boolean
@@ -52,7 +53,10 @@ export function TokenDetailsContextProvider({
   children,
   currencyId,
   navigation,
-}: PropsWithChildren<Pick<TokenDetailsContextState, 'currencyId' | 'navigation'>>): JSX.Element {
+  initialIsMultichainAsset = false,
+}: PropsWithChildren<
+  Pick<TokenDetailsContextState, 'currencyId' | 'navigation'> & { initialIsMultichainAsset?: boolean }
+>): JSX.Element {
   const dispatch = useDispatch()
   const trace = useTrace()
 
@@ -127,6 +131,7 @@ export function TokenDetailsContextProvider({
       address,
       chainId,
       currencyInfo,
+      initialIsMultichainAsset,
       tokenColor,
       tokenColorLoading,
       isChainEnabled,
@@ -154,6 +159,7 @@ export function TokenDetailsContextProvider({
     currencyInfo,
     enabledChains,
     error,
+    initialIsMultichainAsset,
     isContractAddressExplainerModalOpen,
     isMultichainAddressSheetOpen,
     isTokenWarningModalOpen,

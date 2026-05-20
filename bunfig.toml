@@ -25,7 +25,6 @@ minimumReleaseAgeExcludes = [
   "@uniswap/client-notification-service",
   "@uniswap/client-platform-service",
   "@uniswap/client-privy-embedded-wallet",
-  "@uniswap/client-search",
   "@uniswap/client-trading",
   "@uniswap/client-unirpc-v2",
   "@uniswap/client-unitag",

@@ -1,12 +1,12 @@
 import { isExtensionApp } from '@universe/environment'
 import { memo, PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimateTransition, TouchableArea } from 'ui/src'
+import { AnimateTransition, TouchableArea, useMedia } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { COPY_CLOSE_DELAY } from 'uniswap/src/components/lists/items/tokens/useSearchTokenMenuItems'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import type { MenuOptionItemWithId } from 'uniswap/src/components/menus/ContextMenu'
-import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
+import { MENU_CONTENT_SHEET_CONTAINER_STYLES, MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { MultichainContextMenuAddressSubview } from 'uniswap/src/components/MultichainTokenDetails/MultichainContextMenuAddressSubview'
 import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
@@ -44,6 +44,7 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
   recipient,
 }: TokensMultichainParentContextMenuProps): JSX.Element {
   const { t } = useTranslation()
+  const isSheet = useMedia().sm
   const { value: isOpen, setTrue: openMenu, setFalse: rawCloseMenu, toggle } = useBooleanState(false)
   const [viewState, setViewState] = useState<ViewState>('actions')
   const [animationType, setAnimationType] = useState<'forward' | 'backward'>('forward')
@@ -150,6 +151,7 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
           handleCloseMenu={handleContentClose}
           elementName={ElementName.PortfolioTokenContextMenu}
           sectionName={SectionName.PortfolioTokensTab}
+          containerStyles={isSheet ? MENU_CONTENT_SHEET_CONTAINER_STYLES : undefined}
         />
         <MultichainContextMenuAddressSubview
           orderedEntries={orderedEntries}
@@ -159,7 +161,17 @@ export const TokensMultichainParentContextMenu = memo(function TokensMultichainP
         />
       </AnimateTransition>
     ),
-    [viewIndex, animationType, menuActions, handleContentClose, orderedEntries, onCopyMultichainAddress, handleBack, t],
+    [
+      viewIndex,
+      animationType,
+      menuActions,
+      handleContentClose,
+      isSheet,
+      orderedEntries,
+      onCopyMultichainAddress,
+      handleBack,
+      t,
+    ],
   )
 
   const ignoreDefault = useEvent((e: React.MouseEvent<HTMLDivElement>) => {

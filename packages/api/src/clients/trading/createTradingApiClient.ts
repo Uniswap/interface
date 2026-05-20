@@ -10,6 +10,8 @@ import type {
   CreateSwap7702Response,
   CreateSwapRequest,
   CreateSwapResponse,
+  Encode4337Request,
+  Encode4337Response,
   Encode7702ResponseBody,
   GetOrdersResponse,
   GetSwappableTokensResponse,
@@ -47,6 +49,7 @@ export const TRADING_API_PATHS = {
   wallet: {
     checkDelegation: 'wallet/check_delegation',
     encode7702: 'wallet/encode_7702',
+    encode4337: 'wallet/encode_4337',
   },
 }
 
@@ -76,6 +79,7 @@ export interface TradingApiClient {
   }) => Promise<GetOrdersResponse>
   fetchSwappableTokens: (params: SwappableTokensParams) => Promise<GetSwappableTokensResponse>
   fetchWalletEncoding7702: (params: WalletEncode7702RequestBody) => Promise<Encode7702ResponseBody>
+  fetchWalletEncoding4337: (params: Encode4337Request) => Promise<Encode4337Response>
   checkWalletDelegationWithoutBatching: (
     params: WalletCheckDelegationRequestBody,
   ) => Promise<WalletCheckDelegationResponseBody>
@@ -245,6 +249,15 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     }),
   })
 
+  const fetchWalletEncoding4337 = createFetcher<Encode4337Request, Encode4337Response>({
+    client,
+    url: getApiPath(TRADING_API_PATHS.wallet.encode4337),
+    method: 'post',
+    transformRequest: async () => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.wallet.encode4337),
+    }),
+  })
+
   const checkWalletDelegationWithoutBatching = createFetcher<
     WalletCheckDelegationRequestBody,
     WalletCheckDelegationResponseBody
@@ -325,6 +338,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     fetchOrdersWithoutIds,
     fetchSwappableTokens,
     fetchWalletEncoding7702,
+    fetchWalletEncoding4337,
     checkWalletDelegationWithoutBatching,
     createNewPlan,
     fetchPlan,

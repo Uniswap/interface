@@ -231,13 +231,11 @@ export const uniswapUrls = {
   privyEmbeddedWalletUrl: getPrivyEmbeddedWalletUrl(),
 
   // API Paths
-  gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
     approval: `${tradingApiVersionPrefix}/check_approval`,
     order: `${tradingApiVersionPrefix}/order`,
     orders: `${tradingApiVersionPrefix}/orders`,
     plan: `${tradingApiVersionPrefix}/plan`,
-    priceDiscrepancy: `${tradingApiVersionPrefix}/lp/price_discrepancy`,
     quote: `${tradingApiVersionPrefix}/quote`,
     swap: `${tradingApiVersionPrefix}/swap`,
     swap5792: `${tradingApiVersionPrefix}/swap_5792`,
@@ -247,6 +245,7 @@ export const uniswapUrls = {
     wallet: {
       checkDelegation: `${tradingApiVersionPrefix}/wallet/check_delegation`,
       encode7702: `${tradingApiVersionPrefix}/wallet/encode_7702`,
+      encode4337: `${tradingApiVersionPrefix}/wallet/encode_4337`,
     },
   },
 
@@ -262,7 +261,7 @@ export const uniswapUrls = {
 
   // Privy REST endpoints
   // Docs: https://docs.privy.io/guide/api/encrypted-authorization-keys
-  privyEncryptedAuthorizationKeysUrl: 'https://auth.privy.io/api/v1/encrypted_authorization_keys',
+  privyEncryptedAuthorizationKeysUrl: `https://privy.${EMBEDDED_WALLET_HOSTNAME}/api/v1/encrypted_authorization_keys`,
 
   // Web Interface Urls
   webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,

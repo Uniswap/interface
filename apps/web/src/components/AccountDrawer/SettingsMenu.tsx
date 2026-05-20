@@ -7,7 +7,6 @@ import { FileListLock } from 'ui/src/components/icons/FileListLock'
 import { Language } from 'ui/src/components/icons/Language'
 import { Power } from 'ui/src/components/icons/Power'
 import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -18,7 +17,7 @@ import { useOnDisconnect } from '~/components/AccountDrawer/DisconnectButton'
 import { SettingsButton } from '~/components/AccountDrawer/SettingsButton'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { TestnetsToggle } from '~/components/AccountDrawer/TestnetsToggle'
-import { useAccount } from '~/hooks/useAccount'
+import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { ThemeToggleWithLabel } from '~/theme/components/ThemeToggle'
 
 function SectionHeader({ title }: { title: string }) {
@@ -50,8 +49,7 @@ export function SettingsMenu({
   const activeLanguage = useCurrentLanguage()
   const activeLocalCurrency = useAppFiatCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
-  const connectedWithEmbeddedWallet =
-    useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const connectedWithEmbeddedWallet = useIsEmbeddedWallet()
   const onLogOut = useOnDisconnect()
 
   return (

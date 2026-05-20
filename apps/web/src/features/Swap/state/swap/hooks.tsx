@@ -1,13 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainGasToken } from 'uniswap/src/features/gas/hooks/useChainGasToken'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { queryParametersToCurrencyState } from '~/features/Swap/state/swap/tradeQueryParams'
@@ -43,7 +41,6 @@ export function useInitialCurrencyState(): {
 } {
   const { setIsUserSelectedToken } = useMultichainContext()
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
-  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
@@ -70,11 +67,9 @@ export function useInitialCurrencyState(): {
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
     // Default to native if no query params or chain is not compatible with testnet or mainnet mode
     if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
-      // oxlint-disable-next-line no-shadow
-      const initialChainId = persistedFilteredChainIds?.input ?? defaultChainId
       return {
-        initialInputCurrencyAddress: currencyAddress(getChainGasToken(initialChainId)),
-        initialChainId,
+        initialInputCurrencyAddress: currencyAddress(getChainGasToken(defaultChainId)),
+        initialChainId: defaultChainId,
       }
     }
     // Handle query params or disconnected state

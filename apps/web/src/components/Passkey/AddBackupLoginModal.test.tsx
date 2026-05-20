@@ -514,14 +514,14 @@ describe('AddBackupLoginModal', () => {
         expect(screen.getByText('Confirm your passcode')).toBeInTheDocument()
       })
 
-      // Paste matching PIN — auto-submits, crypto runs, "Sign in with passkey" appears
+      // Paste matching PIN — auto-submits, crypto runs, "Confirm with passkey" appears
       pasteIntoFirstInput('5937')
 
       await waitFor(() => {
-        expect(screen.getByText('Sign in with passkey')).toBeInTheDocument()
+        expect(screen.getByText('Confirm with passkey')).toBeInTheDocument()
       })
 
-      fireEvent.click(screen.getByText('Sign in with passkey'))
+      fireEvent.click(screen.getByText('Confirm with passkey'))
 
       await waitFor(() => {
         expect(screen.getByText('Backup login added')).toBeInTheDocument()
@@ -580,10 +580,10 @@ describe('AddBackupLoginModal', () => {
       pasteIntoFirstInput('5937')
 
       await waitFor(() => {
-        expect(screen.getByText('Sign in with passkey')).toBeInTheDocument()
+        expect(screen.getByText('Confirm with passkey')).toBeInTheDocument()
       })
 
-      fireEvent.click(screen.getByText('Sign in with passkey'))
+      fireEvent.click(screen.getByText('Confirm with passkey'))
 
       await waitFor(() => {
         expect(screen.getByText('Backup login added')).toBeInTheDocument()

@@ -1,13 +1,11 @@
-import { Currency, Percent } from '@uniswap/sdk-core'
-import { useCallback, useEffect, useMemo } from 'react'
-import { Flex } from 'ui/src'
+import { Currency } from '@uniswap/sdk-core'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { AnimateTransition, Flex } from 'ui/src'
 // oxlint-disable-next-line no-restricted-imports -- ui constant needed for modal animation timing
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
-import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { SwapPriceUpdateUserResponse } from 'uniswap/src/features/telemetry/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { ZERO_PERCENT } from '~/constants/misc'
 import { SwapDetails } from '~/features/Swap/SwapDetails'
 import { SwapPreview } from '~/features/Swap/SwapPreview'
 import { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
@@ -16,7 +14,11 @@ import { Error as SwapError, PendingModalError } from '~/pages/Swap/Limit/Confir
 import { SwapHead } from '~/pages/Swap/Limit/ConfirmSwapModal/Head'
 import { SwapModal } from '~/pages/Swap/Limit/ConfirmSwapModal/Modal'
 import { Pending } from '~/pages/Swap/Limit/ConfirmSwapModal/Pending'
-import { ProgressIndicator as SwapProgressIndicator } from '~/pages/Swap/Limit/ConfirmSwapModal/ProgressIndicator'
+import {
+  isProgressIndicatorStep,
+  type ProgressIndicatorStep,
+  ProgressIndicator as SwapProgressIndicator,
+} from '~/pages/Swap/Limit/ConfirmSwapModal/ProgressIndicator/ProgressIndicator'
 import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
 import { useConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/useConfirmModalState'
 import { useSuppressPopups } from '~/state/application/hooks'
@@ -25,50 +27,184 @@ import { InterfaceTrade } from '~/state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from '~/state/routing/utils'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
 import { ThemeProvider } from '~/theme'
-import { FadePresence } from '~/theme/components/FadePresence'
 import { SignatureExpiredError, UniswapXv2HardQuoteError } from '~/utils/errors'
-import { formatSwapPriceUpdatedEventProperties } from '~/utils/loggingFormatters'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
 
-export function ConfirmSwapModal({
+/** Must match `animation` on `AnimateTransition` below so held error UI clears after exit completes. */
+const CONFIRM_SWAP_MODAL_BODY_TRANSITION_MS = 200
+
+/**
+ * Single source of truth for `AnimateTransition` child order.
+ * `activePanelId` is chosen below; content for each id lives in `ConfirmSwapModalBodyPanel` switch.
+ */
+const MODAL_BODY_PANEL_ORDER = ['review', 'progress', 'pending', 'error'] as const
+type ConfirmModalBodyPanelId = (typeof MODAL_BODY_PANEL_ORDER)[number]
+
+type ConfirmModalBodyPanelProps = {
+  panelId: ConfirmModalBodyPanelId
+  trade: InterfaceTrade
+  inputCurrency?: Currency
+  allowance: Allowance
+  fiatValueInput: { data?: number; isLoading: boolean }
+  fiatValueOutput: { data?: number; isLoading: boolean }
+  swapResult?: SwapResult
+  swapError?: Error
+  swapFailed: boolean
+  suppressPopups: () => void
+  startSwapFlow: () => void
+  pendingModalSteps: ProgressIndicatorStep[]
+  confirmModalState: ConfirmModalState
+  wrapTxHash?: string
+  onConfirm: () => void
+  displayedModalErrorType: PendingModalError | undefined
+  resetToReviewScreen: () => void
+}
+
+function ConfirmSwapModalBodyPanel({
+  panelId,
   trade,
-  originalTrade,
   inputCurrency,
   allowance,
-  allowedSlippage,
+  fiatValueInput,
+  fiatValueOutput,
+  swapResult,
+  swapError,
+  swapFailed,
+  suppressPopups,
+  startSwapFlow,
+  pendingModalSteps,
+  confirmModalState,
+  wrapTxHash,
+  onConfirm,
+  displayedModalErrorType,
+  resetToReviewScreen,
+}: ConfirmModalBodyPanelProps): JSX.Element {
+  switch (panelId) {
+    case 'review':
+      return (
+        <Flex>
+          <Flex p="$padding12" pb="$none">
+            <SwapPreview inputCurrency={inputCurrency} trade={trade} allowedSlippage={ZERO_PERCENT} />
+          </Flex>
+          <Flex>
+            <Flex gap="$spacing12">
+              <SwapDetails
+                onConfirm={() => {
+                  suppressPopups()
+                  startSwapFlow()
+                }}
+                inputCurrency={inputCurrency}
+                trade={trade}
+                allowance={allowance}
+                swapResult={swapResult}
+                allowedSlippage={ZERO_PERCENT}
+                isLoading={isPreviewTrade(trade)}
+                disabledConfirm={isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING}
+                fiatValueInput={fiatValueInput}
+                fiatValueOutput={fiatValueOutput}
+                showAcceptChanges={false}
+                swapErrorMessage={swapFailed ? swapError?.message : undefined}
+              />
+            </Flex>
+          </Flex>
+        </Flex>
+      )
+    case 'progress':
+      return (
+        <Flex>
+          <Flex p="$padding12" pb="$none">
+            <SwapPreview inputCurrency={inputCurrency} trade={trade} allowedSlippage={ZERO_PERCENT} />
+          </Flex>
+          <Flex>
+            <SwapProgressIndicator
+              steps={pendingModalSteps}
+              currentStep={
+                isProgressIndicatorStep(confirmModalState)
+                  ? confirmModalState
+                  : (pendingModalSteps[0] ?? ConfirmModalState.WRAPPING)
+              }
+              trade={trade}
+              swapResult={swapResult}
+              wrapTxHash={wrapTxHash}
+              tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+              revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+              swapError={swapError}
+              onRetryUniswapXSignature={onConfirm}
+            />
+          </Flex>
+        </Flex>
+      )
+    case 'pending':
+      return (
+        <Flex>
+          <Pending
+            trade={trade}
+            swapResult={swapResult}
+            wrapTxHash={wrapTxHash}
+            tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+            revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+          />
+        </Flex>
+      )
+    case 'error':
+      return (
+        <Flex padding="$spacing16">
+          <SwapError
+            trade={trade}
+            showTrade={
+              displayedModalErrorType !== undefined &&
+              displayedModalErrorType !== PendingModalError.XV2_HARD_QUOTE_ERROR
+            }
+            swapResult={swapResult}
+            errorType={displayedModalErrorType}
+            onRetry={() => {
+              const typeForRetry = displayedModalErrorType
+              if (typeForRetry === PendingModalError.XV2_HARD_QUOTE_ERROR) {
+                resetToReviewScreen()
+              } else {
+                startSwapFlow()
+              }
+            }}
+          />
+        </Flex>
+      )
+    default: {
+      const _exhaustive: never = panelId
+      throw new Error(`Unexpected confirm modal panel: ${String(_exhaustive)}`)
+    }
+  }
+}
+
+/** Limit-order confirmation modal (wrap, allowance, permit, signature, pending / success). */
+export function ConfirmSwapModal({
+  trade,
+  inputCurrency,
+  allowance,
   fiatValueInput,
   fiatValueOutput,
   swapResult,
   swapError,
   clearSwapState,
-  onAcceptChanges,
   onConfirm,
   onCurrencySelection,
   onDismiss,
-  onXV2RetryWithClassic,
 }: {
   trade: InterfaceTrade
-  originalTrade?: InterfaceTrade
   inputCurrency?: Currency
   allowance: Allowance
-  allowedSlippage: Percent
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   swapResult?: SwapResult
   swapError?: Error
   clearSwapState: () => void
-  onAcceptChanges?: () => void
   onConfirm: () => void
   // oxlint-disable-next-line max-params -- biome-parity: oxlint is stricter here
   onCurrencySelection: (field: CurrencyField, currency: Currency, isResettingWETHAfterWrap?: boolean) => void
   onDismiss: () => void
-  onXV2RetryWithClassic?: () => void
 }) {
   const {
     confirmModalState,
     pendingModalSteps,
-    priceUpdate,
-    doesTradeDiffer,
     approvalError,
     wrapTxHash,
     startSwapFlow,
@@ -76,9 +212,7 @@ export function ConfirmSwapModal({
     resetToReviewScreen,
   } = useConfirmModalState({
     trade,
-    originalTrade,
     allowance,
-    allowedSlippage,
     onCurrencySelection,
     onSwap: () => {
       clearSwapState()
@@ -98,7 +232,7 @@ export function ConfirmSwapModal({
   // Has a limit order been submitted?
   const limitPlaced = isLimitTrade(trade) && uniswapXOrder?.status === TransactionStatus.Pending
 
-  // Has the transaction failed locally (i.e. before network or submission), or has it been reverted onchain?
+  // Has the transaction failed locally (i.e. before network or submission), or has it reverted onchain?
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
   const swapReverted = swapStatus === TransactionStatus.Failed
   const swapFailed = localSwapFailure || swapReverted
@@ -118,40 +252,43 @@ export function ConfirmSwapModal({
     return undefined
   }, [approvalError, swapError])
 
-  // Determine which view to show based on confirm modal state and other conditions
-  const { showPreview, showDetails, showProgressIndicator, showAcceptChanges, showConfirming, showSuccess, showError } =
-    useMemo(() => {
-      // oxlint-disable-next-line no-shadow
-      const showAcceptChanges = confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION && doesTradeDiffer
-      // oxlint-disable-next-line no-shadow
-      let showPreview, showDetails, showProgressIndicator, showConfirming, showSuccess, showError
-      if (errorType) {
-        // When any type of error is encountered (except for SignatureExpiredError, which has special retry logic)
-        showError = true
-      } else if (swapConfirmed || limitPlaced) {
-        showSuccess = true
-      } else if (confirmModalState === ConfirmModalState.REVIEWING || showAcceptChanges) {
-        // When swap is in review, either initially or to accept changes, show the swap details
-        showPreview = true
-        showDetails = true
-      } else if (pendingModalSteps.length > 1) {
-        // When a multi-step swap is in progress (i.e. not in review and not yet confirmed), show the progress indicator
-        showPreview = true
-        showProgressIndicator = true
-      } else {
-        // When a single-step swap requires confirmation, show a loading spinner (possibly followed by a submission icon)
-        showConfirming = true
-      }
-      return {
-        showPreview,
-        showDetails,
-        showProgressIndicator,
-        showAcceptChanges,
-        showConfirming,
-        showSuccess,
-        showError,
-      }
-    }, [confirmModalState, doesTradeDiffer, errorType, limitPlaced, pendingModalSteps.length, swapConfirmed])
+  const lastModalErrorTypeRef = useRef<PendingModalError | undefined>(undefined)
+
+  useLayoutEffect(() => {
+    if (errorType !== undefined) {
+      lastModalErrorTypeRef.current = errorType
+    }
+  }, [errorType])
+
+  const displayedModalErrorType = errorType ?? lastModalErrorTypeRef.current
+
+  const modalBodyPanelId = useMemo((): ConfirmModalBodyPanelId => {
+    if (errorType) {
+      return 'error'
+    }
+    if (swapConfirmed || limitPlaced) {
+      return 'pending'
+    }
+    if (confirmModalState === ConfirmModalState.REVIEWING) {
+      return 'review'
+    }
+    if (pendingModalSteps.length > 1) {
+      return 'progress'
+    }
+    return 'pending'
+  }, [confirmModalState, errorType, limitPlaced, pendingModalSteps.length, swapConfirmed])
+
+  const modalBodyIndex = MODAL_BODY_PANEL_ORDER.indexOf(modalBodyPanelId)
+
+  useEffect(() => {
+    if (modalBodyPanelId !== 'error' && errorType === undefined) {
+      const clearHeldErrorTimer = setTimeout(() => {
+        lastModalErrorTypeRef.current = undefined
+      }, CONFIRM_SWAP_MODAL_BODY_TRANSITION_MS)
+      return () => clearTimeout(clearHeldErrorTimer)
+    }
+    return undefined
+  }, [modalBodyPanelId, errorType])
 
   // Reset modal state if user rejects the swap
   useEffect(() => {
@@ -163,28 +300,35 @@ export function ConfirmSwapModal({
   const { suppressPopups, unsuppressPopups } = useSuppressPopups([PopupType.Transaction, PopupType.Order])
 
   const onModalDismiss = useCallback(() => {
-    if (doesTradeDiffer && confirmModalState !== ConfirmModalState.PENDING_CONFIRMATION) {
-      // If the user dismissed the modal while showing the price update, log the event as rejected.
-      sendAnalyticsEvent(
-        SwapEventName.SwapPriceUpdateAcknowledged,
-        formatSwapPriceUpdatedEventProperties({
-          trade,
-          priceUpdate,
-          response: SwapPriceUpdateUserResponse.REJECTED,
-        }),
-      )
-    }
     onDismiss()
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       onCancel()
     }, ADAPTIVE_MODAL_ANIMATION_DURATION)
-    // Popups are suppressed when modal is open; re-enable them on dismissal
     unsuppressPopups()
-  }, [confirmModalState, doesTradeDiffer, onCancel, onDismiss, priceUpdate, unsuppressPopups, trade])
+  }, [onCancel, onDismiss, unsuppressPopups])
+
+  const bodyPanelProps: Omit<ConfirmModalBodyPanelProps, 'panelId'> = {
+    trade,
+    inputCurrency,
+    allowance,
+    fiatValueInput,
+    fiatValueOutput,
+    swapResult,
+    swapError,
+    swapFailed,
+    suppressPopups,
+    startSwapFlow,
+    pendingModalSteps,
+    confirmModalState,
+    wrapTxHash,
+    onConfirm,
+    displayedModalErrorType,
+    resetToReviewScreen,
+  }
 
   return (
-    // Wrapping in a new theme provider resets any color extraction overriding on the current page. Swap modal should use default/non-overridden theme.
+    // Wrapping in a new theme provider resets any color extraction overriding on the current page. Limit confirm modal should use default/non-overridden theme.
     <ThemeProvider>
       <SwapModal onDismiss={onModalDismiss}>
         {/* Head section displays title, help button, close icon */}
@@ -195,92 +339,15 @@ export function ConfirmSwapModal({
             confirmModalState={confirmModalState}
           />
         </Flex>
-        {/* Preview section displays input / output currency amounts */}
-        {showPreview && (
-          <Flex p="$padding12" pb="$none">
-            <SwapPreview inputCurrency={inputCurrency} trade={trade} allowedSlippage={allowedSlippage} />
-          </Flex>
-        )}
-        {/* Details section displays rate, fees, network cost, etc. w/ additional details in drop-down menu .*/}
-        {showDetails && (
-          <Flex>
-            <FadePresence>
-              <Flex gap="$spacing12">
-                <SwapDetails
-                  onConfirm={() => {
-                    suppressPopups()
-                    startSwapFlow()
-                  }}
-                  inputCurrency={inputCurrency}
-                  trade={trade}
-                  allowance={allowance}
-                  swapResult={swapResult}
-                  allowedSlippage={allowedSlippage}
-                  isLoading={isPreviewTrade(trade)}
-                  disabledConfirm={
-                    showAcceptChanges || isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING
-                  }
-                  fiatValueInput={fiatValueInput}
-                  fiatValueOutput={fiatValueOutput}
-                  showAcceptChanges={Boolean(showAcceptChanges)}
-                  onAcceptChanges={onAcceptChanges}
-                  swapErrorMessage={swapFailed ? swapError?.message : undefined}
-                />
-              </Flex>
-            </FadePresence>
-          </Flex>
-        )}
-        {/* Progress indicator displays all the steps of the swap flow and their current status  */}
-        {confirmModalState !== ConfirmModalState.REVIEWING && showProgressIndicator && (
-          <Flex>
-            <FadePresence>
-              <SwapProgressIndicator
-                steps={pendingModalSteps}
-                currentStep={confirmModalState}
-                trade={trade}
-                swapResult={swapResult}
-                wrapTxHash={wrapTxHash}
-                tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-                revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
-                swapError={swapError}
-                onRetryUniswapXSignature={onConfirm}
-              />
-            </FadePresence>
-          </Flex>
-        )}
-        {/* Pending screen displays spinner for single-step confirmations, as well as success screen for all flows */}
-        {(showConfirming || showSuccess) && (
-          <Flex>
-            <FadePresence>
-              <Pending
-                trade={trade}
-                swapResult={swapResult}
-                wrapTxHash={wrapTxHash}
-                tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-                revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
-              />
-            </FadePresence>
-          </Flex>
-        )}
-        {/* Error screen handles all error types with custom messaging and retry logic */}
-        {errorType && showError && (
-          <Flex padding={16}>
-            <SwapError
-              trade={trade}
-              showTrade={errorType !== PendingModalError.XV2_HARD_QUOTE_ERROR}
-              swapResult={swapResult}
-              errorType={errorType}
-              onRetry={() => {
-                if (errorType === PendingModalError.XV2_HARD_QUOTE_ERROR) {
-                  onXV2RetryWithClassic?.()
-                  resetToReviewScreen()
-                } else {
-                  startSwapFlow()
-                }
-              }}
-            />
-          </Flex>
-        )}
+        <AnimateTransition
+          currentIndex={modalBodyIndex}
+          animationType="fade"
+          animation={`${CONFIRM_SWAP_MODAL_BODY_TRANSITION_MS}ms`}
+        >
+          {MODAL_BODY_PANEL_ORDER.map((panelId) => (
+            <ConfirmSwapModalBodyPanel key={panelId} panelId={panelId} {...bodyPanelProps} />
+          ))}
+        </AnimateTransition>
       </SwapModal>
     </ThemeProvider>
   )

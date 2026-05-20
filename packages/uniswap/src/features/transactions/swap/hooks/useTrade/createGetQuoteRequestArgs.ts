@@ -29,6 +29,7 @@ export type GetQuoteRequestResult = QuoteRoutingParamsResult &
     tokenOutChainId: number
     type: TradingApi.TradeType
     urgency?: TradingApi.Urgency
+    walletExecutionContext?: TradingApi.WalletExecutionContext
   }
 
 export type GetQuoteRequestArgsGetter = (input: UseTradeArgs) => GetQuoteRequestResult | undefined

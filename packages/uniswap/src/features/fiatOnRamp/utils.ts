@@ -10,7 +10,7 @@ import {
   FORQuote,
   InitialQuoteSelection,
 } from 'uniswap/src/features/fiatOnRamp/types'
-import { v4 as uuid } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 
 const APPLE_PAY = 'Apple Pay'
 const GOOGLE_PAY = 'Google Pay'

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { type ComponentRef, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { Flex, styled, Text } from 'ui/src'
@@ -109,7 +109,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
 
   const prevQuoteCurrency = usePrevious(quoteCurrency)
   const hiddenObserver = useResizeObserver<HTMLElement>()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<ComponentRef<typeof StyledNumericalInput>>(null)
 
   useEffect(() => {
     const fiatValue = inputInFiat ? inputAmount : derivedBuyFormInfo.amountOut
@@ -270,7 +270,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
             <NumericalInputWrapper>
               <Flex onLayout={onExtraElementLayout}>
                 {inputInFiat && (
-                  <NumericalInputSymbolContainer showPlaceholder={!inputAmount} $fontSize={fontSize}>
+                  <NumericalInputSymbolContainer showPlaceholder={!inputAmount} numericalFontSize={fontSize}>
                     {fiatSymbol}
                   </NumericalInputSymbolContainer>
                 )}
@@ -280,8 +280,8 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
                 disabled={disabled}
                 onUserInput={handleUserInput}
                 placeholder="0"
-                $width={scaledInputWidth}
-                $fontSize={fontSize}
+                fieldWidth={scaledInputWidth}
+                numericalFontSize={fontSize}
                 maxDecimals={
                   inputInFiat
                     ? DEFAULT_FIAT_DECIMALS
@@ -290,7 +290,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
                 testId={TestID.BuyFormAmountInput}
                 ref={inputRef}
               />
-              <NumericalInputMimic ref={hiddenObserver.ref} $fontSize={fontSize}>
+              <NumericalInputMimic ref={hiddenObserver.ref} numericalFontSize={fontSize}>
                 {inputAmount}
               </NumericalInputMimic>
             </NumericalInputWrapper>
@@ -408,7 +408,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
             chain: getChainUrlParam(currencyInfo.currency.chainId),
             outputCurrency: NATIVE_CHAIN_ID,
           })
-          void navigate(`/swap?${params.toString()}`)
+          Promise.resolve(navigate(`/swap?${params.toString()}`)).catch(() => {})
         }}
         onClose={() => {
           setBuyFormState((state) => ({ ...state, selectedUnsupportedCurrency: undefined }))

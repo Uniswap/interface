@@ -367,11 +367,13 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [
       "tokens",
+      "pools",
       "defi",
       "nfts",
       "activity",
       ":walletAddress",
       ":walletAddress/tokens",
+      ":walletAddress/pools",
       ":walletAddress/defi",
       ":walletAddress/nfts",
       ":walletAddress/activity",

@@ -1,7 +1,24 @@
 /* oxlint-disable max-lines */
 import '@testing-library/jest-dom' // jest custom assertions
-import 'jest-styled-components' // adds style diffs to snapshot tests
 import '~/polyfills' // add polyfills
+
+// ResizeObserver is not available in jsdom — provide a minimal stub for tests
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  }
+}
+
+// Deterministic crypto.randomUUID for snapshot stability
+let _testUuidCounter = 0
+crypto.randomUUID = (() => `test-uuid-${_testUuidCounter++}`) as typeof crypto.randomUUID
+// Reset counter between tests so snapshots are stable
+beforeEach(() => {
+  _testUuidCounter = 0
+  crypto.randomUUID = (() => `test-uuid-${_testUuidCounter++}`) as typeof crypto.randomUUID
+})
 // oxlint-disable-next-line
 import './test-utils/mockTamagui' // mock problematic Tamagui components
 import { Readable } from 'stream'
@@ -108,6 +125,7 @@ globalThis.origin = 'https://app.uniswap.org'
 // oxlint-disable-next-line no-lone-blocks -- block used to scope polyfill assignments
 {
   window.open = vi.fn()
+  window.scrollTo = vi.fn()
   window.getComputedStyle = vi.fn()
 
   if (typeof globalThis.TextEncoder === 'undefined') {

@@ -1,5 +1,5 @@
+import { HexString } from '@universe/encoding'
 import type { providers, TypedDataDomain, TypedDataField } from 'ethers'
-import { HexString } from 'utilities/src/addresses/hex'
 
 // these are tied to the ethers.js types,
 // but we should eventually move to our own types

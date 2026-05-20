@@ -77,7 +77,9 @@ export function CreateAuctionCalendarModal(props: CreateAuctionCalendarModalProp
           />
         )}
         {showTimeRow && onTimeChange ? (
-          <CalendarModalTimeRow hour24={hour24 ?? 0} minute={minute ?? 0} onChange={onTimeChange} />
+          <Flex borderTopWidth={1} borderTopColor="$surface3" pt="$spacing16" width="100%">
+            <CalendarModalTimeRow hour24={hour24 ?? 0} minute={minute ?? 0} onChange={onTimeChange} />
+          </Flex>
         ) : null}
       </Flex>
     </AdaptiveWebModal>

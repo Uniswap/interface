@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ClaimFeesRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
 import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Switch, Text } from 'ui/src'
@@ -114,6 +115,7 @@ function UnwrapUnderCard({
 export function ClaimFeeModal() {
   const { t } = useTranslation()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
   const positionInfo = useModalInitialState(ModalName.ClaimFee)
   const account = useWallet().evmAccount
@@ -251,6 +253,7 @@ export function ClaimFeeModal() {
                   currency0AmountUsd: fee0AmountUsd,
                   currency1AmountUsd: fee1AmountUsd,
                   version: positionInfo.version,
+                  isCentralizedPricesEnabled,
                 }),
               }
             : undefined,

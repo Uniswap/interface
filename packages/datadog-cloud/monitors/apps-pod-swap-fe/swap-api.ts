@@ -30,6 +30,55 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/web`,
     dashboards: [],
     additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
+    // Slack-only: this per-attempt signal is useful for provider degradation trends,
+    // but it is too noisy to page on because fallback recovery can hide user impact.
+    enablePaging: false,
+    includeIncidentWebhook: false,
+  },
+  {
+    id: 'swap_fe_web_rpc_providers_exhausted_user_impact',
+    name: '[Web] RPC providers exhausted (user impact)',
+    type: 'rum alert',
+    query: 'formula("cutoff_min(query1, 20) / query").last("4h") > 0.005',
+    alertBody:
+      'At least 0.5% of web sessions, with a minimum floor of 20 distinct sessions, hit `All providers failed to perform the operation`. This means every RPC fallback failed for a user-visible call.',
+    recoveryBody: 'Web RPC provider exhaustion has recovered below the user-impact threshold.',
+    team: TEAM,
+    priority: 2,
+    thresholds: {
+      critical: 0.005,
+      criticalRecovery: 0.0025,
+    },
+    logQuery: 'service:web-prod "All providers failed to perform the operation"',
+    runbookUrl: SWAP_POD_RUNBOOK,
+    readmeUrl: `${UNIVERSE_REPO_URL}/tree/main/apps/web`,
+    dashboards: [],
+    additionalSlackChannels: SWAP_FE_ADDITIONAL_SLACK_CHANNELS,
+    enablePaging: true,
+    includeIncidentWebhook: true,
+    variables: {
+      eventQueries: [
+        {
+          name: 'query1',
+          dataSource: 'rum',
+          indexes: ['*'],
+          search: {
+            query:
+              '@type:error env:(production OR prod) service:web-prod @error.message:"All providers failed to perform the operation"',
+          },
+          computes: [{ aggregation: 'cardinality', metric: '@session.id' }],
+        },
+        {
+          name: 'query',
+          dataSource: 'rum',
+          indexes: ['*'],
+          search: {
+            query: 'env:(production OR prod) service:web-prod',
+          },
+          computes: [{ aggregation: 'cardinality', metric: '@session.id' }],
+        },
+      ],
+    },
   },
   {
     id: 'swap_fe_mobile_unknown_gas_sim_error_rate',

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useDigitInput } from 'uniswap/src/components/passkey/recovery/useDigitInput'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { hashAuthMethodId } from 'uniswap/src/features/passkey/pinCrypto'
+import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import { attemptPinDecryption } from 'uniswap/src/features/passkey/recoveryExecute'
 import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
 import { logger } from 'utilities/src/logger/logger'
@@ -83,6 +84,7 @@ export function useRecoveryFlow({
   const [isDecrypting, setIsDecrypting] = useState(false)
   const [recoveryWalletAddress, setRecoveryWalletAddress] = useState<string | undefined>()
   const [encryptedKeyId, setEncryptedKeyId] = useState<string | undefined>()
+  const [encryptedBlob, setEncryptedBlob] = useState<string | undefined>()
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
   const [oauthEmail, setOauthEmail] = useState<string | undefined>()
   const [finalStepError, setFinalStepError] = useState<string | undefined>()
@@ -113,6 +115,17 @@ export function useRecoveryFlow({
       if (recoveryConfig.walletAddress) {
         setRecoveryWalletAddress(recoveryConfig.walletAddress)
       }
+
+      const blob = await fetchEncryptedBlob({
+        accessToken: token,
+        keyId: recoveryConfig.encryptedKeyId,
+        privyAppId,
+      })
+      if (isActive && !isActive()) {
+        return
+      }
+      setEncryptedBlob(blob)
+
       setStep(RecoveryStep.EnterPin)
     } catch (e) {
       if (isActive && !isActive()) {
@@ -134,7 +147,13 @@ export function useRecoveryFlow({
       return undefined
     }
 
-    if (step !== RecoveryStep.OAuthLoading) {
+    // Mobile keeps the JS context alive (no full-page reload), so `pending` stays false
+    // and step never starts at OAuthLoading. Local `oauthProvider` is set synchronously in
+    // `initOAuth` before any await, so it's a reliable "this user just initiated OAuth"
+    // signal that distinguishes a fresh tap from a stale Privy session.
+    const userExplicitlyInitiatedThisOAuth = oauthProvider !== null && oauthProvider === provider
+    const isLoginAdvance = step === RecoveryStep.Login && userExplicitlyInitiatedThisOAuth
+    if (step !== RecoveryStep.OAuthLoading && !isLoginAdvance) {
       return undefined
     }
 
@@ -154,7 +173,7 @@ export function useRecoveryFlow({
     return () => {
       active = false
     }
-  }, [privy.oauthReturn, fetchRecoveryAndAdvance, setOauthError, step, t])
+  }, [privy.oauthReturn, fetchRecoveryAndAdvance, setOauthError, step, oauthProvider, t])
 
   const sendCodeMutation = useMutation({
     mutationFn: () => {
@@ -200,6 +219,13 @@ export function useRecoveryFlow({
         setRecoveryWalletAddress(recoveryConfig.walletAddress)
       }
 
+      const blob = await fetchEncryptedBlob({
+        accessToken: token,
+        keyId: recoveryConfig.encryptedKeyId,
+        privyAppId,
+      })
+      setEncryptedBlob(blob)
+
       setStep(RecoveryStep.EnterPin)
     },
     onError: (e) => {
@@ -238,7 +264,7 @@ export function useRecoveryFlow({
   })
 
   const handlePinComplete = useEvent(async (code: string) => {
-    if (!accessToken || !encryptedKeyId || isDecrypting) {
+    if (!accessToken || !encryptedKeyId || !encryptedBlob || isDecrypting) {
       return
     }
     if (cooldownExpiresAt && Date.now() < cooldownExpiresAt) {
@@ -253,8 +279,7 @@ export function useRecoveryFlow({
         pin: code,
         email: effectiveEmail,
         accessToken,
-        encryptedKeyId,
-        privyAppId,
+        encryptedBlob,
       })
 
       if (result.success) {
@@ -269,19 +294,18 @@ export function useRecoveryFlow({
           setCooldownExpiresAt(Date.now() + result.cooldownSeconds * 1000)
           setPinError(undefined)
         } else {
-          setPinError(result.errorMessage ?? t('account.passkey.recovery.wrongPin'))
+          // Always show the consistent i18n string for a wrong PIN; the server's
+          // errorMessage is generic SDK copy that doesn't match product UX.
+          setPinError(t('account.passkey.recovery.wrongPin'))
         }
         passcodeInput.reset()
-      } else if (result.error === 'rate_limited') {
+      } else {
         if (result.cooldownSeconds && result.cooldownSeconds > 0) {
           setCooldownExpiresAt(Date.now() + result.cooldownSeconds * 1000)
           setPinError(undefined)
         } else {
           setPinError(result.errorMessage ?? t('common.card.error.description'))
         }
-        passcodeInput.reset()
-      } else {
-        setPinError(result.errorMessage ?? t('common.card.error.description'))
         passcodeInput.reset()
       }
     } catch {
@@ -315,6 +339,7 @@ export function useRecoveryFlow({
     setIsDecrypting(false)
     setRecoveryWalletAddress(undefined)
     setEncryptedKeyId(undefined)
+    setEncryptedBlob(undefined)
     setOauthProvider(null)
     setOauthEmail(undefined)
     setOauthError(undefined)

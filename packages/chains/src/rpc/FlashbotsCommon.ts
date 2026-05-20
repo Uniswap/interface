@@ -1,5 +1,5 @@
 import { Signer } from '@ethersproject/abstract-signer'
-import { HexString } from 'utilities/src/addresses/hex'
+import { HexString } from '@universe/encoding'
 import { sleep } from 'utilities/src/time/timing'
 import { z } from 'zod'
 

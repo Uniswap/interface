@@ -45,6 +45,7 @@ export function DigitInputRow({
           textAlign="center"
           flex={1}
           minWidth={0}
+          maxWidth={56}
           height={60}
           fontSize={20}
           fontWeight="$medium"

@@ -1,6 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useEffect, useMemo, useReducer } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
@@ -8,6 +8,7 @@ import { Flex, Separator, styled, Text, useIsDarkMode, useSporeColors } from 'ui
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { PoolData, usePoolData } from '~/appGraphql/data/pools/usePoolData'
@@ -114,12 +115,27 @@ export function PoolDetailsPage() {
     chainId: chainInfo?.id,
     isPoolAddress: isEVMAddress(poolAddress),
   })
-  const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken({
     poolData,
     chainId: chainInfo?.id,
     protocolVersion: poolData?.protocolVersion,
   })
+
+  // oxlint-disable react-hooks/exhaustive-deps -- unwrappedTokens changes every render; use underlying stable deps instead
+  const waterfallDefault = useMemo(() => {
+    if (!unwrappedTokens[0] || !unwrappedTokens[1]) {
+      return false
+    }
+    const currA = gqlToCurrency(unwrappedTokens[0])
+    const currB = gqlToCurrency(unwrappedTokens[1])
+    return Boolean(currA && currB && shouldReverseForWaterfall(currA, currB))
+  }, [poolData?.token0, poolData?.token1, chainInfo?.id, poolData?.protocolVersion])
+  // oxlint-enable react-hooks/exhaustive-deps
+
+  const [userFlipCount, setUserFlipCount] = useState(0)
+  const toggleReversed = () => setUserFlipCount((n) => n + 1)
+  const isReversed = waterfallDefault !== (userFlipCount % 2 !== 0)
+
   const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
@@ -254,6 +270,7 @@ export function PoolDetailsPage() {
             <Flex $lg={{ marginTop: -24 }} $xl={{ marginTop: -24 }} min-height="fit-content">
               <PoolDetailsStatsButtons
                 chainId={chainInfo.id}
+                poolIdOrAddress={poolAddress}
                 token0={token0}
                 token1={token1}
                 feeTier={poolData?.feeTier?.feeAmount}

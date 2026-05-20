@@ -67,6 +67,14 @@ env:
       PHASE: 'end'
 - waitForAnimationToEnd
 
+# Wait for the post-cancel home screen to fully mount before tapping the settings
+# gear. Without this, Maestro can race the home tree's first commit and fail to
+# find the gear (the testID exists in code; the element just hasn't rendered yet).
+- extendedWaitUntil:
+    visible:
+      id: 'account-header-settings-icon'
+    timeout: 8000
+
 # Track settings navigation
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js

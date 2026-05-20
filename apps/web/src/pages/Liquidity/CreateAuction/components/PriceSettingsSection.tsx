@@ -13,6 +13,7 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { FloorPriceSelector } from '~/pages/Liquidity/CreateAuction/components/FloorPriceSelector'
 import { HookTileContainer } from '~/pages/Liquidity/CreateAuction/components/HookTile'
+import { type InputCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { ExternalLink } from '~/theme/components/Links'
 
@@ -24,6 +25,9 @@ export function PriceSettingsSection({
   onSelect,
   floorPrice,
   tokenTotalSupply,
+  inputCurrency,
+  usdPriceNum,
+  onInputCurrencyChange,
   onFloorPriceChange,
 }: {
   chainId: UniverseChainId
@@ -31,6 +35,9 @@ export function PriceSettingsSection({
   onSelect: (currency: RaiseCurrency) => void
   floorPrice: string
   tokenTotalSupply: CurrencyAmount<Currency>
+  inputCurrency: InputCurrency
+  usdPriceNum: number | null
+  onInputCurrencyChange: (next: InputCurrency) => void
   onFloorPriceChange: (value: string) => void
 }) {
   const { t } = useTranslation()
@@ -141,6 +148,9 @@ export function PriceSettingsSection({
           floorPrice={floorPrice}
           raiseCurrency={raiseCurrency}
           tokenTotalSupply={tokenTotalSupply}
+          inputCurrency={inputCurrency}
+          usdPriceNum={usdPriceNum}
+          onInputCurrencyChange={onInputCurrencyChange}
           onFloorPriceChange={onFloorPriceChange}
         />
         <Flex row gap="$spacing4" alignItems="center">

@@ -3,6 +3,7 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
+import { iconSizes } from 'ui/src/theme'
 import { LIMIT_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
@@ -13,9 +14,9 @@ import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/f
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { PrefetchBalancesWrapper } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { parseUnits } from '~/chains/utilities'
+import { parseUnits } from '~/chains'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
-import { StyledNumericalInput } from '~/components/NumericalInput'
+import { SwapCurrencyInput } from '~/components/NumericalInput'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import {
   LimitCustomMarketPriceButton,
@@ -28,35 +29,7 @@ import { formatCurrencySymbol } from '~/features/Swap/CurrencyInputPanel/utils'
 import { useLimitContext } from '~/features/Swap/state/limit/LimitContext'
 import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
 import { useSwapAndLimitContext } from '~/features/Swap/state/swap/useSwapContext'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { SwitchNetworkAction } from '~/state/popups/types'
-import { ClickableStyle } from '~/theme/components/styles'
-
-const Container = deprecatedStyled(InputPanel)`
-  gap: 4px;
-`
-
-const OutputCurrencyContainer = deprecatedStyled(PrefetchBalancesWrapper)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const OutputCurrencyButton = deprecatedStyled.button`
-  user-select: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background-color: transparent;
-  border: none;
-  display: flex;
-  ${ClickableStyle}
-`
-
-const TextInputRow = deprecatedStyled.div`
-  display: flex;
-  flex-grow: 1;
-`
 
 const PRICE_ADJUSTMENT_PRESETS = [1, 5, 10]
 const INVERTED_PRICE_ADJUSTMENT_PRESETS = [-1, -5, -10]
@@ -212,67 +185,88 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
   const presets = limitPriceInverted ? INVERTED_PRICE_ADJUSTMENT_PRESETS : PRICE_ADJUSTMENT_PRESETS
 
   return (
-    <Container>
-      <Flex row width="100%" justifyContent="space-between" alignItems="center">
-        <LimitPriceInputLabel
-          currency={baseCurrency}
-          showCurrencyMessage={!!formattedLimitPriceOutputAmount}
-          openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
-        />
-        <TouchableArea onPress={onInvertLimitPrices}>
-          <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
-        </TouchableArea>
-      </Flex>
-      <TextInputRow>
-        <StyledNumericalInput
-          disabled={!(baseCurrency && quoteCurrency)}
-          className="limit-price-input"
-          value={formattedLimitPriceOutputAmount}
-          onUserInput={changeLimitPrice}
-          $loading={false}
-        />
-        {quoteCurrency && (
-          <OutputCurrencyContainer>
-            <OutputCurrencyButton onClick={() => setCurrencySelectModalField('outputCurrency')}>
-              <Flex row gap="$gap4" width="unset">
-                <CurrencyLogo currency={quoteCurrency} size={16} />
-                <Text variant="body2" className="token-symbol-container">
-                  {formatCurrencySymbol(quoteCurrency)}
-                </Text>
-              </Flex>
-            </OutputCurrencyButton>
-          </OutputCurrencyContainer>
-        )}
-      </TextInputRow>
-      <Flex row width="100%" mt="$spacing8" justifyContent="space-between" alignItems="center">
-        <Flex row gap="$gap8">
-          <LimitCustomMarketPriceButton
-            key="limit-price-market"
-            customAdjustmentPercentage={(() => {
-              if (!currentPriceAdjustment || currentPriceAdjustment === 0) {
-                return undefined
-              }
-              if (presets.includes(currentPriceAdjustment)) {
-                return undefined
-              }
-              return currentPriceAdjustment
-            })()}
-            disabled={!baseCurrency || !quoteCurrency}
-            selected={Boolean(currentPriceAdjustment !== undefined && !presets.includes(currentPriceAdjustment))}
-            onSelect={() => onSelectLimitPrice(marketPrice, 0)}
+    <InputPanel>
+      <Flex flexDirection="column" gap="$gap4" width="100%">
+        <Flex row width="100%" justifyContent="space-between" alignItems="center">
+          <LimitPriceInputLabel
+            currency={baseCurrency}
+            showCurrencyMessage={!!formattedLimitPriceOutputAmount}
+            openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
           />
-          {presets.map((adjustmentPercentage) => {
-            const adjustedPrice = adjustedPrices?.[adjustmentPercentage as keyof typeof adjustedPrices]
-            return (
-              <LimitPresetPriceButton
-                key={`limit-price-${adjustmentPercentage}`}
-                priceAdjustmentPercentage={adjustmentPercentage}
-                disabled={!baseCurrency || !quoteCurrency || !marketPrice}
-                selected={currentPriceAdjustment === adjustmentPercentage}
-                onSelect={() => onSelectLimitPrice(adjustedPrice, adjustmentPercentage)}
-              />
-            )
-          })}
+          <TouchableArea onPress={onInvertLimitPrices}>
+            <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
+          </TouchableArea>
+        </Flex>
+        <Flex row flexGrow={1} alignItems="center" width="100%">
+          <SwapCurrencyInput
+            disabled={!(baseCurrency && quoteCurrency)}
+            className="limit-price-input"
+            value={formattedLimitPriceOutputAmount}
+            onUserInput={changeLimitPrice}
+          />
+          {quoteCurrency && (
+            <PrefetchBalancesWrapper>
+              <Flex alignItems="center" justifyContent="center">
+                <TouchableArea onPress={() => setCurrencySelectModalField('outputCurrency')}>
+                  <Flex
+                    row
+                    gap="$spacing4"
+                    width="unset"
+                    userSelect="none"
+                    alignItems="center"
+                    overflow="hidden"
+                    flexShrink={1}
+                    minWidth={0}
+                    maxWidth="100%"
+                  >
+                    <CurrencyLogo currency={quoteCurrency} size={iconSizes.icon16} />
+                    <Text
+                      variant="body2"
+                      color="$neutral1"
+                      className="token-symbol-container"
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      flexShrink={1}
+                      minWidth={0}
+                    >
+                      {formatCurrencySymbol(quoteCurrency)}
+                    </Text>
+                  </Flex>
+                </TouchableArea>
+              </Flex>
+            </PrefetchBalancesWrapper>
+          )}
+        </Flex>
+        <Flex row mt="$spacing8" width="100%" justifyContent="space-between" alignItems="center">
+          <Flex row gap="$spacing8" alignItems="center">
+            <LimitCustomMarketPriceButton
+              key="limit-price-market"
+              customAdjustmentPercentage={(() => {
+                if (!currentPriceAdjustment || currentPriceAdjustment === 0) {
+                  return undefined
+                }
+                if (presets.includes(currentPriceAdjustment)) {
+                  return undefined
+                }
+                return currentPriceAdjustment
+              })()}
+              disabled={!baseCurrency || !quoteCurrency}
+              selected={Boolean(currentPriceAdjustment !== undefined && !presets.includes(currentPriceAdjustment))}
+              onSelect={() => onSelectLimitPrice(marketPrice, 0)}
+            />
+            {presets.map((adjustmentPercentage) => {
+              const adjustedPrice = adjustedPrices?.[adjustmentPercentage as keyof typeof adjustedPrices]
+              return (
+                <LimitPresetPriceButton
+                  key={`limit-price-${adjustmentPercentage}`}
+                  priceAdjustmentPercentage={adjustmentPercentage}
+                  disabled={!baseCurrency || !quoteCurrency || !marketPrice}
+                  selected={currentPriceAdjustment === adjustmentPercentage}
+                  onSelect={() => onSelectLimitPrice(adjustedPrice, adjustmentPercentage)}
+                />
+              )
+            })}
+          </Flex>
         </Flex>
       </Flex>
       <CurrencySearchModal
@@ -293,6 +287,6 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         selectedCurrency={quoteCurrency}
         otherSelectedCurrency={baseCurrency}
       />
-    </Container>
+    </InputPanel>
   )
 }

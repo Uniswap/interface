@@ -1,19 +1,23 @@
 /**
- * Token Launcher calendar: Sunday week, bordered selected state on a 64×64 day grid.
+ * Token Launcher calendar: Sunday week, bordered selected state on a 48×48 day grid.
  * Text and surfaces use `--auction-calendar-*` vars from `useSporeColors()` for light/dark parity.
  * Scoped under `.auction-day-picker-shell` so overrides win over default `react-day-picker` CSS.
  */
 /* Floor height for caption/head/table (DayPicker uses `fixedWeeks` so tbody is always 6 rows — stable centered modal). */
+/* Width is fixed at 7 × cell-size so columns sit flush together (Figma) and don't stretch with the popover. */
 .auction-day-picker-shell {
-  overflow: hidden;
+  --auction-cell-size: 48px;
+  --auction-grid-width: calc(var(--auction-cell-size) * 7);
+  width: var(--auction-grid-width);
   max-width: 100%;
-  /* 492px = caption row (56) + weekday head (48) + table margin-top (4) + 6 fixed week rows × cell (64) */
-  min-height: 492px;
+  overflow: hidden;
+  /* 360px = caption row (24) + parent gap (12) + weekday head (24) + table margin-top (12) + 6 fixed week rows × cell (48) */
+  min-height: 360px;
   box-sizing: border-box;
 }
 
 .auction-day-picker-shell .rdp-months {
-  width: 100%;
+  width: var(--auction-grid-width);
   max-width: 100%;
 }
 
@@ -21,7 +25,7 @@
 /* Map theme vars onto .rdp: the library sets --rdp-selected-color: #fff on `.rdp`, which wins over
    inherited values from the shell — without this block, selected day text stays white. */
 .auction-day-picker-shell .rdp {
-  --rdp-cell-size: 64px;
+  --rdp-cell-size: var(--auction-cell-size);
   --rdp-accent-color: var(--auction-calendar-accent-color);
   --rdp-background-color: var(--auction-calendar-default-hover-bg);
   margin: 0;
@@ -36,29 +40,29 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 0 8px;
+  padding: 0;
 }
 
 .auction-day-picker-shell .rdp-caption_label {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 500;
-  line-height: 1.2;
-  letter-spacing: -0.12px;
+  line-height: 20px;
+  letter-spacing: 0;
   color: var(--auction-calendar-text-primary);
   padding: 0;
 }
 
 .auction-day-picker-shell .rdp-nav {
   display: flex;
-  gap: 0;
+  gap: 12px;
 }
 
 .auction-day-picker-shell .rdp-nav_button {
-  width: 44px;
-  height: 44px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   background: transparent;
   color: var(--auction-calendar-text-secondary);
 }
@@ -74,9 +78,9 @@
 }
 
 .auction-day-picker-shell .rdp-table {
-  width: 100%;
+  width: var(--auction-grid-width);
   max-width: none;
-  margin-top: 4px;
+  margin-top: 12px;
   border-collapse: collapse;
   table-layout: fixed;
 }
@@ -85,12 +89,12 @@
   box-sizing: border-box;
   font-size: 14px;
   font-weight: 500;
-  line-height: 48px;
+  line-height: 24px;
   color: var(--auction-calendar-text-primary);
   text-align: center;
   text-transform: none;
   padding: 0;
-  height: 48px;
+  height: 24px;
   vertical-align: middle;
 }
 
@@ -124,11 +128,14 @@
 }
 
 /* Adjacent-month days: same surface as in-month, muted label only.
- * Range modifiers explicitly excluded so a start/end/middle day rendered as an outside day
- * (e.g. when the picker is showing a different month) keeps the range styling.
+ * Range modifiers + `_disabled` excluded so (a) range styling wins on outside days that fall inside
+ * the range, and (b) disabled outside days stay at the same faded opacity as disabled in-month days
+ * (otherwise this rule's high specificity would force `opacity: 1` and they'd look darker).
  */
 .auction-day-picker-shell
-  .rdp-day_outside:not(.rdp-day_selected):not(.rdp-day_range-start):not(.rdp-day_range-end):not(.rdp-day_range-middle) {
+  .rdp-day_outside:not(.rdp-day_selected):not(.rdp-day_range-start):not(.rdp-day_range-end):not(
+    .rdp-day_range-middle
+  ):not(.rdp-day_disabled) {
   background: transparent;
   color: var(--auction-calendar-text-tertiary);
   opacity: 1;
@@ -145,10 +152,6 @@
   opacity: 0.35;
   cursor: default;
   color: var(--auction-calendar-text-tertiary);
-}
-
-.auction-day-picker-shell .rdp-day_disabled.rdp-day_outside {
-  opacity: 0.5;
 }
 
 /* ---------- Range variant ---------- */

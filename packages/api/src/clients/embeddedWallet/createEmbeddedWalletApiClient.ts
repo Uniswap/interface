@@ -15,6 +15,7 @@ import {
   type GetRecoveryConfigResponse,
   type ListAuthenticatorsResponse,
   type OprfEvaluateResponse,
+  type PrepareAddAuthenticatorResponse,
   type ReportDecryptionResultResponse,
   type SetupRecoveryResponse,
   type SignMessageResponse,
@@ -49,6 +50,7 @@ export type {
   GetRecoveryConfigResponse,
   ListAuthenticatorsResponse,
   OprfEvaluateResponse,
+  PrepareAddAuthenticatorResponse,
   RecoveryMethod,
   RegistrationOptions,
   ReportDecryptionResultResponse,
@@ -224,11 +226,19 @@ export function createEmbeddedWalletApiClient({
     return await rpcClient.startAuthenticatedSession({ existingCredential, devicePublicKey })
   }
 
+  async function fetchPrepareAddAuthenticatorRequest({
+    newCredential,
+  }: {
+    newCredential: string
+  }): Promise<PrepareAddAuthenticatorResponse> {
+    return await rpcClient.prepareAddAuthenticator({ newCredential })
+  }
+
   async function fetchAddAuthenticatorRequest({
     newCredential,
     deviceSignature,
   }: {
-    newCredential: string
+    newCredential?: string
     deviceSignature: string
   }): Promise<AddAuthenticatorResponse> {
     return await rpcClient.addAuthenticator({ newCredential, deviceSignature })
@@ -347,6 +357,7 @@ export function createEmbeddedWalletApiClient({
     fetchDisconnectRequest,
     fetchListAuthenticatorsRequest,
     fetchStartAuthenticatedSessionRequest,
+    fetchPrepareAddAuthenticatorRequest,
     fetchAddAuthenticatorRequest,
     fetchDeleteAuthenticatorRequest,
     fetchOprfEvaluate,

@@ -41,10 +41,6 @@ export function buildFlagGroups(extras: {
       ],
     },
     {
-      name: 'Monad',
-      flags: [{ flag: FeatureFlags.Monad, label: 'Enable Monad UX' }],
-    },
-    {
       name: 'XLayer',
       flags: [{ flag: FeatureFlags.XLayer, label: 'Enable XLayer UX' }],
     },
@@ -72,7 +68,6 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.LimitsFees, label: 'Enable Limits fees' },
         { flag: FeatureFlags.EnablePermitMismatchUX, label: 'Enable Permit2 mismatch detection' },
         { flag: FeatureFlags.NetworkFilterV2, label: 'Enable Network Filter V2' },
-        { flag: FeatureFlags.GasServiceV2, label: 'Enable Gas Service V2' },
         {
           flag: FeatureFlags.ForcePermitTransactions,
           label: 'Force Permit2 transaction instead of signatures, always',
@@ -99,6 +94,7 @@ export function buildFlagGroups(extras: {
     {
       name: 'LP',
       flags: [
+        { flag: FeatureFlags.AddLiquidityRevamp, label: 'Enable Add Liquidity Revamp' },
         { flag: FeatureFlags.LpPdpDepthChart, label: 'Enable LP PDP Depth Chart toggle' },
         { flag: FeatureFlags.LiquidityBatchedTransactions, label: 'Enable Batched Transactions for LP flow' },
         { flag: FeatureFlags.LpIncentives, label: 'Enable LP Incentives' },
@@ -124,7 +120,6 @@ export function buildFlagGroups(extras: {
       name: 'New Chains',
       flags: [
         { flag: FeatureFlags.Linea, label: 'Enable Linea' },
-        { flag: FeatureFlags.Soneium, label: 'Enable Soneium' },
         { flag: FeatureFlags.Tempo, label: 'Enable Tempo' },
       ],
     },
@@ -171,10 +166,7 @@ export function buildFlagGroups(extras: {
     },
     {
       name: 'Prices',
-      flags: [
-        { flag: FeatureFlags.CentralizedPrices, label: 'Enable Centralized Prices' },
-        { flag: FeatureFlags.CentralizedPricesWs, label: 'Enable Centralized Prices WebSocket' },
-      ],
+      flags: [{ flag: FeatureFlags.CentralizedPrices, label: 'Enable Centralized Prices' }],
     },
     { name: 'Experiments', flags: [] },
     {

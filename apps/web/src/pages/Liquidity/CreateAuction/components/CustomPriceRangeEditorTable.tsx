@@ -13,10 +13,11 @@ import {
   PriceBoundInput,
 } from '~/pages/Liquidity/CreateAuction/components/CustomPriceRangeEditorInputs'
 import {
+  CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   CUSTOM_PRICE_RANGE_PRESETS,
-  CustomPriceRangeBound,
   type CustomPriceRangeEntry,
   type CustomPriceRangePreset,
+  MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
 } from '~/pages/Liquidity/CreateAuction/types'
 
 /** Dot width — must match histogram bullet on each range row */
@@ -32,26 +33,36 @@ export function HeaderColumnLabel({ children }: { children: ReactNode }): JSX.El
   )
 }
 
-export function PriceBoundColumnHeader({ label }: { label: ReactNode }): JSX.Element {
+export function PriceBoundColumnHeader({
+  label,
+  showPercentFromClearingHint = true,
+}: {
+  label: ReactNode
+  showPercentFromClearingHint?: boolean
+}): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex flex={1} flexBasis={0} minWidth={0} width="100%" row flexWrap="wrap" alignItems="baseline">
       <Text variant="body4" color="$neutral1">
         {label}
       </Text>
-      <Text variant="body4" color="$neutral2">
-        {t('toucan.createAuction.step.customizePool.priceRange.custom.percentFromClearingHint')}
-      </Text>
+      {showPercentFromClearingHint ? (
+        <Text variant="body4" color="$neutral2">
+          {t('toucan.createAuction.step.customizePool.priceRange.custom.percentFromClearingHint')}
+        </Text>
+      ) : null}
     </Flex>
   )
 }
 
 type PriceRangeRowShellProps = {
-  leading: ReactNode
+  /** When omitted, no leading column is rendered (e.g. read-only review table). */
+  leading?: ReactNode
   column1: ReactNode
   column2: ReactNode
   column3: ReactNode
-  trailing: ReactNode
+  /** When omitted, no trailing column is rendered (e.g. read-only review table). */
+  trailing?: ReactNode
   backgroundColor?: '$surface3' | '$transparent'
   /** Header rows use flex-start so wrapped labels align to the top; data rows stay vertically centered. */
   rowAlignItems?: 'center' | 'flex-start'
@@ -82,9 +93,11 @@ export function PriceRangeRowShell({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <Flex flexShrink={0} alignItems="center" justifyContent="center" width={RANGE_ROW_LEADING_SIZE}>
-        {leading}
-      </Flex>
+      {leading !== undefined ? (
+        <Flex flexShrink={0} alignItems="center" justifyContent="center" width={RANGE_ROW_LEADING_SIZE}>
+          {leading}
+        </Flex>
+      ) : null}
       <Flex
         flex={1}
         flexBasis={0}
@@ -101,9 +114,11 @@ export function PriceRangeRowShell({
         {column2}
         {column3}
       </Flex>
-      <Flex flexShrink={0} alignItems="center" justifyContent="center">
-        {trailing}
-      </Flex>
+      {trailing !== undefined ? (
+        <Flex flexShrink={0} alignItems="center" justifyContent="center">
+          {trailing}
+        </Flex>
+      ) : null}
     </Flex>
   )
 }
@@ -148,18 +163,16 @@ export function CustomPriceRangeRow({
       }
       column2={
         <PriceBoundInput
+          side="min"
           value={entry.minPercentFromClearing}
-          infinityValue={CustomPriceRangeBound.NegativeInfinity}
-          infinityLabel="∞"
           isActive={false}
           onValueChange={(minPercentFromClearing) => onUpdateBounds({ minPercentFromClearing })}
         />
       }
       column3={
         <PriceBoundInput
+          side="max"
           value={entry.maxPercentFromClearing}
-          infinityValue={CustomPriceRangeBound.PositiveInfinity}
-          infinityLabel="∞"
           isActive={false}
           onValueChange={(maxPercentFromClearing) => onUpdateBounds({ maxPercentFromClearing })}
         />
@@ -204,8 +217,8 @@ export function AddRangeRow({
         disabled={!canAddEntry}
         onPress={() =>
           onAddPreset({
-            minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
-            maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+            minPercentFromClearing: MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
+            maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
           })
         }
       >

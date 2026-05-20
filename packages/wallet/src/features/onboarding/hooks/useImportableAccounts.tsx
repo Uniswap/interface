@@ -1,12 +1,11 @@
 import { useApolloClient } from '@apollo/client'
 import { useQuery } from '@tanstack/react-query'
-import { GraphQLApi } from '@universe/api'
 import { useCallback, useMemo, useState } from 'react'
-import { unitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
+import { fetchBalancesAndUnitags } from 'wallet/src/features/onboarding/fetchBalancesAndUnitags'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export interface AddressWithBalanceAndName {
@@ -82,48 +81,20 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
   const { gqlChains } = useEnabledChains()
 
   const fetchBalanceAndUnitags = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName>> => {
-    if (addressesArray.length === 0) {
-      return {} as AddressTo<AddressWithBalanceAndName>
-    }
-
-    const valueModifiers = addressesArray.map((addr) => ({
-      ownerAddress: addr,
-      includeSmallBalances: true,
-      includeSpamTokens: false,
-    }))
-
-    const fetchBalances = apolloClient.query<GraphQLApi.SelectWalletScreenQuery>({
-      query: GraphQLApi.SelectWalletScreenDocument,
-      variables: { ownerAddresses: addressesArray, chains: gqlChains, valueModifiers },
+    const { balanceByAddress, unitagByAddress } = await fetchBalancesAndUnitags({
+      addresses: addressesArray,
+      apolloClient,
+      gqlChains,
     })
 
-    const fetchUnitags = unitagsApiClient.fetchUnitagsByAddresses({ addresses: addressesArray })
-
-    const [balancesResponse, unitagsResponse] = await Promise.all([fetchBalances, fetchUnitags])
-
-    const unitagsByAddress = unitagsResponse.usernames
-
-    const balancesByAddress = (balancesResponse.data.portfolios ?? []).reduce(
-      (balances: AddressTo<number | undefined>, portfolios): AddressTo<number | undefined> => {
-        if (portfolios?.ownerAddress) {
-          balances[portfolios.ownerAddress] = portfolios.tokensTotalDenominatedValue?.value
-        }
-        return balances
-      },
-      {},
-    )
-
-    const dataMap: AddressTo<AddressWithBalanceAndName> = addressesArray.reduce((map, address) => {
-      const entry = {
+    return addressesArray.reduce((map, address) => {
+      map[address] = {
         address,
-        balance: balancesByAddress[address],
-        unitag: unitagsByAddress[address]?.username,
+        balance: balanceByAddress[address],
+        unitag: unitagByAddress[address]?.username,
       }
-      map[entry.address] = entry
       return map
     }, {} as AddressTo<AddressWithBalanceAndName>)
-
-    return dataMap
 
     // We use `refetchCount` as a dependency to manually trigger a refetch when calling the `refetch` function.
     // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here

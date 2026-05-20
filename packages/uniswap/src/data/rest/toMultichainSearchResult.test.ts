@@ -1,4 +1,4 @@
-import { ChainToken, MultichainToken, SpamCode } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { MultichainToken, ChainToken, SpamCode } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { toMultichainSearchResult } from 'uniswap/src/data/rest/toMultichainSearchResult'
 
 function createMultichainToken(

@@ -1,16 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
-.c0 {
-  height: 28px;
-  width: 28px;
-}
-
-.c0 path {
-  background: rgba(19, 19, 19, 0.63);
-  fill: rgba(19, 19, 19, 0.63);
-}
-
 <body>
   <div>
     <span
@@ -92,7 +82,7 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                   data-testid="dialog-icon"
                 >
                   <svg
-                    class="c0"
+                    class="sc-bRKDuR gCyIwy"
                     fill="rgba(19, 19, 19, 0.63)"
                     viewBox="0 0 28 28"
                     xmlns="http://www.w3.org/2000/svg"

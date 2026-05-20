@@ -22,6 +22,7 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   isBatchedTransactionRequest,
   isTransactionRequest,
+  isUserOpRequest,
   setDidOpenFromDeepLink,
   WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
@@ -141,6 +142,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       return false
     }
 
+    if (isUserOpRequest(request) && request.gasSponsored) {
+      // TODO(SWAP-2508): Need to handle case where userOp not sponsored: confirm should be disabled if !gasFee
+      return true
+    }
+
     if (getDoesMethodCostGas(request)) {
       return !!(tx && hasSufficientFunds && gasFee.value && !gasFee.error && !gasFee.isLoading)
     }
@@ -201,26 +207,42 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       request.type === UwULinkMethod.Erc20Send ||
       request.type === EthMethod.WalletSendCalls
     ) {
-      if (!tx) {
-        return
-      }
-      const txnWithFormattedGasEstimates = formatExternalTxnWithGasEstimates({
-        transaction: tx,
-        gasFeeResult: gasFee,
-      })
+      if (isUserOpRequest(request)) {
+        dispatch(
+          signWcRequestActions.trigger({
+            sessionId: request.sessionId,
+            requestInternalId: request.internalId,
+            method: EthMethod.WalletSendCalls,
+            transaction: { chainId },
+            account: signerAccount,
+            dappRequestInfo: request.dappRequestInfo,
+            chainId,
+            request,
+          }),
+        )
+      } else {
+        if (!tx) {
+          return
+        }
+        const txnWithFormattedGasEstimates = formatExternalTxnWithGasEstimates({
+          transaction: tx,
+          gasFeeResult: gasFee,
+        })
 
-      dispatch(
-        signWcRequestActions.trigger({
-          sessionId: request.sessionId,
-          requestInternalId: request.internalId,
-          method: request.type === EthMethod.WalletSendCalls ? EthMethod.WalletSendCalls : EthMethod.EthSendTransaction,
-          transaction: txnWithFormattedGasEstimates,
-          account: signerAccount,
-          dappRequestInfo: request.dappRequestInfo,
-          chainId,
-          request,
-        }),
-      )
+        dispatch(
+          signWcRequestActions.trigger({
+            sessionId: request.sessionId,
+            requestInternalId: request.internalId,
+            method:
+              request.type === EthMethod.WalletSendCalls ? EthMethod.WalletSendCalls : EthMethod.EthSendTransaction,
+            transaction: txnWithFormattedGasEstimates,
+            account: signerAccount,
+            dappRequestInfo: request.dappRequestInfo,
+            chainId,
+            request,
+          }),
+        )
+      }
     } else {
       dispatch(
         signWcRequestActions.trigger({
@@ -299,7 +321,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   return (
     <ModalWithOverlay
       confirmationButtonText={
-        isTransactionRequest(request) || isBatchedTransactionRequest(request)
+        isTransactionRequest(request) || isBatchedTransactionRequest(request) || isUserOpRequest(request)
           ? t('common.button.confirm')
           : t('walletConnect.request.button.sign')
       }

@@ -32,6 +32,8 @@ function getPageNameFromTab(tab: PortfolioTab | undefined): InterfacePageName {
       return InterfacePageName.PortfolioPage
     case PortfolioTab.Tokens:
       return InterfacePageName.PortfolioTokensPage
+    case PortfolioTab.Pools:
+      return InterfacePageName.PortfolioPoolsPage
     case PortfolioTab.Defi:
       return InterfacePageName.PortfolioDefiPage
     case PortfolioTab.Nfts:
@@ -124,8 +126,8 @@ export function PortfolioHeader({ isCompact }: PortfolioHeaderProps) {
     <Flex
       data-testid={TestID.PortfolioHeader}
       backgroundColor="$surface1"
-      marginTop="$spacing8"
-      paddingTop="$spacing16"
+      mt="$spacing8"
+      pt="$spacing16"
       zIndex="$header"
       $platform-web={{
         position: 'sticky',

@@ -1,6 +1,7 @@
 import { act, fireEvent, waitFor } from '@testing-library/react'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { exportSeedPhrase } from 'uniswap/src/features/passkey/utils'
+import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PhraseDisplayContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/PhraseDisplayContent'
 import { RecoveryPhraseMenu } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu'
 import { WarningContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/WarningContent'
@@ -9,6 +10,10 @@ import { render, screen } from '~/test-utils/render'
 
 vi.mock('uniswap/src/features/passkey/utils', () => ({
   exportSeedPhrase: vi.fn(),
+}))
+
+vi.mock('~/components/AccountDrawer/PasskeyMenu/PasskeyMenu', () => ({
+  invalidateListAuthenticators: vi.fn(),
 }))
 
 vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
@@ -31,6 +36,8 @@ vi.mock('~/components/AccountDrawer/SlideOutMenu', () => ({
 }))
 
 const MOCK_PHRASE = 'abandon ability able about above absent absorb abstract absurd abuse access accident'
+const MOCK_PHRASE_24 =
+  'abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve acid acoustic acquire across act action actor actress actual'
 
 describe('WarningContent', () => {
   it('fires onContinue when the CTA is pressed', () => {
@@ -95,6 +102,12 @@ describe('PhraseDisplayContent', () => {
     expect(screen.getByText('Copied')).toBeInTheDocument()
     expect(screen.queryByText('Copy')).not.toBeInTheDocument()
   })
+
+  it('renders all 24 words from a 24-word EW seed phrase when visible', () => {
+    render(<PhraseDisplayContent {...defaultProps} seedPhrase={MOCK_PHRASE_24} isVisible />)
+    expect(screen.getByText('abandon')).toBeInTheDocument()
+    expect(screen.getByText('actual')).toBeInTheDocument()
+  })
 })
 
 describe('RecoveryPhraseMenu', () => {
@@ -121,6 +134,28 @@ describe('RecoveryPhraseMenu', () => {
       expect(screen.getByText('Done')).toBeInTheDocument()
     })
     expect(vi.mocked(exportSeedPhrase)).toHaveBeenCalledWith({ walletId: 'test-wallet-id' })
+  })
+
+  it('invalidates the listAuthenticators cache on a successful export so the speedbump shows the new timestamp', async () => {
+    vi.mocked(exportSeedPhrase).mockResolvedValue(MOCK_PHRASE)
+
+    render(<RecoveryPhraseMenu onClose={vi.fn()} />)
+    fireEvent.click(screen.getByText('View recovery phrase'))
+
+    await waitFor(() => {
+      expect(invalidateListAuthenticators).toHaveBeenCalledWith(expect.anything(), 'test-wallet-id')
+    })
+  })
+
+  it('does not invalidate the listAuthenticators cache when the user aborts the export', async () => {
+    vi.mocked(exportSeedPhrase).mockResolvedValue(undefined)
+
+    render(<RecoveryPhraseMenu onClose={vi.fn()} />)
+    await act(async () => {
+      fireEvent.click(screen.getByText('View recovery phrase'))
+    })
+
+    expect(invalidateListAuthenticators).not.toHaveBeenCalled()
   })
 
   it('stays on the warning step when exportSeedPhrase returns undefined (user aborted)', async () => {

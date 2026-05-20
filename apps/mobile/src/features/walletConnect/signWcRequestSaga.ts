@@ -2,9 +2,12 @@ import { buildAuthObject, getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
+  isBatchedTransactionRequest,
+  isUserOpRequest,
   TransactionRequest,
   UwuLinkErc20Request,
   WalletSendCallsEncodedRequest,
+  WalletSendCallsUserOperationRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -19,12 +22,16 @@ import { TransactionOriginType, TransactionType } from 'uniswap/src/features/tra
 import { DappRequestInfo, DappRequestType, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
+import { addWalletCallTransaction } from 'wallet/src/features/batchedTransactions/slice'
 import { SendCallsResult } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import {
+  ExecuteUserOpParams,
+  executeUserOpSaga,
+} from 'wallet/src/features/transactions/executeTransaction/executeUserOpSaga'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -47,7 +54,11 @@ type SignTransactionParams = {
   method: EthMethod.EthSendTransaction | EthMethod.WalletSendCalls
   dappRequestInfo: DappRequestInfo
   chainId: UniverseChainId
-  request: TransactionRequest | UwuLinkErc20Request | WalletSendCallsEncodedRequest
+  request:
+    | TransactionRequest
+    | UwuLinkErc20Request
+    | WalletSendCallsEncodedRequest
+    | WalletSendCallsUserOperationRequest
 }
 
 function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
@@ -108,7 +119,39 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         }),
       )
       // oxlint-disable-next-line typescript/no-unnecessary-condition
-    } else if (method === EthMethod.WalletSendCalls && params.request.type === EthMethod.WalletSendCalls) {
+    } else if (method === EthMethod.WalletSendCalls && isUserOpRequest(params.request)) {
+      // 4337 UserOp path — gas-sponsored dapp request
+      const userOpParams: ExecuteUserOpParams = {
+        userOp: params.request.unsignedUserOperation,
+        account,
+        chainId: params.request.chainId,
+        typeInfo: {
+          type: TransactionType.WCConfirm,
+          dappRequestInfo: params.dappRequestInfo,
+        },
+      }
+      const { userOpHash } = yield* call(executeUserOpSaga, userOpParams)
+
+      result = { id: params.request.id }
+
+      yield* put(
+        addWalletCallTransaction({
+          batchId: params.request.id,
+          userOpHash,
+          requestId: params.request.requestId,
+          chainId: params.request.chainId,
+        }),
+      )
+
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.TransactionPending,
+          chainId: params.request.chainId,
+        }),
+      )
+      // oxlint-disable-next-line typescript/no-unnecessary-condition
+    } else if (method === EthMethod.WalletSendCalls && isBatchedTransactionRequest(params.request)) {
+      // 7702 encoded transaction path
       const txParams: ExecuteTransactionParams = {
         chainId: params.request.chainId,
         account,
@@ -135,7 +178,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
 
       // Store the batch transaction in Redux
       yield* put(
-        addBatchedTransaction({
+        addWalletCallTransaction({
           batchId: params.request.id,
           txHashes: [transactionHash],
           requestId: params.request.encodedRequestId,

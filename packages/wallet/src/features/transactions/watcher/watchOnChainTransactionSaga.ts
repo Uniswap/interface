@@ -1,11 +1,11 @@
 /* oxlint-disable typescript/explicit-function-return-type */
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { waitForFlashbotsProtectReceipt } from '@universe/chains'
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { call, cancel, delay, fork, put, race, spawn, take } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { CancelableStepInfo } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
 import {
   cancelPlanStep,

@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { exportSeedPhrase } from 'uniswap/src/features/passkey/utils'
@@ -5,6 +6,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { useTimeout } from 'utilities/src/time/timing'
+import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PhraseDisplayContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/PhraseDisplayContent'
 import { WarningContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/WarningContent'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
@@ -20,6 +22,7 @@ enum ExportStep {
 
 export function RecoveryPhraseMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
+  const queryClient = useQueryClient()
   const { walletId } = useEmbeddedWalletState()
   const [step, setStep] = useState<ExportStep>(ExportStep.WARNING)
   const [seedPhrase, setSeedPhrase] = useState<string | null>(null)
@@ -52,6 +55,8 @@ export function RecoveryPhraseMenu({ onClose }: { onClose: () => void }) {
       if (phrase) {
         setSeedPhrase(phrase)
         setStep(ExportStep.DISPLAY)
+        // Refresh the lastExported timestamp surfaced in the delete passkey speedbump.
+        void invalidateListAuthenticators(queryClient, walletId)
       }
     } catch (e) {
       logger.error(e, {
@@ -60,7 +65,7 @@ export function RecoveryPhraseMenu({ onClose }: { onClose: () => void }) {
     } finally {
       setIsLoading(false)
     }
-  }, [walletId])
+  }, [walletId, queryClient])
 
   const handleToggleVisibility = (): void => setIsVisible((prev) => !prev)
 

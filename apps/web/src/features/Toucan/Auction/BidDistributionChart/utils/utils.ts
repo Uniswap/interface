@@ -1,4 +1,4 @@
-import { formatUnits } from 'viem'
+import { formatUnits } from '~/chains'
 import {
   CHART_CONSTRAINTS,
   DEFAULT_Y_AXIS_LEVELS,

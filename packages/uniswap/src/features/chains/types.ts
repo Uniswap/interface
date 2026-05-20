@@ -97,7 +97,6 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly explorer: {
     name: string
     url: `${string}/`
-    apiURL?: string
   }
   readonly openseaName?: string
   readonly rpcUrls: {

@@ -456,6 +456,7 @@ export interface UseTradeArgs {
   isDebouncing?: boolean
   generatePermitAsTransaction?: boolean
   isV4HookPoolsEnabled?: boolean
+  walletExecutionContext?: TradingApi.WalletExecutionContext
 }
 
 export type SwapFee = {

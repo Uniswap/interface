@@ -246,12 +246,10 @@
         "@vitest/coverage-v8"
       ]
     },
-    "packages/docker-image-builder": {
-      "ignoreDependencies": [
-        "@pulumi/awsx",
-        "gts",
-        "vite",
-        "vitest"
+    "packages/config-cli": {
+      "entry": [
+        "src/main.ts",
+        "src/errors.ts"
       ]
     },
     "packages/environment": {

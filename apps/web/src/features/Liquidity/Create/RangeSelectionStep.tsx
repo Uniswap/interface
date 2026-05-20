@@ -482,10 +482,20 @@ export const SelectPriceRangeStep = ({
               isFullRange={priceRangeState.fullRange}
               handleSelectToken={handleSelectToken}
               setMinTick={(tick) => {
-                setPriceRangeState((prev) => ({ ...prev, minTick: tick }))
+                setPriceRangeState((prev) => {
+                  if (tick !== undefined && prev.maxTick !== undefined && tick >= prev.maxTick) {
+                    return { ...prev, minTick: prev.maxTick - poolOrPair.tickSpacing }
+                  }
+                  return { ...prev, minTick: tick }
+                })
               }}
               setMaxTick={(tick) => {
-                setPriceRangeState((prev) => ({ ...prev, maxTick: tick }))
+                setPriceRangeState((prev) => {
+                  if (tick !== undefined && prev.minTick !== undefined && tick <= prev.minTick) {
+                    return { ...prev, maxTick: prev.minTick + poolOrPair.tickSpacing }
+                  }
+                  return { ...prev, maxTick: tick }
+                })
               }}
               setIsFullRange={(isFullRange: boolean) => {
                 handleSelectRange(isFullRange ? RangeSelection.FULL : RangeSelection.CUSTOM)

@@ -1,35 +1,52 @@
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, styled, Text, TouchableArea } from 'ui/src'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { useLimitContext } from '~/features/Swap/state/limit/LimitContext'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ClickableStyle } from '~/theme/components/styles'
 
-const ExpirySection = deprecatedStyled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  padding: 12px 16px;
-  justify-content: space-between;
-`
+const ExpirySection = styled(Flex, {
+  row: true,
+  alignItems: 'center',
+  width: '100%',
+  py: '$spacing12',
+  px: '$spacing16',
+  justifyContent: 'space-between',
+})
 
-const LimitExpiryButton = deprecatedStyled.button<{ $selected: boolean }>`
-  display: flex;
-  padding: 4px 8px;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 4px;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  height: 28px;
-  border-radius: 999px;
-  background-color: ${({ theme, $selected }) => ($selected ? theme.surface3 : 'unset')};
-  color: ${({ theme, $selected }) => ($selected ? theme.neutral1 : theme.neutral2)};
-  ${ClickableStyle}
-`
+const LimitExpiryButton = styled(TouchableArea, {
+  name: 'LimitExpiryButton',
+  tag: 'button',
+  row: true,
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  gap: '$gap4',
+  height: '$spacing28',
+  borderRadius: '$roundedFull',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  px: '$spacing8',
+  py: '$spacing4',
+  userSelect: 'none',
+
+  variants: {
+    selected: {
+      true: {
+        backgroundColor: '$surface3',
+        borderColor: '$surface3',
+      },
+      false: {
+        backgroundColor: 'transparent',
+        borderColor: '$surface3',
+      },
+    },
+  },
+
+  defaultVariants: {
+    selected: false,
+  },
+})
 
 const EXPIRY_OPTIONS = [LimitsExpiry.Day, LimitsExpiry.Week, LimitsExpiry.Month, LimitsExpiry.Year]
 
@@ -60,8 +77,8 @@ export function LimitExpirySection() {
         {EXPIRY_OPTIONS.map((expiry) => (
           <LimitExpiryButton
             key={expiry}
-            $selected={expiry === limitState.expiry}
-            onClick={() => {
+            selected={expiry === limitState.expiry}
+            onPress={() => {
               if (expiry === limitState.expiry) {
                 return
               }
@@ -74,7 +91,7 @@ export function LimitExpirySection() {
               }))
             }}
           >
-            <Text variant="buttonLabel3" color="inherit">
+            <Text variant="buttonLabel3" color={expiry === limitState.expiry ? '$neutral1' : '$neutral2'}>
               {getExpiryLabelText(t, expiry)}
             </Text>
           </LimitExpiryButton>

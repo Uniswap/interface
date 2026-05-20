@@ -11,7 +11,7 @@ import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isAddress } from 'viem'
+import { isAddress } from '~/chains'
 import { DisconnectedState } from '~/pages/Wrapped/DisconnectedState'
 import { useAppDispatch } from '~/state/hooks'
 

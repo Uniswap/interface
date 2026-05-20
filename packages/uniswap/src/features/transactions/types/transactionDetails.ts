@@ -9,6 +9,7 @@ import type { SwapRouting } from 'uniswap/src/features/telemetry/types'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
+import type { RpcUserOperation } from 'viem/account-abstraction'
 
 export type ChainIdToTxIdToDetails = Partial<
   Record<UniverseChainId, { [txId: string]: TransactionDetails | InterfaceTransactionDetails }>
@@ -616,6 +617,7 @@ export interface SendCallsTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SendCalls
   encodedTransaction?: EthTransaction
   encodedRequestId?: string
+  unsignedUserOperation?: RpcUserOperation<'0.8'>
   dappInfo?: DappInfoTransactionDetails
 }
 

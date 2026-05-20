@@ -1,4 +1,4 @@
-import { formatUnits } from 'viem'
+import { formatUnits } from '~/chains'
 
 export function formatTokenAmount(amount: string, decimals: number): string {
   try {

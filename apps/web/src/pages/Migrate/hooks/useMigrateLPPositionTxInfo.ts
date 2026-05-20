@@ -153,7 +153,7 @@ export function useMigrateLPPositionTxInfo({
   const isUserCommitedToMigrate =
     currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransaction ||
     currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransactionAsync ||
-    currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransactionBatched
+    currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransactionWalletCall
 
   const isQueryEnabled =
     !isUserCommitedToMigrate &&

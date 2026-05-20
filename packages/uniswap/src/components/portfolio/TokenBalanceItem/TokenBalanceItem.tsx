@@ -104,8 +104,9 @@ export const TokenBalanceItem = memo(function TokenBalanceItemInner({
   }, [portfolioBalance])
 
   const handleMenuRowPress = useCallback((): void => {
-    onPressToken?.(currencyInfo.currencyId)
-  }, [currencyInfo.currencyId, onPressToken])
+    const isMultichainAsset = (portfolioBalance?.tokens.length ?? 0) > 1
+    onPressToken?.(currencyInfo.currencyId, { isMultichainAsset })
+  }, [currencyInfo.currencyId, onPressToken, portfolioBalance?.tokens.length])
 
   const row = (
     <Flex

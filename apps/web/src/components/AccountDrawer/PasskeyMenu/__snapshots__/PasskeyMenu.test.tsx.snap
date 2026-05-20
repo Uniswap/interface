@@ -355,35 +355,24 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
               <div
                 aria-expanded="false"
                 aria-haspopup="dialog"
-                class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                class="is_TouchableArea  t_group_true"
+                data-state="closed"
+                data-testid="delete-passkey"
+                role="button"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                tabindex="0"
               >
-                <div
-                  aria-expanded="false"
-                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                  data-state="closed"
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
                 >
-                  <div>
-                    <div
-                      class="is_TouchableArea  t_group_true"
-                      data-testid="delete-passkey"
-                      role="button"
-                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
-                      tabindex="0"
-                    >
-                      <svg
-                        fill="none"
-                        stroke-width="8"
-                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                  <path
+                    d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </div>
             </div>
           </div>
@@ -454,35 +443,24 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
               <div
                 aria-expanded="false"
                 aria-haspopup="dialog"
-                class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                class="is_TouchableArea  t_group_true"
+                data-state="closed"
+                data-testid="delete-passkey"
+                role="button"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                tabindex="0"
               >
-                <div
-                  aria-expanded="false"
-                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                  data-state="closed"
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
                 >
-                  <div>
-                    <div
-                      class="is_TouchableArea  t_group_true"
-                      data-testid="delete-passkey"
-                      role="button"
-                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
-                      tabindex="0"
-                    >
-                      <svg
-                        fill="none"
-                        stroke-width="8"
-                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                  <path
+                    d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </div>
             </div>
           </div>
@@ -543,5 +521,7 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
       />
     </span>
   </div>
+  <reach-portal />
+  <reach-portal />
 </body>
 `;

@@ -42,7 +42,7 @@ type MaybeOnboardingProps = OnboardingScreenProps | null
 let currentOnboardingScreen: MaybeOnboardingProps = null
 const onboardingScreenListen = new Set<(step: Step, val: MaybeOnboardingProps) => void>()
 
-let clearScreenTimeout: NodeJS.Timeout
+let clearScreenTimeout: ReturnType<typeof setTimeout>
 
 export function OnboardingStepsProvider({
   steps,

@@ -37,7 +37,9 @@ export const useTabsContent = (): TabsSection[] => {
   const { chainId: portfolioChainId, isExternalWallet } = usePortfolioRoutes()
   const colors = useSporeColors()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const isToucanLaunchAuctionEnabled = useFeatureFlag(FeatureFlags.ToucanLaunchAuction)
+  const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
 
   return [
     {
@@ -125,7 +127,7 @@ export const useTabsContent = (): TabsSection[] => {
         },
         {
           label: t('nav.tabs.createPosition'),
-          href: '/positions/create',
+          href: isAddLiquidityRevamp ? '/positions/add' : '/positions/create',
           internal: true,
           elementName: ElementName.NavbarPoolDropdownCreatePosition,
         },
@@ -161,7 +163,7 @@ export const useTabsContent = (): TabsSection[] => {
           elementName: ElementName.NavbarPortfolioDropdownOverview,
         },
         {
-          label: t('portfolio.tokens.title'),
+          label: t('common.tokens'),
           href: buildPortfolioUrl({
             tab: PortfolioTab.Tokens,
             chainId: portfolioChainId,
@@ -169,6 +171,19 @@ export const useTabsContent = (): TabsSection[] => {
           internal: true,
           elementName: ElementName.NavbarPortfolioDropdownTokens,
         },
+        ...(portfolioPoolsBalancesEnabled
+          ? [
+              {
+                label: t('common.pools'),
+                href: buildPortfolioUrl({
+                  tab: PortfolioTab.Pools,
+                  chainId: portfolioChainId,
+                }),
+                internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownPools,
+              },
+            ]
+          : []),
         ...(isPortfolioDefiTabEnabled
           ? [
               {
@@ -192,7 +207,7 @@ export const useTabsContent = (): TabsSection[] => {
           elementName: ElementName.NavbarPortfolioDropdownNfts,
         },
         {
-          label: t('portfolio.activity.title'),
+          label: t('common.activity'),
           href: buildPortfolioUrl({
             tab: PortfolioTab.Activity,
             chainId: portfolioChainId,

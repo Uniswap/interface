@@ -99,6 +99,7 @@ export function NetworkFilter({
   isTriggerStyled = true,
   tracePage,
   tab,
+  forceFlipUp,
 }: {
   showMultichainOption?: boolean
   showDisplayName?: boolean
@@ -112,6 +113,7 @@ export function NetworkFilter({
   isTriggerStyled?: boolean
   tracePage?: InterfacePageName
   tab?: ExploreTab
+  forceFlipUp?: boolean
 }) {
   const { t } = useTranslation()
   const [isMenuOpen, toggleMenu] = useState(false)
@@ -177,6 +179,7 @@ export function NetworkFilter({
           dropdownStyle={StyledDropdown}
           adaptToSheet
           allowFlip
+          forceFlipUp={forceFlipUp}
           alignRight={position === 'right'}
         >
           <ScrollView>

@@ -25,7 +25,7 @@ export function ConfirmPasscodeExtra({
   return (
     <Flex row alignSelf="stretch" pt="$spacing4">
       <Button variant="branded" size="medium" onPress={handleSignInWithPasskey} isDisabled={isSigningIn}>
-        {isSigningIn ? <SpinningLoader size={20} /> : t('account.passkey.verify.button')}
+        {isSigningIn ? <SpinningLoader size={20} /> : t('swap.button.submitting.passkey')}
       </Button>
     </Flex>
   )

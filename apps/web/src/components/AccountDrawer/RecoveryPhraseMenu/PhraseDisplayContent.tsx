@@ -6,6 +6,7 @@ import { Eye } from 'ui/src/components/icons/Eye'
 import { EyeSlash } from 'ui/src/components/icons/EyeSlash'
 import { FileListLock } from 'ui/src/components/icons/FileListLock'
 import { GraduationCap } from 'ui/src/components/icons/GraduationCap'
+import { MNEMONIC_LENGTH_EW } from 'wallet/src/constants/accounts'
 
 function PlaceholderBars({ rowCount }: { rowCount: number }) {
   const perColumn = Math.ceil(rowCount / 2)
@@ -67,6 +68,7 @@ export function PhraseDisplayContent({
   onToggleVisibility,
   onCopy,
   onDone,
+  expectedWordCount = MNEMONIC_LENGTH_EW,
 }: {
   seedPhrase: string | null
   isVisible: boolean
@@ -74,10 +76,11 @@ export function PhraseDisplayContent({
   onToggleVisibility: () => void
   onCopy: () => void
   onDone: () => void
+  expectedWordCount?: number
 }) {
   const { t } = useTranslation()
   const words = seedPhrase ? seedPhrase.split(' ') : []
-  const wordCount = words.length || 12
+  const wordCount = words.length || expectedWordCount
 
   return (
     <Flex gap="$gap24" px="$padding8" pb="$padding8" flex={1}>

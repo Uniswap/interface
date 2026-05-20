@@ -7,7 +7,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { type SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import {
-  HandleSwapBatchedStepParams,
+  HandleSwapWalletCallStepParams,
   type HandleSwapStepParams,
   type TransactionStep,
   TransactionStepType,
@@ -38,6 +38,7 @@ import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
 import { handleAtomicSendCalls } from '~/state/sagas/transactions/5792'
 import { jupiterSwap } from '~/state/sagas/transactions/solana'
+import { sendSwapSignedEvent } from '~/state/sagas/transactions/swapSignedAnalytics'
 import { handleUniswapXSignatureStep } from '~/state/sagas/transactions/uniswapx'
 import {
   getDisplayableError,
@@ -101,11 +102,11 @@ export function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGe
   return hash
 }
 
-export function createHandleSwapTransactionBatchedStep(ctx: {
+export function createHandleSwapTransactionWalletCallStep(ctx: {
   disableOneClickSwap: () => void
   waitForTxHash?: boolean
 }) {
-  return function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
+  return function* handleSwapTransactionWalletCallStep(params: HandleSwapWalletCallStepParams) {
     const { trade, step, analytics, planId } = params
 
     const info = getSwapTransactionInfo({
@@ -146,9 +147,9 @@ function handleSwapTransactionAnalytics(params: {
 }) {
   const { trade, analytics, hash, batchId } = params
 
-  sendAnalyticsEvent(
-    SwapEventName.SwapSigned,
-    formatSwapSignedAnalyticsEventProperties({
+  sendSwapSignedEvent({
+    analytics,
+    properties: formatSwapSignedAnalyticsEventProperties({
       trade,
       allowedSlippage: trade.slippageTolerance ? slippageToleranceToPercent(trade.slippageTolerance) : ZERO_PERCENT,
       fiatValues: {
@@ -163,8 +164,9 @@ function handleSwapTransactionAnalytics(params: {
       includedPermitTransactionStep: analytics.included_permit_transaction_step,
       batchId,
       planAnalytics: planAnalyticsToCamelCase(analytics),
+      priceSource: analytics.price_source,
     }),
-  )
+  })
 }
 
 type SwapParams = SwapExecutionCallbacks & {
@@ -201,7 +203,7 @@ function* swap(params: SwapParams) {
   let signature: string | undefined
   let step: TransactionStep | undefined
 
-  const handleSwapTransactionBatchedStep = createHandleSwapTransactionBatchedStep({ disableOneClickSwap })
+  const handleSwapTransactionWalletCallStep = createHandleSwapTransactionWalletCallStep({ disableOneClickSwap })
 
   try {
     // TODO(SWAP-287): Integrate jupiter swap into TransactionStep, rather than special-casing.
@@ -240,9 +242,9 @@ function* swap(params: SwapParams) {
           })
           break
         }
-        case TransactionStepType.SwapTransactionBatched: {
+        case TransactionStepType.SwapTransactionWalletCall: {
           requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
-          yield* call(handleSwapTransactionBatchedStep, {
+          yield* call(handleSwapTransactionWalletCallStep, {
             address,
             step,
             setCurrentStep,

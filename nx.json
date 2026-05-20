@@ -5,6 +5,13 @@
   "tui": {
     "enabled": false
   },
+  "s3": {
+    "region": "us-east-2",
+    "bucket": "uniswap-nx-remote-cache-prod",
+    "cacheKeyPrefix": "nx-cache/universe/",
+    "localMode": "no-cache",
+    "ciMode": "no-cache"
+  },
   "targetDefaults": {
     "prepare": {
       "inputs": ["dependencies"],

@@ -48,7 +48,11 @@ export function roundForDisplay(value: number, sigFigs: number = 4): number {
 
   if (coefficient >= 10 * ROUND_UP_THRESHOLD) {
     const roundedAbs = Math.pow(10, magnitude + 1)
-    return value < 0 ? -roundedAbs : roundedAbs
+    // Don't round up across the 1.0 boundary — values like 0.9999 should stay as 0.9999,
+    // not become 1.0, which causes loss of meaningful precision for prices near parity.
+    if (roundedAbs < 1) {
+      return value < 0 ? -roundedAbs : roundedAbs
+    }
   }
 
   return roundToSigFigs(value, sigFigs)

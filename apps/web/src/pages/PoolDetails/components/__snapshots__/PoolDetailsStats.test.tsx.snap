@@ -2,11 +2,7 @@
 
 exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: #E10F0F;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -146,7 +142,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
           >
             <svg
               aria-label="down"
-              class="c0"
+              class="sc-hvigdm fKvgQS"
               fill="none"
               height="16"
               viewBox="0 0 24 24"
@@ -190,7 +186,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
           >
             <svg
               aria-label="down"
-              class="c0"
+              class="sc-hvigdm fKvgQS"
               fill="none"
               height="16"
               viewBox="0 0 24 24"
@@ -241,11 +237,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 
 exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: #E10F0F;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -358,7 +350,7 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
           >
             <svg
               aria-label="down"
-              class="c0"
+              class="sc-hvigdm fKvgQS"
               fill="none"
               height="16"
               viewBox="0 0 24 24"
@@ -402,7 +394,7 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
           >
             <svg
               aria-label="down"
-              class="c0"
+              class="sc-hvigdm fKvgQS"
               fill="none"
               height="16"
               viewBox="0 0 24 24"

@@ -52,7 +52,6 @@ export const SONEIUM_CHAIN_INFO = {
   explorer: {
     name: 'Blockscout',
     url: 'https://soneium.blockscout.com/',
-    apiURL: 'https://soneium.blockscout.com/api',
   },
   openseaName: 'soneium',
   interfaceName: 'soneium',

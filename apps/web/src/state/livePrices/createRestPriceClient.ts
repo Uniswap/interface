@@ -21,11 +21,12 @@ const dataApiClient = createPromiseClient(DataApiService, dataApiTransport)
  * to fetch token prices via POST /data.v1.DataApiService/GetTokenPrices.
  *
  * @param options.preferQuotePrices - When true, the backend returns TAPI quote
- *   prices (with Aurora as fallback) and logs the comparison. Used during the
- *   metrics collection phase to validate Aurora data quality before full rollout.
+ *   prices and the cached entry is tagged `tapi_quote`. When false (default),
+ *   the response is Aurora substreams data and is tagged `aurora_rest_fallback`.
  */
 export function createRestPriceClient(options?: { preferQuotePrices?: boolean }): RestPriceClient {
   const preferQuotePrices = options?.preferQuotePrices ?? false
+  const source: TokenPriceData['source'] = preferQuotePrices ? 'tapi_quote' : 'aurora_rest_fallback'
 
   return {
     async getTokenPrices(tokens: TokenIdentifier[]): Promise<Map<string, TokenPriceData>> {
@@ -45,6 +46,7 @@ export function createRestPriceClient(options?: { preferQuotePrices?: boolean })
           result.set(key, {
             price: tp.priceUsd,
             timestamp: tp.updatedAt ? new Date(tp.updatedAt).getTime() : Date.now(),
+            source,
           })
         }
       }

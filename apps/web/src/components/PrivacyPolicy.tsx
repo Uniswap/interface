@@ -6,6 +6,7 @@ import { Flex, ModalCloseIcon, Text } from 'ui/src'
 import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Card, DarkGrayCard } from '~/components/Card/cards'
@@ -109,8 +110,8 @@ function PrivacyPolicy() {
     >
       <Flex gap="$spacing16">
         <Flex gap="$gap8" width="100%">
-          <ExternalLinkCard href="https://uniswap.org/terms-of-service">{t('privacy.uniswaptos')}</ExternalLinkCard>
-          <ExternalLinkCard href="https://uniswap.org/privacy-policy/">{t('common.privacyPolicy')}</ExternalLinkCard>
+          <ExternalLinkCard href={uniswapUrls.termsOfServiceUrl}>{t('privacy.uniswaptos')}</ExternalLinkCard>
+          <ExternalLinkCard href={uniswapUrls.privacyPolicyUrl}>{t('common.privacyPolicy')}</ExternalLinkCard>
         </Flex>
         <Text variant="body3" color="$neutral2">
           {t('privacy.thirdPartyApis')}

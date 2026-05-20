@@ -1,5 +1,7 @@
 import { ChainId } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { isValidHexString } from '@universe/encoding'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useRef, useState } from 'react'
 import { useSubmitBidMutation } from 'uniswap/src/data/rest/auctions/useSubmitBidMutation'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -9,11 +11,10 @@ import { ToucanBidTransactionInfo, TransactionType } from 'uniswap/src/features/
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
-import { isValidHexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { zeroAddress } from 'viem'
+import { zeroAddress } from '~/chains'
 import { getAuctionBidBaseAnalyticsProperties } from '~/features/Toucan/Auction/analytics'
 import { useAuctionStore, useAuctionStoreActions } from '~/features/Toucan/Auction/store/useAuctionStore'
 import { useToucanSubmitBid } from '~/hooks/useToucanSubmitBid'
@@ -120,6 +121,7 @@ export function useBidFormSubmit({
   const toucanSubmitBid = useToucanSubmitBid()
   const { evmAccount } = useWallet()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const preparedBidRef = useRef<{ signature: string; data: PreparedBidTransaction } | null>(null)
   const [submissionError, setSubmissionError] = useState<Error | undefined>(undefined)
 
@@ -318,6 +320,7 @@ export function useBidFormSubmit({
       maxReceivableAmount,
       tokenSymbol: auctionTokenSymbol,
       tokenName: auctionTokenName,
+      isCentralizedPricesEnabled,
     })
 
     // Return a promise that resolves/rejects when the saga completes

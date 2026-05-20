@@ -8,8 +8,8 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { Sign } from '~/components/Icons/Sign'
 import { Swap } from '~/components/Icons/Swap'
 import { useColor } from '~/hooks/useColor'
+import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmSwapModal/ProgressIndicator/Step'
 import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
-import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmSwapModal/Step'
 import { Divider } from '~/theme/components/Dividers'
 
 export type ProgressIndicatorStep = Extract<

@@ -3,6 +3,7 @@ import type {
   ExitBidPositionResponse,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
 import { BidToExit, ChainId } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useExitBidAndClaimTokensMutation } from 'uniswap/src/data/rest/auctions/useExitBidAndClaimTokensMutation'
 import { useExitBidPositionMutation } from 'uniswap/src/data/rest/auctions/useExitBidPositionMutation'
@@ -105,6 +106,7 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
   const useSimpleExitApi = isPreClaimWindow && !!bidId
   const { evmAccount } = useWallet()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const preparedTransactionRef = useRef<{
     signature: string
     data: PreparedWithdrawBidAndClaimTokensTransaction
@@ -331,6 +333,7 @@ export function useWithdrawBidAndClaimTokensFormSubmit({
       expectedReceiveAmount: withdrawalData?.expectedReceiveAmount,
       isGraduated,
       isAuctionCompleted,
+      isCentralizedPricesEnabled,
     })
 
     return new Promise<void>((resolve, reject) => {

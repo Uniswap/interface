@@ -32,7 +32,7 @@ export function parseForSubscriptNotation(params: ParseForSubscriptNotationParam
     }
   }
 
-  const roundedValue = roundForDisplay(value)
+  const roundedValue = roundForDisplay(value, maxSigDigits)
   const absValue = Math.abs(roundedValue)
 
   if (absValue >= 1e15) {

@@ -10,6 +10,7 @@ import { MenuStateVariant, useMenuState, useSetMenuCallback } from '~/components
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PortfolioBalanceMenu } from '~/components/AccountDrawer/PortfolioBalanceMenu'
+import { RecoveryPhraseDownloadPrompt } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseDownloadPrompt'
 import { RecoveryPhraseMenu } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu'
 import { SettingsMenu } from '~/components/AccountDrawer/SettingsMenu'
 import { StorageMenu } from '~/components/AccountDrawer/StorageMenu'
@@ -25,7 +26,8 @@ export function DefaultMenu() {
   const openLocalCurrencySettings = useSetMenuCallback(MenuStateVariant.LOCAL_CURRENCY_SETTINGS)
   const openPortfolioBalanceSettings = useSetMenuCallback(MenuStateVariant.PORTFOLIO_BALANCE_SETTINGS)
   const openPasskeySettings = useSetMenuCallback(MenuStateVariant.PASSKEYS)
-  const openRecoveryPhraseSettings = useSetMenuCallback(MenuStateVariant.RECOVERY_PHRASE)
+  const openRecoveryPhraseDownloadPrompt = useSetMenuCallback(MenuStateVariant.RECOVERY_PHRASE_DOWNLOAD_PROMPT)
+  const openRecoveryPhraseWarning = useSetMenuCallback(MenuStateVariant.RECOVERY_PHRASE)
   const openStorageSettings = useSetMenuCallback(MenuStateVariant.STORAGE_SETTINGS)
 
   const { isOpen: drawerOpen } = useAccountDrawer()
@@ -43,7 +45,8 @@ export function DefaultMenu() {
       [MenuStateVariant.LOCAL_CURRENCY_SETTINGS]: 2,
       [MenuStateVariant.PORTFOLIO_BALANCE_SETTINGS]: 2,
       [MenuStateVariant.PASSKEYS]: 2,
-      [MenuStateVariant.RECOVERY_PHRASE]: 2,
+      [MenuStateVariant.RECOVERY_PHRASE_DOWNLOAD_PROMPT]: 2,
+      [MenuStateVariant.RECOVERY_PHRASE]: 3,
       [MenuStateVariant.STORAGE_SETTINGS]: 3,
     }
 
@@ -97,7 +100,7 @@ export function DefaultMenu() {
             openLanguageSettings={openLanguageSettings}
             openLocalCurrencySettings={openLocalCurrencySettings}
             openPasskeySettings={openPasskeySettings}
-            openRecoveryPhraseSettings={openRecoveryPhraseSettings}
+            openRecoveryPhraseSettings={openRecoveryPhraseDownloadPrompt}
             openPortfolioBalanceSettings={openPortfolioBalanceSettings}
             openStorageSettings={openStorageSettings}
           />
@@ -112,6 +115,8 @@ export function DefaultMenu() {
         return <StorageMenu onClose={openSettings} />
       case MenuStateVariant.PASSKEYS:
         return <PasskeyMenu onClose={openSettings} />
+      case MenuStateVariant.RECOVERY_PHRASE_DOWNLOAD_PROMPT:
+        return <RecoveryPhraseDownloadPrompt onBack={openSettings} onContinueOnWeb={openRecoveryPhraseWarning} />
       case MenuStateVariant.RECOVERY_PHRASE:
         return <RecoveryPhraseMenu onClose={openSettings} />
       default:
@@ -123,7 +128,8 @@ export function DefaultMenu() {
     openLocalCurrencySettings,
     openPortfolioBalanceSettings,
     openPasskeySettings,
-    openRecoveryPhraseSettings,
+    openRecoveryPhraseDownloadPrompt,
+    openRecoveryPhraseWarning,
     openStorageSettings,
     openSettings,
     returnToMain,

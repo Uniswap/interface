@@ -34,7 +34,7 @@ export const TEMPO_CHAIN_INFO = {
     // Virtual USD must never be indexed as a portfolio balance
     nativeTokenBackendAddress: undefined,
   },
-  bridge: undefined,
+  bridge: 'https://www.bungee.exchange/',
   docs: 'https://docs.tempo.xyz/',
   label: 'Tempo',
   logo: TEMPO_LOGO,

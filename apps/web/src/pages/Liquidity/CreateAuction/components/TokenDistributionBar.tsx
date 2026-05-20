@@ -1,16 +1,22 @@
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useCreateAuctionDistributionBarColors } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionDistributionBarColors'
+import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { amountToPercent } from '~/pages/Liquidity/CreateAuction/utils'
 
 const BAR_GAP_PX = 4
 const SOLD_BRACKET_HEIGHT_PX = 8
 const SOLD_BRACKET_RADIUS_PX = 4
+const HOVER_HIT_AREA_PX = 8
+const DIMMED_OPACITY = 0.64
+
+type DistributionBarSegment = 'fundraise' | 'raiseSideLp' | 'tokenSideLp'
 
 interface TokenDistributionBarProps {
   label?: string
@@ -19,7 +25,7 @@ interface TokenDistributionBarProps {
   tokenSymbol: string
   chainId: UniverseChainId
   raiseCurrency: RaiseCurrency
-  tokenColor?: string
+  tokenColor?: TokenAccentHex
 }
 
 export function TokenDistributionBar({
@@ -38,12 +44,67 @@ export function TokenDistributionBar({
     raiseCurrency,
     tokenColor,
   })
+  const [hoveredSegment, setHoveredSegment] = useState<DistributionBarSegment | null>(null)
+  const segmentOpacity = (segment: DistributionBarSegment): number =>
+    hoveredSegment === null || hoveredSegment === segment ? 1 : DIMMED_OPACITY
   const formatAmount = (amount: CurrencyAmount<Currency>): string =>
     formatNumberOrString({
       value: amount.toExact(),
       type: NumberType.TokenQuantityStats,
       placeholder: '0',
     })
+
+  const renderBarSegment = ({
+    segment,
+    flex,
+    color,
+  }: {
+    segment: DistributionBarSegment
+    flex: number
+    color: string
+  }) => (
+    <Flex flex={flex} position="relative">
+      <Flex height="$spacing12" borderRadius="$rounded4" backgroundColor={color} opacity={segmentOpacity(segment)} />
+      <Flex
+        position="absolute"
+        top={-HOVER_HIT_AREA_PX}
+        bottom={-HOVER_HIT_AREA_PX}
+        left={0}
+        right={0}
+        onMouseEnter={() => setHoveredSegment(segment)}
+        onMouseLeave={() => setHoveredSegment(null)}
+      />
+    </Flex>
+  )
+
+  const renderLegendItem = ({
+    segment,
+    color,
+    amount,
+    description,
+  }: {
+    segment: DistributionBarSegment
+    color: string
+    amount: string
+    description: string
+  }) => (
+    <Flex
+      row
+      gap="$spacing4"
+      alignItems="center"
+      opacity={segmentOpacity(segment)}
+      onMouseEnter={() => setHoveredSegment(segment)}
+      onMouseLeave={() => setHoveredSegment(null)}
+    >
+      <Flex width={8} height={8} borderRadius="$roundedFull" backgroundColor={color} />
+      <Text variant="body4" color="$neutral1">
+        {amount}
+      </Text>
+      <Text variant="body4" color="$neutral2">
+        {description}
+      </Text>
+    </Flex>
+  )
 
   // auctionSupplyAmount = deposited tokens D = sold S + reserve R with R = r·S. Each LP token leg = postAuctionLiquidityAmount = r·S = R.
   const soldAmount = auctionSupplyAmount.subtract(postAuctionLiquidityAmount)
@@ -108,57 +169,38 @@ export function TokenDistributionBar({
         )}
 
         <Flex row height="$spacing12" gap={BAR_GAP_PX}>
-          {showFundraise && (
-            <Flex
-              flex={fundraisePercent}
-              height="$spacing12"
-              borderRadius="$rounded4"
-              backgroundColor={fundraiseColor}
-            />
-          )}
-          <Flex flex={lpLegPercent} height="$spacing12" borderRadius="$rounded4" backgroundColor={raiseSideLpColor} />
-          <Flex flex={lpLegPercent} height="$spacing12" borderRadius="$rounded4" backgroundColor={tokenSideLpColor} />
+          {showFundraise && renderBarSegment({ segment: 'fundraise', flex: fundraisePercent, color: fundraiseColor })}
+          {renderBarSegment({ segment: 'raiseSideLp', flex: lpLegPercent, color: raiseSideLpColor })}
+          {renderBarSegment({ segment: 'tokenSideLp', flex: lpLegPercent, color: tokenSideLpColor })}
         </Flex>
       </Flex>
 
       <Flex row gap="$spacing12" flexWrap="wrap" alignItems="center">
-        {showFundraise && (
-          <Flex row gap="$spacing4" alignItems="center">
-            <Flex width={8} height={8} borderRadius="$roundedFull" backgroundColor={fundraiseColor} />
-            <Text variant="body4" color="$neutral1">
-              {formatAmount(fundraiseAmount)}
-            </Text>
-            <Text variant="body4" color="$neutral2">
-              {t('toucan.createAuction.step.configureAuction.distribution.fundraiseSold', {
-                raiseToken: raiseCurrency,
-              })}
-            </Text>
-          </Flex>
-        )}
-        <>
-          <Flex row gap="$spacing4" alignItems="center">
-            <Flex width={8} height={8} borderRadius="$roundedFull" backgroundColor={raiseSideLpColor} />
-            <Text variant="body4" color="$neutral1">
-              {formatAmount(postAuctionLiquidityAmount)}
-            </Text>
-            <Text variant="body4" color="$neutral2">
-              {t('toucan.createAuction.step.configureAuction.distribution.tokenLpSoldRaiseSide', {
-                token: raiseCurrency,
-              })}
-            </Text>
-          </Flex>
-          <Flex row gap="$spacing4" alignItems="center">
-            <Flex width={8} height={8} borderRadius="$roundedFull" backgroundColor={tokenSideLpColor} />
-            <Text variant="body4" color="$neutral1">
-              {formatAmount(postAuctionLiquidityAmount)}
-            </Text>
-            <Text variant="body4" color="$neutral2">
-              {t('toucan.createAuction.step.configureAuction.distribution.tokenLpReservedTokenSide', {
-                token: tokenSymbol,
-              })}
-            </Text>
-          </Flex>
-        </>
+        {showFundraise &&
+          renderLegendItem({
+            segment: 'fundraise',
+            color: fundraiseColor,
+            amount: formatAmount(fundraiseAmount),
+            description: t('toucan.createAuction.step.configureAuction.distribution.fundraiseSold', {
+              raiseToken: raiseCurrency,
+            }),
+          })}
+        {renderLegendItem({
+          segment: 'raiseSideLp',
+          color: raiseSideLpColor,
+          amount: formatAmount(postAuctionLiquidityAmount),
+          description: t('toucan.createAuction.step.configureAuction.distribution.tokenLpSoldRaiseSide', {
+            token: raiseCurrency,
+          }),
+        })}
+        {renderLegendItem({
+          segment: 'tokenSideLp',
+          color: tokenSideLpColor,
+          amount: formatAmount(postAuctionLiquidityAmount),
+          description: t('toucan.createAuction.step.configureAuction.distribution.tokenLpReservedTokenSide', {
+            token: tokenSymbol,
+          }),
+        })}
       </Flex>
     </Flex>
   )

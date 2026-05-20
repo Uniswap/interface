@@ -1,7 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
@@ -44,6 +45,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const startChainId = connectedAccount.chainId
   const account = useWallet().evmAccount
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const { needsPasskeySignin } = useGetPasskeyAuthStatus(connectedAccount.connector?.id)
   const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
 
@@ -182,6 +184,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
             currency1: currencyAmounts.TOKEN1.currency,
             currency0AmountUsd: updatedUSDAmounts?.TOKEN0,
             currency1AmountUsd: updatedUSDAmounts?.TOKEN1,
+            isCentralizedPricesEnabled,
           }),
           expectedAmountBaseRaw: updatedCurrencyAmounts?.TOKEN0?.quotient.toString(),
           expectedAmountQuoteRaw: updatedCurrencyAmounts?.TOKEN1?.quotient.toString(),
@@ -285,10 +288,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans
-                      i18nKey="pool.newSpecificPosition"
-                      values={{ symbol: currencyAmounts?.TOKEN0?.currency.symbol }}
-                    />
+                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN0?.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (
@@ -308,10 +308,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans
-                      i18nKey="pool.newSpecificPosition"
-                      values={{ symbol: currencyAmounts?.TOKEN1?.currency.symbol }}
-                    />
+                    {t('pool.newSpecificPosition', { symbol: currencyAmounts?.TOKEN1?.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (

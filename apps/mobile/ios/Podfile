@@ -2,10 +2,36 @@
 ENV['RCT_NEW_ARCH_ENABLED'] = '0'
 # changes from here: https://docs.expo.dev/bare/installing-expo-modules/
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
+
+# Helper function to read Podfile.properties (Expo 54+)
+def read_podfile_properties
+  properties = {}
+  podfile_dir = File.dirname(__FILE__)
+  # Try JSON format first (expo-build-properties), then fall back to key=value format
+  podfile_properties_json_path = File.join(podfile_dir, 'Podfile.properties.json')
+  podfile_properties_path = File.join(podfile_dir, 'Podfile.properties')
+  
+  if File.exist?(podfile_properties_json_path)
+    require 'json'
+    properties = JSON.parse(File.read(podfile_properties_json_path)) rescue {}
+  elsif File.exist?(podfile_properties_path)
+    File.readlines(podfile_properties_path).each do |line|
+      line = line.strip
+      next if line.empty? || line.start_with?('#')
+      key, value = line.split('=', 2)
+      properties[key.strip] = value&.strip if key
+    end
+  end
+  properties
+end
+
+podfile_properties = read_podfile_properties
+ENV['RCT_USE_RN_DEP'] = '1' if podfile_properties['ios.buildReactNativeFromSource'] != 'true' && podfile_properties['newArchEnabled'] != 'false'
+ENV['RCT_USE_PREBUILT_RNCORE'] = '1' if podfile_properties['ios.buildReactNativeFromSource'] != 'true' && podfile_properties['newArchEnabled'] != 'false'
 require_relative '../../../node_modules/react-native/scripts/react_native_pods'
 require_relative '../../../node_modules/react-native-permissions/scripts/setup'
 
-platform :ios, '15.1'
+platform :ios, podfile_properties['ios.deploymentTarget'] || '15.1'
 prepare_react_native_project!
 
 setup_permissions([
@@ -68,6 +94,41 @@ target 'Uniswap' do
 
   post_install do |installer|
     react_native_post_install(installer, "../../../node_modules/react-native")
+
+    # fmt 11.0.2 (shipped with RN 0.81) hits a consteval miscompilation under
+    # Xcode 26's Apple clang: FMT_STRING expands to a struct returned from a
+    # constexpr lambda whose value is then passed to a consteval ctor, which
+    # the new compiler refuses to fold. fmt 11.1+ fixes this, but RN pins
+    # 11.0.2 and base.h's FMT_USE_CONSTEVAL macro chain isn't `#ifndef`-guarded
+    # so a -D override is clobbered by the headers. Patch base.h in place to
+    # force-disable consteval; the patch re-applies on every `pod install`.
+    fmt_base_h = File.join(installer.sandbox.root, 'fmt', 'include', 'fmt', 'base.h')
+    if File.exist?(fmt_base_h)
+      content = File.read(fmt_base_h)
+      sentinel = '// rn-upgrade FMT_USE_CONSTEVAL force-disabled for Xcode 26'
+      unless content.include?(sentinel)
+        # Replace the entire FMT_USE_CONSTEVAL detection block (which spans
+        # multiple `#elif` branches and re-enables consteval on Apple clang
+        # >= 14000029) with an unconditional `#define FMT_USE_CONSTEVAL 0`.
+        block_start = "// Detect consteval, C++20 constexpr extensions and std::is_constant_evaluated.\n#if !defined(__cpp_lib_is_constant_evaluated)"
+        idx = content.index(block_start)
+        if idx
+          # Find the matching #endif after the block (the one before "#if FMT_USE_CONSTEVAL")
+          tail_anchor = "#endif\n#if FMT_USE_CONSTEVAL"
+          end_idx = content.index(tail_anchor, idx)
+          if end_idx
+            new_block = "// Detect consteval, C++20 constexpr extensions and std::is_constant_evaluated.\n#define FMT_USE_CONSTEVAL 0  #{sentinel}\n"
+            new_content = content[0...idx] + new_block + content[(end_idx + "#endif\n".length)..-1]
+            File.chmod(0644, fmt_base_h)
+            File.write(fmt_base_h, new_content)
+          else
+            Pod::UI.warn "fmt FMT_USE_CONSTEVAL patch: tail anchor not found"
+          end
+        else
+          Pod::UI.warn "fmt FMT_USE_CONSTEVAL patch: block start not found"
+        end
+      end
+    end
 
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|

@@ -2,17 +2,13 @@
 
 exports[`Delta > should render correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <svg
       aria-label="up"
-      class="c0"
+      class="sc-bRKDuR hhKhvv"
       fill="none"
       height="16"
       viewBox="0 0 24 24"
@@ -33,17 +29,13 @@ exports[`Delta > should render correctly 1`] = `
 
 exports[`Delta > should render correctly when delta is negative 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: #E10F0F;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <svg
       aria-label="down"
-      class="c0"
+      class="sc-hvigdm fKvgQS"
       fill="none"
       height="16"
       viewBox="0 0 24 24"
@@ -64,17 +56,13 @@ exports[`Delta > should render correctly when delta is negative 1`] = `
 
 exports[`Delta > should render correctly when delta is positive 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: #0C8911;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <svg
       aria-label="up"
-      class="c0"
+      class="sc-bRKDuR ctKTlN"
       fill="none"
       height="16"
       viewBox="0 0 24 24"
@@ -95,17 +83,13 @@ exports[`Delta > should render correctly when delta is positive 1`] = `
 
 exports[`Delta > should render negative zero when delta is close to zero but negative 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <svg
       aria-label="up"
-      class="c0"
+      class="sc-bRKDuR hhKhvv"
       fill="none"
       height="16"
       viewBox="0 0 24 24"
@@ -126,17 +110,13 @@ exports[`Delta > should render negative zero when delta is close to zero but neg
 
 exports[`Delta > should render positive zero when delta is 0 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <svg
       aria-label="up"
-      class="c0"
+      class="sc-bRKDuR hhKhvv"
       fill="none"
       height="16"
       viewBox="0 0 24 24"
@@ -157,17 +137,13 @@ exports[`Delta > should render positive zero when delta is 0 1`] = `
 
 exports[`Delta > should render positive zero when delta is close to zero but positive 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <svg
       aria-label="up"
-      class="c0"
+      class="sc-bRKDuR hhKhvv"
       fill="none"
       height="16"
       viewBox="0 0 24 24"
@@ -188,17 +164,13 @@ exports[`Delta > should render positive zero when delta is close to zero but pos
 
 exports[`Delta > should render positive zero when delta is parsed as positive zero 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <svg
       aria-label="up"
-      class="c0"
+      class="sc-bRKDuR hhKhvv"
       fill="none"
       height="16"
       viewBox="0 0 24 24"

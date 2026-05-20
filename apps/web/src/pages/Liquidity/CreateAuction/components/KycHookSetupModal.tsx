@@ -21,7 +21,7 @@ import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isAddress } from '~/chains/utilities'
+import { isAddress, zeroAddress } from '~/chains'
 import { ExternalLink } from '~/theme/components/Links'
 
 const MOCK_KYC_HOOK_VALIDATION_ADDRESS = '0x1234567890123456789012345678901234567891'
@@ -77,7 +77,7 @@ export function KycHookSetupModal({
     if (
       areAddressesEqual({
         addressInput1: { address: trimmedAddress, chainId },
-        addressInput2: { address: '0x0000000000000000000000000000000000000000', chainId },
+        addressInput2: { address: zeroAddress, chainId },
       })
     ) {
       setPhase('enter')

@@ -9,9 +9,11 @@ import { ArrowLeft } from 'ui/src/components/icons/ArrowLeft'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import type { PoolData } from '~/appGraphql/data/pools/usePoolData'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
-import { Container } from '~/features/Liquidity/Create/Container'
+import { Container, PageLayout } from '~/features/Liquidity/Create/Container'
 import { EditSelectTokensStep } from '~/features/Liquidity/Create/EditStep'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { SelectPriceRangeStep } from '~/features/Liquidity/Create/RangeSelectionStep'
 import { SelectTokensStep } from '~/features/Liquidity/Create/SelectTokenStep'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
@@ -40,6 +42,7 @@ export function FormStepsWrapper({
   priceRangeSectionName = SectionName.CreatePositionPriceRangeStep,
   priceRangeProps,
   onSelectTokensContinue,
+  poolData,
 }: {
   isMigration?: boolean
   hideEditStepOnDesktop?: boolean
@@ -49,6 +52,7 @@ export function FormStepsWrapper({
   priceRangeProps?: React.ComponentProps<typeof SelectPriceRangeStep>
   priceRangeSectionName?: SectionName
   onSelectTokensContinue: () => void
+  poolData?: PoolData
 }) {
   const { step } = useCreateLiquidityContext()
   const media = useMedia()
@@ -76,7 +80,7 @@ export function FormStepsWrapper({
                 </Flex>
               )}
             </AnimatePresence>
-            {showEditStep && <EditSelectTokensStep />}
+            {showEditStep && <EditSelectTokensStep poolData={poolData} />}
           </HeightAnimator>
         </Container>
       )}
@@ -129,6 +133,7 @@ export function FormWrapper({
   const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const { pathname } = useLocation()
   const showPoolsBreadcrumb = isAddLiquidityRevamp && pathname.startsWith('/positions/add/')
+  const entryPointBreadcrumb = useEntryPointBreadcrumb()
 
   const poolProgressSteps = useMemo(() => {
     const createStep = ({
@@ -183,27 +188,14 @@ export function FormWrapper({
   }, [creatingPoolOrPair, protocolVersion, setStep, step, t, setPriceRangeState, isMigration])
 
   return (
-    <Flex
-      mt="$spacing24"
-      width="100%"
-      px="$spacing40"
-      maxWidth={WIDTH.positionCard + WIDTH.sidebar + 80}
-      $xl={{
-        px: '$spacing24',
-        maxWidth: '100%',
-        mx: 'auto',
-      }}
-      $sm={{
-        px: '$spacing8',
-      }}
-    >
+    <PageLayout mt="$spacing24">
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
         {showPoolsBreadcrumb ? (
           <>
-            <BreadcrumbNavLink to="/explore/pools">
-              {t('common.pools')} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
+            <BreadcrumbNavLink to={entryPointBreadcrumb.to}>
+              {entryPointBreadcrumb.label} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
             </BreadcrumbNavLink>
-            <Text color="$neutral1">{t('common.addLiquidity')}</Text>
+            <Text color="$neutral1">{title || t('position.new')}</Text>
           </>
         ) : (
           <>
@@ -227,7 +219,7 @@ export function FormWrapper({
       >
         <Flex row alignItems="center" gap="$spacing8">
           {showPoolsBreadcrumb && (
-            <TouchableArea onPress={() => navigate('/positions/add')}>
+            <TouchableArea onPress={() => navigate(-1)}>
               <ArrowLeft size="$icon.24" color="$neutral1" />
             </TouchableArea>
           )}
@@ -242,6 +234,6 @@ export function FormWrapper({
           {children}
         </Flex>
       </Flex>
-    </Flex>
+    </PageLayout>
   )
 }

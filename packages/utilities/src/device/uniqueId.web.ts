@@ -1,5 +1,5 @@
 import { getChromeWithThrow } from '@universe/environment'
-import { v4 as uuidv4 } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 
 export const USER_ID_KEY = 'USER_ID'
 
@@ -10,7 +10,7 @@ export async function getUniqueId(): Promise<string> {
     return storedUserId
   }
 
-  const newUserId = uuidv4()
+  const newUserId = uuid()
   await setUserId(newUserId)
   return newUserId
 }

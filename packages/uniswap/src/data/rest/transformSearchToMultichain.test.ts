@@ -1,12 +1,6 @@
-import {
-  FeeData,
-  MultichainToken,
-  Pool,
-  SearchTokensResponse,
-  SpamCode,
-  Token,
-  TokenProtectionInfo,
-} from '@uniswap/client-search/dist/search/v1/api_pb'
+import { SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/search_pb'
+import { TokenProtectionInfo } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
+import { FeeData, MultichainToken, Pool, SpamCode, Token } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import {
   shouldTransformSearchToMultichain,
   transformSearchToMultichain,

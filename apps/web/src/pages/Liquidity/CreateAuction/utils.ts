@@ -28,6 +28,12 @@ const COMPACT_NUMBER_FORMATS = [
   { suffix: 'k', value: 1_000 },
 ] as const
 
+function formatCompactNormalized(normalized: number): string {
+  return Number.isInteger(normalized)
+    ? normalized.toFixed(0)
+    : normalized.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
+}
+
 export function getRecommendedStrategy(): PriceRangeStrategy {
   return PriceRangeStrategy.CONCENTRATED_FULL_RANGE
 }
@@ -42,6 +48,25 @@ export function clampPostAuctionLiquidityTierPercent(percent: number): number {
 
 /** Maximum fractional digits allowed while editing post-auction liquidity percent inputs. */
 export const MAX_POST_AUCTION_PARTIAL_PERCENT_DECIMAL_PLACES = 5
+
+/** Normalizes JS arithmetic for decimal text fields (avoids float artifacts like 0.30000000000000004). */
+export function formatArithmeticResultForInput(n: number): string {
+  if (!Number.isFinite(n)) {
+    return ''
+  }
+  if (n === 0) {
+    return '0'
+  }
+  const cleaned = Number.parseFloat(n.toPrecision(12))
+  if (!Number.isFinite(cleaned)) {
+    return ''
+  }
+  let s = cleaned.toString()
+  if (s.includes('e') || s.includes('E')) {
+    s = cleaned.toFixed(18).replace(/\.?0+$/, '') || '0'
+  }
+  return s === '-0' ? '0' : s
+}
 
 export function isValidPartialPercentInput(value: string): boolean {
   if (value === '') {
@@ -91,12 +116,6 @@ export function createSinglePostAuctionLiquidityAllocation(percent: number): Pos
   }
 }
 
-function formatCompactNormalized(normalized: number): string {
-  return Number.isInteger(normalized)
-    ? normalized.toFixed(0)
-    : normalized.toFixed(2).replace(/0+$/, '').replace(/\.$/, '')
-}
-
 function formatCompactNumber(value: number): string {
   for (let i = 0; i < COMPACT_NUMBER_FORMATS.length; i++) {
     const { suffix, value: threshold } = COMPACT_NUMBER_FORMATS[i]
@@ -114,7 +133,9 @@ function formatCompactNumber(value: number): string {
     return `${formatted}${suffix}`
   }
 
-  return value.toString()
+  // Values below 1k: avoid raw `toString()` float noise (e.g. "285.7142857142857") that breaks
+  // USD↔raise round-trips and tier previews; keep a stable decimal string instead.
+  return formatArithmeticResultForInput(value)
 }
 
 export function formatCompactNumberInput(value: number): string {
@@ -220,24 +241,51 @@ function nextBoundedTierNumericId(tiers: PostAuctionLiquidityTier[]): number {
 
 /**
  * Creates a new bounded tier to insert before the unbounded tier.
- * Uses 10× the last bounded tier's milestone, or the default initial milestone if none exist.
+ *
+ * - First bounded tier defaults to `DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE` (raise units).
+ *   When `usdPriceNum` is provided (USD input mode), this default is interpreted as USD instead and
+ *   converted to raise units (`100k USD / usdPriceNum`) so the user sees a round $100k milestone.
+ * - Subsequent tiers default to **10× the previous tier in USD** when `usdPriceNum` is set: the next
+ *   boundary is `round(lastRaise × usdPrice × 10)` whole USD, then converted back to raise. That keeps
+ *   defaults on exact USD rungs ($1m, $10m, …) without IEEE error from `10 ×` in raise space alone.
+ *   In raise-only mode, defaults stay `10 ×` the last bounded milestone (compact-formatted).
  */
-export function createNextBoundedTier(tiers: PostAuctionLiquidityTier[]): PostAuctionLiquidityTier {
+export function createNextBoundedTier(
+  tiers: PostAuctionLiquidityTier[],
+  options?: { usdPriceNum: number | null },
+): PostAuctionLiquidityTier {
   const boundedTiers = tiers.filter((t) => !isUnboundedTier(t))
   const unboundedTier = tiers.find(isUnboundedTier)
   const defaultPercent = clampPostAuctionLiquidityTierPercent(unboundedTier?.percent ?? 0)
   const nextId = nextBoundedTierNumericId(tiers)
 
   if (boundedTiers.length === 0) {
+    const usdPriceNum = options?.usdPriceNum
+    const initialRaiseMilestone =
+      usdPriceNum && usdPriceNum > 0
+        ? formatArithmeticResultForInput(DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE / usdPriceNum)
+        : formatCompactNumberInput(DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE)
     return {
       id: `tier-${nextId}`,
-      raiseMilestone: formatCompactNumberInput(DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE),
+      raiseMilestone: initialRaiseMilestone,
       percent: defaultPercent,
     }
   }
 
   const lastBounded = boundedTiers[boundedTiers.length - 1]
   const lastMilestone = parseCompactNumberInput(lastBounded.raiseMilestone)
+  const usdPriceNum = options?.usdPriceNum
+
+  if (usdPriceNum && usdPriceNum > 0 && lastMilestone && lastMilestone > 0) {
+    const nextUsdMilestone = Math.round(lastMilestone * usdPriceNum * 10)
+    const nextRaise = nextUsdMilestone / usdPriceNum
+    return {
+      id: `tier-${nextId}`,
+      raiseMilestone: formatArithmeticResultForInput(nextRaise),
+      percent: defaultPercent,
+    }
+  }
+
   const nextMilestone =
     lastMilestone && lastMilestone > 0 ? lastMilestone * 10 : DEFAULT_POST_AUCTION_LIQUIDITY_TIER_INITIAL_MILESTONE
 

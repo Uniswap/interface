@@ -1,6 +1,5 @@
 import { lazy, PropsWithChildren, ReactNode, Suspense, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import {
   AnimatedPager,
   Flex,
@@ -30,7 +29,6 @@ import { AndroidLogo } from '~/components/Icons/AndroidLogo'
 import { AppleLogo } from '~/components/Icons/AppleLogo'
 import { useAccount } from '~/hooks/useAccount'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { updateDownloadGraduatedWalletCardsDismissed } from '~/state/application/reducer'
 import { ExternalLink } from '~/theme/components/Links'
 
 const LazyWalletOneLinkQR = lazy(async () => {
@@ -162,13 +160,6 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const account = useAccount()
-  const dispatch = useDispatch()
-
-  const onPressCard = useEvent(() => {
-    if (account.address) {
-      dispatch(updateDownloadGraduatedWalletCardsDismissed({ walletAddress: account.address }))
-    }
-  })
 
   return (
     <Trace logImpression modal={ModalName.DownloadApp} properties={{ connector_id: account.connector?.id }}>
@@ -179,13 +170,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
         maxWidth="620px"
       >
         <Flex row gap="$spacing12" width="100%" alignItems="flex-start">
-          <Card
-            style={{ flex: '1 1 auto' }}
-            onClick={() => {
-              setPage(Page.DownloadMobile)
-              onPressCard()
-            }}
-          >
+          <Card style={{ flex: '1 1 auto' }} onClick={() => setPage(Page.DownloadMobile)}>
             <IllustrationContainer>
               <Illustration src={WalletIllustration} alt="Wallet example page" />
             </IllustrationContainer>
@@ -207,12 +192,7 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
             </CardInfo>
           </Card>
           <Trace logPress element={ElementName.ExtensionDownloadButton}>
-            <Card
-              onClick={() => {
-                window.open(uniswapUrls.chromeExtension)
-                onPressCard()
-              }}
-            >
+            <Card onClick={() => window.open(uniswapUrls.chromeExtension)}>
               <IllustrationContainer>
                 <Illustration src={ExtensionIllustration} alt="Extension example page" />
               </IllustrationContainer>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { formatUnits } from 'viem'
+import { formatUnits } from '~/chains'
 import { BidTokenInfo } from '~/features/Toucan/Auction/store/types'
 import { approximateNumberFromRaw, computeFdvBidTokenRaw } from '~/features/Toucan/Auction/utils/fixedPointFdv'
 

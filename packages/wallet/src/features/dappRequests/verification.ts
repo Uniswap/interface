@@ -1,3 +1,4 @@
+import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 
 /**
@@ -24,4 +25,37 @@ export function mergeVerificationStatuses(
   }
 
   return DappVerificationStatus.Verified
+}
+
+const FIRST_PARTY_HOSTNAMES: ReadonlySet<string> = new Set([UNISWAP_WEB_HOSTNAME])
+
+export function isFirstPartyDapp(url: string | undefined): boolean {
+  if (!url) {
+    return false
+  }
+  try {
+    return FIRST_PARTY_HOSTNAMES.has(new URL(url).hostname)
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Treats first-party Uniswap dapps as Verified when upstream signals (Blockaid, WC Verify)
+ * default to Unverified due to indexing gaps or transient failures. Threat is preserved so
+ * a genuine malicious signal is never suppressed.
+ *
+ * IMPORTANT: `url` must come from a trusted source (e.g. WC Verify's `verified.origin` or
+ * the browser origin in the extension). Never pass dapp-supplied metadata URLs — a
+ * malicious dapp could otherwise claim a first-party hostname and be force-upgraded to
+ * Verified. When no trusted URL is available, pass `undefined` and the override is skipped.
+ */
+export function applyFirstPartyOverride(
+  status: DappVerificationStatus,
+  url: string | undefined,
+): DappVerificationStatus {
+  if (status === DappVerificationStatus.Threat) {
+    return status
+  }
+  return isFirstPartyDapp(url) ? DappVerificationStatus.Verified : status
 }

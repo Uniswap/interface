@@ -14,6 +14,9 @@ import { type Currency, type TradeType } from '@uniswap/sdk-core'
 import { type TradingApi } from '@universe/api'
 import { type Experiments } from '@universe/gating'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
+
+export type { PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { type OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { type EthMethod } from 'uniswap/src/features/dappRequests/types'
@@ -208,6 +211,9 @@ export type SwapTradeBaseProperties = {
   step_index?: number
   is_final_step?: boolean
   swap_start_timestamp?: number
+  // Which pricing pipeline produced the displayed USD values on this trade.
+  // See `PriceSourceTag` in packages/uniswap/src/features/prices/getDisplayedPriceSource.ts.
+  price_source?: PriceSourceTag
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -251,6 +257,7 @@ type BaseSwapTransactionResultProperties = {
   /** Total number of non-error steps in the plan, excluding error/retry steps*/
   total_non_error_steps?: number
   step_type?: string
+  price_source?: PriceSourceTag
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -500,6 +507,7 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   // for debugging Linear ticket DS-172:
   currencyInfo0Decimals: number
   currencyInfo1Decimals: number
+  price_source?: PriceSourceTag
 }
 
 export type AuctionWithdrawAnalyticsProperties = ITraceContext & {
@@ -532,6 +540,7 @@ export type AuctionWithdrawAnalyticsProperties = ITraceContext & {
   // Auction status
   is_graduated: boolean
   is_auction_completed: boolean
+  price_source?: PriceSourceTag
 }
 
 export type AuctionBidAnalyticsProperties = ITraceContext & {
@@ -554,6 +563,7 @@ export type AuctionBidAnalyticsProperties = ITraceContext & {
   // Token info
   token_symbol?: string
   token_name?: string
+  price_source?: PriceSourceTag
 }
 
 export type AuctionBidInputtedAnalyticsProperties = ITraceContext & {
@@ -577,6 +587,7 @@ export type AuctionBidInputtedAnalyticsProperties = ITraceContext & {
 
   // Token info
   token_symbol?: string
+  price_source?: PriceSourceTag
 }
 
 export type NotificationToggleLoggingType = 'settings_general_updates_enabled' | 'wallet_activity'
@@ -806,6 +817,7 @@ export type UniverseEventProperties = {
     currencyId: string
     amount: string
     recipient: string
+    price_source?: PriceSourceTag
   }
   [InterfaceEventName.TokenSelectorOpened]: undefined
   [InterfaceEventName.LimitedWalletSupportToastDismissed]: {

@@ -8,7 +8,6 @@ import { PlusCircle } from 'ui/src/components/icons/PlusCircle'
 import { SwitchArrows } from 'ui/src/components/icons/SwitchArrows'
 import { type AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -21,15 +20,14 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { Power } from '~/components/Icons/Power'
 import { useAccountsStore, useActiveConnector, useActiveWallet } from '~/features/accounts/store/hooks'
 import { type ExternalWallet } from '~/features/accounts/store/types'
-import { useAccount } from '~/hooks/useAccount'
 import { useDisconnect } from '~/hooks/useDisconnect'
+import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { useSignOutWithPasskey } from '~/hooks/useSignOutWithPasskey'
 
 export function useOnDisconnect() {
   const disconnect = useDisconnect()
 
-  const activeEVMWallet = useActiveWallet(Platform.EVM)
-  const connectedWithEmbeddedWallet = activeEVMWallet?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const connectedWithEmbeddedWallet = useIsEmbeddedWallet()
   const { signOutWithPasskey } = useSignOutWithPasskey()
 
   const accountDrawer = useAccountDrawer()
@@ -275,7 +273,7 @@ function InLineDisconnectButton() {
   const colors = useSporeColors()
   const evmConnectorId = useActiveConnector(Platform.EVM)?.externalLibraryId
   const svmConnectorId = useActiveConnector(Platform.SVM)?.externalLibraryId
-  const isEmbeddedWallet = useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const isEmbeddedWallet = useIsEmbeddedWallet()
 
   const handleDisconnect = useEvent(() => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

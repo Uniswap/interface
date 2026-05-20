@@ -10,7 +10,7 @@ const DEFAULT_OPTIONS: Required<LayoutAnimationOptions> = {
 export function easeInEaseOutLayoutAnimation(options?: LayoutAnimationOptions): void {
   const mergedOptions = options ? { ...DEFAULT_OPTIONS, ...options } : DEFAULT_OPTIONS
 
-  if (mergedOptions.shouldSkip) {
+  if (mergedOptions.shouldSkip || typeof document === 'undefined') {
     return
   }
 
@@ -24,10 +24,9 @@ export function easeInEaseOutLayoutAnimation(options?: LayoutAnimationOptions): 
 
   // Timer can outlive the document (e.g. test teardown, page unload)
   setTimeout(() => {
-    if (typeof document === 'undefined') {
-      return
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove(animationClass)
     }
-    document.body.classList.remove(animationClass)
   }, getAnimationDurationForPreset(mergedOptions.preset))
 }
 

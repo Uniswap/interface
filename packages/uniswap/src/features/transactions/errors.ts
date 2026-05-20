@@ -242,7 +242,7 @@ function getStepSpecificErrorContent(
         message: error.isPlanStep ? t('swap.fail.message.plan') : t('swap.fail.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
-    case TransactionStepType.SwapTransactionBatched: {
+    case TransactionStepType.SwapTransactionWalletCall: {
       // Only show batched-specific retry UI if the first step failed;
       // Handles scenarios where plan cannot disable one-click swap beyond first step.
       const shouldDisableOneClickSwap = !error.stepIndex || error.stepIndex === 0

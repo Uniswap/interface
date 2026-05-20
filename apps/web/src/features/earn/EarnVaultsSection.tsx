@@ -1,15 +1,45 @@
-import { useCallback, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import {
+  getListEarnPositionsQueryOptions,
+  getListEarnVaultsQueryOptions,
+} from 'uniswap/src/data/apiClients/dataApiService/earn'
+import { EARN_SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
+import { getEarnPositionInfosByVaultId, getEarnVaultInfos } from 'uniswap/src/features/earn/utils'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { MOCK_EARN_VAULTS, type MockEarnVault } from '~/features/earn/_fixtures/vaults'
+import { useActiveAccount } from '~/features/accounts/store/hooks'
 import { EarnVaultChip } from '~/features/earn/EarnVaultChip'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
 
-// Scaffold only — backend data wires in via FE-2 (`GetEarnVaults`). See CONS-1779.
 export function EarnVaultsSection() {
   const { t } = useTranslation()
-  const [selectedVault, setSelectedVault] = useState<MockEarnVault | null>(null)
+  const evmAccount = useActiveAccount(Platform.EVM)
+  const [selectedVault, setSelectedVault] = useState<EarnVaultInfo | null>(null)
+
+  const vaultsQueryParams = useMemo(() => ({ chainIds: EARN_SUPPORTED_CHAIN_IDS }), [])
+  const positionsQueryParams = useMemo(
+    () => (evmAccount?.address ? { walletAddress: evmAccount.address, chainIds: EARN_SUPPORTED_CHAIN_IDS } : undefined),
+    [evmAccount?.address],
+  )
+
+  const vaultsQuery = useQuery(getListEarnVaultsQueryOptions({ params: vaultsQueryParams }))
+  const positionsQuery = useQuery(
+    getListEarnPositionsQueryOptions({
+      params: positionsQueryParams,
+      enabled: !!positionsQueryParams,
+    }),
+  )
+
+  const vaults = useMemo(() => getEarnVaultInfos(vaultsQuery.data?.vaults), [vaultsQuery.data?.vaults])
+
+  const positionsByVaultId = useMemo(
+    () => getEarnPositionInfosByVaultId(positionsQuery.data?.positions),
+    [positionsQuery.data?.positions],
+  )
 
   const handleClose = useCallback(() => {
     setSelectedVault(null)
@@ -42,12 +72,17 @@ export function EarnVaultsSection() {
           $lg={{ width: '100%' }}
           $md={{ flexDirection: 'column' }}
         >
-          {MOCK_EARN_VAULTS.map((vault) => (
+          {vaults.map((vault) => (
             <EarnVaultChip key={vault.id} vault={vault} onPress={() => setSelectedVault(vault)} />
           ))}
         </Flex>
       </Flex>
-      <EarnVaultModal vault={selectedVault} isOpen={selectedVault !== null} onClose={handleClose} />
+      <EarnVaultModal
+        vault={selectedVault}
+        prefetchedPosition={selectedVault ? positionsByVaultId.get(selectedVault.id) : undefined}
+        isOpen={selectedVault !== null}
+        onClose={handleClose}
+      />
     </>
   )
 }

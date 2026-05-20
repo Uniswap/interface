@@ -14,26 +14,25 @@ import {
   signWithAuthKey,
   zeroBuffers,
 } from 'uniswap/src/features/passkey/pinCrypto'
-import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import { logger } from 'utilities/src/logger/logger'
 
+// Privy rate-limits `GET /encrypted_authorization_keys/:keyId`; callers fetch the
+// blob once and pass it in so PIN retries don't burn against the limit.
 export async function attemptPinDecryption({
   pin,
   email,
   accessToken,
-  encryptedKeyId,
-  privyAppId,
+  encryptedBlob,
 }: {
   pin: string
   email: string
   accessToken: string
-  encryptedKeyId: string
-  privyAppId: string
+  encryptedBlob: string
 }): Promise<
   | { success: true; authPrivateKey: Uint8Array }
   | {
       success: false
-      error: 'wrong_pin' | 'rate_limited' | 'no_blobs'
+      error: 'wrong_pin' | 'rate_limited'
       cooldownSeconds?: number
       errorMessage?: string
     }
@@ -41,15 +40,7 @@ export async function attemptPinDecryption({
   try {
     const authMethodId = hashAuthMethodId(email)
 
-    // 1. Fetch encrypted blob from Privy
-    let blob: string
-    try {
-      blob = await fetchEncryptedBlob({ accessToken, keyId: encryptedKeyId, privyAppId })
-    } catch {
-      return { success: false, error: 'no_blobs', errorMessage: 'No recovery data found for this account.' }
-    }
-
-    // 2. OPRF: blind → evaluate → finalize
+    // 1. OPRF: blind → evaluate → finalize
     const { blindedElement, blindState } = await blindPin(pin)
     const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate(
       {
@@ -66,12 +57,12 @@ export async function attemptPinDecryption({
 
     const oprfOutput = await finalizeOprf(blindState, oprfResponse.evaluatedElement)
 
-    // 3. Attempt decryption
+    // 2. Attempt decryption
     let pinKey: Uint8Array | undefined
     let ikm: Uint8Array | undefined
     let finalKey: Uint8Array | undefined
     try {
-      const { salt1, salt2, iv, ciphertextWithTag } = parseBlob(blob)
+      const { salt1, salt2, iv, ciphertextWithTag } = parseBlob(encryptedBlob)
 
       // Argon2id in worker + HKDF (errors here should propagate, not be treated as wrong PIN)
       pinKey = await deriveArgon2InWorker(pin, salt1)
@@ -207,10 +198,7 @@ export async function executeRecoveryExport({
       encryptionKey,
     })
 
-    // `exportSigningPayload` isn't in the generated proto types yet — read via cast until
-    // the proto package updates. TODO: remove cast once @uniswap/client-privy-embedded-wallet ships.
-    const raw = reportResponse as unknown as { exportSigningPayload?: string }
-    const exportSigningPayload = raw.exportSigningPayload
+    const { exportSigningPayload } = reportResponse
 
     if (!exportSigningPayload) {
       throw new Error('Server did not return an export signing payload')

@@ -3,14 +3,17 @@
   "version": "0.0.0",
   "dependencies": {
     "@ethersproject/abstract-signer": "5.7.0",
+    "@ethersproject/address": "5.7.0",
     "@ethersproject/bignumber": "5.7.0",
     "@ethersproject/hash": "5.7.0",
     "@ethersproject/properties": "5.7.0",
     "@ethersproject/providers": "5.7.2",
+    "@ethersproject/units": "5.7.0",
     "@ethersproject/web": "5.7.1",
     "@uniswap/sdk-core": "7.12.1",
+    "@universe/encoding": "workspace:^",
     "ethers": "5.7.2",
-    "utilities": "workspace:*",
+    "utilities": "workspace:^",
     "viem": "2.30.5",
     "zod": "4.3.6"
   },
@@ -19,7 +22,7 @@
     "@types/node": "22.19.17",
     "@typescript/native-preview": "7.0.0-dev.20260421.2",
     "@universe/sessions": "workspace:^",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "vitest": "3.2.1"
   },
   "scripts": {

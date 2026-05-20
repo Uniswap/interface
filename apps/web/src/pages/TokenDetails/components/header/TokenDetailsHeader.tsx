@@ -85,7 +85,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
   const openReportTokenModal = useEvent(() => {
-    void setModalProps({
+    setModalProps({
       source: 'token-details',
       currency,
       isMarkedSpam: tokenQuery.data?.token?.project?.isSpam,

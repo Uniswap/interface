@@ -197,8 +197,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [liquidityTxContext.txRequest],
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [liquidityTxContext.txRequest],
           },
         ])
       })
@@ -215,8 +215,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [liquidityTxContext.approveToken0Request, liquidityTxContext.txRequest],
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [liquidityTxContext.approveToken0Request, liquidityTxContext.txRequest],
           },
         ])
       })
@@ -234,8 +234,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [
               liquidityTxContext.approveToken0Request,
               liquidityTxContext.approveToken1Request,
               liquidityTxContext.txRequest,
@@ -259,8 +259,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [
               liquidityTxContext.revokeToken0Request,
               liquidityTxContext.revokeToken1Request,
               liquidityTxContext.approveToken0Request,
@@ -284,8 +284,8 @@ describe('Liquidity', () => {
 
         expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
           {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
+            type: TransactionStepType.IncreasePositionTransactionWalletCall,
+            walletCallTxRequests: [
               liquidityTxContext.token0PermitTransaction,
               liquidityTxContext.token1PermitTransaction,
               liquidityTxContext.txRequest,

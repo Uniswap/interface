@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
@@ -53,8 +53,9 @@ export function LocalCurrencyMenuItems() {
 }
 
 export function LocalCurrencyMenu({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation()
   return (
-    <SlideOutMenu title={<Trans i18nKey="common.currency" />} onClose={onClose}>
+    <SlideOutMenu title={t('common.currency')} onClose={onClose}>
       <MenuColumn>
         <LocalCurrencyMenuItems />
       </MenuColumn>

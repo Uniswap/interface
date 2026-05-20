@@ -7,6 +7,7 @@ import { all, call, delay, put } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { doesGetPortfolioQueryMatchAddress, getPortfolioQueriesToUpdate } from 'uniswap/src/data/rest/getPortfolio'
+import { doesGetWalletBalancesQueryMatchAddress } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
 import {
@@ -269,6 +270,13 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
   yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
     predicate: (query: { queryKey: readonly unknown[] }) =>
       doesGetPortfolioQueryMatchAddress({ queryKey: query.queryKey, address: activeAddress, platform }),
+  })
+
+  // Invalidate aggregate wallet-balance queries for this address. The response is
+  // aggregate-only (no per-balance entries), so a plain invalidate-and-refetch is sufficient.
+  yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
+    predicate: (query: { queryKey: readonly unknown[] }) =>
+      doesGetWalletBalancesQueryMatchAddress({ queryKey: query.queryKey, address: activeAddress, platform }),
   })
 
   // Invalidate token profit/loss queries for this address so the TDP Performance section updates after swaps

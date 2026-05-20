@@ -62,7 +62,7 @@ import {
   testRemoveTHBFromCurrency,
 } from 'uniswap/src/state/uniswapMigrationTests'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
-import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
+import { initialWalletCallTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
@@ -116,7 +116,7 @@ describe('Redux state migrations', () => {
       dappRequests: {
         requests: {},
       },
-      batchedTransactions: initialBatchedTransactionsState,
+      batchedTransactions: initialWalletCallTransactionsState,
       blocks: { byChainId: {} },
       chains: {
         byChainId: {

@@ -25,12 +25,14 @@ export function TokenCloud(): JSX.Element {
   const onPress = useCallback(
     (item: ItemPoint<InteractiveToken>) => {
       const { address, chain } = item.itemData
-      void navigate(
-        getTokenDetailsURL({
-          address,
-          chain,
-        }),
-      )
+      Promise.resolve(
+        navigate(
+          getTokenDetailsURL({
+            address,
+            chain,
+          }),
+        ),
+      ).catch(() => {})
     },
     [navigate],
   )

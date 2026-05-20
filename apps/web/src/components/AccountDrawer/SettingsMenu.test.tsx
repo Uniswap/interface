@@ -1,12 +1,11 @@
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { SettingsMenu } from '~/components/AccountDrawer/SettingsMenu'
-import { useAccount } from '~/hooks/useAccount'
+import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { mocked } from '~/test-utils/mocked'
 import { render } from '~/test-utils/render'
 
 const noop = () => {}
 
-vi.mock('~/hooks/useAccount')
+vi.mock('~/hooks/useIsEmbeddedWallet')
 vi.mock('~/components/AccountDrawer/DisconnectButton', () => ({
   useOnDisconnect: vi.fn().mockReturnValue(vi.fn()),
 }))
@@ -29,15 +28,13 @@ const defaultProps = {
 
 describe('SettingsMenu', () => {
   it('renders for standard wallet user', () => {
-    mocked(useAccount).mockReturnValue({ connector: { id: 'injected' } } as any)
+    mocked(useIsEmbeddedWallet).mockReturnValue(false)
     const { container } = render(<SettingsMenu {...defaultProps} />)
     expect(container).toMatchSnapshot()
   })
 
   it('renders for embedded wallet user (Login Methods + Log out visible)', () => {
-    mocked(useAccount).mockReturnValue({
-      connector: { id: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
-    } as any)
+    mocked(useIsEmbeddedWallet).mockReturnValue(true)
     const { container } = render(<SettingsMenu {...defaultProps} />)
     expect(container).toMatchSnapshot()
   })

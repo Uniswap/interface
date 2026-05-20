@@ -4,6 +4,7 @@ import { argon2id } from '@noble/hashes/argon2.js'
 import { hkdf } from '@noble/hashes/hkdf.js'
 import { sha256 } from '@noble/hashes/sha2.js'
 import { bytesToHex } from '@noble/hashes/utils.js'
+import { generateRandomBytes } from '@universe/cryptography'
 import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 
 // OPRF types (lazy-loaded to code-split @cloudflare/voprf-ts)
@@ -90,7 +91,7 @@ export function encryptAuthKey(params: {
   salt2: Uint8Array
 }): string {
   const { finalKey, authPrivateKey, salt1, salt2 } = params
-  const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH))
+  const iv = generateRandomBytes(IV_LENGTH)
   const cipher = gcm(finalKey, iv)
   const ciphertextWithTag = cipher.encrypt(authPrivateKey)
 

@@ -77,6 +77,7 @@ function createLivePricesClient(): WebSocketClient<TokenSubscriptionParams, Toke
         SharedQueryClient.setQueryData(priceKeys.token(chainId, tokenAddress), {
           price: priceUsd,
           timestamp,
+          source: 'aurora_ws',
         })
       }
     },
@@ -94,11 +95,8 @@ export function LivePricesProvider({ children }: { children: ReactNode }): React
 }
 
 function LivePricesProviderInner({ children }: { children: ReactNode }): ReactElement {
-  const useWs = useFeatureFlag(FeatureFlags.CentralizedPricesWs)
-  const [wsClient] = useState(() => (useWs ? createLivePricesClient() : null))
-  // Metrics phase (useWs=false): tell the backend to return TAPI quote prices and
-  // log the Aurora comparison. Full rollout (useWs=true): use Aurora prices directly.
-  const [restBatcher] = useState(() => new RestPriceBatcher(createRestPriceClient({ preferQuotePrices: !useWs })))
+  const [wsClient] = useState(() => createLivePricesClient())
+  const [restBatcher] = useState(() => new RestPriceBatcher(createRestPriceClient({ preferQuotePrices: false })))
 
   return (
     <PriceServiceProvider wsClient={wsClient ?? undefined} queryClient={SharedQueryClient} restBatcher={restBatcher}>

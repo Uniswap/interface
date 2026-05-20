@@ -7,6 +7,7 @@ import { Navigate, useParams } from 'react-router'
 import { Flex, SpinningLoader } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { FeeData } from 'uniswap/src/features/positions/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
@@ -16,6 +17,7 @@ import type { PoolData } from '~/appGraphql/data/pools/usePoolData'
 import { usePoolData } from '~/appGraphql/data/pools/usePoolData'
 import { gqlToCurrency } from '~/appGraphql/data/util'
 import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
+import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
 import { PositionFlowStep } from '~/features/Liquidity/Create/types'
 import {
@@ -34,12 +36,25 @@ import { CreatePositionTxContextProvider } from '~/pages/CreatePosition/CreatePo
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
+function parseProtocolVersion(value: string | null): ProtocolVersion {
+  switch (value) {
+    case 'v2':
+      return ProtocolVersion.V2
+    case 'v3':
+      return ProtocolVersion.V3
+    default:
+      return ProtocolVersion.V4
+  }
+}
+
 function AddLiquidityPoolForm({
   currencyInputs,
   setCurrencyInputs,
+  poolData,
 }: {
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
+  poolData?: PoolData
 }) {
   const {
     positionState: { protocolVersion },
@@ -67,21 +82,45 @@ function AddLiquidityPoolForm({
       currencyInputs={currencyInputs}
       setCurrencyInputs={setCurrencyInputs}
       onSelectTokensContinue={handleContinue}
+      poolData={poolData}
     />
   )
 }
 
-function AddLiquidityPoolContent({ poolData, chainId }: { poolData: PoolData; chainId: UniverseChainId }) {
+function AddLiquidityPoolContent({
+  chainId,
+  poolData,
+  poolLoading,
+  urlToken0,
+  urlToken1,
+  urlProtocolVersion,
+  urlFee,
+  urlHook,
+}: {
+  chainId: UniverseChainId
+  poolData?: PoolData
+  poolLoading: boolean
+  urlToken0?: Currency
+  urlToken1?: Currency
+  urlProtocolVersion: ProtocolVersion
+  urlFee?: FeeData
+  urlHook?: string
+}) {
   const { t } = useTranslation()
 
-  const protocolVersion = gqlToRestProtocolVersion(poolData.protocolVersion) ?? ProtocolVersion.V4
-  const { token0, token1 } = useMemo(
-    () => ({
-      token0: gqlToCurrency(poolData.token0),
-      token1: gqlToCurrency(poolData.token1),
-    }),
-    [poolData],
-  )
+  const protocolVersion = poolData
+    ? (gqlToRestProtocolVersion(poolData.protocolVersion) ?? ProtocolVersion.V4)
+    : urlProtocolVersion
+
+  const { token0, token1 } = useMemo(() => {
+    if (poolData) {
+      return {
+        token0: gqlToCurrency(poolData.token0),
+        token1: gqlToCurrency(poolData.token1),
+      }
+    }
+    return { token0: urlToken0, token1: urlToken1 }
+  }, [poolData, urlToken0, urlToken1])
 
   const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>({
     tokenA: token0,
@@ -105,6 +144,9 @@ function AddLiquidityPoolContent({ poolData, chainId }: { poolData: PoolData; ch
     depositState: parseAsDepositState,
   })
 
+  const fee = poolData?.feeTier ?? urlFee
+  const hook = poolData?.hookAddress ?? urlHook
+
   const autoSlippageTolerance = useLPSlippageValue({
     version: protocolVersion,
     currencyA: token0,
@@ -119,8 +161,8 @@ function AddLiquidityPoolContent({ poolData, chainId }: { poolData: PoolData; ch
             currencyInputs={currencyInputs}
             setCurrencyInputs={setCurrencyInputs}
             initialPositionState={{
-              fee: poolData.feeTier ?? undefined,
-              hook: poolData.hookAddress ?? undefined,
+              fee: fee ?? undefined,
+              hook: hook ?? undefined,
               protocolVersion,
             }}
             initialPriceRangeState={urlState.priceRangeState}
@@ -131,9 +173,13 @@ function AddLiquidityPoolContent({ poolData, chainId }: { poolData: PoolData; ch
               <FormWrapper
                 title={t('addLiquidity.setYourPosition')}
                 toolbar={<></>}
-                sidebar={<PoolInfoCard poolData={poolData} />}
+                sidebar={<PoolInfoCard poolData={poolData} loading={poolLoading} />}
               >
-                <AddLiquidityPoolForm currencyInputs={currencyInputs} setCurrencyInputs={setCurrencyInputs} />
+                <AddLiquidityPoolForm
+                  currencyInputs={currencyInputs}
+                  setCurrencyInputs={setCurrencyInputs}
+                  poolData={poolData}
+                />
               </FormWrapper>
               <SharedCreateModals />
             </CreatePositionTxContextProvider>
@@ -155,6 +201,36 @@ export default function AddLiquidityPool(): JSX.Element {
     isPoolAddress: isEVMAddress(poolAddress),
   })
 
+  const liquidityUrlState = useLiquidityUrlState()
+  const urlToken0 = liquidityUrlState.tokenA
+  const urlToken1 = liquidityUrlState.tokenB
+  const urlFee = liquidityUrlState.fee ?? undefined
+  const urlHook = liquidityUrlState.hook ?? undefined
+  const urlProtocolVersion = parseProtocolVersion(liquidityUrlState.protocolVersion)
+
+  const hasUrlTokens = !!urlToken0 && !!urlToken1
+
+  if (!chainId) {
+    return <Navigate to="/positions/add" replace />
+  }
+
+  // If we have URL params with token info, render immediately without waiting for poolData
+  if (hasUrlTokens) {
+    return (
+      <AddLiquidityPoolContent
+        chainId={chainId}
+        poolData={poolData ?? undefined}
+        poolLoading={loading}
+        urlToken0={urlToken0}
+        urlToken1={urlToken1}
+        urlProtocolVersion={urlProtocolVersion}
+        urlFee={urlFee}
+        urlHook={urlHook}
+      />
+    )
+  }
+
+  // Fallback: no URL params (e.g. bookmarked URL), wait for poolData
   if (loading) {
     return (
       <Flex width="100%" minHeight={400} centered>
@@ -163,9 +239,16 @@ export default function AddLiquidityPool(): JSX.Element {
     )
   }
 
-  if (!poolData || !chainId) {
+  if (!poolData) {
     return <Navigate to="/positions/add" replace />
   }
 
-  return <AddLiquidityPoolContent poolData={poolData} chainId={chainId} />
+  return (
+    <AddLiquidityPoolContent
+      chainId={chainId}
+      poolData={poolData}
+      poolLoading={false}
+      urlProtocolVersion={gqlToRestProtocolVersion(poolData.protocolVersion) ?? ProtocolVersion.V4}
+    />
+  )
 }

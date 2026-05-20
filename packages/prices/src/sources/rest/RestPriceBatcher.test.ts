@@ -11,7 +11,7 @@ function createMockClient(
 }
 
 function priceData(price: number, timestamp = Date.now()): TokenPriceData {
-  return { price, timestamp }
+  return { price, timestamp, source: 'aurora_rest_fallback' }
 }
 
 describe('RestPriceBatcher', () => {

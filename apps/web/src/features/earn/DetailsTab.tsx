@@ -5,21 +5,29 @@ import { GauntletLogo } from 'ui/src/components/icons/GauntletLogo'
 import { MorphoLogo } from 'ui/src/components/icons/MorphoLogo'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import type { MockEarnVault } from '~/features/earn/_fixtures/vaults'
 
 const MORPHO_BLUE = '#2470FF'
 
 interface DetailsTabProps {
-  vault: MockEarnVault
+  vault: EarnVaultInfo
   hasPosition: boolean
+  isConnected: boolean
   onDeposit: () => void
+  onConnectWallet: () => void
 }
 
-export function DetailsTab({ vault, hasPosition, onDeposit }: DetailsTabProps): JSX.Element {
+export function DetailsTab({
+  vault,
+  hasPosition,
+  isConnected,
+  onDeposit,
+  onConnectWallet,
+}: DetailsTabProps): JSX.Element {
   const { t } = useTranslation()
 
   return (
@@ -39,10 +47,16 @@ export function DetailsTab({ vault, hasPosition, onDeposit }: DetailsTabProps): 
         {t('explore.earn.vault.viewOnMorpho')}
       </Button>
       <VaultDescription curatorName={vault.curator.name} />
-      {!hasPosition && (
-        <Button emphasis="primary" size="medium" py="$spacing16" onPress={onDeposit}>
-          {t('explore.earn.vault.deposit')}
+      {!isConnected ? (
+        <Button emphasis="primary" size="medium" py="$spacing16" onPress={onConnectWallet}>
+          {t('common.connectWallet.button')}
         </Button>
+      ) : (
+        !hasPosition && (
+          <Button emphasis="primary" size="medium" py="$spacing16" onPress={onDeposit}>
+            {t('explore.earn.vault.deposit')}
+          </Button>
+        )
       )}
     </Flex>
   )
@@ -68,7 +82,7 @@ function VaultDescription({ curatorName }: { curatorName: string }): JSX.Element
   )
 }
 
-function VaultStatsGrid({ vault }: { vault: MockEarnVault }): JSX.Element {
+function VaultStatsGrid({ vault }: { vault: EarnVaultInfo }): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent, formatNumberOrString } = useLocalizationContext()
 
@@ -180,15 +194,18 @@ function ExposureTokenLogo({ currencyId }: { currencyId: string }): JSX.Element 
   )
 }
 
-function VaultDetailsList({ vault }: { vault: MockEarnVault }): JSX.Element {
+function VaultDetailsList({ vault }: { vault: EarnVaultInfo }): JSX.Element {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
+  const curatorAddress = vault.curator.address
+  const curatorTvlUsd = vault.curator.tvlUsd
 
-  const deploymentDateLabel = vault.deploymentDate.toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  const deploymentDateLabel =
+    vault.deploymentDate?.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }) ?? '--'
 
   return (
     <Flex gap="$spacing12">
@@ -206,26 +223,34 @@ function VaultDetailsList({ vault }: { vault: MockEarnVault }): JSX.Element {
       <DetailRow
         label={t('explore.earn.vault.curatorAddress')}
         value={
-          <TouchableArea
-            row
-            alignItems="center"
-            gap="$spacing4"
-            onPress={() => {
-              // TODO(CONS-1781): link to etherscan with the real curator address.
-            }}
-          >
+          curatorAddress ? (
+            <TouchableArea
+              row
+              alignItems="center"
+              gap="$spacing4"
+              onPress={() => {
+                // TODO(CONS-1781): link to etherscan with the real curator address once backend provides it.
+              }}
+            >
+              <Text variant="body3" color="$neutral1">
+                {shortenAddress({ address: curatorAddress })}
+              </Text>
+              <ExternalLink color="$neutral2" size="$icon.16" />
+            </TouchableArea>
+          ) : (
             <Text variant="body3" color="$neutral1">
-              {shortenAddress({ address: vault.curator.address })}
+              --
             </Text>
-            <ExternalLink color="$neutral2" size="$icon.16" />
-          </TouchableArea>
+          )
         }
       />
       <DetailRow
         label={t('explore.earn.vault.curatorTvl')}
         value={
           <Text variant="body3" color="$neutral1">
-            {formatNumberOrString({ value: vault.curator.tvlUsd, type: NumberType.FiatTokenDetails })}
+            {curatorTvlUsd === undefined
+              ? '--'
+              : formatNumberOrString({ value: curatorTvlUsd, type: NumberType.FiatTokenDetails })}
           </Text>
         }
       />

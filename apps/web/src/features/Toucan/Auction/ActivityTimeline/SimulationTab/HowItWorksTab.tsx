@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { parseUnits } from 'viem'
+import { formatUnits, parseUnits } from '~/chains'
 import { SimulationChart } from '~/features/Toucan/Auction/ActivityTimeline/SimulationTab/SimulationChart'
 import { computeSimulationResult } from '~/features/Toucan/Auction/ActivityTimeline/SimulationTab/utils/computeSimulationResult'
 import { fromQ96ToDecimalWithTokenDecimals } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'
@@ -30,7 +30,7 @@ export function HowItWorksTab() {
     if (!auctionDetails?.totalSupply || !auctionTokenDecimals) {
       return 0
     }
-    return Number(BigInt(auctionDetails.totalSupply)) / 10 ** auctionTokenDecimals
+    return Number(formatUnits(BigInt(auctionDetails.totalSupply), auctionTokenDecimals))
   }, [auctionDetails?.totalSupply, auctionTokenDecimals])
 
   // Compute anchor and floor prices (per-token, decimal)

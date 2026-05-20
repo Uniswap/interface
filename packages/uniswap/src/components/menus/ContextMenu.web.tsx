@@ -2,7 +2,7 @@ import { isWebApp } from '@universe/environment'
 import { Fragment, PropsWithChildren, useRef, useState } from 'react'
 import { AdaptiveWebPopoverContent, Popover, RemoveScroll, useMedia } from 'ui/src'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenu'
-import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
+import { MENU_CONTENT_SHEET_CONTAINER_STYLES, MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { useContextMenuTracking } from 'uniswap/src/components/menus/hooks/useContextMenuTracking'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useEvent, useOnClickOutside } from 'utilities/src/react/hooks'
@@ -155,22 +155,7 @@ export function ContextMenu({
       >
         {contentOverride ?? (
           <MenuContent
-            containerStyles={
-              isSheet
-                ? {
-                    p: '$none',
-                    pb: '$spacing16',
-                    backgroundColor: 'transparent',
-                    borderWidth: '$none',
-                    gap: '$spacing8',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    width: '100%',
-                    minWidth: undefined,
-                    maxWidth: undefined,
-                  }
-                : undefined
-            }
+            containerStyles={isSheet ? MENU_CONTENT_SHEET_CONTAINER_STYLES : undefined}
             items={menuItems}
             handleCloseMenu={handleCloseMenu}
             elementName={elementName}

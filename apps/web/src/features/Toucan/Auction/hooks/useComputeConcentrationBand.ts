@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { formatUnits } from 'viem'
+import { formatUnits } from '~/chains'
 import {
   BidConcentrationResult,
   calculateBidConcentration,

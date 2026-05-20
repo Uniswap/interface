@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Loader, Text, TouchableArea } from 'ui/src'
@@ -12,17 +12,16 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import {
   AuthenticatorAttachment,
-  listAuthenticators,
   registerNewAuthenticator,
   startAddAuthenticatorSession,
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { LIST_AUTHENTICATORS_QUERY_KEY } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
-import { getPrivyConfig } from '~/config'
+import { logger } from 'utilities/src/logger/logger'
+import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
+import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useAccount } from '~/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
-import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 type AddPasskeyStep = 'verify' | 'choose'
@@ -39,41 +38,44 @@ export function AddPasskeyModal() {
     params: account.address ? { address: account.address } : undefined,
   })
 
+  const { data: listAuthenticatorsData } = useListAuthenticatorsQuery()
+
   const handleClose = () => {
     setStep('verify')
     onClose()
   }
 
-  const { mutate: verifyPasskey } = usePasskeyAuthWithHelpModal(
-    async () => {
+  const { mutate: verifyPasskey } = useMutation({
+    mutationFn: async () => {
       return await startAddAuthenticatorSession(walletId ?? undefined)
     },
-    {
-      onSuccess: () => setStep('choose'),
+    onSuccess: () => setStep('choose'),
+    onError: (error) => {
+      logger.error(error, { tags: { file: 'AddPasskeyModal', function: 'verifyPasskey' } })
     },
-  )
+  })
 
-  const { mutate: registerAuthenticator } = usePasskeyAuthWithHelpModal(
-    async (authenticatorAttachment: AuthenticatorAttachment) => {
-      const { authenticators } = await listAuthenticators(walletId ?? undefined)
+  const { mutate: registerAuthenticator } = useMutation({
+    mutationFn: async (authenticatorAttachment: AuthenticatorAttachment) => {
+      const existingCount = listAuthenticatorsData?.authenticators.length ?? 0
       const displayName =
         unitag?.username ??
         (account.address ? `${account.address.slice(0, 6)}...${account.address.slice(-4)}` : undefined)
-      const newPasskeyUsername = displayName ? `${displayName} (${authenticators.length + 1})` : undefined
+      const newPasskeyUsername = displayName ? `${displayName} (${existingCount + 1})` : undefined
       return await registerNewAuthenticator({
         authenticatorAttachment,
         username: newPasskeyUsername,
         walletId: walletId ?? undefined,
-        privyAppId: getPrivyConfig().appId,
       })
     },
-    {
-      onSettled: () => {
-        queryClient.invalidateQueries({ queryKey: [LIST_AUTHENTICATORS_QUERY_KEY] })
-        handleClose()
-      },
+    onError: (error) => {
+      logger.error(error, { tags: { file: 'AddPasskeyModal', function: 'registerAuthenticator' } })
     },
-  )
+    onSettled: () => {
+      invalidateListAuthenticators(queryClient, walletId)
+      handleClose()
+    },
+  })
 
   return (
     <Modal name={ModalName.AddPasskey} isModalOpen={isOpen} onClose={handleClose} maxWidth={420}>

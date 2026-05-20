@@ -5,6 +5,7 @@ import {
   RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 import type { RegistrationOptions } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
+import { HexString } from '@universe/encoding'
 import { isWebApp } from '@universe/environment'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import {
@@ -22,7 +23,6 @@ import {
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 
 export {
@@ -277,16 +277,14 @@ export async function signInWithPasskey(
     }
 
     let credential: string | undefined
-    let challengeIncludedWalletId = !!walletId
     try {
       credential = await authenticateWithPasskey(Action.WALLET_SIGNIN, { walletId, devicePublicKey })
     } catch (challengeError) {
-      // Retry without the walletId hint when a hinted Challenge fails (e.g. backend "Wallet not found").
-      if (!walletId) {
-        throw challengeError
+      // Don't retry in place: it would trigger a second passkey prompt back-to-back.
+      if (walletId) {
+        options?.onWalletSignInFailureWithWalletId?.()
       }
-      credential = await authenticateWithPasskey(Action.WALLET_SIGNIN, { walletId: undefined, devicePublicKey })
-      challengeIncludedWalletId = false
+      throw challengeError
     }
     if (!credential) {
       return undefined
@@ -296,7 +294,7 @@ export async function signInWithPasskey(
       signInRespJson = await EmbeddedWalletApiClient.fetchWalletSigninRequest({ credential })
     } catch (signInError) {
       // The credential is already consumed; signal callers so they can clear stale walletId hints.
-      if (challengeIncludedWalletId) {
+      if (walletId) {
         options?.onWalletSignInFailureWithWalletId?.()
       }
       throw signInError
@@ -378,6 +376,7 @@ export async function disconnectWallet(walletId?: string | null): Promise<void> 
 
 export {
   deleteAuthenticator,
+  deleteAuthenticatorWithPasskey,
   deleteRecoveryMethod,
   listAuthenticators,
   registerNewAuthenticator,

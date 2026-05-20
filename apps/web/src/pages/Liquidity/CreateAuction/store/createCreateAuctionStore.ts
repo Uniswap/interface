@@ -1,18 +1,19 @@
-import { type Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isDevEnv } from '@universe/environment'
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { zeroAddress } from '~/chains/utilities'
+import { zeroAddress } from '~/chains'
+import { stripZeroPercentCustomPriceRangeEntries } from '~/pages/Liquidity/CreateAuction/customPriceRanges'
 import {
   buildAuctionAmountsFromLiquidityPreview,
   getPostAuctionLiquidityAmountFromAllocation,
   normalizePostAuctionLiquidityAllocation,
   updateCommittedPostAuctionLiquidity,
 } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
+import { rebaseAuctionTokenAmounts } from '~/pages/Liquidity/CreateAuction/store/rebaseAuctionTokenAmounts'
 import {
-  type AuctionTokenAmounts,
   type CustomPriceRangePreset,
   CreateAuctionStep,
   type CreateAuctionStoreState,
@@ -22,7 +23,7 @@ import {
   MAX_POST_AUCTION_LIQUIDITY_TIERS,
   NEW_TOKEN_DECIMALS,
   PostAuctionLiquidityAllocationType,
-  type PriceRangeStrategy,
+  PriceRangeStrategy,
   TimeLockPreset,
   TIMELOCK_PRESET_DURATION_DAYS,
   type TokenFormState,
@@ -39,18 +40,6 @@ import {
   updateCustomPriceRangeBounds,
   updateCustomPriceRangeLiquidityPercent,
 } from '~/pages/Liquidity/CreateAuction/utils'
-
-/**
- * Re-wrap existing committed amounts with a new token, preserving raw values.
- * Used when only the token metadata (name/symbol) changed but the supply didn't.
- */
-function rebaseAmounts(committed: AuctionTokenAmounts, newToken: Currency): AuctionTokenAmounts {
-  return {
-    totalSupply: CurrencyAmount.fromRawAmount(newToken, committed.totalSupply.quotient),
-    auctionSupplyAmount: CurrencyAmount.fromRawAmount(newToken, committed.auctionSupplyAmount.quotient),
-    postAuctionLiquidityAmount: CurrencyAmount.fromRawAmount(newToken, committed.postAuctionLiquidityAmount.quotient),
-  }
-}
 
 export type CreateAuctionStore = UseBoundStore<StoreApi<CreateAuctionStoreState>>
 
@@ -70,9 +59,27 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             set({ step })
           },
           goToNextStep: () => {
-            set((state) => ({
-              step: Math.min(state.step + 1, CreateAuctionStep.REVIEW_LAUNCH) as CreateAuctionStep,
-            }))
+            set((state) => {
+              const nextStep = Math.min(state.step + 1, CreateAuctionStep.REVIEW_LAUNCH) as CreateAuctionStep
+
+              if (
+                state.step === CreateAuctionStep.CUSTOMIZE_POOL &&
+                state.customizePool.priceRangeStrategy === PriceRangeStrategy.CUSTOM_RANGE
+              ) {
+                const nextRanges = stripZeroPercentCustomPriceRangeEntries(state.customizePool.customPriceRanges)
+                if (nextRanges !== state.customizePool.customPriceRanges) {
+                  return {
+                    step: nextStep,
+                    customizePool: {
+                      ...state.customizePool,
+                      customPriceRanges: nextRanges,
+                    },
+                  }
+                }
+              }
+
+              return { step: nextStep }
+            })
           },
           goToPreviousStep: () => {
             set((state) => ({
@@ -141,7 +148,7 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
               }
             })
           },
-          addPostAuctionLiquidityTier: () => {
+          addPostAuctionLiquidityTier: (options) => {
             set((state) => {
               const { committed, postAuctionLiquidityAllocation } = state.configureAuction
               if (postAuctionLiquidityAllocation.type !== PostAuctionLiquidityAllocationType.TIERED) {
@@ -152,14 +159,14 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
               }
 
               const { tiers } = postAuctionLiquidityAllocation
-              const newBoundedTier = createNextBoundedTier(tiers)
+              const newBoundedTier = createNextBoundedTier(tiers, options)
               const unboundedTier = tiers.find(isUnboundedTier)
               const boundedTiers = tiers.filter((t) => !isUnboundedTier(t))
 
-              const nextAllocation = {
+              const nextAllocation = normalizePostAuctionLiquidityAllocation({
                 ...postAuctionLiquidityAllocation,
                 tiers: [...boundedTiers, newBoundedTier, ...(unboundedTier ? [unboundedTier] : [])],
-              }
+              })
 
               return {
                 configureAuction: {
@@ -390,19 +397,30 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
             }))
           },
           setFeesRecipientAddress: (feesRecipientAddress: string) => {
-            set((state) => ({
-              customizePool: { ...state.customizePool, feesRecipientAddress },
-            }))
+            set((state) => {
+              const { customizePool } = state
+              const hasFeeClaim = feesRecipientAddress.trim().length > 0
+              return {
+                customizePool: {
+                  ...customizePool,
+                  feesRecipientAddress,
+                  sendFeesEnabled: hasFeeClaim,
+                  ...(hasFeeClaim ? { buybackAndBurnEnabled: false } : {}),
+                },
+              }
+            })
           },
           setBuybackAndBurnEnabled: (buybackAndBurnEnabled: boolean) => {
-            set((state) => ({
-              customizePool: { ...state.customizePool, buybackAndBurnEnabled },
-            }))
-          },
-          setAutocompoundFeesEnabled: (autocompoundFeesEnabled: boolean) => {
-            set((state) => ({
-              customizePool: { ...state.customizePool, autocompoundFeesEnabled },
-            }))
+            set((state) => {
+              const { customizePool } = state
+              return {
+                customizePool: {
+                  ...customizePool,
+                  buybackAndBurnEnabled,
+                  ...(buybackAndBurnEnabled ? { feesRecipientAddress: '', sendFeesEnabled: false } : {}),
+                },
+              }
+            })
           },
           commitTokenFormAndAdvance: () => {
             set((state) => {
@@ -433,7 +451,7 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
                 ? postAuctionLiquidityAllocation
                 : createSinglePostAuctionLiquidityAllocation(previewPercent)
               const committedBase = isSameSupply
-                ? rebaseAmounts(existingCommitted, totalSupply.currency)
+                ? rebaseAuctionTokenAmounts(existingCommitted, totalSupply.currency)
                 : buildAuctionAmountsFromLiquidityPreview(totalSupply, previewPercent)
               const committed = updateCommittedPostAuctionLiquidity(committedBase, nextAllocation)
 

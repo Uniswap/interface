@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -6,12 +6,12 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { deleteRecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { logger } from 'utilities/src/logger/logger'
 import {
   getRecoveryMethodLabel,
-  LIST_AUTHENTICATORS_QUERY_KEY,
+  invalidateListAuthenticators,
 } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useModalState } from '~/hooks/useModalState'
-import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
 import type { RemoveBackupLoginModalParams } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppSelector } from '~/state/hooks'
@@ -28,20 +28,21 @@ export function RemoveBackupLoginModal() {
 
   const providerLabel = initialState?.recoveryMethodType ? getRecoveryMethodLabel(initialState.recoveryMethodType) : ''
 
-  const { mutate: handleRemove, isPending } = usePasskeyAuthWithHelpModal(
-    async () => {
+  const { mutate: handleRemove, isPending } = useMutation({
+    mutationFn: async () => {
       if (!walletId) {
         throw new Error('No walletId available')
       }
       return await deleteRecoveryMethod(walletId)
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [LIST_AUTHENTICATORS_QUERY_KEY] })
-        onClose()
-      },
+    onSuccess: () => {
+      invalidateListAuthenticators(queryClient, walletId)
+      onClose()
     },
-  )
+    onError: (error) => {
+      logger.error(error, { tags: { file: 'RemoveBackupLoginModal', function: 'handleRemove' } })
+    },
+  })
 
   return (
     <Modal name={ModalName.RemoveBackupLogin} isModalOpen={isOpen} onClose={onClose} maxWidth={420}>

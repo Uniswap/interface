@@ -45,7 +45,6 @@ export const LINEA_CHAIN_INFO = {
   explorer: {
     name: 'Lineascan',
     url: 'https://lineascan.build/',
-    apiURL: 'https://api.lineascan.build/api',
   },
   interfaceName: 'linea',
   label: 'Linea',

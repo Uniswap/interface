@@ -38,6 +38,7 @@ export function pathToPortfolioTab(path: string): PortfolioTab | undefined {
   const PATHNAME_TO_TAB: Partial<Record<string, PortfolioTab>> = {
     '/portfolio': PortfolioTab.Overview,
     '/portfolio/tokens': PortfolioTab.Tokens,
+    '/portfolio/pools': PortfolioTab.Pools,
     '/portfolio/defi': PortfolioTab.Defi,
     '/portfolio/nfts': PortfolioTab.Nfts,
     '/portfolio/activity': PortfolioTab.Activity,

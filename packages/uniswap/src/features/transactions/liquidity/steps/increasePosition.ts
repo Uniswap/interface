@@ -8,7 +8,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import {
   OnChainTransactionFields,
-  OnChainTransactionFieldsBatched,
+  OnChainTransactionFieldsWalletCall,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -26,8 +26,8 @@ export interface IncreasePositionTransactionStepAsync {
   getTxRequest(signature: string): Promise<{ txRequest: ValidatedTransactionRequest | undefined }>
 }
 
-export interface IncreasePositionTransactionStepBatched extends OnChainTransactionFieldsBatched {
-  type: TransactionStepType.IncreasePositionTransactionBatched
+export interface IncreasePositionTransactionStepWalletCall extends OnChainTransactionFieldsWalletCall {
+  type: TransactionStepType.IncreasePositionTransactionWalletCall
 }
 
 export function createIncreasePositionStep(txRequest: ValidatedTransactionRequest): IncreasePositionTransactionStep {
@@ -130,11 +130,11 @@ export function createIncreasePositionAsyncStep(
   }
 }
 
-export function createIncreasePositionStepBatched(
+export function createIncreasePositionStepWalletCall(
   txRequests: ValidatedTransactionRequest[],
-): IncreasePositionTransactionStepBatched {
+): IncreasePositionTransactionStepWalletCall {
   return {
-    type: TransactionStepType.IncreasePositionTransactionBatched,
-    batchedTxRequests: txRequests,
+    type: TransactionStepType.IncreasePositionTransactionWalletCall,
+    walletCallTxRequests: txRequests,
   }
 }

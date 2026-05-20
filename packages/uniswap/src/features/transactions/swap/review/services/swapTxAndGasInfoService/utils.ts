@@ -65,6 +65,7 @@ export interface TransactionRequestInfo {
   gasEstimate: SwapGasFeeEstimation
   swapRequestArgs: TradingApi.CreateSwapRequest | undefined
   includesDelegation?: boolean
+  paymasterService?: TradingApi.PaymasterServiceCapability
 }
 
 export function processWrapResponse({
@@ -240,6 +241,7 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
       gasEstimate,
       includesDelegation: response?.includesDelegation,
       swapRequestArgs: swapRequestParams,
+      paymasterService: response?.paymasterService,
     }
   }
 }
@@ -390,6 +392,7 @@ export function getClassicSwapTxAndGasInfo({
     txRequests,
     permit,
     includesDelegation: swapTxInfo.includesDelegation,
+    paymasterService: swapTxInfo.paymasterService,
   }
 }
 
@@ -465,6 +468,7 @@ export function getBridgeSwapTxAndGasInfo({
     ...createApprovalFields({ approvalTxInfo }),
     txRequests,
     includesDelegation: swapTxInfo.includesDelegation,
+    paymasterService: swapTxInfo.paymasterService,
   }
 }
 

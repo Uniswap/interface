@@ -1,8 +1,8 @@
 import { createListenerMiddleware, createSlice } from '@reduxjs/toolkit'
+import { hexToNumber } from '@universe/encoding'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { hexToNumber } from 'utilities/src/addresses/hex'
 import { createOnSetCapabilitiesByChainEffect } from '~/state/walletCapabilities/effects'
 import {
   isAtomicBatchingSupported,

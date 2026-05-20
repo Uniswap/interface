@@ -67,6 +67,7 @@ export function EmailEntryStep({
           color="$neutral1"
           fontSize={18}
           fontWeight="$book"
+          disabled={isLoading}
           onChangeText={(v) => setEmail(v.trim())}
           onSubmitEditing={() => {
             if (canSubmit) {

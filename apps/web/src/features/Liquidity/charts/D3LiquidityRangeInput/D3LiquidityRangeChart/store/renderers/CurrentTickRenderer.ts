@@ -79,14 +79,20 @@ export function createCurrentTickRenderer({
       .attr('height', dimensions.height)
       .attr('fill', 'transparent')
       .on('mousemove', function (event) {
-        if (!currentDot) return
+        if (!currentDot) {
+          return
+        }
         const { dragStartY } = getState()
-        if (dragStartY !== null) return
+        if (dragStartY !== null) {
+          return
+        }
 
         const { priceData, priceToY } = context
         const [x] = d3.pointer(event)
         const closest = findClosestPriceDataPoint({ priceData, mouseX: x, chartWidth: dimensions.width })
-        if (!closest) return
+        if (!closest) {
+          return
+        }
 
         const firstMs = priceData[0].time * 1000
         const lastMs = priceData[priceData.length - 1].time * 1000

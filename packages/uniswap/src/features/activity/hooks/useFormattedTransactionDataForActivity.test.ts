@@ -271,6 +271,18 @@ describe('useFormattedTransactionDataForActivity', () => {
       // Should be false despite API returning hasNextPage=true because limit reached
       expect(result.current.hasNextPage).toBe(false)
     })
+
+    it('should continue paginating beyond 250 items when maxItems is Infinity', () => {
+      // Simulate a web Activity page with 500+ transactions — should never hit the cap
+      const transactions = Array.from({ length: 500 }, (_, i) => createTestTransaction({ id: `tx-${i}` }))
+
+      mockListTransactions({ data: transactions, hasNextPage: true })
+      mockUseMergeLocalAndRemoteTransactions.mockReturnValue(transactions)
+
+      const { result } = renderFormattedHook({ maxItems: Infinity })
+
+      expect(result.current.hasNextPage).toBe(true)
+    })
   })
 
   describe('combined filtering', () => {

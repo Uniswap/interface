@@ -128,7 +128,7 @@ function* executeChainedPlan(params: ExecutePlanParams, dependencies: Transactio
       })
       return result
     },
-    handleSwapTransactionBatchedStep() {
+    handleSwapTransactionWalletCallStep() {
       throw new Error('5792-style batching does not apply to wallet applications.')
     },
     *sendToast(appNotification): SagaGenerator<void> {

@@ -5,9 +5,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// oxlint-disable-next-line no-restricted-imports -- styled-components needed for custom component styling
-import styled from 'styled-components'
-import { Button, Flex, ModalCloseIcon, Text, Tooltip } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Text, Tooltip, styled } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
@@ -39,11 +37,11 @@ import {
 import { NumericalInputMimic, NumericalInputSymbolContainer } from '~/pages/Swap/common/shared'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-const FeeTierPercentInput = styled(StyledPercentInput)`
-  flex-grow: 0;
-  text-align: end;
-  justify-content: flex-end;
-`
+const FeeTierPercentInput = styled(StyledPercentInput, {
+  flexGrow: 0,
+  textAlign: 'right',
+  justifyContent: 'flex-end',
+})
 
 const MAX_CHAR_PIXEL_WIDTH = 46
 const MAX_FONT_SIZE = 70
@@ -248,13 +246,13 @@ export function FeeTierSearchModal({
                     }}
                     placeholder="0"
                     maxDecimals={MAX_FEE_TIER_DECIMALS}
-                    $fontSize={fontSize}
-                    $width={createFeeValue && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
+                    numericalFontSize={fontSize}
+                    fieldWidth={createFeeValue && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
                   />
-                  <NumericalInputSymbolContainer showPlaceholder={!createFeeValue} $fontSize={fontSize}>
+                  <NumericalInputSymbolContainer showPlaceholder={!createFeeValue} numericalFontSize={fontSize}>
                     %
                   </NumericalInputSymbolContainer>
-                  <NumericalInputMimic ref={hiddenObserver.ref} $fontSize={fontSize}>
+                  <NumericalInputMimic ref={hiddenObserver.ref} numericalFontSize={fontSize}>
                     {createFeeValue}
                   </NumericalInputMimic>
                 </Flex>

@@ -1,78 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
-.c1 {
-  color: #131313;
-  pointer-events: auto;
-  width: 0;
-  position: relative;
-  font-weight: 485;
-  outline: none;
-  border: none;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: 28px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-  text-align: right;
-}
-
-.c1 ::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-.c1 [type='number'] {
-  -moz-appearance: textfield;
-}
-
-.c1 ::-webkit-outer-spin-button,
-.c1 ::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.c1 ::placeholder {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-.c2 {
-  max-height: 84px;
-  max-width: calc(100% - 43px);
-  width: 43px;
-  font-size: 70px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c2 ::placeholder {
-  opacity: 1;
-}
-
-.c3 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  font-size: 70px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c0 {
-  user-select: none;
-  color: #131313;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
 <span
   class=""
   style="display: contents;"
@@ -84,73 +12,101 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
       class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
-          data-disable-theme="true"
-        >
-          You’re sending
-        </span>
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-center"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: text; pointer-events: auto; width: 100%; transform: scale(1);"
+          tabindex="0"
         >
-          <span
-            class="c0"
-            style="line-height: 84px; font-size: 70px;"
-          >
-            $
-          </span>
-          <input
-            autocomplete="off"
-            autocorrect="off"
-            class="c1 c2"
-            data-testid="send-form-amount-input"
-            inputmode="decimal"
-            maxlength="79"
-            minlength="1"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder="0"
-            spellcheck="false"
-            style="line-height: 84px;"
-            type="text"
-            value="1000"
-          />
-          <span
-            class="c3"
-            style="line-height: 84px; font-size: 70px;"
-          >
-            1000
-          </span>
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
-          />
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _color-accent3"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              You’re sending
+            </span>
+          </div>
+          <div
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _width-10037 _alignItems-center _color-accent3"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _userSelect-none _textAlign-left"
+                  data-disable-theme="true"
+                  style="line-height: 84px; font-size: 70px;"
+                >
+                  $
+                </span>
+              </div>
+              <span
+                class="_dsp_contents"
+              >
+                <span
+                  class="_dsp_contents"
+                >
+                  <input
+                    autocapitalize="sentences"
+                    autocomplete="off"
+                    autocorrect="off"
+                    class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _minWidth-0px _position-relative _fontFamily-f-family _outlineWidth-0px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _flexGrow-1 _flexShrink-1 _flexBasis-auto _backgroundColor-transparent _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _pt-0px _pr-0px _pb-0px _pl-0px _color-neutral1 _fontSize-70px _textAlign-left _pointerEvents-auto _fontWeight-f-weight-bo3548 _lineHeight-84px _width-43px _maxWidth-calc100-43p1180324142 _maxHeight-84px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true is_NumericalStyledInput "
+                    data-disable-theme="true"
+                    data-testid="send-form-amount-input"
+                    dir="auto"
+                    inputmode="decimal"
+                    maxlength="79"
+                    placeholder="0"
+                    rows="1"
+                    spellcheck="false"
+                    style="--placeholderTextColor: var(--neutral2);"
+                    value="1000"
+                    virtualkeyboardpolicy="auto"
+                  />
+                </span>
+              </span>
+              <span
+                class="font_body _visibility-_platformweb_hidden _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _position-absolute _pointerEvents-none _bottom-0px _right-0px _textAlign-left"
+                data-disable-theme="true"
+                style="line-height: 84px; font-size: 70px;"
+              >
+                1000
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
-          style="transition: 100ms;"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334076 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
         >
-          <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
-            data-disable-theme="true"
+          <div
+            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+            style="transition: 100ms;"
           >
-            100.00 DAI
-          </span>
-          <svg
-            fill="none"
-            stroke-width="8"
-            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
-              fill="currentColor"
-            />
-          </svg>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              100.00 DAI
+            </span>
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
@@ -508,69 +464,6 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
-.c0 {
-  color: #131313;
-  pointer-events: auto;
-  width: 0;
-  position: relative;
-  font-weight: 485;
-  outline: none;
-  border: none;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: 28px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-  text-align: right;
-}
-
-.c0 ::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-.c0 [type='number'] {
-  -moz-appearance: textfield;
-}
-
-.c0 ::-webkit-outer-spin-button,
-.c0 ::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.c0 ::placeholder {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-.c1 {
-  max-height: 84px;
-  max-width: 100%;
-  width: 43px;
-  font-size: 70px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c1 ::placeholder {
-  opacity: 1;
-}
-
-.c2 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  font-size: 70px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
 <span
   class=""
   style="display: contents;"
@@ -582,67 +475,90 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
       class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
-          data-disable-theme="true"
-        >
-          You’re sending
-        </span>
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-center"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: text; pointer-events: auto; width: 100%; transform: scale(1);"
+          tabindex="0"
         >
-          <input
-            autocomplete="off"
-            autocorrect="off"
-            class="c0 c1"
-            data-testid="send-form-amount-input"
-            inputmode="decimal"
-            maxlength="79"
-            minlength="1"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder="0"
-            spellcheck="false"
-            style="line-height: 84px;"
-            type="text"
-            value="1"
-          />
-          <span
-            class="c2"
-            style="line-height: 84px; font-size: 70px;"
-          >
-            1
-          </span>
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
-          />
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _color-accent3"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              You’re sending
+            </span>
+          </div>
+          <div
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _width-10037 _alignItems-center _color-accent3"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+            >
+              <span
+                class="_dsp_contents"
+              >
+                <span
+                  class="_dsp_contents"
+                >
+                  <input
+                    autocapitalize="sentences"
+                    autocomplete="off"
+                    autocorrect="off"
+                    class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _minWidth-0px _position-relative _fontFamily-f-family _outlineWidth-0px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _flexGrow-1 _flexShrink-1 _flexBasis-auto _backgroundColor-transparent _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _pt-0px _pr-0px _pb-0px _pl-0px _color-neutral1 _fontSize-70px _textAlign-left _pointerEvents-auto _fontWeight-f-weight-bo3548 _lineHeight-84px _width-43px _maxWidth-10037 _maxHeight-84px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true is_NumericalStyledInput "
+                    data-disable-theme="true"
+                    data-testid="send-form-amount-input"
+                    dir="auto"
+                    inputmode="decimal"
+                    maxlength="79"
+                    placeholder="0"
+                    rows="1"
+                    spellcheck="false"
+                    style="--placeholderTextColor: var(--neutral2);"
+                    value="1"
+                    virtualkeyboardpolicy="auto"
+                  />
+                </span>
+              </span>
+              <span
+                class="font_body _visibility-_platformweb_hidden _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _position-absolute _pointerEvents-none _bottom-0px _right-0px _textAlign-left"
+                data-disable-theme="true"
+                style="line-height: 84px; font-size: 70px;"
+              >
+                1
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
-          style="transition: 100ms;"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334076 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
         >
-          <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
-            data-disable-theme="true"
+          <div
+            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+            style="transition: 100ms;"
           >
-            $100.00
-          </span>
-          <svg
-            fill="none"
-            stroke-width="8"
-            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
-              fill="currentColor"
-            />
-          </svg>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              $100.00
+            </span>
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
@@ -1000,79 +916,6 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform > should render placeholder values 1`] = `
-.c1 {
-  color: #131313;
-  pointer-events: auto;
-  width: 0;
-  position: relative;
-  font-weight: 485;
-  outline: none;
-  border: none;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: 28px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-  text-align: right;
-}
-
-.c1 ::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
-
-.c1 [type='number'] {
-  -moz-appearance: textfield;
-}
-
-.c1 ::-webkit-outer-spin-button,
-.c1 ::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.c1 ::placeholder {
-  color: rgba(19, 19, 19, 0.35);
-}
-
-.c2 {
-  max-height: 84px;
-  max-width: calc(100% - 43px);
-  width: 43px;
-  font-size: 70px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c2 ::placeholder {
-  opacity: 1;
-}
-
-.c3 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  font-size: 70px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c0 {
-  user-select: none;
-  color: #131313;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-  color: rgba(19, 19, 19, 0.35);
-}
-
 <span
   class=""
   style="display: contents;"
@@ -1084,71 +927,99 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
       class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface1 _alignItems-center _justifyContent-flex-end _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
-      >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
-          data-disable-theme="true"
-        >
-          You’re sending
-        </span>
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _alignItems-center"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: text; pointer-events: auto; width: 100%; transform: scale(1);"
+          tabindex="0"
         >
-          <span
-            class="c0"
-            style="line-height: 84px; font-size: 70px;"
-          >
-            $
-          </span>
-          <input
-            autocomplete="off"
-            autocorrect="off"
-            class="c1 c2"
-            data-testid="send-form-amount-input"
-            inputmode="decimal"
-            maxlength="79"
-            minlength="1"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder="0"
-            spellcheck="false"
-            style="line-height: 84px;"
-            type="text"
-            value=""
-          />
-          <span
-            class="c3"
-            style="line-height: 84px; font-size: 70px;"
-          />
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _opacity-0 _width-10037 _height-20px _zIndex--1"
-          />
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _color-accent3"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              You’re sending
+            </span>
+          </div>
+          <div
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360333927 _width-10037 _alignItems-center _color-accent3"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _maxWidth-10037 _position-relative _width-max-content"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _userSelect-none _textAlign-left"
+                  data-disable-theme="true"
+                  style="line-height: 84px; font-size: 70px;"
+                >
+                  $
+                </span>
+              </div>
+              <span
+                class="_dsp_contents"
+              >
+                <span
+                  class="_dsp_contents"
+                >
+                  <input
+                    autocapitalize="sentences"
+                    autocomplete="off"
+                    autocorrect="off"
+                    class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _minWidth-0px _position-relative _fontFamily-f-family _outlineWidth-0px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _flexGrow-1 _flexShrink-1 _flexBasis-auto _backgroundColor-transparent _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _pt-0px _pr-0px _pb-0px _pl-0px _color-neutral1 _fontSize-70px _textAlign-left _pointerEvents-auto _fontWeight-f-weight-bo3548 _lineHeight-84px _width-43px _maxWidth-calc100-43p1180324142 _maxHeight-84px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true is_NumericalStyledInput "
+                    data-disable-theme="true"
+                    data-testid="send-form-amount-input"
+                    dir="auto"
+                    inputmode="decimal"
+                    maxlength="79"
+                    placeholder="0"
+                    rows="1"
+                    spellcheck="false"
+                    style="--placeholderTextColor: var(--neutral2);"
+                    value=""
+                    virtualkeyboardpolicy="auto"
+                  />
+                </span>
+              </span>
+              <span
+                class="font_body _visibility-_platformweb_hidden _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-70px _fontWeight-f-weight-bo3548 _lineHeight-spacing6036 _position-absolute _pointerEvents-none _bottom-0px _right-0px _textAlign-left"
+                data-disable-theme="true"
+                style="line-height: 84px; font-size: 70px;"
+              />
+            </div>
+          </div>
         </div>
         <div
-          class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
-          style="transition: 100ms;"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334076 _pb-t-space-spa1360333927 _gap-t-space-spa1360334076 _width-10037 _alignItems-center"
         >
-          <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
-            data-disable-theme="true"
+          <div
+            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _gap-t-space-gap52 _cursor-pointer"
+            style="transition: 100ms;"
           >
-            0 DAI
-          </span>
-          <svg
-            fill="none"
-            stroke-width="8"
-            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
-              fill="currentColor"
-            />
-          </svg>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+              data-disable-theme="true"
+            >
+              0 DAI
+            </span>
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.7069 7.7071C21.5119 7.9021 21.2559 8.00007 20.9999 8.00007C20.7439 8.00007 20.4879 7.9021 20.2929 7.7071L17.9999 5.41413V17.0001C17.9999 17.5521 17.5529 18.0001 16.9999 18.0001C16.4469 18.0001 15.9999 17.5521 15.9999 17.0001V5.41413L13.7069 7.7071C13.3159 8.0981 12.6839 8.0981 12.2929 7.7071C11.9019 7.3161 11.9019 6.68403 12.2929 6.29304L16.2919 2.29401C16.3849 2.20101 16.4948 2.12797 16.6178 2.07697C16.8618 1.97597 17.138 1.97597 17.382 2.07697C17.505 2.12797 17.6149 2.20101 17.7079 2.29401L21.7069 6.29304C22.0979 6.68403 22.0979 7.3161 21.7069 7.7071ZM10.2929 16.293L7.99992 18.586V7.00007C7.99992 6.44807 7.55292 6.00007 6.99992 6.00007C6.44692 6.00007 5.99992 6.44807 5.99992 7.00007V18.586L3.70695 16.293C3.31595 15.902 2.68388 15.902 2.29288 16.293C1.90188 16.684 1.90188 17.3161 2.29288 17.7071L6.29191 21.7061C6.38491 21.7991 6.49483 21.8722 6.61784 21.9232C6.73984 21.9742 6.86992 22.0001 6.99992 22.0001C7.12992 22.0001 7.25999 21.9732 7.382 21.9232C7.505 21.8722 7.61492 21.7991 7.70792 21.7061L11.7069 17.7071C12.0979 17.3161 12.0979 16.684 11.7069 16.293C11.3159 15.902 10.6839 15.902 10.2929 16.293Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>

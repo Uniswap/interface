@@ -8,7 +8,7 @@ import {
 } from 'uniswap/src/features/language/LocalizationContext'
 import { formatPriceRangeBound } from '~/pages/Liquidity/CreateAuction/components/customPriceRangeEditorFormatting'
 import {
-  CustomPriceRangeBound,
+  CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   type CustomPriceRangeEntry,
   type CustomPriceRangeValue,
   PriceRangeStrategy,
@@ -69,10 +69,7 @@ export function getPriceHistogramBarCountForWidth(width: number): number {
 }
 
 function getComparableBound(value: CustomPriceRangeValue): number {
-  if (value === CustomPriceRangeBound.NegativeInfinity) {
-    return Number.NEGATIVE_INFINITY
-  }
-  if (value === CustomPriceRangeBound.PositiveInfinity) {
+  if (value === CUSTOM_PRICE_RANGE_POSITIVE_INFINITY) {
     return Number.POSITIVE_INFINITY
   }
   return value
@@ -106,7 +103,7 @@ export type HistogramPercentToXParams = {
   totalBarsWidth: number
 }
 
-/** Maps a % from clearing (or ±∞) to an x coordinate on the custom-range histogram. */
+/** Maps a % from clearing (or +∞) to an x coordinate on the custom-range histogram. */
 export function getHistogramXForPercentFromClearing(
   bound: number,
   { startX, centerX, totalBarsWidth }: HistogramPercentToXParams,
@@ -115,9 +112,6 @@ export function getHistogramXForPercentFromClearing(
   const leftSpan = centerX - startX
   const rightSpan = rightEdge - centerX
 
-  if (bound === Number.NEGATIVE_INFINITY) {
-    return startX
-  }
   if (bound === Number.POSITIVE_INFINITY) {
     return rightEdge
   }
@@ -150,6 +144,16 @@ type CustomPriceHistogramLayer = {
   color: string
 }
 
+/**
+ * Numeric width used to order layers in the histogram stack. Min is always finite (the leftmost
+ * value is the histogram's negative full extent). A `+∞` max bound is clamped to the positive
+ * full extent so ranges with `+∞` still get a consistent finite width.
+ */
+function getCustomPriceHistogramLayerSortWidth(min: number, max: number): number {
+  const upper = max === Number.POSITIVE_INFINITY ? CUSTOM_PRICE_HISTOGRAM_POSITIVE_FULL_EXTENT_PERCENT : max
+  return upper - min
+}
+
 export function getCustomPriceHistogramLayers({
   entries,
   barColor,
@@ -161,16 +165,31 @@ export function getCustomPriceHistogramLayers({
 }): CustomPriceHistogramLayer[] {
   let nextY = PRICE_INDICATOR_TOP_OFFSET + CONTAINER_HEIGHT
 
+  // Stack widest ranges at the bottom and narrowest on top, regardless of table order.
+  // Lookups elsewhere key off entryId, so highlighting stays correct across this reorder.
   return entries
     .filter(isCustomPriceRangeEntryValid)
-    .map((entry, index) => {
+    .map((entry) => ({
+      entry,
+      min: getComparableBound(entry.minPercentFromClearing),
+      max: getComparableBound(entry.maxPercentFromClearing),
+    }))
+    .sort((a, b) => {
+      const widthA = getCustomPriceHistogramLayerSortWidth(a.min, a.max)
+      const widthB = getCustomPriceHistogramLayerSortWidth(b.min, b.max)
+      if (widthA === widthB) {
+        return 0
+      }
+      return widthB - widthA
+    })
+    .map(({ entry, min, max }, index) => {
       const height = (Math.max(0, entry.liquidityPercent) / 100) * CONTAINER_HEIGHT
       nextY -= height
 
       return {
         entryId: entry.id,
-        min: getComparableBound(entry.minPercentFromClearing),
-        max: getComparableBound(entry.maxPercentFromClearing),
+        min,
+        max,
         height,
         y: nextY,
         color: getLayeredPriceHistogramColor({ barColor, neutral1Color, layerIndex: index }),

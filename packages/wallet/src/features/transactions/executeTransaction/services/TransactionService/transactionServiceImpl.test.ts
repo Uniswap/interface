@@ -1,4 +1,5 @@
 import { BaseProvider, JsonRpcProvider, Provider, TransactionReceipt } from '@ethersproject/providers'
+import { ensure0xHex } from '@universe/encoding'
 import { BigNumber, utils } from 'ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountMeta, AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
@@ -10,7 +11,6 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'

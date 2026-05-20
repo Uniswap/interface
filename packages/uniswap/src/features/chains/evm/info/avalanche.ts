@@ -45,7 +45,6 @@ export const AVALANCHE_CHAIN_INFO = {
   explorer: {
     name: 'Snowtrace',
     url: 'https://snowtrace.io/',
-    apiURL: 'https://api.snowscan.xyz',
   },
   openseaName: 'avalanche',
   interfaceName: 'avalanche',

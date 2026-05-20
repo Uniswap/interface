@@ -5,6 +5,7 @@ import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useSrcColor } from '~/hooks/useColor'
+import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 
@@ -16,7 +17,7 @@ export function useCreateAuctionDistributionBarColors({
 }: {
   chainId: UniverseChainId
   raiseCurrency: RaiseCurrency
-  tokenColor?: string
+  tokenColor?: TokenAccentHex
 }): { fundraiseColor: string; raiseSideLpColor: string; tokenSideLpColor: string } {
   const colors = useSporeColors()
   const raiseCurrencySdk = useMemo(() => getRaiseCurrencyAsCurrency(raiseCurrency, chainId), [raiseCurrency, chainId])

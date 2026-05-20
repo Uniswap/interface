@@ -19,6 +19,7 @@ import {
   type Action as NewAction,
   type AuthenticationTypes as NewAuthenticationTypes,
   type OprfEvaluateResponse,
+  type PrepareAddAuthenticatorResponse,
   type RegistrationOptions,
   type ReportDecryptionResultResponse,
   type SetupRecoveryResponse,
@@ -47,6 +48,7 @@ export interface EmbeddedWalletClientContext {
     disconnect: (req: Record<string, unknown>) => Promise<DisconnectResponse>
     listAuthenticators: (req: Record<string, unknown>) => Promise<ListAuthenticatorsResponse>
     startAuthenticatedSession: (req: Record<string, unknown>) => Promise<StartAuthenticatedSessionResponse>
+    prepareAddAuthenticator: (req: Record<string, unknown>) => Promise<PrepareAddAuthenticatorResponse>
     addAuthenticator: (req: Record<string, unknown>) => Promise<AddAuthenticatorResponse>
     deleteAuthenticator: (req: Record<string, unknown>) => Promise<DeleteAuthenticatorResponse>
     oprfEvaluate: (req: Record<string, unknown>, options?: CallOptions) => Promise<OprfEvaluateResponse>
@@ -143,8 +145,9 @@ export interface EmbeddedWalletApiClient {
     existingCredential: string
     devicePublicKey: string
   }) => Promise<StartAuthenticatedSessionResponse>
+  fetchPrepareAddAuthenticatorRequest: (params: { newCredential: string }) => Promise<PrepareAddAuthenticatorResponse>
   fetchAddAuthenticatorRequest: (params: {
-    newCredential: string
+    newCredential?: string
     deviceSignature: string
   }) => Promise<AddAuthenticatorResponse>
   fetchDeleteAuthenticatorRequest: (params: {

@@ -41,7 +41,10 @@ yarn-error.log*
 .turbo
 
 # nx
-.nx/
+# `.nx/*` (not `.nx/`) so the activation key in .nx/key/ can be re-included
+# — git cannot un-exclude a path under a directory-excluded parent.
+.nx/*
+!.nx/key/
 graph.json
 
 # .yarn files

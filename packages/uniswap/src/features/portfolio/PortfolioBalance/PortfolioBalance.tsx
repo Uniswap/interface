@@ -9,8 +9,9 @@ import AnimatedNumber, {
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -33,6 +34,7 @@ interface PortfolioBalanceProps {
   overrideAbsoluteChangeUSD?: number
   /** When true, hides the percent change (absolute change still shown) */
   hidePercentChange?: boolean
+  part?: PortfolioBalancePart
 }
 
 export const PortfolioBalance = memo(function PortfolioBalanceInner({
@@ -45,9 +47,11 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   overridePercentChange,
   overrideAbsoluteChangeUSD,
   hidePercentChange,
+  part = PortfolioBalancePart.Total,
 }: PortfolioBalanceProps): JSX.Element {
   const { t } = useTranslation()
-  const { data, loading, error, networkStatus, refetch } = usePortfolioTotalValue({
+  const { data, loading, error, networkStatus, refetch } = usePortfolioBalancePart({
+    part,
     evmAddress: evmOwner,
     svmAddress: svmOwner,
     chainIds,

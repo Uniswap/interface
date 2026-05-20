@@ -21,6 +21,7 @@ import {
 import { formatSwapSignedAnalyticsEventProperties } from '~/lib/utils/analytics'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
+import { sendSwapSignedEvent } from '~/state/sagas/transactions/swapSignedAnalytics'
 import {
   addTransactionBreadcrumb,
   getSwapTransactionInfo,
@@ -49,6 +50,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     },
     portfolioBalanceUsd: analytics.total_balances_usd,
     trace: { ...analytics },
+    priceSource: analytics.price_source,
   }
 
   sendAnalyticsEvent(
@@ -78,6 +80,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
       },
       portfolioBalanceUsd: analytics.total_balances_usd,
       trace: { ...analytics },
+      priceSource: analytics.price_source,
     }),
   )
 
@@ -131,9 +134,11 @@ export function* handleUniswapXPlanSignatureStep(params: HandleUniswapXPlanSigna
   // Check again after user has signed to ensure they didn't sign after the deadline
   checkDeadline(step.deadline)
 
-  sendAnalyticsEvent(SwapEventName.SwapSigned, { ...analytics })
+  sendSwapSignedEvent({
+    analytics,
+    properties: { ...analytics },
+  })
 
-  // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
   return signature
 }
 

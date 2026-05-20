@@ -43,13 +43,13 @@ import appsFlyer from 'react-native-appsflyer'
 import DeviceInfo, { getUniqueIdSync } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
-import { MMKV } from 'react-native-mmkv'
 import { OneSignal } from 'react-native-onesignal'
 import { configureReanimatedLogger } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import { createMMKVApolloAdapter } from 'src/app/mmkvApolloAdapter'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { AppModals } from 'src/app/modals/AppModals'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
@@ -65,6 +65,7 @@ import {
   DatadogProviderWrapper,
   MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
 } from 'src/features/datadog/DatadogProviderWrapper'
+import { useDatadogWalletContext } from 'src/features/datadog/useDatadogWalletContext'
 import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
 import { setupExpoImageMemoryWatcher } from 'src/features/images/expoImageCacheSetup'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
@@ -288,7 +289,7 @@ function ApplyPersistedLanguage(): null {
 function AppOuter(): JSX.Element | null {
   const customEndpoint = useSelector(selectCustomEndpoint)
   const client = usePersistedApolloClient({
-    storageWrapper: new MMKVWrapper(new MMKV()),
+    storageWrapper: new MMKVWrapper(createMMKVApolloAdapter()),
     maxCacheSizeInBytes: MAX_CACHE_SIZE_IN_BYTES,
     customEndpoint,
     reduxStore: store,
@@ -448,6 +449,7 @@ function DataUpdaters(): JSX.Element {
   const isSessionServiceEnabled = useIsSessionServiceEnabled()
 
   useDatadogUserAttributesTracking({ isOnboarded: !!finishedOnboarding })
+  useDatadogWalletContext()
   useHeartbeatReporter({ isOnboarded: !!finishedOnboarding })
   useLastBalancesReporter({ isOnboarded: !!finishedOnboarding })
   useTestnetModeForLoggingAndAnalytics()

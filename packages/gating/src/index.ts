@@ -94,4 +94,4 @@ export {
   useGateValue,
   useLayer,
 } from '@universe/gating/src/sdk/statsig'
-export { getOverrides, waitForStatsigReady } from '@universe/gating/src/utils'
+export { getOverrides, isStatsigClientRegistered, waitForStatsigReady } from '@universe/gating/src/utils'

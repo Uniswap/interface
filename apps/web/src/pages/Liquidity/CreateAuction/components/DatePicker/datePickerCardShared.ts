@@ -1,3 +1,5 @@
+import { HEX_RGB_PATTERN } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
+
 export const pad = (n: number): string => String(n).padStart(2, '0')
 
 /** Month / day / year token order for numeric date segments (from `Intl`, not translated month names). */
@@ -114,4 +116,35 @@ export function to24Hour({ hour12, period }: { hour12: number; period: 'AM' | 'P
     return hour12 % 12
   }
   return (hour12 % 12) + 12
+}
+
+/** Locale-aware compact time string (e.g. "12:00 AM" for en-US, "00:00" for de-DE). */
+export function formatTimeForDisplay({ date, locale }: { date: Date; locale: string }): string {
+  const uses12Hour = getLocaleUses12HourTime(locale)
+  const { hour, minute, period } = splitTimeForDisplay(date, uses12Hour)
+  return period ? `${hour}:${minute} ${period}` : `${hour}:${minute}`
+}
+
+/** Returns `rgba(...)` for a `#RRGGBB` string at the given alpha (0..1), or `undefined` for unsupported inputs. */
+export function hexToRgba({ hex, alpha }: { hex: string; alpha: number }): string | undefined {
+  if (!HEX_RGB_PATTERN.test(hex)) {
+    return undefined
+  }
+  const r = Number.parseInt(hex.slice(1, 3), 16)
+  const g = Number.parseInt(hex.slice(3, 5), 16)
+  const b = Number.parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+/** Returns a hex string darkened by `amount` (0..1). For example `0.12` ≈ 12% closer to black. */
+export function darkenHex({ hex, amount }: { hex: string; amount: number }): string | undefined {
+  if (!HEX_RGB_PATTERN.test(hex)) {
+    return undefined
+  }
+  const factor = 1 - Math.min(Math.max(amount, 0), 1)
+  const channel = (slice: string): string => {
+    const next = Math.round(Number.parseInt(slice, 16) * factor)
+    return next.toString(16).padStart(2, '0')
+  }
+  return `#${channel(hex.slice(1, 3))}${channel(hex.slice(3, 5))}${channel(hex.slice(5, 7))}`
 }

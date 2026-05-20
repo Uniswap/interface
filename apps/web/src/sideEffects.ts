@@ -1,4 +1,3 @@
-import '@reach/dialog/styles.css'
 import '~/global.css'
 import '~/polyfills'
 import '~/tracing'

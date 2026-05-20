@@ -1,5 +1,5 @@
+import { ContractTransaction } from '@ethersproject/contracts'
 import { TradingApi } from '@universe/api'
-import { ContractTransaction } from 'ethers/lib/ethers'
 import { useCallback, useMemo } from 'react'
 import {
   cancelMultipleUniswapXOrders,

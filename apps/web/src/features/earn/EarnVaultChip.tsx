@@ -3,11 +3,11 @@ import { Text, TouchableArea } from 'ui/src'
 import { Flex } from 'ui/src/components/layout'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import type { MockEarnVault } from '~/features/earn/_fixtures/vaults'
 
-export function EarnVaultChip({ vault, onPress }: { vault: MockEarnVault; onPress: () => void }) {
+export function EarnVaultChip({ vault, onPress }: { vault: EarnVaultInfo; onPress: () => void }) {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const currencyInfo = useCurrencyInfo(vault.currencyId)

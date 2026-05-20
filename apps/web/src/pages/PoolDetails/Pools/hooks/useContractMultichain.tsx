@@ -1,5 +1,5 @@
+import { BaseContract } from '@ethersproject/contracts'
 import { useWeb3React } from '@web3-react/core'
-import { BaseContract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

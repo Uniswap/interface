@@ -9,6 +9,24 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 const MENU_MIN_WIDTH = 200
 const MENU_MAX_WIDTH = 250
 
+/**
+ * `containerStyles` to apply to {@link MenuContent} when the surrounding `ContextMenu`
+ * adapts to a `WebBottomSheet` on mWeb. Neutralises the default popover frame so the
+ * sheet is the only visual card.
+ */
+export const MENU_CONTENT_SHEET_CONTAINER_STYLES: FlexProps = {
+  p: '$none',
+  pb: '$spacing16',
+  backgroundColor: 'transparent',
+  borderWidth: '$none',
+  gap: '$spacing8',
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  minWidth: undefined,
+  maxWidth: undefined,
+}
+
 type MenuContentProps = {
   items: MenuOptionItem[]
   handleCloseMenu?: DropdownMenuSheetItemProps['handleCloseMenu']

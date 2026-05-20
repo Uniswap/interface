@@ -40,7 +40,6 @@ export const SOLANA_CHAIN_INFO = {
   explorer: {
     name: 'Solscan',
     url: 'https://solscan.io/',
-    apiURL: 'https://api.explorer.solana.com',
   },
   interfaceName: 'solana',
   label: 'Solana',

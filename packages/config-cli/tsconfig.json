@@ -8,5 +8,15 @@
     "types": ["node"],
     "paths": {}
   },
-  "references": []
+  "references": [
+    {
+      "path": "../../config/vitest-presets"
+    },
+    {
+      "path": "../environment"
+    },
+    {
+      "path": "../config"
+    }
+  ]
 }

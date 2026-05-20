@@ -1,26 +1,16 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import {
-  AreaSeriesPartialOptions,
-  BarPrice,
-  DeepPartial,
-  ISeriesApi,
-  LineType,
-  Time,
-  TimeChartOptions,
-  UTCTimestamp,
-} from 'lightweight-charts'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import { opacify } from 'ui/src/theme'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { NumberType } from 'utilities/src/format/types'
+import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
-import { Chart, ChartModel, ChartModelParams } from '~/components/Charts/ChartModel'
+import { Chart } from '~/components/Charts/ChartModel'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { ChartType } from '~/components/Charts/utils'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
@@ -34,316 +24,32 @@ import {
   getGapTime,
   toDisplayPrice,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
-import { DepthTooltipBody } from '~/pages/PoolDetails/components/ChartSection/DepthChartTooltip'
+import {
+  DepthChartModel,
+  DepthChartZoomActions,
+  TooltipUpdate,
+} from '~/pages/PoolDetails/components/ChartSection/DepthChartModel'
+import {
+  DepthSideTooltipContent,
+  DepthTooltipBody,
+  TooltipShell,
+} from '~/pages/PoolDetails/components/ChartSection/DepthChartTooltip'
+
+export type { DepthChartZoomActions } from '~/pages/PoolDetails/components/ChartSection/DepthChartModel'
 
 const PDP_CHART_HEIGHT_PX = 356
 
 // Minimum real bars (excluding the active-tick anchor) required on EACH side of the active price
 // before the depth chart is considered informative. Below this, render the standard chart-error
 // skeleton instead of a sparse, misleading staircase.
-const MIN_DEPTH_BARS_PER_SIDE = 4
-
-export type DepthChartZoomActions = {
-  zoomIn: () => void
-  zoomOut: () => void
-  resetView: () => void
-}
-
-interface DepthChartModelParams extends ChartModelParams<DepthPoint> {
-  sellData: DepthPoint[]
-  buyData: DepthPoint[]
-  sellColor: string
-  buyColor: string
-  isReversed: boolean
-  onZoomActionsReady?: (actions: DepthChartZoomActions) => void
-}
-
-// Fraction of the full data range to show initially — smaller = more zoomed in on the spread.
-const INITIAL_ZOOM_FRACTION = 0.4
-// Clamp zoom so the chart never collapses onto itself (too zoomed in) or shows the full
-// many-orders-of-magnitude tick range (too zoomed out).
-const MIN_VISIBLE_POINTS = 10
-const MAX_VISIBLE_FRACTION = 0.6
-
-class DepthChartModel extends ChartModel<DepthPoint> {
-  // `this.series` is the hidden catch-all series used for crosshair hover resolution in the
-  // base class. The visible sell/buy series render the colored depth regions.
-  protected series: ISeriesApi<'Area'>
-  private sellSeries: ISeriesApi<'Area'>
-  private buySeries: ISeriesApi<'Area'>
-  private timeToPrice = new Map<number, number>()
-  private totalPoints = 0
-  private sellCount = 0
-  private gapTime: UTCTimestamp | null = null
-  private isReversed: boolean
-
-  constructor(chartDiv: HTMLDivElement, params: DepthChartModelParams) {
-    const { combined, gapTime } = DepthChartModel.buildCombinedWithGap(params)
-    super(chartDiv, { ...params, data: combined })
-    this.series = this.api.addAreaSeries()
-    this.sellSeries = this.api.addAreaSeries()
-    this.buySeries = this.api.addAreaSeries()
-    this.series.setData(combined)
-    this.sellSeries.setData(params.sellData)
-    this.buySeries.setData(params.buyData)
-    this.totalPoints = combined.length
-    this.sellCount = params.sellData.length
-    this.gapTime = gapTime
-    this.isReversed = params.isReversed
-    this.rebuildTimeToPrice(params)
-
-    chartDiv.addEventListener('wheel', this.depthWheelHandler, { passive: false, capture: true })
-
-    this.updateOptions(params)
-    this.fitContent()
-    this.applyInitialZoom(this.sellCount, this.totalPoints)
-
-    params.onZoomActionsReady?.({
-      zoomIn: () => this.zoomByFactor(1.5),
-      zoomOut: () => this.zoomByFactor(1 / 1.5),
-      resetView: () => this.applyInitialZoom(this.sellCount, this.totalPoints),
-    })
-  }
-
-  // Injects an invisible midpoint datum between sell and buy into the hidden catch-all series
-  // so the crosshair fires hover events when the cursor is in the empty gap between sides.
-  private static buildCombinedWithGap(params: DepthChartModelParams): {
-    combined: DepthPoint[]
-    gapTime: UTCTimestamp | null
-  } {
-    const gap = getGapTime(params.sellData, params.buyData)
-    if (gap === null) {
-      return { combined: [...params.sellData, ...params.buyData], gapTime: null }
-    }
-    const gapTime = gap as UTCTimestamp
-    // Sentinel point — never surfaced in the tooltip (special-cased on `gapTime`).
-    const gapPoint: DepthPoint = {
-      time: gapTime,
-      value: 0,
-      tick: 0,
-      price: 0,
-      activeLiquidity: 0,
-      swapToMove: 0,
-      inputIsToken0: false,
-      side: 'sell',
-    }
-    return {
-      combined: [...params.sellData, gapPoint, ...params.buyData],
-      gapTime,
-    }
-  }
-
-  private zoomByFactor(factor: number) {
-    const timeScale = this.api.timeScale()
-    const visibleRange = timeScale.getVisibleLogicalRange()
-    if (!visibleRange) {
-      return
-    }
-    const center = (visibleRange.from + visibleRange.to) / 2
-    const halfRange = (visibleRange.to - visibleRange.from) / 2
-    const clamped = this.clampHalfRange(halfRange / factor)
-    timeScale.setVisibleLogicalRange({ from: center - clamped, to: center + clamped })
-  }
-
-  private rebuildTimeToPrice(params: DepthChartModelParams) {
-    this.timeToPrice.clear()
-    for (const p of params.sellData) {
-      this.timeToPrice.set(p.time as number, toDisplayPrice(p.price, params.isReversed))
-    }
-    for (const p of params.buyData) {
-      this.timeToPrice.set(p.time as number, toDisplayPrice(p.price, params.isReversed))
-    }
-  }
-
-  // Centers the initial view on the injected gap-midpoint (logical index = sellCount), which
-  // sits exactly between sell and buy sides regardless of asymmetric liquidity.
-  private applyInitialZoom(sellCount: number, totalCount: number) {
-    if (totalCount === 0) {
-      return
-    }
-    const timeScale = this.api.timeScale()
-    const minHalfRange = MIN_VISIBLE_POINTS / 2
-    const maxHalfRange = (totalCount * MAX_VISIBLE_FRACTION) / 2
-    // For very sparse pools, the min-visible-points floor would force a window wider than
-    // the data itself, leaving most of the chart empty. Just fit the data instead.
-    if (maxHalfRange < minHalfRange) {
-      timeScale.fitContent()
-      return
-    }
-    const center = this.gapTime === null ? sellCount - 0.5 : sellCount
-    const halfWidth = this.clampHalfRange((totalCount / 2) * INITIAL_ZOOM_FRACTION)
-    timeScale.setVisibleLogicalRange({ from: center - halfWidth, to: center + halfWidth })
-  }
-
-  private clampHalfRange(rawHalfRange: number): number {
-    const minHalfRange = MIN_VISIBLE_POINTS / 2
-    const maxHalfRange = (this.totalPoints * MAX_VISIBLE_FRACTION) / 2
-    return Math.max(minHalfRange, Math.min(maxHalfRange, rawHalfRange))
-  }
-
-  // Re-reads the current visible range and clamps its width. Used after the base class's
-  // Ctrl+wheel pinch-zoom fires so trackpad pinch can't bypass our min/max zoom.
-  private enforceZoomClamp() {
-    const timeScale = this.api.timeScale()
-    const visibleRange = timeScale.getVisibleLogicalRange()
-    if (!visibleRange) {
-      return
-    }
-    const half = (visibleRange.to - visibleRange.from) / 2
-    const clamped = this.clampHalfRange(half)
-    if (clamped === half) {
-      return
-    }
-    const center = (visibleRange.from + visibleRange.to) / 2
-    timeScale.setVisibleLogicalRange({ from: center - clamped, to: center + clamped })
-  }
-
-  // Trackpad: horizontal scroll → pan, vertical scroll → zoom. Ctrl+wheel (macOS pinch)
-  // runs through the base class's handler first; we enforce the clamp afterwards so pinch
-  // can't bypass our min/max zoom.
-  private depthWheelHandler = (event: WheelEvent): void => {
-    if (event.ctrlKey) {
-      this.enforceZoomClamp()
-      return
-    }
-    event.preventDefault()
-    event.stopPropagation()
-
-    const timeScale = this.api.timeScale()
-    const visibleRange = timeScale.getVisibleLogicalRange()
-    if (!visibleRange) {
-      return
-    }
-    const rangeWidth = visibleRange.to - visibleRange.from
-
-    if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-      const panAmount = (event.deltaX / 200) * rangeWidth
-      let newFrom = visibleRange.from + panAmount
-      let newTo = visibleRange.to + panAmount
-      const maxIndex = this.totalPoints - 1
-      if (rangeWidth >= this.totalPoints) {
-        return
-      }
-      if (newFrom < 0) {
-        newTo -= newFrom
-        newFrom = 0
-      }
-      if (newTo > maxIndex) {
-        newFrom -= newTo - maxIndex
-        newTo = maxIndex
-      }
-      timeScale.setVisibleLogicalRange({ from: newFrom, to: newTo })
-    } else {
-      const zoomFactor = event.deltaY > 0 ? 0.95 : 1.05
-      const center = (visibleRange.from + visibleRange.to) / 2
-      const clampedHalfRange = this.clampHalfRange(rangeWidth / 2 / zoomFactor)
-      timeScale.setVisibleLogicalRange({
-        from: center - clampedHalfRange,
-        to: center + clampedHalfRange,
-      })
-    }
-  }
-
-  override remove() {
-    this.chartDiv.removeEventListener('wheel', this.depthWheelHandler, { capture: true })
-    super.remove()
-  }
-
-  override updateOptions(params: DepthChartModelParams) {
-    const reversedChanged = this.isReversed !== params.isReversed
-    const { combined, gapTime } = DepthChartModel.buildCombinedWithGap(params)
-    this.rebuildTimeToPrice(params)
-    this.totalPoints = combined.length
-    this.sellCount = params.sellData.length
-    this.gapTime = gapTime
-    this.isReversed = params.isReversed
-    const nonDefault: DeepPartial<TimeChartOptions> = {
-      localization: {
-        priceFormatter: (price: BarPrice) =>
-          params.format.convertFiatAmountFormatted(Number(price), NumberType.FiatTokenStats),
-      },
-      leftPriceScale: {
-        visible: false,
-        borderVisible: false,
-        minimumWidth: 0,
-      },
-      rightPriceScale: {
-        visible: false,
-        borderVisible: false,
-        minimumWidth: 0,
-        scaleMargins: { top: 0.1, bottom: 0 },
-        autoScale: true,
-      },
-      timeScale: {
-        visible: true,
-        borderVisible: false,
-        ticksVisible: true,
-        timeVisible: true,
-        fixLeftEdge: false,
-        fixRightEdge: false,
-        tickMarkFormatter: (time: Time) => {
-          const price = this.timeToPrice.get(time as number)
-          return price === undefined
-            ? ''
-            : params.format.formatNumberOrString({ value: price, type: NumberType.TokenTx })
-        },
-      },
-      grid: {
-        vertLines: { visible: false },
-        horzLines: { visible: false },
-      },
-    }
-    super.updateOptions(params, nonDefault)
-
-    // All three series share the left price scale so sell/buy sides are comparable on the same y-axis.
-    this.series.applyOptions({
-      priceScaleId: 'right',
-      lineColor: 'transparent',
-      topColor: 'transparent',
-      bottomColor: 'transparent',
-      priceLineVisible: false,
-      lastValueVisible: false,
-      crosshairMarkerVisible: false,
-    })
-
-    const commonOptions: AreaSeriesPartialOptions = {
-      lineType: LineType.WithSteps,
-      lineWidth: 2,
-      priceLineVisible: false,
-      lastValueVisible: false,
-      crosshairMarkerRadius: 0,
-    }
-
-    this.sellSeries.applyOptions({
-      ...commonOptions,
-      priceScaleId: 'right',
-      lineColor: params.sellColor,
-      topColor: opacify(40, params.sellColor),
-      bottomColor: opacify(0, params.sellColor),
-    })
-    this.buySeries.applyOptions({
-      ...commonOptions,
-      priceScaleId: 'right',
-      lineColor: params.buyColor,
-      topColor: opacify(40, params.buyColor),
-      bottomColor: opacify(0, params.buyColor),
-    })
-
-    this.series.setData(combined)
-    this.sellSeries.setData(params.sellData)
-    this.buySeries.setData(params.buyData)
-
-    if (reversedChanged) {
-      this.applyInitialZoom(this.sellCount, this.totalPoints)
-    }
-  }
-}
+export const MIN_DEPTH_BARS_PER_SIDE = 4
 
 export function DepthChart({
   tokenA,
   tokenB,
   feeTier,
   isReversed,
+
   chainId,
   version,
   hooks,
@@ -354,6 +60,7 @@ export function DepthChart({
   tokenB: Currency
   feeTier: FeeAmount
   isReversed: boolean
+
   chainId: UniverseChainId
   version: RestProtocolVersion
   hooks?: string
@@ -364,6 +71,9 @@ export function DepthChart({
   const colors = useSporeColors()
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
+
+  const [mirrorState, setMirrorState] = useState<TooltipUpdate | null>(null)
+  const [gapState, setGapState] = useState<{ sell: TooltipUpdate; buy: TooltipUpdate } | null>(null)
 
   const { data: poolData } = useGetPoolsByTokens(
     {
@@ -420,18 +130,59 @@ export function DepthChart({
 
   const gapTime = useMemo(() => getGapTime(sellData, buyData), [sellData, buyData])
 
+  // Standard depth chart convention: green (bids) on left, red (asks) on right.
+  const sellColor = colors.statusSuccess.val
+  const buyColor = colors.statusCritical.val
+
+  const { base, quote } = getDisplayPair({ tokenA, tokenB, isReversed })
+
+  const isBaseStable = useMemo(() => {
+    if (!isUniverseChainId(base.chainId)) {
+      return false
+    }
+    return getStablecoinsForChain(base.chainId).some((s) => s.equals(base))
+  }, [base])
+
+  const isQuoteStable = useMemo(() => {
+    if (!isUniverseChainId(quote.chainId)) {
+      return false
+    }
+    return getStablecoinsForChain(quote.chainId).some((s) => s.equals(quote))
+  }, [quote])
+
+  // When the quote is itself a stablecoin (e.g. ETH/USDT), label the USD row with that symbol.
+  // Otherwise fall back to USDC, which is what useUSDCValue prices in.
+  const usdSymbol = isQuoteStable ? (quote.symbol ?? quote.name ?? 'USDC') : 'USDC'
+
+  const oneBaseAmount = useMemo(
+    () =>
+      base.isToken ? CurrencyAmount.fromRawAmount(base, (BigInt(10) ** BigInt(base.decimals)).toString()) : undefined,
+    [base],
+  )
+  const baseUsdCurrencyAmount = useUSDCValue(oneBaseAmount)
+  const baseUsdPrice = useMemo(
+    () => (!isBaseStable && baseUsdCurrencyAmount ? parseFloat(baseUsdCurrencyAmount.toSignificant(10)) : undefined),
+    [isBaseStable, baseUsdCurrencyAmount],
+  )
+
+  const crosshairColor = colors.neutral3.val
+
   const params = useMemo(
     () => ({
       data: [...sellData, ...buyData] as DepthPoint[],
       sellData,
       buyData,
-      sellColor: colors.statusCritical.val,
-      buyColor: colors.statusSuccess.val,
+      sellColor,
+      buyColor,
+      crosshairColor,
       isReversed,
+      midPrice,
       hideTooltipBorder: true,
       onZoomActionsReady,
+      onMirrorChange: setMirrorState,
+      onGapChange: setGapState,
     }),
-    [sellData, buyData, colors.statusSuccess, colors.statusCritical, isReversed, onZoomActionsReady],
+    [sellData, buyData, sellColor, buyColor, crosshairColor, isReversed, midPrice, onZoomActionsReady],
   )
 
   if (loading) {
@@ -446,34 +197,43 @@ export function DepthChart({
   }
 
   return (
-    <Chart
-      height={PDP_CHART_HEIGHT_PX}
-      Model={DepthChartModel}
-      params={params}
-      TooltipBody={({ data }: { data: DepthPoint }) => (
-        <DepthTooltipBody
-          data={data}
-          pointByTime={pointByTime}
-          tokenA={tokenA}
-          tokenB={tokenB}
-          isReversed={isReversed}
-          gapTime={gapTime}
-          feeTierLabel={`${feeTier / BIPS_BASE}%`}
-        />
-      )}
-    >
-      {(crosshair) => {
-        const hoveredPrice = crosshair ? pointByTime.get(crosshair.time as number)?.price : undefined
-        const displayPrice = toDisplayPrice(hoveredPrice ?? midPrice, isReversed)
-        const { base: baseDescriptor, quote: quoteDescriptor } = getDisplayPair({
-          tokenA: tokenADescriptor,
-          tokenB: tokenBDescriptor,
-          isReversed,
-        })
-        return (
-          <ChartHeader
-            value={
-              <Flex gap="$spacing4">
+    <Flex position="relative" width="100%" overflow="visible">
+      <Chart
+        height={PDP_CHART_HEIGHT_PX}
+        Model={DepthChartModel}
+        params={params}
+        TooltipBody={({ data }: { data: DepthPoint }) => {
+          // Gap sentinel: LW tooltip suppressed — we render sell+buy pair as React components instead.
+          if (gapTime !== null && (data.time as number) === gapTime) {
+            return null
+          }
+          return (
+            <DepthTooltipBody
+              data={data}
+              pointByTime={pointByTime}
+              tokenA={tokenA}
+              tokenB={tokenB}
+              isReversed={isReversed}
+              feeTierLabel={`${feeTier / BIPS_BASE}%`}
+              midPrice={midPrice}
+              sellColor={sellColor}
+              buyColor={buyColor}
+              baseUsdPrice={baseUsdPrice}
+              usdSymbol={usdSymbol}
+            />
+          )
+        }}
+      >
+        {() => {
+          const displayPrice = toDisplayPrice(midPrice, isReversed)
+          const { base: baseDescriptor, quote: quoteDescriptor } = getDisplayPair({
+            tokenA: tokenADescriptor,
+            tokenB: tokenBDescriptor,
+            isReversed,
+          })
+          return (
+            <ChartHeader
+              value={
                 <Text variant="heading3">
                   <Flex row gap="$spacing4">
                     {`1 ${baseDescriptor} =`}{' '}
@@ -485,11 +245,61 @@ export function DepthChart({
                     />
                   </Flex>
                 </Text>
-              </Flex>
-            }
-          />
-        )
-      }}
-    </Chart>
+              }
+            />
+          )
+        }}
+      </Chart>
+      {mirrorState && (
+        <Flex
+          position="absolute"
+          top={0}
+          left={0}
+          pointerEvents="none"
+          zIndex={100}
+          style={{ transform: mirrorState.transform }}
+        >
+          <TooltipShell>
+            <DepthSideTooltipContent
+              point={mirrorState.point}
+              tokenA={tokenA}
+              tokenB={tokenB}
+              isReversed={isReversed}
+              midPrice={midPrice}
+              color={mirrorState.point.side === 'sell' ? sellColor : buyColor}
+              feeTierLabel={`${feeTier / BIPS_BASE}%`}
+              baseUsdPrice={baseUsdPrice}
+              usdSymbol={usdSymbol}
+            />
+          </TooltipShell>
+        </Flex>
+      )}
+      {gapState &&
+        ([gapState.sell, gapState.buy] as const).map((side, i) => (
+          <Flex
+            key={i}
+            position="absolute"
+            top={0}
+            left={0}
+            pointerEvents="none"
+            zIndex={100}
+            style={{ transform: side.transform }}
+          >
+            <TooltipShell>
+              <DepthSideTooltipContent
+                point={side.point}
+                tokenA={tokenA}
+                tokenB={tokenB}
+                isReversed={isReversed}
+                midPrice={midPrice}
+                color={side.point.side === 'sell' ? sellColor : buyColor}
+                feeTierLabel={`${feeTier / BIPS_BASE}%`}
+                baseUsdPrice={baseUsdPrice}
+                usdSymbol={usdSymbol}
+              />
+            </TooltipShell>
+          </Flex>
+        ))}
+    </Flex>
   )
 }

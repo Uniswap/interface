@@ -28,6 +28,7 @@ import {
 } from 'uniswap/src/features/transactions/swap/plan/planSagaUtils'
 import {
   logPlanStepTradeAnalytics,
+  TRADE_STEP_TYPES,
   logUniswapXPlanOrderSubmitted,
 } from 'uniswap/src/features/transactions/swap/plan/planStepAnalytics'
 import { TransactionAndPlanStep } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
@@ -56,6 +57,48 @@ import { BackoffStrategy, retryWithBackoff } from 'utilities/src/async/retryWith
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
+function getLastTradeRelevantNonErrorStep(steps: TransactionAndPlanStep[]): TransactionAndPlanStep | undefined {
+  return [...steps]
+    .filter((step) => TRADE_STEP_TYPES.has(step.type))
+    .filter((step) => step.status !== TradingApi.PlanStepStatus.STEP_ERROR)
+    .sort((a, b) => a.stepIndex - b.stepIndex)
+    .at(-1)
+}
+
+/**
+ * Finds a step by the Trading API `stepIndex` value. Plan arrays can retain
+ * retry/error rows, so array position is not a stable step identity.
+ */
+function getStepBySemanticIndex(
+  steps: TransactionAndPlanStep[],
+  stepIndex: number,
+): TransactionAndPlanStep | undefined {
+  return steps.find((step) => step.stepIndex === stepIndex)
+}
+
+function buildAnalyticsWithPlanStepContext(params: {
+  analytics: PlanSagaAnalytics
+  planId: string
+  currentStep: TransactionAndPlanStep | undefined
+  steps: TransactionAndPlanStep[]
+  stepRouting: PlanSagaAnalytics['step_routing']
+}): PlanSagaAnalytics {
+  const { analytics, planId, currentStep, steps, stepRouting } = params
+  const lastTradeRelevantStep = getLastTradeRelevantNonErrorStep(steps)
+
+  return {
+    ...analytics,
+    routing: stepRouting ?? analytics.routing,
+    plan_id: planId,
+    step_index: currentStep?.stepIndex,
+    is_final_step: currentStep?.stepIndex === lastTradeRelevantStep?.stepIndex,
+    total_steps: steps.length,
+    total_non_error_steps: steps.filter((step) => step.status !== TradingApi.PlanStepStatus.STEP_ERROR).length,
+    step_type: currentStep?.type,
+    step_routing: stepRouting,
+  }
+}
+
 /**
  * Saga for executing a plan returned from the Trading API. This plan
  * includes a list of steps to be executed in sequence in order to execute
@@ -77,11 +120,12 @@ export function* plan(params: PlanParams) {
     selectChain,
     handleApprovalTransactionStep,
     handleSwapTransactionStep,
-    handleSwapTransactionBatchedStep,
+    handleSwapTransactionWalletCallStep,
     handleSignatureStep,
     handleUniswapXPlanSignatureStep,
     getDisplayableError,
     sendToast,
+    onPlanFinalized,
     caip25Info,
   } = params
 
@@ -171,7 +215,6 @@ export function* plan(params: PlanParams) {
       let patchResponse: TradingApi.PlanResponse | undefined
 
       currentStep = steps[currentStepIndex]
-      const isLastStep = currentStepIndex === steps.length - 1
 
       logger.debug('planSaga', 'plan', '🚨 Starting step', currentStep)
 
@@ -195,18 +238,14 @@ export function* plan(params: PlanParams) {
         : undefined
 
       // Augment analytics with plan context for chained actions
-      const analyticsWithPlanStepContext = {
-        ...analytics,
-        routing: stepRouting ?? analytics.routing,
-        plan_id: planId,
-        step_index: currentStep?.stepIndex,
-        is_final_step: isLastStep,
-        total_steps: steps.length,
-        // We filter out error steps that were later retried and a new step was added to the plan
-        total_non_error_steps: steps.filter((s) => s.status !== TradingApi.PlanStepStatus.STEP_ERROR).length,
-        step_type: currentStep?.type,
-        step_routing: stepRouting,
-      }
+      const analyticsWithPlanStepContext = buildAnalyticsWithPlanStepContext({
+        analytics,
+        planId,
+        currentStep,
+        steps,
+        stepRouting,
+      })
+      const isLastStep = analyticsWithPlanStepContext.is_final_step === true
 
       switch (currentStep?.type) {
         case TransactionStepType.TokenRevocationTransaction:
@@ -255,10 +294,10 @@ export function* plan(params: PlanParams) {
           })
           break
         }
-        case TransactionStepType.SwapTransactionBatched: {
+        case TransactionStepType.SwapTransactionWalletCall: {
           requireRouting(trade, [TradingApi.Routing.CHAINED])
 
-          const batchResult = yield* call(handleSwapTransactionBatchedStep, {
+          const batchResult = yield* call(handleSwapTransactionWalletCallStep, {
             address,
             step: currentStep,
             setCurrentStep: updateGlobalStateProofPending,
@@ -268,7 +307,7 @@ export function* plan(params: PlanParams) {
             disableOneClickSwap: () => {},
           })
           if (!batchResult.hash) {
-            throw new ShouldRetryPlanError('Batched swap failed')
+            throw new ShouldRetryPlanError('WalletCall swap failed')
           }
           hash = batchResult.hash
           break
@@ -323,6 +362,7 @@ export function* plan(params: PlanParams) {
           inputChainId,
           address,
           onSuccess,
+          onPlanFinalized,
           sendToast,
           startTime,
           timeToCreatePlan,
@@ -347,7 +387,31 @@ export function* plan(params: PlanParams) {
       logger.debug('planSaga', 'plan', '🚨 updated steps', updatedSteps)
       response = latestPlanResponse
 
-      const stepFailure = updatedSteps[currentStepIndex]?.status === TradingApi.PlanStepStatus.STEP_ERROR
+      // Re-find the executed step by Trading API `stepIndex`; retry/error rows can
+      // remain in the plan and shift array positions after watchPlanStep returns.
+      const executedUpdatedStep = getStepBySemanticIndex(updatedSteps, currentStep.stepIndex)
+      if (!executedUpdatedStep) {
+        logger.error(new Error('Unable to find executed step by semantic step index after watchPlanStep'), {
+          tags: { file: 'planSaga', function: 'plan' },
+          extra: {
+            planId,
+            semanticStepIndex: currentStep.stepIndex,
+            updatedStepIndices: updatedSteps.map((step) => ({
+              stepIndex: step.stepIndex,
+              status: step.status,
+              type: step.type,
+            })),
+          },
+        })
+      }
+      const stepFailure = executedUpdatedStep?.status === TradingApi.PlanStepStatus.STEP_ERROR
+      const updatedAnalyticsWithPlanStepContext = buildAnalyticsWithPlanStepContext({
+        analytics,
+        planId,
+        currentStep: executedUpdatedStep ?? currentStep,
+        steps: updatedSteps,
+        stepRouting,
+      })
 
       // Non-last trade steps are logged here synchronously after `watchPlanStep` returns.
       // Last steps are instead logged inside `watchLastPlanStepWithCleanup` (forked background saga).
@@ -356,11 +420,11 @@ export function* plan(params: PlanParams) {
       logPlanStepTradeAnalytics({
         stepType: currentStep.type,
         updatedSteps,
-        stepIndex: currentStepIndex,
+        semanticStepIndex: currentStep.stepIndex,
         hash,
         chainId: stepChainId ?? undefined,
         stepFailure,
-        analyticsWithPlanStepContext,
+        analyticsWithPlanStepContext: updatedAnalyticsWithPlanStepContext,
         errorExtra: { planResponse: latestPlanResponse, stepIndex: currentStep.stepIndex },
       })
 
@@ -430,6 +494,10 @@ export function* plan(params: PlanParams) {
     // The `if (planId)` guard handles the case where `initializePlan` failed before assigning planId.
     if (planId) {
       unlockPlanExecution(planId)
+
+      if (!isPlanBackgrounded(planId)) {
+        onPlanFinalized?.(planId)
+      }
     }
     yield* cancel(earlyCloseTask)
   }
@@ -441,6 +509,7 @@ interface HandleLastStepCompletionParams {
   inputChainId: UniverseChainId
   address: Address
   onSuccess: () => void
+  onPlanFinalized?: (planId: string) => void
   sendToast: PlanParams['sendToast']
   startTime: number
   timeToCreatePlan: number | undefined
@@ -455,6 +524,7 @@ interface HandleLastStepCompletionParams {
 type WatchLastPlanStepParams = WatchPlanStepParams & {
   stepType: TransactionStepType
   analyticsWithPlanStepContext: PlanSagaAnalytics
+  onPlanFinalized?: (planId: string) => void
   sendToast: PlanParams['sendToast']
   hash: string | undefined
   chainId: number | undefined
@@ -497,6 +567,7 @@ function* watchLastPlanStepWithCleanup(params: WatchLastPlanStepParams) {
   const {
     stepType,
     analyticsWithPlanStepContext,
+    onPlanFinalized,
     sendToast,
     hash,
     chainId,
@@ -512,18 +583,40 @@ function* watchLastPlanStepWithCleanup(params: WatchLastPlanStepParams) {
 
   try {
     const { steps: updatedSteps, planResponse: latestPlanResponse } = yield* call(watchPlanStep, watchParams)
+    const updatedWatchedStep = getStepBySemanticIndex(updatedSteps, watchParams.targetStepIndex)
+    if (!updatedWatchedStep) {
+      logger.error(new Error('Unable to find watched step by semantic step index after watchPlanStep'), {
+        tags: { file: 'planSaga', function: 'watchLastPlanStepWithCleanup' },
+        extra: {
+          planId: watchParams.planId,
+          semanticStepIndex: watchParams.targetStepIndex,
+          updatedStepIndices: updatedSteps.map((step) => ({
+            stepIndex: step.stepIndex,
+            status: step.status,
+            type: step.type,
+          })),
+        },
+      })
+    }
+    const updatedAnalyticsWithPlanStepContext = buildAnalyticsWithPlanStepContext({
+      analytics: analyticsWithPlanStepContext,
+      planId: watchParams.planId,
+      currentStep: updatedWatchedStep,
+      steps: updatedSteps,
+      stepRouting: analyticsWithPlanStepContext.step_routing,
+    })
 
     // watchPlanStep returns for both COMPLETE and STEP_ERROR — check actual status
-    const stepFailure = updatedSteps[watchParams.targetStepIndex]?.status === TradingApi.PlanStepStatus.STEP_ERROR
+    const stepFailure = updatedWatchedStep?.status === TradingApi.PlanStepStatus.STEP_ERROR
 
     logPlanStepTradeAnalytics({
       stepType,
       updatedSteps,
-      stepIndex: watchParams.targetStepIndex,
+      semanticStepIndex: watchParams.targetStepIndex,
       hash,
       chainId,
       stepFailure,
-      analyticsWithPlanStepContext,
+      analyticsWithPlanStepContext: updatedAnalyticsWithPlanStepContext,
       errorExtra,
     })
 
@@ -546,7 +639,7 @@ function* watchLastPlanStepWithCleanup(params: WatchLastPlanStepParams) {
     logPlanStepTradeAnalytics({
       stepType,
       updatedSteps: undefined,
-      stepIndex: watchParams.targetStepIndex,
+      semanticStepIndex: watchParams.targetStepIndex,
       hash,
       chainId,
       stepFailure: true,
@@ -571,6 +664,7 @@ function* watchLastPlanStepWithCleanup(params: WatchLastPlanStepParams) {
     if (isPlanBackgrounded(params.planId)) {
       clearPlan(params.planId)
     }
+    onPlanFinalized?.(params.planId)
   }
 }
 
@@ -616,6 +710,7 @@ function* handleLastStepCompletion(params: HandleLastStepCompletionParams) {
     address,
     stepType: currentStep.type,
     analyticsWithPlanStepContext,
+    onPlanFinalized: params.onPlanFinalized,
     sendToast,
     hash,
     chainId: lastStepChainId,

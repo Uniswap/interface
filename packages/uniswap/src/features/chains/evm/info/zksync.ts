@@ -40,7 +40,6 @@ export const ZKSYNC_CHAIN_INFO = {
   explorer: {
     name: 'ZKsync Explorer',
     url: 'https://explorer.zksync.io/',
-    apiURL: 'https://block-explorer-api.mainnet.zksync.io',
   },
   interfaceName: 'zksync',
   searchAliases: ['zk sync', 'zk'],

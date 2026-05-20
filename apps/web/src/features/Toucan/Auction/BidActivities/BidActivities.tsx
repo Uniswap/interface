@@ -8,6 +8,7 @@ import { zIndexes } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { shortenAddress } from 'utilities/src/addresses'
+import { formatUnits } from '~/chains'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
@@ -140,10 +141,10 @@ export const BidActivities = ({
 
   const formattedBidActivities: BidActivityRow[] = useMemo(() => {
     return visibleActivities.map((bid) => {
-      const bidPriceInToken = Number(bid.baseTokenInitial) / 10 ** bidTokenDecimals
+      const bidPriceInToken = Number(formatUnits(BigInt(bid.baseTokenInitial), bidTokenDecimals))
       const bidPriceFiat = hasPriceFiat ? convertFiatAmount(bidPriceInToken * bidTokenPriceFiat).amount : 0
       const maxPricePerTokenWei = q96ToRawAmount(bid.price, auctionTokenDecimals)
-      const maxPriceInToken = Number(maxPricePerTokenWei) / 10 ** bidTokenDecimals
+      const maxPriceInToken = Number(formatUnits(maxPricePerTokenWei, bidTokenDecimals))
       const maxPriceFiat = hasPriceFiat ? convertFiatAmount(maxPriceInToken * bidTokenPriceFiat).amount : 0
 
       return {

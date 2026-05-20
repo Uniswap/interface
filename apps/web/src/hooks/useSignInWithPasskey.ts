@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query'
 import { connect } from '@wagmi/core'
 import { useDispatch } from 'react-redux'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
@@ -15,7 +16,6 @@ import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks
 import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
-import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
 import { isIFramed } from '~/utils/isIFramed'
@@ -58,12 +58,12 @@ export function useSignInWithPasskey({
     mutate: signInWithPasskey,
     mutateAsync: signInWithPasskeyAsync,
     ...rest
-  } = usePasskeyAuthWithHelpModal<{
+  } = useMutation<{
     walletAddress: string
     walletId: string
     exported?: boolean
-  }>(
-    async (): Promise<{ walletAddress: string; walletId: string; exported?: boolean }> => {
+  }>({
+    mutationFn: async (): Promise<{ walletAddress: string; walletId: string; exported?: boolean }> => {
       // We do not support EW passkeys in iframes to prevent clickjacking
       // If a user is embedded in an iframe, they will be frame busted and redirected to the web app
       if (isIFramed(true)) {
@@ -113,39 +113,37 @@ export function useSignInWithPasskey({
         }
       }
     },
-    {
-      onSuccess: async ({ walletAddress, walletId, exported }) => {
-        await onSuccess?.()
-        dispatch(updateIsEmbeddedWalletBackedUp({ isEmbeddedWalletBackedUp: exported ?? false }))
-        setWalletAddress(walletAddress)
-        setWalletId(walletId)
-        setIsConnected(true)
-        await connect(wagmiConfig, { connector })
-        if (createNewWallet) {
-          sendAnalyticsEvent(InterfaceEventName.EmbeddedWalletCreated)
-          accountDrawer.open()
-        } else {
-          sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
-            result: WalletConnectionResult.Succeeded,
-            wallet_name: connector.name,
-            wallet_type: walletTypeToAmplitudeWalletType(connector.type),
-            wallet_address: walletAddress,
-          })
-        }
-      },
-      onError: (error: Error) => {
-        if (createNewWallet) {
-          logger.error(error, { tags: { file: 'useSignInWithPasskey', function: 'onError' } })
-        } else {
-          logger.error(error, {
-            tags: { file: 'useSignInWithPasskey', function: 'onError' },
-            extra: { wallet_name: connector.name, wallet_type: walletTypeToAmplitudeWalletType(connector.type) },
-          })
-        }
-        onError?.(error)
-      },
+    onSuccess: async ({ walletAddress, walletId, exported }) => {
+      await onSuccess?.()
+      dispatch(updateIsEmbeddedWalletBackedUp({ isEmbeddedWalletBackedUp: exported ?? false }))
+      setWalletAddress(walletAddress)
+      setWalletId(walletId)
+      setIsConnected(true)
+      await connect(wagmiConfig, { connector })
+      if (createNewWallet) {
+        sendAnalyticsEvent(InterfaceEventName.EmbeddedWalletCreated)
+        accountDrawer.open()
+      } else {
+        sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
+          result: WalletConnectionResult.Succeeded,
+          wallet_name: connector.name,
+          wallet_type: walletTypeToAmplitudeWalletType(connector.type),
+          wallet_address: walletAddress,
+        })
+      }
     },
-  )
+    onError: (error: Error) => {
+      if (createNewWallet) {
+        logger.error(error, { tags: { file: 'useSignInWithPasskey', function: 'onError' } })
+      } else {
+        logger.error(error, {
+          tags: { file: 'useSignInWithPasskey', function: 'onError' },
+          extra: { wallet_name: connector.name, wallet_type: walletTypeToAmplitudeWalletType(connector.type) },
+        })
+      }
+      onError?.(error)
+    },
+  })
 
   return { signInWithPasskey, signInWithPasskeyAsync, ...rest }
 }

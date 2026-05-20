@@ -10,6 +10,12 @@
         "cwd": "{projectRoot}"
       }
     },
+    "android:dev:optimized": {
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devDebugOptimized --app-id=com.uniswap.mobile.dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "android:release": {
       "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devRelease --app-id=com.uniswap.mobile.dev",
       "options": {

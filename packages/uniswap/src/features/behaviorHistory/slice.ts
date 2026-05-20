@@ -21,10 +21,6 @@ export interface UniswapBehaviorHistoryState {
   }
   // whether we have shown the mismatch toast (related to wallet capabilities & wallet bytecode)
   hasShownMismatchToast?: boolean
-  /** Wallet addresses with timestamps that have dismissed the graduate wallet card for 30 days. The same property in the application reducer is a list of wallet addresses that have dismissed the graduated wallet card for this session. */
-  embeddedWalletGraduateCardDismissed?: {
-    [walletAddress: string]: number
-  }
   hasShownSmartWalletNudge?: boolean
   /** Global flag for when user sees modal without wallet connected */
   hasSeenToucanIntroModal?: boolean
@@ -109,10 +105,6 @@ const slice = createSlice({
     setHasShownMismatchToast: (state, action: PayloadAction<boolean>) => {
       state.hasShownMismatchToast = action.payload
     },
-    setEmbeddedWalletGraduateCardDismissed: (state, action: PayloadAction<{ walletAddress: string }>) => {
-      state.embeddedWalletGraduateCardDismissed ??= {}
-      state.embeddedWalletGraduateCardDismissed[action.payload.walletAddress] = new Date().getTime()
-    },
     setHasShownSmartWalletNudge: (state, action: PayloadAction<boolean>) => {
       state.hasShownSmartWalletNudge = action.payload
     },
@@ -149,7 +141,6 @@ export const {
   resetUniswapBehaviorHistory,
   setHasViewedContractAddressExplainer,
   setHasShownMismatchToast,
-  setEmbeddedWalletGraduateCardDismissed,
   setHasShownSmartWalletNudge,
   setHasSeenToucanIntroModal,
   setToucanIntroModalSeenByWallet,

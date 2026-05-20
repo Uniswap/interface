@@ -1,7 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
@@ -46,6 +47,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const account = useWallet().evmAccount
   const dispatch = useDispatch()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const { needsPasskeySignin } = useGetPasskeyAuthStatus(connectedAccount.connector?.id)
 
   const { txContext, gasFeeEstimateUSD } = removeLiquidityTxContext
@@ -157,6 +159,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
             currency0AmountUsd: currency0AmountToRemoveUSD,
             currency1AmountUsd: currency1AmountToRemoveUSD,
             version,
+            isCentralizedPricesEnabled,
           }),
           expectedAmountBaseRaw: unwrappedCurrency0AmountToRemove.quotient.toString(),
           expectedAmountQuoteRaw: unwrappedCurrency1AmountToRemove.quotient.toString(),
@@ -236,7 +239,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans i18nKey="pool.newSpecificPosition" values={{ symbol: currency0Amount.currency.symbol }} />
+                    {t('pool.newSpecificPosition', { symbol: currency0Amount.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (
@@ -256,7 +259,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans i18nKey="pool.newSpecificPosition" values={{ symbol: currency1Amount.currency.symbol }} />
+                    {t('pool.newSpecificPosition', { symbol: currency1Amount.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (

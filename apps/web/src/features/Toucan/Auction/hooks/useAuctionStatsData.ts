@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { TokenCountAllocatedToLpForAuctionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/auction_pb'
 import { useMemo } from 'react'
-import { AuctionMutationClient } from 'uniswap/src/data/apiClients/liquidityService/AuctionMutationClient'
+import { AuctionQueryClient } from 'uniswap/src/data/apiClients/liquidityService/AuctionQueryClient'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { formatTokenPriceSubscript } from '~/features/Toucan/Auction/BidDistributionChart/utils/tokenFormatters'
@@ -104,7 +104,7 @@ export function useAuctionStatsData(): AuctionStatsData {
       auctionDetails?.chainId,
     ],
     queryFn: async () =>
-      AuctionMutationClient.tokenCountAllocatedToLpForAuction(
+      AuctionQueryClient.tokenCountAllocatedToLpForAuction(
         new TokenCountAllocatedToLpForAuctionRequest({
           auctionContractAddress: auctionDetails!.address.toLowerCase(),
           chainId: Number(auctionDetails!.chainId),

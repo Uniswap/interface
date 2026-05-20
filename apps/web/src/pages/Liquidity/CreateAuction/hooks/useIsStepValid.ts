@@ -1,9 +1,9 @@
-import { getMinStartTime } from '~/pages/Liquidity/CreateAuction/components/DurationSection'
 import { isValidPoolOwner } from '~/pages/Liquidity/CreateAuction/components/PoolOwnerSection'
 import { useCreateAuctionStore } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { isPostAuctionLiquidityAllocationValid } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import { CreateAuctionStep, PriceRangeStrategy, TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 import { isCustomPriceRangeAllocationValid } from '~/pages/Liquidity/CreateAuction/utils'
+import { getMinAuctionStartTimeToProceed } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 export function useIsStepValid(step: CreateAuctionStep): boolean {
   return useCreateAuctionStore((state) => {
@@ -29,7 +29,7 @@ export function useIsStepValid(step: CreateAuctionStep): boolean {
         if (!committed) {
           return false
         }
-        const isStartTimeValid = !!startTime && startTime.getTime() >= getMinStartTime().getTime()
+        const isStartTimeValid = !!startTime && startTime.getTime() >= getMinAuctionStartTimeToProceed().getTime()
         const isEndTimeValid = !!endTime && !!startTime && endTime.getTime() > startTime.getTime()
         return (
           isStartTimeValid &&

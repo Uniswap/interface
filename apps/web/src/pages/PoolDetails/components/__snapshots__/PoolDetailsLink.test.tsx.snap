@@ -2,24 +2,7 @@
 
 exports[`PoolDetailsHeader > renders link for pool address 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -128,7 +111,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
           </svg>
         </div>
         <a
-          class="c0"
+          class="sc-jwTyAe khiuw"
           data-testid="explorer-url-https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
           href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
           rel="noopener noreferrer"
@@ -168,24 +151,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
 
 exports[`PoolDetailsHeader > renders link for token address 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -282,7 +248,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
           </svg>
         </div>
         <a
-          class="c0"
+          class="sc-jwTyAe khiuw"
           data-testid="explorer-url-https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
           href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
           rel="noopener noreferrer"

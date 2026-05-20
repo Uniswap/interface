@@ -1,5 +1,6 @@
+import type { TFunction } from 'i18next'
 import { ReactNode } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { Clock } from 'ui/src/components/icons/Clock'
@@ -7,12 +8,12 @@ import { iconSizes } from 'ui/src/theme'
 import { useOpenLimitOrders } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-function getExtraWarning(openLimitOrders: any[]) {
+function getExtraWarning(openLimitOrders: any[], t: TFunction) {
   if (openLimitOrders.length >= 100) {
-    return <Trans i18nKey="common.limits.cancelProceed" />
+    return t('common.limits.cancelProceed')
   }
   if (openLimitOrders.length >= 90) {
-    return <Trans i18nKey="common.limits.approachMax" />
+    return t('common.limits.approachMax')
   }
   return undefined
 }
@@ -67,7 +68,7 @@ export function OpenLimitOrdersButton({
 }) {
   const { t } = useTranslation()
   const { openLimitOrders, loading } = useOpenLimitOrders(account)
-  const extraWarning = getExtraWarning(openLimitOrders)
+  const extraWarning = getExtraWarning(openLimitOrders, t)
 
   if (openLimitOrders.length < 1) {
     return null

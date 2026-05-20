@@ -6,7 +6,7 @@
   "tags": [],
   "targets": {
     "test": {
-      "command": "vitest run --passWithNoTests",
+      "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
       }

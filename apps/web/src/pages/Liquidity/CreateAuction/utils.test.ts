@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CustomPriceRangeBound,
+  CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   MAX_CUSTOM_PRICE_RANGE_ENTRIES,
   PostAuctionLiquidityAllocationType,
   UNBOUNDED_TIER_ID,
@@ -18,6 +18,7 @@ import {
   isCustomPriceRangeAllocationValid,
   isCustomPriceRangeEntryValid,
   isValidPartialPercentInput,
+  parseCompactNumberInput,
   isValidPartialSignedPercentInput,
   removeCustomPriceRangeEntry,
   updateCustomPriceRangeLiquidityPercent,
@@ -31,6 +32,19 @@ describe('formatCompactNumberInput', () => {
 
   it('keeps k when the normalized value stays below 1000 after rounding', () => {
     expect(formatCompactNumberInput(999_500)).toBe('999.5k')
+  })
+
+  it('avoids raw double tails for values below 1k (tier milestones / USD round-trips)', () => {
+    const formatted = formatCompactNumberInput(333.3333333333333)
+    expect(formatted).not.toMatch(/333\.3333333333333/)
+    expect(formatted.length).toBeLessThan(20)
+  })
+
+  it('preserves fractional mantissas for compact billions (display precision)', () => {
+    expect(formatCompactNumberInput(2_345_678_912)).toBe('2.35b')
+    expect(formatCompactNumberDisplay(2_345_678_912)).toBe('2.35B')
+    expect(formatCompactNumberInput(5_500_000_000_000)).toBe('5.5t')
+    expect(formatCompactNumberDisplay(5_500_000_000_000)).toBe('5.5T')
   })
 })
 
@@ -77,8 +91,8 @@ describe('custom price range utilities', () => {
     expect(createDefaultCustomPriceRangeEntry()).toEqual({
       id: 'custom-range-1',
       liquidityPercent: 100,
-      minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
-      maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+      minPercentFromClearing: -100,
+      maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
     })
   })
 
@@ -113,7 +127,7 @@ describe('custom price range utilities', () => {
     ).toBe(entries)
   })
 
-  it('keeps the edited percent and adjusts the last other row', () => {
+  it('updates only the edited row and leaves other rows unchanged', () => {
     const entries = [
       createDefaultCustomPriceRangeEntry(),
       { id: 'custom-range-2', liquidityPercent: 0, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
@@ -126,33 +140,30 @@ describe('custom price range utilities', () => {
         entryId: 'custom-range-2',
         percent: 25,
       }).map((entry) => entry.liquidityPercent),
-    ).toEqual([75, 25, 0])
+    ).toEqual([100, 25, 0])
   })
 
-  it('coerces a single custom range row to 100 percent liquidity', () => {
-    expect(
-      updateCustomPriceRangeLiquidityPercent({
-        entries: [createDefaultCustomPriceRangeEntry()],
-        entryId: 'custom-range-1',
-        percent: 40,
-      }).map((entry) => entry.liquidityPercent),
-    ).toEqual([100])
-  })
-
-  it('cascades percent balancing when the last other row cannot absorb the delta', () => {
+  it('clamps the edited row percent into [0, 100] without touching other rows', () => {
     const entries = [
       { id: 'custom-range-1', liquidityPercent: 50, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
       { id: 'custom-range-2', liquidityPercent: 50, minPercentFromClearing: -33, maxPercentFromClearing: 50 },
-      { id: 'custom-range-3', liquidityPercent: 0, minPercentFromClearing: -20, maxPercentFromClearing: 25 },
     ]
 
     expect(
       updateCustomPriceRangeLiquidityPercent({
         entries,
         entryId: 'custom-range-1',
-        percent: 100,
+        percent: 150,
       }).map((entry) => entry.liquidityPercent),
-    ).toEqual([100, 0, 0])
+    ).toEqual([100, 50])
+
+    expect(
+      updateCustomPriceRangeLiquidityPercent({
+        entries,
+        entryId: 'custom-range-1',
+        percent: -25,
+      }).map((entry) => entry.liquidityPercent),
+    ).toEqual([0, 50])
   })
 
   it('transfers removed row percent to the last remaining row', () => {
@@ -181,8 +192,24 @@ describe('custom price range utilities', () => {
       isCustomPriceRangeEntryValid({
         id: 'custom-range-1',
         liquidityPercent: 100,
-        minPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+        minPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
         maxPercentFromClearing: 10,
+      }),
+    ).toBe(false)
+    expect(
+      isCustomPriceRangeEntryValid({
+        id: 'custom-range-1',
+        liquidityPercent: 100,
+        minPercentFromClearing: -200,
+        maxPercentFromClearing: 100,
+      }),
+    ).toBe(false)
+    expect(
+      isCustomPriceRangeEntryValid({
+        id: 'custom-range-1',
+        liquidityPercent: 100,
+        minPercentFromClearing: -10,
+        maxPercentFromClearing: -5,
       }),
     ).toBe(false)
   })
@@ -369,6 +396,33 @@ describe('createNextBoundedTier', () => {
       { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 15 },
     ])
     expect(next.id).toBe('tier-4')
+  })
+
+  it('defaults the first bounded tier in raise units from USD when usdPriceNum is set', () => {
+    const next = createNextBoundedTier([{ id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 50 }], {
+      usdPriceNum: 3000,
+    })
+    expect(parseCompactNumberInput(next.raiseMilestone)).toBeCloseTo(100_000 / 3000, 5)
+  })
+
+  it('snaps default next tier to a whole-USD 10× boundary when usdPriceNum is set', () => {
+    const usd = 3000
+    const first = createNextBoundedTier([{ id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 100 }], {
+      usdPriceNum: usd,
+    })
+    const second = createNextBoundedTier(
+      [
+        { ...first, id: 'tier-1' },
+        { id: UNBOUNDED_TIER_ID, raiseMilestone: '', percent: 100 },
+      ],
+      { usdPriceNum: usd },
+    )
+    const firstRaise = parseCompactNumberInput(first.raiseMilestone) ?? 0
+    const nextUsd = Math.round(firstRaise * usd * 10)
+    expect(nextUsd).toBe(1_000_000)
+    const secondRaise = parseCompactNumberInput(second.raiseMilestone) ?? 0
+    expect(Math.abs(secondRaise - 1_000_000 / usd)).toBeLessThan(1e-6)
+    expect(second.raiseMilestone).not.toMatch(/\.\d{10}/)
   })
 })
 

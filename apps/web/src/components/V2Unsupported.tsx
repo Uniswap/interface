@@ -1,7 +1,8 @@
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 
 export function V2Unsupported() {
+  const { t } = useTranslation()
   return (
     <Flex gap="$gap24" alignItems="center" width="100%">
       <Flex gap="$gap12" width="100%" alignItems="center">
@@ -15,7 +16,7 @@ export function V2Unsupported() {
           py="$spacing16"
         >
           <Text color="$neutral2" textAlign="center" variant="body2">
-            <Trans i18nKey="v2.notAvailable" />
+            {t('v2.notAvailable')}
           </Text>
         </Flex>
       </Flex>

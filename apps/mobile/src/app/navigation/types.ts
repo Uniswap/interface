@@ -63,6 +63,7 @@ export type ExploreStackParamList = {
   }
   [MobileScreens.TokenDetails]: {
     currencyId: string
+    isMultichainAsset?: boolean
   }
 }
 
@@ -167,6 +168,7 @@ export type AppStackParamList = {
   [MobileScreens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>
   [MobileScreens.TokenDetails]: {
     currencyId: string
+    isMultichainAsset?: boolean
   }
   [MobileScreens.ExternalProfile]: {
     address: string
@@ -199,7 +201,6 @@ export type AppStackParamList = {
   [ModalName.HiddenTokenInfoModal]: undefined
   [ModalName.ScreenshotWarning]: { acknowledgeText?: string } | undefined
   [ModalName.PasskeyManagement]: PasskeyManagementModalState
-  [ModalName.PasskeysHelp]: undefined
   [ModalName.BiometricsModal]: undefined
   [ModalName.FiatCurrencySelector]: undefined
   [ModalName.ManageWalletsModal]: ManageWalletsModalState

@@ -125,26 +125,33 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
       : undefined
   }, [dappRequest])
 
-  const { gasFeeResult, encodedTransactionRequest, encodedRequestId, showSmartWalletActivation, preSignedTransaction } =
-    usePrepareAndSignSendCallsTransaction({
-      request,
-      account: currentAccount,
-      chainId,
-    })
+  const {
+    gasFeeResult,
+    encodedTransactionRequest,
+    encodedRequestId,
+    showSmartWalletActivation,
+    preSignedTransaction,
+    unsignedUserOperation,
+  } = usePrepareAndSignSendCallsTransaction({
+    request,
+    account: currentAccount,
+    chainId,
+  })
 
   const onConfirmRequest = useCallback(async () => {
     const transactionTypeInfo: TransactionTypeInfo = {
       type: TransactionType.SendCalls,
-      encodedTransaction: encodedTransactionRequest,
-      encodedRequestId,
+      ...(unsignedUserOperation
+        ? { unsignedUserOperation }
+        : { encodedTransaction: encodedTransactionRequest, encodedRequestId }),
     }
 
     await onConfirm({
       request,
       transactionTypeInfo,
-      preSignedTransaction,
+      preSignedTransaction: unsignedUserOperation ? undefined : preSignedTransaction,
     })
-  }, [encodedTransactionRequest, encodedRequestId, onConfirm, preSignedTransaction, request])
+  }, [encodedTransactionRequest, encodedRequestId, unsignedUserOperation, onConfirm, preSignedTransaction, request])
 
   const onCancelRequest = useCallback(async () => {
     await onCancel(request)

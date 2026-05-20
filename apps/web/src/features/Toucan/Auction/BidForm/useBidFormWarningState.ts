@@ -4,7 +4,7 @@ import { getChainInfo, TOUCAN_AUCTION_SUPPORTED_CHAINS } from 'uniswap/src/featu
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { zeroAddress } from 'viem'
+import { zeroAddress } from '~/chains'
 import { AuctionProgressState, type UserBid } from '~/features/Toucan/Auction/store/types'
 
 interface UseBidFormWarningStateParams {

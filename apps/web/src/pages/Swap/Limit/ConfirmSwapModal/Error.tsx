@@ -1,4 +1,5 @@
-import { Trans, useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -7,7 +8,6 @@ import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { SwapResult } from '~/hooks/useSwapCallback'
 import { TradeSummary } from '~/pages/Swap/Limit/ConfirmSwapModal/TradeSummary'
 import { InterfaceTrade, TradeFillType } from '~/state/routing/types'
-import { isLimitTrade, isUniswapXTrade } from '~/state/routing/utils'
 import { ExternalLink } from '~/theme/components/Links'
 
 export enum PendingModalError {
@@ -19,69 +19,60 @@ export enum PendingModalError {
 }
 
 interface ErrorModalContentProps {
-  errorType: PendingModalError
+  /** When omitted, renders nothing (stable subtree when the panel is always mounted). */
+  errorType?: PendingModalError
   trade?: InterfaceTrade
   showTrade?: boolean
   swapResult?: SwapResult
   onRetry: () => void
 }
 
-function getErrorContent({ errorType, trade }: { errorType: PendingModalError; trade?: InterfaceTrade }): {
-  title: JSX.Element
-  message?: JSX.Element
+function getErrorContent(
+  errorType: PendingModalError,
+  t: TFunction,
+): {
+  title: string
+  message?: string
   supportArticleURL?: string
 } {
   switch (errorType) {
     case PendingModalError.TOKEN_APPROVAL_ERROR:
       return {
-        title: <Trans i18nKey="error.tokenApproval" />,
-        message: <Trans i18nKey="error.tokenApproval.message" />,
+        title: t('error.tokenApproval'),
+        message: t('error.tokenApproval.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case PendingModalError.PERMIT_ERROR:
       return {
-        title: <Trans i18nKey="permit.approval.fail" />,
-        message: <Trans i18nKey="permit.approval.fail.message" />,
+        title: t('permit.approval.fail'),
+        message: t('permit.approval.fail.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case PendingModalError.XV2_HARD_QUOTE_ERROR:
-      return {
-        title: <Trans i18nKey="common.swap.failed" />,
-        message: <Trans i18nKey="swap.fail.uniswapX" />,
-        supportArticleURL: uniswapUrls.helpArticleUrls.uniswapXFailure,
-      }
     case PendingModalError.CONFIRMATION_ERROR:
-      if (isLimitTrade(trade)) {
-        return {
-          title: <Trans i18nKey="common.limit.failed" />,
-          supportArticleURL: uniswapUrls.helpArticleUrls.limitsFailure,
-        }
-      } else {
-        return {
-          title: <Trans i18nKey="common.swap.failed" />,
-          message: <Trans i18nKey="swap.fail.message" />,
-          supportArticleURL: isUniswapXTrade(trade)
-            ? uniswapUrls.helpArticleUrls.uniswapXFailure
-            : uniswapUrls.helpArticleUrls.transactionFailure,
-        }
+      return {
+        title: t('common.limit.failed'),
+        supportArticleURL: uniswapUrls.helpArticleUrls.limitsFailure,
       }
     case PendingModalError.WRAP_ERROR:
       return {
-        title: <Trans i18nKey="common.wrap.failed" />,
-        message: <Trans i18nKey="token.wrap.fail.message" />,
+        title: t('common.wrap.failed'),
+        message: t('token.wrap.fail.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.wethExplainer,
       }
     default:
       return {
-        title: <Trans i18nKey="common.unknownError.error" />,
-        message: <Trans i18nKey="common.swap.failed" />,
+        title: t('common.unknownError.error'),
       }
   }
 }
 
 export function Error({ errorType, trade, showTrade, swapResult, onRetry }: ErrorModalContentProps) {
-  const { title, message, supportArticleURL } = getErrorContent({ errorType, trade })
   const { t } = useTranslation()
+  if (errorType === undefined) {
+    return null
+  }
+  const { title, message, supportArticleURL } = getErrorContent(errorType, t)
 
   return (
     <Flex alignItems="center" p="$spacing8" gap="$spacing8">
@@ -99,9 +90,11 @@ export function Error({ errorType, trade, showTrade, swapResult, onRetry }: Erro
       <Text variant="subheading1" color="$neutral1" mt="$spacing8">
         {title}
       </Text>
-      <Text variant="body3" color="$neutral2">
-        {message}
-      </Text>
+      {message ? (
+        <Text variant="body3" color="$neutral2">
+          {message}
+        </Text>
+      ) : null}
       <Flex gap="$gap8" justifyContent="center" alignItems="center">
         {showTrade && trade && <TradeSummary trade={trade} />}
         {supportArticleURL && <LearnMoreLink url={supportArticleURL} centered />}

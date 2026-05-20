@@ -35,7 +35,6 @@ import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeG
 import { AdvancedSettingsModal } from 'src/components/modals/ReactNavigationModals/AdvancedSettingsModal'
 import { BridgedAssetModalScreen } from 'src/components/modals/ReactNavigationModals/BridgedAssetModal'
 import { HiddenTokenInfoModalScreen } from 'src/components/modals/ReactNavigationModals/HiddenTokenInfoModalScreen'
-import { PasskeyHelpModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyHelpModalScreen'
 import { PasskeyManagementModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyManagementModalScreen'
 import { PermissionsSettingsScreen } from 'src/components/modals/ReactNavigationModals/PermissionsSettingsScreen'
 import { PortfolioBalanceSettingsScreen } from 'src/components/modals/ReactNavigationModals/PortfolioBalanceSettingsScreen'
@@ -423,7 +422,6 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={ReportTokenDataModalScreen} name={ModalName.ReportTokenData} />
         <AppStack.Screen component={ScreenshotWarningModal} name={ModalName.ScreenshotWarning} />
         <AppStack.Screen component={PasskeyManagementModalScreen} name={ModalName.PasskeyManagement} />
-        <AppStack.Screen component={PasskeyHelpModalScreen} name={ModalName.PasskeysHelp} />
         <AppStack.Screen component={SettingsBiometricModal} name={ModalName.BiometricsModal} />
         <AppStack.Screen component={SettingsFiatCurrencyModal} name={ModalName.FiatCurrencySelector} />
         <AppStack.Screen component={SettingsLanguageModal} name={ModalName.LanguageSelector} />

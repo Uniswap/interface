@@ -19,6 +19,7 @@ import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddre
 import { OverviewActionTiles } from '~/pages/Portfolio/Overview/ActionTiles'
 import { OVERVIEW_RIGHT_COLUMN_WIDTH } from '~/pages/Portfolio/Overview/constants'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
+import { usePortfolioChartSeries } from '~/pages/Portfolio/Overview/hooks/usePortfolioChartSeries'
 import { PortfolioOverviewTables } from '~/pages/Portfolio/Overview/OverviewTables'
 import { PortfolioChart } from '~/pages/Portfolio/Overview/PortfolioChart'
 import { PortfolioPerformance } from '~/pages/Portfolio/Overview/PortfolioPerformance'
@@ -40,10 +41,15 @@ const ActionsAndStatsContainer = styled(Flex, {
   } as const,
 })
 
+// Keep in sync with the rendered PortfolioBalanceHeader height.
+const ACTIONS_TOP_OFFSET_WITH_BALANCE_HEADER = 92
+
 export const PortfolioOverview = memo(function PortfolioOverview() {
   const media = useMedia()
   const isFullWidth = media.xl
   const isProfitLossEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  const showBalanceHeaderRow = portfolioPoolsBalancesEnabled
   const { chainId, isExternalWallet } = usePortfolioRoutes()
   const portfolioAddresses = usePortfolioAddresses()
   const { chains: allChainIds } = useEnabledChains()
@@ -75,6 +81,23 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
     },
     enabled: !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress),
   })
+
+  const { series, chartPercentChange } = usePortfolioChartSeries({
+    chartData: portfolioChartData,
+    selectedPeriod,
+  })
+  const isChartLoading = isChartPending || !series.length
+  const isChartEmpty = useMemo(() => {
+    if (!series.length) {
+      return true
+    }
+
+    if (series[series.length - 1].close === 0) {
+      return series.every((d) => d.close === 0)
+    }
+
+    return false
+  }, [series])
 
   // Get the latest value from chart endpoint (last point in the array) for comparison
   const lastChartValue = useMemo(() => {
@@ -134,13 +157,16 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
             <PortfolioChart
               portfolioTotalBalanceUSD={portfolioData?.balanceUSD}
               isPortfolioZero={isPortfolioZero}
-              chartData={portfolioChartData}
-              isPending={isChartPending}
+              series={series}
+              chartPercentChange={chartPercentChange}
+              isLoading={isChartLoading}
+              isChartEmpty={isChartEmpty}
               error={chartError}
               selectedPeriod={selectedPeriod}
               setSelectedPeriod={setSelectedPeriod}
               onHoverPeriod={handleHoverPeriod}
               isTotalValueMatch={isTotalValueMatch}
+              showBalanceHeaderRow={showBalanceHeaderRow}
             />
           </Trace>
           {isPortfolioZero ? (
@@ -155,7 +181,10 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
             </ActionsAndStatsContainer>
           ) : (
             <Trace section={SectionName.PortfolioOverviewTab} element={ElementName.PortfolioActionTiles}>
-              <ActionsAndStatsContainer fullWidth={isFullWidth}>
+              <ActionsAndStatsContainer
+                fullWidth={isFullWidth}
+                pt={showBalanceHeaderRow && !isFullWidth ? ACTIONS_TOP_OFFSET_WITH_BALANCE_HEADER : undefined}
+              >
                 <OverviewActionTiles />
                 {isProfitLossEnabled ? <PortfolioPerformance /> : <OverviewStatsTiles activityData={activityData} />}
               </ActionsAndStatsContainer>

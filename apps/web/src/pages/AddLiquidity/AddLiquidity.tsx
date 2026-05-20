@@ -1,7 +1,8 @@
 import type { Currency } from '@uniswap/sdk-core'
+import { useQueryStates } from 'nuqs'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { Button, Flex, Text } from 'ui/src'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Plus } from 'ui/src/components/icons/Plus'
@@ -9,22 +10,29 @@ import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
 import { OrderDirection } from '~/appGraphql/data/util'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { ExpandableSearchInput } from '~/components/ExpandableSearchInput/ExpandableSearchInput'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { ExploreTablesFilterStoreContextProvider } from '~/features/Explore/state/exploreTablesFilterStore'
+import { PageLayout } from '~/features/Liquidity/Create/Container'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { CurrencySelector } from '~/features/Liquidity/Create/SelectTokenStep'
+import { parseAsChainId, parseAsCurrencyAddress } from '~/features/Liquidity/parsers/urlParsers'
+import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useDebounce } from '~/hooks/useDebounce'
+import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import { useAddLiquidityPools } from '~/pages/AddLiquidity/useAddLiquidityPools'
+import type { PoolLinkData } from '~/pages/Explore/tables/Pools/PoolTable'
 import { PoolsTable } from '~/pages/Explore/tables/Pools/PoolTable'
 import { PoolTableStoreContextProvider, usePoolTableStore } from '~/pages/Explore/tables/Pools/poolTableStore'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { getChainUrlParam } from '~/utils/params/chainParams'
+
+const FEW_RESULTS_THRESHOLD = 10
 
 export default function AddLiquidity(): JSX.Element {
   // These providers create independent store instances — no shared state with the explore page
@@ -40,32 +48,60 @@ export default function AddLiquidity(): JSX.Element {
 function AddLiquidityContent(): JSX.Element {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
+  const entryPointBreadcrumb = useEntryPointBreadcrumb()
+  const entryPoint = (location.state as { entryPoint?: string } | null)?.entryPoint
 
-  // Token selection state
-  const [currency0, setCurrency0] = useState<Currency | undefined>()
-  const [currency1, setCurrency1] = useState<Currency | undefined>()
+  // Token selection and chain filter persisted in URL search params
+  const [urlState, setUrlState] = useQueryStates(
+    {
+      currencyA: parseAsCurrencyAddress.withDefault(''),
+      currencyB: parseAsCurrencyAddress.withDefault(''),
+      chain: parseAsChainId,
+    },
+    { history: 'replace' },
+  )
+
   const [currencySearchInputState, setCurrencySearchInputState] = useState<'token0' | 'token1' | undefined>(undefined)
 
-  const currency0Info = useCurrencyInfo(currencyId(currency0))
-  const currency1Info = useCurrencyInfo(currencyId(currency1))
+  const selectedChainId = urlState.chain ?? undefined
+  // Token chain is tracked independently so the NetworkFilter doesn't shift currency resolution
+  const [tokenChainId, setTokenChainId] = useState<UniverseChainId | undefined>(selectedChainId)
+
+  const currency0Info = useCurrencyInfo(urlState.currencyA || undefined, tokenChainId)
+  const currency1Info = useCurrencyInfo(urlState.currencyB || undefined, tokenChainId)
+  const currency0 = currency0Info?.currency
+  const currency1 = currency1Info?.currency
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
+      const address = currency.isNative ? NATIVE_CHAIN_ID : currency.address
       if (currencySearchInputState === 'token0') {
-        setCurrency0(currency)
+        setUrlState({ currencyA: address, chain: currency.chainId })
       } else if (currencySearchInputState === 'token1') {
-        setCurrency1(currency)
+        setUrlState({ currencyB: address, chain: currency.chainId })
       }
+      setTokenChainId(currency.chainId)
       setCurrencySearchInputState(undefined)
     },
-    [currencySearchInputState],
+    [currencySearchInputState, setUrlState],
+  )
+
+  const handleChainSelect = useCallback(
+    (chainId: UniverseChainId | undefined) => {
+      const hasTokens = Boolean(urlState.currencyA || urlState.currencyB)
+      if (hasTokens && chainId !== undefined && chainId !== tokenChainId) {
+        setUrlState({ chain: chainId, currencyA: '', currencyB: '' })
+        setTokenChainId(undefined)
+      } else {
+        setUrlState({ chain: chainId ?? null })
+      }
+    },
+    [setUrlState, tokenChainId, urlState.currencyA, urlState.currencyB],
   )
 
   const [filterString, setFilterString] = useState('')
   const debouncedFilterString = useDebounce(filterString, 300)
-
-  // Chain filter state
-  const [selectedChainId, setSelectedChainId] = useState<UniverseChainId | undefined>(undefined)
 
   // Sort state — driven by the local pool table store instance
   const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
@@ -79,6 +115,7 @@ function AddLiquidityContent(): JSX.Element {
     isLoading,
     isError,
     loadMore: backendLoadMore,
+    hasNextPage,
   } = useAddLiquidityPools({
     currency0,
     currency1,
@@ -90,20 +127,29 @@ function AddLiquidityContent(): JSX.Element {
     },
   })
 
-  const getPoolLink = useCallback(
-    (chainId: UniverseChainId, poolIdOrHash: string) => `/positions/add/${getChainUrlParam(chainId)}/${poolIdOrHash}`,
-    [],
-  )
+  const getPoolLink = useCallback((pool: PoolLinkData) => {
+    const base = `/positions/add/${getChainUrlParam(pool.chainId)}/${pool.poolIdOrHash}`
+    const params = buildPoolSearchParams({
+      currencyA: pool.token0Address ?? NATIVE_CHAIN_ID,
+      currencyB: pool.token1Address ?? NATIVE_CHAIN_ID,
+      chain: getChainUrlParam(pool.chainId),
+      fee: pool.fee,
+      hookAddress: pool.hookAddress,
+      protocolVersion: pool.protocolVersion,
+    })
+    const search = params.toString()
+    return search ? `${base}?${search}` : base
+  }, [])
 
   return (
     <Trace logImpression page={InterfacePageName.AddLiquidity}>
-      <Flex width="100%" maxWidth={1200} mx="auto" py="$spacing24" px="$spacing16">
+      <PageLayout py="$spacing24">
         {/* Breadcrumbs */}
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-          <BreadcrumbNavLink to="/explore/pools">
-            {t('common.pools')} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
+          <BreadcrumbNavLink to={entryPointBreadcrumb.to}>
+            {entryPointBreadcrumb.label} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
           </BreadcrumbNavLink>
-          <Text color="$neutral2">{t('common.addLiquidity')}</Text>
+          <Text color="$neutral1">{t('common.addLiquidity')}</Text>
         </BreadcrumbNavContainer>
 
         {/* Title row */}
@@ -111,8 +157,13 @@ function AddLiquidityContent(): JSX.Element {
           <Flex grow>
             <Text variant="heading3">{t('addLiquidity.choosePool')}</Text>
           </Flex>
-          <Button fill={false} emphasis="text-only" icon={<Plus />} onPress={() => navigate('/positions/add/new')}>
-            {t('addLiquidity.createPool')}
+          <Button
+            fill={false}
+            emphasis="text-only"
+            icon={<Plus color="$neutral2" />}
+            onPress={() => navigate('/positions/add/new')}
+          >
+            <Button.Text color="$neutral2">{t('addLiquidity.createPool')}</Button.Text>
           </Button>
         </Flex>
 
@@ -120,8 +171,18 @@ function AddLiquidityContent(): JSX.Element {
         <Flex row justifyContent="space-between" alignItems="center" width="100%" gap="$spacing16" height="40px">
           {/* Left: Token selectors */}
           <Flex row gap="$spacing8" height="100%">
-            <CurrencySelector currencyInfo={currency0Info} onPress={() => setCurrencySearchInputState('token0')} />
-            <CurrencySelector currencyInfo={currency1Info} onPress={() => setCurrencySearchInputState('token1')} />
+            <CurrencySelector
+              currencyInfo={currency0Info}
+              onPress={() => setCurrencySearchInputState('token0')}
+              placeholder={t('addLiquidity.selectFirstToken')}
+              emphasis="tertiary"
+            />
+            <CurrencySelector
+              currencyInfo={currency1Info}
+              onPress={() => setCurrencySearchInputState('token1')}
+              placeholder={t('addLiquidity.selectSecondToken')}
+              emphasis="tertiary"
+            />
           </Flex>
 
           {/* Right: Filters */}
@@ -131,7 +192,7 @@ function AddLiquidityContent(): JSX.Element {
               onChangeText={setFilterString}
               placeholder={t('tokens.table.search.placeholder.pools')}
             />
-            <NetworkFilter position="right" onPress={setSelectedChainId} currentChainId={selectedChainId} />
+            <NetworkFilter position="right" onPress={handleChainSelect} currentChainId={selectedChainId} />
           </Flex>
         </Flex>
 
@@ -142,11 +203,25 @@ function AddLiquidityContent(): JSX.Element {
             loading={isLoading}
             error={isError}
             loadMore={backendLoadMore}
-            maxWidth={1200}
             hiddenColumns={[PoolSortFields.VolOverTvl]}
             getLink={getPoolLink}
+            linkState={entryPoint ? { entryPoint } : undefined}
           />
         </Flex>
+
+        {/* Create pool button — shown when there are few results and nothing more to load */}
+        {!isLoading && !hasNextPage && pools && pools.length > 0 && pools.length < FEW_RESULTS_THRESHOLD && (
+          <Flex alignItems="center" mt="$spacing16">
+            <Button
+              fill={false}
+              emphasis="text-only"
+              icon={<Plus color="$neutral2" />}
+              onPress={() => navigate('/positions/add/new')}
+            >
+              <Button.Text color="$neutral2">{t('addLiquidity.createNewPool')}</Button.Text>
+            </Button>
+          </Flex>
+        )}
 
         {/* Currency search modal */}
         <CurrencySearchModal
@@ -156,7 +231,7 @@ function AddLiquidityContent(): JSX.Element {
           onCurrencySelect={handleCurrencySelect}
           flow={TokenSelectorFlow.Liquidity}
         />
-      </Flex>
+      </PageLayout>
     </Trace>
   )
 }

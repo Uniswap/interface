@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { formatUnits } from '~/chains'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { formatTickForDisplay } from '~/features/Toucan/Auction/BidDistributionChart/utils/utils'
 import type { BidTokenInfo } from '~/features/Toucan/Auction/store/types'
@@ -58,7 +59,7 @@ export function ClearingPriceTooltipBody({
       formatter: (amount) => convertFiatAmountFormatted(amount, NumberType.FiatTokenStats),
     })
 
-    const supply = Number(totalSupply) / 10 ** auctionTokenDecimals
+    const supply = Number(formatUnits(BigInt(totalSupply), auctionTokenDecimals))
     if (!supply || !Number.isFinite(supply)) {
       return null
     }

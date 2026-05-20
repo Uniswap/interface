@@ -1,4 +1,4 @@
-import { formatUnits } from 'viem'
+import { formatUnits } from '~/chains'
 
 /**
  * Q96 constant used in fixed-point arithmetic by the TWAP auction contracts

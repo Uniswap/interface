@@ -60,13 +60,17 @@ import {
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
-import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
+import { addWalletCallTransaction } from 'wallet/src/features/batchedTransactions/slice'
 import { generateBatchId, getCapabilitiesResponse } from 'wallet/src/features/batchedTransactions/utils'
 import { type Call } from 'wallet/src/features/dappRequests/types'
 import {
   type ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import {
+  ExecuteUserOpParams,
+  executeUserOpSaga,
+} from 'wallet/src/features/transactions/executeTransaction/executeUserOpSaga'
 import { type SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
@@ -576,7 +580,21 @@ export function* handleSendCalls({
   preSignedTransaction?: SignedTransactionRequest
 }) {
   const isSendCallTransaction = transactionTypeInfo?.type === TransactionType.SendCalls
-  if (!isSendCallTransaction || !transactionTypeInfo.encodedTransaction || !transactionTypeInfo.encodedRequestId) {
+  if (!isSendCallTransaction) {
+    const errorResponse: ErrorResponse = {
+      type: DappResponseType.ErrorResponse,
+      error: serializeError(rpcErrors.invalidInput()),
+      requestId: request.requestId,
+    }
+    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    return
+  }
+
+  const { unsignedUserOperation, encodedTransaction, encodedRequestId } = transactionTypeInfo
+  const is4337 = !!unsignedUserOperation
+  const is7702 = !!encodedTransaction && !!encodedRequestId
+
+  if (!is4337 && !is7702) {
     const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
       error: serializeError(rpcErrors.invalidInput()),
@@ -599,52 +617,88 @@ export function* handleSendCalls({
     }
 
     const activeAccount = getActiveSignerConnectedAccount(dappInfo.connectedAccounts, dappInfo.activeConnectedAddress)
-
-    // Generate or use provided batch ID
     const batchId = request.id || generateBatchId()
 
-    const { encodedTransaction, encodedRequestId } = transactionTypeInfo
-    const sendTransactionParams: ExecuteTransactionParams = {
-      chainId,
-      account: activeAccount,
-      typeInfo: {
-        type: TransactionType.SendCalls,
-        encodedTransaction,
-        encodedRequestId,
-        dappInfo: {
-          name: dappInfo.displayName,
-          address: encodedTransaction.to,
-          icon: dappInfo.iconUrl,
-        },
-      },
-      options: {
-        request: encodedTransaction,
-      },
-      transactionOriginType: TransactionOriginType.External,
-      preSignedTransaction,
-    }
-
-    const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
-
-    yield* put(
-      addBatchedTransaction({
-        batchId,
-        txHashes: [transactionHash], // Assuming single tx for now, might need update if batching changes
-        requestId: encodedRequestId,
+    if (is4337) {
+      // 4337 UserOp path — gas-sponsored dapp request
+      const executeUserOpParams: ExecuteUserOpParams = {
+        userOp: unsignedUserOperation,
+        account: activeAccount,
         chainId,
-      }),
-    )
+        typeInfo: {
+          type: TransactionType.SendCalls,
+          unsignedUserOperation,
+          dappInfo: {
+            name: dappInfo.displayName,
+            icon: dappInfo.iconUrl,
+          },
+        },
+      }
+      const { userOpHash } = yield* call(executeUserOpSaga, executeUserOpParams)
 
-    const response: SendCallsResponse = {
-      type: DappResponseType.SendCallsResponse,
-      requestId: request.requestId,
-      response: {
-        id: batchId,
-        capabilities: request.capabilities || {},
-      },
+      yield* put(
+        addWalletCallTransaction({
+          batchId,
+          userOpHash,
+          requestId: batchId,
+          chainId,
+        }),
+      )
+
+      const response: SendCallsResponse = {
+        type: DappResponseType.SendCallsResponse,
+        requestId: request.requestId,
+        response: {
+          id: batchId,
+          capabilities: request.capabilities || {},
+        },
+      }
+
+      yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+    } else if (is7702) {
+      // 7702 encoded transaction path
+      const sendTransactionParams: ExecuteTransactionParams = {
+        chainId,
+        account: activeAccount,
+        typeInfo: {
+          type: TransactionType.SendCalls,
+          encodedTransaction,
+          encodedRequestId,
+          dappInfo: {
+            name: dappInfo.displayName,
+            address: encodedTransaction.to,
+            icon: dappInfo.iconUrl,
+          },
+        },
+        options: {
+          request: encodedTransaction,
+        },
+        transactionOriginType: TransactionOriginType.External,
+        preSignedTransaction,
+      }
+
+      const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+
+      yield* put(
+        addWalletCallTransaction({
+          batchId,
+          txHashes: [transactionHash], // Assuming single tx for now, might need update if batching changes
+          requestId: encodedRequestId,
+          chainId,
+        }),
+      )
+
+      const response: SendCallsResponse = {
+        type: DappResponseType.SendCallsResponse,
+        requestId: request.requestId,
+        response: {
+          id: batchId,
+          capabilities: request.capabilities || {},
+        },
+      }
+
+      yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
     }
-
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
   } catch (error) {
     logger.error(error, {
       tags: { file: 'dappRequestSaga', function: 'handleSendCalls' },

@@ -1,9 +1,10 @@
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Input, Text } from 'ui/src'
+import { Flex, Input, Text, useMedia } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { fonts } from 'ui/src/theme'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
@@ -13,6 +14,10 @@ import {
   isAllowedCompactNumberInput,
   percentOfAmount,
 } from '~/pages/Liquidity/CreateAuction/utils'
+import {
+  formatLocalizedNumber,
+  useLocalizedNumberInput,
+} from '~/pages/Liquidity/CreateAuction/utils/localizedNumberInput'
 
 const QUICK_SELECT_PERCENTS = [2, 5, 10] as const
 
@@ -44,21 +49,55 @@ export function AuctionSupplySelector({
 }: AuctionSupplySelectorProps) {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
 
   const [isFocused, setIsFocused] = useState(false)
   const [rawInput, setRawInput] = useState('')
 
   const currency = tokenTotalSupply.currency
 
-  const formatAmount = (amount: CurrencyAmount<Currency>): string =>
-    formatNumberOrString({
-      value: amount.toExact(),
-      type: NumberType.TokenQuantityStats,
-      placeholder: '0',
-    })
+  // Input display: locale separators, no compact suffixes ("1.23K"), no truncation of integer part.
+  // The unfocused view caps fractional digits to keep the line short; the focused Input (via the
+  // hook) uses full precision so the user always sees their exact typed value while editing.
+  const displayUnfocused = formatLocalizedNumber({
+    rawValue: auctionSupplyAmount.toExact(),
+    locale,
+    maxDecimals: 4,
+  })
+  // Subtitle (Total supply): keeps the original compact stats formatter — this is a reference number,
+  // not the editable amount, so abbreviating large supplies is desirable here.
+  const totalSupplyFormatted = formatNumberOrString({
+    value: tokenTotalSupply.toExact(),
+    type: NumberType.TokenQuantityStats,
+    placeholder: '0',
+  })
 
-  const displayValue = formatAmount(auctionSupplyAmount)
-  const totalSupplyFormatted = formatAmount(tokenTotalSupply)
+  const handleRawChange = useCallback(
+    (raw: string) => {
+      if (!isAllowedCompactNumberInput(raw)) {
+        return
+      }
+      setRawInput(raw)
+      const parsed = parseSuffixedAmount(raw, currency)
+      if (!parsed) {
+        return
+      }
+      // Live-update with exact amount; cap to total supply so the store stays valid
+      const capped = parsed.greaterThan(tokenTotalSupply) ? tokenTotalSupply : parsed
+      onAmountChange(capped)
+    },
+    [currency, tokenTotalSupply, onAmountChange],
+  )
+
+  const {
+    displayValue: focusedDisplay,
+    inputRef,
+    handleChange,
+  } = useLocalizedNumberInput({
+    rawValue: rawInput,
+    locale,
+    onChangeRaw: handleRawChange,
+  })
 
   // While focused, parse typed value into a CurrencyAmount for exact comparison
   const parsedAmount = useMemo(
@@ -66,25 +105,6 @@ export function AuctionSupplySelector({
     [isFocused, rawInput, currency],
   )
   const exceedsTotalSupply = parsedAmount !== null && parsedAmount.greaterThan(tokenTotalSupply)
-
-  const handleChange = useCallback(
-    (value: string) => {
-      if (!isAllowedCompactNumberInput(value)) {
-        return
-      }
-      setRawInput(value)
-
-      const parsed = parseSuffixedAmount(value, currency)
-      if (!parsed) {
-        return
-      }
-
-      // Live-update with exact amount; cap to total supply so the store stays valid
-      const capped = parsed.greaterThan(tokenTotalSupply) ? tokenTotalSupply : parsed
-      onAmountChange(capped)
-    },
-    [currency, tokenTotalSupply, onAmountChange],
-  )
 
   const handleFocus = useCallback(() => {
     setIsFocused(true)
@@ -115,6 +135,10 @@ export function AuctionSupplySelector({
     [onSelectPercent],
   )
 
+  const media = useMedia()
+  // stack pills on medium-and-smaller viewports.
+  const stackPresetPills = Boolean(media.md)
+
   return (
     <Flex
       backgroundColor="$surface2"
@@ -132,12 +156,26 @@ export function AuctionSupplySelector({
         <QuestionInCircleFilled size="$icon.16" color="$neutral3" />
       </Flex>
 
-      {/* Input row: amount + symbol on left, quick selects on right */}
-      <Flex row alignItems="center">
-        <Flex flex={1} flexBasis={0} minWidth={0} gap="$spacing4">
-          <Flex row alignItems="center" gap="$spacing4">
+      {/* Amount + total supply on top; preset pills beside on wide cards, below when narrow */}
+      <Flex
+        row={!stackPresetPills}
+        alignItems={stackPresetPills ? 'stretch' : 'center'}
+        justifyContent={stackPresetPills ? 'flex-start' : 'space-between'}
+        gap={stackPresetPills ? '$spacing12' : '$spacing8'}
+        width="100%"
+      >
+        <Flex
+          flex={stackPresetPills ? undefined : 1}
+          flexBasis={stackPresetPills ? undefined : 0}
+          flexGrow={stackPresetPills ? undefined : 1}
+          minWidth={0}
+          gap="$spacing4"
+          maxWidth="100%"
+        >
+          <Flex row alignItems="center" flexWrap="wrap" gap="$spacing4" minWidth={0}>
             {isFocused ? (
               <Input
+                ref={inputRef}
                 autoFocus
                 height={fonts.heading3.lineHeight}
                 $platform-web={{
@@ -145,7 +183,7 @@ export function AuctionSupplySelector({
                   minWidth: '1ch',
                   maxWidth: '100%',
                 }}
-                value={rawInput}
+                value={focusedDisplay}
                 onChangeText={handleChange}
                 onBlur={handleBlur}
                 placeholder="0"
@@ -159,10 +197,10 @@ export function AuctionSupplySelector({
               />
             ) : (
               <Text variant="heading3" color="$neutral1" cursor="text" onPress={handleFocus}>
-                {displayValue}
+                {displayUnfocused}
               </Text>
             )}
-            <Text variant="heading3" color="$neutral3">
+            <Text flexShrink={0} variant="heading3" color="$neutral3">
               {tokenSymbol}
             </Text>
           </Flex>
@@ -171,7 +209,18 @@ export function AuctionSupplySelector({
           </Text>
         </Flex>
 
-        <Flex row flex={1} flexBasis={0} minWidth={0} gap="$spacing2">
+        <Flex
+          gap="$spacing2"
+          maxWidth="100%"
+          alignSelf={stackPresetPills ? 'stretch' : 'flex-end'}
+          width={stackPresetPills ? '100%' : undefined}
+          flexShrink={0}
+          $platform-web={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            ...(!stackPresetPills ? { width: 'min(100%, 20rem)' } : {}),
+          }}
+        >
           {QUICK_SELECT_PERCENTS.map((pillPercent) => (
             <PercentButton
               key={pillPercent}

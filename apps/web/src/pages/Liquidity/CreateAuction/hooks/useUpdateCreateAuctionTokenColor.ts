@@ -5,6 +5,7 @@ import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
+import { parseTokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import { TokenMode } from '~/pages/Liquidity/CreateAuction/types'
 
 /** Passed as `defaultColor` so extraction failures stay distinguishable from real colors. */
@@ -45,7 +46,8 @@ export function useUpdateCreateAuctionTokenColor(): void {
       setTokenColor(undefined)
       return
     }
+    // oxlint-disable-next-line universe-custom/no-tolowercase-address-currencyid
     const extractionFailed = tokenColor?.toLowerCase() === TOKEN_COLOR_EXTRACTION_SENTINEL
-    setTokenColor(extractionFailed ? undefined : (tokenColor ?? undefined))
+    setTokenColor(extractionFailed ? undefined : parseTokenAccentHex(tokenColor ?? undefined))
   }, [imageUrl, tokenColor, tokenColorLoading, setTokenColor])
 }

@@ -1,15 +1,18 @@
+import { QueryClient } from '@tanstack/react-query'
 import { fireEvent, waitFor } from '@testing-library/react'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { invalidateListAuthenticators, PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/config', () => ({
   getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id' })),
   getPrivyConfig: vi.fn(() => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' })),
+  getPrivyAppId: vi.fn(() => 'test-privy-app-id'),
 }))
 
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
@@ -194,12 +197,12 @@ describe('PasskeyMenu', () => {
     render(<PasskeyMenu onClose={vi.fn()} />)
     await screen.findByText('iCloud')
 
-    // mouseDown opens the ContextMenu (Primary trigger mode)
+    // Click opens the Popover; menu content renders into a Portal under document.body.
     const overflowButtons = screen.getAllByTestId(TestID.DeletePasskey)
-    fireEvent.mouseDown(overflowButtons[0])
+    fireEvent.click(overflowButtons[0])
 
     // Click "Remove" in the popover
-    fireEvent.click(screen.getByText('Remove'))
+    fireEvent.click(await screen.findByText('Remove'))
 
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -256,11 +259,11 @@ describe('PasskeyMenu', () => {
       expect(screen.getByText('Google')).toBeInTheDocument()
     })
 
-    // mouseDown opens the ContextMenu (Primary trigger mode)
-    fireEvent.mouseDown(screen.getByTestId(TestID.RemoveBackupLoginOverflow))
+    // Click opens the Popover; menu content renders into a Portal under document.body.
+    fireEvent.click(screen.getByTestId(TestID.RemoveBackupLoginOverflow))
 
     // Click "Remove" in the popover
-    fireEvent.click(screen.getByText('Remove'))
+    fireEvent.click(await screen.findByText('Remove'))
 
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -303,5 +306,31 @@ describe('PasskeyMenu', () => {
     })
     expect(screen.getByText('Backup login')).toBeInTheDocument()
     expect(screen.queryByText('user@gmail.com')).not.toBeInTheDocument()
+  })
+})
+
+describe('invalidateListAuthenticators', () => {
+  beforeEach(() => {
+    sessionStorage.clear()
+  })
+
+  it('removes the sessionStorage mirror and invalidates the query', async () => {
+    sessionStorage.setItem('listAuth:wallet-1', JSON.stringify({ authenticators: [], recoveryMethods: [] }))
+    const queryClient = new QueryClient()
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+
+    await invalidateListAuthenticators(queryClient, 'wallet-1')
+
+    expect(sessionStorage.getItem('listAuth:wallet-1')).toBeNull()
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.ListAuthenticators] })
+  })
+
+  it('handles a null walletId by clearing the empty-suffix sessionStorage key', async () => {
+    sessionStorage.setItem('listAuth:', JSON.stringify({ authenticators: [], recoveryMethods: [] }))
+    const queryClient = new QueryClient()
+
+    await invalidateListAuthenticators(queryClient, null)
+
+    expect(sessionStorage.getItem('listAuth:')).toBeNull()
   })
 })

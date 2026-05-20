@@ -9,32 +9,21 @@ import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { NumberType } from 'utilities/src/format/types'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
-import type { MockEarnVault } from '~/features/earn/_fixtures/vaults'
-
-// TODO(CONS-1787): replace with dynamic gas estimate from withdraw quote.
-const NETWORK_COST_USD = 1.05
 
 interface WithdrawReviewViewProps {
-  vault: MockEarnVault
+  vault: EarnVaultInfo
   amount: string
   chainId: UniverseChainId
   onBack: () => void
   onClose: () => void
-  onWithdraw: () => void
 }
 
-export function WithdrawReviewView({
-  vault,
-  amount,
-  chainId,
-  onBack,
-  onClose,
-  onWithdraw,
-}: WithdrawReviewViewProps): JSX.Element {
+export function WithdrawReviewView({ vault, amount, chainId, onBack, onClose }: WithdrawReviewViewProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { formatNumberOrString } = useLocalizationContext()
@@ -128,14 +117,15 @@ export function WithdrawReviewView({
             label={t('common.networkCost')}
             value={
               <Text variant="body3" color="$neutral1">
-                {formatFiat(NETWORK_COST_USD)}
+                —
               </Text>
             }
           />
         </Flex>
       )}
 
-      <Button variant="branded" size="large" py="$spacing24" onPress={onWithdraw}>
+      {/* TODO(CONS-1998): re-enable once earn chained actions are rebuilt on the new plan interface. */}
+      <Button variant="branded" size="large" py="$spacing24" isDisabled onPress={() => undefined}>
         {t('explore.earn.withdraw.cta', { symbol })}
       </Button>
     </Flex>

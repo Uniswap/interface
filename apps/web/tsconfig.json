@@ -49,6 +49,9 @@
       "path": "../../packages/environment"
     },
     {
+      "path": "../../packages/wallet"
+    },
+    {
       "path": "../../packages/utilities"
     },
     {
@@ -70,13 +73,13 @@
       "path": "../../packages/encoding"
     },
     {
-      "path": "../../packages/config"
-    },
-    {
       "path": "../../packages/chains"
     },
     {
       "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/config"
     },
     {
       "path": "../../packages/api"

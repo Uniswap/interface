@@ -9,6 +9,10 @@ export type { UniRpcConfig } from './rpc/getUniRpcConfig'
 export type { CreateEthersProvider } from './rpc/createEthersProvider'
 export type { CreateViemClient, CreateViemClientFactoryCtx } from './rpc/createViemClient'
 export type { SessionStrategy } from './rpc/createUniRpcTransport'
+export type { EthersSignTypedDataParams } from './createSignTypedData'
+
+// Transactions
+export { createTransactions } from './createTransactions'
 
 // Config factories
 export { createUniRpcConfigResolver } from './rpc/getUniRpcConfig'

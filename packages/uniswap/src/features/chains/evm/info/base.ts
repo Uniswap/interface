@@ -48,7 +48,6 @@ export const BASE_CHAIN_INFO = {
   explorer: {
     name: 'BaseScan',
     url: 'https://basescan.org/',
-    apiURL: 'https://api.basescan.org',
   },
   openseaName: 'base',
   interfaceName: 'base',

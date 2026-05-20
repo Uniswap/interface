@@ -1,12 +1,9 @@
-import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
-import { BINANCE_WALLET_ICON, UNISWAP_LOGO } from 'ui/src/assets'
+import { BINANCE_WALLET_ICON } from 'ui/src/assets'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Passkey } from 'ui/src/components/icons/Passkey'
-import { ScanQr } from 'ui/src/components/icons/ScanQr'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { WalletFilled } from 'ui/src/components/icons/WalletFilled'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
@@ -20,6 +17,7 @@ import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuSta
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { Loader } from '~/components/Icons/LoadingSpinner'
 import { DetectedBadge } from '~/components/WalletModal/shared'
+import { UniswapBrandedIcon } from '~/components/WalletModal/UniswapBrandedIcon'
 import { useRecentConnectorId } from '~/connection/constants'
 import { useIsInjectedWallet } from '~/features/accounts/store/hooks'
 import { ExternalWallet } from '~/features/accounts/store/types'
@@ -43,14 +41,6 @@ function EmbeddedWalletIcon() {
     <Flex p="$spacing6" backgroundColor="$accent2" borderRadius="$rounded8">
       <Passkey color="$accent1" size="$icon.20" />
     </Flex>
-  )
-}
-
-function UniswapMobileIcon({ iconSize }: { iconSize: number }) {
-  return isMobileWeb ? (
-    <Image height={iconSize} source={UNISWAP_LOGO} width={iconSize} />
-  ) : (
-    <ScanQr size={iconSize} minWidth={iconSize} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
   )
 }
 
@@ -84,13 +74,9 @@ function getIcon({
   if (wallet.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return <EmbeddedWalletIcon />
   } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
-    return isEmbeddedWalletEnabled ? (
-      <Flex p="$spacing4" backgroundColor="$accent2" borderRadius="$rounded8">
-        <UniswapLogo size={iconSize - 10} color="$accent1" />
-      </Flex>
-    ) : (
-      <UniswapMobileIcon iconSize={iconSize} />
-    )
+    return <UniswapBrandedIcon size={iconSize} />
+  } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) {
+    return <UniswapBrandedIcon size={iconSize} withChromeBadge />
   } else if (wallet.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
     return <BinanceWalletIcon iconSize={iconSize} />
   } else {

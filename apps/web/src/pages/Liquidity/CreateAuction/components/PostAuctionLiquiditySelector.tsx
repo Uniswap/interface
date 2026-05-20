@@ -1,12 +1,13 @@
-import { useCallback, useRef, useState, type ComponentRef } from 'react'
+import { useCallback, useRef, useState, type ComponentRef, type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Input, Text, Tooltip, TouchableArea } from 'ui/src'
+import { Flex, Input, Text, Tooltip, TouchableArea, useMedia } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { fonts } from 'ui/src/theme'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { PercentButton } from '~/pages/Liquidity/CreateAuction/components/PercentButton'
 import { PostAuctionLiquidityAllocationPopover } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquidityAllocationPopover'
 import { PostAuctionLiquidityTieredEditor } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquidityTieredEditor'
+import { type InputCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import {
   MAX_POST_AUCTION_LIQUIDITY_PERCENT,
   MIN_POST_AUCTION_LIQUIDITY_PERCENT,
@@ -40,11 +41,243 @@ interface PostAuctionLiquiditySelectorProps {
   raiseCurrencySymbol: string
   subtitle: string
   showSubtitleTooltip: boolean
+  inputCurrency: InputCurrency
+  usdPriceNum: number | null
+  fiatCurrencyCode: string
   onAllocationTypeSelect: (type: PostAuctionLiquidityAllocationType) => void
   onSelectPercent: (percent: number) => void
   onAddTier: () => void
   onUpdateTier: (tierId: string, config: Partial<Pick<PostAuctionLiquidityTier, 'raiseMilestone' | 'percent'>>) => void
   onRemoveTier: (tierId: string) => void
+}
+
+interface PostAuctionLiquiditySelectorCardHeaderProps {
+  label: string
+  headerHelpDescription: string
+  allocationType: PostAuctionLiquidityAllocationType
+  raiseCurrencySymbol: string
+  onAllocationTypeSelect: (type: PostAuctionLiquidityAllocationType) => void
+}
+
+function PostAuctionLiquiditySelectorCardHeader({
+  label,
+  headerHelpDescription,
+  allocationType,
+  raiseCurrencySymbol,
+  onAllocationTypeSelect,
+}: PostAuctionLiquiditySelectorCardHeaderProps) {
+  return (
+    <Flex row alignItems="flex-start" justifyContent="space-between" gap="$spacing8" width="100%">
+      <Flex
+        row
+        alignItems="flex-start"
+        gap="$spacing4"
+        flexShrink={1}
+        minWidth={0}
+        maxWidth="100%"
+        $platform-web={{ width: 'fit-content' }}
+      >
+        <Text
+          flexShrink={1}
+          minWidth={0}
+          variant="buttonLabel3"
+          color="$neutral2"
+          $platform-web={{ overflowWrap: 'anywhere' }}
+        >
+          {label}
+        </Text>
+        <Flex flexShrink={0} alignSelf="flex-start">
+          <Tooltip placement="top">
+            <Tooltip.Trigger asChild>
+              <Flex cursor="help" aria-label={headerHelpDescription}>
+                <QuestionInCircleFilled size="$icon.16" color="$neutral3" />
+              </Flex>
+            </Tooltip.Trigger>
+            <Tooltip.Content zIndex={zIndexes.overlay}>
+              <Tooltip.Arrow />
+              <Text variant="body4" color="$neutral1" maxWidth={280}>
+                {headerHelpDescription}
+              </Text>
+            </Tooltip.Content>
+          </Tooltip>
+        </Flex>
+      </Flex>
+
+      <Flex flexShrink={0}>
+        <PostAuctionLiquidityAllocationPopover
+          allocationType={allocationType}
+          raiseCurrencySymbol={raiseCurrencySymbol}
+          onSelectType={onAllocationTypeSelect}
+        />
+      </Flex>
+    </Flex>
+  )
+}
+
+interface PostAuctionLiquiditySingleAllocationEditorProps {
+  stackCompactLayout: boolean
+  postAuctionLiquidityPercent: number
+  subtitle: string
+  showSubtitleTooltip: boolean
+  isFocused: boolean
+  rawInput: string
+  isInvalid: boolean
+  showMinTooltip: boolean
+  isMinActive: boolean
+  inputRef: RefObject<InputRef | null>
+  subtitleFloorPriceTooltipContent: string
+  minPercentTooltipContent: string
+  onFocus: () => void
+  onBlur: () => void
+  onChange: (value: string) => void
+  onSelectionChange: () => void
+  onPercentDisplayPress: () => void
+  onSelectPercent: (percent: number) => void
+}
+
+function PostAuctionLiquiditySingleAllocationEditor({
+  stackCompactLayout,
+  postAuctionLiquidityPercent,
+  subtitle,
+  showSubtitleTooltip,
+  isFocused,
+  rawInput,
+  isInvalid,
+  showMinTooltip,
+  isMinActive,
+  inputRef,
+  subtitleFloorPriceTooltipContent,
+  minPercentTooltipContent,
+  onFocus,
+  onBlur,
+  onChange,
+  onSelectionChange,
+  onPercentDisplayPress,
+  onSelectPercent,
+}: PostAuctionLiquiditySingleAllocationEditorProps) {
+  return (
+    <Flex
+      row={!stackCompactLayout}
+      alignItems={stackCompactLayout ? 'stretch' : 'center'}
+      justifyContent={stackCompactLayout ? 'flex-start' : 'space-between'}
+      gap={stackCompactLayout ? '$spacing12' : '$spacing8'}
+      width="100%"
+    >
+      <Flex
+        flex={stackCompactLayout ? undefined : 1}
+        flexBasis={stackCompactLayout ? undefined : 0}
+        flexGrow={stackCompactLayout ? undefined : 1}
+        minWidth={0}
+        gap="$spacing4"
+        maxWidth="100%"
+      >
+        <Flex row alignItems="center" flexWrap="wrap" gap="$spacing4" minWidth={0}>
+          {isFocused ? (
+            <Input
+              ref={inputRef}
+              autoFocus
+              height={fonts.heading3.lineHeight}
+              value={`${rawInput}%`}
+              onChangeText={(value: string) => onChange(value.replace(/%/g, ''))}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              onSelectionChange={onSelectionChange}
+              placeholder="0%"
+              placeholderTextColor="$neutral3"
+              fontSize={fonts.heading3.fontSize}
+              lineHeight={fonts.heading3.lineHeight}
+              fontWeight={fonts.heading3.fontWeight}
+              color={isInvalid ? '$statusCritical' : '$neutral1'}
+              px="$none"
+              backgroundColor="$transparent"
+              width="100%"
+            />
+          ) : (
+            <Text variant="heading3" color="$neutral1" cursor="text" onPress={onPercentDisplayPress}>
+              {`${formatPostAuctionPercentForUi(postAuctionLiquidityPercent) || '0'}%`}
+            </Text>
+          )}
+        </Flex>
+
+        {showSubtitleTooltip ? (
+          <Tooltip placement="left">
+            <Tooltip.Trigger asChild>
+              <Flex cursor="help" alignSelf="flex-start">
+                <Text variant="body4" color="$neutral2">
+                  {subtitle}
+                </Text>
+              </Flex>
+            </Tooltip.Trigger>
+            <Tooltip.Content zIndex={zIndexes.overlay}>
+              <Tooltip.Arrow />
+              <Text variant="body4" color="$neutral1" maxWidth={280}>
+                {subtitleFloorPriceTooltipContent}
+              </Text>
+            </Tooltip.Content>
+          </Tooltip>
+        ) : (
+          <Flex alignSelf="flex-start">
+            <Text variant="body4" color="$neutral2">
+              {subtitle}
+            </Text>
+          </Flex>
+        )}
+      </Flex>
+
+      <Flex
+        gap="$spacing2"
+        maxWidth="100%"
+        alignSelf={stackCompactLayout ? 'stretch' : 'flex-end'}
+        width={stackCompactLayout ? '100%' : undefined}
+        flexShrink={0}
+        $platform-web={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+          ...(!stackCompactLayout ? { width: 'min(100%, 20rem)' } : {}),
+        }}
+      >
+        <Flex minWidth={0} width="100%">
+          <Tooltip placement="bottom" open={showMinTooltip}>
+            <TouchableArea
+              width="100%"
+              minWidth={0}
+              overflow="hidden"
+              backgroundColor={isMinActive ? '$surface3' : 'transparent'}
+              borderWidth="$spacing1"
+              borderColor="$surface3"
+              borderRadius="$rounded16"
+              px="$spacing8"
+              py="$spacing6"
+              onPress={() => onSelectPercent(MIN_POST_AUCTION_LIQUIDITY_PERCENT)}
+            >
+              <Tooltip.Trigger asChild>
+                <Flex alignItems="center" justifyContent="center">
+                  <Text variant="buttonLabel4" color="$neutral1" textAlign="center" numberOfLines={1}>
+                    {`${MIN_POST_AUCTION_LIQUIDITY_PERCENT}%`}
+                  </Text>
+                </Flex>
+              </Tooltip.Trigger>
+            </TouchableArea>
+            <Tooltip.Content zIndex={zIndexes.overlay}>
+              <Tooltip.Arrow />
+              <Text variant="body4" color="$neutral1" maxWidth={250}>
+                {minPercentTooltipContent}
+              </Text>
+            </Tooltip.Content>
+          </Tooltip>
+        </Flex>
+
+        {QUICK_SELECT_PERCENTS.filter((pct) => pct !== MIN_POST_AUCTION_LIQUIDITY_PERCENT).map((pct) => (
+          <PercentButton
+            key={pct}
+            label={`${pct}%`}
+            isActive={postAuctionLiquidityPercent === pct}
+            onPress={() => onSelectPercent(pct)}
+          />
+        ))}
+      </Flex>
+    </Flex>
+  )
 }
 
 export function PostAuctionLiquiditySelector({
@@ -53,6 +286,9 @@ export function PostAuctionLiquiditySelector({
   raiseCurrencySymbol,
   subtitle,
   showSubtitleTooltip,
+  inputCurrency,
+  usdPriceNum,
+  fiatCurrencyCode,
   onAllocationTypeSelect,
   onSelectPercent,
   onAddTier,
@@ -60,6 +296,9 @@ export function PostAuctionLiquiditySelector({
   onRemoveTier,
 }: PostAuctionLiquiditySelectorProps) {
   const { t } = useTranslation()
+  const media = useMedia()
+  // `md` → ui/src/theme/media.ts (maxWidth: breakpoints.md); same breakpoint as auction supply presets.
+  const stackCompactLayout = Boolean(media.md)
   const inputRef = useRef<InputRef>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [rawInput, setRawInput] = useState('')
@@ -148,6 +387,11 @@ export function PostAuctionLiquiditySelector({
         raiseCurrency: raiseCurrencySymbol,
       })
 
+  const subtitleFloorPriceTooltipContent = t(
+    'toucan.createAuction.step.configureAuction.postAuctionLiquidity.subtitleFloorPriceTooltip',
+  )
+  const minPercentTooltipContent = t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.minTooltip')
+
   return (
     <Flex
       backgroundColor="$surface2"
@@ -155,136 +399,47 @@ export function PostAuctionLiquiditySelector({
       borderColor="$surface3"
       borderRadius="$rounded16"
       p="$spacing16"
-      gap="$spacing8"
     >
-      <Flex row alignItems="center" justifyContent="space-between" gap="$spacing8">
-        <Flex row alignItems="center" gap="$spacing4">
-          <Text variant="buttonLabel3" color="$neutral2">
-            {label}
-          </Text>
-          <Tooltip placement="top">
-            <Tooltip.Trigger asChild>
-              <Flex cursor="help" aria-label={headerHelpDescription}>
-                <QuestionInCircleFilled size="$icon.16" color="$neutral3" />
-              </Flex>
-            </Tooltip.Trigger>
-            <Tooltip.Content zIndex={zIndexes.overlay}>
-              <Tooltip.Arrow />
-              <Text variant="body4" color="$neutral1" maxWidth={280}>
-                {headerHelpDescription}
-              </Text>
-            </Tooltip.Content>
-          </Tooltip>
-        </Flex>
-
-        <PostAuctionLiquidityAllocationPopover
-          allocationType={allocation.type}
-          raiseCurrencySymbol={raiseCurrencySymbol}
-          onSelectType={onAllocationTypeSelect}
-        />
-      </Flex>
+      <PostAuctionLiquiditySelectorCardHeader
+        label={label}
+        headerHelpDescription={headerHelpDescription}
+        allocationType={allocation.type}
+        raiseCurrencySymbol={raiseCurrencySymbol}
+        onAllocationTypeSelect={onAllocationTypeSelect}
+      />
 
       {isTiered ? (
         <PostAuctionLiquidityTieredEditor
           raiseCurrencySymbol={raiseCurrencySymbol}
           tiers={allocation.tiers}
+          inputCurrency={inputCurrency}
+          usdPriceNum={usdPriceNum}
+          fiatCurrencyCode={fiatCurrencyCode}
           onAddTier={onAddTier}
           onUpdateTier={onUpdateTier}
           onRemoveTier={onRemoveTier}
         />
       ) : (
-        <Flex row alignItems="center">
-          <Flex flex={1} flexBasis={0} minWidth={0} gap="$spacing4">
-            {isFocused ? (
-              <Input
-                ref={inputRef}
-                autoFocus
-                height={fonts.heading3.lineHeight}
-                value={`${rawInput}%`}
-                onChangeText={(value: string) => handleChange(value.replace(/%/g, ''))}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                onSelectionChange={clampCaret}
-                placeholder="0%"
-                placeholderTextColor="$neutral3"
-                fontSize={fonts.heading3.fontSize}
-                lineHeight={fonts.heading3.lineHeight}
-                fontWeight={fonts.heading3.fontWeight}
-                color={isInvalid ? '$statusCritical' : '$neutral1'}
-                px="$none"
-                backgroundColor="$transparent"
-                width="100%"
-              />
-            ) : (
-              <Text variant="heading3" color="$neutral1" cursor="text" onPress={handleFocus}>
-                {`${formatPostAuctionPercentForUi(postAuctionLiquidityPercent) || '0'}%`}
-              </Text>
-            )}
-
-            {showSubtitleTooltip ? (
-              <Tooltip placement="left">
-                <Tooltip.Trigger asChild>
-                  <Flex cursor="help" alignSelf="flex-start">
-                    <Text variant="body4" color="$neutral2">
-                      {subtitle}
-                    </Text>
-                  </Flex>
-                </Tooltip.Trigger>
-                <Tooltip.Content zIndex={zIndexes.overlay}>
-                  <Tooltip.Arrow />
-                  <Text variant="body4" color="$neutral1" maxWidth={280}>
-                    {t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.subtitleFloorPriceTooltip')}
-                  </Text>
-                </Tooltip.Content>
-              </Tooltip>
-            ) : (
-              <Flex alignSelf="flex-start">
-                <Text variant="body4" color="$neutral2">
-                  {subtitle}
-                </Text>
-              </Flex>
-            )}
-          </Flex>
-
-          <Flex row flex={1} flexBasis={0} minWidth={0} gap="$spacing2">
-            <Tooltip placement="bottom" open={showMinTooltip}>
-              <TouchableArea
-                flex={1}
-                minWidth={0}
-                backgroundColor={isMinActive ? '$surface3' : 'transparent'}
-                borderWidth="$spacing1"
-                borderColor="$surface3"
-                borderRadius="$rounded16"
-                px="$spacing8"
-                py="$spacing6"
-                onPress={handleSelectPercent.bind(null, MIN_POST_AUCTION_LIQUIDITY_PERCENT)}
-              >
-                <Tooltip.Trigger asChild>
-                  <Flex flex={1} alignItems="center" justifyContent="center">
-                    <Text variant="buttonLabel4" color="$neutral1">
-                      {`${MIN_POST_AUCTION_LIQUIDITY_PERCENT}%`}
-                    </Text>
-                  </Flex>
-                </Tooltip.Trigger>
-              </TouchableArea>
-              <Tooltip.Content zIndex={zIndexes.overlay}>
-                <Tooltip.Arrow />
-                <Text variant="body4" color="$neutral1" maxWidth={250}>
-                  {t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.minTooltip')}
-                </Text>
-              </Tooltip.Content>
-            </Tooltip>
-
-            {QUICK_SELECT_PERCENTS.filter((pct) => pct !== MIN_POST_AUCTION_LIQUIDITY_PERCENT).map((pct) => (
-              <PercentButton
-                key={pct}
-                label={`${pct}%`}
-                isActive={postAuctionLiquidityPercent === pct}
-                onPress={handleSelectPercent.bind(null, pct)}
-              />
-            ))}
-          </Flex>
-        </Flex>
+        <PostAuctionLiquiditySingleAllocationEditor
+          stackCompactLayout={stackCompactLayout}
+          postAuctionLiquidityPercent={postAuctionLiquidityPercent}
+          subtitle={subtitle}
+          showSubtitleTooltip={showSubtitleTooltip}
+          isFocused={isFocused}
+          rawInput={rawInput}
+          isInvalid={isInvalid}
+          showMinTooltip={showMinTooltip}
+          isMinActive={isMinActive}
+          inputRef={inputRef}
+          subtitleFloorPriceTooltipContent={subtitleFloorPriceTooltipContent}
+          minPercentTooltipContent={minPercentTooltipContent}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onSelectionChange={clampCaret}
+          onPercentDisplayPress={handleFocus}
+          onSelectPercent={handleSelectPercent}
+        />
       )}
     </Flex>
   )

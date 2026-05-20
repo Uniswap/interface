@@ -110,6 +110,7 @@ export function useAddLiquidityPools({
   isLoading: boolean
   isError: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
+  hasNextPage: boolean
 } {
   const hasTokenFilter = Boolean(currency0 || currency1)
 
@@ -192,6 +193,7 @@ export function useAddLiquidityPools({
       isLoading: listPoolsResult.isLoading,
       isError: listPoolsResult.isError,
       loadMore: undefined,
+      hasNextPage: false,
     }
   }
 
@@ -200,5 +202,6 @@ export function useAddLiquidityPools({
     isLoading: topPoolsResult.isLoading,
     isError: topPoolsResult.isError,
     loadMore: topPoolsResult.loadMore,
+    hasNextPage: topPoolsResult.hasNextPage,
   }
 }

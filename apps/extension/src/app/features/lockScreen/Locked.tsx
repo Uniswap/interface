@@ -23,6 +23,7 @@ import { AuthSagaError } from 'wallet/src/features/auth/types'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
 
 function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
   const [value, setValue] = useState(defaultValue)
@@ -97,6 +98,8 @@ export function Locked(): JSX.Element {
 
   const isIncorrectPassword = status === SagaStatus.Failure && error === AuthSagaError.InvalidPassword
 
+  const recoveryPhraseWordCount = getExpectedMnemonicLength(associatedAccounts[0])
+
   const inputRef = useRef<Input>(null)
   const [hideInput, setHideInput] = useState(true)
   const toggleHideInput = (): void => setHideInput(!hideInput)
@@ -110,7 +113,7 @@ export function Locked(): JSX.Element {
   const modalProps: Record<ForgotPasswordModalStep, ModalProps> = {
     [ForgotPasswordModalStep.Initial]: {
       buttonText: t('extension.lock.button.reset'),
-      description: t('extension.lock.password.reset.initial.description'),
+      description: t('extension.lock.password.reset.initial.description', { count: recoveryPhraseWordCount }),
       linkText: t('extension.lock.password.reset.initial.help'),
       linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseHowToFind,
       icon: (
@@ -125,7 +128,7 @@ export function Locked(): JSX.Element {
     },
     [ForgotPasswordModalStep.Speedbump]: {
       buttonText: t('common.button.continue'),
-      description: t('extension.lock.password.reset.speedbump.description'),
+      description: t('extension.lock.password.reset.speedbump.description', { count: recoveryPhraseWordCount }),
       linkText: t('extension.lock.password.reset.speedbump.help'),
       linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseForgotten,
       icon: (

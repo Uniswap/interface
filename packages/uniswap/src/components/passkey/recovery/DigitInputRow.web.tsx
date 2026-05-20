@@ -39,9 +39,10 @@ export function DigitInputRow({
           style={{
             flex: 1,
             minWidth: 0,
+            maxWidth: 56,
             height: 60,
             textAlign: 'center',
-            fontSize: 20,
+            fontSize: inputType === 'password' ? 28 : 20,
             fontWeight: 500,
             borderRadius: 16,
             background: 'var(--surface2)',

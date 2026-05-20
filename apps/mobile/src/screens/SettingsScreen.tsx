@@ -50,7 +50,7 @@ import {
   LineChartDots,
   Lock,
   MessageQuestion,
-  Passkey,
+  ShieldCheck,
   Sliders,
   TouchId,
   UniswapLogo,
@@ -303,8 +303,8 @@ export function SettingsScreen(): JSX.Element {
           {
             navigationModal: ModalName.PasskeyManagement,
             isHidden: !hasPasskeyBackup,
-            text: t('common.passkeys'),
-            icon: <Passkey {...iconProps} />,
+            text: t('settings.setting.loginMethods'),
+            icon: <ShieldCheck {...iconProps} />,
             navigationProps: { address: signerAccount?.address },
           },
           {

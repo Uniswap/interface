@@ -66,7 +66,7 @@ export function* getCallsStatusHelper(
 
   let overallStatus = getTransactionStatusCode(TransactionStatus.Pending)
 
-  for (const hash of txHashes) {
+  for (const hash of txHashes ?? []) {
     const transaction: TransactionDetails | undefined = transactions.find((tx) => tx.hash === hash)
 
     if (!transaction?.receipt) {

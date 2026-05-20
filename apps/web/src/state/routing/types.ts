@@ -20,7 +20,7 @@ import {
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { zeroAddress } from '~/chains/utilities'
+import { zeroAddress } from '~/chains'
 import { ZERO_PERCENT } from '~/constants/misc'
 
 export enum TradeState {

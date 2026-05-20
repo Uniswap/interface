@@ -124,6 +124,7 @@ export function ClaimUnitagContent({
   const debouncedInputValue = useDebounce(unitagInputValue, VERIFICATION_DEBOUNCE_MS)
   const { error: canClaimUnitagNameError, loading: isCheckingUnitag } = useCanClaimUnitagName(
     debouncedInputValue || undefined, // set to undefined if the input is empty to clear the error
+    unitagAddress,
   )
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
@@ -204,6 +205,11 @@ export function ClaimUnitagContent({
       })
       sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'select' })
 
+      // Clear availability UI once the user commits; refetches can otherwise report "taken"
+      // after a successful claim and repopulate error state while this screen is still mounted.
+      setUnitagAvailableError(undefined)
+      setAddressError(undefined)
+
       // Animate the Unitag logo in and text input out
       setShowTextInputView(false)
 
@@ -231,6 +237,12 @@ export function ClaimUnitagContent({
   )
 
   useEffect(() => {
+    // Do not sync username availability into error state after the user has continued past the input
+    // (query refetch after claim can report unavailable for the chosen name).
+    if (!showTextInputView) {
+      return
+    }
+
     if (!!debouncedInputValue && !isCheckingUnitag) {
       // If unitagError or addressError is defined, it's rendered in UI
       if (entryPoint === OnboardingScreens.Landing && !unitagAddress) {
@@ -251,7 +263,7 @@ export function ClaimUnitagContent({
         setUnitagAvailableError(canClaimUnitagNameError)
       }
     }
-  }, [canClaimUnitagNameError, debouncedInputValue, isCheckingUnitag, entryPoint, unitagAddress, t])
+  }, [canClaimUnitagNameError, debouncedInputValue, isCheckingUnitag, entryPoint, unitagAddress, t, showTextInputView])
 
   const shouldBlockContinue = (entryPoint === OnboardingScreens.Landing && !unitagAddress) || !unitagInputValue
 
@@ -386,7 +398,7 @@ export function ClaimUnitagContent({
         )}
 
         <AvailabilityStatus
-          unitagAvailableError={unitagAvailableError}
+          unitagAvailableError={showTextInputView ? unitagAvailableError : undefined}
           addressError={addressError}
           isUnitagAvailable={isUnitagAvailable}
           showTextInputView={showTextInputView}

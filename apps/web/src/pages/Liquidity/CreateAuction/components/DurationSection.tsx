@@ -1,14 +1,14 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { DateRangePickerCard } from '~/pages/Liquidity/CreateAuction/components/DatePicker/DateRangePickerCard'
-
-const MIN_START_TIME_OFFSET_MINUTES = 5
-
-export function getMinStartTime(): Date {
-  const min = new Date()
-  min.setMinutes(min.getMinutes() + MIN_START_TIME_OFFSET_MINUTES)
-  return min
-}
+import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
+import {
+  CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED,
+  formatLeadMinutesLabel,
+  getMinAuctionStartTimeToProceed,
+  getMinStartTime,
+} from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 export function DurationSection({
   startTime,
@@ -20,8 +20,14 @@ export function DurationSection({
   onChange: (next: { startTime: Date | undefined; endTime: Date | undefined }) => void
 }) {
   const { t } = useTranslation()
+  const tokenColor = useCreateAuctionTokenColor()
+  const minProceedLeadTimeLabel = useMemo(
+    () => formatLeadMinutesLabel(CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED, t),
+    [t],
+  )
   const minStartTime = getMinStartTime()
-  const isStartTimeInvalid = startTime !== undefined && startTime.getTime() < minStartTime.getTime()
+  const minProceedStartTime = getMinAuctionStartTimeToProceed()
+  const isStartTimeInvalid = startTime !== undefined && startTime.getTime() < minProceedStartTime.getTime()
   const isRangeInvalid = startTime !== undefined && endTime !== undefined && endTime.getTime() <= startTime.getTime()
 
   return (
@@ -37,6 +43,8 @@ export function DurationSection({
       <DateRangePickerCard
         startLabel={t('toucan.createAuction.step.configureAuction.duration.startDate')}
         endLabel={t('toucan.createAuction.step.configureAuction.duration.endDate')}
+        startTimeLabel={t('toucan.createAuction.step.configureAuction.duration.startTime')}
+        endTimeLabel={t('toucan.createAuction.step.configureAuction.duration.endTime')}
         startDate={startTime}
         endDate={endTime}
         minStartDate={minStartTime}
@@ -44,11 +52,14 @@ export function DurationSection({
         endPlaceholder={t('toucan.createAuction.step.configureAuction.duration.endDate.placeholder')}
         ariaLabelStart={t('toucan.createAuction.step.configureAuction.duration.startDate')}
         ariaLabelEnd={t('toucan.createAuction.step.configureAuction.duration.endDate')}
+        tokenColor={tokenColor}
         onChange={(next) => onChange({ startTime: next.startDate, endTime: next.endDate })}
       />
       {isStartTimeInvalid && (
         <Text variant="body4" color="$statusCritical" textAlign="center">
-          {t('toucan.createAuction.step.configureAuction.duration.startTime.error')}
+          {t('toucan.createAuction.step.configureAuction.duration.startTime.error', {
+            time: minProceedLeadTimeLabel,
+          })}
         </Text>
       )}
       {!isStartTimeInvalid && isRangeInvalid && (

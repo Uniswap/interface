@@ -1,7 +1,7 @@
 import { TFunction } from 'i18next'
 import { ReactNode, useMemo, useRef } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { Flex, styled, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -10,9 +10,6 @@ import { LogoContainer } from '~/components/AccountDrawer/MiniPortfolio/Activity
 import { OrderContent } from '~/components/modals/OffchainActivityModal'
 import { useAccount } from '~/hooks/useAccount'
 import { SwapResult, useSwapTransactionStatus } from '~/hooks/useSwapCallback'
-import { useUnmountingAnimation } from '~/hooks/useUnmountingAnimation'
-import { css, deprecatedStyled } from '~/lib/deprecated-styled'
-import { slideInAnimation, slideOutAnimation } from '~/pages/Swap/Limit/ConfirmSwapModal/animations'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
@@ -22,34 +19,23 @@ import { TradeSummary } from '~/pages/Swap/Limit/ConfirmSwapModal/TradeSummary'
 import { InterfaceTrade, TradeFillType } from '~/state/routing/types'
 import { isLimitTrade, isUniswapXTradeType } from '~/state/routing/utils'
 import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
-import { AnimationType } from '~/theme/components/FadePresence'
 import { ExternalLink } from '~/theme/components/Links'
-const AnimationWrapper = deprecatedStyled.div`
-  position: relative;
-  width: 100%;
-  min-height: 72px;
-  display: flex;
-  flex-grow: 1;
-`
-const StepTitleAnimationContainer = deprecatedStyled.div<{ disableEntranceAnimation?: boolean }>`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: display ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-  ${({ disableEntranceAnimation }) =>
-    !disableEntranceAnimation &&
-    css`
-      ${slideInAnimation}
-    `}
 
-  &.${AnimationType.EXITING} {
-    ${slideOutAnimation}
-  }
-`
+const AnimationWrapper = styled(Flex, {
+  position: 'relative',
+  width: '100%',
+  minHeight: 72,
+  flexGrow: 1,
+})
+
+const StepTitleAnimationContainer = styled(Flex, {
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  alignItems: 'center',
+  flexDirection: 'column',
+  gap: '$gap12',
+})
 
 function getTitle({
   t,
@@ -121,9 +107,6 @@ export function Pending({
   const showSubmitted = swapPending && chainId === UniverseChainId.Mainnet
   const showSuccess = swapConfirmed || (chainId !== UniverseChainId.Mainnet && swapPending)
 
-  const currentStepContainerRef = useRef<HTMLDivElement>(null)
-  useUnmountingAnimation({ node: currentStepContainerRef, getAnimatingClass: () => AnimationType.EXITING })
-
   const explorerLink = useMemo(() => {
     let txHash
     if (swapResult && swapResult.type === TradeFillType.Classic) {
@@ -150,7 +133,17 @@ export function Pending({
   }
 
   return (
-    <Flex alignItems="center" width="100%" mt={48} mb="$spacing8" gap="$gap24">
+    <Flex
+      alignItems="center"
+      width="100%"
+      mt={48}
+      mb="$spacing8"
+      gap="$gap24"
+      animation="300ms"
+      animateOnly={['transform', 'opacity']}
+      enterStyle={{ opacity: 0, x: 40 }}
+      exitStyle={{ opacity: 0, x: -40 }}
+    >
       <LogoContainer>
         {/* Shown only during the final step under "success" conditions, and scales in */}
         {showSuccess && <AnimatedEntranceConfirmationIcon />}
@@ -169,7 +162,7 @@ export function Pending({
         opacity={transactionPending && !limitPlaced ? 0.5 : 1}
       >
         <AnimationWrapper>
-          <StepTitleAnimationContainer ref={currentStepContainerRef} disableEntranceAnimation>
+          <StepTitleAnimationContainer>
             <Text variant="body2" width="100%" textAlign="center" data-testid="pending-modal-content-title">
               {getTitle({ t, trade: initialTrade, swapPending, swapConfirmed })}
             </Text>
@@ -199,11 +192,7 @@ export function Pending({
                     : uniswapUrls.helpArticleUrls.uniswapXInfo
                 }
               >
-                {isLimitTrade(initialTrade) ? (
-                  <Trans i18nKey="limits.learnMore" />
-                ) : (
-                  <Trans i18nKey="uniswapX.learnMore" />
-                )}
+                {isLimitTrade(initialTrade) ? t('limits.learnMore') : t('uniswapX.learnMore')}
               </ExternalLink>
             </Text>
           </Flex>
@@ -213,7 +202,7 @@ export function Pending({
           <Flex row width="100%" justifyContent="center" alignItems="center" mt={32} minHeight={24}>
             <Text variant="body3" color="$neutral2">
               <ExternalLink href={explorerLink} color="neutral2">
-                <Trans i18nKey="common.viewOnExplorer" />
+                {t('common.viewOnExplorer')}
               </ExternalLink>
             </Text>
           </Flex>

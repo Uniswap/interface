@@ -23,8 +23,8 @@ import {
   Language as LanguageIcon,
   LineChartDots,
   Lock,
-  Passkey,
   Settings,
+  ShieldCheck,
   Sliders,
   Wrench,
 } from 'ui/src/components/icons'
@@ -273,8 +273,8 @@ export function SettingsScreen(): JSX.Element {
               <>
                 {hasPasskeyBackup && (
                   <SettingsItem
-                    Icon={Passkey}
-                    title={t('common.passkeys')}
+                    Icon={ShieldCheck}
+                    title={t('settings.setting.loginMethods')}
                     onPress={(): void => setIsPasskeyModalOpen(true)}
                   />
                 )}

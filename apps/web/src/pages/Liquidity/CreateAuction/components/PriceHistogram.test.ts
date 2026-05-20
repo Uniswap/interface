@@ -13,7 +13,7 @@ import {
   getPriceHistogramBarCountForWidth,
   getPriceHistogramBarOpacity,
 } from '~/pages/Liquidity/CreateAuction/components/PriceHistogram'
-import { CustomPriceRangeBound } from '~/pages/Liquidity/CreateAuction/types'
+import { CUSTOM_PRICE_RANGE_POSITIVE_INFINITY } from '~/pages/Liquidity/CreateAuction/types'
 
 function formatPercentEnUs(value: Maybe<number | string>, maxDecimals?: PercentNumberDecimals): string {
   return formatPercent({ rawPercentage: value, locale: Locale.EnglishUnitedStates, maxDecimals })
@@ -46,8 +46,8 @@ describe('PriceHistogram helpers', () => {
         {
           id: 'custom-range-1',
           liquidityPercent: 25,
-          minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
-          maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+          minPercentFromClearing: -100,
+          maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
         },
         { id: 'custom-range-2', liquidityPercent: 35, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
         { id: 'custom-range-3', liquidityPercent: 40, minPercentFromClearing: -33, maxPercentFromClearing: 50 },
@@ -63,10 +63,32 @@ describe('PriceHistogram helpers', () => {
     expect(layers[2]?.y).toBe(9)
   })
 
+  it('stacks layers by range width descending so wider ranges sit at the bottom', () => {
+    const layers = getCustomPriceHistogramLayers({
+      barColor: '#02d497',
+      neutral1Color: '#000000',
+      entries: [
+        { id: 'narrow', liquidityPercent: 30, minPercentFromClearing: -10, maxPercentFromClearing: 10 },
+        {
+          id: 'widest',
+          liquidityPercent: 30,
+          minPercentFromClearing: -100,
+          maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
+        },
+        { id: 'medium', liquidityPercent: 30, minPercentFromClearing: -50, maxPercentFromClearing: 100 },
+      ],
+    })
+
+    expect(layers.map((layer) => layer.entryId)).toEqual(['widest', 'medium', 'narrow'])
+    // The first (widest) layer sits at the bottom of the stack.
+    const ys = layers.map((layer) => layer.y) as [number, number, number]
+    expect(ys[0]).toBeGreaterThan(ys[1])
+    expect(ys[1]).toBeGreaterThan(ys[2])
+  })
+
   it('maps negative % linearly to −100% at the left edge and positive % to +500% at the right edge', () => {
     const params = { startX: 0, centerX: 50, totalBarsWidth: 100 } as const
 
-    expect(getHistogramXForPercentFromClearing(Number.NEGATIVE_INFINITY, params)).toBe(0)
     expect(getHistogramXForPercentFromClearing(Number.POSITIVE_INFINITY, params)).toBe(100)
 
     expect(getHistogramXForPercentFromClearing(0, params)).toBe(50)

@@ -286,7 +286,11 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                     <Button
                       size="small"
                       icon={<Plus />}
-                      onPress={() => navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create')}
+                      onPress={() =>
+                        navigate(isAddLiquidityRevampEnabled ? '/positions/add' : '/positions/create', {
+                          state: { entryPoint: '/explore/pools' },
+                        })
+                      }
                     >
                       {media.sm ? t('common.new') : t('pool.newPosition.title')}
                     </Button>

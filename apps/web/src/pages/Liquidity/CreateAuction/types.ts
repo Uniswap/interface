@@ -3,6 +3,7 @@ import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { FeeData } from 'uniswap/src/features/positions/types'
+import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 
 /**
  * Placeholder address for a token that is being created and does not have an address yet.
@@ -63,6 +64,9 @@ export enum RaiseCurrency {
   ETH = 'ETH',
   USDC = 'USDC',
 }
+
+/** What currency the user types floor price / FDV in (raise token vs USD fiat). */
+export type InputCurrency = 'raise' | 'usd'
 
 export enum PostAuctionLiquidityAllocationType {
   SINGLE = 'single',
@@ -127,12 +131,16 @@ export enum PriceRangeStrategy {
   CUSTOM_RANGE = 'custom_range',
 }
 
-export enum CustomPriceRangeBound {
-  NegativeInfinity = 'negative_infinity',
-  PositiveInfinity = 'positive_infinity',
-}
+/** Sentinel for an unbounded max price range (+∞). */
+export const CUSTOM_PRICE_RANGE_POSITIVE_INFINITY = 'positive_infinity' as const
 
-export type CustomPriceRangeValue = number | CustomPriceRangeBound
+/**
+ * Lowest finite percent-from-clearing the histogram renders. Doubles as the leftmost
+ * value the min bound can take, since `−∞` is no longer a selectable option.
+ */
+export const MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING = -100
+
+export type CustomPriceRangeValue = number | typeof CUSTOM_PRICE_RANGE_POSITIVE_INFINITY
 
 export type CustomPriceRangeEntry = {
   id: string
@@ -180,7 +188,6 @@ type CustomizePoolState = {
   sendFeesEnabled: boolean
   feesRecipientAddress: string
   buybackAndBurnEnabled: boolean
-  autocompoundFeesEnabled: boolean
 }
 
 const DEFAULT_FEE_DATA: FeeData = {
@@ -192,7 +199,7 @@ const DEFAULT_FEE_DATA: FeeData = {
 interface CreateAuctionState {
   step: CreateAuctionStep
   tokenForm: TokenFormState
-  tokenColor: string | undefined
+  tokenColor: TokenAccentHex | undefined
   configureAuction: ConfigureAuctionFormState
   customizePool: CustomizePoolState
   xVerification: XVerification | undefined
@@ -217,8 +224,8 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
       {
         id: 'custom-range-1',
         liquidityPercent: 100,
-        minPercentFromClearing: CustomPriceRangeBound.NegativeInfinity,
-        maxPercentFromClearing: CustomPriceRangeBound.PositiveInfinity,
+        minPercentFromClearing: MIN_CUSTOM_PRICE_RANGE_PERCENT_FROM_CLEARING,
+        maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
       },
     ],
     poolOwner: '',
@@ -228,7 +235,6 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
     sendFeesEnabled: false,
     feesRecipientAddress: '',
     buybackAndBurnEnabled: false,
-    autocompoundFeesEnabled: false,
   },
   tokenForm: {
     mode: TokenMode.CREATE_NEW,
@@ -266,7 +272,7 @@ interface CreateAuctionStoreActions {
   setXVerification: (value: XVerification | undefined) => void
   setPostAuctionLiquidityAllocationType: (type: PostAuctionLiquidityAllocationType) => void
   setSinglePostAuctionLiquidityPercent: (percent: number) => void
-  addPostAuctionLiquidityTier: () => void
+  addPostAuctionLiquidityTier: (options?: { usdPriceNum: number | null }) => void
   updatePostAuctionLiquidityTier: (
     tierId: string,
     config: Partial<Pick<PostAuctionLiquidityTier, 'raiseMilestone' | 'percent'>>,
@@ -294,8 +300,7 @@ interface CreateAuctionStoreActions {
   setSendFeesEnabled: (enabled: boolean) => void
   setFeesRecipientAddress: (address: string) => void
   setBuybackAndBurnEnabled: (enabled: boolean) => void
-  setAutocompoundFeesEnabled: (enabled: boolean) => void
-  setTokenColor: (color: string | undefined) => void
+  setTokenColor: (color: TokenAccentHex | undefined) => void
   reset: () => void
 }
 

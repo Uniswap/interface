@@ -4,6 +4,7 @@ import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { FetchError, TradingApi } from '@universe/api'
+import { HexString, isValidHexString } from '@universe/encoding'
 import { BlockedAsyncSubmissionChainIdsConfigKey, DynamicConfigs, getDynamicConfigValue } from '@universe/gating'
 import ms from 'ms'
 import type { Action } from 'redux'
@@ -65,7 +66,6 @@ import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
-import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { noop } from 'utilities/src/react/noop'
 import { hexlifyTransaction } from 'utilities/src/transactions/hexlifyTransaction'
@@ -112,7 +112,6 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ad
 
   addTransactionBreadcrumb({ step, data: { signature }, status: TransactionBreadcrumbStatus.Complete })
 
-  // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
   return signature
 }
 

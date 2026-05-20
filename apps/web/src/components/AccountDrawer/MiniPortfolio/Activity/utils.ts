@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { GraphQLApi, TradingApi } from '@universe/api'
-import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
+import dayjs from 'dayjs'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -8,7 +8,7 @@ import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
-import { parseUnits } from '~/chains/utilities'
+import { parseUnits } from '~/chains'
 import { Activity, ActivityMap } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 
 interface ActivityGroup {
@@ -57,16 +57,16 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
       } else {
         pending.push(activity)
       }
-    } else if (isSameDay(now, addedTime)) {
+    } else if (dayjs(now).isSame(addedTime, 'day')) {
       today.push(activity)
-    } else if (isSameWeek(addedTime, now)) {
+    } else if (dayjs(addedTime).isSame(now, 'week')) {
       currentWeek.push(activity)
-    } else if (isSameMonth(addedTime, now)) {
+    } else if (dayjs(addedTime).isSame(now, 'month')) {
       last30Days.push(activity)
-    } else if (isSameYear(addedTime, now)) {
+    } else if (dayjs(addedTime).isSame(now, 'year')) {
       currentYear.push(activity)
     } else {
-      const year = getYear(addedTime)
+      const year = dayjs(addedTime).year()
 
       // oxlint-disable-next-line typescript/no-unnecessary-condition
       if (!yearMap[year]) {

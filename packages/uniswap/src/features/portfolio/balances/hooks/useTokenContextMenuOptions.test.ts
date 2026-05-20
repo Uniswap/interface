@@ -36,7 +36,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   }),
 }))
 
-vi.mock('uniswap/src/features/dataApi/balances/balancesRest', () => ({
+vi.mock('uniswap/src/features/dataApi/balances/portfolioCacheUpdater', () => ({
   usePortfolioCacheUpdater: () => vi.fn(),
 }))
 

@@ -5,9 +5,6 @@
   "exclude": [".storybook/storybook.requires.ts", "oxlint.config.ts"],
   "references": [
     {
-      "path": "../../packages/environment"
-    },
-    {
       "path": "../../packages/sessions"
     },
     {
@@ -20,6 +17,9 @@
       "path": "../../packages/gating"
     },
     {
+      "path": "../../packages/encoding"
+    },
+    {
       "path": "../../packages/config"
     },
     {
@@ -30,6 +30,9 @@
     },
     {
       "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/environment"
     },
     {
       "path": "../../packages/ui"

@@ -174,29 +174,12 @@ exports[`DoubleLogo > renders with one valid and one undefined currency 1`] = `
 
 exports[`DoubleLogo > renders with two undefined currencies 1`] = `
 <DocumentFragment>
-  .c0 {
-  --size: 32px;
-  border-radius: 100px;
-  color: #FC74FE;
-  background-color: #FEF4FF;
-  font-size: calc(var(--size) / 3);
-  font-weight: 535;
-  height: 32px;
-  line-height: 32px;
-  text-align: center;
-  width: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
-      class="c0"
+      class="sc-bRKDuR ihHhtk"
     />
     <div
       style="display: contents;"

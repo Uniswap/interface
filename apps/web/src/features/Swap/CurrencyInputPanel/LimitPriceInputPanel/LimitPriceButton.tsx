@@ -1,9 +1,8 @@
-import { Trans } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { css, deprecatedStyled } from '~/lib/deprecated-styled'
-import { ClickableStyle } from '~/theme/components/styles'
 
 interface LimitPriceButtonProps {
   priceAdjustmentPercentage: number
@@ -12,60 +11,88 @@ interface LimitPriceButtonProps {
   onSelect: (priceAdjustmentPercentage: number) => void
 }
 
-const containerBorderCss = css`
-  border-radius: 999px;
-  border: 1px solid ${({ theme }) => theme.surface3};
-`
+function marketSegmentLayout({
+  selected,
+  disabled,
+  highlighted,
+}: {
+  selected: boolean
+  disabled: boolean
+  highlighted: boolean
+}) {
+  const foreground = highlighted || (selected && !disabled) ? '$neutral1' : '$neutral2'
+  const background = highlighted || selected ? '$surface3' : 'transparent'
+  return { foreground, background }
+}
 
-const highlightedBorderCss = css`
-  border-radius: 999px 0px 0px 999px;
-  border-top: 1px solid ${({ theme }) => theme.surface3};
-  border-bottom: 1px solid ${({ theme }) => theme.surface3};
-  border-left: 1px solid ${({ theme }) => theme.surface3};
-  border-right: 0px;
-`
+interface MarketSegmentButtonProps {
+  selected?: boolean
+  disabled?: boolean
+  highlighted: boolean
+  onPress: () => void
+  children: ReactNode
+}
 
-const Container = deprecatedStyled.button<{ $selected?: boolean; $disabled?: boolean; $highlighted: boolean }>`
-  color: ${({ theme, $selected, $disabled, $highlighted }) => {
-    if ($highlighted) {
-      return theme.neutral1
-    }
-    if ($selected && !$disabled) {
-      return theme.neutral1
-    }
-    return theme.neutral2
-  }};
-  padding: 2px 8px;
-  height: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme, $highlighted, $selected }) => {
-    if ($highlighted || $selected) {
-      return theme.surface3
-    }
-    return 'unset'
-  }};
-  ${({ $highlighted }) => ($highlighted ? highlightedBorderCss : containerBorderCss)};
-  ${({ $disabled }) => !$disabled && ClickableStyle};
-`
+function MarketSegmentButton({ selected, disabled, highlighted, onPress, children }: MarketSegmentButtonProps) {
+  const { foreground, background } = marketSegmentLayout({
+    selected: Boolean(selected),
+    disabled: Boolean(disabled),
+    highlighted,
+  })
+  const borderRadiusProps = highlighted
+    ? {
+        borderTopLeftRadius: '$roundedFull',
+        borderBottomLeftRadius: '$roundedFull',
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        borderRightWidth: 0,
+      }
+    : { borderRadius: '$roundedFull' }
+  return (
+    <TouchableArea
+      row
+      alignItems="center"
+      justifyContent="center"
+      height="$spacing28"
+      px="$spacing8"
+      py="$spacing2"
+      backgroundColor={background}
+      borderWidth={1}
+      borderColor="$surface3"
+      {...borderRadiusProps}
+      disabled={disabled}
+      onPress={onPress}
+    >
+      <Text variant="buttonLabel2" color={foreground}>
+        {children}
+      </Text>
+    </TouchableArea>
+  )
+}
 
-const HighlightedContainerXButton = deprecatedStyled.button`
-  ${ClickableStyle}
-  background-color: ${({ theme }) => theme.surface3};
-  color: ${({ theme }) => theme.neutral2};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 6px 6px 6px 4px;
-  height: 28px;
-  border-radius: 0px 999px 999px 0px;
-  border-top: 1px solid ${({ theme }) => theme.surface3};
-  border-bottom: 1px solid ${({ theme }) => theme.surface3};
-  border-right: 1px solid ${({ theme }) => theme.surface3};
-  border-left: 1px solid transparent;
-`
+function MarketSegmentXButton({ onPress, disabled }: { onPress: () => void; disabled?: boolean }) {
+  return (
+    <TouchableArea disabled={disabled} onPress={onPress}>
+      <Flex
+        row
+        centered
+        height="$spacing28"
+        p="$spacing6"
+        pl="$spacing4"
+        backgroundColor="$surface3"
+        borderWidth={1}
+        borderColor="$surface3"
+        borderLeftColor="transparent"
+        borderTopRightRadius="$roundedFull"
+        borderBottomRightRadius="$roundedFull"
+        borderTopLeftRadius={0}
+        borderBottomLeftRadius={0}
+      >
+        <X size="$icon.16" color="$neutral2" />
+      </Flex>
+    </TouchableArea>
+  )
+}
 
 export function LimitPresetPriceButton({
   priceAdjustmentPercentage,
@@ -73,26 +100,25 @@ export function LimitPresetPriceButton({
   disabled,
   onSelect,
 }: LimitPriceButtonProps) {
+  const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const sign = priceAdjustmentPercentage > 0 ? '+' : '-'
   return (
-    <Container
-      $selected={selected}
-      $disabled={disabled}
-      $highlighted={false}
-      onClick={() => !disabled && onSelect(priceAdjustmentPercentage)}
+    <MarketSegmentButton
+      selected={selected}
+      disabled={disabled}
+      highlighted={false}
+      onPress={() => onSelect(priceAdjustmentPercentage)}
     >
       {priceAdjustmentPercentage === 0 ? (
-        <Text variant="buttonLabel2" color="inherit">
-          <Trans i18nKey="common.market.label" />
-        </Text>
+        t('common.market.label')
       ) : (
-        <Text variant="buttonLabel2" color="inherit">
+        <>
           {sign}
           {formatPercent(Math.abs(priceAdjustmentPercentage))}
-        </Text>
+        </>
       )}
-    </Container>
+    </MarketSegmentButton>
   )
 }
 
@@ -108,32 +134,30 @@ export function LimitCustomMarketPriceButton({
 }: Omit<LimitPriceButtonProps, 'priceAdjustmentPercentage'> & {
   customAdjustmentPercentage?: number
 }) {
-  const onSetAdjustmentPercentage = () => !disabled && onSelect(0)
+  const { t } = useTranslation()
+  const onSetAdjustmentPercentage = () => onSelect(0)
   const { formatPercent } = useLocalizationContext()
+
   return (
-    <Flex row width="unset" gap={1}>
-      <Container
-        $selected={selected}
-        $disabled={disabled}
-        $highlighted={customAdjustmentPercentage !== undefined}
-        onClick={onSetAdjustmentPercentage}
+    <Flex row width="unset" gap="$spacing1">
+      <MarketSegmentButton
+        selected={selected}
+        disabled={disabled}
+        highlighted={customAdjustmentPercentage !== undefined}
+        onPress={onSetAdjustmentPercentage}
       >
         {!customAdjustmentPercentage ? (
-          <Text variant="buttonLabel2" color="inherit">
-            <Trans i18nKey="common.market.label" />
-          </Text>
+          t('common.market.label')
         ) : (
-          <Text variant="buttonLabel2" color="inherit">
+          <>
             {customAdjustmentPercentage > 0 ? '+' : ''}
             {formatPercent(customAdjustmentPercentage)}
-          </Text>
+          </>
         )}
-      </Container>
-      {customAdjustmentPercentage && (
-        <HighlightedContainerXButton onClick={onSetAdjustmentPercentage}>
-          <X size="$icon.16" />
-        </HighlightedContainerXButton>
-      )}
+      </MarketSegmentButton>
+      {customAdjustmentPercentage ? (
+        <MarketSegmentXButton disabled={disabled} onPress={onSetAdjustmentPercentage} />
+      ) : null}
     </Flex>
   )
 }

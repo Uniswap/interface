@@ -3,6 +3,7 @@ import { atom, useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, SpinningLoader, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Envelope } from 'ui/src/components/icons/Envelope'
@@ -12,6 +13,7 @@ import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Person } from 'ui/src/components/icons/Person'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -25,6 +27,7 @@ import { WalletModalLayout } from '~/components/WalletModal/WalletModalLayout'
 import { WalletOptionsGrid } from '~/components/WalletModal/WalletOptionsGrid'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
+import { setOpenModal } from '~/state/application/reducer'
 
 // TODO: [INFRA-1559] Replace Jotai atoms with Zustand store
 /** Shared atom so RecentlyConnectedModal can trigger the login view in the account drawer */
@@ -36,8 +39,8 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const accountDrawer = useAccountDrawer()
+  const dispatch = useDispatch()
   const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
-  const { openModal: openRecoverWallet } = useModalState(ModalName.RecoverWallet)
   const [showLoginView, setShowLoginView] = useAtom(showEmbeddedLoginViewAtom)
 
   const handleCreateAccount = useEvent(() => {
@@ -69,6 +72,8 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
     },
   })
 
+  const disableOauth = isPasskeyLoading || oauthLoading
+
   const handleInitOAuth = useEvent(async (provider: 'google' | 'apple'): Promise<void> => {
     if (!privyReady) {
       return
@@ -87,7 +92,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
   })
 
   const handleEmailRecovery = useEvent(() => {
-    openRecoverWallet()
+    dispatch(setOpenModal({ name: ModalName.RecoverWallet, initialState: { initialMethod: 'email' } }))
   })
 
   if (showLoginView) {
@@ -99,7 +104,10 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
             <TouchableArea variant="unstyled" onPress={handleBackToConnect}>
               <BackArrow size="$icon.20" color="$neutral1" />
             </TouchableArea>
-            <TouchableArea variant="unstyled" onPress={() => window.open('https://support.uniswap.org', '_blank')}>
+            <TouchableArea
+              variant="unstyled"
+              onPress={() => window.open(uniswapUrls.helpArticleUrls.passkeysInfo, '_blank')}
+            >
               <Flex
                 row
                 gap="$gap4"
@@ -166,7 +174,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
                 onPress={() => handleInitOAuth('apple')}
                 element={ElementName.LoginWithApple}
                 loading={oauthLoading && oauthProvider === 'apple'}
-                disabled={oauthLoading && oauthProvider !== 'apple'}
+                disabled={disableOauth && oauthProvider !== 'apple'}
               />
               <OptionRow
                 icon={<GoogleLogoGradient size={iconSizes.icon20} />}
@@ -174,14 +182,14 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
                 onPress={() => handleInitOAuth('google')}
                 element={ElementName.LoginWithGoogle}
                 loading={oauthLoading && oauthProvider === 'google'}
-                disabled={oauthLoading && oauthProvider !== 'google'}
+                disabled={disableOauth && oauthProvider !== 'google'}
               />
               <OptionRow
                 icon={<Envelope size="$icon.20" color="$blueBase" />}
                 label={t('account.passkey.backupLogin.add.email')}
                 onPress={handleEmailRecovery}
                 element={ElementName.LoginWithEmail}
-                disabled={oauthLoading && oauthProvider !== null}
+                disabled={disableOauth}
               />
             </Flex>
           </Flex>

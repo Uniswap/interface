@@ -93,7 +93,7 @@ export function KycCard() {
             alignItems="center"
             gap={2}
             px="$spacing4"
-            py={2}
+            py="$spacing2"
             borderRadius="$rounded6"
             backgroundColor="$accent1"
             flexShrink={0}

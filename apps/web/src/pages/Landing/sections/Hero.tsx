@@ -120,7 +120,6 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               initialInputChainId={defaultChainId}
               initialInputCurrency={initialInputCurrency}
               swapRedirectCallback={swapRedirectCallback}
-              usePersistedFilteredChainIds
             />
           </Flex>
         </RiseIn>

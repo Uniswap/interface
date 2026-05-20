@@ -128,7 +128,6 @@ interface ExpectedApplicationState {
   readonly chainId: number | null
   readonly openModal: OpenModalParams | null
   readonly suppressedPopups: PopupType[]
-  readonly downloadGraduatedWalletCardsDismissed: string[]
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()

@@ -32,6 +32,9 @@ const compileNodeModules = [
   'react-native-image-picker',
   'expo-modules-core',
   'react-native-reanimated',
+  // RN gesture-handler 2.28 ships some raw .ts sources alongside compiled .js (packaging regression);
+  // route them through swc so webpack can parse TS-only syntax.
+  'react-native-gesture-handler',
 ]
 
 // This is needed for webpack to compile JavaScript.

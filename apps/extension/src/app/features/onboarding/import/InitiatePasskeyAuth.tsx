@@ -26,9 +26,9 @@ import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/use
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
+import { uuid } from 'utilities/src/primitives/uuid'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
-import { v4 as uuid } from 'uuid'
 
 /**************************************************************************************************************
  *

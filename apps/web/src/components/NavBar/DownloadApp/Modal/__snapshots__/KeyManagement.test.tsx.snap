@@ -2,24 +2,7 @@
 
 exports[`KeyManagementModal > renders correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -82,7 +65,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
         </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334018 _maxWidth-480px"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-center _alignItems-center _gap-t-space-spa1360334018 _width-10037 _maxWidth-480px"
       >
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
@@ -152,7 +135,7 @@ exports[`KeyManagementModal > renders correctly 1`] = `
         Secured by
       </span>
       <a
-        class="c0"
+        class="sc-bRKDuR dvTvpU"
         href="https://www.privy.io/user-help-center"
         rel="noopener noreferrer"
         style="stroke: none;"

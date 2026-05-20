@@ -79,6 +79,7 @@ type LimitFormProps = {
 
 // oxlint-disable-next-line complexity
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
+  const { t } = useTranslation()
   const account = useAccount()
   const { chainId } = useMultichainContext()
   const {
@@ -374,7 +375,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       <SwapSection>
         <Trace section={SectionName.SwapCurrencyInput}>
           <SwapCurrencyInputPanel
-            label={<Trans i18nKey="common.sell.label" />}
+            label={t('common.sell.label')}
             value={formattedAmounts[CurrencyField.INPUT]}
             showMaxButton={showMaxButton}
             currency={inputCurrency ?? null}
@@ -403,7 +404,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       <SwapSection>
         <Trace section={SectionName.SwapCurrencyOutput}>
           <SwapCurrencyInputPanel
-            label={<Trans i18nKey="common.buy.label" />}
+            label={t('common.buy.label')}
             value={formattedAmounts[CurrencyField.OUTPUT]}
             showMaxButton={false}
             currency={outputCurrency ?? null}
@@ -459,9 +460,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
                       href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}
                       target="_blank"
                     >
-                      <LearnMore>
-                        <Trans i18nKey="common.button.learn" />
-                      </LearnMore>
+                      <LearnMore>{t('common.button.learn')}</LearnMore>
                     </Anchor>
                   ),
                 }}
@@ -472,9 +471,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
                 components={{
                   link: (
                     <Anchor textDecorationLine="none" href={uniswapUrls.helpArticleUrls.limitsFailure} target="_blank">
-                      <LearnMore>
-                        <Trans i18nKey="common.button.learn" />
-                      </LearnMore>
+                      <LearnMore>{t('common.button.learn')}</LearnMore>
                     </Anchor>
                   ),
                 }}
@@ -496,7 +493,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           allowance={allowance}
           trade={limitOrderTrade}
           inputCurrency={inputCurrency}
-          allowedSlippage={ZERO_PERCENT}
           clearSwapState={() => {
             setSwapError(undefined)
             setSwapResult(undefined)

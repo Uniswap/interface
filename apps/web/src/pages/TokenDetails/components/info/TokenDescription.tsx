@@ -181,7 +181,7 @@ export function TokenDescription() {
   const handleExplorerPress = useCallback(
     (url: string, chainId: UniverseChainId) => {
       logTdpExplorerLinkClicked(chainId)
-      void openUri({ uri: url })
+      openUri({ uri: url }).catch(() => {})
     },
     [logTdpExplorerLinkClicked],
   )

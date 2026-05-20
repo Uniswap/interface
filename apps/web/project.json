@@ -161,7 +161,7 @@
       "inputs": ["default", "^production", "!{projectRoot}/build"]
     },
     "preview": {
-      "command": "vite preview --port 3000",
+      "command": "vite preview --port 3000 --outDir build/client",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -169,7 +169,7 @@
       "dependsOn": ["build:production"]
     },
     "preview:staging": {
-      "command": "vite preview --port 3000",
+      "command": "vite preview --port 3000 --outDir build/client",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -177,7 +177,7 @@
       "dependsOn": ["build:staging:preview"]
     },
     "preview:e2e": {
-      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true vite preview --port 3000",
+      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true vite preview --port 3000 --outDir build/client",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -185,7 +185,7 @@
       "dependsOn": ["build:e2e"]
     },
     "preview:e2e:no-build": {
-      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true vite preview --port 3000",
+      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true vite preview --port 3000 --outDir build/client",
       "options": {
         "cwd": "{projectRoot}"
       },

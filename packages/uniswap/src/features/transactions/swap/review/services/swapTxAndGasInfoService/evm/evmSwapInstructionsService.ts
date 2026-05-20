@@ -81,7 +81,7 @@ function createLegacyEVMSwapInstructionsService(
   return service
 }
 
-function createBatchedEVMSwapInstructionsService(
+function createWalletCallEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'presignPermit'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
   const { gasStrategy, swapRepository } = ctx
@@ -97,7 +97,7 @@ function createBatchedEVMSwapInstructionsService(
         signature: undefined,
         transactionSettings,
         alreadyApproved: approvalAction === ApprovalAction.None,
-        overrideSimulation: true, // always simulate for batched transactions
+        overrideSimulation: true, // always simulate for wallet_sendCalls transactions
       })
 
       const response = await swapRepository.fetchSwapData(swapRequestParams)
@@ -111,13 +111,13 @@ function createBatchedEVMSwapInstructionsService(
 export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsServiceContext): EVMSwapInstructionsService {
   const { getSwapDelegationInfo } = ctx
   const smartContractWalletInstructionService = getSwapDelegationInfo
-    ? createBatchedEVMSwapInstructionsService({
+    ? createWalletCallEVMSwapInstructionsService({
         ...ctx,
         swapRepository: create7702EVMSwapRepository({ getSwapDelegationInfo }),
       })
     : undefined
 
-  const batchedInstructionsService = createBatchedEVMSwapInstructionsService({
+  const walletCallInstructionService = createWalletCallEVMSwapInstructionsService({
     ...ctx,
     swapRepository: create5792EVMSwapRepository(),
   })
@@ -135,8 +135,8 @@ export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsService
         return smartContractWalletInstructionService.getSwapInstructions(params)
       }
 
-      if (ctx.getCanBatchTransactions?.(chainId)) {
-        return batchedInstructionsService.getSwapInstructions(params)
+      if (ctx.getCanBatchTransactions?.(chainId) || params.swapQuoteResponse.sponsorshipInfo?.sponsored) {
+        return walletCallInstructionService.getSwapInstructions(params)
       }
 
       return legacyInstructionsService.getSwapInstructions(params)

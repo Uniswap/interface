@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
+import type { EarnPositionInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import type { MockEarnPosition } from '~/features/earn/_fixtures/positions'
 
 interface BalanceTabProps {
-  position: MockEarnPosition
+  position: EarnPositionInfo
   onDeposit: () => void
   onWithdraw: () => void
 }
@@ -32,14 +32,6 @@ export function BalanceTab({ position, onDeposit, onWithdraw }: BalanceTabProps)
           value={
             <Text variant="body2" color="$accent1">
               {t('explore.earn.vault.rateValue', { apy: formatPercent(position.apyPercent) })}
-            </Text>
-          }
-        />
-        <BalanceRow
-          label={t('explore.earn.vault.totalRewards')}
-          value={
-            <Text variant="body2" color="$statusSuccess">
-              {formatFiat(position.rewardsUsd)}
             </Text>
           }
         />

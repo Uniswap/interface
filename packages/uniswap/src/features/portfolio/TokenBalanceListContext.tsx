@@ -13,6 +13,10 @@ import { useTokenBalanceListMultichainExpansion } from 'uniswap/src/features/por
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
+export type TokenBalancePressOptions = {
+  isMultichainAsset?: boolean
+}
+
 type TokenBalanceListContextState = {
   balancesById: Record<string, PortfolioMultichainBalance> | undefined
   expandedCurrencyIds: Set<string>
@@ -26,7 +30,7 @@ type TokenBalanceListContextState = {
   rows: Array<TokenBalanceListRow>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
   toggleExpanded: (currencyId: string) => void
-  onPressToken?: (currencyId: CurrencyId) => void
+  onPressToken?: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
   evmOwner?: Address
   svmOwner?: Address
   error?: Error
@@ -45,7 +49,7 @@ export function TokenBalanceListContextProvider({
   evmOwner?: Address
   svmOwner?: Address
   isExternalProfile: boolean
-  onPressToken?: (currencyId: CurrencyId) => void
+  onPressToken?: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
 }>): JSX.Element {
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
 

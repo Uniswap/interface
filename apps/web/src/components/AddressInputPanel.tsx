@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactNode, useCallback } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -108,14 +108,14 @@ export function AddressInputPanel({
           <Flex gap="$gap12" width="100%">
             <Flex row width="100%" justifyContent="space-between" alignItems="center">
               <Text variant="body1" color={colors.neutral2.val}>
-                {label ?? <Trans i18nKey="addressInput.recipient" />}
+                {label ?? t('addressInput.recipient')}
               </Text>
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink({ chainId, data: name ?? address, type: ExplorerDataType.ADDRESS })}
                   style={{ fontSize: '14px' }}
                 >
-                  (<Trans i18nKey="common.viewOnExplorer" />)
+                  ({t('common.viewOnExplorer')})
                 </ExternalLink>
               )}
             </Flex>

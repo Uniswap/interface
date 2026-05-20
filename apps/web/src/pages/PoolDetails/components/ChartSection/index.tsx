@@ -101,10 +101,13 @@ function usePDPChartState({
 }): TDPChartState {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [selectedChartType, setChartType] = useQueryState('chart', parseAsPDPChartType)
-  // DEPTH is a different visualization of the same data as LIQUIDITY — share data fetching.
-  const chartType = selectedChartType === ChartType.DEPTH ? ChartType.LIQUIDITY : selectedChartType
 
   const isV2 = protocolVersion === GraphQLApi.ProtocolVersion.V2
+
+  // DEPTH is not supported for v2 pools — normalize to VOLUME if the URL holds ?chart=depth.
+  const normalizedChartType = isV2 && selectedChartType === ChartType.DEPTH ? ChartType.VOLUME : selectedChartType
+  // DEPTH is a different visualization of the same data as LIQUIDITY — share data fetching.
+  const chartType = normalizedChartType === ChartType.DEPTH ? ChartType.LIQUIDITY : normalizedChartType
   const isV3 = protocolVersion === GraphQLApi.ProtocolVersion.V3
   const isV4 = protocolVersion === GraphQLApi.ProtocolVersion.V4
   const variables = {
@@ -136,10 +139,10 @@ function usePDPChartState({
       timePeriod,
       setTimePeriod,
       setChartType,
-      selectedChartType,
+      selectedChartType: normalizedChartType,
       activeQuery,
     }
-  }, [chartType, selectedChartType, volumeQuery, priceQuery, timePeriod, setChartType])
+  }, [chartType, normalizedChartType, volumeQuery, priceQuery, timePeriod, setChartType])
 }
 
 export function ChartSection(props: ChartSectionProps) {
@@ -235,8 +238,9 @@ export function ChartSection(props: ChartSectionProps) {
     }
   }, [activeQuery.chartType, timePeriod, setTimePeriod])
 
-  const disabledChartOption =
-    props.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
+  const isV2Pool = props.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2
+
+  const disabledChartOption = isV2Pool ? [ChartType.LIQUIDITY, ChartType.DEPTH] : undefined
 
   const availableChartOptions = useMemo(
     () =>

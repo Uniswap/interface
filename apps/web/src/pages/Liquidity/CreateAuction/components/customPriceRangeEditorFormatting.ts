@@ -1,5 +1,5 @@
 import {
-  CustomPriceRangeBound,
+  CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
   type CustomPriceRangePreset,
   type CustomPriceRangeValue,
 } from '~/pages/Liquidity/CreateAuction/types'
@@ -13,10 +13,7 @@ export function formatPriceRangeBound(
   value: CustomPriceRangeValue,
   formatFiniteValue: (value: number) => string,
 ): string {
-  if (value === CustomPriceRangeBound.NegativeInfinity) {
-    return '–∞'
-  }
-  if (value === CustomPriceRangeBound.PositiveInfinity) {
+  if (value === CUSTOM_PRICE_RANGE_POSITIVE_INFINITY) {
     return '+∞'
   }
   return formatSignedValue(value, formatFiniteValue)

@@ -54,7 +54,7 @@ export function ChangeUnitagModal({
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
 
-  const { error: canClaimUnitagNameError, loading: canClaimUnitagLoading } = useCanClaimUnitagName(newUnitag)
+  const { error: canClaimUnitagNameError, loading: canClaimUnitagLoading } = useCanClaimUnitagName(newUnitag, address)
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const resetUnitagsQueries = useResetUnitagsQueries()
 

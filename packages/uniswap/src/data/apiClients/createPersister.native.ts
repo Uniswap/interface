@@ -1,11 +1,11 @@
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { type AsyncStorage, type Persister } from '@tanstack/react-query-persist-client'
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from 'react-native-mmkv'
 import { REACT_QUERY_PERSISTER_KEY } from 'uniswap/src/data/apiClients/constants'
 import { jsonParse, jsonStringify } from 'utilities/src/serialization/json'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-const mmkv = new MMKV()
+const mmkv = createMMKV()
 
 const mmkvStorageWrapper: AsyncStorage<string> = {
   async getItem(key: string): Promise<string | undefined> {
@@ -15,7 +15,7 @@ const mmkvStorageWrapper: AsyncStorage<string> = {
     mmkv.set(key, value)
   },
   async removeItem(key: string): Promise<void> {
-    mmkv.delete(key)
+    mmkv.remove(key)
   },
 }
 

@@ -60,31 +60,36 @@ export class ViemClientManager {
   }
 
   getViemClient(chainId: UniverseChainId): PublicClient {
-    const cachedClient = this._viemClients[chainId]?.public
-    if (!cachedClient) {
-      this.createViemClient(chainId)
-    }
-
-    const clientDetails = this._viemClients[chainId]?.public
-    if (!clientDetails) {
+    // Re-resolve on every call so the manager tracks the current rpc config
+    // instead of returning whatever the factory produced at startup. Two
+    // boot-time conditions used to silently pin the chain to a legacy URL
+    // for the whole session:
+    //   1. The `initProviders` saga eagerly constructs clients for every EVM
+    //      chain before Statsig's flag registry has finished initializing —
+    //      `isStatsigClientRegistered()` returns false, the UniRPC gate read
+    //      short-circuits to false, and the cache captures the legacy URL.
+    //   2. The user toggling `unirpc_enabled` via the FeatureFlagModal after
+    //      app start — the cache still held the URL resolved at boot.
+    // Re-resolving here is cheap (synchronous flag check + viem client
+    // construction is sub-millisecond) and fixes both paths in one place.
+    const client = this.createClient({ chainId, rpcType: RPCType.Public })
+    if (!client) {
       throw new Error(`Viem client doesn't exist for chain ${chainId}`)
     }
-
-    return clientDetails
+    return client
   }
 
   async getPrivateViemClient(chainId: UniverseChainId, signer?: Signer): Promise<PublicClient> {
     const signerAddress = await signer?.getAddress()
-    const cachedClient = this._viemClients[chainId]?.private
-    if (!cachedClient) {
-      this.createPrivateViemClient({ chainId, signer, address: signerAddress })
-    }
-
-    const clientDetails = this._viemClients[chainId]?.private
-    if (!clientDetails) {
+    const signerInfo = signer && signerAddress ? { signer, address: signerAddress } : undefined
+    // See `getViemClient` for the rationale on re-resolving every call. The
+    // private path has an additional staleness vector: a cached client tied
+    // to one signer would survive an account switch. Re-resolving handles
+    // both the rpc-config and the signer-identity cases.
+    const client = this.createClient({ chainId, rpcType: RPCType.Private, signerInfo })
+    if (!client) {
       throw new Error(`Viem client doesn't exist for chain ${chainId}`)
     }
-
-    return clientDetails
+    return client
   }
 }

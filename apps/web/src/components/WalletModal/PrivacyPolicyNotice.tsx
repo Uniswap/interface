@@ -1,5 +1,6 @@
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { ExternalLink } from '~/theme/components/Links'
 
@@ -14,8 +15,8 @@ export function PrivacyPolicyNotice() {
       <Trans
         i18nKey="wallet.connectingAgreement"
         components={{
-          termsLink: <StyledLink href="https://uniswap.org/terms-of-service/" />,
-          privacyLink: <StyledLink href="https://uniswap.org/privacy-policy" />,
+          termsLink: <StyledLink href={uniswapUrls.termsOfServiceUrl} />,
+          privacyLink: <StyledLink href={uniswapUrls.privacyPolicyUrl} />,
         }}
       />
     </Text>

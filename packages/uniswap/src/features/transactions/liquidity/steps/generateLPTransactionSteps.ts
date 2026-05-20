@@ -11,12 +11,12 @@ import {
   createCreatePositionAsyncStep,
   createIncreasePositionAsyncStep,
   createIncreasePositionStep,
-  createIncreasePositionStepBatched,
+  createIncreasePositionStepWalletCall,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
 import {
   createMigratePositionAsyncStep,
   createMigratePositionStep,
-  createMigratePositionStepBatched,
+  createMigratePositionStepWalletCall,
 } from 'uniswap/src/features/transactions/liquidity/steps/migrate'
 import {
   MigrationSteps,
@@ -141,7 +141,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
                 (step): step is MigrationSteps & OnChainTransactionFields => 'txRequest' in step && !!step.txRequest,
               )
               .map((step) => step.txRequest)
-            return [createMigratePositionStepBatched(txRequests)]
+            return [createMigratePositionStepWalletCall(txRequests)]
           }
 
           return migrateSteps
@@ -181,7 +181,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             const txRequests = steps
               .filter((step): step is IncreaseLiquiditySteps & OnChainTransactionFields => 'txRequest' in step)
               .map((step) => step.txRequest)
-            return [createIncreasePositionStepBatched(txRequests)]
+            return [createIncreasePositionStepWalletCall(txRequests)]
           }
 
           return steps

@@ -1,15 +1,18 @@
 import type { TransactionRequest } from '@ethersproject/abstract-provider'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import type { GasFeeResult } from '@universe/api'
+import { SharedQueryClient } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useRef } from 'react'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SendTokenTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyAddress, currencyId, getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { useAccount } from '~/hooks/useAccount'
 import { useEthersProvider } from '~/hooks/useEthersProvider'
 import { useSelectChain } from '~/hooks/useSelectChain'
@@ -38,6 +41,7 @@ export function useSendCallback({
   const addTransaction = useTransactionAdder()
   const selectChain = useSelectChain()
   const supportedTransactionChainId = useSupportedChainId(transactionRequest?.chainId)
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
 
   return useCallback(async () => {
     if (!transactionRequest) {
@@ -105,6 +109,13 @@ export function useSendCallback({
         currencyId: currencyId(currencyAmount.currency),
         amount: sendInfo.currencyAmountRaw ?? '',
         recipient: sendInfo.recipient,
+        price_source: getDisplayedPriceSource({
+          isCentralizedPricesEnabled,
+          surface: 'usdc',
+          chainId: currencyAmount.currency.chainId,
+          address: getCurrencyAddressForAnalytics(currencyAmount.currency),
+          queryClient: SharedQueryClient,
+        }),
       })
     } catch (error) {
       if (error instanceof UserRejectedRequestError) {
@@ -121,5 +132,6 @@ export function useSendCallback({
     supportedTransactionChainId,
     selectChain,
     transactionRequest,
+    isCentralizedPricesEnabled,
   ])
 }

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import {
@@ -21,6 +21,7 @@ import {
   MAX_CUSTOM_PRICE_RANGE_ENTRIES,
   PriceRangeStrategy,
 } from '~/pages/Liquidity/CreateAuction/types'
+import { getCustomPriceRangeLiquidityTotal } from '~/pages/Liquidity/CreateAuction/utils'
 
 export function CustomPriceRangeEditor({
   entries,
@@ -53,6 +54,9 @@ export function CustomPriceRangeEditor({
     })
     return new Map(layers.map((layer) => [layer.entryId, layer.color]))
   }, [entries, histogramBarColor, sporeColors.neutral1.val])
+
+  const liquidityTotal = useMemo(() => getCustomPriceRangeLiquidityTotal(entries), [entries])
+  const isLiquidityTotalValid = liquidityTotal === 100
 
   return (
     <Flex gap="$spacing16">
@@ -110,6 +114,11 @@ export function CustomPriceRangeEditor({
         ))}
         <AddRangeRow canAddEntry={canAddEntry} onAddPreset={onAddPreset} />
       </Flex>
+      {!isLiquidityTotalValid && (
+        <Text variant="body3" color="$statusCritical" textAlign="center">
+          {t('toucan.createAuction.step.customizePool.priceRange.custom.totalMustEqual100')}
+        </Text>
+      )}
     </Flex>
   )
 }

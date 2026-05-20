@@ -43,7 +43,6 @@ export const BNB_CHAIN_INFO = {
   explorer: {
     name: 'BscScan',
     url: 'https://bscscan.com/',
-    apiURL: 'https://api.bscscan.com',
   },
   interfaceName: 'bnb',
   searchAliases: ['bnb', 'bnb chain', 'binance'],

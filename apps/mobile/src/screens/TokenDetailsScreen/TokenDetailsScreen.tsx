@@ -40,22 +40,29 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 const CONTEXT_MENU_RENDER_DELAY_MS = 1000
 
 export function TokenDetailsScreen({ route, navigation }: AppStackScreenProp<MobileScreens.TokenDetails>): JSX.Element {
-  const { currencyId } = route.params
+  const { currencyId, isMultichainAsset } = route.params
   const normalizedCurrencyId = normalizeAddress(currencyId, AddressStringFormat.Lowercase)
 
   return (
-    <TokenDetailsContextProvider currencyId={normalizedCurrencyId} navigation={navigation}>
+    <TokenDetailsContextProvider
+      currencyId={normalizedCurrencyId}
+      navigation={navigation}
+      initialIsMultichainAsset={isMultichainAsset}
+    >
       <TokenDetailsWrapper />
     </TokenDetailsContextProvider>
   )
 }
 
 function TokenDetailsWrapper(): JSX.Element {
-  const { chainId, address, currencyId } = useTokenDetailsContext()
+  const { chainId, address, currencyId, initialIsMultichainAsset } = useTokenDetailsContext()
   const { data: token } = useTokenBasicInfoPartsFragment({ currencyId })
   const { data: projectParts } = useTokenBasicProjectPartsFragment({ currencyId })
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
-  const isMultichainAsset = isMultichainProjectTokens(projectParts.project?.tokens)
+  // Combine the navigator-provided hint with the project-derived signal so the
+  // first analytics impression carries the correct value even when the project
+  // fragment hasn't resolved yet.
+  const isMultichainAsset = initialIsMultichainAsset || isMultichainProjectTokens(projectParts.project?.tokens)
 
   const traceProperties = useMemo(
     () => ({

@@ -157,7 +157,7 @@ function ExtensionPasskeyAuthPopUpContent(): JSX.Element {
         setStep(Step.Denied)
       }
     }
-    void handshake()
+    handshake().catch(() => {})
     // Intentionally runs exactly once on mount: the searchParams / chromeRuntime values
     // are captured at the top of the effect and must not retrigger the handshake.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -242,12 +242,12 @@ function ExtensionPasskeyAuthPopUpContent(): JSX.Element {
       return undefined
     }
     const controller = new AbortController()
-    void (async () => {
+    ;(async () => {
       if (controller.signal.aborted) {
         return
       }
       await onPressSignIn()
-    })()
+    })().catch(() => {})
     return () => controller.abort()
     // onPressSignIn captures step/encryptionKey/isAuthenticating; at the moment
     // passkeyRequestData transitions to set, those values are correct for the trigger.

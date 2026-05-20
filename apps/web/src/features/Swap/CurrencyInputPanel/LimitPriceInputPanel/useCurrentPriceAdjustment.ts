@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { parseUnits } from '~/chains/utilities'
+import { parseUnits } from '~/chains'
 
 export enum LimitPriceErrorType {
   CALCULATION_ERROR = 'CALCULATION_ERROR',

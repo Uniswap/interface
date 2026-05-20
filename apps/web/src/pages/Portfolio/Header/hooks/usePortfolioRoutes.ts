@@ -15,8 +15,10 @@ import { getChainFilterFromSearchParams } from '~/utils/params/chainQueryParam'
  * URL formats:
  * - /portfolio -> Overview tab, no external wallet
  * - /portfolio/tokens -> Tokens tab, no external wallet
+ * - /portfolio/pools -> Pools tab, no external wallet
  * - /portfolio/0x123... -> Overview tab, external wallet 0x123...
  * - /portfolio/0x123.../tokens -> Tokens tab, external wallet 0x123...
+ * - /portfolio/0x123.../pools -> Pools tab, external wallet 0x123...
  */
 function parsePortfolioPath(pathname: string): {
   potentialAddress: string | undefined
@@ -56,6 +58,7 @@ export function usePortfolioRoutes(): {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
 
   const { potentialAddress, tabSegment } = useMemo(() => parsePortfolioPath(pathname), [pathname])
   const { evmAddress, svmAddress } = useActiveAddresses()
@@ -95,12 +98,20 @@ export function usePortfolioRoutes(): {
     // Redirect to overview if trying to access DeFi tab when feature flag is disabled
     if (tab === PortfolioTab.Defi && !isPortfolioDefiTabEnabled) {
       navigate(buildPortfolioUrl({ chainId, externalAddress: externalAddress?.address }), { replace: true })
+      return
+    }
+
+    // Redirect to overview if trying to access Pools tab when feature flag is disabled
+    if (tab === PortfolioTab.Pools && !portfolioPoolsBalancesEnabled) {
+      navigate(buildPortfolioUrl({ chainId, externalAddress: externalAddress?.address }), { replace: true })
+      return
     }
   }, [
     potentialAddress,
     externalAddress,
     tab,
     isPortfolioDefiTabEnabled,
+    portfolioPoolsBalancesEnabled,
     navigate,
     chainId,
     isOwnEvmAddress,

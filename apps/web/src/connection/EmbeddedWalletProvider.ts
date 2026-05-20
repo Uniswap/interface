@@ -1,3 +1,4 @@
+import { HexString, isValidHexString } from '@universe/encoding'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { applyGasBuffer } from 'uniswap/src/features/gas/utils'
@@ -13,7 +14,6 @@ import {
 } from 'uniswap/src/features/passkey/embeddedWalletDelegation'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import type { Account, Hash, PublicClient, SignableMessage } from 'viem'
 import { getEmbeddedWalletState, setChainId } from '~/state/embeddedWallet/store'
@@ -91,9 +91,6 @@ export class EmbeddedWalletProvider {
       case 'eth_getCode':
         return this.getCode(args)
       default: {
-        logger.error(NoWalletFoundError, {
-          tags: { file: 'EmbeddedWalletProvider.ts', function: 'request' },
-        })
         throw NoWalletFoundError
       }
     }
@@ -209,11 +206,7 @@ export class EmbeddedWalletProvider {
   async estimateGas(params: any) {
     const account = this.getAccount()
     if (!account) {
-      const error = new Error('Attempted embedded wallet function with no embedded wallet connected')
-      logger.error(error, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'estimateGas' },
-      })
-      throw error
+      throw NoWalletFoundError
     }
     const client = this.getPublicClient(this.chainId)
     const data = await client.estimateGas({
@@ -244,9 +237,6 @@ export class EmbeddedWalletProvider {
     try {
       const account = this.getAccount()
       if (!account) {
-        logger.error(NoWalletFoundError, {
-          tags: { file: 'EmbeddedWalletProvider.ts', function: 'sendTransaction' },
-        })
         throw NoWalletFoundError
       }
 
@@ -385,9 +375,6 @@ export class EmbeddedWalletProvider {
   async signMessage(args: RequestArgs) {
     const account = this.getAccount()
     if (!account) {
-      logger.error(NoWalletFoundError, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'signMessage' },
-      })
       throw NoWalletFoundError
     }
     return await account.signMessage({ message: args.params?.[0] })
@@ -396,9 +383,6 @@ export class EmbeddedWalletProvider {
   async sign(args: RequestArgs) {
     const account = this.getAccount()
     if (!account) {
-      logger.error(NoWalletFoundError, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'sign' },
-      })
       throw NoWalletFoundError
     }
     return await account.signMessage(args.params?.[0])
@@ -407,9 +391,6 @@ export class EmbeddedWalletProvider {
   async signTypedData(args: RequestArgs) {
     const account = this.getAccount()
     if (!account) {
-      logger.error(NoWalletFoundError, {
-        tags: { file: 'EmbeddedWalletProvider.ts', function: 'signTypedData' },
-      })
       throw NoWalletFoundError
     }
     if (!args.params) {

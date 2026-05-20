@@ -1,5 +1,5 @@
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { AuctionAdvancedSettings } from '~/pages/Liquidity/CreateAuction/components/AuctionAdvancedSettings'
@@ -16,9 +16,11 @@ import {
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
 import { useCreateAuctionTokenLogoNode } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenLogoNode'
 import { useIsStepValid } from '~/pages/Liquidity/CreateAuction/hooks/useIsStepValid'
+import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/useStableRaiseUsdPrice'
 import {
   type ConfigureAuctionFormState,
   CreateAuctionStep,
+  type InputCurrency,
   PostAuctionLiquidityAllocationType,
 } from '~/pages/Liquidity/CreateAuction/types'
 import {
@@ -54,6 +56,21 @@ export function ConfigureAuctionStep() {
 
   const { startTime, endTime, committed, postAuctionLiquidityAllocation, raiseCurrency, floorPrice } = configureAuction
   const isNextStepDisabled = !useIsStepValid(CreateAuctionStep.CONFIGURE_AUCTION)
+
+  // Active currency for price/milestone inputs. UI-only — not part of submitted config.
+  // Defaults to USD for both ETH and USDC: raise-token amounts are either too small (ETH) or
+  // numerically identical to USD (USDC) to make the raise-currency view useful as a default.
+  // Resets when raiseCurrency changes so the toggle starts fresh after a swap.
+  const [inputCurrency, setInputCurrency] = useState<InputCurrency>('usd')
+  useEffect(() => {
+    setInputCurrency('usd')
+  }, [raiseCurrency])
+
+  // Snapshot the raise-token USD price once per raise-currency selection. Holding it stable
+  // keeps every USD↔raise conversion in the flow agreeing on one anchor, so the user's "$100k"
+  // doesn't drift to "$99,990" on the next oracle tick. Re-snapshots only on raise-currency
+  // change. Single source of truth — children receive this instead of calling useUSDCPrice themselves.
+  const usdPriceNum = useStableRaiseUsdPrice({ raiseCurrency, chainId: committed?.totalSupply.currency.chainId ?? 1 })
 
   const handleDurationChange = useCallback(
     ({ startTime: nextStart, endTime: nextEnd }: { startTime: Date | undefined; endTime: Date | undefined }) => {
@@ -141,6 +158,9 @@ export function ConfigureAuctionStep() {
             onSelect={setRaiseCurrency}
             floorPrice={floorPrice}
             tokenTotalSupply={totalSupply}
+            inputCurrency={inputCurrency}
+            usdPriceNum={usdPriceNum}
+            onInputCurrencyChange={setInputCurrency}
             onFloorPriceChange={setFloorPrice}
           />
 
@@ -153,6 +173,8 @@ export function ConfigureAuctionStep() {
             raiseCurrency={raiseCurrency}
             chainId={totalSupply.currency.chainId}
             tokenSymbol={tokenSymbol}
+            inputCurrency={inputCurrency}
+            usdPriceNum={usdPriceNum}
             onAllocationTypeSelect={setPostAuctionLiquidityAllocationType}
             onSelectPercent={handlePostAuctionLiquidityPercentChange}
             onAddTier={addPostAuctionLiquidityTier}

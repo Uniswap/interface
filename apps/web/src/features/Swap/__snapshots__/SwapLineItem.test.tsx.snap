@@ -2,30 +2,7 @@
 
 exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
 <DocumentFragment>
-  .c1 {
-  filter: none;
-  opacity: 1;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c2 {
-  color: #4673fa;
-}
-
-@supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
-  .c2 {
-    background-image: linear-gradient(91.39deg, #4673fa -101.76%, #9646fa 101.76%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -43,7 +20,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -53,13 +30,13 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-jwTyAe fkchcS"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
                 >
                   <div
-                    class="c1"
+                    class="sc-fhHczv dxMJEb"
                   >
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
@@ -75,7 +52,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
                         <defs>
                           <lineargradient
                             gradientUnits="userSpaceOnUse"
-                            id="AutoRouterIconGradientfixed-uuid-value"
+                            id="AutoRouterIconGradienttest-uuid-0"
                             x1="-10.1807"
                             x2="10.6573"
                             y1="-12.0006"
@@ -92,14 +69,14 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
                         </defs>
                         <path
                           d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
-                          fill="url(#AutoRouterIconGradientfixed-uuid-value)"
+                          fill="url(#AutoRouterIconGradienttest-uuid-0)"
                         />
                       </svg>
                       <div
                         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
                       >
                         <div
-                          class="c2"
+                          class="sc-hwkwBN kGDnsr"
                         >
                           $0
                         </div>
@@ -133,7 +110,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -157,30 +134,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
 
 exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
 <DocumentFragment>
-  .c1 {
-  filter: none;
-  opacity: 1;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c2 {
-  color: #4673fa;
-}
-
-@supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
-  .c2 {
-    background-image: linear-gradient(91.39deg, #4673fa -101.76%, #9646fa 101.76%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -198,7 +152,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -208,13 +162,13 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-jwTyAe fkchcS"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
                 >
                   <div
-                    class="c1"
+                    class="sc-fhHczv dxMJEb"
                   >
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
@@ -230,7 +184,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
                         <defs>
                           <lineargradient
                             gradientUnits="userSpaceOnUse"
-                            id="AutoRouterIconGradientfixed-uuid-value"
+                            id="AutoRouterIconGradienttest-uuid-0"
                             x1="-10.1807"
                             x2="10.6573"
                             y1="-12.0006"
@@ -247,14 +201,14 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
                         </defs>
                         <path
                           d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
-                          fill="url(#AutoRouterIconGradientfixed-uuid-value)"
+                          fill="url(#AutoRouterIconGradienttest-uuid-0)"
                         />
                       </svg>
                       <div
                         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center"
                       >
                         <div
-                          class="c2"
+                          class="sc-hwkwBN kGDnsr"
                         >
                           $0
                         </div>
@@ -288,7 +242,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -312,18 +266,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
 
 exports[`SwapLineItem.tsx > exact input 1`] = `
 <DocumentFragment>
-  .c1 {
-  filter: none;
-  opacity: 1;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -341,7 +284,7 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -351,13 +294,13 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-jwTyAe fkchcS"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
                 >
                   <div
-                    class="c1"
+                    class="sc-fhHczv dxMJEb"
                   >
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
@@ -408,7 +351,7 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -432,18 +375,7 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
 
 exports[`SwapLineItem.tsx > exact input api 1`] = `
 <DocumentFragment>
-  .c1 {
-  filter: none;
-  opacity: 1;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -461,7 +393,7 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -471,13 +403,13 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-jwTyAe fkchcS"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
                 >
                   <div
-                    class="c1"
+                    class="sc-fhHczv dxMJEb"
                   >
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
@@ -528,7 +460,7 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -552,18 +484,7 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
 
 exports[`SwapLineItem.tsx > exact output 1`] = `
 <DocumentFragment>
-  .c1 {
-  filter: none;
-  opacity: 1;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -581,7 +502,7 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -591,13 +512,13 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-jwTyAe fkchcS"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
                 >
                   <div
-                    class="c1"
+                    class="sc-fhHczv dxMJEb"
                   >
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
@@ -648,7 +569,7 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -672,18 +593,7 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
 
 exports[`SwapLineItem.tsx > fee on buy 1`] = `
 <DocumentFragment>
-  .c1 {
-  filter: none;
-  opacity: 1;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -701,7 +611,7 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -711,13 +621,13 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-jwTyAe fkchcS"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
                 >
                   <div
-                    class="c1"
+                    class="sc-fhHczv dxMJEb"
                   >
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
@@ -768,7 +678,7 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -792,18 +702,7 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
 
 exports[`SwapLineItem.tsx > fee on sell 1`] = `
 <DocumentFragment>
-  .c1 {
-  filter: none;
-  opacity: 1;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -821,7 +720,7 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -831,13 +730,13 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-jwTyAe fkchcS"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
                 >
                   <div
-                    class="c1"
+                    class="sc-fhHczv dxMJEb"
                   >
                     <div
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-fit-content"
@@ -888,7 +787,7 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -912,23 +811,7 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
 
 exports[`SwapLineItem.tsx > preview exact in 1`] = `
 <DocumentFragment>
-  .c1 {
-  animation: fAQEyV 1.5s infinite;
-  animation-fill-mode: both;
-  background: linear-gradient(     to left,     #FFFFFF 25%,     rgba(19, 19, 19, 0.08) 50%,     #FFFFFF 75%   );
-  background-size: 400%;
-  will-change: background-position;
-  border-radius: 12px;
-  height: 15px;
-  width: 50px;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -946,7 +829,7 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-jwTyAe fkchcS"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -956,7 +839,7 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c1"
+                class="sc-hvigdm hHPnuf"
                 data-testid="loading-row"
                 height="15"
                 width="50"
@@ -984,7 +867,7 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
           data-disable-theme="true"
         >
           <div
-            class="c1"
+            class="sc-hvigdm hHPnuf"
             data-testid="loading-row"
             height="15"
             width="50"
@@ -1001,18 +884,7 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
 
 exports[`SwapLineItem.tsx > syncing 1`] = `
 <DocumentFragment>
-  .c0 {
-  animation: fAQEyV 1.5s infinite;
-  animation-fill-mode: both;
-  background: linear-gradient(     to left,     #FFFFFF 25%,     rgba(19, 19, 19, 0.08) 50%,     #FFFFFF 75%   );
-  background-size: 400%;
-  will-change: background-position;
-  border-radius: 12px;
-  height: 15px;
-  width: 50px;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -1030,7 +902,7 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
           Network cost
         </span>
         <div
-          class="c0"
+          class="sc-hvigdm hHPnuf"
           data-testid="loading-row"
           height="15"
           width="50"
@@ -1051,7 +923,7 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
           Fee 
         </span>
         <div
-          class="c0"
+          class="sc-hvigdm hHPnuf"
           data-testid="loading-row"
           height="15"
           width="50"

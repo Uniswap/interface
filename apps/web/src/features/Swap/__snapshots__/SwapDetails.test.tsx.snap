@@ -80,31 +80,14 @@ exports[`SwapDetails.tsx > renders a preview trade while disabling submission 1`
 
 exports[`SwapDetails.tsx > renders slippage tooltip 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     The maximum price movement before your transaction will revert.
     <br />
     <a
-      class="c0"
+      class="sc-bRKDuR dvTvpU"
       href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
       rel="noopener noreferrer"
       target="_blank"

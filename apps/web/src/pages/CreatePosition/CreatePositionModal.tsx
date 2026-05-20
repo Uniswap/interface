@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -65,6 +66,7 @@ export function CreatePositionModal({
   const startChainId = connectedAccount.chainId
   const navigate = useNavigate()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
 
   const onSuccess = useCallback(() => {
     setSteps([])
@@ -125,6 +127,7 @@ export function CreatePositionModal({
                 TOKEN1: currencyAmounts.TOKEN1.currency,
               },
             }),
+            isCentralizedPricesEnabled,
           }),
           expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient.toString(),
           expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient.toString(),
@@ -154,6 +157,7 @@ export function CreatePositionModal({
     creatingPoolOrPair,
     poolOrPair,
     disableOneClickSwap,
+    isCentralizedPricesEnabled,
   ])
 
   return (

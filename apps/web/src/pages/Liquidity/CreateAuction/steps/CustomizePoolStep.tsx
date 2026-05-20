@@ -19,7 +19,6 @@ import { FeeTierSelector } from '~/features/Liquidity/FeeTierSelector'
 import { useAllFeeTierPoolData } from '~/features/Liquidity/hooks/useAllFeeTierPoolData'
 import { getDefaultFeeTiersWithData } from '~/features/Liquidity/utils/feeTiers'
 import { AdvancedSettingsSeparator } from '~/pages/Liquidity/CreateAuction/components/AdvancedSettingsSeparator'
-import { AutocompoundFeesSection } from '~/pages/Liquidity/CreateAuction/components/AutocompoundFeesSection'
 import { BuybackAndBurnSection } from '~/pages/Liquidity/CreateAuction/components/BuybackAndBurnSection'
 import { PoolOwnerSection } from '~/pages/Liquidity/CreateAuction/components/PoolOwnerSection'
 import { PriceRangeStrategySelector } from '~/pages/Liquidity/CreateAuction/components/PriceRangeStrategySelector'
@@ -45,6 +44,9 @@ import {
   formatReviewAuctionDuration,
 } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
+/** Wide-layout width for the address field / control column in advanced settings rows (must match across sections). */
+const ADVANCED_SETTINGS_CONTROL_COLUMN_WIDTH_PX = 280
+
 export function CustomizePoolStep() {
   const { t } = useTranslation()
   const tokenColor = useCreateAuctionTokenColor()
@@ -63,10 +65,8 @@ export function CustomizePoolStep() {
     setTimeLockEnabled,
     setTimeLockPreset,
     setTimeLockDurationDays,
-    setSendFeesEnabled,
     setFeesRecipientAddress,
     setBuybackAndBurnEnabled,
-    setAutocompoundFeesEnabled,
   } = useCreateAuctionStoreActions()
   const locale = useCurrentLocale()
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
@@ -75,7 +75,7 @@ export function CustomizePoolStep() {
   const configureAuction = useCreateAuctionStore((state) => state.configureAuction)
   const customizePool = useCreateAuctionStore((state) => state.customizePool)
   const [advancedSettingsExpanded, setAdvancedSettingsExpanded] = useState(
-    customizePool.sendFeesEnabled || customizePool.buybackAndBurnEnabled || customizePool.autocompoundFeesEnabled,
+    customizePool.sendFeesEnabled || customizePool.buybackAndBurnEnabled,
   )
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
   const isNextStepDisabled = !useIsStepValid(CreateAuctionStep.CUSTOMIZE_POOL)
@@ -124,21 +124,14 @@ export function CustomizePoolStep() {
   )
 
   const { committed, startTime, endTime } = configureAuction
-  const {
-    timeLockEnabled,
-    timeLockPreset,
-    timeLockDurationDays,
-    feesRecipientAddress,
-    buybackAndBurnEnabled,
-    autocompoundFeesEnabled,
-  } = customizePool
+  const { timeLockEnabled, timeLockPreset, timeLockDurationDays, feesRecipientAddress, buybackAndBurnEnabled } =
+    customizePool
 
   const handleFeesRecipientAddressChange = useCallback(
     (address: string) => {
       setFeesRecipientAddress(address)
-      setSendFeesEnabled(address.trim().length > 0)
     },
-    [setFeesRecipientAddress, setSendFeesEnabled],
+    [setFeesRecipientAddress],
   )
 
   const auctionEndDate = useMemo(() => {
@@ -283,13 +276,15 @@ export function CustomizePoolStep() {
             {advancedSettingsExpanded && (
               <>
                 <SendFeesToAddressSection
+                  controlColumnWidthPx={ADVANCED_SETTINGS_CONTROL_COLUMN_WIDTH_PX}
                   value={feesRecipientAddress}
                   onValueChange={handleFeesRecipientAddressChange}
+                  poolOwnerAddress={customizePool.poolOwner || activeAddress || null}
                 />
-                <BuybackAndBurnSection enabled={buybackAndBurnEnabled} onEnabledChange={setBuybackAndBurnEnabled} />
-                <AutocompoundFeesSection
-                  enabled={autocompoundFeesEnabled}
-                  onEnabledChange={setAutocompoundFeesEnabled}
+                <BuybackAndBurnSection
+                  controlColumnWidthPx={ADVANCED_SETTINGS_CONTROL_COLUMN_WIDTH_PX}
+                  enabled={buybackAndBurnEnabled}
+                  onEnabledChange={setBuybackAndBurnEnabled}
                 />
               </>
             )}

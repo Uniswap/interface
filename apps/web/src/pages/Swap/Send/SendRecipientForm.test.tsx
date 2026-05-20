@@ -1,11 +1,26 @@
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
+import * as UseGroupedRecentTransfers from '~/features/Swap/hooks/useGroupedRecentTransfers'
 import { SendContext, SendContextType } from '~/features/Swap/state/send/SendContext'
 import { SwapAndLimitContext } from '~/features/Swap/state/swap/types'
 import { SendRecipientForm } from '~/pages/Swap/Send/SendRecipientForm'
 import { MultichainContext } from '~/state/multichain/types'
-import { render, screen } from '~/test-utils/render'
+import { act, fireEvent, render, screen, waitFor } from '~/test-utils/render'
+
+vi.mock('uniswap/src/features/ens/api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('uniswap/src/features/ens/api')>()
+  return {
+    ...actual,
+    useENSName: vi.fn(() => ({ data: undefined, isLoading: false })),
+    useENSAvatar: vi.fn(() => ({ data: undefined, isLoading: false })),
+  }
+})
+
+vi.mock('uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery', () => ({
+  useUnitagsAddressQuery: vi.fn(() => ({ data: undefined, isLoading: false })),
+  useUnitagsAddressesQuery: vi.fn(() => ({ data: undefined, isLoading: false })),
+}))
 
 const mockMultichainContextValue = {
   reset: vi.fn(),
@@ -94,7 +109,7 @@ const mockedSendContextWithUnitag: SendContextType = {
   setSendState: vi.fn(),
 }
 
-describe('SendCurrencyInputform', () => {
+describe('SendRecipientForm', () => {
   it('should render placeholder values', () => {
     const { container } = render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
@@ -139,7 +154,7 @@ describe('SendCurrencyInputform', () => {
   })
 
   it('should render correctly with unitag', () => {
-    const { container } = render(
+    render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextWithUnitag}>
@@ -150,6 +165,41 @@ describe('SendCurrencyInputform', () => {
     )
     expect(screen.getByText('hayden')).toBeVisible()
     expect(screen.getByText(shortenAddress({ address: '0x9984b4b4E408e8D618A879e5315BD30952c89103' }))).toBeVisible()
-    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('should blur recipient input when clicking outside', async () => {
+    // With an empty recipient, the flyout only opens when there are recent transfers; dismissal (and blur)
+    // runs from controlled Popover `onOpenChange(false)`, which does not fire if the popover never opened.
+    const groupedSpy = vi.spyOn(UseGroupedRecentTransfers, 'useGroupedRecentTransfers').mockReturnValue({
+      transfers: { '0x1111111111111111111111111111111111111111': 1 },
+      loading: false,
+    })
+    try {
+      render(
+        <MultichainContext.Provider value={mockMultichainContextValue}>
+          <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+            <SendContext.Provider value={mockedSendContextDefault}>
+              <SendRecipientForm />
+            </SendContext.Provider>
+          </SwapAndLimitContext.Provider>
+        </MultichainContext.Provider>,
+      )
+
+      const input = screen.getByPlaceholderText('Wallet address or ENS name')
+      act(() => {
+        input.focus()
+      })
+      expect(input).toHaveFocus()
+
+      act(() => {
+        fireEvent.mouseDown(document.body)
+      })
+
+      await waitFor(() => {
+        expect(input).not.toHaveFocus()
+      })
+    } finally {
+      groupedSpy.mockRestore()
+    }
   })
 })

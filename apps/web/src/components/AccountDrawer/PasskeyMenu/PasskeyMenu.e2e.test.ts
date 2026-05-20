@@ -242,36 +242,7 @@ test.describe(
       await expect(page.getByText('Passkey required')).toBeVisible()
     })
 
-    test('shows last passkey warning when only one authenticator exists', async ({ page }) => {
-      await setupEmbeddedWalletState(page)
-      await setupNeckMocks(page)
-      await setupNeckAwareChallengeRoute(page)
-
-      await page.route(LIST_AUTHENTICATORS_URL, async (route) => {
-        await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_single })
-      })
-
-      await page.goto(`/swap?${EW_ENABLED}`)
-      await navigateToPasskeyMenu(page)
-
-      const drawer = page.getByTestId(TestID.AccountDrawer)
-
-      // With only one authenticator, the component passes isLastAuthenticator=true
-      // to the DeletePasskeyMenu, which shows a warning
-      await expect(drawer.getByText('iCloud')).toBeVisible()
-
-      // Hover to reveal trash icon
-      await drawer.getByText('iCloud').hover()
-
-      // Assert overflow menu button appears; clicking it opens context menu, then select "Remove"
-      const trashButton = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
-      await expect(trashButton.first()).toBeVisible()
-      await trashButton.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
-      await page.getByText('Remove').click()
-      await expect(page.getByText('Passkey required')).toBeVisible()
-    })
-
-    test('shows delete speedbump before deletion of last passkey', async ({ page }) => {
+    test('hides delete affordance when only one authenticator exists', async ({ page }) => {
       await setupEmbeddedWalletState(page)
       await setupNeckMocks(page)
       await setupNeckAwareChallengeRoute(page)
@@ -285,15 +256,11 @@ test.describe(
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
       await expect(drawer.getByText('iCloud')).toBeVisible()
+
+      // Hovering must not surface the overflow/delete affordance: removing the
+      // last passkey would lock the user out, so the row is read-only.
       await drawer.getByText('iCloud').hover()
-
-      const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
-      await expect(trashButtons.first()).toBeVisible()
-      await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
-      await page.getByText('Remove').click()
-
-      // Clicking trash on last passkey shows verify modal before proceeding to delete
-      await expect(page.getByText('Passkey required')).toBeVisible()
+      await expect(page.locator(`[data-testid="${TestID.DeletePasskey}"]`)).toHaveCount(0)
     })
 
     test('successfully adds a new passkey', async ({ page }) => {
@@ -486,12 +453,46 @@ test.describe(
       await expect(drawer.getByText('Chrome')).not.toBeVisible()
     })
 
-    test('deleting last passkey disconnects wallet and closes drawer', async ({ page }) => {
+    test('shows delete speedbump warning before the delete confirmation', async ({ page }) => {
+      await setupEmbeddedWalletState(page)
+      await setupNeckMocks(page)
+      await setupNeckAwareChallengeRoute(page)
+
+      await page.route(LIST_AUTHENTICATORS_URL, async (route) => {
+        await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_multi })
+      })
+
+      await page.goto(`/swap?${EW_ENABLED}`)
+      await navigateToPasskeyMenu(page)
+
+      const drawer = page.getByTestId(TestID.AccountDrawer)
+      await expect(drawer.getByText('iCloud')).toBeVisible()
+      await drawer.getByText('iCloud').hover()
+
+      const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
+      await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
+      await page.getByText('Remove').click()
+
+      // Verify modal opens first; clicking sign-in advances to the speedbump warning
+      // that recommends backing up the recovery phrase before proceeding.
+      await expect(page.getByText('Passkey required')).toBeVisible()
+      await page.getByRole('button', { name: /sign in with passkey/i }).click()
+      await expect(page.getByText('Are you sure?')).toBeVisible()
+    })
+
+    test('deleting a non-last passkey keeps the wallet connected', async ({ page }) => {
       await setupEmbeddedWalletState(page)
       await setupNeckMocks(page)
 
+      let listCallCount = 0
       await page.route(LIST_AUTHENTICATORS_URL, async (route) => {
-        await route.fulfill({ path: Mocks.EmbeddedWallet.list_authenticators_single })
+        listCallCount++
+        // First call: 2 passkeys. After deletion refresh: 1 passkey.
+        const mockPath =
+          listCallCount === 1
+            ? Mocks.EmbeddedWallet.list_authenticators_multi
+            : Mocks.EmbeddedWallet.list_authenticators_single
+        await route.fulfill({ path: mockPath })
       })
 
       await setupNeckAwareChallengeRoute(page)
@@ -500,18 +501,13 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.delete_authenticator })
       })
 
-      // Disconnect RPC (called after deleting last authenticator)
-      await page.route('**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/Disconnect', async (route) => {
-        await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ success: true }) })
-      })
-
       await page.goto(`/swap?${EW_ENABLED}`)
       await navigateToPasskeyMenu(page)
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
       await expect(drawer.getByText('iCloud')).toBeVisible()
-
       await drawer.getByText('iCloud').hover()
+
       const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
       await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
       await page.getByText('Remove').click()
@@ -519,7 +515,6 @@ test.describe(
       await expect(page.getByText('Passkey required')).toBeVisible()
       await page.getByRole('button', { name: /sign in with passkey/i }).click()
 
-      // Speedbump warns to back up recovery phrase — click Continue
       await expect(page.getByText('Are you sure?')).toBeVisible()
       await page.getByRole('button', { name: /continue/i }).click()
 
@@ -528,8 +523,9 @@ test.describe(
       await page.getByRole('button', { name: /^delete$/i }).click()
       await deleteResponsePromise
 
-      // After deleting last passkey, wallet disconnects — connect wallet button reappears
-      await expect(page.getByTestId(TestID.Web3StatusConnected)).not.toBeVisible()
+      // Inverse of the old last-passkey test: deleting one of two passkeys must
+      // leave the user signed in (no Disconnect side effect on non-last delete).
+      await expect(page.getByTestId(TestID.Web3StatusConnected)).toBeVisible()
     })
   },
 )

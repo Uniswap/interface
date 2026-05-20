@@ -3,7 +3,6 @@ import { isMobileWeb } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
 import type { SegmentedControlOption } from 'ui/src'
 import { Flex, SegmentedControl, styled, Text, Tooltip } from 'ui/src'
@@ -25,13 +24,11 @@ import type {
   SwapRedirectFn,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
-import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { noop } from 'utilities/src/react/noop'
@@ -93,30 +90,12 @@ export function SwapPage() {
             initialTypedValue={initialTypedValue}
             initialIndependentField={initialField}
             syncTabToUrl={true}
-            usePersistedFilteredChainIds
           />
         </WebFORNudgeProvider>
       </PageWrapper>
       <ReturnToAuctionBanner />
     </Trace>
   )
-}
-
-// If there are persisted filtered chain ids, use them. Otherwise, use the initial input and output chain ids derived from query params.
-function getFilteredChainIdsOverride({
-  initialInputChainId,
-  initialOutputChainId,
-  usePersistedFilteredChainIds,
-  persistedFilteredChainIds,
-}: {
-  initialInputChainId?: UniverseChainId
-  initialOutputChainId?: UniverseChainId
-  usePersistedFilteredChainIds?: boolean
-  persistedFilteredChainIds?: { [key in CurrencyField]?: UniverseChainId }
-}): TransactionState['filteredChainIdsOverride'] {
-  return usePersistedFilteredChainIds && !!persistedFilteredChainIds
-    ? persistedFilteredChainIds
-    : { [CurrencyField.OUTPUT]: initialOutputChainId, [CurrencyField.INPUT]: initialInputChainId }
 }
 
 /**
@@ -139,7 +118,6 @@ export function Swap({
   syncTabToUrl,
   swapRedirectCallback,
   tokenColor,
-  usePersistedFilteredChainIds = false,
   tdpCurrency,
 }: {
   initialInputChainId?: UniverseChainId
@@ -154,7 +132,6 @@ export function Swap({
   hideFooter?: boolean
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
-  usePersistedFilteredChainIds?: boolean
   passkeyAuthStatus?: PasskeyAuthStatus
   /** When Swap is embedded in Token Details Page, pass the TDP token currency for Buy/Sell prefill */
   tdpCurrency?: Currency
@@ -173,8 +150,6 @@ export function Swap({
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
-  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
-
   const prefilledState = useSwapPrefilledState({
     input,
     output,
@@ -183,12 +158,10 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
     selectingCurrencyChainId: swapOutputChainId,
     skipFocusOnCurrencyField: isMobileWeb,
-    filteredChainIdsOverride: getFilteredChainIdsOverride({
-      initialInputChainId,
-      initialOutputChainId,
-      usePersistedFilteredChainIds,
-      persistedFilteredChainIds,
-    }),
+    filteredChainIdsOverride: {
+      [CurrencyField.INPUT]: initialInputChainId,
+      [CurrencyField.OUTPUT]: initialOutputChainId,
+    },
   })
 
   return (

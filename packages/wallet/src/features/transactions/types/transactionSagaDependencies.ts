@@ -18,6 +18,8 @@ import type { TransactionConfigService } from 'wallet/src/features/transactions/
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import type { UserOpService } from 'wallet/src/features/transactions/executeTransaction/services/UserOpService/userOpService'
+import type { UserOpSigner } from 'wallet/src/features/transactions/executeTransaction/services/UserOpSignerService/userOpSignerService'
 import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import type { TransactionParamsFactory } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
 import type { BaseTransactionContext } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
@@ -60,6 +62,13 @@ export interface TransactionSagaDependencies {
     getViemClient: () => Promise<PublicClient>
     getSignerManager: () => SignerManager
   }) => TransactionSigner
+  createBundledDelegationUserOpSignerService: (params: {
+    delegationInfo: DelegationCheckResult
+    getAccount: () => SignerMnemonicAccountMeta
+    getProvider: () => Promise<Provider>
+    getViemClient: () => Promise<PublicClient>
+    getSignerManager: () => SignerManager
+  }) => UserOpSigner
   createTransactionService: (params: {
     transactionRepository: TransactionRepository
     transactionSigner: TransactionSigner
@@ -68,6 +77,7 @@ export interface TransactionSagaDependencies {
     logger: Logger
     getProvider: () => Promise<Provider>
   }) => TransactionService
+  createUserOpService: (params: { userOpSigner: UserOpSigner; logger: Logger }) => UserOpService
   createAnalyticsService: (params: {
     sendAnalyticsEvent: typeof sendAnalyticsEvent
     logger: Logger

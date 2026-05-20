@@ -113,6 +113,7 @@ env:
     timeout: 3000
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
+# Multichain UX: Buy/Sell buttons replaced single Swap button
 - assertVisible:
     id: ${output.testIds.TokenDetailsBuyButton}
 - runScript:

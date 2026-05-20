@@ -47,10 +47,6 @@ const RemoveLiquidityModal = createLazy(() =>
 const ClaimFeeModal = createLazy(() =>
   import('~/features/Liquidity/ClaimFeeModal').then((module) => ({ default: module.ClaimFeeModal })),
 )
-const PasskeysHelpModal = createLazy(() =>
-  import('uniswap/src/features/passkey/PasskeysHelpModal').then((module) => ({ default: module.PasskeysHelpModal })),
-)
-
 const DelegationMismatchModal = createLazy(() =>
   import('~/components/delegation/DelegationMismatchModal').then((module) => ({
     default: module.default,
@@ -215,10 +211,6 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.DevFlags]: {
     component: DevFlagsBox,
     shouldMount: () => true,
-  },
-  [ModalName.PasskeysHelp]: {
-    component: PasskeysHelpModal,
-    shouldMount: (state) => state.application.openModal?.name === ModalName.PasskeysHelp,
   },
   [ModalName.DelegationMismatch]: {
     component: DelegationMismatchModal,

@@ -150,12 +150,14 @@ function BreakdownSection({
         setSelectedMultichainChainId(chainId)
         return
       }
-      void navigate(
-        getTokenDetailsURL({
-          address: currency.isToken ? currency.address : undefined,
-          chain: toGraphQLChain(chainId),
-        }),
-      )
+      Promise.resolve(
+        navigate(
+          getTokenDetailsURL({
+            address: currency.isToken ? currency.address : undefined,
+            chain: toGraphQLChain(chainId),
+          }),
+        ),
+      ).catch(() => {})
     },
     [defaultChainId, multichainTokenUxEnabled, navigate, setSelectedMultichainChainId, trace],
   )

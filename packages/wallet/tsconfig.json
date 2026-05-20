@@ -15,6 +15,12 @@
       "path": "../gating"
     },
     {
+      "path": "../encoding"
+    },
+    {
+      "path": "../cryptography"
+    },
+    {
       "path": "../api"
     },
     {

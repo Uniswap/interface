@@ -7,23 +7,19 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { Pill } from 'uniswap/src/components/pill/Pill'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { NumberType } from 'utilities/src/format/types'
-import type { MockEarnVault } from '~/features/earn/_fixtures/vaults'
-
-// TODO(CONS-1783): replace with dynamic gas estimate from VaultActionRequest quote.
-const NETWORK_COST_USD = 1.02
 
 interface DepositReviewViewProps {
-  vault: MockEarnVault
+  vault: EarnVaultInfo
   amount: string
   onBack: () => void
   onClose: () => void
-  onDeposit: () => void
 }
 
-export function DepositReviewView({ vault, amount, onBack, onClose, onDeposit }: DepositReviewViewProps): JSX.Element {
+export function DepositReviewView({ vault, amount, onBack, onClose }: DepositReviewViewProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
@@ -116,7 +112,7 @@ export function DepositReviewView({ vault, amount, onBack, onClose, onDeposit }:
             label={t('explore.earn.deposit.rewardRate')}
             value={
               <Text variant="body3" color="$accent1">
-                {t('explore.earn.vault.rateValue', { apy: formatPercent(vault.rewardsAprPercent) })}
+                {t('explore.earn.vault.rateValue', { apy: formatPercent(vault.apyPercent) })}
               </Text>
             }
           />
@@ -124,14 +120,15 @@ export function DepositReviewView({ vault, amount, onBack, onClose, onDeposit }:
             label={t('common.networkCost')}
             value={
               <Text variant="body3" color="$neutral1">
-                {formatFiat(NETWORK_COST_USD)}
+                —
               </Text>
             }
           />
         </Flex>
       )}
 
-      <Button variant="branded" size="large" py="$spacing24" onPress={onDeposit}>
+      {/* TODO(CONS-1998): re-enable once earn chained actions are rebuilt on the new plan interface. */}
+      <Button variant="branded" size="large" py="$spacing24" isDisabled onPress={() => undefined}>
         {t('explore.earn.deposit.cta', { symbol })}
       </Button>
     </Flex>

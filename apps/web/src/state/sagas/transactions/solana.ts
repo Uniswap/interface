@@ -1,5 +1,6 @@
 import { VersionedTransaction } from '@solana/web3.js'
 import { JupiterExecuteResponse, TradingApi } from '@universe/api'
+import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 import { call, delay, spawn } from 'typed-redux-saga'
 import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterFetchClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -46,7 +47,7 @@ async function signAndSendJupiterSwap({
   onSwapSigned?: () => void
 }): Promise<JupiterExecuteResponse> {
   const signedTransactionObj = await signSolanaTransaction(transaction)
-  const signedTransaction = Buffer.from(signedTransactionObj.serialize()).toString('base64')
+  const signedTransaction = uint8ToBase64(signedTransactionObj.serialize())
 
   onSwapSigned?.()
 
@@ -119,7 +120,7 @@ function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => 
     const { trade, transactionBase64 } = swapTxContext
     const { requestId } = trade.quote.quote
 
-    const transaction = VersionedTransaction.deserialize(Buffer.from(transactionBase64, 'base64'))
+    const transaction = VersionedTransaction.deserialize(base64ToUint8(transactionBase64))
 
     const { data, error } = yield* call(() =>
       tryCatch(signAndSendJupiterSwap({ transaction, requestId, signSolanaTransaction, onSwapSigned })),

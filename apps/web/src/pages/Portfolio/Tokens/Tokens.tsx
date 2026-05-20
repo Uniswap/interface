@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, RemoveScroll, Text, useMedia } from 'ui/src'
 import { TokensListEmptyState } from 'uniswap/src/components/tokens/TokensListEmptyState'
+import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useGetWalletTokensProfitLossQuery } from 'uniswap/src/data/rest/getWalletTokensProfitLoss'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -129,7 +130,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
 
   // Handler to clear chain filter and show all networks
   const handleShowAllNetworks = useCallback(() => {
-    void navigate('/portfolio/tokens')
+    Promise.resolve(navigate('/portfolio/tokens')).catch(() => {})
   }, [navigate])
 
   // Custom empty state for chain filtering
@@ -170,6 +171,7 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
                 svmOwner={portfolioAddresses.svmAddress}
                 endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
                 chainIds={effectiveChainId ? [effectiveChainId] : undefined}
+                part={PortfolioBalancePart.Tokens}
               />
             </Trace>
             <Trace logFocus section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioTokensSearch}>

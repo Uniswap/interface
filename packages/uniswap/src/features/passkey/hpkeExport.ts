@@ -1,8 +1,8 @@
 import { Chacha20Poly1305 } from '@hpke/chacha20poly1305'
 import { CipherSuite, DhkemP256HkdfSha256, HkdfSha256 } from '@hpke/core'
+import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { exportEncryptedSeedPhrase, type GetExportCredentialFn } from 'uniswap/src/features/passkey/embeddedWallet'
-import { base64ToBytes, bytesToBase64 } from 'uniswap/src/features/passkey/encoding'
 import { executeRecoveryExport } from 'uniswap/src/features/passkey/recoveryExecute'
 
 /**
@@ -17,7 +17,7 @@ export async function generateHpkeKeypair(): Promise<{
   const kem = new DhkemP256HkdfSha256()
   const keypair = await kem.generateKeyPair()
   const spki = await crypto.subtle.exportKey('spki', keypair.publicKey)
-  const publicKeyBase64 = bytesToBase64(new Uint8Array(spki))
+  const publicKeyBase64 = uint8ToBase64(new Uint8Array(spki))
   const suite = new CipherSuite({ kem, kdf: new HkdfSha256(), aead: new Chacha20Poly1305() })
   return { suite, keypair, publicKeyBase64 }
 }
@@ -37,8 +37,8 @@ export async function decryptHpkeCiphertext({
   ciphertext: string
   encapsulatedKey: string
 }): Promise<string> {
-  const enc = base64ToBytes(encapsulatedKey)
-  const ct = base64ToBytes(ciphertext)
+  const enc = base64ToUint8(encapsulatedKey)
+  const ct = base64ToUint8(ciphertext)
   const recipientCtx = await suite.createRecipientContext({ recipientKey: keypair, enc })
   const plaintext = await recipientCtx.open(ct)
   return new TextDecoder().decode(plaintext)

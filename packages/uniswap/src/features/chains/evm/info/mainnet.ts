@@ -53,7 +53,6 @@ export const MAINNET_CHAIN_INFO = {
   explorer: {
     name: 'Etherscan',
     url: 'https://etherscan.io/',
-    apiURL: 'https://api.etherscan.io',
   },
   openseaName: 'ethereum',
   interfaceName: 'mainnet',
@@ -140,7 +139,6 @@ export const SEPOLIA_CHAIN_INFO = {
   explorer: {
     name: 'Etherscan',
     url: 'https://sepolia.etherscan.io/',
-    apiURL: 'https://api-sepolia.etherscan.io',
   },
   interfaceName: 'sepolia',
   label: 'Sepolia',

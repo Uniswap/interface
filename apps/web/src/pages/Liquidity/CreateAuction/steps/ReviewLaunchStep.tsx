@@ -8,6 +8,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -16,24 +17,28 @@ import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { isAddress } from '~/chains/utilities'
+import { isAddress } from '~/chains'
 import { BIPS_BASE } from '~/constants/misc'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
+import { formatUtcOffset } from '~/pages/Liquidity/CreateAuction/components/DatePicker/datePickerCardShared'
+import { ReviewCustomPriceRangeExpandable } from '~/pages/Liquidity/CreateAuction/components/ReviewCustomPriceRangeExpandable'
+import { ReviewPostAuctionLiquidityExpandable } from '~/pages/Liquidity/CreateAuction/components/ReviewPostAuctionLiquidityExpandable'
 import { TokenDistributionBar } from '~/pages/Liquidity/CreateAuction/components/TokenDistributionBar'
 import {
   useCreateAuctionStore,
   useCreateAuctionStoreActions,
 } from '~/pages/Liquidity/CreateAuction/CreateAuctionContext'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
+import { useStableRaiseUsdPrice } from '~/pages/Liquidity/CreateAuction/hooks/useStableRaiseUsdPrice'
 import {
   CreateAuctionStep,
+  PostAuctionLiquidityAllocationType,
   PriceRangeStrategy,
   RaiseCurrency,
   TimeLockPreset,
   TokenMode,
 } from '~/pages/Liquidity/CreateAuction/types'
 import { amountToPercent } from '~/pages/Liquidity/CreateAuction/utils'
-import { formatReviewAuctionDuration } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
 const TOKEN_LOGO_SIZE = 60
 const CURRENCY_LOGO_SIZE = iconSizes.icon20
@@ -88,11 +93,33 @@ function ReviewRow({ label, children }: { label: string; children: React.ReactNo
   )
 }
 
+/** Locale-aware numeric date (2-digit year) + neutral 24h time and UTC offset — Figma 11223:39682. */
+function ReviewAuctionDateTime({ date }: { date: Date }) {
+  const dayjsInstance = useLocalizedDayjs()
+  const { locale } = useCurrentLanguageInfo()
+  const dateLabel = new Intl.DateTimeFormat(locale, {
+    year: '2-digit',
+    month: 'numeric',
+    day: 'numeric',
+  }).format(date)
+  const timeLabel = `${dayjsInstance(date).format('HH:mm')} ${formatUtcOffset(date)}`
+  return (
+    <Flex row alignItems="center" gap="$spacing6" flexWrap="wrap">
+      <Text variant="body1" color="$neutral1">
+        {dateLabel}
+      </Text>
+      <Text variant="body1" color="$neutral2">
+        {timeLabel}
+      </Text>
+    </Flex>
+  )
+}
+
 // oxlint-disable-next-line complexity
 export function ReviewLaunchStep() {
   const { t } = useTranslation()
   const tokenColor = useCreateAuctionTokenColor()
-  const { formatNumberOrString, formatPercent } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatNumberOrString, formatPercent } = useLocalizationContext()
   const tokenForm = useCreateAuctionStore((state) => state.tokenForm)
   const configureAuction = useCreateAuctionStore((state) => state.configureAuction)
   const customizePool = useCreateAuctionStore((state) => state.customizePool)
@@ -102,11 +129,6 @@ export function ReviewLaunchStep() {
   const handleEditTokenInfo = () => setStep(CreateAuctionStep.ADD_TOKEN_INFO)
   const handleEditAuctionConfig = () => setStep(CreateAuctionStep.CONFIGURE_AUCTION)
   const handleEditCustomizePool = () => setStep(CreateAuctionStep.CUSTOMIZE_POOL)
-
-  const dayjsInstance = useLocalizedDayjs()
-  const formattedStartDate = configureAuction.startTime
-    ? dayjsInstance(configureAuction.startTime).format('MM/DD/YY')
-    : undefined
 
   const tokenName =
     tokenForm.mode === TokenMode.CREATE_NEW
@@ -140,6 +162,19 @@ export function ReviewLaunchStep() {
   }, [configureAuction.floorPrice, committed])
   const formattedFdv =
     fdv !== undefined ? formatNumberOrString({ value: fdv.toString(), type: NumberType.TokenNonTx }) : undefined
+
+  // Stable USD snapshot for the raise currency — same source as FloorPriceSelector so the review
+  // values stay pinned to what the user saw while editing, instead of jittering with each oracle tick.
+  const stableRaiseUsdPrice = useStableRaiseUsdPrice({ raiseCurrency: configureAuction.raiseCurrency, chainId })
+  const floorPriceNum = configureAuction.floorPrice ? parseFloat(configureAuction.floorPrice) : undefined
+  const formattedFloorPriceUsd =
+    stableRaiseUsdPrice !== null && floorPriceNum !== undefined && Number.isFinite(floorPriceNum)
+      ? convertFiatAmountFormatted(floorPriceNum * stableRaiseUsdPrice, NumberType.FiatTokenPrice)
+      : undefined
+  const formattedFdvUsd =
+    stableRaiseUsdPrice !== null && fdv !== undefined
+      ? convertFiatAmountFormatted(fdv * stableRaiseUsdPrice, NumberType.FiatTokenStats)
+      : undefined
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const usdcCurrencyId = useMemo(() => {
@@ -177,7 +212,7 @@ export function ReviewLaunchStep() {
       return t('toucan.createAuction.step.customizePool.priceRange.concentratedFullRange')
     }
     if (customizePool.priceRangeStrategy === PriceRangeStrategy.CUSTOM_RANGE) {
-      return t('common.customRange')
+      return t('common.custom')
     }
     return t('toucan.createAuction.step.customizePool.priceRange.fullRange')
   })()
@@ -186,6 +221,7 @@ export function ReviewLaunchStep() {
     return null
   }
 
+  const postAuctionLiquidityAllocation = configureAuction.postAuctionLiquidityAllocation
   const postAuctionLiquidityPercentDisplay = Math.round(
     amountToPercent(committed.auctionSupplyAmount, committed.postAuctionLiquidityAmount),
   )
@@ -256,23 +292,19 @@ export function ReviewLaunchStep() {
 
           {configureAuction.startTime ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.startDate')}>
-              <Text variant="body1" color="$neutral1">
-                {formattedStartDate}
-              </Text>
+              <ReviewAuctionDateTime date={configureAuction.startTime} />
             </ReviewRow>
           ) : null}
 
-          <ReviewRow label={t('toucan.createAuction.step.configureAuction.duration')}>
+          {configureAuction.endTime ? (
+            <ReviewRow label={t('toucan.createAuction.step.configureAuction.duration.endDate')}>
+              <ReviewAuctionDateTime date={configureAuction.endTime} />
+            </ReviewRow>
+          ) : null}
+
+          <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.auctionAmount')}>
             <Text variant="body1" color="$neutral1">
-              {configureAuction.startTime && configureAuction.endTime
-                ? formatReviewAuctionDuration(
-                    {
-                      startTime: configureAuction.startTime,
-                      endTime: configureAuction.endTime,
-                    },
-                    t,
-                  )
-                : t('common.day.count', { count: 0 })}
+              {formattedAuctionAmount} {tokenSymbol}
             </Text>
           </ReviewRow>
 
@@ -286,40 +318,60 @@ export function ReviewLaunchStep() {
           </ReviewRow>
 
           {configureAuction.floorPrice ? (
-            <ReviewRow label={t('toucan.createAuction.step.configureAuction.floorPrice')}>
+            <ReviewRow label={t('toucan.createAuction.step.configureAuction.floorPrice.token')}>
               <Flex row alignItems="center" gap="$spacing4">
                 <Text variant="body1" color="$neutral1">
                   {configureAuction.floorPrice} {configureAuction.raiseCurrency}
                 </Text>
-                {formattedFdv !== undefined ? (
+                {formattedFloorPriceUsd !== undefined ? (
                   <Text variant="body1" color="$neutral2">
-                    ({formattedFdv} {configureAuction.raiseCurrency} FDV)
+                    ({formattedFloorPriceUsd})
                   </Text>
                 ) : null}
               </Flex>
             </ReviewRow>
           ) : null}
 
-          <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.auctionAmount')}>
-            <Text variant="body1" color="$neutral1">
-              {formattedAuctionAmount} {tokenSymbol}
-            </Text>
-          </ReviewRow>
+          {formattedFdv !== undefined ? (
+            <ReviewRow label={t('toucan.createAuction.step.configureAuction.floorPrice.fdv')}>
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text variant="body1" color="$neutral1">
+                  {formattedFdv} {configureAuction.raiseCurrency}
+                </Text>
+                {formattedFdvUsd !== undefined ? (
+                  <Text variant="body1" color="$neutral2">
+                    ({formattedFdvUsd})
+                  </Text>
+                ) : null}
+              </Flex>
+            </ReviewRow>
+          ) : null}
 
-          <ReviewRow label={t('toucan.createAuction.step.configureAuction.postAuctionLiquidity')}>
-            <Text variant="body1" color="$neutral1">
-              {formatPercent(postAuctionLiquidityPercentDisplay)}
-            </Text>
-          </ReviewRow>
-
-          <TokenDistributionBar
-            auctionSupplyAmount={committed.auctionSupplyAmount}
-            postAuctionLiquidityAmount={committed.postAuctionLiquidityAmount}
-            tokenSymbol={tokenSymbol}
-            chainId={chainId}
-            raiseCurrency={configureAuction.raiseCurrency}
-            tokenColor={tokenColor}
-          />
+          {postAuctionLiquidityAllocation.type === PostAuctionLiquidityAllocationType.SINGLE ? (
+            <>
+              <ReviewRow label={t('toucan.details.postAuctionLiquidity')}>
+                <Text variant="body1" color="$neutral1">
+                  {formatPercent(postAuctionLiquidityPercentDisplay)}
+                </Text>
+              </ReviewRow>
+              <TokenDistributionBar
+                auctionSupplyAmount={committed.auctionSupplyAmount}
+                postAuctionLiquidityAmount={committed.postAuctionLiquidityAmount}
+                tokenSymbol={tokenSymbol}
+                chainId={chainId}
+                raiseCurrency={configureAuction.raiseCurrency}
+                tokenColor={tokenColor}
+              />
+            </>
+          ) : (
+            <ReviewPostAuctionLiquidityExpandable
+              label={t('toucan.details.postAuctionLiquidity')}
+              summaryLabel={t('common.custom')}
+              tiers={postAuctionLiquidityAllocation.tiers}
+              raiseCurrencySymbol={configureAuction.raiseCurrency}
+              raiseUsdPrice={stableRaiseUsdPrice}
+            />
+          )}
 
           <ReviewRow label={t('toucan.details.kyc')}>
             <Text variant="body1" color="$neutral1">
@@ -341,11 +393,19 @@ export function ReviewLaunchStep() {
             </Text>
           </ReviewRow>
 
-          <ReviewRow label={t('toucan.createAuction.step.customizePool.priceRange.title')}>
-            <Text variant="body1" color="$neutral1">
-              {priceRangeDisplay}
-            </Text>
-          </ReviewRow>
+          {customizePool.priceRangeStrategy === PriceRangeStrategy.CUSTOM_RANGE ? (
+            <ReviewCustomPriceRangeExpandable
+              label={t('toucan.createAuction.step.customizePool.priceRange.title')}
+              summaryLabel={priceRangeDisplay}
+              entries={customizePool.customPriceRanges}
+            />
+          ) : (
+            <ReviewRow label={t('toucan.createAuction.step.customizePool.priceRange.title')}>
+              <Text variant="body1" color="$neutral1">
+                {priceRangeDisplay}
+              </Text>
+            </ReviewRow>
+          )}
 
           {showPoolOwner ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.poolOwner')}>
@@ -375,14 +435,6 @@ export function ReviewLaunchStep() {
 
           {customizePool.timeLockEnabled && customizePool.buybackAndBurnEnabled ? (
             <ReviewRow label={t('toucan.createAuction.step.reviewLaunch.buybackAndBurn')}>
-              <Text variant="body1" color="$neutral1">
-                {t('toucan.createAuction.step.reviewLaunch.enabled')}
-              </Text>
-            </ReviewRow>
-          ) : null}
-
-          {customizePool.timeLockEnabled && customizePool.autocompoundFeesEnabled ? (
-            <ReviewRow label={t('toucan.createAuction.step.customizePool.autocompoundFees')}>
               <Text variant="body1" color="$neutral1">
                 {t('toucan.createAuction.step.reviewLaunch.enabled')}
               </Text>

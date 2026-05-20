@@ -197,7 +197,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       >
         <RCTScrollView
           collapsable={false}
-          handlerTag={1}
+          handlerTag={-1}
           handlerType="NativeViewGestureHandler"
           onGestureHandlerEvent={[Function]}
           onGestureHandlerStateChange={[Function]}

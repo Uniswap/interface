@@ -27,8 +27,8 @@ import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { MultiBlockchainAddressDisplay } from '~/components/AccountDetails/MultiBlockchainAddressDisplay'
+import { AddBackupLoginCard } from '~/components/AccountDrawer/AddBackupLoginCard'
 import { DisconnectButton } from '~/components/AccountDrawer/DisconnectButton'
-import { DownloadGraduatedWalletCard } from '~/components/AccountDrawer/DownloadGraduatedWalletCard'
 import { EmptyWallet } from '~/components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { MiniPortfolio } from '~/components/AccountDrawer/MiniPortfolio/MiniPortfolio'
@@ -220,7 +220,7 @@ export function AuthenticatedHeader({
                   <ReceiveActionTile />
                 </Flex>
               </Flex>
-              <DownloadGraduatedWalletCard />
+              <AddBackupLoginCard />
               <MiniPortfolio
                 evmAddress={evmAddress}
                 svmAddress={svmAddress}

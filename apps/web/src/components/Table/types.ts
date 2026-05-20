@@ -20,6 +20,7 @@ export type TableBodyProps<T extends RowData = unknown> = {
   subRowHeight?: number
   hasPinnedColumns?: boolean
   dimmed?: boolean
+  virtualized?: boolean
 }
 
 export type TableProps<T extends RowData = unknown> = {
@@ -55,4 +56,6 @@ export type TableProps<T extends RowData = unknown> = {
   hideHiddenRowsLabel?: string
   /** When true, shows native browser scrollbar instead of hiding it */
   showScrollbar?: boolean
+  /** When true, only visible rows are rendered using window-based virtualization */
+  virtualized?: boolean
 }

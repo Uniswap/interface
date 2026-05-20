@@ -1,12 +1,14 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 /**
  * Minimum contract a digit-input cell ref needs to satisfy to be focusable by the
  * hook. `HTMLInputElement`, React Native `TextInput` refs, and any platform wrapper
- * exposing `focus()` all conform.
+ * exposing `focus()`/`blur()` all conform. `blur` is optional so platforms that don't
+ * need it can omit it without breaking the type.
  */
 export interface FocusableRef {
   focus: () => void
+  blur?: () => void
 }
 
 type KeyDownEvent = { key: string }
@@ -33,7 +35,18 @@ export function useDigitInput({ length, onComplete }: { length: number; onComple
   reset: () => void
 } {
   const [digits, setDigits] = useState<string[]>(Array(length).fill(''))
+  const [resetVersion, setResetVersion] = useState(0)
   const refs = useRef<(FocusableRef | null)[]>([])
+
+  // Focus the first cell after a reset. Done in an effect (not synchronously inside
+  // `reset()`) so React has flushed any parent state changes first — most notably
+  // the consumer turning off a `disabled` flag in a `finally` block after a failed
+  // submit. Calling focus() while the input is still `disabled` is a browser no-op.
+  useEffect(() => {
+    if (resetVersion > 0) {
+      refs.current[0]?.focus()
+    }
+  }, [resetVersion])
 
   const handleChange = useCallback(
     (index: number, value: string) => {
@@ -58,6 +71,9 @@ export function useDigitInput({ length, onComplete }: { length: number; onComple
 
       const code = newDigits.join('')
       if (code.length === length && newDigits.every(Boolean)) {
+        // Drop focus when the code completes so the just-typed cell doesn't keep
+        // its focus ring while `onComplete` (typically a network call) is in flight.
+        refs.current[index]?.blur?.()
         onComplete?.(code)
       }
     },
@@ -100,7 +116,7 @@ export function useDigitInput({ length, onComplete }: { length: number; onComple
 
   const reset = useCallback(() => {
     setDigits(Array(length).fill(''))
-    refs.current[0]?.focus()
+    setResetVersion((v) => v + 1)
   }, [length])
 
   return { digits, refs, handleChange, handleKeyDown, handlePaste, reset }

@@ -12,6 +12,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
 
 const HIDE_PHRASE_TIMEOUT_MS = ONE_MINUTE_MS * 2
 
@@ -117,7 +118,7 @@ export function ViewRecoveryPhraseScreen({
         </SettingsRecoveryPhrase>
       ) : (
         <Flex fill gap="$spacing24" pt="$spacing36">
-          <SeedPhraseDisplay mnemonicId={mnemonicId} />
+          <SeedPhraseDisplay mnemonicId={mnemonicId} expectedWordCount={getExpectedMnemonicLength(mnemonicAccount)} />
 
           <Flex alignItems="center" gap="$spacing8">
             <Text color="$neutral2" textAlign="center" variant="body3">

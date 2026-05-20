@@ -221,7 +221,7 @@ function OverlayDateWithModalTimePickerCard({
 
   // Time the user has picked but hasn't yet committed via a calendar-day click.
   // Once `date` is set, the source of truth for hour/minute is `date` itself.
-  const [pendingHour24, setPendingHour24] = useState(0)
+  const [pendingHour24, setPendingHour24] = useState(10)
   const [pendingMinute, setPendingMinute] = useState(0)
 
   const hour24 = date ? date.getHours() : pendingHour24

@@ -27,6 +27,7 @@ const tokens = buildChainTokens({
     USDT0: new Token(UniverseChainId.XLayer, '0x779Ded0c9e1022225f8E0630b35a9b54bE713736', 6, 'USDT0', 'USDT0'),
     USDC: buildUSDC('0x74b7F16337b8972027F6196A17a631aC6dE26d22', UniverseChainId.XLayer),
   },
+  primaryStablecoin: 'USDT0',
 })
 
 export const XLAYER_CHAIN_INFO = {

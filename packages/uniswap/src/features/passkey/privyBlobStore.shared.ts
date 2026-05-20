@@ -26,6 +26,7 @@ export function createPrivyBlobStore({
       method: 'POST',
       headers: buildHeaders({ accessToken, privyAppId }),
       body: JSON.stringify({ ciphertext: blob }),
+      credentials: 'include',
     })
 
     if (!response.ok) {
@@ -52,6 +53,7 @@ export function createPrivyBlobStore({
     const response = await fetch(`${uniswapUrls.privyEncryptedAuthorizationKeysUrl}/${keyId}`, {
       method: 'GET',
       headers: buildHeaders({ accessToken, privyAppId }),
+      credentials: 'include',
     })
 
     if (!response.ok) {

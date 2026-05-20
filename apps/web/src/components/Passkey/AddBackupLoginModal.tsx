@@ -16,10 +16,8 @@ import { validatePin } from 'uniswap/src/features/passkey/pinValidation'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import {
-  type AuthenticatorDisplay,
-  LIST_AUTHENTICATORS_QUERY_KEY,
-} from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { type AuthenticatorDisplay } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { ConfirmPasscodeExtra, SuccessStep } from '~/components/Passkey/AddBackupLoginFinalSteps'
 import {
   EmailCodeStep,
@@ -258,7 +256,7 @@ export function AddBackupLoginModal() {
       queryClient.setQueryData<{
         authenticators: AuthenticatorDisplay[]
         recoveryMethods: RecoveryMethod[]
-      }>([LIST_AUTHENTICATORS_QUERY_KEY, walletId], (old) =>
+      }>([ReactQueryCacheKey.ListAuthenticators, walletId], (old) =>
         old ? { ...old, recoveryMethods: [...old.recoveryMethods, newRecoveryMethod] } : old,
       )
 
@@ -426,6 +424,7 @@ export function AddBackupLoginModal() {
             digitInput={confirmPasscodeInput}
             handleBack={handleBack}
             handleClose={handleClose}
+            inputsLocked={cryptoResult !== null}
             isEncrypting={isEncrypting}
             passcodeError={passcodeError}
             setShowPasscode={setShowPasscode}

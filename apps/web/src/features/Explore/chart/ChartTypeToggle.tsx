@@ -13,20 +13,27 @@ export function ChartTypeToggle({
   availableOptions: readonly ChartType[]
   currentChartType: ChartType
   onChartTypeChange: (c: ChartType) => void
-  disabledOption?: ChartType
+  disabledOption?: ChartType | ChartType[]
 }) {
   const { t } = useTranslation()
   const media = useMedia()
 
   const options: SegmentedControlOption<ChartType>[] = useMemo(() => {
-    const liquidityDisabled = disabledOption === ChartType.LIQUIDITY
-    const liquidityDisabledTooltip = (
+    const disabledOptions = Array.isArray(disabledOption) ? disabledOption : disabledOption ? [disabledOption] : []
+    const isDisabled = (type: ChartType) => disabledOptions.includes(type)
+    const disabledTooltip = (
       <MouseoverTooltip
         text={t('chart.settings.unavailable.label')}
         placement="bottom"
         style={{ alignContent: 'center', width: '33.33%' }}
       />
     )
+    const withDisabled = (type: ChartType, displayText: string): SegmentedControlOption<ChartType> => ({
+      value: type,
+      displayText,
+      disabled: isDisabled(type),
+      wrapper: isDisabled(type) ? disabledTooltip : undefined,
+    })
     return [
       {
         value: ChartType.PRICE,
@@ -40,16 +47,8 @@ export function ChartTypeToggle({
         value: ChartType.TVL,
         displayText: t('common.totalValueLocked'),
       },
-      {
-        value: ChartType.LIQUIDITY,
-        displayText: t('common.liquidity'),
-        disabled: liquidityDisabled,
-        wrapper: liquidityDisabled ? liquidityDisabledTooltip : undefined,
-      },
-      {
-        value: ChartType.DEPTH,
-        displayText: t('chart.type.depth'),
-      },
+      withDisabled(ChartType.LIQUIDITY, t('common.liquidity')),
+      withDisabled(ChartType.DEPTH, t('chart.type.depth')),
     ].filter((option) => availableOptions.includes(option.value))
   }, [availableOptions, t, disabledOption])
 

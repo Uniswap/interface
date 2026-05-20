@@ -5,7 +5,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import {
   OnChainTransactionFields,
-  OnChainTransactionFieldsBatched,
+  OnChainTransactionFieldsWalletCall,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -23,8 +23,8 @@ export interface MigratePositionTransactionStepAsync {
   getTxRequest(signature: string): Promise<{ txRequest: ValidatedTransactionRequest | undefined }>
 }
 
-export interface MigratePositionTransactionStepBatched extends OnChainTransactionFieldsBatched {
-  type: TransactionStepType.MigratePositionTransactionBatched
+export interface MigratePositionTransactionStepWalletCall extends OnChainTransactionFieldsWalletCall {
+  type: TransactionStepType.MigratePositionTransactionWalletCall
 }
 
 export function createMigratePositionStep(txRequest: ValidatedTransactionRequest): MigratePositionTransactionStep {
@@ -77,11 +77,11 @@ export function createMigratePositionAsyncStep(
   }
 }
 
-export function createMigratePositionStepBatched(
+export function createMigratePositionStepWalletCall(
   txRequests: ValidatedTransactionRequest[],
-): MigratePositionTransactionStepBatched {
+): MigratePositionTransactionStepWalletCall {
   return {
-    type: TransactionStepType.MigratePositionTransactionBatched,
-    batchedTxRequests: txRequests,
+    type: TransactionStepType.MigratePositionTransactionWalletCall,
+    walletCallTxRequests: txRequests,
   }
 }

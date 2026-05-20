@@ -25,11 +25,13 @@ import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
 const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]
 
-const MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 250
+// Native FlatList performance degrades with large lists; callers that don't have this constraint
+// (e.g. web) can pass a higher maxItems value
+const MOBILE_MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 250
 
-function hasReachedLimit(transactions: TransactionDetails[] | undefined): boolean {
+function hasReachedLimit(transactions: TransactionDetails[] | undefined, maxItems: number): boolean {
   const currentTransactionCount = transactions?.length ?? 0
-  return currentTransactionCount >= MAX_ACTIVITY_ITEMS
+  return currentTransactionCount >= maxItems
 }
 
 // Contract for returning Transaction data
@@ -49,6 +51,7 @@ interface UseFormattedTransactionDataOptions {
   chainIds?: UniverseChainId[]
   filterTransactionTypes?: TransactionTypeFilter[]
   searchText?: string
+  maxItems?: number
 }
 
 type FormattedTransactionInputs = UseFormattedTransactionDataOptions &
@@ -82,6 +85,7 @@ export function useFormattedTransactionDataForActivity({
   chainIds,
   filterTransactionTypes,
   searchText,
+  maxItems = MOBILE_MAX_ACTIVITY_ITEMS,
   showLoadingOnRefetch = false,
   ...queryOptions
 }: FormattedTransactionInputs): FormattedTransactionDataResult {
@@ -202,7 +206,7 @@ export function useFormattedTransactionDataForActivity({
     isFetching,
     keyExtractor,
     fetchNextPage,
-    hasNextPage: hasNextPage && !hasReachedLimit(transactions),
+    hasNextPage: hasNextPage && !hasReachedLimit(transactions, maxItems),
     isFetchingNextPage,
     dataUpdatedAt,
   }

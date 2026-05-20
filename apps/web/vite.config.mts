@@ -143,7 +143,7 @@ function getNextDevVersion(): string {
   }
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, isPreview }) => {
   let env = loadEnv(mode, __dirname, '')
 
   // Load root .env.defaults.local as a base layer (app-level env files take precedence)
@@ -444,7 +444,12 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      DEPLOY_TARGET === 'cloudflare' || mode === 'development'
+      // Skip the Cloudflare plugin during `vite preview` — preview only serves
+      // static assets, doesn't need worker bindings, and the plugin's
+      // getWorkerConfigs enumerates every env in wrangler-vite-worker.jsonc and
+      // chokes when one env's build dir is missing (e.g. after switching between
+      // build:production and build:staging). See INFRA-1874.
+      (DEPLOY_TARGET === 'cloudflare' || mode === 'development') && !isPreview
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
             // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
@@ -464,7 +469,7 @@ export default defineConfig(({ mode }) => {
       include: [
         'graphql',
         'expo-linear-gradient',
-        'expo-modules-core',
+        'invariant',
         'react-native-web',
         'react-native-gesture-handler',
         'tamagui',
@@ -488,6 +493,7 @@ export default defineConfig(({ mode }) => {
         '@connectrpc/connect',
         '@uniswap/client-liquidity',
         '@uniswap/client-privy-embedded-wallet',
+        'expo-modules-core',
       ],
       esbuildOptions: {
         resolveExtensions: [

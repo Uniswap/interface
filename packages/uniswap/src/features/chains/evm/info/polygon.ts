@@ -43,7 +43,6 @@ export const POLYGON_CHAIN_INFO = {
   explorer: {
     name: 'PolygonScan',
     url: 'https://polygonscan.com/',
-    apiURL: 'https://api.polygonscan.com',
   },
   openseaName: 'matic',
   interfaceName: 'polygon',

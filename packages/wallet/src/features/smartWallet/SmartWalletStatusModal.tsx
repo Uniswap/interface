@@ -75,15 +75,17 @@ export function SmartWalletStatusModal({
         maxHeight="100%"
         {...(isWebPlatform && { flex: 1, overflowY: 'hidden' })}
       >
-        <TouchableArea
-          position="absolute"
-          top="$spacing2"
-          right="$spacing2"
-          zIndex={zIndexes.default}
-          onPress={onClose}
-        >
-          <X size="$icon.16" color="$neutral2" />
-        </TouchableArea>
+        {!isMobileApp && (
+          <TouchableArea
+            position="absolute"
+            top="$spacing2"
+            right="$spacing2"
+            zIndex={zIndexes.default}
+            onPress={onClose}
+          >
+            <X size="$icon.16" color="$neutral2" />
+          </TouchableArea>
+        )}
         <Flex row alignItems="center" gap="$spacing12">
           <AccountIcon address={walletAddress} size={iconSizes.icon40} />
           <Flex>

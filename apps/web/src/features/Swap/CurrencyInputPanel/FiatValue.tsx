@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -17,6 +17,7 @@ export function FiatValue({
   priceImpact?: Percent
   testId?: string
 }) {
+  const { t } = useTranslation()
   const { formatPercent, convertFiatAmountFormatted } = useLocalizationContext()
 
   const priceImpactColor = useMemo(() => {
@@ -46,12 +47,12 @@ export function FiatValue({
         {fiatValue.data ? (
           convertFiatAmountFormatted(fiatValue.data, NumberType.FiatTokenPrice)
         ) : (
-          <MouseoverTooltip text={<Trans i18nKey="liquidity.notEnough.label" />}>-</MouseoverTooltip>
+          <MouseoverTooltip text={t('liquidity.notEnough.label')}>-</MouseoverTooltip>
         )}
       </Text>
       {priceImpact && (
         <Text variant="body3" color={priceImpactColor}>
-          <MouseoverTooltip placement="right" text={<Trans i18nKey="swap.estimatedDifference.label" />}>
+          <MouseoverTooltip placement="right" text={t('swap.estimatedDifference.label')}>
             ({formatPercent(priceImpact.multiply(-1).toSignificant())})
           </MouseoverTooltip>
         </Text>

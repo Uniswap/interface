@@ -1,7 +1,6 @@
 // TODO: migrate consumers to import from @universe/chains directly
 export {
   buildFlashbotsUrl,
-  waitForFlashbotsProtectReceipt,
   FLASHBOTS_RPC_URL,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
   FLASHBOTS_SIGNATURE_HEADER,

@@ -19,6 +19,42 @@ type RawBar = { tick: number; liquidity: number; price0: string; amount0Locked: 
 
 export const STEP_WIDTH = 1000
 
+// Find the closest depth point on the mirror side at the same % deviation from mid price.
+export function getMirrorPoint({
+  point,
+  midPrice,
+  isReversed,
+  otherSideData,
+}: {
+  point: DepthPoint
+  midPrice: number
+  isReversed: boolean
+  otherSideData: DepthPoint[]
+}): DepthPoint | undefined {
+  if (!midPrice || otherSideData.length === 0) {
+    return undefined
+  }
+  const displayPrice = toDisplayPrice(point.price, isReversed)
+  const displayMid = toDisplayPrice(midPrice, isReversed)
+  if (!displayMid) {
+    return undefined
+  }
+  const pctDev = Math.abs((displayPrice - displayMid) / displayMid)
+
+  let closest: DepthPoint | undefined
+  let closestDiff = Infinity
+  for (const p of otherSideData) {
+    const pDisplay = toDisplayPrice(p.price, isReversed)
+    const pPct = Math.abs((pDisplay - displayMid) / displayMid)
+    const diff = Math.abs(pPct - pctDev)
+    if (diff < closestDiff) {
+      closestDiff = diff
+      closest = p
+    }
+  }
+  return closest
+}
+
 // `DepthPoint.price` is always price0 (token1 per token0). Reversed view shows price1, so invert.
 export function toDisplayPrice(price0: number, isReversed: boolean): number {
   if (!isReversed) {
@@ -48,7 +84,7 @@ export function getDisplayPair<T>({ tokenA, tokenB, isReversed }: { tokenA: T; t
 }
 
 // price0 at tick T, in token1 units per token0 unit, accounting for decimals.
-function priceFromTick({
+export function priceFromTick({
   tick,
   token0Decimals,
   token1Decimals,

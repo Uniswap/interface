@@ -1,8 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { SharedQueryClient } from '@universe/api'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { LiquidityAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
-import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { currencyId, currencyIdToAddress, getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function getLPBaseAnalyticsProperties({
@@ -18,6 +20,7 @@ export function getLPBaseAnalyticsProperties({
   currency1AmountUsd,
   version,
   poolId,
+  isCentralizedPricesEnabled,
 }: {
   trace: ITraceContext
   fee?: number | string // denominated in hundredths of bips
@@ -31,6 +34,7 @@ export function getLPBaseAnalyticsProperties({
   currency1AmountUsd: Maybe<CurrencyAmount<Currency>>
   version: ProtocolVersion
   poolId?: string
+  isCentralizedPricesEnabled: boolean
 }): Omit<LiquidityAnalyticsProperties, 'transaction_hash'> {
   return {
     ...trace,
@@ -50,5 +54,12 @@ export function getLPBaseAnalyticsProperties({
     token1AmountUSD: currency1AmountUsd ? parseFloat(currency1AmountUsd.toExact()) : undefined,
     currencyInfo0Decimals: currency0.decimals,
     currencyInfo1Decimals: currency1.decimals,
+    price_source: getDisplayedPriceSource({
+      isCentralizedPricesEnabled,
+      surface: 'usdc',
+      chainId: currency0.chainId,
+      address: getCurrencyAddressForAnalytics(currency0),
+      queryClient: SharedQueryClient,
+    }),
   }
 }

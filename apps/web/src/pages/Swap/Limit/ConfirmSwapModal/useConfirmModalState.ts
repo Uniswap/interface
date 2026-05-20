@@ -1,4 +1,4 @@
-import { Currency, Percent } from '@uniswap/sdk-core'
+import type { Currency } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -12,24 +12,14 @@ import { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
 import { usePrevious } from '~/hooks/usePrevious'
 import { useSelectChain } from '~/hooks/useSelectChain'
 import { useNativeCurrency } from '~/lib/hooks/useNativeCurrency'
-import { getPriceUpdateBasisPoints } from '~/lib/utils/analytics'
 import { PendingModalError } from '~/pages/Swap/Limit/ConfirmSwapModal/Error'
+import type { ProgressIndicatorStep } from '~/pages/Swap/Limit/ConfirmSwapModal/ProgressIndicator/ProgressIndicator'
 import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { InterfaceTrade } from '~/state/routing/types'
 import { isLimitTrade } from '~/state/routing/utils'
 import { useIsTransactionConfirmed } from '~/state/transactions/hooks'
 import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
-import { tradeMeaningfullyDiffers } from '~/utils/tradeMeaningFullyDiffer'
-
-type PendingConfirmModalState = Extract<
-  ConfirmModalState,
-  | ConfirmModalState.APPROVING_TOKEN
-  | ConfirmModalState.PERMITTING
-  | ConfirmModalState.PENDING_CONFIRMATION
-  | ConfirmModalState.WRAPPING
-  | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
->
 
 function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   return (
@@ -39,17 +29,14 @@ function isInApprovalPhase(confirmModalState: ConfirmModalState) {
   )
 }
 
+/** Modal flow for submitting a limit order (wrap / allowance / permit / sign). */
 export function useConfirmModalState({
   trade,
-  originalTrade,
-  allowedSlippage,
   onSwap,
   allowance,
   onCurrencySelection,
 }: {
   trade: InterfaceTrade
-  originalTrade?: InterfaceTrade
-  allowedSlippage: Percent
   onSwap: () => void
   allowance: Allowance
   // oxlint-disable-next-line max-params -- biome-parity: oxlint is stricter here
@@ -57,7 +44,7 @@ export function useConfirmModalState({
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
-  const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
+  const [pendingModalSteps, setPendingModalSteps] = useState<ProgressIndicatorStep[]>([])
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const account = useAccount()
@@ -67,8 +54,8 @@ export function useConfirmModalState({
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
   // at the bottom of the modal, even after they complete steps 1 and 2.
   const generateRequiredSteps = useCallback(() => {
-    const steps: PendingConfirmModalState[] = []
-    // Limit orders still require wrapping ETH to WETH (unlike regular UniswapX swaps which now support native ETH)
+    const steps: ProgressIndicatorStep[] = []
+    // Limit orders require wrapping ETH to WETH (UniswapX limits do not use native ETH input).
     if (isLimitTrade(trade) && trade.wrapInfo.needsWrap) {
       steps.push(ConfirmModalState.WRAPPING)
     }
@@ -212,25 +199,13 @@ export function useConfirmModalState({
     }
   }, [allowance, performStep, previousRevocationPending])
 
-  const doesTradeDiffer =
-    originalTrade &&
-    tradeMeaningfullyDiffers({
-      currentTrade: trade,
-      newTrade: originalTrade,
-      slippage: allowedSlippage,
-    })
   useEffect(() => {
     // Automatically triggers the next phase if the local modal state still thinks we're in the approval phase,
-    // but the allowance has been set. This will automaticaly trigger the swap.
+    // but the allowance has been set. This will automatically trigger order submission.
     if (isInApprovalPhase(confirmModalState) && allowance.state === AllowanceState.ALLOWED) {
-      // Caveat: prevents swap if trade has updated mid approval flow.
-      if (doesTradeDiffer) {
-        setConfirmModalState(ConfirmModalState.REVIEWING)
-        return
-      }
       performStep(ConfirmModalState.PENDING_CONFIRMATION)
     }
-  }, [allowance, confirmModalState, doesTradeDiffer, performStep])
+  }, [allowance, confirmModalState, performStep])
 
   const resetToReviewScreen = () => {
     setConfirmModalState(ConfirmModalState.REVIEWING)
@@ -241,24 +216,13 @@ export function useConfirmModalState({
     setApprovalError(undefined)
   }
 
-  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
-  const [priceUpdate, setPriceUpdate] = useState<number>()
-  useEffect(() => {
-    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
-      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
-      setLastExecutionPrice(trade.executionPrice)
-    }
-  }, [lastExecutionPrice, trade])
-
   return {
     startSwapFlow,
     resetToReviewScreen,
     onCancel,
     confirmModalState,
-    doesTradeDiffer,
     approvalError,
     pendingModalSteps,
-    priceUpdate,
     wrapTxHash,
   }
 }

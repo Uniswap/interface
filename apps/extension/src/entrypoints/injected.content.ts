@@ -1,5 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
+import { hexToNumber, HexString } from '@universe/encoding'
 import { dappStore } from 'src/app/features/dapp/store'
 import { getOrderedConnectedAddresses } from 'src/app/features/dapp/utils'
 import { isArcBrowser } from 'src/app/utils/chrome'
@@ -43,7 +44,6 @@ import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -257,7 +257,7 @@ function makeInjected(): void {
       const provider = getProvider()
 
       if (chainId && !provider) {
-        const chainIdNum = parseInt(chainId, 16)
+        const chainIdNum = hexToNumber(chainId)
         const defaultProvider = walletContextValue.providers.getProvider(chainIdNum)
         setProvider(defaultProvider)
       }

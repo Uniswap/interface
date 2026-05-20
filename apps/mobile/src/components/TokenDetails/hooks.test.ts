@@ -214,6 +214,18 @@ describe(useTokenDetailsNavigation, () => {
     expect(mockedNavigation.navigate).toHaveBeenCalledTimes(1)
     expect(mockedNavigation.navigate).toHaveBeenNthCalledWith(1, MobileScreens.TokenDetails, {
       currencyId: SAMPLE_CURRENCY_ID_1,
+      isMultichainAsset: undefined,
+    })
+  })
+
+  it('forwards the isMultichainAsset hint to the navigation params when provided', async () => {
+    const { result } = renderHook(() => useTokenDetailsNavigation())
+
+    await act(() => result.current.navigate(SAMPLE_CURRENCY_ID_1, { isMultichainAsset: true }))
+
+    expect(mockedNavigation.navigate).toHaveBeenNthCalledWith(1, MobileScreens.TokenDetails, {
+      currencyId: SAMPLE_CURRENCY_ID_1,
+      isMultichainAsset: true,
     })
   })
 
@@ -228,6 +240,7 @@ describe(useTokenDetailsNavigation, () => {
       expect(mockedNavigation.push).toHaveBeenCalledTimes(1)
       expect(mockedNavigation.push).toHaveBeenNthCalledWith(1, MobileScreens.TokenDetails, {
         currencyId: SAMPLE_CURRENCY_ID_1,
+        isMultichainAsset: undefined,
       })
     })
 
@@ -241,6 +254,7 @@ describe(useTokenDetailsNavigation, () => {
       expect(mockedNavigation.push).toHaveBeenCalledTimes(1)
       expect(mockedNavigation.push).toHaveBeenNthCalledWith(1, MobileScreens.TokenDetails, {
         currencyId: SAMPLE_CURRENCY_ID_1,
+        isMultichainAsset: undefined,
       })
     })
   })

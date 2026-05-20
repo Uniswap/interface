@@ -1,7 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
+import { HexString } from '@universe/encoding'
 import { useEffect, useMemo } from 'react'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_HOUR_MS } from 'utilities/src/time/time'

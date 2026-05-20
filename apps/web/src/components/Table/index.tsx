@@ -207,6 +207,7 @@ export function Table<T extends RowData>({
   showHiddenRowsLabel,
   hideHiddenRowsLabel,
   showScrollbar,
+  virtualized = false,
 }: TableProps<T>) {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -340,6 +341,7 @@ export function Table<T extends RowData>({
             compactRowHeight={compactRowHeight}
             subRowHeight={subRowHeight}
             hasPinnedColumns={hasPinnedColumns}
+            virtualized={virtualized}
             // @ts-ignore
             table={table}
             ref={tableBodyRef}

@@ -230,12 +230,12 @@ function StatsigProvider({ children }: PropsWithChildren) {
 }
 
 function MaybePrivyProvider({ children }: { children: ReactNode }) {
-  const { appId } = getPrivyConfig(false)
-  if (!appId) {
+  const { appId, clientId } = getPrivyConfig(false)
+  if (!appId || !clientId) {
     return <>{children}</>
   }
   return (
-    <PrivyProvider appId={appId} config={{ loginMethods: ['email', 'google', 'apple'] }}>
+    <PrivyProvider appId={appId} clientId={clientId} config={{ loginMethods: ['email', 'google', 'apple'] }}>
       {children}
     </PrivyProvider>
   )

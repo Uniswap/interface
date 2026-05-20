@@ -23,6 +23,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useIsShowingWebFORNudge } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { EmptyWalletCards } from '~/components/emptyWallet/EmptyWalletCards'
+import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { ExternalLink } from '~/theme/components/Links'
@@ -40,6 +41,8 @@ export function SwapBottomCard() {
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)
   const shouldShowWebFORNudge = useIsShowingWebFORNudge() && isSwapPage
+
+  const isEmbeddedWallet = useIsEmbeddedWallet()
 
   const hideCard = !isSupportedChain || !(isSwapPage || isSendPage || shouldShowWebFORNudge)
 
@@ -61,12 +64,12 @@ export function SwapBottomCard() {
       )
     }
 
-    if (!isBridgingSupportedChain) {
+    if (!isBridgingSupportedChain && !isEmbeddedWallet) {
       return <MaybeExternalBridgeCard chainId={chainId} />
     } else {
       return null
     }
-  }, [chainId, hideCard, isBridgingSupportedChain, shouldShowWebFORNudge])
+  }, [chainId, hideCard, isBridgingSupportedChain, isEmbeddedWallet, shouldShowWebFORNudge])
 
   return <>{card}</>
 }

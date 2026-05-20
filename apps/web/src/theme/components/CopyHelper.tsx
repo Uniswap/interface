@@ -1,5 +1,5 @@
 import { forwardRef, PropsWithChildren, ReactNode, useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { AnimatableCopyIcon, ColorTokens, Flex, isTouchable, Text, TextProps } from 'ui/src'
 import { ReactComponent as TooltipTriangle } from '~/assets/svg/tooltip_triangle.svg'
 import { useCopyClipboard } from '~/hooks/useCopyClipboard'
@@ -8,12 +8,13 @@ import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/
 const TOOLTIP_WIDTH = 60
 
 function Tooltip() {
+  const { t } = useTranslation()
   return (
     <Flex
       alignItems="center"
       position="absolute"
       top="100%"
-      marginTop="$spacing8"
+      mt="$spacing8"
       zIndex="$tooltip"
       animation="quick"
       enterStyle={{ opacity: 0, y: -5 }}
@@ -31,7 +32,7 @@ function Tooltip() {
         height="32px"
         lineHeight="32px"
       >
-        <Trans i18nKey="common.copied" />
+        {t('common.copied')}
       </Text>
     </Flex>
   )
@@ -102,6 +103,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
     }: CopyHelperProps,
     ref,
   ) => {
+    const { t } = useTranslation()
     const [isCopied, setCopied] = useCopyClipboard(1000)
 
     const copy = useCallback(
@@ -160,7 +162,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
         <Flex ref={textRef} maxWidth={`calc(100% - ${offset + 'px'})`} {...EllipsisTamaguiStyle}>
           {isCopied && iconPosition === 'left' ? (
             <Text variant="body3" color="neutral3" {...textProps}>
-              <Trans i18nKey="common.copied" />
+              {t('common.copied')}
             </Text>
           ) : (
             children

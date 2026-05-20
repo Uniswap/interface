@@ -1214,15 +1214,6 @@ export default defineConfig({
       },
     },
 
-    // ── packages/docker-image-builder ─────────────────────────────────
-    {
-      files: ['packages/docker-image-builder/**'],
-      rules: {
-        'no-console': 'off',
-        'max-params': 'off',
-      },
-    },
-
     // ── packages/prices ───────────────────────────────────────────────
     {
       files: ['packages/prices/**'],

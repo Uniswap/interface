@@ -159,7 +159,8 @@ function ChartLoadingStateMask({
         </>
       )
     default:
-      return null
+      // No animated shape for this type — define an empty mask so the background rect stays hidden.
+      return <mask id={id} style={{ maskType: 'alpha' }} />
   }
 }
 

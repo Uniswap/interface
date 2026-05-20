@@ -1,8 +1,9 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { Button, Flex, Main, styled } from 'ui/src'
@@ -77,6 +78,7 @@ function MigrateInner({
 }) {
   const { pairAddress } = useParams<{ tokenId: string; chainName: string; pairAddress: string }>()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const { t } = useTranslation()
 
   const { setStep, setCurrentTransactionStep } = useCreateLiquidityContext()
@@ -167,6 +169,7 @@ function MigrateInner({
             currency1AmountUsd: currency1FiatAmount,
             poolId: positionInfo.poolId,
             version: ProtocolVersion.V3,
+            isCentralizedPricesEnabled,
           }),
           action: 'V3->V4',
         },
@@ -189,6 +192,7 @@ function MigrateInner({
     currency0Amount.currency,
     currency1Amount.currency,
     overrideBatchedTransactions,
+    isCentralizedPricesEnabled,
   ])
 
   const priceRangeProps = useMemo(() => {
@@ -274,6 +278,7 @@ function Toolbar({
   currency1Amount: CurrencyAmount<Currency>
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 }) {
+  const { t } = useTranslation()
   const { positionState, priceRangeState, setPositionState, setStep, setPriceRangeState, setDepositState } =
     useCreateLiquidityContext()
   const { fee, hook, protocolVersion: finalProtocolVersion } = positionState
@@ -321,7 +326,7 @@ function Toolbar({
           setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
         }}
       >
-        <Trans i18nKey="common.button.reset" />
+        {t('common.button.reset')}
       </Button>
     </Flex>
   )

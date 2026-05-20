@@ -2,12 +2,7 @@
 
 exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -64,7 +59,7 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-hvigdm eQXltD"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -108,12 +103,7 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 
 exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swap 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -189,7 +179,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-hvigdm eQXltD"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -233,12 +223,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
 
 exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 swap 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -314,7 +299,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-hvigdm eQXltD"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -358,12 +343,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
 
 exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -420,7 +400,7 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-hvigdm eQXltD"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -464,12 +444,7 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 
 exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
@@ -526,7 +501,7 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
               data-disable-theme="true"
             >
               <div
-                class="c0"
+                class="sc-hvigdm eQXltD"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"

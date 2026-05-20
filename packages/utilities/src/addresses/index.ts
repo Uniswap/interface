@@ -1,6 +1,6 @@
 import { getAddress } from '@ethersproject/address'
+import { HexString } from '@universe/encoding'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { HexString } from 'utilities/src/addresses/hex'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 import { logger } from 'utilities/src/logger/logger'
 

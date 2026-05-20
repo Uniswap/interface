@@ -53,7 +53,7 @@ export function useRecoveryPrivyAuth(): RecoveryPrivyAuth {
   // Privy Expo drives OAuth via an in-app browser and updates `user` when it completes.
   // We infer OAuth return by checking for a linked provider account. The shared flow
   // hook's `pending` semantics don't apply to mobile (no full-page reload), so we always
-  // report `pending: false`.
+  // report `pending: false`. `useRecoveryFlow` gates the advance on local `oauthProvider`.
   //
   // Only one provider is linked per recovery session because `ensureLoggedOut()` runs
   // before each `initOAuth()` call, so the google/apple ordering below is just a

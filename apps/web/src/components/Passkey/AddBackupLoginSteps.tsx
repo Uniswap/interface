@@ -22,6 +22,7 @@ import {
   OptionRow,
   StepHeader,
 } from '~/components/Passkey/BackupLoginComponents'
+import { PrivyWatermark } from '~/components/Passkey/PrivyWatermark'
 
 export function MethodSelectStep({
   handleClose,
@@ -84,6 +85,7 @@ export function MethodSelectStep({
           disabled={oauthLoading && oauthProvider !== null}
         />
       </Flex>
+      <PrivyWatermark />
     </Trace>
   )
 }
@@ -297,6 +299,7 @@ export function PasscodeStep({
   digitInput,
   handleBack,
   handleClose,
+  inputsLocked = false,
   isEncrypting,
   passcodeError,
   setShowPasscode,
@@ -309,6 +312,8 @@ export function PasscodeStep({
   digitInput: DigitInputState
   handleBack: () => void
   handleClose: () => void
+  // Prevent digit edits after encryption succeeds while the WebAuthn prompt is pending.
+  inputsLocked?: boolean
   isEncrypting: boolean
   passcodeError: string | undefined
   setShowPasscode: Dispatch<SetStateAction<boolean>>
@@ -316,6 +321,7 @@ export function PasscodeStep({
   t: TFunction
   title: string
 }) {
+  const inputsDisabled = isEncrypting || inputsLocked
   return (
     <Trace logImpression modal={ModalName.AddBackupLogin}>
       <StepHeader onBack={handleBack} onClose={handleClose} />
@@ -341,7 +347,7 @@ export function PasscodeStep({
           onPaste={digitInput.handlePaste}
           inputType={showPasscode ? 'text' : 'password'}
           autoFocus
-          disabled={isEncrypting}
+          disabled={inputsDisabled}
         />
         {passcodeError && (
           <Text variant="body3" color="$statusCritical" textAlign="center">
@@ -357,7 +363,7 @@ export function PasscodeStep({
           </Flex>
         )}
         <Flex alignItems="center">
-          <TouchableArea variant="unstyled" onPress={() => setShowPasscode(!showPasscode)} disabled={isEncrypting}>
+          <TouchableArea variant="unstyled" onPress={() => setShowPasscode(!showPasscode)} disabled={inputsDisabled}>
             <Flex row gap="$gap4" alignItems="center">
               {showPasscode ? <EyeOff size="$icon.16" color="$neutral2" /> : <Eye size="$icon.16" color="$neutral2" />}
               <Text variant="buttonLabel3" color="$neutral2">

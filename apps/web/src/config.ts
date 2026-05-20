@@ -185,8 +185,12 @@ export const getConfig = (): Config => {
 export function getPrivyConfig(isRequired = true): { appId: string; clientId: string } {
   const { privyAppId, privyClientId } = getConfig()
   // Web requires only appId to function
-  if (isRequired && !privyAppId) {
-    throw new Error('Privy is not configured: PRIVY_APP_ID must be set')
+  if (isRequired && (!privyAppId || !privyClientId)) {
+    throw new Error('Privy is not configured: PRIVY_APP_ID and PRIVY_CLIENT_ID must be set')
   }
   return { appId: privyAppId ?? '', clientId: privyClientId ?? '' }
+}
+
+export function getPrivyAppId(): string | undefined {
+  return getPrivyConfig(false).appId || undefined
 }

@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react'
-import { useDigitInput } from 'uniswap/src/components/passkey/recovery/useDigitInput'
+import { type FocusableRef, useDigitInput } from 'uniswap/src/components/passkey/recovery/useDigitInput'
 import { describe, expect, it, vi } from 'vitest'
 
-type FakeRef = { focus: () => void }
+type FakeRef = { focus: ReturnType<typeof vi.fn>; blur: ReturnType<typeof vi.fn> }
 
-function attachRefs(refs: React.MutableRefObject<(FakeRef | null)[]>, length: number): FakeRef[] {
-  const fakes = Array.from({ length }, () => ({ focus: vi.fn() }))
+function attachRefs(refs: React.MutableRefObject<(FocusableRef | null)[]>, length: number): FakeRef[] {
+  const fakes: FakeRef[] = Array.from({ length }, () => ({ focus: vi.fn(), blur: vi.fn() }))
   for (let i = 0; i < length; i++) {
     refs.current[i] = fakes[i] ?? null
   }
@@ -95,5 +95,37 @@ describe('useDigitInput', () => {
     act(() => result.current.reset())
     expect(result.current.digits).toEqual(['', '', '', ''])
     expect(refs[0]?.focus).toHaveBeenCalled()
+  })
+
+  it('blurs the just-typed cell on completion', () => {
+    const { result } = renderHook(() => useDigitInput({ length: 4, onComplete: vi.fn() }))
+    const refs = attachRefs(result.current.refs, 4)
+
+    act(() => result.current.handleChange(0, '1'))
+    act(() => result.current.handleChange(1, '2'))
+    act(() => result.current.handleChange(2, '3'))
+    expect(refs[2]?.blur).not.toHaveBeenCalled()
+
+    act(() => result.current.handleChange(3, '4'))
+    expect(refs[3]?.blur).toHaveBeenCalledTimes(1)
+  })
+
+  it('reset focuses first cell via an effect, not synchronously', () => {
+    // Focus runs in a useEffect so it fires AFTER React flushes — important
+    // because the consumer (e.g., useRecoveryFlow) toggles a `disabled` flag
+    // in a finally block; focusing while disabled is a browser no-op. Guards
+    // against a regression to synchronous focus().
+    const { result } = renderHook(() => useDigitInput({ length: 4 }))
+    const refs = attachRefs(result.current.refs, 4)
+    let syncCallCount = -1
+
+    act(() => {
+      result.current.reset()
+      // Snapshot focus call count BEFORE the act() callback returns / effects flush.
+      syncCallCount = refs[0]?.focus.mock.calls.length ?? -1
+    })
+
+    expect(syncCallCount).toBe(0)
+    expect(refs[0]?.focus).toHaveBeenCalledTimes(1)
   })
 })

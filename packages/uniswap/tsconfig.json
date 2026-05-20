@@ -24,13 +24,16 @@
       "path": "../encoding"
     },
     {
+      "path": "../cryptography"
+    },
+    {
       "path": "../config"
     },
     {
-      "path": "../api"
+      "path": "../chains"
     },
     {
-      "path": "../chains"
+      "path": "../api"
     },
     {
       "path": "../../config/vitest-presets"

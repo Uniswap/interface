@@ -126,7 +126,7 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
           />
         )}
         {flow.step === RecoveryStep.OAuthLoading && (
-          <OAuthLoadingStep oauthError={oauthError} handleClose={() => navigation.goBack()} />
+          <OAuthLoadingStep oauthError={oauthError} headerActions={null} handleClose={() => navigation.goBack()} />
         )}
         {flow.step === RecoveryStep.EmailEntry && (
           <EmailEntryStep
@@ -137,6 +137,7 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
             isReady={flow.isReady}
             errorMessage={flow.errorMessage}
             sendCodeMutation={flow.sendCodeMutation}
+            headerActions={null}
             handleBack={() => navigation.goBack()}
             handleClose={() => navigation.goBack()}
             t={t}
@@ -150,6 +151,7 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
             resendCodeMutation={flow.resendCodeMutation}
             errorMessage={flow.errorMessage}
             isReady={flow.isReady}
+            headerActions={null}
             handleBack={flow.handleBack}
             handleClose={() => navigation.goBack()}
             t={t}
@@ -164,6 +166,7 @@ export function RecoveryFlowScreen({ navigation, route: { params } }: Props): JS
             pinError={flow.pinError}
             cooldown={flow.cooldown}
             isDecrypting={flow.isDecrypting}
+            headerActions={null}
             handleBack={flow.handleBack}
             handleClose={() => navigation.goBack()}
             t={t}

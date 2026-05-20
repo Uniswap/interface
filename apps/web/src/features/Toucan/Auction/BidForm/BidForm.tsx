@@ -1,6 +1,7 @@
 //! tamagui-ignore
 // tamagui-ignore
 import { KycVerificationStatus } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, useColorsFromTokenColor } from 'ui/src'
@@ -13,7 +14,7 @@ import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarn
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { zeroAddress } from 'viem'
+import { zeroAddress } from '~/chains'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { getAuctionBidInputtedAnalyticsProperties } from '~/features/Toucan/Auction/analytics'
@@ -57,6 +58,7 @@ interface BidFormProps {
 export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.Element {
   const { t } = useTranslation()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const chainId = useAuctionStore((state) => state.auctionDetails?.chainId)
   const auctionContractAddress = useAuctionStore((state) => state.auctionAddress)
   const currency = useAuctionStore((state) => state.auctionDetails?.currency)
@@ -184,6 +186,7 @@ export function BidForm({ onInputChange, onBidSubmitted }: BidFormProps): JSX.El
           minExpectedReceiveAmount,
           maxReceivableAmount,
           tokenSymbol: auctionTokenSymbol,
+          isCentralizedPricesEnabled,
         }),
       )
     }

@@ -48,7 +48,6 @@ export const OPTIMISM_CHAIN_INFO = {
   explorer: {
     name: 'OP Etherscan',
     url: 'https://optimistic.etherscan.io/',
-    apiURL: 'https://api-optimistic.etherscan.io',
   },
   openseaName: 'optimism',
   interfaceName: 'optimism',

@@ -10,6 +10,9 @@
   },
   "references": [
     {
+      "path": "../encoding"
+    },
+    {
       "path": "../utilities"
     },
     {

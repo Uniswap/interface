@@ -1,9 +1,9 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
+import { ensure0xHex } from '@universe/encoding'
 import { useMemo } from 'react'
 import { useProvider } from 'uniswap/src/contexts/UniswapContext'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isDelegatedEOA } from 'uniswap/src/features/smartWallet/delegation/isDelegatedEOA'
-import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 

@@ -1,10 +1,10 @@
 /* oxlint-disable no-console -- misc script, so it's okay */
 /* oxlint-disable typescript/no-explicit-any -- misc script, so it's okay */
 
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path, { join } from 'node:path'
 import camelcase from 'camelcase'
 import { load } from 'cheerio'
-import { ensureDirSync, existsSync, readdirSync, readFileSync, writeFileSync } from 'fs-extra'
 // oxlint-disable-next-line typescript/ban-ts-comment
 // @ts-expect-error
 import uppercamelcase from 'uppercamelcase'
@@ -43,7 +43,7 @@ async function run(): Promise<void> {
 
 async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): Promise<void> {
   // Ensure output directory exists
-  ensureDirSync(dirs.output)
+  mkdirSync(dirs.output, { recursive: true })
 
   let indexFile = ``
   const fileNames = readdirSync(dirs.input)

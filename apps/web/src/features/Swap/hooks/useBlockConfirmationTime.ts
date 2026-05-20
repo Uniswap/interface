@@ -1,9 +1,11 @@
-import { useWeb3React } from '@web3-react/core'
 import { useEffect, useState } from 'react'
+import { getInterfaceProvider } from '~/constants/providers'
+import { useAccount } from '~/hooks/useAccount'
 import { useBlockNumber } from '~/lib/hooks/useBlockNumber'
 
 export function useBlockConfirmationTime() {
-  const { provider } = useWeb3React()
+  const { chainId } = useAccount()
+  const provider = getInterfaceProvider(chainId)
   const currentBlockNumber = useBlockNumber()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)

@@ -1,3 +1,4 @@
+import { getPortfolio, listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest, type Page } from '~/playwright/fixtures'
 import { getVisibleDropdownElementByTestId } from '~/playwright/fixtures/utils'
@@ -36,7 +37,12 @@ test.describe(
   },
   () => {
     test.describe('Mini Portfolio settings', () => {
-      test.beforeEach(async ({ page }) => {
+      test.beforeEach(async ({ page, dataApi }) => {
+        // Mock DataApi so the account drawer doesn't layout-shift mid-hover when the
+        // activity/portfolio requests fail (the outage banner mounting breaks the Tooltip hover
+        // used by the disconnect flow). Same fix as WalletConnection.e2e.test.ts (#31710).
+        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions_empty)
+        await dataApi.intercept(getPortfolio, Mocks.DataApiService.get_portfolio_empty)
         await page.goto('/swap')
         await page.getByTestId(TestID.Web3StatusConnected).click()
         await getVisibleDropdownElementByTestId(page, TestID.WalletSettings).click()
@@ -76,15 +82,32 @@ test.describe(
         // trigger with no onPress and the actual disconnect row is `WalletDisconnectInModal`
         // inside the tooltip. When disabled, clicking `WalletDisconnect` fires onDisconnect directly.
         const disconnectButton = getVisibleDropdownElementByTestId(page, TestID.WalletDisconnect)
-        await disconnectButton.hover()
-        await disconnectButton.click() // triggers tooltip in the Solana-enabled case, disconnects otherwise
+        await disconnectButton.waitFor({ state: 'visible' })
         const disconnectInModal = page.getByTestId(TestID.WalletDisconnectInModal).first()
-        await Promise.race([
-          disconnectInModal.waitFor({ state: 'visible' }).then(() => disconnectInModal.click()),
-          page.getByTestId(TestID.NavConnectWalletButton).waitFor({ state: 'visible' }),
-        ])
+        const navConnectButton = page.getByTestId(TestID.NavConnectWalletButton)
+        // Hover opens the disconnect tooltip (Solana-enabled case). Retry the hover-then-check as a
+        // unit so a layout shift mid-hover (e.g. from a late portfolio/activity request) doesn't
+        // leave us with a closed tooltip. Same retry pattern as WalletConnection.e2e.test.ts (#31710).
+        // If the tooltip never opens, the Solana flag is off and clicking the trigger disconnects
+        // directly — fall back to that path.
+        let tooltipOpened = false
+        try {
+          await expect(async () => {
+            await disconnectButton.hover()
+            await expect(disconnectInModal).toBeVisible({ timeout: 2_000 })
+          }).toPass({ timeout: 6_000 })
+          tooltipOpened = true
+        } catch {
+          // Tooltip never opened — Solana flag is off; the trigger itself disconnects on click.
+        }
+        if (tooltipOpened) {
+          await disconnectInModal.click()
+        } else {
+          await disconnectButton.click()
+        }
+        await navConnectButton.waitFor({ state: 'visible' })
         // Open the nav menu and verify settings are not visible
-        await page.getByTestId(TestID.NavConnectWalletButton).click()
+        await navConnectButton.click()
         await expect(getVisibleDropdownElementByTestId(page, TestID.WalletSettings)).not.toBeVisible()
       })
 

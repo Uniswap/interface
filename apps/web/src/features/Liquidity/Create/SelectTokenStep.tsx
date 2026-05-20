@@ -38,9 +38,10 @@ import { ErrorCallout } from '~/components/ErrorCallout'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from '~/components/Tooltip'
+import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { AddHook } from '~/features/Liquidity/Create/AddHook'
 import { AdvancedButton } from '~/features/Liquidity/Create/AdvancedButton'
-import { CreatingPoolInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
+import { CreatingPoolInfo, PoolAlreadyCreatedInfo } from '~/features/Liquidity/Create/CreatingPoolInfo'
 import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
 import { PoolParsingError } from '~/features/Liquidity/Create/PoolParsingError'
 import { DEFAULT_POSITION_STATE } from '~/features/Liquidity/Create/types'
@@ -51,13 +52,16 @@ import { LpIncentivesAprDisplay } from '~/features/Liquidity/LPIncentives/LpInce
 import { getDefaultFeeTiersWithData, getFeeTierKey } from '~/features/Liquidity/utils/feeTiers'
 import { hasLPFoTTransferError } from '~/features/Liquidity/utils/hasLPFoTTransferError'
 import { isUnsupportedLPChain } from '~/features/Liquidity/utils/isUnsupportedLPChain'
+import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import { serializeSwapStateToURLParameters } from '~/features/Swap/state/swap/tradeQueryParams'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from '~/hooks/useNetworkSupportsV2'
+import { buildPoolSearchParams } from '~/pages/AddLiquidity/poolLinkParams'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 import { isV4UnsupportedChain } from '~/utils/networkSupportsV4'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 interface WrappedNativeWarning {
   wrappedToken: Currency
@@ -69,13 +73,18 @@ export const CurrencySelector = ({
   loading,
   currencyInfo,
   onPress,
+  placeholder,
+  emphasis = 'primary',
 }: {
   loading?: boolean
   currencyInfo: Maybe<CurrencyInfo>
   onPress: () => void
+  placeholder?: string
+  emphasis?: 'primary' | 'tertiary'
 }) => {
   const { t } = useTranslation()
   const currency = currencyInfo?.currency
+  const emptyTextColor = emphasis === 'tertiary' ? '$neutral2' : '$surface1'
 
   return loading ? (
     <Shine width="100%">
@@ -83,7 +92,7 @@ export const CurrencySelector = ({
     </Shine>
   ) : (
     <DropdownButton
-      emphasis={currencyInfo ? undefined : 'primary'}
+      emphasis={currencyInfo ? undefined : emphasis}
       onPress={onPress}
       elementPositioning="grouped"
       isExpanded={false}
@@ -99,8 +108,8 @@ export const CurrencySelector = ({
         ) : undefined
       }
     >
-      <DropdownButton.Text color={currency ? '$neutral1' : '$surface1'}>
-        {currency ? currency.symbol : t('fiatOnRamp.button.chooseToken')}
+      <DropdownButton.Text color={currency ? '$neutral1' : emptyTextColor}>
+        {currency ? currency.symbol : (placeholder ?? t('fiatOnRamp.button.chooseToken'))}
       </DropdownButton.Text>
     </DropdownButton>
   )
@@ -123,10 +132,12 @@ export function SelectTokensStep({
 } & FlexProps) {
   const { loadingA, loadingB } = useLiquidityUrlState()
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { setSelectedChainId, setIsUserSelectedToken } = useMultichainContext()
   const trace = useTrace()
   const [hookModalOpen, setHookModalOpen] = useState(false)
   const [showWrappedNativeWarning, setShowWrappedNativeWarning] = useState(false)
+  const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const allowedV4WethHookAddresses: string[] = useDynamicConfigValue({
     config: DynamicConfigs.AllowedV4WethHookAddresses,
@@ -142,6 +153,7 @@ export function SelectTokensStep({
     currencies,
     poolOrPairLoading,
     poolOrPair,
+    poolId,
     setFeeTierSearchModalOpen,
   } = useCreateLiquidityContext()
 
@@ -239,8 +251,7 @@ export function SelectTokensStep({
   }, [hasExistingFeeTiers, feeTierData])
 
   useEffect(() => {
-    // If a fee tier is already set, return
-    if (fee) {
+    if (fee || isAddLiquidityRevamp) {
       return
     }
 
@@ -255,7 +266,7 @@ export function SelectTokensStep({
         ...trace,
       })
     }
-  }, [mostUsedFeeTier, fee, setPositionState, trace])
+  }, [mostUsedFeeTier, fee, setPositionState, trace, isAddLiquidityRevamp])
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {
@@ -279,6 +290,21 @@ export function SelectTokensStep({
   )
 
   const handleOnContinue = () => {
+    if (poolAlreadyExists && poolId && token0.chainId) {
+      const base = `/positions/add/${getChainUrlParam(token0.chainId)}/${poolId}`
+      const params = buildPoolSearchParams({
+        currencyA: token0.isNative ? NATIVE_CHAIN_ID : token0.address,
+        currencyB: token1.isNative ? NATIVE_CHAIN_ID : token1.address,
+        chain: getChainUrlParam(token0.chainId),
+        fee,
+        hookAddress: hook,
+        protocolVersion: getProtocolVersionLabel(protocolVersion),
+      })
+      const search = params.toString()
+      navigate(search ? `${base}?${search}` : base)
+      return
+    }
+
     if (wrappedNativeWarning) {
       setShowWrappedNativeWarning(true)
       return
@@ -372,6 +398,9 @@ export function SelectTokensStep({
     )
     return matchingFeeTier?.boostedApr && matchingFeeTier.boostedApr > 0 ? matchingFeeTier.boostedApr : undefined
   }, [isLpIncentivesEnabled, protocolVersion, feeTierData, currentFeeTierKey])
+
+  const poolAlreadyExists =
+    isAddLiquidityRevamp && !creatingPoolOrPair && !!poolOrPair && !!poolId && !!token0 && !!token1 && !!fee
 
   const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion })
 
@@ -475,7 +504,7 @@ export function SelectTokensStep({
                           borderRadius="$rounded6"
                           backgroundColor="$surface3"
                           px={7}
-                          py={2}
+                          py="$spacing2"
                           $md={{ display: 'none' }}
                         >
                           <Text variant="buttonLabel4">{t('fee.tier.highestTvl')}</Text>
@@ -550,7 +579,7 @@ export function SelectTokensStep({
               />
             )}
           </Flex>
-          <CreatingPoolInfo />
+          {poolAlreadyExists ? <PoolAlreadyCreatedInfo /> : <CreatingPoolInfo />}
           <Flex row>
             <Button
               size="large"
@@ -561,7 +590,7 @@ export function SelectTokensStep({
                 !(creatingPoolOrPair || poolOrPair) || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)
               }
             >
-              {t('common.button.continue')}
+              {poolAlreadyExists ? t('common.addLiquidity') : t('common.button.continue')}
             </Button>
           </Flex>
           <PoolParsingError formComplete={Boolean(token0 && token1 && fee)} />

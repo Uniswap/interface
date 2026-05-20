@@ -1,4 +1,5 @@
-import { Pool, SearchTokensResponse, SearchType } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/search_pb'
+import { SearchType, Pool } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { searchPoolToPoolSearchResult, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'

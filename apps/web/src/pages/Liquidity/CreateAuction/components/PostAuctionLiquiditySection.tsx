@@ -4,10 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { NumberType } from 'utilities/src/format/types'
 import { PostAuctionLiquiditySelector } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquiditySelector'
+import { type InputCurrency } from '~/pages/Liquidity/CreateAuction/types'
 import {
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
@@ -25,9 +27,11 @@ interface PostAuctionLiquiditySectionProps {
   raiseCurrency: RaiseCurrency
   chainId: UniverseChainId
   tokenSymbol: string
+  inputCurrency: InputCurrency
+  usdPriceNum: number | null
   onAllocationTypeSelect: (type: PostAuctionLiquidityAllocationType) => void
   onSelectPercent: (percent: number) => void
-  onAddTier: () => void
+  onAddTier: (options?: { usdPriceNum: number | null }) => void
   onUpdateTier: (tierId: string, config: Partial<Pick<PostAuctionLiquidityTier, 'raiseMilestone' | 'percent'>>) => void
   onRemoveTier: (tierId: string) => void
 }
@@ -41,6 +45,8 @@ export function PostAuctionLiquiditySection({
   raiseCurrency,
   chainId,
   tokenSymbol,
+  inputCurrency,
+  usdPriceNum,
   onAllocationTypeSelect,
   onSelectPercent,
   onAddTier,
@@ -49,9 +55,17 @@ export function PostAuctionLiquiditySection({
 }: PostAuctionLiquiditySectionProps) {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
+  const { code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
   const [helpExpanded, setHelpExpanded] = useState(false)
 
   const toggleHelp = useCallback(() => setHelpExpanded((prev) => !prev), [])
+
+  // When the editor is in USD mode, pass the (snapshotted) USD price down so the first tier
+  // defaults to 100k USD (converted to raise) instead of 100k raise tokens. Subsequent tiers
+  // (10× previous) preserve USD round-ness automatically since 10× commutes with the conversion.
+  const handleAddTier = useCallback(() => {
+    onAddTier({ usdPriceNum: inputCurrency === 'usd' ? usdPriceNum : null })
+  }, [onAddTier, inputCurrency, usdPriceNum])
 
   const { subtitle, showSubtitleTooltip } = useMemo(() => {
     const zeroSubtitle = t('toucan.createAuction.step.configureAuction.postAuctionLiquidity.subtitle', {
@@ -127,9 +141,12 @@ export function PostAuctionLiquiditySection({
         raiseCurrencySymbol={raiseCurrency}
         subtitle={subtitle}
         showSubtitleTooltip={showSubtitleTooltip}
+        inputCurrency={inputCurrency}
+        usdPriceNum={usdPriceNum}
+        fiatCurrencyCode={fiatCurrencyCode}
         onAllocationTypeSelect={onAllocationTypeSelect}
         onSelectPercent={onSelectPercent}
-        onAddTier={onAddTier}
+        onAddTier={handleAddTier}
         onUpdateTier={onUpdateTier}
         onRemoveTier={onRemoveTier}
       />

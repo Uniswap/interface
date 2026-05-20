@@ -1,4 +1,5 @@
 import type { BlockaidScanJsonRpcRequest, GasFeeResult } from '@universe/api'
+import { numberToHex } from '@universe/encoding'
 import { useEffect, useMemo } from 'react'
 import { Flex } from 'ui/src'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -62,7 +63,7 @@ export function DappSendCallsScanningContent({
       params: [
         {
           version: '1.0',
-          chainId: `0x${chainId.toString(16)}`,
+          chainId: numberToHex(chainId),
           from: account,
           calls,
         },

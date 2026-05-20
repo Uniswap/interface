@@ -1,11 +1,8 @@
 import { Signer } from '@ethersproject/abstract-signer'
-import {
-  buildFlashbotsUrl,
-  SignerInfo,
-  waitForFlashbotsProtectReceipt,
-} from 'uniswap/src/features/providers/FlashbotsCommon'
+import { waitForFlashbotsProtectReceipt } from '@universe/chains'
+import { HexString } from '@universe/encoding'
+import { buildFlashbotsUrl, SignerInfo } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { createFlashbotsRpcClient } from 'uniswap/src/features/providers/FlashbotsRpcClient'
-import { HexString } from 'utilities/src/addresses/hex'
 import { Chain, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 import type { Mock, Mocked } from 'vitest'

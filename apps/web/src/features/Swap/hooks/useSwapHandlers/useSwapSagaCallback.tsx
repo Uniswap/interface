@@ -1,10 +1,12 @@
-import { TradingApi } from '@universe/api'
+import { SharedQueryClient, TradingApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { resolvePlatform } from 'uniswap/src/features/accounts/store/utils/flexibleInput'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -16,6 +18,7 @@ import { type SwapCallback, type SwapCallbackParams } from 'uniswap/src/features
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useTotalBalancesUsdForAnalytics } from '~/appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
@@ -24,10 +27,11 @@ import { useSelectChain } from '~/hooks/useSelectChain'
 import { useSetOverrideOneClickSwapFlag } from '~/pages/Swap/settings/OneClickSwap'
 import { useGetOnPressRetry } from '~/state/sagas/transactions/retry'
 import {
-  createHandleSwapTransactionBatchedStep,
+  createHandleSwapTransactionWalletCallStep,
   handleSwapTransactionStep,
   swapActions,
 } from '~/state/sagas/transactions/swapSaga'
+import { clearLoggedSwapSignedPlanSteps } from '~/state/sagas/transactions/swapSignedAnalytics'
 import { handleUniswapXPlanSignatureStep } from '~/state/sagas/transactions/uniswapx'
 import {
   getDisplayableError,
@@ -68,6 +72,8 @@ export function useSwapCallback(): SwapCallback {
     return state.getActiveConnector(Platform.EVM)?.session?.caip25Info
   })
 
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
+
   return useCallback(
     (args: SwapCallbackParams) => {
       const {
@@ -91,6 +97,14 @@ export function useSwapCallback(): SwapCallback {
       const isBatched = isClassicSwap && swapTxContext.txRequests && swapTxContext.txRequests.length > 1
       const includedPermitTransactionStep = isClassicSwap && swapTxContext.permit?.method === PermitMethod.Transaction
 
+      const priceSource = getDisplayedPriceSource({
+        isCentralizedPricesEnabled,
+        surface: 'usdc',
+        chainId: trade.inputAmount.currency.chainId,
+        address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
+        queryClient: SharedQueryClient,
+      })
+
       const analytics = getBaseTradeAnalyticsProperties({
         formatter,
         trade,
@@ -103,6 +117,7 @@ export function useSwapCallback(): SwapCallback {
         isBatched,
         includedPermitTransactionStep,
         swapStartTimestamp,
+        priceSource,
       })
 
       const account = getActiveAccount(trade.inputAmount.currency.chainId)
@@ -132,7 +147,7 @@ export function useSwapCallback(): SwapCallback {
         swapStartTimestamp,
       }
       if (swapTxContext.trade.routing === TradingApi.Routing.CHAINED) {
-        const handleSwapTransactionBatchedStep = createHandleSwapTransactionBatchedStep({
+        const handleSwapTransactionWalletCallStep = createHandleSwapTransactionWalletCallStep({
           disableOneClickSwap,
           waitForTxHash: true,
         })
@@ -143,12 +158,13 @@ export function useSwapCallback(): SwapCallback {
             address: account.address,
             handleApprovalTransactionStep,
             handleSwapTransactionStep,
-            handleSwapTransactionBatchedStep,
+            handleSwapTransactionWalletCallStep,
             handleSignatureStep,
             handleUniswapXPlanSignatureStep,
             // oxlint-disable-next-line no-shadow
             getDisplayableError: (args) => getDisplayableError({ ...args, isPlanStep: true }),
             getOnPressRetry,
+            onPlanFinalized: clearLoggedSwapSignedPlanSteps,
             sendToast,
           }),
         )
@@ -184,6 +200,7 @@ export function useSwapCallback(): SwapCallback {
       disableOneClickSwap,
       updateSwapForm,
       caip25Info,
+      isCentralizedPricesEnabled,
     ],
   )
 }

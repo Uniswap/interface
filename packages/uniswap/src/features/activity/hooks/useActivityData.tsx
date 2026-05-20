@@ -36,6 +36,7 @@ export type UseActivityDataProps = {
   showLoadingOnRefetch?: boolean
   filterTransactionTypes?: TransactionTypeFilter[]
   searchText?: string
+  maxItems?: number
 }
 
 export type ActivityRenderData = PaginationControls & {
@@ -67,6 +68,7 @@ export function useActivityData({
   showLoadingOnRefetch = false,
   filterTransactionTypes,
   searchText,
+  maxItems,
 }: UseActivityDataProps): ActivityRenderData {
   const { t } = useTranslation()
 
@@ -105,6 +107,7 @@ export function useActivityData({
     showLoadingOnRefetch,
     filterTransactionTypes,
     searchText,
+    maxItems,
   })
 
   const sectionDataWithExtra: ActivityItem[] | undefined = useMemo(() => {

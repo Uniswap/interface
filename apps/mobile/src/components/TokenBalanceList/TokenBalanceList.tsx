@@ -24,6 +24,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import {
   TokenBalanceListContextProvider,
+  TokenBalancePressOptions,
   useTokenBalanceListContext,
 } from 'uniswap/src/features/portfolio/TokenBalanceListContext'
 import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/features/portfolio/types'
@@ -38,7 +39,7 @@ import { noop } from 'utilities/src/react/noop'
 
 type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null
-  onPressToken: (currencyId: CurrencyId) => void
+  onPressToken: (currencyId: CurrencyId, options?: TokenBalancePressOptions) => void
   isExternalProfile?: boolean
 }
 

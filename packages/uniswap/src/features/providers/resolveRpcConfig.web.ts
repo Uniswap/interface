@@ -1,7 +1,7 @@
 import { getEntryGatewayUrl, provideDeviceIdService, provideSessionStorage } from '@universe/api'
 import { createRpcConfigResolver, createUniRpcConfigResolver } from '@universe/chains'
 import { isExtensionApp, REQUEST_SOURCE } from '@universe/environment'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import { FeatureFlags, getFeatureFlag, isStatsigClientRegistered } from '@universe/gating'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
 
 export { createRpcConfigResolver } from '@universe/chains'
@@ -21,7 +21,9 @@ export type { RpcConfigResolver, RpcConfigResolverInput } from '@universe/chains
  * Mobile uses the `.native.ts` sibling.
  */
 const SHARED_UNI_RPC_CONFIG = {
-  getFeatureFlag: () => getFeatureFlag(FeatureFlags.UniRpcEnabled),
+  // Saga init runs before the Statsig provider mounts; guard so the flag read
+  // doesn't trigger StatsigClient.instance()'s broken-fallback branch.
+  getFeatureFlag: () => isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled),
   getEntryGatewayUrl,
   serviceId: REQUEST_SOURCE,
 } as const

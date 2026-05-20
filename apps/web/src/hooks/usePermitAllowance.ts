@@ -115,7 +115,6 @@ export function useUpdatePermitAllowance({
           if (!signer) {
             throw new Error('missing signer')
           }
-          // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
           return await signTypedData({ signer, domain, types, value: values })
         } catch (error) {
           if (didUserReject(error)) {

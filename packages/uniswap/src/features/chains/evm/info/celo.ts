@@ -41,7 +41,6 @@ export const CELO_CHAIN_INFO = {
   explorer: {
     name: 'CeloScan',
     url: 'https://celoscan.io/',
-    apiURL: 'https://api.celoscan.io',
   },
   interfaceName: 'celo',
   label: 'Celo',

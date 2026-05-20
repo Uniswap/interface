@@ -1,4 +1,5 @@
 import { TradingApi } from '@universe/api'
+import { isValidHexString } from '@universe/encoding'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
@@ -12,7 +13,6 @@ import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/
 import { TransactionReceipt, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { receiptFromViemReceipt } from 'uniswap/src/features/transactions/utils/receipt'
 import { shouldCheckTransaction } from 'uniswap/src/utils/polling'
-import { isValidHexString } from 'utilities/src/addresses/hex'
 import { usePublicClient } from 'wagmi'
 import { useAccount } from '~/hooks/useAccount'
 import { useCurrentBlockTimestamp } from '~/hooks/useCurrentBlockTimestamp'

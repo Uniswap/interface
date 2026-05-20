@@ -81,7 +81,7 @@ export function PortfolioNfts(): JSX.Element {
 
   // Handler to clear chain filter and show all networks
   const handleShowAllNetworks = useCallback(() => {
-    void navigate('/portfolio/nfts')
+    Promise.resolve(navigate('/portfolio/nfts')).catch(() => {})
   }, [navigate])
 
   // Custom empty state for chain filtering

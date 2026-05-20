@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { base64urlToBase64 } from '@universe/encoding'
 import { connect } from '@wagmi/core'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex } from 'ui/src'
@@ -23,7 +23,7 @@ import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { LIST_AUTHENTICATORS_QUERY_KEY } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { AddPasskeyStep } from '~/components/Passkey/RecoverWalletSteps'
 import { useRecoveryPrivyAuth } from '~/components/Passkey/useRecoveryPrivyAuth'
 import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
@@ -31,7 +31,9 @@ import { getPrivyConfig } from '~/config'
 import { wagmiConfig } from '~/connection/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from '~/connection/walletConnect'
 import { useModalState } from '~/hooks/useModalState'
+import type { RecoverWalletModalParams } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
+import { useAppSelector } from '~/state/hooks'
 import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
 
 export function RecoverWalletModal(): JSX.Element {
@@ -82,7 +84,7 @@ export function RecoverWalletModal(): JSX.Element {
       setWalletAddress(recoveryResult.walletAddress)
       setWalletId(recoveryResult.walletId)
       setIsConnected(true)
-      void connect(wagmiConfig, { connector })
+      Promise.resolve(connect(wagmiConfig, { connector })).catch(() => {})
       sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
         result: WalletConnectionResult.Succeeded,
         wallet_name: connector.name,
@@ -90,7 +92,7 @@ export function RecoverWalletModal(): JSX.Element {
         wallet_address: recoveryResult.walletAddress,
       })
 
-      void queryClient.invalidateQueries({ queryKey: [LIST_AUTHENTICATORS_QUERY_KEY] })
+      void invalidateListAuthenticators(queryClient, recoveryResult.walletId)
       handleClose()
     },
   )
@@ -102,6 +104,18 @@ export function RecoverWalletModal(): JSX.Element {
     setOauthError,
     showAddPasskeyStep: true,
   })
+
+  // Safe against re-fire: EmailEntry's back button is wired to `handleClose`, not
+  // `flow.handleBack`, so the user can't return to Login mid-session.
+  const initialMethod = useAppSelector(
+    (state) => (state.application.openModal as Partial<RecoverWalletModalParams> | null)?.initialState?.initialMethod,
+  )
+  const { step: flowStep, selectEmailLogin: flowSelectEmailLogin } = flow
+  useEffect(() => {
+    if (isOpen && initialMethod === 'email' && flowStep === RecoveryStep.Login) {
+      flowSelectEmailLogin()
+    }
+  }, [isOpen, initialMethod, flowStep, flowSelectEmailLogin])
 
   const handleClose = useEvent(() => {
     flow.reset()

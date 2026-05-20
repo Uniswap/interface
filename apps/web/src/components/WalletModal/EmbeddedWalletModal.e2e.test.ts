@@ -45,20 +45,5 @@ test.describe(
       // GetTheApp modal should open at the GetStarted page
       await expect(page.getByTestId(TestID.DownloadUniswapModal)).toBeVisible()
     })
-
-    test('Log In button triggers the passkey sign-in flow', async ({ page }) => {
-      await page.goto(`/swap?${NOT_CONNECTED}&${EW_ENABLED}`)
-
-      await page.getByTestId(TestID.NavConnectWalletButton).click()
-      const walletModal = getVisibleDropdownElementByTestId(page, 'wallet-modal')
-      await expect(walletModal).toBeVisible()
-
-      await walletModal.getByRole('button', { name: 'Log in' }).click()
-
-      // In the test environment the embedded-wallet package is unavailable, so the
-      // passkey flow fails and PasskeysHelpModal opens. Its presence proves that
-      // signInWithPasskeyAsync was invoked and the sign-in flow was triggered.
-      await expect(page.getByText('Need help?')).toBeVisible()
-    })
   },
 )

@@ -114,6 +114,7 @@ export function useActivityFiltering({
       chainIds: chainId ? [chainId] : undefined,
       filterTransactionTypes: serverFilterTypes,
       searchText,
+      maxItems: Infinity,
     })
 
   // Track chainId changes to show loading skeleton when switching networks

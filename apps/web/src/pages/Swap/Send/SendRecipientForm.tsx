@@ -1,7 +1,17 @@
-import { ChangeEvent, ForwardedRef, forwardRef, KeyboardEvent, MouseEvent, useCallback, useRef, useState } from 'react'
+import { type ElementRef, MouseEvent, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { capitalize } from 'tsafe'
-import { Flex, Popover, styled, Text, Tooltip, TouchableArea, TouchableAreaEvent } from 'ui/src'
+import {
+  Flex,
+  Input,
+  Popover,
+  Text,
+  Tooltip,
+  TouchableArea,
+  TouchableAreaEvent,
+  styled,
+  useShadowPropsMedium,
+} from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
@@ -14,31 +24,13 @@ import { RecipientData } from '~/features/Swap/state/send/hooks'
 import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
-import { useUnmountingAnimation } from '~/hooks/useUnmountingAnimation'
-import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
-import { AnimationType } from '~/theme/components/FadePresence'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-const StyledConfirmedRecipientRow = styled(Flex, {
-  row: true,
-  width: '100%',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  py: '$spacing6',
-})
+const SEND_RECIPIENT_INPUT_PADDING = 16
 
-const StyledConfirmedRecipientDisplayRow = styled(Flex, {
-  row: true,
-  alignItems: 'center',
-  gap: '$gap12',
-  ...ClickableTamaguiStyle,
-})
-
-const RecipientWrapper = styled(Flex, {
-  position: 'relative',
+const RecipientWrapper = styled(TouchableArea, {
   backgroundColor: '$surface2',
   borderRadius: '$rounded16',
-  padding: '$spacing16',
+  padding: SEND_RECIPIENT_INPUT_PADDING,
   gap: '$spacing4',
   opacity: 1,
   borderColor: '$transparent',
@@ -60,58 +52,48 @@ const RecipientWrapper = styled(Flex, {
   } as const,
 })
 
-const StyledRecipientInput = deprecatedStyled.input`
-  background: none;
-  width: 100%;
-  color: ${({ theme }) => theme.neutral1};
-  outline: none;
-  border: none;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
+const SendRecipientInput = styled(Input, {
+  unstyled: true,
+  width: '100%',
+  backgroundColor: 'transparent',
+  borderWidth: 0,
+  outlineWidth: 0,
+  padding: 0,
+  fontSize: 16,
+  fontWeight: '500',
+  lineHeight: 24,
+  color: '$neutral1',
+  placeholderTextColor: '$neutral3',
+  focusStyle: {
+    outlineWidth: 0,
+    outlineStyle: 'none',
+    borderWidth: 0,
+    boxShadow: 'none',
+  },
+  focusVisibleStyle: {
+    outlineWidth: 0,
+    outlineStyle: 'none',
+    borderWidth: 0,
+    boxShadow: 'none',
+  },
+  '$platform-web': {
+    outlineStyle: 'none',
+    outlineWidth: 0,
+  },
+})
 
-  ::placeholder {
-    color: ${({ theme }) => theme.neutral3};
-  }
-`
+type SendRecipientInputRef = ElementRef<typeof SendRecipientInput>
 
-const slideIn = keyframes`
-  from { opacity: 0; transform: translateY(-40px) }
-  to { opacity: 1; transform: translateY(0px) }
-`
-const slideInAnimation = css`
-  animation: ${slideIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-
-const slideOut = keyframes`
-  from { opacity: 1; transform: translateY(0px) }
-  to { opacity: 0; transform: translateY(-40px) }
-`
-const slideOutAnimation = css`
-  animation: ${slideOut} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-`
-
-const MenuFlyout = deprecatedStyled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: ${({ theme }) => theme.surface1};
-  border: 1px solid ${({ theme }) => theme.surface3};
-  box-shadow:
-    0px 0px 1px rgba(0, 0, 0, 0.01),
-    0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
-  position: absolute;
-  z-index: 100;
-  padding: 16px;
-  transition: display ${({ theme }) => `${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
-  ${slideInAnimation}
-  &.${AnimationType.EXITING} {
-    ${slideOutAnimation}
-  }
-`
+const AutocompletePanel = styled(Flex, {
+  width: '100%',
+  backgroundColor: '$surface1',
+  borderWidth: 1,
+  borderColor: '$surface3',
+  borderRadius: '$rounded12',
+  padding: '$spacing16',
+  flexDirection: 'column',
+  gap: '$spacing4',
+})
 
 const AutocompleteRow = ({
   address,
@@ -208,20 +190,21 @@ interface AutocompleteFlyoutProps {
   selectRecipient: (recipient: RecipientData) => void
 }
 
-const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: ForwardedRef<HTMLDivElement>) => {
+function AutocompleteFlyout(props: AutocompleteFlyoutProps) {
   const { transfers, validatedRecipientData, selectRecipient } = props
   const { t } = useTranslation()
+  const shadowProps = useShadowPropsMedium()
 
   if (validatedRecipientData) {
     return (
-      <MenuFlyout ref={ref}>
+      <AutocompletePanel {...shadowProps} onPointerDown={(e) => e.preventDefault()}>
         <AutocompleteRow
           address={validatedRecipientData.address}
           validatedEnsName={validatedRecipientData.ensName}
           numberOfTransfers={transfers?.[validatedRecipientData.address] ?? 0}
           selectRecipient={selectRecipient}
         />
-      </MenuFlyout>
+      </AutocompletePanel>
     )
   }
 
@@ -230,7 +213,7 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
   }
 
   return (
-    <MenuFlyout ref={ref}>
+    <AutocompletePanel {...shadowProps} onPointerDown={(e) => e.preventDefault()}>
       <Text variant="body3" color="$neutral2">
         {t('sendRecipientForm.recentAddresses.label')}
       </Text>
@@ -244,11 +227,9 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
             selectRecipient={selectRecipient}
           />
         ))}
-    </MenuFlyout>
+    </AutocompletePanel>
   )
-})
-
-AutocompleteFlyout.displayName = 'AutocompleteFlyout'
+}
 
 export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { t } = useTranslation()
@@ -263,20 +244,25 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const handleFocus = useCallback((focus: boolean) => setFocus([focus, false]), [])
   const handleForceFocus = useCallback((focus: boolean) => setFocus([focus, true]), [])
 
-  const inputNode = useRef<HTMLInputElement | null>(null)
   const inputWrapperNode = useRef<HTMLDivElement | null>(null)
+  const inputNode = useRef<SendRecipientInputRef | null>(null)
   const popoverContentRef = useRef<HTMLDivElement | null>(null)
   /** When true, ignore blur-driven commit — `blur()` runs before validatedRecipientData flushes from select/Enter. */
   const skipBlurRecipientCommitRef = useRef(false)
   useOnClickOutside({
     node: inputWrapperNode,
-    handler: isFocusing ? () => handleFocus(false) : undefined,
+    handler: isFocusing
+      ? () => {
+          inputNode.current?.blur()
+          handleFocus(false)
+        }
+      : undefined,
     ignoredNodes: [popoverContentRef],
   })
 
+  /** When to render flyout body: focused + resolved match and/or recents shell. Popover `open` uses `isFocusing` so Enter/blur matches main. */
   const showFlyout = isFocusing && (!!recipientData || !recipient)
-  const flyoutRef = useRef<HTMLDivElement>(null)
-  useUnmountingAnimation({ node: flyoutRef, getAnimatingClass: () => AnimationType.EXITING })
+  const showInputField = !validatedRecipientData || isFocusing || isForcingFocus
 
   const handleInputValidatedRecipient = useCallback(
     (value?: RecipientData) => {
@@ -289,10 +275,9 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
     [setSendState],
   )
 
-  const handleInput = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const input = event.target.value
-      const inputWithoutSpaces = input.replace(/\s+/g, '')
+  const handleRecipientChangeText = useCallback(
+    (text: string) => {
+      const inputWithoutSpaces = text.replace(/\s+/g, '')
       setSendState((prev) => ({
         ...prev,
         recipient: inputWithoutSpaces,
@@ -329,16 +314,13 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
     handleForceFocus(true)
   }, [handleForceFocus])
 
-  const handleEnter = useCallback(
-    (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key !== 'Enter' || !recipientData) {
-        return
-      }
-      e.preventDefault()
-      selectValidatedRecipient(recipientData)
-    },
-    [recipientData, selectValidatedRecipient],
-  )
+  /** Tamagui `Input` is RN `TextInput`; Enter is `onSubmitEditing`, not reliably `onKeyDown` like a native `<input>`. */
+  const handleRecipientSubmitEditing = useCallback(() => {
+    if (!recipientData) {
+      return
+    }
+    selectValidatedRecipient(recipientData)
+  }, [recipientData, selectValidatedRecipient])
 
   const handleRecipientInputBlur = useCallback(() => {
     if (!skipBlurRecipientCommitRef.current && !validatedRecipientData && recipientData) {
@@ -347,40 +329,52 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
     handleFocus(false)
   }, [handleFocus, handleInputValidatedRecipient, recipientData, validatedRecipientData])
 
-  const showInputField = !validatedRecipientData || isFocusing || isForcingFocus
+  const focusRecipientInput = useCallback(() => {
+    if (disabled) {
+      return
+    }
+    handleFocus(true)
+    inputNode.current?.focus()
+  }, [disabled, handleFocus])
 
   return (
-    <RecipientWrapper isDisabled={disabled} isFocused={isFocusing}>
-      <Popover open={isFocusing} placement="bottom-start" offset={{ crossAxis: -16 }}>
-        <Popover.Anchor ref={inputWrapperNode}>
+    <Popover open={isFocusing} placement="bottom" allowFlip stayInFrame>
+      <Popover.Anchor ref={inputWrapperNode}>
+        <RecipientWrapper
+          isDisabled={disabled}
+          isFocused={isFocusing}
+          cursor={showInputField && !disabled ? 'text' : undefined}
+          onPress={() => showInputField && focusRecipientInput()}
+        >
           {showInputField ? (
             <Flex>
               <Text variant="body3" userSelect="none" color="$neutral2">
                 {capitalize(t('common.to'))}
               </Text>
-              <StyledRecipientInput
+              <SendRecipientInput
                 ref={inputNode}
-                type="text"
                 autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
+                autoCorrect={false}
+                autoCapitalize="none"
+                spellCheck={false}
+                returnKeyType="done"
                 placeholder={recipientData ? '' : t('common.addressOrENS')}
+                // @ts-expect-error Web-only `<input pattern>`; Tamagui `Input` typings omit it (RN `TextInput`).
                 pattern="^(0x[a-fA-F0-9]{40})$"
-                onChange={handleInput}
+                value={recipient}
+                onChangeText={handleRecipientChangeText}
                 onBlur={handleRecipientInputBlur}
                 onFocus={() => handleFocus(true)}
-                value={recipient}
-                onKeyDown={handleEnter}
+                onSubmitEditing={handleRecipientSubmitEditing}
                 autoFocus={isForcingFocus}
               />
             </Flex>
           ) : (
-            <StyledConfirmedRecipientRow>
-              <StyledConfirmedRecipientDisplayRow onPress={editValidatedRecipient}>
+            <Flex row py="$spacing6" justifyContent="space-between" alignItems="center">
+              <TouchableArea row alignItems="center" gap="$spacing12" onPress={editValidatedRecipient}>
                 <AccountIcon address={validatedRecipientData.address} size={36} />
-                <Flex gap="$gap4">
-                  <Flex row gap="$gap4" alignItems="center">
+                <Flex gap="$spacing4">
+                  <Flex row alignItems="center" gap="$spacing4">
                     <Text variant="body2">
                       {validatedRecipientData.unitag ??
                         validatedRecipientData.ensName ??
@@ -398,30 +392,36 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                     </Text>
                   )}
                 </Flex>
-              </StyledConfirmedRecipientDisplayRow>
+              </TouchableArea>
               <TouchableArea onPress={clearValidatedRecipient}>
                 <X size="$icon.20" color="$neutral3" />
               </TouchableArea>
-            </StyledConfirmedRecipientRow>
+            </Flex>
           )}
-        </Popover.Anchor>
-        <Popover.Content
-          disableFocusScope
-          zIndex={zIndexes.overlay}
-          background="transparent"
-          width={(inputNode.current?.clientWidth ?? 0) + 32}
-          ref={popoverContentRef}
-        >
-          {showFlyout && (
-            <AutocompleteFlyout
-              ref={flyoutRef}
-              transfers={recentTransfers}
-              validatedRecipientData={recipientData}
-              selectRecipient={selectValidatedRecipient}
-            />
-          )}
-        </Popover.Content>
-      </Popover>
-    </RecipientWrapper>
+        </RecipientWrapper>
+      </Popover.Anchor>
+      <Popover.Content
+        disableFocusScope
+        zIndex={zIndexes.overlay}
+        background="transparent"
+        animation="quick"
+        animateOnly={['transform', 'opacity']}
+        enterStyle={{ y: -12, opacity: 0 }}
+        exitStyle={{ y: -12, opacity: 0 }}
+        width={(inputWrapperNode.current?.getBoundingClientRect().width ?? 0) + SEND_RECIPIENT_INPUT_PADDING * 2}
+        ref={popoverContentRef}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
+        }}
+      >
+        {showFlyout ? (
+          <AutocompleteFlyout
+            transfers={recentTransfers}
+            validatedRecipientData={recipientData}
+            selectRecipient={selectValidatedRecipient}
+          />
+        ) : null}
+      </Popover.Content>
+    </Popover>
   )
 }

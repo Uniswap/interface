@@ -27,7 +27,7 @@ export function useReportPositionHandler({
         POPUP_MEDIUM_DISMISS_MS,
       )
       if (navigateToPositions) {
-        void navigate('/positions')
+        Promise.resolve(navigate('/positions')).catch(() => {})
       }
     },
   })

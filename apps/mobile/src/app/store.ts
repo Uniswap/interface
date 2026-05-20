@@ -1,17 +1,16 @@
-import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
+import type { Middleware, PreloadedState, StoreEnhancer } from '@reduxjs/toolkit'
 import { isRNDev, isUnitTestEnv } from '@universe/environment'
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from 'react-native-mmkv'
 import { persistReducer, persistStore, Storage } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
 import { rootMobileSaga } from 'src/app/saga'
 import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
-import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { setReduxPersistor } from 'wallet/src/state/persistor'
 
-const storage = new MMKV()
+const storage = createMMKV()
 
 const reduxStorage: Storage = {
   setItem: (key, value) => {
@@ -23,7 +22,7 @@ const reduxStorage: Storage = {
     return Promise.resolve(value)
   },
   removeItem: (key) => {
-    storage.delete(key)
+    storage.remove(key)
     return Promise.resolve()
   },
 }
@@ -38,14 +37,7 @@ export const persistConfig = {
 
 export const persistedReducer = persistReducer(persistConfig, mobileReducer)
 
-const dataDogReduxEnhancer = createDatadogReduxEnhancer({
-  shouldLogReduxState: (state: MobileState): boolean => {
-    // Do not log the state if a user has opted out of analytics.
-    return !!state.telemetry.allowAnalytics
-  },
-})
-
-const enhancers = [dataDogReduxEnhancer]
+const enhancers: StoreEnhancer[] = []
 
 if (!isUnitTestEnv() && isRNDev()) {
   // oxlint-disable-next-line typescript/no-var-requires

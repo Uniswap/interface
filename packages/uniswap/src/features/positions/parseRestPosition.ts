@@ -251,8 +251,13 @@ function getPairFromRest({
  */
 export function parseRestPosition(position?: RestPosition): PositionInfo | undefined {
   try {
-    if (position?.position.case === 'v2Pair') {
-      const v2PairPosition = position.position.value
+    const positionPayload = position?.position
+    if (!position || !positionPayload?.case) {
+      return undefined
+    }
+
+    if (positionPayload.case === 'v2Pair') {
+      const v2PairPosition = positionPayload.value
       const token0 = parseRestToken<Token>(v2PairPosition.token0)
       const token1 = parseRestToken<Token>(v2PairPosition.token1)
       const liquidityToken = parseRestToken<Token>(v2PairPosition.liquidityToken)
@@ -260,7 +265,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         return undefined
       }
 
-      const pair = getPairFromRest({ pair: position.position.value, token0, token1 })
+      const pair = getPairFromRest({ pair: v2PairPosition, token0, token1 })
 
       return {
         status: position.status,
@@ -279,9 +284,8 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         owner: undefined,
         isHidden: position.isHidden,
       }
-    } else if (position?.position.case === 'v3Position') {
-      const v3Position = position.position.value
-
+    } else if (positionPayload.case === 'v3Position') {
+      const v3Position = positionPayload.value
       const token0 = parseRestToken<Token>(v3Position.token0)
       const token1 = parseRestToken<Token>(v3Position.token1)
       if (!token0 || !token1) {
@@ -289,7 +293,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       }
 
       const pool = getSDKPoolFromPoolPosition({
-        pool: position.position.value,
+        pool: v3Position,
         token0,
         token1,
         protocolVersion: ProtocolVersion.V3,
@@ -311,7 +315,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         version: ProtocolVersion.V3,
         chainId: token0.chainId,
         poolOrPair: pool,
-        poolId: position.position.value.poolId,
+        poolId: v3Position.poolId,
         position: sdkPosition,
         tickLower: Number(v3Position.tickLower),
         tickUpper: Number(v3Position.tickUpper),
@@ -329,15 +333,16 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         owner: v3Position.owner,
         isHidden: position.isHidden,
       }
-    } else if (position?.position.case === 'v4Position') {
-      const v4Position = position.position.value.poolPosition
+    } else {
+      const v4PositionPayload = positionPayload.value
+      const v4Position = v4PositionPayload.poolPosition
       const token0 = parseRestToken<Currency>(v4Position?.token0)
       const token1 = parseRestToken<Currency>(v4Position?.token1)
       if (!v4Position || !token0 || !token1) {
         return undefined
       }
 
-      const hook = position.position.value.hooks[0]?.address
+      const hook = v4PositionPayload.hooks[0]?.address
       // Normalize at the SDK boundary: V4 SDK requires a concrete hook address.
       // Keep `hook` as-is for the returned domain model so v4hook preserves its original
       // "undefined when no hook from API" semantic.
@@ -394,12 +399,10 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         apr: v4Position.apr,
         owner: v4Position.owner,
         isHidden: position.isHidden,
-        totalApr: position.position.value.poolPosition?.totalApr,
-        unclaimedRewardsAmountUni: position.position.value.poolPosition?.unclaimedRewardsAmountUni,
-        boostedApr: position.position.value.poolPosition?.boostedApr,
+        totalApr: v4Position.totalApr,
+        unclaimedRewardsAmountUni: v4Position.unclaimedRewardsAmountUni,
+        boostedApr: v4Position.boostedApr,
       }
-    } else {
-      return undefined
     }
   } catch (e) {
     logger.error(e, {

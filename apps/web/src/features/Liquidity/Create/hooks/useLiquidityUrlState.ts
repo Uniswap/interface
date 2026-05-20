@@ -36,6 +36,9 @@ const replaceStateParser = {
   // Fee data
   fee: parseAsFeeData,
 
+  // Protocol version
+  protocolVersion: parseAsString,
+
   // Price range state
   priceRangeState: parseAsPriceRangeState,
 
@@ -85,7 +88,7 @@ export function useLiquidityUrlState() {
     history: 'replace',
   })
 
-  const { currencyA, currencyB, chain, fee, hook, priceRangeState, depositState } = replaceState
+  const { currencyA, currencyB, chain, fee, hook, protocolVersion, priceRangeState, depositState } = replaceState
 
   // Apply URL parameter migrations for backwards compatibility
   useEffect(() => {
@@ -185,6 +188,7 @@ export function useLiquidityUrlState() {
       tokenB: currencyBLoaded,
       fee,
       hook,
+      protocolVersion,
       loading,
       loadingA,
       loadingB,
@@ -201,6 +205,7 @@ export function useLiquidityUrlState() {
     currencyBLoaded,
     fee,
     hook,
+    protocolVersion,
     defaultInitialToken,
     loading,
     loadingA,

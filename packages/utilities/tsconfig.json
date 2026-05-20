@@ -6,10 +6,13 @@
   },
   "references": [
     {
-      "path": "../../config/vitest-presets"
+      "path": "../environment"
     },
     {
-      "path": "../environment"
+      "path": "../encoding"
+    },
+    {
+      "path": "../../config/vitest-presets"
     }
   ]
 }

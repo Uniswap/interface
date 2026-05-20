@@ -1,5 +1,5 @@
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { zeroAddress } from '~/chains/utilities'
+import { zeroAddress } from '~/chains'
 import { calculateSlippageAmount } from '~/utils/calculateSlippageAmount'
 
 describe('#calculateSlippageAmount', () => {

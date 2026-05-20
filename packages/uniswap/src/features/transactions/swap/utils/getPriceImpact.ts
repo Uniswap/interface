@@ -2,7 +2,7 @@ import { type Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 
 function stringToUSDAmount(value: string | number | undefined, USDCurrency: Currency): Maybe<CurrencyAmount<Currency>> {
   if (!value) {
@@ -54,7 +54,29 @@ export function getPriceImpact(derivedSwapInfo: DerivedSwapInfo): Percent | unde
     return getUniswapXPriceImpact({ derivedSwapInfo })
   } else if (isClassic(trade) || isJupiter(trade)) {
     return trade.priceImpact
+  } else if (isChained(trade)) {
+    return getChainedPriceImpact({ derivedSwapInfo })
   } else {
     return undefined
   }
+}
+
+/**
+ * Returns a USD-based price impact for CHAINED trades.
+ *
+ * `ChainedActionTrade` declares `priceImpact: undefined`, so we fall back to the same shape
+ * UniswapX uses: `1 - outputUSD/inputUSD` from `derivedSwapInfo.currencyAmountsUSDValue`.
+ * Unlike UniswapX, we don't adjust for classic gas / swap fees here — the chained quote
+ * doesn't surface a comparable classic-gas estimate.
+ */
+function getChainedPriceImpact({ derivedSwapInfo }: { derivedSwapInfo: DerivedSwapInfo }): Percent | undefined {
+  const { input: inputUSD, output: outputUSD } = derivedSwapInfo.currencyAmountsUSDValue
+
+  if (!inputUSD || !outputUSD) {
+    return undefined
+  }
+
+  const result = outputUSD.divide(inputUSD).asFraction.subtract(1).multiply(-1)
+
+  return new Percent(result.numerator, result.denominator)
 }

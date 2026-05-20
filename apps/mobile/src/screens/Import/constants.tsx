@@ -6,6 +6,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { MNEMONIC_LENGTH_HD } from 'wallet/src/constants/accounts'
 
 type ImportMethodScreens =
   | OnboardingScreens.SeedPhraseInput
@@ -57,7 +58,8 @@ export const seedPhraseImportOption: ImportMethodOption<OnboardingScreens.SeedPh
  */
 export const restoreWalletWithSeedPhraseOption: ImportMethodOption<OnboardingScreens.SeedPhraseInput> = {
   title: (t: AppTFunction) => t('onboarding.import.method.restoreSeedPhrase.wallet.title'),
-  blurb: (t: AppTFunction) => t('onboarding.import.method.restoreSeedPhrase.wallet.desc'),
+  blurb: (t: AppTFunction) =>
+    t('onboarding.import.method.restoreSeedPhrase.wallet.desc', { count: MNEMONIC_LENGTH_HD }),
   icon: <PaperStack color="$accent1" size="$icon.18" strokeWidth={1.5} />,
   nav: OnboardingScreens.SeedPhraseInput,
   importType: ImportType.RestoreMnemonic,

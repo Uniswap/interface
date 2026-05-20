@@ -29,6 +29,17 @@ initializes what it nees by importing pre-defined factories like
 `createUtilities`. This makes it easier for consumers and reduces the need for
 boilerplate at the cost of a fatter SDK without tree-shaking.
 
+#### Consumer initialization
+
+``` sh
+import { createUtilities } from '@universe/chains'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+
+const ctx = { getViemEnabled: () => getFeatureFlag(FeatureFlags.ViemEnabled) }
+
+export const { formatUnits, isAddress, namehash, parseUnits, zeroAddress } = createUtilities(ctx)
+```
+
 ### `getViemEnabled`
 
 We want the consumer to own the feature flipping. We don't want chains to

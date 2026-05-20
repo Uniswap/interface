@@ -6,6 +6,7 @@ import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenDistributionBar } from '~/pages/Liquidity/CreateAuction/components/TokenDistributionBar'
+import type { TokenAccentHex } from '~/pages/Liquidity/CreateAuction/tokenAccentHex'
 import { type RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
 
 export function AuctionDistributionSection({
@@ -22,7 +23,7 @@ export function AuctionDistributionSection({
   tokenSymbol: string
   raiseCurrency: RaiseCurrency
   chainId: UniverseChainId
-  tokenColor?: string
+  tokenColor?: TokenAccentHex
   tokenLogoNode: ReactNode
 }) {
   const { t } = useTranslation()

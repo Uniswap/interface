@@ -6,22 +6,6 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
-/**
- * Sorts `chainIds` in a query cache inputs object so that the same logical input
- * produces a stable cache key regardless of array order.
- */
-function isNumberArray(arr: unknown): arr is number[] {
-  return Array.isArray(arr) && arr.every((id): id is number => typeof id === 'number')
-}
-
-function sortQueryCacheInputs(inputs: Record<string, unknown>): Record<string, unknown> {
-  const result = { ...inputs }
-  if (isNumberArray(result['chainIds'])) {
-    result['chainIds'] = [...result['chainIds']].sort((a, b) => a - b)
-  }
-  return result
-}
-
 /** Input used to build queryKey and queryFn. Config (enabled, refetchInterval, select) is applied by the caller. */
 export type GetPortfolioQueryParams = {
   input?: WithoutWalletAccount<PartialMessage<GetPortfolioRequest>> & {
@@ -53,15 +37,13 @@ export function getGetPortfolioQueryOptions(
 
   const { modifier: _modifier, walletAccount: _walletAccount, ...queryCacheInputs } = transformedInput ?? {}
 
-  const queryCacheInputsSorted = sortQueryCacheInputs(queryCacheInputs)
-
   const addressKey = {
     ...(input?.evmAddress && { evmAddress: input.evmAddress }),
     ...(input?.svmAddress && { svmAddress: input.svmAddress }),
   }
 
   return persistableQueryOptions({
-    queryKey: [ReactQueryCacheKey.GetPortfolio, addressKey, queryCacheInputsSorted] as const,
+    queryKey: [ReactQueryCacheKey.GetPortfolio, addressKey, queryCacheInputs] as const,
     queryFn: async (): Promise<GetPortfolioResponse | undefined> => {
       if (!transformedInput) {
         return undefined

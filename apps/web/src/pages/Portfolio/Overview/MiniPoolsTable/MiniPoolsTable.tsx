@@ -1,5 +1,6 @@
 import { Row } from '@tanstack/react-table'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -8,14 +9,18 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { Table } from '~/components/Table'
 import { getPositionUrl } from '~/features/Liquidity/utils/getPositionUrl'
 import { PORTFOLIO_TABLE_ROW_HEIGHT } from '~/pages/Portfolio/constants'
+import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { useMiniPoolsTableColumns } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableColumns'
 import { useMiniPoolsTableData } from '~/pages/Portfolio/Overview/MiniPoolsTable/hooks/useMiniPoolsTableData'
 import { TableSectionHeader } from '~/pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from '~/pages/Portfolio/Overview/ViewAllButton'
+import { PortfolioTab } from '~/pages/Portfolio/types'
+import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
 
 const POOLS_TABLE_MAX_HEIGHT = 800
 const POOLS_TABLE_MAX_WIDTH = 1200
@@ -30,8 +35,17 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
   const { t } = useTranslation()
   const navigate = useNavigate()
   const trace = useTrace()
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  const { chainId: routeChainId, externalAddress } = usePortfolioRoutes()
 
   const { positions, showLoading, hasNoData } = useMiniPoolsTableData({ account, maxPools, chainId })
+  const viewAllHref = portfolioPoolsBalancesEnabled
+    ? buildPortfolioUrl({
+        tab: PortfolioTab.Pools,
+        chainId: routeChainId,
+        externalAddress: externalAddress?.address,
+      })
+    : '/positions'
 
   const columns = useMiniPoolsTableColumns({ isLoading: showLoading })
 
@@ -85,9 +99,10 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools, 
         />
       </TableSectionHeader>
       <ViewAllButton
-        href="/positions"
+        href={viewAllHref}
         label={t('portfolio.overview.pools.table.viewAllPools')}
         elementName={ElementName.PortfolioViewAllPools}
+        testId={TestID.PortfolioOverviewViewAllPools}
       />
     </Flex>
   )

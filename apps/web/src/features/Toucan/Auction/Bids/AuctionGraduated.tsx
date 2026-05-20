@@ -9,7 +9,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfoWithLoading } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { formatUnits } from 'viem'
+import { formatUnits } from '~/chains'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { useTokenLaunchedBannerColorData } from '~/features/Toucan/Auction/Banners/TokenLaunched/useTokenLaunchedBannerColorData'
 import { q96ToPriceString } from '~/features/Toucan/Auction/BidDistributionChart/utils/q96'

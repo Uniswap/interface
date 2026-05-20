@@ -166,7 +166,7 @@ export function SwapReviewScreen(): JSX.Element | null {
           )}
         </Flex>
       </SwapReviewContentWrapper>
-      <SwapReviewFooter />
+      {!hideContent && <SwapReviewFooter />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useDynamicFontSizing } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
@@ -6,6 +6,7 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import useResizeObserver from 'use-resize-observer'
@@ -13,7 +14,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
-import type { MockEarnVault } from '~/features/earn/_fixtures/vaults'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import {
@@ -36,7 +36,7 @@ const WITHDRAW_DESTINATION_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Unich
 export const DEFAULT_WITHDRAW_CHAIN_ID = WITHDRAW_DESTINATION_CHAIN_IDS[0]
 
 interface WithdrawAmountViewProps {
-  vault: MockEarnVault
+  vault: EarnVaultInfo
   availableBalance: number
   initialAmount?: string
   initialChainId?: UniverseChainId
@@ -63,7 +63,7 @@ export function WithdrawAmountView({
   const [amount, setAmount] = useState(initialAmount)
   const [inputInFiat, setInputInFiat] = useState(true)
   const [chainId, setChainId] = useState<UniverseChainId>(initialChainId)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<ComponentRef<typeof StyledNumericalInput>>(null)
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
   const { fontSize, onLayout, onSetFontSize, onExtraElementLayout } = useDynamicFontSizing({
@@ -87,8 +87,9 @@ export function WithdrawAmountView({
       if (!isSafeNumber(value)) {
         return
       }
-      onSetFontSize(value)
-      setAmount(value)
+      const normalized = value.replace(/^0+(?=\d)/, '')
+      onSetFontSize(normalized)
+      setAmount(normalized)
     },
     [onSetFontSize],
   )
@@ -170,7 +171,7 @@ export function WithdrawAmountView({
           <NumericalInputWrapper>
             <Flex onLayout={onExtraElementLayout}>
               {inputInFiat && (
-                <NumericalInputSymbolContainer showPlaceholder={!amount} $fontSize={fontSize}>
+                <NumericalInputSymbolContainer showPlaceholder={!amount} numericalFontSize={fontSize}>
                   $
                 </NumericalInputSymbolContainer>
               )}
@@ -179,13 +180,13 @@ export function WithdrawAmountView({
               value={amount}
               onUserInput={handleUserInput}
               placeholder="0"
-              $width={scaledInputWidth}
-              $fontSize={fontSize}
-              $hasPrefix={inputInFiat}
+              fieldWidth={scaledInputWidth}
+              numericalFontSize={fontSize}
+              hasPrefix={inputInFiat}
               maxDecimals={FIAT_DECIMALS}
               ref={inputRef}
             />
-            <NumericalInputMimic ref={hiddenObserver.ref} $fontSize={fontSize}>
+            <NumericalInputMimic ref={hiddenObserver.ref} numericalFontSize={fontSize}>
               {amount}
             </NumericalInputMimic>
           </NumericalInputWrapper>
@@ -265,6 +266,8 @@ export function WithdrawAmountView({
             isTriggerStyled={false}
             showMultichainOption={false}
             position="right"
+            // Trigger sits near the bottom of the modal; flip the menu upward so it stays inside.
+            forceFlipUp
             onPress={handleNetworkChange}
             customTrigger={
               <Flex row alignItems="center" gap="$spacing6">

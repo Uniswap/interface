@@ -68,10 +68,12 @@ env:
 - waitForAnimationToEnd
 
 # Wait for sort options to appear
+# Bumped 3s → 8s: the popover renders via Tamagui portal which on iOS RN 0.81
+# can take an extra render cycle to settle in the accessibility tree.
 - extendedWaitUntil:
     visible:
       text: ".*Market.*"
-    timeout: 3000
+    timeout: 8000
 
 - tapOn:
     text: ".*Market.*"
@@ -105,7 +107,7 @@ env:
 - extendedWaitUntil:
     visible:
       text: ".*TVL.*"
-    timeout: 3000
+    timeout: 8000
 
 - tapOn:
     text: ".*TVL.*"
@@ -141,7 +143,7 @@ env:
 - extendedWaitUntil:
     visible:
       text: ".*Price.*increase.*"
-    timeout: 3000
+    timeout: 8000
 
 - tapOn:
     text: ".*Price.*increase.*"
@@ -177,7 +179,7 @@ env:
 - extendedWaitUntil:
     visible:
       text: ".*Price.*decrease.*"
-    timeout: 3000
+    timeout: 8000
 
 - tapOn:
     text: ".*Price.*decrease.*"

@@ -8,7 +8,7 @@ import {
 } from 'src/contentScript/types'
 import { WindowEthereumProxy } from 'src/contentScript/WindowEthereumProxy'
 import { logger } from 'utilities/src/logger/logger'
-import { v4 as uuid } from 'uuid'
+import { uuid } from 'utilities/src/primitives/uuid'
 import { defineContentScript } from 'wxt/utils/define-content-script'
 
 declare global {

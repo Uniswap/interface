@@ -1,10 +1,10 @@
+import { HexString, isValidHexString } from '@universe/encoding'
 import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SMART_WALLET_DELEGATION_GAS_FEE } from 'uniswap/src/features/gas/hooks'
 import { applyGasBuffer } from 'uniswap/src/features/gas/utils'
 import { sign7702AuthorizationWithPasskey, sign7702TransactionWithPasskey } from 'uniswap/src/features/passkey/signing'
-import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { Account, Address, type Hash, getAddress } from 'viem'
 

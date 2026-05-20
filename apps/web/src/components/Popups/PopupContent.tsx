@@ -137,7 +137,7 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
       borderWidth="$spacing1"
       borderRadius="$rounded16"
       borderColor="$surface3"
-      py={2}
+      py="$spacing2"
       px={0}
       animation="300ms"
       data-testid={TestID.ActivityPopup}

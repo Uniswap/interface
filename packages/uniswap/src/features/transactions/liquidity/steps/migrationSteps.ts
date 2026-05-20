@@ -1,7 +1,7 @@
 import {
   MigratePositionTransactionStep,
   MigratePositionTransactionStepAsync,
-  MigratePositionTransactionStepBatched,
+  MigratePositionTransactionStepWalletCall,
 } from 'uniswap/src/features/transactions/liquidity/steps/migrate'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import type { Permit2SignatureStep } from 'uniswap/src/features/transactions/steps/permit2Signature'
@@ -12,7 +12,7 @@ export type MigrationSteps =
   | Permit2TransactionStep
   | MigratePositionTransactionStep
   | MigratePositionTransactionStepAsync
-  | MigratePositionTransactionStepBatched
+  | MigratePositionTransactionStepWalletCall
   | TokenApprovalTransactionStep
 
 export type MigrationFlow =

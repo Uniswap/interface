@@ -101,7 +101,6 @@ export {
   type GasEstimate,
   type GasEstimateEip1559,
   type GasEstimateLegacy,
-  type GasFeeResponse,
   type GasFeeResult,
   type GasFeeResultWithoutState,
   type GasStrategy,
@@ -120,6 +119,10 @@ export {
   createAuctionMutationClient,
   type AuctionMutationClient,
 } from '@universe/api/src/clients/liquidity/createAuctionMutationClient'
+export {
+  createAuctionQueryClient,
+  type AuctionQueryClient,
+} from '@universe/api/src/clients/liquidity/createAuctionQueryClient'
 
 // Auction Service API
 export {
@@ -132,13 +135,6 @@ export {
   createXVerificationServiceClient,
   type XVerificationServiceClient,
 } from '@universe/api/src/clients/x/createXVerificationServiceClient'
-
-// Uniswap API
-export {
-  createUniswapApiClient,
-  type UniswapApiClient,
-  type UniswapApiClientContext,
-} from '@universe/api/src/clients/uniswap/createUniswapApiClient'
 
 // Compliance API
 export {
@@ -191,12 +187,20 @@ export {
   type GetPortfolioQueryParams,
 } from '@universe/api/src/clients/dataApi/getGetPortfolioQueryOptions'
 export {
+  getGetWalletBalancesQueryOptions,
+  type GetWalletBalancesQueryParams,
+} from '@universe/api/src/clients/dataApi/getGetWalletBalancesQueryOptions'
+export {
   TopPoolsOrderBy,
   TokensOrderBy,
+  type BalanceComponent,
   type GetPortfolioRequest,
   type GetPortfolioResponse,
+  type GetWalletBalancesRequest,
+  type GetWalletBalancesResponse,
   type ListTopPoolsResponse,
   type ListTokensResponse,
+  type WalletBalance,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 export { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 export {

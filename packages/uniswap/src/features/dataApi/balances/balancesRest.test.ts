@@ -1,13 +1,9 @@
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   convertRestBalanceToPortfolioBalance,
-  createPortfolioCacheUpdater,
   formatPortfolioResponseToMap,
   usePortfolioTotalValue,
 } from 'uniswap/src/features/dataApi/balances/balancesRest'
-import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { DAI_CURRENCY_INFO, UNI_CURRENCY_INFO } from 'uniswap/src/test/fixtures'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 
 const {
@@ -49,39 +45,6 @@ vi.mock('uniswap/src/features/transactions/selectors', async (importOriginal) =>
 vi.mock('uniswap/src/utils/usePlatformBasedFetchPolicy', () => ({
   usePlatformBasedFetchPolicy: mockUsePlatformBasedFetchPolicy,
 }))
-
-const mainnetNativeAddress = getNativeAddress(UniverseChainId.Mainnet)
-
-const mockPortfolioData = {
-  portfolio: {
-    balances: [
-      { token: { address: mainnetNativeAddress, chainId: 1 }, amount: { amount: 1 }, isHidden: false },
-      { token: { address: '0x2', chainId: 1 }, amount: { amount: 2 }, isHidden: false },
-      { token: { address: mainnetNativeAddress, chainId: 1 }, amount: { amount: 3 }, isHidden: true },
-    ],
-    totalValueUsd: 300,
-  },
-}
-
-const mockPortfolioBalance1: PortfolioBalance = {
-  balanceUSD: 100,
-  cacheId: 'TokenBalance:1-0x1-0xuser',
-  currencyInfo: UNI_CURRENCY_INFO,
-  id: '1-0x1-0xuser',
-  isHidden: false,
-  quantity: 1,
-  relativeChange24: 2.5,
-}
-
-const mockPortfolioBalance2: PortfolioBalance = {
-  balanceUSD: 200,
-  cacheId: 'TokenBalance:1-0x3-0xuser',
-  currencyInfo: DAI_CURRENCY_INFO,
-  id: '1-0x3-0xuser',
-  isHidden: false,
-  quantity: 1,
-  relativeChange24: 0,
-}
 
 describe(formatPortfolioResponseToMap, () => {
   const owner = '0xuser'
@@ -276,68 +239,6 @@ describe(convertRestBalanceToPortfolioBalance, () => {
 
     const result = convertRestBalanceToPortfolioBalance(balance as never, '0xuser')
     expect(result).toBeUndefined()
-  })
-})
-
-describe(createPortfolioCacheUpdater, () => {
-  it('updates balance visibility and total value when hiding', () => {
-    const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
-      updateData: vi.fn(),
-    }
-
-    const updater = createPortfolioCacheUpdater(ctx)({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    // Execute the update
-    updater({ hidden: true, portfolioBalance: mockPortfolioBalance1 })
-
-    // Verify the key was built correctly
-    expect(ctx.getCurrentData).toHaveBeenCalledWith({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    // Test the updater function that was passed to setQueryData
-    const updaterFn = ctx.updateData.mock.calls[0]![1]
-    const result = updaterFn(mockPortfolioData)
-
-    expect(result.portfolio.balances[0].isHidden).toBe(true)
-    expect(result.portfolio.balances[1].isHidden).toBe(false)
-    expect(result.portfolio.balances[2].isHidden).toBe(true)
-    expect(result.portfolio.totalValueUsd).toBe(200)
-  })
-
-  it('updates balance visibility and total value when un-hiding', () => {
-    const ctx = {
-      getCurrentData: vi.fn().mockReturnValue(mockPortfolioData),
-      updateData: vi.fn(),
-    }
-
-    const updater = createPortfolioCacheUpdater(ctx)({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    // Execute the update
-    updater({ hidden: false, portfolioBalance: mockPortfolioBalance2 })
-
-    // Verify the key was built correctly
-    expect(ctx.getCurrentData).toHaveBeenCalledWith({
-      evmAddress: '0xuser',
-      chainIds: [1, 2],
-    })
-
-    // Test the updater function that was passed to setQueryData
-    const updaterFn = ctx.updateData.mock.calls[0]![1]
-    const result = updaterFn(mockPortfolioData)
-
-    expect(result.portfolio.balances[0].isHidden).toBe(false)
-    expect(result.portfolio.balances[1].isHidden).toBe(false)
-    expect(result.portfolio.balances[2].isHidden).toBe(false)
-    expect(result.portfolio.totalValueUsd).toBe(500)
   })
 })
 

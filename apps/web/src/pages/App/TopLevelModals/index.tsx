@@ -5,18 +5,15 @@ import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/Bridg
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { ReportTokenDataModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenDataModal'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AnalyticsDebugOverlayLazy } from 'uniswap/src/features/telemetry/debug/AnalyticsDebugOverlayLazy'
-import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent } from 'utilities/src/react/hooks'
 import { OAuthRedirectProvider } from '~/components/Passkey/OAuthRedirectContext'
 import { useOAuthRedirectRouter } from '~/components/Passkey/useOAuthRedirectRouter'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
 import { useAccountRiskCheck } from '~/hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { PasskeysHelpModalTypeAtom } from '~/hooks/usePasskeyAuthWithHelpModal'
 import { ModalRenderer } from '~/pages/App/TopLevelModals/modalRegistry'
 import { popupRegistry } from '~/state/popups/registry'
 import { PopupType } from '~/state/popups/types'
@@ -26,16 +23,7 @@ export function TopLevelModals() {
   const { t } = useTranslation()
   const isLandingPage = useIsPage(PageType.LANDING)
   const { evmAddress, svmAddress } = useActiveAddresses()
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: evmAddress ? { address: evmAddress } : undefined,
-  })
-  const evmAccountName = unitag?.username
-    ? unitag.username + '.uni.eth'
-    : evmAddress
-      ? shortenAddress({ address: evmAddress })
-      : undefined
   const blockedAddress = useAccountRiskCheck({ evmAddress, svmAddress })
-  const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
   const bridgedAssetModalProps = useAtomValue(BridgedAssetModalAtom)
   const wormholeModalProps = useAtomValue(WormholeModalAtom)
 
@@ -69,10 +57,6 @@ export function TopLevelModals() {
         <ModalRenderer modalName={ModalName.OffchainActivity} />
         <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
         <ModalRenderer modalName={ModalName.PendingWalletConnection} />
-        <ModalRenderer
-          modalName={ModalName.PasskeysHelp}
-          componentProps={{ type: passkeysHelpModalType, accountName: evmAccountName }}
-        />
         <ModalRenderer modalName={ModalName.AddPasskey} />
         <ModalRenderer modalName={ModalName.AddBackupLogin} />
         <ModalRenderer modalName={ModalName.RecoverWallet} />
@@ -103,10 +87,6 @@ export function TopLevelModals() {
       <ModalRenderer modalName={ModalName.AddLiquidity} />
       <ModalRenderer modalName={ModalName.RemoveLiquidity} />
       <ModalRenderer modalName={ModalName.ClaimFee} />
-      <ModalRenderer
-        modalName={ModalName.PasskeysHelp}
-        componentProps={{ type: passkeysHelpModalType, accountName: evmAccountName }}
-      />
       <ModalRenderer modalName={ModalName.Help} />
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
       <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />

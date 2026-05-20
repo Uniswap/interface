@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type ComponentRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, ModalCloseIcon, Text, TouchableArea, useDynamicFontSizing } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { isSafeNumber } from 'utilities/src/primitives/integer'
-import type { MockEarnVault } from '~/features/earn/_fixtures/vaults'
 import { PredefinedAmount } from '~/pages/Swap/Buy/PredefinedAmount'
 import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import {
@@ -28,7 +28,7 @@ const FIAT_DECIMALS = 2
 const PERCENT_OPTIONS = [0.25, 0.5, 0.75, 1] as const
 
 interface DepositAmountViewProps {
-  vault: MockEarnVault
+  vault: EarnVaultInfo
   availableBalance: number
   initialAmount?: string
   onBack: () => void
@@ -52,7 +52,7 @@ export function DepositAmountView({
 
   const [amount, setAmount] = useState(initialAmount)
   const [inputInFiat, setInputInFiat] = useState(true)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<ComponentRef<typeof StyledNumericalInput>>(null)
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
   const { fontSize, onLayout, onSetFontSize, onExtraElementLayout } = useDynamicFontSizing({
@@ -76,8 +76,9 @@ export function DepositAmountView({
       if (!isSafeNumber(value)) {
         return
       }
-      onSetFontSize(value)
-      setAmount(value)
+      const normalized = value.replace(/^0+(?=\d)/, '')
+      onSetFontSize(normalized)
+      setAmount(normalized)
     },
     [onSetFontSize],
   )
@@ -154,7 +155,7 @@ export function DepositAmountView({
           <NumericalInputWrapper>
             <Flex onLayout={onExtraElementLayout}>
               {inputInFiat && (
-                <NumericalInputSymbolContainer showPlaceholder={!amount} $fontSize={fontSize}>
+                <NumericalInputSymbolContainer showPlaceholder={!amount} numericalFontSize={fontSize}>
                   $
                 </NumericalInputSymbolContainer>
               )}
@@ -163,13 +164,13 @@ export function DepositAmountView({
               value={amount}
               onUserInput={handleUserInput}
               placeholder="0"
-              $width={scaledInputWidth}
-              $fontSize={fontSize}
-              $hasPrefix={inputInFiat}
+              fieldWidth={scaledInputWidth}
+              numericalFontSize={fontSize}
+              hasPrefix={inputInFiat}
               maxDecimals={FIAT_DECIMALS}
               ref={inputRef}
             />
-            <NumericalInputMimic ref={hiddenObserver.ref} $fontSize={fontSize}>
+            <NumericalInputMimic ref={hiddenObserver.ref} numericalFontSize={fontSize}>
               {amount}
             </NumericalInputMimic>
           </NumericalInputWrapper>

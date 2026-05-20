@@ -1,6 +1,6 @@
 import { isAddress as ethersIsAddress } from '@ethersproject/address'
-import { isAddress as viemIsAddress } from 'viem'
+import { type Address, isAddress as viemIsAddress } from 'viem'
 
-export function createIsAddress(ctx: { getViemEnabled: () => boolean }): (value: string) => boolean {
-  return (value) => (ctx.getViemEnabled() ? viemIsAddress(value) : ethersIsAddress(value))
+export function createIsAddress(ctx: { getViemEnabled: () => boolean }): (value: string) => value is Address {
+  return (value): value is Address => (ctx.getViemEnabled() ? viemIsAddress(value) : ethersIsAddress(value))
 }

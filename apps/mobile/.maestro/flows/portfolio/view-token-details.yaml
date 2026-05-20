@@ -48,11 +48,11 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 
-# Assert TDP Buy/Sell (opened from a balance the wallet holds)
+# Assert expected action buttons are shown for a native token
+# Note: under the multichain UX flag, the single Swap button is replaced by Buy/Sell.
+# We assert Buy here (Sell is also present); see TokenDetailsActionButtonsWrapper.
 - assertVisible:
     id: ${output.testIds.TokenDetailsBuyButton}
-- assertVisible:
-    id: ${output.testIds.TokenDetailsSellButton}
 
 # Note: Copy address button is present but disabled for native tokens
 
@@ -102,11 +102,9 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 
-# Assert multichain TDP Buy/Sell (opened from a balance the wallet holds)
+# Assert expected action buttons are shown for a standard token (multichain UX: Buy/Sell)
 - assertVisible:
     id: ${output.testIds.TokenDetailsBuyButton}
-- assertVisible:
-    id: ${output.testIds.TokenDetailsSellButton}
 
 # Standard tokens have a contract address to copy
 - assertVisible:

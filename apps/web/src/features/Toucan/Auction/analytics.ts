@@ -1,3 +1,5 @@
+import { SharedQueryClient } from '@universe/api'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import {
   AuctionBidAnalyticsProperties,
   AuctionBidInputtedAnalyticsProperties,
@@ -27,6 +29,7 @@ export function getAuctionWithdrawBaseAnalyticsProperties({
   expectedReceiveAmount,
   isGraduated,
   isAuctionCompleted,
+  isCentralizedPricesEnabled,
 }: {
   trace: ITraceContext
   chainId: number
@@ -41,6 +44,7 @@ export function getAuctionWithdrawBaseAnalyticsProperties({
   expectedReceiveAmount?: number
   isGraduated: boolean
   isAuctionCompleted: boolean
+  isCentralizedPricesEnabled: boolean
 }): Omit<AuctionWithdrawAnalyticsProperties, 'transaction_hash'> {
   return {
     ...trace,
@@ -60,6 +64,13 @@ export function getAuctionWithdrawBaseAnalyticsProperties({
     expected_receive_amount: expectedReceiveAmount,
     is_graduated: isGraduated,
     is_auction_completed: isAuctionCompleted,
+    price_source: getDisplayedPriceSource({
+      isCentralizedPricesEnabled,
+      surface: 'usdc',
+      chainId,
+      address: info.bidTokenAddress ?? '',
+      queryClient: SharedQueryClient,
+    }),
   }
 }
 
@@ -78,6 +89,7 @@ export function getAuctionBidBaseAnalyticsProperties({
   maxReceivableAmount,
   tokenSymbol,
   tokenName,
+  isCentralizedPricesEnabled,
 }: {
   trace: ITraceContext
   chainId: number
@@ -89,6 +101,7 @@ export function getAuctionBidBaseAnalyticsProperties({
   maxReceivableAmount?: number
   tokenSymbol?: string
   tokenName?: string
+  isCentralizedPricesEnabled: boolean
 }): Omit<AuctionBidAnalyticsProperties, 'transaction_hash'> {
   return {
     ...trace,
@@ -104,6 +117,13 @@ export function getAuctionBidBaseAnalyticsProperties({
     max_receivable_amount: maxReceivableAmount,
     token_symbol: tokenSymbol,
     token_name: tokenName,
+    price_source: getDisplayedPriceSource({
+      isCentralizedPricesEnabled,
+      surface: 'usdc',
+      chainId,
+      address: info.bidTokenAddress,
+      queryClient: SharedQueryClient,
+    }),
   }
 }
 
@@ -121,6 +141,7 @@ export function getAuctionBidInputtedAnalyticsProperties({
   minExpectedReceiveAmount,
   maxReceivableAmount,
   tokenSymbol,
+  isCentralizedPricesEnabled,
 }: {
   trace: ITraceContext
   chainId: number
@@ -135,6 +156,7 @@ export function getAuctionBidInputtedAnalyticsProperties({
   minExpectedReceiveAmount?: number
   maxReceivableAmount?: number
   tokenSymbol?: string
+  isCentralizedPricesEnabled: boolean
 }): AuctionBidInputtedAnalyticsProperties {
   return {
     ...trace,
@@ -150,5 +172,12 @@ export function getAuctionBidInputtedAnalyticsProperties({
     min_expected_receive_amount: minExpectedReceiveAmount,
     max_receivable_amount: maxReceivableAmount,
     token_symbol: tokenSymbol,
+    price_source: getDisplayedPriceSource({
+      isCentralizedPricesEnabled,
+      surface: 'usdc',
+      chainId,
+      address: bidTokenAddress,
+      queryClient: SharedQueryClient,
+    }),
   }
 }
