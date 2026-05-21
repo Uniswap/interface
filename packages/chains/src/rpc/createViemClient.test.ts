@@ -54,7 +54,7 @@ describe('createViemClientFactory — branching contract', () => {
     const factory = buildFactory({
       rpcUrl: 'https://gateway/rpc/1',
       isUniRpc: true,
-      headers: { 'x-uni-service-id': 'ext' },
+      headers: { 'x-request-source': 'ext' },
       getRequestHeaders,
     })
     const client = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!
@@ -63,7 +63,7 @@ describe('createViemClientFactory — branching contract', () => {
 
     // Header strategy → outgoing fetch carries both static + dynamic headers.
     const headers = new Headers(lastInit?.headers as HeadersInit)
-    expect(headers.get('x-uni-service-id')).toBe('ext')
+    expect(headers.get('x-request-source')).toBe('ext')
     expect(headers.get('x-session-id')).toBe('sess-1')
     expect(getRequestHeaders).toHaveBeenCalled()
     // Cookie credentials must NOT be set on header strategy.
@@ -74,7 +74,7 @@ describe('createViemClientFactory — branching contract', () => {
     const factory = buildFactory({
       rpcUrl: 'https://gateway/rpc/1',
       isUniRpc: true,
-      headers: { 'x-uni-service-id': 'web' },
+      headers: { 'x-request-source': 'web' },
       credentials: 'include',
     })
     const client = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!
@@ -83,7 +83,7 @@ describe('createViemClientFactory — branching contract', () => {
 
     expect(lastInit?.credentials).toBe('include')
     const headers = new Headers(lastInit?.headers as HeadersInit)
-    expect(headers.get('x-uni-service-id')).toBe('web')
+    expect(headers.get('x-request-source')).toBe('web')
   })
 
   test('!isUniRpc → routes through plain http() transport', async () => {

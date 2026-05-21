@@ -14,7 +14,7 @@ export interface RpcConfig {
   isUniRpc?: boolean
   shouldUseFlashbots?: boolean
   flashbotsConfig?: FlashbotsConfig
-  /** Static headers to include in RPC requests (e.g., x-uni-service-id for UniRPC) */
+  /** Static headers to include in RPC requests (e.g., x-request-source for UniRPC) */
   headers?: Record<string, string>
   /** Async callback resolved per-request for dynamic headers (e.g., session auth) */
   getRequestHeaders?: () => Promise<Record<string, string>>

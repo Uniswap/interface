@@ -10,7 +10,7 @@ import type { RpcConfigResolver } from '../resolveRpcConfig'
 import { UniverseChainId, RPCType } from '../types'
 import type { ViemChainInfo } from '../types'
 
-const SERVICE_ID = 'uniswap-extension'
+const REQUEST_SOURCE = 'uniswap-extension'
 const VITALIK_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 
 const TEST_CHAIN_INFO: Record<number, ViemChainInfo> = {
@@ -47,7 +47,7 @@ describe('UniRPC Integration', () => {
       resolveUniRpcConfig: createUniRpcConfigResolver({
         getFeatureFlag: () => true,
         getEntryGatewayUrl: () => session.backendUrl,
-        serviceId: SERVICE_ID,
+        requestSource: REQUEST_SOURCE,
         getRequestHeaders: () => session.getSessionHeaders(),
       }),
       selectLegacyRpcUrl: () => null,

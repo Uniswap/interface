@@ -21,14 +21,13 @@ export const defaultResolveRpcConfig = createRpcConfigResolver({
     // doesn't trigger StatsigClient.instance()'s broken-fallback branch.
     getFeatureFlag: () => isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled),
     getEntryGatewayUrl,
-    serviceId: REQUEST_SOURCE,
+    requestSource: REQUEST_SOURCE,
     getRequestHeaders: async () => {
       const [session, deviceId] = await Promise.all([
         provideSessionStorage().get(),
         provideDeviceIdService().getDeviceId(),
       ])
       return {
-        'x-request-source': REQUEST_SOURCE,
         ...(session?.sessionId && { 'X-Session-ID': session.sessionId }),
         ...(deviceId && { 'X-Device-ID': deviceId }),
       }

@@ -44,7 +44,7 @@ describe('createEthersProviderFactory — branching contract', () => {
     const factory = buildFactory({
       rpcUrl: 'https://gateway/rpc/1',
       isUniRpc: true,
-      headers: { 'x-uni-service-id': 'web' },
+      headers: { 'x-request-source': 'web' },
       getRequestHeaders: async () => ({ 'x-session-id': 'sess' }),
     })
 
@@ -58,7 +58,7 @@ describe('createEthersProviderFactory — branching contract', () => {
     const factory = buildFactory({
       rpcUrl: 'https://gateway/rpc/1',
       isUniRpc: true,
-      headers: { 'x-uni-service-id': 'web' },
+      headers: { 'x-request-source': 'web' },
       credentials: 'include',
     })
 
@@ -102,7 +102,7 @@ describe('createEthersProviderFactory — branching contract', () => {
       shouldUseFlashbots: true,
       flashbotsConfig: { refundPercent: 50, calldataHintsEnabled: false },
       isUniRpc: true,
-      headers: { 'x-uni-service-id': 'web' },
+      headers: { 'x-request-source': 'web' },
       getRequestHeaders: async () => ({}),
     })
 

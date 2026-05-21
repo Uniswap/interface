@@ -25,7 +25,7 @@ const SHARED_UNI_RPC_CONFIG = {
   // doesn't trigger StatsigClient.instance()'s broken-fallback branch.
   getFeatureFlag: () => isStatsigClientRegistered() && getFeatureFlag(FeatureFlags.UniRpcEnabled),
   getEntryGatewayUrl,
-  serviceId: REQUEST_SOURCE,
+  requestSource: REQUEST_SOURCE,
 } as const
 
 const webResolveUniRpcConfig = createUniRpcConfigResolver({
@@ -41,7 +41,6 @@ const extensionResolveUniRpcConfig = createUniRpcConfigResolver({
       provideDeviceIdService().getDeviceId(),
     ])
     return {
-      'x-request-source': REQUEST_SOURCE,
       ...(session?.sessionId && { 'X-Session-ID': session.sessionId }),
       ...(deviceId && { 'X-Device-ID': deviceId }),
     }

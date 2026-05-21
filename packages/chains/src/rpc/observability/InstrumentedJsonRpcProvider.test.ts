@@ -35,7 +35,7 @@ describe('InstrumentedJsonRpcProvider', () => {
     // breaking ENS/portfolio/gas resolution against the entry gateway.
     const provider = new InstrumentedJsonRpcProvider({
       url: 'https://entry-gateway.api.uniswap.org/rpc/1',
-      headers: { 'x-uni-service-id': 'uniswap-web' },
+      headers: { 'x-request-source': 'uniswap-web' },
       credentials: 'include',
       chainIdOrNetwork: 1,
       observer: noopObserver,
@@ -43,20 +43,20 @@ describe('InstrumentedJsonRpcProvider', () => {
 
     const connection = getConnection(provider)
     expect(connection.fetchOptions?.credentials).toBe('include')
-    expect(connection.headers?.['x-uni-service-id']).toBe('uniswap-web')
+    expect(connection.headers?.['x-request-source']).toBe('uniswap-web')
   })
 
   test('omits fetchOptions when no credentials supplied', () => {
     const provider = new InstrumentedJsonRpcProvider({
       url: 'https://example.com/rpc',
-      headers: { 'x-uni-service-id': 'uniswap-web' },
+      headers: { 'x-request-source': 'uniswap-web' },
       chainIdOrNetwork: 1,
       observer: noopObserver,
     })
 
     const connection = getConnection(provider)
     expect(connection.fetchOptions).toBeUndefined()
-    expect(connection.headers?.['x-uni-service-id']).toBe('uniswap-web')
+    expect(connection.headers?.['x-request-source']).toBe('uniswap-web')
   })
 
   test('uses bare URL when neither headers nor credentials present (legacy path)', () => {
@@ -95,7 +95,7 @@ describe('InstrumentedJsonRpcProvider', () => {
 
     const provider = new InstrumentedJsonRpcProvider({
       url: 'https://entry-gateway.api.uniswap.org/rpc/1',
-      headers: { 'x-uni-service-id': 'uniswap-web' },
+      headers: { 'x-request-source': 'uniswap-web' },
       chainIdOrNetwork: 1,
       observer,
     })

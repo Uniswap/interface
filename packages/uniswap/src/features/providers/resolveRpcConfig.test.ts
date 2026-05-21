@@ -6,7 +6,7 @@ import type { Mock } from 'vitest'
 
 const UNIRPC_CONFIG: UniRpcConfig = {
   rpcUrl: 'https://entry-gateway.example.uniswap.org/rpc',
-  headers: { 'x-uni-service-id': 'test' },
+  headers: { 'x-request-source': 'test' },
 }
 
 const LEGACY_PUBLIC: RpcConfig = { rpcUrl: 'https://legacy.example.com/public' }

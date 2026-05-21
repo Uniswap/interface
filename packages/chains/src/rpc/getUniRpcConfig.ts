@@ -11,7 +11,7 @@ export interface UniRpcConfig {
 interface UniRpcConfigResolverCtx {
   getFeatureFlag: () => boolean
   getEntryGatewayUrl: () => string
-  serviceId: string
+  requestSource: string
   getRequestHeaders?: () => Promise<Record<string, string>>
   credentials?: 'include'
 }
@@ -51,7 +51,7 @@ export function createUniRpcConfigResolver(ctx: UniRpcConfigResolverCtx) {
       return {
         rpcUrl: `${baseUrl}/rpc/${input.chainId}`,
         headers: {
-          'x-uni-service-id': ctx.serviceId,
+          'x-request-source': ctx.requestSource,
         },
         getRequestHeaders: ctx.getRequestHeaders,
         credentials: ctx.credentials,

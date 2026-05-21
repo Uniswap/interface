@@ -97,7 +97,7 @@ const VIEM_PATHS: RpcPath[] = [
       const factory = buildViemFactory({
         rpcUrl: 'https://gateway/rpc/1',
         isUniRpc: true,
-        headers: { 'x-uni-service-id': 'ext' },
+        headers: { 'x-request-source': 'ext' },
         getRequestHeaders: async () => ({ 'x-session-id': 'sess' }),
       })
       const client = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!
@@ -110,7 +110,7 @@ const VIEM_PATHS: RpcPath[] = [
       const factory = buildViemFactory({
         rpcUrl: 'https://gateway/rpc/1',
         isUniRpc: true,
-        headers: { 'x-uni-service-id': 'web' },
+        headers: { 'x-request-source': 'web' },
         credentials: 'include',
       })
       const client = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!
@@ -143,7 +143,7 @@ const VIEM_PATHS: RpcPath[] = [
       const factory = buildEthersFactory({
         rpcUrl: 'https://gateway/rpc/1',
         isUniRpc: true,
-        headers: { 'x-uni-service-id': 'ext' },
+        headers: { 'x-request-source': 'ext' },
         getRequestHeaders: async () => ({ 'x-session-id': 'sess' }),
       })
       const provider = factory({ chainId: CHAIN_ID, rpcType: RPCType.Public })!

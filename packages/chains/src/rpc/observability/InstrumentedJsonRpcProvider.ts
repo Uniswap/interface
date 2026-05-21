@@ -28,7 +28,7 @@ export class InstrumentedJsonRpcProvider extends StaticJsonRpcProvider {
   }) {
     // ethers' StaticJsonRpcProvider accepts either a string URL or a ConnectionInfo
     // object. Use ConnectionInfo when headers or credentials are present so
-    // UniRPC's static auth headers (e.g. x-uni-service-id) and cookie credentials
+    // UniRPC's static auth headers (e.g. x-request-source) and cookie credentials
     // flow through the underlying fetch.
     //
     // Credentials must go via `fetchOptions.credentials` — ConnectionInfo has no

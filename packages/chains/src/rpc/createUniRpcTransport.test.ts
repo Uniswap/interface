@@ -9,7 +9,7 @@ vi.mock('utilities/src/logger/logger', () => ({
 }))
 
 const RPC_URL = 'https://entry-gateway.api.uniswap.org/rpc/1'
-const STATIC_HEADERS = { 'x-uni-service-id': 'uniswap-web' }
+const STATIC_HEADERS = { 'x-request-source': 'uniswap-web' }
 
 let lastInit: RequestInit | undefined
 let lastUrl: string | undefined
@@ -56,10 +56,10 @@ describe('createUniRpcTransportFactory — cookies session', () => {
     expect(lastInit?.credentials).toBe('include')
   })
 
-  test('sends static headers (x-uni-service-id) in outgoing fetch', async () => {
+  test('sends static headers (x-request-source) in outgoing fetch', async () => {
     await sendRequest(buildTransport, { rpcUrl: RPC_URL, headers: STATIC_HEADERS })
     const headers = new Headers(lastInit?.headers as HeadersInit)
-    expect(headers.get('x-uni-service-id')).toBe('uniswap-web')
+    expect(headers.get('x-request-source')).toBe('uniswap-web')
   })
 
   test('targets the configured RPC URL', async () => {
@@ -79,7 +79,7 @@ describe('createUniRpcTransportFactory — headers session', () => {
 
     expect(getSessionHeaders).toHaveBeenCalledTimes(1)
     const headers = new Headers(lastInit?.headers as HeadersInit)
-    expect(headers.get('x-uni-service-id')).toBe('uniswap-web')
+    expect(headers.get('x-request-source')).toBe('uniswap-web')
     expect(headers.get('x-session-id')).toBe('sess-1')
   })
 
@@ -114,7 +114,7 @@ describe('createUniRpcTransportFactory — headers session', () => {
   })
 
   test('dynamic headers override static when keys collide', async () => {
-    const getSessionHeaders = vi.fn().mockResolvedValue({ 'x-uni-service-id': 'session-override' })
+    const getSessionHeaders = vi.fn().mockResolvedValue({ 'x-request-source': 'session-override' })
     const buildTransport = createUniRpcTransportFactory({
       session: { type: 'headers', getSessionHeaders },
     })
@@ -124,7 +124,7 @@ describe('createUniRpcTransportFactory — headers session', () => {
     const headers = new Headers(lastInit?.headers as HeadersInit)
     // Documents the precedence: dynamic (per-request) wins over static.
     // If this changes, callers downstream of `getSessionHeaders` need to know.
-    expect(headers.get('x-uni-service-id')).toBe('session-override')
+    expect(headers.get('x-request-source')).toBe('session-override')
   })
 
   test('resolves headers per request — multiple calls trigger multiple resolutions', async () => {

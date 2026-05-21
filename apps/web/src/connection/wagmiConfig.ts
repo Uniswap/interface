@@ -115,7 +115,7 @@ const webResolveRpcConfig = createRpcConfigResolver({
   resolveUniRpcConfig: createUniRpcConfigResolver({
     getFeatureFlag: () => getFeatureFlag(FeatureFlags.UniRpcEnabled),
     getEntryGatewayUrl,
-    serviceId: 'uniswap-web',
+    requestSource: 'uniswap-web',
     credentials: 'include',
   }),
   selectLegacyRpcUrl: selectRpcUrl,
