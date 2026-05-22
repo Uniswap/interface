@@ -7,11 +7,8 @@ import type { Mock } from 'vitest'
 import { useDerivedSendInfo } from '~/features/Swap/state/send/hooks'
 import { SendState } from '~/features/Swap/state/send/SendContext'
 
-vi.mock('@web3-react/core', () => ({
-  useWeb3React: () => ({
-    chainId: 1,
-    provider: {},
-  }),
+vi.mock('~/hooks/useEthersProvider', () => ({
+  useEthersProvider: () => ({}),
 }))
 vi.mock('~/hooks/useAccount', () => ({
   useAccount: () => '0xYourAccountAddress',
@@ -48,8 +45,9 @@ vi.mock('~/hooks/useUSDTokenUpdater', () => ({
 vi.mock('~/lib/hooks/useCurrencyBalance', () => ({
   useCurrencyBalances: () => [undefined, undefined],
 }))
+const mockUseCreateTransferTransaction = vi.fn(() => undefined)
 vi.mock('~/utils/transfer', () => ({
-  useCreateTransferTransaction: () => undefined,
+  useCreateTransferTransaction: (...args: unknown[]) => mockUseCreateTransferTransaction(...args),
 }))
 vi.mock('uniswap/src/features/ens/api', () => ({
   useENSName: vi.fn(),
@@ -274,5 +272,44 @@ describe('useDerivedSendInfo', () => {
     const info = result.current
 
     expect(info.recipientData).toEqual(validatedRecipientData)
+  })
+
+
+  it('uses inputCurrency.chainId for transfer when it differs from ambient wallet chain', () => {
+    const mockCurrency = {
+      chainId: 10,
+      isNative: false,
+      isToken: true,
+      address: '0xabcdef1234567890abcdef1234567890abcdef12',
+      decimals: 18,
+      symbol: 'TEST',
+      name: 'Test Token',
+      equals: () => false,
+      wrapped: undefined,
+    } as unknown as Currency
+
+    const mockSendState: SendState = {
+      ...defaultSendState,
+      inputCurrency: mockCurrency,
+    }
+
+    renderHook(() => useDerivedSendInfo(mockSendState))
+
+    expect(mockUseCreateTransferTransaction).toHaveBeenCalledWith(
+      expect.objectContaining({ chainId: 10 }),
+    )
+  })
+
+  it('falls back to multichain chainId when no inputCurrency is set', () => {
+    const mockSendState: SendState = {
+      ...defaultSendState,
+      inputCurrency: undefined,
+    }
+
+    renderHook(() => useDerivedSendInfo(mockSendState))
+
+    expect(mockUseCreateTransferTransaction).toHaveBeenCalledWith(
+      expect.objectContaining({ chainId: 1 }),
+    )
   })
 })
