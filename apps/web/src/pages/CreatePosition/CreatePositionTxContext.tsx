@@ -100,7 +100,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     return {
       protocolVersion,
       poolOrPair,
-      address: evmAddress,
+      address: smartPoolAddress ?? evmAddress,
       token0: TOKEN0,
       token1: TOKEN1,
       tickLower: protocolVersion !== ProtocolVersion.V2 ? (tickLower ?? undefined) : undefined,
@@ -110,7 +110,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       skipDependentAmount: protocolVersion === ProtocolVersion.V2 ? false : outOfRange || invalidRange,
       isSmartPool: !!smartPoolAddress,
     }
-  }, [TOKEN0, TOKEN1, exactField, ticks, poolOrPair, depositState, evmAddress, protocolVersion, invalidRange])
+  }, [TOKEN0, TOKEN1, exactField, ticks, poolOrPair, depositState, evmAddress, smartPoolAddress, protocolVersion, invalidRange])
 
   const {
     currencyMaxAmounts,
