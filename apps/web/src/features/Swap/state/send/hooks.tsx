@@ -1,7 +1,7 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import type { GasFeeResult } from '@universe/api'
-import { useWeb3React } from '@web3-react/core'
+import { useEthersProvider } from '~/hooks/useEthersProvider'
 import { useMemo } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
@@ -46,9 +46,12 @@ export type SendInfo = {
 
 export function useDerivedSendInfo(state: SendState): SendInfo {
   const account = useAccount()
-  const { provider } = useWeb3React()
-  const { chainId } = useMultichainContext()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
+  const { chainId: multichainChainId } = useMultichainContext()
+  // Use the selected asset's chain for all send operations to prevent
+  // cross-chain mismatch when the wallet is on a different network.
+  const chainId = inputCurrency?.chainId ?? multichainChainId
+  const provider = useEthersProvider({ chainId })
 
   // If we have validatedRecipientData, skip custom lookups
   // Otherwise, use raw `recipient` input from the user.
