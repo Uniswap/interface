@@ -323,6 +323,11 @@ export function SelectTokensStep({
       return undefined
     }
 
+    // Only enforce native ETH on pool creation; allow WETH when adding liquidity to an existing pool.
+    if (!creatingPoolOrPair) {
+      return undefined
+    }
+
     if (hook && allowedV4WethHookAddresses.includes(hook)) {
       return undefined
     }
@@ -357,7 +362,7 @@ export function SelectTokensStep({
 
     setShowWrappedNativeWarning(false)
     return undefined
-  }, [token0, token1, protocolVersion, hook, allowedV4WethHookAddresses])
+  }, [token0, token1, protocolVersion, hook, allowedV4WethHookAddresses, creatingPoolOrPair])
 
   const token0CurrencyInfo = useCurrencyInfo(currencyId(token0))
   const token1CurrencyInfo = useCurrencyInfo(currencyId(token1))
