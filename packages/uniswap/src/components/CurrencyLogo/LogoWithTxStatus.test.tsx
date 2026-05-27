@@ -8,10 +8,14 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { render } from 'uniswap/src/test/test-utils'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+
+const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`
+const mainnetNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.Mainnet}`
 
 vi.mock('ui/src/components/UniversalImage/internal/PlainImage', async (importOriginal) => {
   const actual = await importOriginal<typeof import('ui/src/components/UniversalImage/internal/PlainImage.web')>()
@@ -75,13 +79,13 @@ describe(LogoWithTxStatus, () => {
           <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.ArbitrumOne })} />,
         )
 
-        expect(queryByTestId('network-logo')).toBeTruthy()
+        expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
       })
 
       it('does not show network logo if chainId is not specified', () => {
         const { queryByTestId } = render(<LogoWithTxStatus {...currencyLogoProps({ chainId: null })} />)
 
-        expect(queryByTestId('network-logo')).toBeFalsy()
+        expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeFalsy()
       })
 
       it('does not show network logo if chainId is Mainnet', () => {
@@ -89,7 +93,7 @@ describe(LogoWithTxStatus, () => {
           <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })} />,
         )
 
-        expect(queryByTestId('network-logo')).toBeFalsy()
+        expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
       })
     })
 
@@ -192,7 +196,7 @@ describe(DappLogoWithTxStatus, () => {
 
   describe('status icon', () => {
     const showedIconCases: [string, WalletConnectEvent, string][] = [
-      ['NetworkChanged', WalletConnectEvent.NetworkChanged, 'network-logo'],
+      ['NetworkChanged', WalletConnectEvent.NetworkChanged, arbitrumNetworkLogoTestID],
       ['TransactionConfirmed', WalletConnectEvent.TransactionConfirmed, 'icon-approve'],
       ['TransactionFailed', WalletConnectEvent.TransactionFailed, 'icon-alert'],
     ]
@@ -213,7 +217,7 @@ describe(DappLogoWithTxStatus, () => {
 
       expect(queryByTestId('icon-approve')).toBeFalsy()
       expect(queryByTestId('icon-alert')).toBeFalsy()
-      expect(queryByTestId('network-logo')).toBeFalsy()
+      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeFalsy()
     })
 
     it('does not render an icon if there is no event', () => {
@@ -221,7 +225,7 @@ describe(DappLogoWithTxStatus, () => {
 
       expect(queryByTestId('icon-approve')).toBeFalsy()
       expect(queryByTestId('icon-alert')).toBeFalsy()
-      expect(queryByTestId('network-logo')).toBeFalsy()
+      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeFalsy()
     })
   })
 
@@ -276,14 +280,14 @@ describe(DappLogoWithWCBadge, () => {
     it('renders transaction summary network logo if chain is not Mainnet', () => {
       const { queryByTestId } = render(<DappLogoWithWCBadge {...props} />)
 
-      expect(queryByTestId('network-logo')).toBeTruthy()
+      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
       expect(queryByTestId('wallet-connect-logo')).toBeFalsy()
     })
 
     it('renders wallet connect logo if chain is Mainnet', () => {
       const { queryByTestId } = render(<DappLogoWithWCBadge {...props} chainId={UniverseChainId.Mainnet} />)
 
-      expect(queryByTestId('network-logo')).toBeFalsy()
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
       expect(queryByTestId('wallet-connect-logo')).toBeTruthy()
     })
   })

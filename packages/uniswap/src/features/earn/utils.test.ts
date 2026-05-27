@@ -13,7 +13,9 @@ import {
   getEarnVaultId,
   getEarnVaultInfo,
   getEarnVaultInfos,
+  getEarnVaultsSortedByPosition,
   getProjectedAnnualEarningsUsd,
+  getTotalEarnDepositedUsd,
   getTokenBalanceUsd,
   getTokenProjectCurrencyIds,
   hasEarnPosition,
@@ -133,6 +135,7 @@ describe('earn API mappers', () => {
     const position = new DataApiEarnPosition({
       vault: createDataApiVault(),
       sharesRaw: '1000000000000000000000',
+      currentAssetsRaw: '1005000000',
       currentAssetsUsd: 1005,
     })
 
@@ -141,10 +144,25 @@ describe('earn API mappers', () => {
     expect(mappedPosition).toEqual({
       vaultId: getEarnVaultId({ chainId: UniverseChainId.Mainnet, vaultAddress: VAULT_ADDRESS }),
       depositedUsd: 1005,
+      depositedRaw: '1005000000',
       apyPercent: 4.8,
       sharesRaw: '1000000000000000000000',
     })
     expect(getEarnPositionInfosByVaultId([position]).get(mappedPosition?.vaultId ?? '')).toEqual(mappedPosition)
+  })
+
+  it('defaults missing raw position amounts to zero', () => {
+    const mappedPosition = getEarnPositionInfo(
+      new DataApiEarnPosition({
+        vault: createDataApiVault(),
+        currentAssetsUsd: 0,
+      }),
+    )
+
+    expect(mappedPosition).toMatchObject({
+      depositedRaw: '0',
+      sharesRaw: '0',
+    })
   })
 
   it('builds currency ids for token project deployments', () => {
@@ -177,16 +195,75 @@ describe('earn API mappers', () => {
     expect(getProjectedAnnualEarningsUsd({ balanceUsd: 1_000, apyPercent: 5.23 })).toBeCloseTo(52.3)
   })
 
+  it('sums active earn deposits by USD value', () => {
+    expect(
+      getTotalEarnDepositedUsd([
+        { vaultId: '1-0xvault-1', depositedUsd: 100, depositedRaw: '100000000', apyPercent: 1, sharesRaw: '1' },
+        { vaultId: '1-0xvault-2', depositedUsd: 25, depositedRaw: '25000000', apyPercent: 1, sharesRaw: '1' },
+        { vaultId: '1-0xvault-3', depositedUsd: 10, depositedRaw: '0', apyPercent: 1, sharesRaw: '0' },
+      ]),
+    ).toBe(135)
+  })
+
+  it('sorts vaults with active positions first by deposited USD value', () => {
+    const vaultWithoutPosition = createSharedVault({ id: 'vault-without-position' })
+    const smallerPositionVault = createSharedVault({ id: 'smaller-position-vault' })
+    const largerPositionVault = createSharedVault({ id: 'larger-position-vault' })
+    const positionsByVaultId = new Map([
+      [
+        smallerPositionVault.id,
+        {
+          vaultId: smallerPositionVault.id,
+          depositedUsd: 25,
+          depositedRaw: '25000000',
+          apyPercent: 1,
+          sharesRaw: '1',
+        },
+      ],
+      [
+        largerPositionVault.id,
+        {
+          vaultId: largerPositionVault.id,
+          depositedUsd: 100,
+          depositedRaw: '100000000',
+          apyPercent: 1,
+          sharesRaw: '1',
+        },
+      ],
+    ])
+
+    expect(
+      getEarnVaultsSortedByPosition({
+        positionsByVaultId,
+        vaults: [vaultWithoutPosition, smallerPositionVault, largerPositionVault],
+      }).map((vault) => vault.id),
+    ).toEqual([largerPositionVault.id, smallerPositionVault.id, vaultWithoutPosition.id])
+  })
+
   it('treats positions with deposited USD or raw shares as existing deposits', () => {
-    expect(hasEarnPosition({ vaultId: '1-0xvault', depositedUsd: 1, apyPercent: 1, sharesRaw: '0' })).toBe(true)
+    expect(
+      hasEarnPosition({ vaultId: '1-0xvault', depositedUsd: 1, depositedRaw: '0', apyPercent: 1, sharesRaw: '0' }),
+    ).toBe(true)
     expect(
       hasEarnPosition({
         vaultId: '1-0xvault',
         depositedUsd: 0,
+        depositedRaw: '1000000',
+        apyPercent: 1,
+        sharesRaw: '0',
+      }),
+    ).toBe(true)
+    expect(
+      hasEarnPosition({
+        vaultId: '1-0xvault',
+        depositedUsd: 0,
+        depositedRaw: '0',
         apyPercent: 1,
         sharesRaw: '1000000',
       }),
     ).toBe(true)
-    expect(hasEarnPosition({ vaultId: '1-0xvault', depositedUsd: 0, apyPercent: 1, sharesRaw: '0' })).toBe(false)
+    expect(
+      hasEarnPosition({ vaultId: '1-0xvault', depositedUsd: 0, depositedRaw: '0', apyPercent: 1, sharesRaw: '0' }),
+    ).toBe(false)
   })
 })

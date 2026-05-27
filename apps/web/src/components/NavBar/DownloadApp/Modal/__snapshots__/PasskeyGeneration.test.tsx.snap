@@ -7,10 +7,10 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-pad1331704925"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _mt-t-space-spa94665591 _mb-t-space-spa94665591 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _width-10037"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
       >
         <div
           class="is_TouchableArea  t_group_true"
@@ -65,10 +65,10 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
         </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-center _alignItems-center _gap-t-space-spa1360334018 _width-10037 _maxWidth-480px"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-center _alignItems-center _gap-t-space-spa1360334076 _width-10037"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334047"
         >
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _height-48px _width-80px _alignItems-center _justifyContent-center"
@@ -121,7 +121,7 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
             </div>
           </div>
           <div
-            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080 _pr-t-space-spa1360333989 _pl-t-space-spa1360333989"
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
           >
             <h3
               class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
@@ -151,12 +151,12 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334018 _pl-t-space-spa1360334018 _mb-t-space-spa1360334018 _width-10037"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
         >
           <button
             class="is_Button  t_group_item"
             data-testid="create-passkey"
-            dd-action-name="Create your passkey"
+            dd-action-name="Create passkey"
             style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded20); border-top-right-radius: var(--t-radius-rounded20); border-bottom-right-radius: var(--t-radius-rounded20); border-bottom-left-radius: var(--t-radius-rounded20); gap: var(--t-space-spacing12); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
           >
             <svg
@@ -184,7 +184,7 @@ exports[`PasskeyGenerationModal > renders default state 1`] = `
               class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
               line-height-disabled="false"
             >
-              Create your passkey
+              Create passkey
             </span>
           </button>
         </div>
@@ -204,10 +204,10 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-pad1331704925"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _mt-t-space-spa94665591 _mb-t-space-spa94665591 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _width-10037"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
       >
         <div
           class="is_TouchableArea  t_group_true"
@@ -262,10 +262,10 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
         </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-center _alignItems-center _gap-t-space-spa1360334018 _width-10037 _maxWidth-480px"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignSelf-center _alignItems-center _gap-t-space-spa1360334076 _width-10037"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334047"
         >
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _height-48px _width-80px _alignItems-center _justifyContent-center"
@@ -318,7 +318,7 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
             </div>
           </div>
           <div
-            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080 _pr-t-space-spa1360333989 _pl-t-space-spa1360333989"
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334080"
           >
             <h3
               class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
@@ -348,7 +348,7 @@ exports[`PasskeyGenerationModal > renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334018 _pl-t-space-spa1360334018 _mb-t-space-spa1360334018 _width-10037"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
         >
           <button
             aria-disabled="true"

@@ -262,3 +262,19 @@ export const migrateDismissedTokenWarnings = createSafeMigration({
     tokens: { ...state.tokens, dismissedTokenWarnings: {} },
   }),
 })
+
+// Mobile: 98
+// Extension: 32
+// Web: 62
+export function addEnableCustomGasFeeEntry(state: any): any {
+  if (!state?.userSettings) {
+    return state
+  }
+  return {
+    ...state,
+    userSettings: {
+      ...state.userSettings,
+      enableCustomGasFeeEntry: false,
+    },
+  }
+}

@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, useSporeColors } from 'ui/src'
+import { Sign } from 'ui/src/components/icons/Sign'
+import { Swap } from 'ui/src/components/icons/Swap'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { Sign } from '~/components/Icons/Sign'
-import { Swap } from '~/components/Icons/Swap'
 import { useColor } from '~/hooks/useColor'
 import { ICON_SIZE, Step, StepDetails } from '~/pages/Swap/Limit/ConfirmSwapModal/ProgressIndicator/Step'
 import { ConfirmModalState } from '~/pages/Swap/Limit/ConfirmSwapModal/state'
@@ -16,6 +16,14 @@ export type ProgressIndicatorStep = Extract<
   ConfirmModalState,
   ConfirmModalState.APPROVING_TOKEN | ConfirmModalState.PERMITTING | ConfirmModalState.PENDING_CONFIRMATION
 >
+
+function SwapIcon() {
+  return (
+    <Flex centered width={ICON_SIZE} height={ICON_SIZE} borderRadius="$roundedFull" backgroundColor="$neutral2">
+      <Swap size="$icon.12" color="$white" />
+    </Flex>
+  )
+}
 
 interface BidProgressIndicatorProps {
   steps: ProgressIndicatorStep[]
@@ -62,7 +70,7 @@ export function BidProgressIndicator({
   const stepDetails: Record<ProgressIndicatorStep, StepDetails> = useMemo(
     () => ({
       [ConfirmModalState.APPROVING_TOKEN]: {
-        icon: bidCurrencyInfo ? <CurrencyLogo currencyInfo={bidCurrencyInfo} size={ICON_SIZE} /> : <Swap />,
+        icon: bidCurrencyInfo ? <CurrencyLogo currencyInfo={bidCurrencyInfo} size={ICON_SIZE} /> : <SwapIcon />,
         rippleColor: tokenColor,
         previewTitle: t('common.approveSpend', { symbol: bidCurrencySymbol }),
         actionRequiredTitle: t('common.wallet.approve'),
@@ -71,7 +79,11 @@ export function BidProgressIndicator({
         learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
       },
       [ConfirmModalState.PERMITTING]: {
-        icon: <Sign />,
+        icon: (
+          <Flex centered width={ICON_SIZE} height={ICON_SIZE} borderRadius="$roundedFull" backgroundColor="$accent1">
+            <Sign size="$icon.12" />
+          </Flex>
+        ),
         rippleColor: colors.accent1.val,
         previewTitle: t('common.approveSpend', { symbol: 'Permit2' }),
         actionRequiredTitle: t('common.wallet.approve'),
@@ -80,7 +92,7 @@ export function BidProgressIndicator({
         learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
       },
       [ConfirmModalState.PENDING_CONFIRMATION]: {
-        icon: auctionTokenInfo ? <CurrencyLogo currencyInfo={auctionTokenInfo} size={ICON_SIZE} /> : <Swap />,
+        icon: auctionTokenInfo ? <CurrencyLogo currencyInfo={auctionTokenInfo} size={ICON_SIZE} /> : <SwapIcon />,
         rippleColor: colors.accent1.val,
         previewTitle: t('toucan.bidReview.placeBid'),
         actionRequiredTitle: t('common.confirmWallet'),

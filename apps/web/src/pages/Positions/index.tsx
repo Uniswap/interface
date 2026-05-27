@@ -3,27 +3,32 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text } from 'ui/src'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import tokenLogo from '~/assets/images/token-logo.png'
+import { DisconnectedWalletView } from '~/features/Liquidity/components/emptyStates/DisconnectedWalletView'
+import { EmptyPositionsView } from '~/features/Liquidity/components/emptyStates/EmptyPositionsView'
+import { ErrorPositionsView } from '~/features/Liquidity/components/emptyStates/ErrorPositionsView'
+import { PoolsUnavailableOnSolanaView } from '~/features/Liquidity/components/emptyStates/PoolsUnavailableOnSolanaView'
+import { LiquidityLearnMoreTiles } from '~/features/Liquidity/components/LearnMoreTiles'
 import { useLpIncentives } from '~/features/Liquidity/hooks/useLpIncentives'
+import { useWalletPositionsWeb } from '~/features/Liquidity/hooks/useWalletPositionsWeb'
 import { LiquidityPositionCardLoader } from '~/features/Liquidity/LiquidityPositionCard'
+import { useLpIncentiveRewardsUsdValue } from '~/features/Liquidity/LPIncentives/hooks/useLpIncentiveRewardsUsdValue'
 import { LpIncentiveClaimModal } from '~/features/Liquidity/LPIncentives/LpIncentiveClaimModal'
 import { LpIncentiveRewardsCard } from '~/features/Liquidity/LPIncentives/LpIncentiveRewardsCard'
-import {
-  DisconnectedWalletView,
-  EmptyPositionsView,
-  ErrorPositionsView,
-} from '~/features/Liquidity/PositionsEmptyStates'
 import { PositionsHeader } from '~/features/Liquidity/PositionsHeader'
+import { PositionsListSection } from '~/features/Liquidity/PositionsListSection'
 import { useAccount } from '~/hooks/useAccount'
 import { ClosedPositionsCTA } from '~/pages/Positions/components/ClosedPositionsCTA'
-import { PositionsListSection } from '~/pages/Positions/components/PositionsListSection'
 import { PositionsSidebar } from '~/pages/Positions/components/PositionsSidebar'
 import { usePositionFilters } from '~/pages/Positions/hooks/usePositionFilters'
-import { useWalletPositionsWeb } from '~/pages/Positions/hooks/useWalletPositionsWeb'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { useCreatePositionHref } from '~/utils/createPositionRoute'
+import { buildImportV2PositionsHref } from '~/utils/importV2PositionsRoute'
 
 export function Pool() {
   const account = useAccount()
@@ -31,6 +36,8 @@ export function Pool() {
   const { address, isConnected } = account
 
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives) && isConnected
+  const newPositionHref = useCreatePositionHref()
+  const connectedWithoutEVM = useIsMissingPlatformWallet(Platform.EVM)
 
   const { chainFilter, setChainFilter, versionFilter, toggleVersion, statusFilter, toggleStatus } = usePositionFilters()
   const [showHiddenPositions, setShowHiddenPositions] = useState(false)
@@ -45,6 +52,8 @@ export function Pool() {
     onTransactionSuccess,
     hasCollectedRewards,
   } = useLpIncentives()
+
+  const { formattedUsdValue: formattedRewardsUsdValue } = useLpIncentiveRewardsUsdValue(tokenRewards)
 
   const {
     visiblePositions,
@@ -100,7 +109,12 @@ export function Pool() {
               onStatusChange={toggleStatus}
             />
           </Flex>
-          {hasErrorWithoutData && isConnected ? (
+          {connectedWithoutEVM ? (
+            <>
+              <PoolsUnavailableOnSolanaView withBorder />
+              <LiquidityLearnMoreTiles />
+            </>
+          ) : hasErrorWithoutData && isConnected ? (
             <ErrorPositionsView onRetry={refetch} />
           ) : !isLoadingPositions ? (
             visiblePositions.length > 0 || hiddenPositions.length > 0 ? (
@@ -113,9 +127,10 @@ export function Pool() {
                 loadMorePositions={loadMorePositions}
                 showHiddenPositions={showHiddenPositions}
                 setShowHiddenPositions={setShowHiddenPositions}
+                hiddenSectionPadding={{ py: '$spacing12', px: 0 }}
               />
             ) : isConnected ? (
-              <EmptyPositionsView />
+              <EmptyPositionsView newPositionHref={newPositionHref} withBorder />
             ) : (
               <DisconnectedWalletView />
             )
@@ -132,7 +147,7 @@ export function Pool() {
               <Text variant="body3" color="$neutral2">
                 {t('pool.import.link.description')}
               </Text>
-              <Anchor href="/pools/v2/find" textDecorationLine="none">
+              <Anchor href={buildImportV2PositionsHref()} textDecorationLine="none">
                 <Text variant="body3" color="$neutral1" {...ClickableTamaguiStyle}>
                   {t('pool.import.positions.v2')}
                 </Text>
@@ -155,6 +170,7 @@ export function Pool() {
           tokenRewards={tokenRewards}
           isPendingTransaction={isPendingTransaction}
           iconUrl={tokenLogo}
+          formattedRewardsUsdValue={formattedRewardsUsdValue}
         />
       )}
     </Trace>

@@ -1,8 +1,8 @@
 import { Fragment, ReactElement, useEffect, useState } from 'react'
 import { Flex, styled, Text } from 'ui/src'
+import { Check } from 'ui/src/components/icons/Check'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
-import { CheckMark } from '~/components/Icons/CheckMark'
-import { LoaderV3 } from '~/components/Icons/LoadingSpinner'
+import { LogoLoadingSpinner } from '~/components/LogoLoadingSpinner'
 import { ExternalLink } from '~/theme/components/Links'
 
 export const ICON_SIZE = 24
@@ -52,7 +52,9 @@ const Ring = styled(Flex, {
 function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon: ReactElement; rippleColor?: string }) {
   const isActive = stepStatus === StepStatus.Active
   if (stepStatus === StepStatus.InProgress) {
-    return <LoaderV3 size={`${ICON_SIZE}px`} stroke={rippleColor} fill={rippleColor} data-testid="loader-icon" />
+    return (
+      <LogoLoadingSpinner size={`${ICON_SIZE}px`} stroke={rippleColor} fill={rippleColor} data-testid="loader-icon" />
+    )
   }
   return (
     <Flex centered position="relative" width={ICON_SIZE} height={ICON_SIZE}>
@@ -168,7 +170,7 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
           </Flex>
         </Flex>
         {secondsRemaining !== null && <Timer secondsRemaining={secondsRemaining} />}
-        {stepStatus === StepStatus.Complete && <CheckMark />}
+        {stepStatus === StepStatus.Complete && <Check color="$statusSuccess" size="$icon.24" strokeWidth={4} />}
       </Flex>
     </Fragment>
   )

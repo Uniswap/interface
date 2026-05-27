@@ -3,8 +3,9 @@ import type { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, IconButton, Image, useSporeColors } from 'ui/src'
+import { Button, Flex, IconButton, Image } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
+import { Settings } from 'ui/src/components/icons/Settings'
 import { Shine } from 'ui/src/loading/Shine'
 import { iconSizes } from 'ui/src/theme'
 import AnimatedNumber, {
@@ -36,7 +37,6 @@ import { ReceiveActionTile } from '~/components/ActionTiles/ReceiveActionTile'
 import { SendActionTile } from '~/components/ActionTiles/SendActionTile/SendActionTile'
 import { LimitedSupportBanner } from '~/components/Banner/LimitedSupportBanner'
 import { DelegationMismatchModal } from '~/components/delegation/DelegationMismatchModal'
-import { Settings } from '~/components/Icons/Settings'
 import { StatusIcon } from '~/components/StatusIcon'
 import { ExtensionRequestMethods, useUniswapExtensionRequest } from '~/components/WalletModal/useWagmiConnectorWithId'
 import { useAccountsStore } from '~/features/accounts/store/hooks'
@@ -116,7 +116,6 @@ export function AuthenticatedHeader({
   const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const shouldShowDelegationMismatch = isPermitMismatchUxEnabled && isDelegationMismatch
   const [displayDelegationMismatchModal, setDisplayDelegationMismatchModal] = useState(false)
-  const colors = useSporeColors()
 
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' }) ?? '-'
 
@@ -164,7 +163,7 @@ export function AuthenticatedHeader({
                 size="small"
                 emphasis="text-only"
                 data-testid={TestID.WalletSettings}
-                icon={<Settings height={24} width={24} color={colors.neutral2.val} />}
+                icon={<Settings size="$icon.24" color="$neutral2" />}
                 borderRadius="$rounded32"
                 hoverStyle={{
                   backgroundColor: '$surface2',

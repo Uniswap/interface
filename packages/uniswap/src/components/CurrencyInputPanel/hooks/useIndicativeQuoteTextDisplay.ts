@@ -13,7 +13,7 @@ export type PanelTextDisplay = {
  *
  * Rules:
  * * If the value goes from indicative to full, show the indicative value for another 200ms in neutral2 before changing.
- * * If the value is undefined, but there is input, continue to show the previous value until it gets replaced by a new quote.
+ * * While a new quote is loading (isLoading), the previous value is cleared so the user does not see a stale output while the quote refreshes.
  */
 export function useIndicativeQuoteTextDisplay({
   currencyAmount,
@@ -43,6 +43,10 @@ export function useIndicativeQuoteTextDisplay({
     }
 
     if (!value) {
+      // While a new quote is loading, clear the previous value rather than showing a stale result.
+      if (isLoading) {
+        return { value: undefined, color: '$neutral3' }
+      }
       return hasInput ? lastDisplayRef.current : { value, color: '$neutral3' }
     }
 
@@ -52,5 +56,5 @@ export function useIndicativeQuoteTextDisplay({
     lastDisplayRef.current = display
 
     return display
-  }, [focus, value, usdValue, hasInput, valueIsIndicative])
+  }, [focus, value, usdValue, isLoading, hasInput, valueIsIndicative])
 }

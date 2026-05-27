@@ -1,16 +1,4 @@
-import { colorsDark, colorsLight } from 'ui/src/theme'
-import { ArrowChangeDown } from '~/components/Icons/ArrowChangeDown'
-import { ArrowChangeUp } from '~/components/Icons/ArrowChangeUp'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-
-const StyledUpArrow = deprecatedStyled(ArrowChangeUp)<{ $noColor?: boolean }>`
-  color: ${({ theme, $noColor }) =>
-    $noColor ? theme.neutral3 : theme.darkMode ? colorsDark.statusSuccess : colorsLight.statusSuccess};
-`
-const StyledDownArrow = deprecatedStyled(ArrowChangeDown)<{ $noColor?: boolean }>`
-  color: ${({ theme, $noColor }) =>
-    $noColor ? theme.neutral3 : theme.darkMode ? colorsDark.statusCritical : colorsLight.statusCritical};
-`
+import { ArrowChange } from 'ui/src/components/icons/ArrowChange'
 
 export function calculateDelta(start: number, current: number): number | undefined {
   const delta = (current / start - 1) * 100
@@ -41,8 +29,14 @@ export function DeltaArrow({ delta, formattedDelta, noColor = false, size = 16 }
   const isZero = isDeltaZero(formattedDelta)
 
   return Math.sign(delta) < 0 && !isZero ? (
-    <StyledDownArrow width={size} height={size} key="arrow-down" aria-label="down" $noColor={noColor} />
+    <ArrowChange aria-label="down" color={noColor ? '$neutral3' : '$statusCritical'} key="arrow-down" size={size} />
   ) : (
-    <StyledUpArrow width={size} height={size} key="arrow-up" aria-label="up" $noColor={isZero || noColor} />
+    <ArrowChange
+      aria-label="up"
+      color={isZero || noColor ? '$neutral3' : '$statusSuccess'}
+      key="arrow-up"
+      rotate="180deg"
+      size={size}
+    />
   )
 }

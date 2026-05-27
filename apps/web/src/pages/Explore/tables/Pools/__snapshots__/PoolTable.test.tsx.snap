@@ -99,7 +99,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -152,7 +152,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -184,7 +184,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -216,7 +216,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -331,7 +331,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                                 >
                                   <img
                                     height="24"
-                                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                    src="eth-logo.png"
                                     style="object-fit: contain; border-radius: 24px; z-index: 1;"
                                     width="24"
                                   />
@@ -355,7 +355,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                                 >
                                   <img
                                     height="24"
-                                    src="eth-logo.png"
+                                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                                     style="object-fit: contain; border-radius: 24px; z-index: 1;"
                                     width="24"
                                   />
@@ -367,7 +367,7 @@ exports[`PoolTable > renders data filled state 1`] = `
                             class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
                             data-disable-theme="true"
                           >
-                            USDC/ETH
+                            ETH/USDC
                           </span>
                         </div>
                       </div>
@@ -489,20 +489,47 @@ exports[`PoolTable > renders data filled state 1`] = `
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-accent2Soli100 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _width-fit-content _pt-t-space-pad95589114 _pr-t-space-pad95589114 _pb-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-gap56 _height-34px"
           >
-            <svg
-              class="sc-hvigdm sc-fhHczv hnGfNe gkZCRe"
-              fill="none"
-              stroke="#FF37C7"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+            <style>
+              
+  @keyframes rotate360 {
+      from {
+          transform: rotate(0deg);
+      }
+      to {
+          transform: rotate(360deg);
+      }
+  }
+
+  .RotateElement {
+      animation: rotate360 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
+      transform-origin: center center;
+  }
+
+            </style>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column RotateElement"
             >
-              <path
-                d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2.5"
-              />
-            </svg>
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 16px; height: 16px; color: rgb(255, 55, 199);"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
+                  opacity="0.1"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                />
+                <path
+                  d="M21 12C21 7.02944 16.9706 3 12 3"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                />
+              </svg>
+            </div>
             Loading
           </div>
         </div>
@@ -614,7 +641,7 @@ exports[`PoolTable > renders error state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -667,7 +694,7 @@ exports[`PoolTable > renders error state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -699,7 +726,7 @@ exports[`PoolTable > renders error state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -731,7 +758,7 @@ exports[`PoolTable > renders error state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -6423,7 +6450,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -6476,7 +6503,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -6508,7 +6535,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"
@@ -6540,7 +6567,7 @@ exports[`PoolTable > renders loading state 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
                 >
                   <div
-                    class="sc-dTvVRJ VVNTK"
+                    class="sc-fhHczv iUPILv"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-default"

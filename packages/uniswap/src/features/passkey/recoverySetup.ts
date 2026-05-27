@@ -60,7 +60,7 @@ export async function encryptAndStoreRecovery({
     const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate(
       {
         blindedElement,
-        isRecovery: false,
+        authMethodId,
       },
       accessToken,
     )

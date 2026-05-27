@@ -26,7 +26,6 @@ import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/Portfoli
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { useAccount } from '~/hooks/useAccount'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
 const ReviewContentContainer = styled(Flex, {
   width: '100%',
@@ -74,7 +73,6 @@ export type SendModalProps = SendModalInnerProps & {
 
 export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInnerProps) {
   const { t } = useTranslation()
-  const { chainId } = useMultichainContext()
   const account = useAccount()
 
   const {
@@ -89,6 +87,7 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData, currencyBalance },
   } = useSendContext()
+  const chainId = inputCurrency?.chainId
   const maxInputAmount = useMaxAmountSpend({
     currencyAmount: currencyBalance,
     txType: TransactionType.Send,

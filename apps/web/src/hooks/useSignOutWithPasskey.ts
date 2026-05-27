@@ -2,7 +2,7 @@ import { usePrivy } from '@privy-io/react-auth'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import { logger } from 'utilities/src/logger/logger'
-import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
@@ -42,7 +42,7 @@ export function useSignOutWithPasskey({ onSuccess, onError }: SignOutWithPasskey
       setIsConnected(false)
       // Drop cached authenticators (and their sessionStorage mirror) so the next user
       // who signs in on this device gets a fresh listAuthenticators fetch.
-      invalidateListAuthenticators(queryClient, walletId)
+      resetListAuthenticators(queryClient, walletId)
       onSuccess?.()
     },
     onError: (error: Error) => {

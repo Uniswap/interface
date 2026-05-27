@@ -32,6 +32,7 @@ interface LpIncentiveClaimModalProps {
   tokenRewards: string
   isPendingTransaction?: boolean
   iconUrl?: string
+  formattedRewardsUsdValue?: string
 }
 
 export function LpIncentiveClaimModal({
@@ -42,6 +43,7 @@ export function LpIncentiveClaimModal({
   tokenRewards,
   isPendingTransaction = false,
   iconUrl,
+  formattedRewardsUsdValue,
 }: LpIncentiveClaimModalProps) {
   const [error, setError] = useState<string | null>(null)
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
@@ -149,7 +151,10 @@ export function LpIncentiveClaimModal({
       subtext={
         <Flex gap="$spacing4">
           <Flex row alignItems="center" justifyContent="center" gap="$spacing4">
-            <Text variant="body2">{`${formattedTokenRewards} ${token.symbol}`}</Text>
+            <Text variant="body2">
+              {formattedTokenRewards} {token.symbol}
+              {formattedRewardsUsdValue && ` (${formattedRewardsUsdValue})`}
+            </Text>
           </Flex>
           {error && (
             <Flex mt="$spacing6">

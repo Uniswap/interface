@@ -57,7 +57,6 @@ const WEB_STYLING: FlexProps = isWebPlatform
       borderColor: '$surface3',
       py: '$spacing12',
       px: '$spacing20',
-      mb: '$spacing20',
       width: '100%',
     }
   : {}
@@ -402,8 +401,8 @@ export function ClaimUnitagContent({
           addressError={addressError}
           isUnitagAvailable={isUnitagAvailable}
           showTextInputView={showTextInputView}
-          mt="$spacing4"
-          mb={unitagAddress ? undefined : '$spacing20'}
+          mt="$spacing12"
+          mb={unitagAddress ? undefined : '$spacing12'}
         />
       </Flex>
       {/* Wrap button in a TouchableArea to add onPress capabilities when the button is disabled. */}

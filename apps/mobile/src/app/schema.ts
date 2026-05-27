@@ -730,8 +730,16 @@ export const v95Schema = {
 
 export const v96Schema = v95Schema
 
-const v97Schema = v96Schema
+export const v97Schema = v96Schema
+
+const v98Schema = {
+  ...v97Schema,
+  userSettings: {
+    ...v97Schema.userSettings,
+    enableCustomGasFeeEntry: false,
+  },
+}
 
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v97Schema => v97Schema
+export const getSchema = (): typeof v98Schema => v98Schema

@@ -21,6 +21,25 @@ const isProduction = NODE_ENV === 'production'
 const appDirectory = path.resolve(__dirname)
 const manifest = require('./src/manifest.json')
 
+/**
+ * Runs `scripts/validateBuildOutput.ts --webpack` after webpack finishes emitting. The
+ * script scans every emitted `.js` file for bundler regressions that only surface at
+ * runtime — primarily classic `importScripts(` worker chunk loading, which produces the
+ * `chunks/chunks/<hash>.js` NetworkError that shipped in v1.73.0/v1.74.0. Throwing here
+ * fails the webpack build, so CI catches it before the artifact uploads.
+ */
+class ValidateBuildOutputPlugin {
+  apply(compiler) {
+    compiler.hooks.afterEmit.tap('ValidateBuildOutputPlugin', () => {
+      const { execSync } = require('node:child_process')
+      execSync('bun run scripts/validateBuildOutput.ts --webpack', {
+        cwd: __dirname,
+        stdio: 'inherit',
+      })
+    })
+  }
+}
+
 // Add all node modules that have to be compiled
 const compileNodeModules = [
   // These libraries export JSX code from files with .js extension, which aren't transpiled
@@ -192,6 +211,11 @@ module.exports = (env) => {
 
   return {
     mode: NODE_ENV,
+    // Enables ESM output capability (prerequisite for `output.workerChunkLoading: 'import'` below).
+    // Entries that don't opt in — background SW, content scripts, UI entries — remain classic scripts.
+    experiments: {
+      outputModule: true,
+    },
     entry: {
       background: './src/entrypoints/background.ts',
       onboarding: './src/entrypoints/onboarding/main.tsx',
@@ -208,6 +232,42 @@ module.exports = (env) => {
       path: path.resolve(__dirname, dir),
       clean: true,
       publicPath: '',
+      // Web Workers in this extension are constructed with `new Worker(..., { type: 'module' })`
+      // (see `src/workers/hashcashWorker.ts`). `workerChunkLoading: 'import'` makes webpack
+      // emit native `import()` for any sub-chunks instead of the classic `importScripts(<url>)`
+      // (which path-doubled under MV3 once `chunkFilename` put chunks under `chunks/`).
+      // Requires `experiments.outputModule: true` above. This setting alone is not enough
+      // when the worker has dependencies shared with the main bundle — see
+      // `optimization.splitChunks` below.
+      workerChunkLoading: 'import',
+    },
+    // Keep worker chunks self-contained.
+    //
+    // With `experiments.outputModule: true`, webpack emits shared dependency chunks in
+    // ESM format (`export const id=753; export const modules={...}`), but the worker
+    // entry chunk itself is still in classic array-push format
+    // (`var t={...}; function n(e){...t[n](...)}`). Those two formats can't talk to
+    // each other — the classic worker runtime calls into a factories registry that is
+    // never assigned because the ESM loader that would bridge them isn't included in
+    // the worker chunk. The worker throws `TypeError: r[e] is not a function` on the
+    // first `require()` and idle-exits silently. No `error` event reaches the main
+    // thread, so the parent's `bidc` channel waits forever.
+    //
+    // Excluding worker chunks from `splitChunks` forces webpack to inline every worker
+    // dependency into the single worker entry, matching the shape WXT/Vite already
+    // produce (a self-contained ~80KB file). The hashcash worker chunk is named via
+    // the `webpackChunkName: "hashcash-worker"` magic comment in
+    // `src/workers/hashcashWorker.ts`.
+    optimization: {
+      splitChunks: {
+        chunks(chunk) {
+          if (typeof chunk.name === 'string' && chunk.name.includes('worker')) {
+            return false
+          }
+          // Default for everything else: split async chunks (webpack's default behavior).
+          return chunk.canBeInitial() === false
+        },
+      },
     },
     // https://webpack.js.org/configuration/other-options/#level
     infrastructureLogging: { level: 'warn' },
@@ -353,6 +413,11 @@ module.exports = (env) => {
       new CleanWebpackPlugin(),
       new NodePolyfillPlugin(), // necessary to compile with reactnative-dotenv
       ...plugins,
+      // Post-emit scan for production builds — fails the build if any emitted JS contains
+      // forbidden runtime patterns (e.g. `importScripts(` from classic worker chunk loading).
+      // Skipped in dev to keep HMR rebuilds fast and because the bug class only manifests
+      // when code-splitting kicks in for non-dev builds.
+      ...(isProduction ? [new ValidateBuildOutputPlugin()] : []),
       new MiniCssExtractPlugin(),
       new ProgressPlugin(),
       new ProvidePlugin({

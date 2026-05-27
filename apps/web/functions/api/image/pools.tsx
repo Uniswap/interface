@@ -163,6 +163,8 @@ export async function renderPoolOgImage({
                   position: 'absolute',
                   right: '2px',
                   bottom: '0px',
+                  borderRadius: '12px',
+                  objectFit: 'cover',
                 }}
               />
             )}

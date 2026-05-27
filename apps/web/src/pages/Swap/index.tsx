@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
 import type { SegmentedControlOption } from 'ui/src'
-import { Flex, SegmentedControl, styled, Text, Tooltip } from 'ui/src'
+import { Flex, SegmentedControl, stackingLayerAbove, styled, Text, Tooltip } from 'ui/src'
 import type { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -367,13 +367,15 @@ const DisabledOverlay = styled(Flex, {
   zIndex: zIndexes.overlay,
 })
 
+const disabledSwapOverlayTooltipZIndex = stackingLayerAbove(zIndexes.overlay, zIndexes.tooltip)
+
 const DisabledSwapOverlay = () => {
   const { t } = useTranslation()
 
   return (
     <DisabledOverlay cursor="not-allowed">
       <Tooltip placement="left-start">
-        <Tooltip.Content animationDirection="left" zIndex={zIndexes.overlay}>
+        <Tooltip.Content animationDirection="left" zIndex={disabledSwapOverlayTooltipZIndex}>
           <Tooltip.Arrow />
           <Text variant="body4">{t('testnet.unsupported')}</Text>
         </Tooltip.Content>

@@ -1,6 +1,6 @@
 import type { Percent } from '@uniswap/sdk-core'
 import type { ReactNode } from 'react'
-import { useReducer } from 'react'
+import { useMemo, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, HeightAnimator, styled, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
@@ -34,6 +34,8 @@ interface FeeTierSelectorProps {
   footerContent?: ReactNode
   // Content rendered inside the HeightAnimator after the fee tier grid (e.g. search button)
   expandedFooterContent?: ReactNode
+  // Dynamic fee tiers require a hook — excluded by default
+  allowDynamicFee?: boolean
   // Optional controlled expand state; uncontrolled (internal state) if omitted
   isExpanded?: boolean
   onToggleExpand?: () => void
@@ -55,11 +57,13 @@ function FeeTier({
   selected,
   onSelect,
   isLpIncentivesEnabled,
+  showTvl,
 }: {
   feeTier: FeeTierOption
   selected: boolean
   onSelect: (value: FeeData) => void
   isLpIncentivesEnabled?: boolean
+  showTvl: boolean
 }) {
   const { t } = useTranslation()
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
@@ -82,12 +86,14 @@ function FeeTier({
       <Flex mt="$spacing16" gap="$spacing2" alignItems="flex-end">
         <Flex row justifyContent="space-between" width="100%" alignItems="flex-end">
           <Flex>
-            <Text variant="body4" color="$neutral2">
-              {!feeTier.tvl || feeTier.tvl === '0'
-                ? '0'
-                : formatNumberOrString({ value: feeTier.tvl, type: NumberType.FiatTokenStats })}{' '}
-              {t('common.totalValueLocked')}
-            </Text>
+            {showTvl && (
+              <Text variant="body4" color="$neutral2">
+                {!feeTier.tvl || feeTier.tvl === '0'
+                  ? '0'
+                  : formatNumberOrString({ value: feeTier.tvl, type: NumberType.FiatTokenStats })}{' '}
+                {t('common.totalValueLocked')}
+              </Text>
+            )}
             {feeTier.selectionPercent && feeTier.selectionPercent.greaterThan(0) && (
               <Text variant="body4" color="$neutral2">
                 {t('fee.tier.percent.select', {
@@ -112,6 +118,7 @@ export function FeeTierSelector({
   disabled,
   isLpIncentivesEnabled,
   hasLpRewards,
+  allowDynamicFee,
   headerInlineContent,
   headerSubContent,
   footerContent,
@@ -123,8 +130,14 @@ export function FeeTierSelector({
   const { formatPercent } = useLocalizationContext()
   const [uncontrolledExpanded, toggleUncontrolled] = useReducer((s: boolean) => !s, false)
 
+  const filteredFeeTiers = useMemo(
+    () => (allowDynamicFee ? feeTiers : feeTiers.filter((tier) => !isDynamicFeeTier(tier.value))),
+    [feeTiers, allowDynamicFee],
+  )
+
   const isShowMore = controlledExpanded !== undefined ? controlledExpanded : uncontrolledExpanded
   const toggleShowMore = onToggleExpand ?? toggleUncontrolled
+  const hasAnyTvl = filteredFeeTiers.some((tier) => tier.tvl && tier.tvl !== '0')
 
   return (
     <Flex gap="$spacing8" pointerEvents={disabled ? 'none' : 'auto'} opacity={disabled ? 0.5 : 1}>
@@ -173,7 +186,7 @@ export function FeeTierSelector({
             }}
             gap={10}
           >
-            {feeTiers.map((feeTier) => (
+            {filteredFeeTiers.map((feeTier) => (
               <FeeTier
                 key={getFeeTierKey({
                   feeTier: feeTier.value.feeAmount,
@@ -196,6 +209,7 @@ export function FeeTierSelector({
                 }
                 onSelect={onFeeSelect}
                 isLpIncentivesEnabled={isLpIncentivesEnabled}
+                showTvl={hasAnyTvl}
               />
             ))}
           </Flex>

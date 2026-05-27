@@ -1,3 +1,5 @@
+import { type PartialMessage } from '@bufbuild/protobuf'
+import type { Urgency } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { type FormattedUniswapXGasFeeInfo, type GasFeeResult, type GasStrategy } from '@universe/api'
 import { isWebPlatform } from '@universe/environment'
@@ -50,17 +52,23 @@ export function useActiveGasStrategy(chainId: number | undefined, type: GasStrat
  * We use the `displayLimitInflationFactor` to calculate the display value, which can be
  * different from the `limitInflationFactor` so that the gas fee displayed is more accurate.
  *
- * More info: https://www.notion.so/uniswaplabs/Gas-Limit-Experiment-14ac52b2548b80ea932ff2edfdab6683
- *
- * @param gasFee - The gas fee value to convert.
- * @param gasStrategy - The gas strategy used to calculate the gas fee.
- * @returns The display value of the gas fee.
+ * When `hasOverrides` is true, the upstream quote was built with per-tx gas overrides
+ * (`urgency.overrides.{maxFeePerGas, maxPriorityFeePerGas, gasLimit}`). In that case the
+ * gas service has already used the user's explicit `gasLimit` top-level without inflation,
+ * so backing it out a second time would understate the displayed max cost — short-circuit
+ * and return the raw `gasFee` as the display value.
  */
-export function convertGasFeeToDisplayValue(
-  gasFee: string | undefined,
-  gasStrategy: GasStrategy | undefined,
-): string | undefined {
-  if (!gasFee || !gasStrategy || gasStrategy.limitInflationFactor === 0) {
+export function convertGasFeeToDisplayValue({
+  gasFee,
+  gasStrategy,
+  hasOverrides,
+}: {
+  gasFee: string | undefined
+  gasStrategy: GasStrategy | undefined
+  /** When true, return `gasFee` unchanged (no limit-inflation adjustment). */
+  hasOverrides?: boolean
+}): string | undefined {
+  if (!gasFee || hasOverrides || !gasStrategy || gasStrategy.limitInflationFactor === 0) {
     return gasFee
   }
 
@@ -83,6 +91,8 @@ export function useTransactionGasFee({
   skip,
   refetchInterval,
   fallbackGasLimit,
+  urgency,
+  gasLimitOverride,
   // Warning: only use when it's Ok to return old data even when params change.
   shouldUsePreviousValueDuringLoading,
 }: {
@@ -91,12 +101,23 @@ export function useTransactionGasFee({
   skip?: boolean
   refetchInterval?: PollingInterval
   fallbackGasLimit?: number
+  /**
+   * Optional proto-shape urgency. When supplied alongside the
+   * `GasFeeOverrides` feature flag (set in `fetchGasFeeQuery`), the gas
+   * service uses these values instead of running its strategy-based
+   * estimation. Built via `buildGasServiceUrgencyOverride`.
+   */
+  urgency?: PartialMessage<Urgency>
+  /** Optional top-level gas_limit override. Forwarded to the gas service
+   *  alongside `urgency`. Built via `buildGasServiceUrgencyOverride`. */
+  gasLimitOverride?: string
   shouldUsePreviousValueDuringLoading?: boolean
 }): GasFeeResult {
   const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
 
   const { data, error, isLoading } = useGasFeeQuery({
-    params: skip || !tx ? undefined : { tx, fallbackGasLimit, smartContractDelegationAddress },
+    params:
+      skip || !tx ? undefined : { tx, fallbackGasLimit, smartContractDelegationAddress, urgency, gasLimitOverride },
     refetchInterval,
     staleTime: pollingIntervalForChain,
     immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,

@@ -7,10 +7,10 @@ const debug = (...args: unknown[]) => {
 const path = './src/clients/trading/__generated__/models'
 
 // Request types
-const requestFileNames = ['ApprovalRequest', 'CreateSendRequest', 'CreateSwapRequest', 'QuoteRequest']
+const requestFileNames = ['ApprovalRequest', 'CreateSwapRequest', 'QuoteRequest']
 
 // Response types
-const responseFileNames = ['ApprovalResponse', 'CreateSwapResponse', 'CreateSendResponse', 'ClassicQuote']
+const responseFileNames = ['ApprovalResponse', 'CreateSwapResponse', 'ClassicQuote']
 
 // ------------------------------------------------------------------
 // Helpers

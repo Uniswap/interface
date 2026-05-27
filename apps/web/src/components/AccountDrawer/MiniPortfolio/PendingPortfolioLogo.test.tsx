@@ -20,6 +20,8 @@ describe('PendingPortfolioLogo', () => {
 
     const pendingLogo = screen.getByTestId(TestID.ActivityPopupPendingLogo)
     expect(within(pendingLogo).getByTestId(TestID.ActivityPopupPendingRing)).toBeInTheDocument()
-    expect(within(pendingLogo).getByTestId(TestID.NetworkLogo)).toBeInTheDocument()
+    expect(
+      within(pendingLogo).getByTestId(`${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`),
+    ).toBeInTheDocument()
   })
 })

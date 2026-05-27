@@ -30,6 +30,7 @@ import {
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
   isNavigateToSwapFlowArgsPartialState,
+  NavigateToEarnVaultArgs,
   NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToSendFlowArgs,
@@ -51,6 +52,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
   const navigateToExternalProfile = useNavigateToExternalProfile()
   const navigateToAdvancedSettings = useNavigateToAdvancedSettings()
+  const navigateToEarnVault = useNavigateToEarnVault()
 
   return (
     <WalletNavigationProvider
@@ -58,6 +60,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToEarnVault={navigateToEarnVault}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftDetails={navigateToNftDetails}
@@ -333,4 +336,17 @@ function useNavigateToAdvancedSettings(): () => void {
       navigation.navigate(ModalName.SmartWalletAdvancedSettingsModal, advancedSettingsState)
     })
   }, [navigation, advancedSettingsState])
+}
+
+function useNavigateToEarnVault(): (args: NavigateToEarnVaultArgs) => void {
+  const navigation = useAppStackNavigation()
+
+  return useCallback(
+    ({ vault, position }: NavigateToEarnVaultArgs): void => {
+      closeKeyboardBeforeCallback(() => {
+        navigation.navigate(ModalName.EarnVault, { vault, position })
+      })
+    },
+    [navigation],
+  )
 }

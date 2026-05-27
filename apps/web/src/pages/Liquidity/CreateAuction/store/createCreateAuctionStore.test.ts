@@ -24,6 +24,25 @@ describe('createCreateAuctionStore', () => {
     expect(allocation.percent).toBe(100)
   })
 
+  it('persists the user-entered floor price display value with the canonical floor price', () => {
+    const store = createCreateAuctionStore()
+    const { actions } = store.getState()
+
+    actions.setFloorPrice('0.000000000000000004', {
+      rawValue: '0.01',
+      denomination: 'fdv',
+      inputCurrency: 'usd',
+    })
+
+    expect(store.getState().configureAuction.floorPrice).toBe('0.000000000000000004')
+    expect(store.getState().configureAuction.floorPriceInput).toEqual({
+      floorPrice: '0.000000000000000004',
+      rawValue: '0.01',
+      denomination: 'fdv',
+      inputCurrency: 'usd',
+    })
+  })
+
   it('keeps flat tiered allocation equivalent to single allocation', () => {
     const store = createCreateAuctionStore()
     const { actions } = store.getState()

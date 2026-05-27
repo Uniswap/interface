@@ -24,6 +24,7 @@ export type DropdownMenuSheetItemProps = {
   role?: Role
   subheader?: string
   rightElement?: React.ReactNode
+  allowMultiline?: boolean
   onPress: () => void
   handleCloseMenu?: () => void
 }
@@ -42,6 +43,7 @@ export const DropdownMenuSheetItem = ({
   role = 'button',
   subheader,
   rightElement,
+  allowMultiline = false,
   onPress,
   handleCloseMenu,
 }: DropdownMenuSheetItemProps): JSX.Element => {
@@ -107,8 +109,7 @@ export const DropdownMenuSheetItem = ({
         <Flex maxWidth={isWebPlatform ? `calc(100% - ${spacing.spacing12}px)` : '90%'}>
           <Text
             flexShrink={1}
-            numberOfLines={1}
-            ellipsizeMode="tail"
+            {...(allowMultiline ? {} : { numberOfLines: 1, ellipsizeMode: 'tail' as const })}
             variant={variant === 'small' ? 'buttonLabel3' : 'buttonLabel2'}
             color={textColorValue}
             $group-hover={destructive ? undefined : { color: disabled ? '$neutral2' : '$neutral1Hovered' }}

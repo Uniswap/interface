@@ -2,13 +2,14 @@ import { useFocusEffect, useNavigation } from '@react-navigation/core'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { useBiometricAppSpeedBump } from 'src/features/biometrics/useBiometricAppSpeedBump'
 import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
-import { Button, Flex } from 'ui/src'
+import { Button, Flex, flexStyles } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -61,21 +62,27 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
 
   return (
     <>
-      <Flex grow mt="$spacing16">
-        <Flex grow pt="$spacing16" px="$spacing16">
-          <MnemonicDisplay mnemonicId={mnemonicId} showMnemonic={showSeedPhrase} />
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
+        style={flexStyles.fill}
+      >
+        <Flex grow mt="$spacing16">
+          <Flex grow pt="$spacing16" px="$spacing16">
+            <MnemonicDisplay mnemonicId={mnemonicId} showMnemonic={showSeedPhrase} />
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex row borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
-        <Button
-          size="large"
-          emphasis="secondary"
-          testID={TestID.Next}
-          onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}
-        >
-          {showSeedPhrase ? t('setting.recoveryPhrase.action.hide') : t('setting.recoveryPhrase.account.show')}
-        </Button>
-      </Flex>
+        <Flex row borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
+          <Button
+            size="large"
+            emphasis="secondary"
+            testID={TestID.Next}
+            onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}
+          >
+            {showSeedPhrase ? t('setting.recoveryPhrase.action.hide') : t('setting.recoveryPhrase.account.show')}
+          </Button>
+        </Flex>
+      </ScrollView>
 
       {showSeedPhraseViewWarningModal && (
         <WarningModal

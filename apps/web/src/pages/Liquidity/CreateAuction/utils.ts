@@ -473,6 +473,12 @@ export function percentOfSoldToLiquidityFromDepositAndLiquidityAmount(
 }
 
 export {
+  isAllowedWebsiteLinkInput,
+  isValidWebsiteLink,
+  normalizeWebsiteLink,
+} from '~/pages/Liquidity/CreateAuction/websiteLink'
+
+export {
   addCustomPriceRangePreset,
   clampCustomPriceRangeLiquidityPercent,
   createDefaultCustomPriceRangeEntry,

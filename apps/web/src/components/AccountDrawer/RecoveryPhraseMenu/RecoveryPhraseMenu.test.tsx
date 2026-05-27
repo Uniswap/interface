@@ -1,7 +1,7 @@
 import { act, fireEvent, waitFor } from '@testing-library/react'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { exportSeedPhrase } from 'uniswap/src/features/passkey/utils'
-import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PhraseDisplayContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/PhraseDisplayContent'
 import { RecoveryPhraseMenu } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseMenu'
 import { WarningContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/WarningContent'
@@ -13,7 +13,7 @@ vi.mock('uniswap/src/features/passkey/utils', () => ({
 }))
 
 vi.mock('~/components/AccountDrawer/PasskeyMenu/PasskeyMenu', () => ({
-  invalidateListAuthenticators: vi.fn(),
+  resetListAuthenticators: vi.fn(),
 }))
 
 vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
@@ -136,18 +136,18 @@ describe('RecoveryPhraseMenu', () => {
     expect(vi.mocked(exportSeedPhrase)).toHaveBeenCalledWith({ walletId: 'test-wallet-id' })
   })
 
-  it('invalidates the listAuthenticators cache on a successful export so the speedbump shows the new timestamp', async () => {
+  it('resets the listAuthenticators cache on a successful export so the speedbump shows the new timestamp', async () => {
     vi.mocked(exportSeedPhrase).mockResolvedValue(MOCK_PHRASE)
 
     render(<RecoveryPhraseMenu onClose={vi.fn()} />)
     fireEvent.click(screen.getByText('View recovery phrase'))
 
     await waitFor(() => {
-      expect(invalidateListAuthenticators).toHaveBeenCalledWith(expect.anything(), 'test-wallet-id')
+      expect(resetListAuthenticators).toHaveBeenCalledWith(expect.anything(), 'test-wallet-id')
     })
   })
 
-  it('does not invalidate the listAuthenticators cache when the user aborts the export', async () => {
+  it('does not reset the listAuthenticators cache when the user aborts the export', async () => {
     vi.mocked(exportSeedPhrase).mockResolvedValue(undefined)
 
     render(<RecoveryPhraseMenu onClose={vi.fn()} />)
@@ -155,7 +155,7 @@ describe('RecoveryPhraseMenu', () => {
       fireEvent.click(screen.getByText('View recovery phrase'))
     })
 
-    expect(invalidateListAuthenticators).not.toHaveBeenCalled()
+    expect(resetListAuthenticators).not.toHaveBeenCalled()
   })
 
   it('stays on the warning step when exportSeedPhrase returns undefined (user aborted)', async () => {

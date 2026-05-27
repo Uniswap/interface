@@ -12,6 +12,7 @@ import type {
 } from '@universe/api'
 import { TradingApi } from '@universe/api'
 import { isExtensionApp, isMobileApp, isWebApp } from '@universe/environment'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import type { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
@@ -52,7 +53,7 @@ import {
   validateTransactionRequest,
   validateTransactionRequests,
 } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { SWAP_GAS_URGENCY_OVERRIDE } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { buildUrgency, DEFAULT_URGENCY_LEVEL } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
@@ -93,7 +94,13 @@ export function processWrapResponse({
   }
 }
 
-export function createPrepareSwapRequestParams({ gasStrategy }: { gasStrategy: GasStrategy }) {
+export function createPrepareSwapRequestParams({
+  gasStrategy,
+  gasOverrides,
+}: {
+  gasStrategy: GasStrategy
+  gasOverrides?: TradingApi.UrgencyOverrides
+}) {
   return function prepareSwapRequestParams({
     swapQuoteResponse,
     signature,
@@ -121,15 +128,26 @@ export function createPrepareSwapRequestParams({ gasStrategy }: { gasStrategy: G
 
     const deadline = getTradeSettingsDeadline(transactionSettings.customDeadline)
 
-    return {
+    // TODO(GasFeeOverrides): remove flag gate once the new urgency-based payload ships fully.
+    const shouldUseUrgency = getFeatureFlag(FeatureFlags.GasFeeOverrides)
+
+    const base = {
       quote: swapQuoteResponse.quote,
       permitData: permitData ?? undefined,
       signature,
       simulateTransaction: shouldSimulateTxn,
       deadline,
       refreshGasPrice: true,
+    }
+
+    if (shouldUseUrgency) {
+      return { ...base, urgency: buildUrgency(gasOverrides) }
+    }
+
+    return {
+      ...base,
       gasStrategies: [gasStrategy],
-      urgency: SWAP_GAS_URGENCY_OVERRIDE,
+      urgency: DEFAULT_URGENCY_LEVEL,
     }
   }
 }
@@ -192,7 +210,19 @@ export function getSimulationError({
   return null
 }
 
-export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStrategy }) {
+export function createProcessSwapResponse({
+  gasStrategy,
+  hasOverrides,
+}: {
+  gasStrategy: GasStrategy
+  /**
+   * Set true when the upstream quote was built with per-tx gas overrides so
+   * `convertGasFeeToDisplayValue` short-circuits the limit-inflation
+   * adjustment — the gas service has already honored the user's explicit
+   * `gasLimit` top-level without inflation.
+   */
+  hasOverrides?: boolean
+}) {
   return function processSwapResponse({
     response,
     error,
@@ -215,7 +245,7 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
     // We use the gasFee estimate from quote, as its more accurate
     const swapGasFee = {
       value: swapQuote?.gasFee,
-      displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, gasStrategy),
+      displayValue: convertGasFeeToDisplayValue({ gasFee: swapQuote?.gasFee, gasStrategy, hasOverrides }),
     }
 
     // This is a case where simulation fails on backend, meaning txn is expected to fail
@@ -438,11 +468,13 @@ export function createGetPermitTxInfo({ gasStrategy }: { gasStrategy: GasStrateg
       return EMPTY_PERMIT_TX_INFO
     }
 
+    // The permit is a separate tx with its own gas; user `gasLimit` overrides
+    // apply only to the swap tx, so the permit display stays inflation-adjusted.
     return {
       permitTxRequest,
       gasFeeResult: {
         value: quote.permitGasFee,
-        displayValue: convertGasFeeToDisplayValue(quote.permitGasFee, gasStrategy),
+        displayValue: convertGasFeeToDisplayValue({ gasFee: quote.permitGasFee, gasStrategy }),
         isLoading: false,
         error: null,
       },

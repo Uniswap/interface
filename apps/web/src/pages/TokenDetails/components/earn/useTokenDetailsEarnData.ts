@@ -1,14 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import {
-  getListEarnPositionsQueryOptions,
-  getListEarnVaultsQueryOptions,
-} from 'uniswap/src/data/apiClients/dataApiService/earn'
-import { EARN_SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
+import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import {
-  getEarnPositionInfosByVaultId,
-  getEarnVaultInfos,
   getProjectedAnnualEarningsUsd,
   getTokenBalanceUsd,
   getTokenProjectCurrencyIds,
@@ -17,7 +10,7 @@ import {
 } from 'uniswap/src/features/earn/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import type { TokenQueryData } from '~/appGraphql/data/Token'
-import { useActiveAccount } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { getAggregateTokenBalance } from '~/pages/TokenDetails/components/earn/utils'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 
@@ -39,7 +32,7 @@ export function useTokenDetailsEarnData({
   enabled: boolean
   tokenQueryData: TokenQueryData | undefined
 }): TokenDetailsEarnData {
-  const evmAccount = useActiveAccount(Platform.EVM)
+  const evmAccountAddress = useActiveAddress(Platform.EVM)
 
   const { multiChainMap } = useTDPStore((s) => ({
     multiChainMap: s.multiChainMap,
@@ -50,43 +43,20 @@ export function useTokenDetailsEarnData({
     [tokenQueryData?.project?.tokens],
   )
   const aggregateBalance = useMemo(() => getAggregateTokenBalance(multiChainMap), [multiChainMap])
-  const vaultsQueryParams = useMemo(() => ({ chainIds: EARN_SUPPORTED_CHAIN_IDS }), [])
-  const positionsQueryParams = useMemo(
-    () =>
-      evmAccount?.address
-        ? {
-            walletAddress: evmAccount.address,
-            chainIds: EARN_SUPPORTED_CHAIN_IDS,
-          }
-        : undefined,
-    [evmAccount?.address],
-  )
-
-  const vaultsQuery = useQuery(
-    getListEarnVaultsQueryOptions({
-      params: vaultsQueryParams,
-      enabled: enabled && tokenCurrencyIds.length > 0,
-    }),
-  )
-  const positionsQuery = useQuery(
-    getListEarnPositionsQueryOptions({
-      params: positionsQueryParams,
-      enabled: enabled && tokenCurrencyIds.length > 0 && !!positionsQueryParams,
-    }),
-  )
-
-  const earnVaults = useMemo(() => getEarnVaultInfos(vaultsQuery.data?.vaults), [vaultsQuery.data?.vaults])
-  const positionsByVaultId = useMemo(
-    () => getEarnPositionInfosByVaultId(positionsQuery.data?.positions),
-    [positionsQuery.data?.positions],
-  )
+  const {
+    hasLoadedPositions,
+    positionsByVaultId,
+    vaults: earnVaults,
+  } = useEarnVaults({
+    account: evmAccountAddress,
+    enabled: enabled && tokenCurrencyIds.length > 0,
+  })
   const earnVault = useMemo(
     () => selectEarnVaultForToken({ tokenCurrencyIds, vaults: earnVaults }),
     [earnVaults, tokenCurrencyIds],
   )
   const earnPosition = earnVault ? positionsByVaultId.get(earnVault.id) : undefined
-  const isLoggedIn = !!evmAccount?.address
-  const hasLoadedPositions = positionsQuery.isSuccess
+  const isLoggedIn = !!evmAccountAddress
   const userHasEarnPosition = hasLoadedPositions && hasEarnPosition(earnPosition)
   const balanceUsd = getTokenBalanceUsd({
     balance: aggregateBalance,

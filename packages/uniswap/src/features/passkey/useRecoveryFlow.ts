@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useDigitInput } from 'uniswap/src/components/passkey/recovery/useDigitInput'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { hashAuthMethodId } from 'uniswap/src/features/passkey/pinCrypto'
-import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import { attemptPinDecryption } from 'uniswap/src/features/passkey/recoveryExecute'
 import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
 import { logger } from 'utilities/src/logger/logger'
@@ -116,7 +115,7 @@ export function useRecoveryFlow({
         setRecoveryWalletAddress(recoveryConfig.walletAddress)
       }
 
-      const blob = await fetchEncryptedBlob({
+      const blob = await privy.fetchEncryptedBlob({
         accessToken: token,
         keyId: recoveryConfig.encryptedKeyId,
         privyAppId,
@@ -219,7 +218,7 @@ export function useRecoveryFlow({
         setRecoveryWalletAddress(recoveryConfig.walletAddress)
       }
 
-      const blob = await fetchEncryptedBlob({
+      const blob = await privy.fetchEncryptedBlob({
         accessToken: token,
         keyId: recoveryConfig.encryptedKeyId,
         privyAppId,

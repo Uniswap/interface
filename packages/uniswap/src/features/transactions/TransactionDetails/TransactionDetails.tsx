@@ -55,6 +55,12 @@ interface TransactionDetailsProps {
   RoutingInfo?: JSX.Element
   CollapsedInfoRow?: JSX.Element
   RateInfo?: JSX.Element
+  /**
+   * Optional override for the default `NetworkFee` row. When provided, this
+   * replaces the inline `<NetworkFee />` render (used by the gas overrides
+   * feature to swap in the interactive Network cost row + modals).
+   */
+  NetworkCostRowSlot?: ReactNode
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   txSimulationErrors?: TradingApi.TransactionFailureReason[]
   includesDelegation?: boolean
@@ -91,6 +97,7 @@ export function TransactionDetails({
   RoutingInfo,
   CollapsedInfoRow,
   RateInfo,
+  NetworkCostRowSlot,
   includesDelegation,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
@@ -141,15 +148,17 @@ export function TransactionDetails({
           {isSwap && outputCurrency && (
             <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
           )}
-          <NetworkFee
-            chainId={chainId}
-            gasFee={gasFee}
-            indicative={indicative}
-            transactionUSDValue={transactionUSDValue}
-            uniswapXGasBreakdown={uniswapXGasBreakdown}
-            includesDelegation={includesDelegation}
-            showNetworkLogo={showNetworkLogo}
-          />
+          {NetworkCostRowSlot ?? (
+            <NetworkFee
+              chainId={chainId}
+              gasFee={gasFee}
+              indicative={indicative}
+              transactionUSDValue={transactionUSDValue}
+              uniswapXGasBreakdown={uniswapXGasBreakdown}
+              includesDelegation={includesDelegation}
+              showNetworkLogo={showNetworkLogo}
+            />
+          )}
           {!showChildren && CollapsedInfoRow}
           {(isSwap || isChainedTrade) && RoutingInfo}
           {AccountDetails}

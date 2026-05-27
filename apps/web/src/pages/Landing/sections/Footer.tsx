@@ -80,6 +80,7 @@ function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
 export function Footer() {
   const { t } = useTranslation()
   const { toggleModal: togglePrivacyPolicy } = useModalState(ModalName.PrivacyPolicy)
+  const { toggleModal: toggleDisclosures } = useModalState(ModalName.Disclosures)
   const sectionContent = useMenuContent()
   const productsSection = sectionContent[MenuSectionTitle.Products]
   const protocolSection = sectionContent[MenuSectionTitle.Protocol]
@@ -127,6 +128,7 @@ export function Footer() {
       >
         <Text variant="body3">© {currentYear} - Uniswap Labs</Text>
         <Flex row alignItems="center" gap="$spacing16">
+          <PolicyLink onPress={toggleDisclosures}>{t('common.disclosures')}</PolicyLink>
           <PolicyLink onPress={togglePrivacyPolicy}>{t('common.privacyPolicy')}</PolicyLink>
           <Anchor textDecorationLine="none" href="https://uniswap.org/trademark" target="_blank">
             <PolicyLink>{t('common.trademarkPolicy')}</PolicyLink>

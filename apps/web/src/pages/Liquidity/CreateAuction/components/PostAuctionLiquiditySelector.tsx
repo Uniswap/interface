@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text, Tooltip, TouchableArea, useMedia } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { fonts } from 'ui/src/theme'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 import { PercentButton } from '~/pages/Liquidity/CreateAuction/components/PercentButton'
 import { PostAuctionLiquidityAllocationPopover } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquidityAllocationPopover'
 import { PostAuctionLiquidityTieredEditor } from '~/pages/Liquidity/CreateAuction/components/PostAuctionLiquidityTieredEditor'
@@ -93,7 +92,7 @@ function PostAuctionLiquiditySelectorCardHeader({
                 <QuestionInCircleFilled size="$icon.16" color="$neutral3" />
               </Flex>
             </Tooltip.Trigger>
-            <Tooltip.Content zIndex={zIndexes.overlay}>
+            <Tooltip.Content>
               <Tooltip.Arrow />
               <Text variant="body4" color="$neutral1" maxWidth={280}>
                 {headerHelpDescription}
@@ -176,7 +175,8 @@ function PostAuctionLiquiditySingleAllocationEditor({
             <Input
               ref={inputRef}
               autoFocus
-              height={fonts.heading3.lineHeight}
+              unstyled
+              outlineStyle="none"
               value={`${rawInput}%`}
               onChangeText={(value: string) => onChange(value.replace(/%/g, ''))}
               onFocus={onFocus}
@@ -184,11 +184,11 @@ function PostAuctionLiquiditySingleAllocationEditor({
               onSelectionChange={onSelectionChange}
               placeholder="0%"
               placeholderTextColor="$neutral3"
+              fontFamily="$heading"
               fontSize={fonts.heading3.fontSize}
               lineHeight={fonts.heading3.lineHeight}
               fontWeight={fonts.heading3.fontWeight}
               color={isInvalid ? '$statusCritical' : '$neutral1'}
-              px="$none"
               backgroundColor="$transparent"
               width="100%"
             />
@@ -208,7 +208,7 @@ function PostAuctionLiquiditySingleAllocationEditor({
                 </Text>
               </Flex>
             </Tooltip.Trigger>
-            <Tooltip.Content zIndex={zIndexes.overlay}>
+            <Tooltip.Content>
               <Tooltip.Arrow />
               <Text variant="body4" color="$neutral1" maxWidth={280}>
                 {subtitleFloorPriceTooltipContent}
@@ -258,7 +258,7 @@ function PostAuctionLiquiditySingleAllocationEditor({
                 </Flex>
               </Tooltip.Trigger>
             </TouchableArea>
-            <Tooltip.Content zIndex={zIndexes.overlay}>
+            <Tooltip.Content>
               <Tooltip.Arrow />
               <Text variant="body4" color="$neutral1" maxWidth={250}>
                 {minPercentTooltipContent}

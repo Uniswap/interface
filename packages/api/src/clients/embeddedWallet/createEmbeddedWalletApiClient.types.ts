@@ -8,6 +8,7 @@ import {
 import {
   type AddAuthenticatorResponse,
   type ChallengeResponse,
+  type CheckRecoveryAvailabilityResponse,
   type CreateWalletResponse,
   type DeleteAuthenticatorResponse,
   type DeleteRecoveryResponse,
@@ -34,7 +35,7 @@ import {
 
 export type SignAuth =
   | { case: 'credential'; value: string }
-  | { case: 'deviceAuth'; value: { deviceSignature: string; walletId: string } }
+  | { case: 'deviceAuth'; value: { deviceSignature: string; walletId: string; signingPayload: string } }
   | { case: undefined; value?: undefined }
 
 export interface EmbeddedWalletClientContext {
@@ -52,6 +53,10 @@ export interface EmbeddedWalletClientContext {
     addAuthenticator: (req: Record<string, unknown>) => Promise<AddAuthenticatorResponse>
     deleteAuthenticator: (req: Record<string, unknown>) => Promise<DeleteAuthenticatorResponse>
     oprfEvaluate: (req: Record<string, unknown>, options?: CallOptions) => Promise<OprfEvaluateResponse>
+    checkRecoveryAvailability: (
+      req: Record<string, unknown>,
+      options?: CallOptions,
+    ) => Promise<CheckRecoveryAvailabilityResponse>
     setupRecovery: (req: Record<string, unknown>) => Promise<SetupRecoveryResponse>
     executeRecovery: (req: Record<string, unknown>) => Promise<ExecuteRecoveryResponse>
     reportDecryptionResult: (req: Record<string, unknown>) => Promise<ReportDecryptionResultResponse>
@@ -157,11 +162,14 @@ export interface EmbeddedWalletApiClient {
   fetchOprfEvaluate: (
     params: {
       blindedElement: string
-      isRecovery?: boolean
-      authMethodId?: string
+      authMethodId: string
     },
     accessToken: string,
   ) => Promise<OprfEvaluateResponse>
+  fetchCheckRecoveryAvailability: (
+    params: { authMethodId: string },
+    accessToken: string,
+  ) => Promise<CheckRecoveryAvailabilityResponse>
   fetchSetupRecovery: (params: {
     credential: string
     authMethodId: string

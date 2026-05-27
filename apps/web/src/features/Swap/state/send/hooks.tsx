@@ -20,7 +20,6 @@ import { useTransactionGasFee } from '~/hooks/useTransactionGasFee'
 import { useUSDTokenUpdater } from '~/hooks/useUSDTokenUpdater'
 import { useCurrencyBalances } from '~/lib/hooks/useCurrencyBalance'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { useCreateTransferTransaction } from '~/utils/transfer'
 export interface RecipientData {
   address: string
@@ -47,8 +46,9 @@ export type SendInfo = {
 export function useDerivedSendInfo(state: SendState): SendInfo {
   const account = useAccount()
   const { provider } = useWeb3React()
-  const { chainId } = useMultichainContext()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
+  // Send is single-currency — the input currency's chain is authoritative.
+  const chainId = inputCurrency?.chainId
 
   // If we have validatedRecipientData, skip custom lookups
   // Otherwise, use raw `recipient` input from the user.

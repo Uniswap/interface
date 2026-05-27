@@ -5,18 +5,27 @@
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "types": ["node"],
+    "types": ["node", "bun"],
     "paths": {}
   },
   "references": [
     {
-      "path": "../../config/vitest-presets"
+      "path": "../utilities"
     },
     {
       "path": "../environment"
     },
     {
+      "path": "../encoding"
+    },
+    {
       "path": "../config"
+    },
+    {
+      "path": "../api"
+    },
+    {
+      "path": "../../config/vitest-presets"
     }
   ]
 }

@@ -216,18 +216,12 @@ describe('RecoverWalletModal', () => {
     expect(inputs).toHaveLength(4)
   })
 
-  it('back from email entry returns to login step', async () => {
+  it('hides the back arrow on email entry step', async () => {
     setupMocks()
     render(<RecoverWalletModal />)
     await selectEmailLogin()
 
-    fireEvent.click(screen.getByTestId('step-header-back'))
-
-    // Back from EmailEntry returns to Login (the method-selection screen), not the modal close
-    await waitFor(() => {
-      expect(screen.queryByPlaceholderText('Recovery email')).not.toBeInTheDocument()
-    })
-    expect(screen.getByText('Email')).toBeInTheDocument()
+    expect(screen.queryByTestId('step-header-back')).not.toBeInTheDocument()
   })
 
   it('happy path: correct PIN advances to ADD_PASSKEY step', async () => {

@@ -1,12 +1,11 @@
 import type { TFunction } from 'i18next'
 import type { ReactNode } from 'react'
-import { Button, Flex, Separator, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Separator, SpinningLoader, Text } from 'ui/src'
 import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { Envelope } from 'ui/src/components/icons/Envelope'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Person } from 'ui/src/components/icons/Person'
-import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { OptionRow } from 'uniswap/src/components/passkey/recovery/OptionRow'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -69,11 +68,7 @@ export function RecoveryLoginStep({
     <Trace logImpression modal={ModalName.RecoverWallet}>
       {headerActions !== null && (
         <Flex row width="100%" justifyContent="flex-end" alignItems="center">
-          {headerActions ?? (
-            <TouchableArea variant="unstyled" testID={TestID.StepHeaderClose} onPress={handleClose}>
-              <X size="$icon.20" color="$neutral2" />
-            </TouchableArea>
-          )}
+          {headerActions ?? <ModalCloseIcon testId={TestID.StepHeaderClose} size="$icon.20" onClose={handleClose} />}
         </Flex>
       )}
 

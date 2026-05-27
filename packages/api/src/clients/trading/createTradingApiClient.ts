@@ -68,7 +68,11 @@ export interface TradingApiClient {
   fetchSwap: (params: CreateSwapRequest) => Promise<CreateSwapResponse>
   fetchSwap5792: (params: CreateSwap5792Request) => Promise<CreateSwap5792Response>
   fetchSwap7702: (params: CreateSwap7702Request) => Promise<CreateSwap7702Response>
-  fetchSwaps: (params: { txHashes: TransactionHash[]; chainId: ChainId }) => Promise<GetSwapsResponse>
+  fetchSwaps: (params: {
+    txHashes?: TransactionHash[]
+    userOpHashes?: string[]
+    chainId: ChainId
+  }) => Promise<GetSwapsResponse>
   fetchCheckApproval: (params: ApprovalRequest) => Promise<ApprovalResponse>
   submitOrder: (params: OrderRequest) => Promise<OrderResponse>
   fetchOrders: (params: { orderIds: string[] }) => Promise<GetOrdersResponse>
@@ -223,7 +227,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
 
   const fetchSwaps = createFetcher<
     {
-      txHashes: TransactionHash[]
+      txHashes?: TransactionHash[]
+      userOpHashes?: string[]
       chainId: ChainId
     },
     GetSwapsResponse
@@ -234,7 +239,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     transformRequest: async ({ params }) => ({
       headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swaps, params.chainId),
       params: {
-        txHashes: params.txHashes.join(','),
+        ...(params.txHashes ? { txHashes: params.txHashes.join(',') } : {}),
+        ...(params.userOpHashes ? { userOpHashes: params.userOpHashes.join(',') } : {}),
         chainId: params.chainId,
       },
     }),

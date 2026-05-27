@@ -31,8 +31,8 @@ export function ModalContent({
 
   return (
     <>
-      <Flex pt="$padding16">
-        <Flex row mt="$spacing6" mb="$spacing6" px="$spacing20" width="100%">
+      <Flex>
+        <Flex row width="100%">
           {goBack && (
             <TouchableArea testID={TestID.Back} onPress={goBack}>
               <BackArrow size="$icon.20" color="$neutral2" hoverColor="$neutral2Hovered" />
@@ -44,10 +44,10 @@ export function ModalContent({
             </Flex>
           )}
         </Flex>
-        <Flex alignSelf="center" alignItems="center" gap="$spacing32" width="100%" maxWidth="480px" {...rest}>
-          <Flex alignItems="center" gap="$spacing12">
+        <Flex alignSelf="center" alignItems="center" gap="$spacing16" width="100%" {...rest}>
+          <Flex alignItems="center" gap="$spacing24">
             {header ?? <Image height={iconSizes.icon64} source={UNISWAP_LOGO} width={iconSizes.icon64} />}
-            <Flex alignItems="center" gap="$spacing12" px="$spacing40">
+            <Flex alignItems="center" gap="$spacing12">
               <Text variant="heading3" color="$neutral1">
                 {title}
               </Text>

@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, useMedia } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useAbbreviatedTimeString } from '~/components/Table/utils/useAbbreviatedTimeString'
 import { MARKER_CONFIG } from '~/features/Toucan/Auction/BidDistributionChart/constants'
@@ -144,13 +143,7 @@ export function BidMarker({ marker, bidTokenInfo, formatPrice, formatTokenAmount
           )}
         </Flex>
       </Tooltip.Trigger>
-      <Tooltip.Content
-        backgroundColor="transparent"
-        borderWidth={0}
-        p={0}
-        pointerEvents="none"
-        zIndex={zIndexes.overlay}
-      >
+      <Tooltip.Content backgroundColor="transparent" borderWidth={0} p={0} pointerEvents="none">
         <Flex gap="$spacing2" flexDirection="column">
           {displayBids.map((bid) => (
             <Flex

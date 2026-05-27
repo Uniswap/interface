@@ -187,8 +187,7 @@
   position: relative;
   z-index: 1;
   background: var(--auction-calendar-accent-strong);
-  color: white; /* fallback for browsers without contrast-color() */
-  color: contrast-color(var(--auction-calendar-accent-strong));
+  color: var(--auction-calendar-accent-foreground);
   border-radius: 16px;
   font-weight: 535;
 }

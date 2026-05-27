@@ -6,14 +6,17 @@ import type { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import {
   PortfolioBalancePart,
+  selectPortfolioBalanceBreakdown,
   selectorForPart,
   useGetWalletBalancesQuery,
+  type PortfolioBalanceBreakdown,
 } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { PortfolioTotalValueResult } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/useRestPortfolioValueModifier'
 import { mapRestStatusToNetworkStatus } from 'uniswap/src/features/dataApi/balances/utils'
+import type { BaseResult } from 'uniswap/src/features/dataApi/types'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -29,6 +32,52 @@ type UsePortfolioBalancePartParams = {
 
 export type UsePortfolioTotalValueParams = Omit<UsePortfolioBalancePartParams, 'part'>
 
+type PortfolioBalanceQueryConfig = {
+  portfolioPoolsBalancesEnabled: boolean
+  queryInput: {
+    evmAddress?: Address
+    svmAddress?: Address
+    chainIds: UniverseChainId[]
+    modifier: ReturnType<typeof useRestPortfolioValueModifier>
+  }
+  // TODO(CONS-1952): Collapse to a single enabled value once PortfolioPoolsBalances is removed.
+  portfolioQueryEnabled: boolean
+  walletBalancesQueryEnabled: boolean
+  refetchInterval: number | undefined
+}
+
+function usePortfolioBalanceQueryConfig({
+  evmAddress,
+  svmAddress,
+  pollInterval,
+  fetchPolicy,
+  enabled = true,
+  chainIds,
+}: UsePortfolioTotalValueParams): PortfolioBalanceQueryConfig {
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
+  const walletAddress = evmAddress ?? svmAddress
+  const queryEnabled = !!walletAddress && enabled
+
+  const { chains: defaultChainIds } = useEnabledChains()
+  const effectiveChainIds = chainIds || defaultChainIds
+
+  const { pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
+    fetchPolicy,
+    pollInterval,
+  })
+
+  // TODO(CONS-1074): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
+  const modifier = useRestPortfolioValueModifier(queryEnabled ? walletAddress : undefined)
+
+  return {
+    portfolioPoolsBalancesEnabled,
+    queryInput: { evmAddress, svmAddress, chainIds: effectiveChainIds, modifier },
+    portfolioQueryEnabled: queryEnabled && !portfolioPoolsBalancesEnabled,
+    walletBalancesQueryEnabled: queryEnabled && portfolioPoolsBalancesEnabled,
+    refetchInterval: internalPollInterval,
+  }
+}
+
 /**
  * Canonical hook for reading a part of the wallet's portfolio value.
  */
@@ -41,18 +90,20 @@ export function usePortfolioBalancePart({
   enabled = true,
   chainIds,
 }: UsePortfolioBalancePartParams): PortfolioTotalValueResult {
-  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
-
-  const { chains: defaultChainIds } = useEnabledChains()
-  const effectiveChainIds = chainIds || defaultChainIds
-
-  const { pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
-    fetchPolicy,
+  const {
+    portfolioPoolsBalancesEnabled,
+    queryInput,
+    portfolioQueryEnabled,
+    walletBalancesQueryEnabled,
+    refetchInterval,
+  } = usePortfolioBalanceQueryConfig({
+    evmAddress,
+    svmAddress,
     pollInterval,
+    fetchPolicy,
+    enabled,
+    chainIds,
   })
-
-  // TODO(CONS-1074): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
-  const modifier = useRestPortfolioValueModifier(enabled ? (evmAddress ?? svmAddress) : undefined)
 
   const selectPortfolioTotalFromGetPortfolio = useEvent((portfolioData: GetPortfolioResponse | undefined) => {
     if (!portfolioData?.portfolio) {
@@ -69,18 +120,18 @@ export function usePortfolioBalancePart({
   })
 
   const portfolioResult = useGetPortfolioQuery({
-    input: { evmAddress, svmAddress, chainIds: effectiveChainIds, modifier },
-    enabled: !!(evmAddress ?? svmAddress) && enabled && !portfolioPoolsBalancesEnabled,
-    refetchInterval: internalPollInterval,
+    input: queryInput,
+    enabled: portfolioQueryEnabled,
+    refetchInterval,
     select: selectPortfolioTotalFromGetPortfolio,
   })
 
   const selectFromWalletBalances = useMemo(() => selectorForPart(part), [part])
 
   const walletBalancesResult = useGetWalletBalancesQuery({
-    input: { evmAddress, svmAddress, chainIds: effectiveChainIds, modifier },
-    enabled: !!(evmAddress ?? svmAddress) && enabled && portfolioPoolsBalancesEnabled,
-    refetchInterval: internalPollInterval,
+    input: queryInput,
+    enabled: walletBalancesQueryEnabled,
+    refetchInterval,
     select: selectFromWalletBalances,
   })
 
@@ -102,4 +153,44 @@ export function usePortfolioBalancePart({
  */
 export function usePortfolioTotalValue(params: UsePortfolioTotalValueParams): PortfolioTotalValueResult {
   return usePortfolioBalancePart({ ...params, part: PortfolioBalancePart.Total })
+}
+
+export type UsePortfolioBalanceBreakdownParams = Omit<UsePortfolioBalancePartParams, 'part'>
+
+/**
+ * Reads the total, token, and pool balance slices from the shared wallet-balances query.
+ */
+export function usePortfolioBalanceBreakdown({
+  evmAddress,
+  svmAddress,
+  pollInterval,
+  fetchPolicy,
+  enabled = true,
+  chainIds,
+}: UsePortfolioBalanceBreakdownParams): BaseResult<PortfolioBalanceBreakdown | undefined> {
+  const { portfolioPoolsBalancesEnabled, queryInput, walletBalancesQueryEnabled, refetchInterval } =
+    usePortfolioBalanceQueryConfig({
+      evmAddress,
+      svmAddress,
+      pollInterval,
+      fetchPolicy,
+      enabled,
+      chainIds,
+    })
+
+  const result = useGetWalletBalancesQuery({
+    input: queryInput,
+    enabled: walletBalancesQueryEnabled,
+    refetchInterval,
+    select: selectPortfolioBalanceBreakdown,
+  })
+
+  return {
+    data: portfolioPoolsBalancesEnabled ? result.data : undefined,
+    loading: result.isFetching,
+    networkStatus: mapRestStatusToNetworkStatus(result.status),
+    refetch: result.refetch,
+    error: result.error || undefined,
+    dataUpdatedAt: result.dataUpdatedAt || undefined,
+  }
 }

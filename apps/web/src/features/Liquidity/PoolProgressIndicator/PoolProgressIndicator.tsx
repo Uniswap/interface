@@ -107,7 +107,7 @@ export function PoolProgressIndicatorHeader({
       borderTopWidth="$spacing1"
       borderTopColor={showBottomBorder ? 'transparent' : '$surface3'}
       borderBottomColor={showBottomBorder ? '$surface3' : 'transparent'}
-      $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT, zIndex: zIndexes.sticky }}
+      $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT, zIndex: zIndexes.header }}
     >
       <Flex
         width="$spacing32"

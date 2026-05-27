@@ -161,7 +161,13 @@ export const swapFeApiMonitors: MonitorDefinition[] = [
     id: 'swap_fe_wallet_api_failure_swap_quote',
     name: '[Wallet] General API failure for Swap + Quote endpoints',
     type: 'rum alert',
-    query: 'formula("query / query1 * 100").last("4h") > 50',
+    // `cutoff_min(query1, 25)` enforces a minimum of 25 sessions per
+    // (`@resource.url_path`, `@service`) bucket before the ratio is evaluated.
+    // Without this floor, low-traffic buckets (e.g. extension `/v1/swap` with
+    // <10 sessions/4h) can trip the warn from a single user retrying a failed
+    // request. Matches the floor pattern used by
+    // `swap_fe_web_rpc_providers_exhausted_user_impact` in this file.
+    query: 'formula("query / cutoff_min(query1, 25) * 100").last("4h") > 50',
     alertBody:
       'Sustained API failure rate detected on Swap/Quote endpoints (wallet — mobile + extension). Raise issue in #pod-swap with endpoint affected.',
     team: TEAM,

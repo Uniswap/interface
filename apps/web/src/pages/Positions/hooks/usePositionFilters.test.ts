@@ -3,6 +3,7 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/d
 import { Provider } from 'jotai'
 import { createElement, type ReactNode } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DEFAULT_LP_POSITION_PROTOCOL_FILTER, DEFAULT_LP_POSITION_STATUS_FILTER } from '~/features/Liquidity/constants'
 import { usePositionFilters } from '~/pages/Positions/hooks/usePositionFilters'
 
 // Each renderHook gets its own isolated atom store via a fresh <Provider>
@@ -17,8 +18,8 @@ describe('usePositionFilters', () => {
     const { result } = renderUsePositionFilters()
 
     expect(result.current.chainFilter).toBeNull()
-    expect(result.current.versionFilter).toEqual([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
-    expect(result.current.statusFilter).toEqual([PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE])
+    expect(result.current.versionFilter).toEqual(DEFAULT_LP_POSITION_PROTOCOL_FILTER)
+    expect(result.current.statusFilter).toEqual(DEFAULT_LP_POSITION_STATUS_FILTER)
   })
 
   it('updates chainFilter via setChainFilter', () => {

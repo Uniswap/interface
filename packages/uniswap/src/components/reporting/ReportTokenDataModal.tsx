@@ -22,17 +22,19 @@ import { useEvent } from 'utilities/src/react/hooks'
 export type ReportTokenDataModalProps = {
   currency?: Currency
   isMarkedSpam?: Maybe<boolean>
+  shouldReportMultichainAsset?: boolean
   onReportSuccess?: () => void
 }
 
 export const ReportTokenDataModalPropsAtom = atom<
-  Pick<ReportTokenDataModalProps, 'currency' | 'isMarkedSpam'> | undefined
+  Pick<ReportTokenDataModalProps, 'currency' | 'isMarkedSpam' | 'shouldReportMultichainAsset'> | undefined
 >(undefined)
 
 export function ReportTokenDataModal({
   currency,
   isOpen,
   isMarkedSpam,
+  shouldReportMultichainAsset = false,
   onReportSuccess,
   onClose,
 }: ReportTokenDataModalProps & BaseModalProps): JSX.Element {
@@ -62,6 +64,7 @@ export function ReportTokenDataModal({
         walletAddress,
         reportOptions: Array.from(checkedItems),
         reportTexts,
+        reportMultichainAsset: shouldReportMultichainAsset,
       })
 
       // Submit data report to Zerion via backend proxy
@@ -73,6 +76,7 @@ export function ReportTokenDataModal({
           walletAddress,
           chainId: currency.chainId,
           tokenAddress: currency.address,
+          ...(shouldReportMultichainAsset && { multichain: true }),
         }).catch((error: unknown) => {
           logger.warn('ReportTokenDataModal', 'submitReport', 'Failed to submit data report to backend', {
             error: error instanceof Error ? error.message : String(error),

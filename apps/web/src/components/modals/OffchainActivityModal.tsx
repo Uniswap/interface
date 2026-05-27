@@ -6,6 +6,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -36,7 +37,6 @@ import {
 import { useCancelMultipleOrdersCallback } from '~/components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AmountHeader } from '~/components/AmountHeader'
-import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { LimitDisclaimer } from '~/components/LimitDisclaimer'
 import { useCurrency } from '~/hooks/Tokens'
 import { useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
@@ -182,7 +182,11 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
   const localizedDayjs = useLocalizedDayjs()
 
   const explorerLink = order.hash
-    ? getExplorerLink({ chainId: order.chainId, data: order.hash, type: ExplorerDataType.TRANSACTION })
+    ? getExplorerLink({
+        chainId: order.chainId,
+        data: order.hash,
+        type: ExplorerDataType.TRANSACTION,
+      })
     : undefined
 
   const createdAt = useFormattedDateTime(localizedDayjs(order.addedTime), FORMAT_DATE_TIME_SHORT)
@@ -191,7 +195,10 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
     // oxlint-disable-next-line no-shadow
     const details = []
     if (amountsDefined) {
-      details.push({ type: OffchainOrderLineItemType.EXCHANGE_RATE, amounts } as OffchainOrderLineItemProps)
+      details.push({
+        type: OffchainOrderLineItemType.EXCHANGE_RATE,
+        amounts,
+      } as OffchainOrderLineItemProps)
     }
     if (order.status === TransactionStatus.Pending) {
       details.push({
@@ -277,7 +284,7 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
       {order.status === TransactionStatus.InsufficientFunds ? (
         <InsufficientFundsCopyContainer>
           <AlertIconContainer>
-            <AlertTriangleFilled size="20px" />
+            <AlertTriangleFilled color="$neutral2" size="$icon.20" />
           </AlertIconContainer>
           <Flex flex={1}>
             <Text variant="body2">{t('common.insufficientBalance.error')}</Text>

@@ -56,6 +56,8 @@ export interface TransactionDetailsCore extends TransactionId {
    * - Plan: Hash is undefined for plan itself, but is defined for each step in the plan.
    */
   hash?: string
+  /** For 4337 transactions, the UserOp hash returned by the bundler */
+  userOpHash?: string
   /**
    * Includes nonce and confirmed time used by all platforms. Wallets also needs to store receipt
    * data for EIP-5792 batch transaction tracking

@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
@@ -11,6 +12,7 @@ import { LiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart/typ
 import { ChartEntry } from '~/features/Liquidity/charts/LiquidityRangeInput/types'
 import { getDisplayPriceFromTick } from '~/features/Liquidity/utils/getTickToPrice'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
+import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
 
 export function shouldShowSinglePrice(params: {
   showSingleTick: boolean | undefined
@@ -145,6 +147,7 @@ export function TickTooltipContent({
 } & FlexProps) {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const amountBaseLockedUSD = useUSDCValue(
     tryParseCurrencyAmount(hoveredTick.amount1Locked?.toFixed(baseCurrency?.decimals ?? 0), baseCurrency),
   )
@@ -205,7 +208,22 @@ export function TickTooltipContent({
       ? [segmentPriceB, segmentPriceA]
       : [segmentPriceA, segmentPriceB]
 
-  const formatPrice = (value: number): string => formatNumberOrString({ value, type: NumberType.TokenTx })
+  const formatPrice = (value: number): string =>
+    formatPriceWithSubscript({
+      price: value,
+      locale,
+      formatNumberOrString,
+      numberType: NumberType.TokenTx,
+      // Route anything below 0.001 through the subscript helper. The TokenTx formatter's
+      // FiveDecimals rule otherwise rounds the entire [1e-5, 1e-3) range to "0.00001"
+      // (see WBTC/USDC tick prices around 1.11e-5) — adjacent ticks then render as the
+      // same string. The subscript helper preserves 6 sig digits so neighbors stay
+      // distinguishable.
+      subscriptThreshold: 0.001,
+      // Tooltips show one price at a time and benefit from extra precision so adjacent
+      // ticks render as distinct strings (e.g. "0.0₅96712" vs "0.0₅96755").
+      maxSigDigits: 6,
+    })
 
   const formattedPriceLow = priceLow !== undefined ? formatPrice(priceLow) : undefined
   const formattedPriceHigh = priceHigh !== undefined ? formatPrice(priceHigh) : undefined

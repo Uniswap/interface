@@ -45,13 +45,6 @@ export function buildFlagGroups(extras: {
       flags: [{ flag: FeatureFlags.XLayer, label: 'Enable XLayer UX' }],
     },
     {
-      name: 'Solana',
-      flags: [
-        { flag: FeatureFlags.Solana, label: 'Enable Solana UX' },
-        { flag: FeatureFlags.SolanaPromo, label: 'Turn on Solana promo banners' },
-      ],
-    },
-    {
       name: 'Multichain Token UX Improvements',
       flags: [{ flag: FeatureFlags.MultichainTokenUx, label: 'Enable Updated Multichain Token UX' }],
     },
@@ -61,6 +54,7 @@ export function buildFlagGroups(extras: {
         { flag: FeatureFlags.NoUniswapInterfaceFees, label: 'Turn off Uniswap interface fees' },
         { flag: FeatureFlags.ChainedActions, label: 'Enable Chained Actions' },
         { flag: FeatureFlags.BatchedSwaps, label: 'Enable Batched Swaps' },
+        { flag: FeatureFlags.GasFeeOverrides, label: 'Enable Custom Gas Fee Overrides' },
         { flag: FeatureFlags.UniquoteEnabled, label: 'Enable Uniquote' },
         { flag: FeatureFlags.UnirouteEnabled, label: 'Enable Uniroute' },
         { flag: FeatureFlags.UseUniversalRouterVersion211, label: 'Use Universal Router v2.1.1' },

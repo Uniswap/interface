@@ -134,6 +134,15 @@ export function FormWrapper({
   const { pathname } = useLocation()
   const showPoolsBreadcrumb = isAddLiquidityRevamp && pathname.startsWith('/positions/add/')
   const entryPointBreadcrumb = useEntryPointBreadcrumb()
+  const leadingBreadcrumb = entryPointBreadcrumb.hasEntryPoint
+    ? entryPointBreadcrumb
+    : { label: t('pool.positions.title'), to: '/positions' }
+  const fallbackTrailingLabel = showPoolsBreadcrumb ? t('position.new') : t('pool.newPosition.title')
+  const isTrailingBreadcrumbEmphasized = entryPointBreadcrumb.hasEntryPoint || showPoolsBreadcrumb
+  const trailingBreadcrumb = currentBreadcrumb ?? (
+    // Entry-point breadcrumbs use the active color because they describe the current create-position flow.
+    <Text color={isTrailingBreadcrumbEmphasized ? '$neutral1' : '$neutral2'}>{title || fallbackTrailingLabel}</Text>
+  )
 
   const poolProgressSteps = useMemo(() => {
     const createStep = ({
@@ -190,21 +199,10 @@ export function FormWrapper({
   return (
     <PageLayout mt="$spacing24">
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-        {showPoolsBreadcrumb ? (
-          <>
-            <BreadcrumbNavLink to={entryPointBreadcrumb.to}>
-              {entryPointBreadcrumb.label} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
-            </BreadcrumbNavLink>
-            <Text color="$neutral1">{title || t('position.new')}</Text>
-          </>
-        ) : (
-          <>
-            <BreadcrumbNavLink to="/positions">
-              {t('pool.positions.title')} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
-            </BreadcrumbNavLink>
-            {currentBreadcrumb || <Text color="$neutral2">{t('pool.newPosition.title')}</Text>}
-          </>
-        )}
+        <BreadcrumbNavLink to={leadingBreadcrumb.to}>
+          {leadingBreadcrumb.label} <Chevron size="$icon.16" color="$neutral2" rotate="180deg" />
+        </BreadcrumbNavLink>
+        {trailingBreadcrumb}
       </BreadcrumbNavContainer>
       <Flex
         row

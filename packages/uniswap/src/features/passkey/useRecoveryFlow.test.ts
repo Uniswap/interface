@@ -2,7 +2,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import React, { type PropsWithChildren } from 'react'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
-import { fetchEncryptedBlob } from 'uniswap/src/features/passkey/privyBlobStore'
 import { attemptPinDecryption } from 'uniswap/src/features/passkey/recoveryExecute'
 import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
 import { RecoveryStep, useRecoveryFlow } from 'uniswap/src/features/passkey/useRecoveryFlow'
@@ -12,10 +11,6 @@ vi.mock('uniswap/src/data/rest/embeddedWallet/requests', () => ({
   EmbeddedWalletApiClient: {
     fetchGetRecoveryConfig: vi.fn(),
   },
-}))
-
-vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
-  fetchEncryptedBlob: vi.fn(),
 }))
 
 vi.mock('uniswap/src/features/passkey/recoveryExecute', () => ({
@@ -32,6 +27,7 @@ function buildPrivy(overrides: Partial<RecoveryPrivyAuth> = {}): RecoveryPrivyAu
     loginWithEmailCode: vi.fn().mockResolvedValue(undefined),
     initOAuth: vi.fn().mockResolvedValue(undefined),
     generateAuthorizationSignature: vi.fn(),
+    fetchEncryptedBlob: vi.fn().mockResolvedValue('blob-fixture'),
     oauthReturn: { pending: false, provider: null, providerEmail: undefined },
     clearOAuthReturn: vi.fn(),
     ...overrides,
@@ -46,7 +42,6 @@ function wrapper(): ({ children }: PropsWithChildren) => React.ReactElement {
 describe('useRecoveryFlow', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(fetchEncryptedBlob).mockResolvedValue('blob-fixture')
   })
 
   it('starts on Login when no OAuth is pending', () => {
@@ -260,7 +255,6 @@ describe('useRecoveryFlow', () => {
       encryptedKeyId: 'key-id-1',
       walletAddress: '0xabc',
     } as never)
-    vi.mocked(fetchEncryptedBlob).mockRejectedValueOnce(new Error('rate limited'))
 
     const setOauthError = vi.fn()
     const { result, rerender } = renderHook(
@@ -276,6 +270,7 @@ describe('useRecoveryFlow', () => {
     rerender({
       privy: buildPrivy({
         oauthReturn: { pending: false, provider: 'google', providerEmail: 'user@example.com' },
+        fetchEncryptedBlob: vi.fn().mockRejectedValueOnce(new Error('rate limited')),
       }),
     })
 

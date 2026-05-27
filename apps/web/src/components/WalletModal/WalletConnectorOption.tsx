@@ -1,6 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
-import { Flex, Image, Text, useSporeColors } from 'ui/src'
+import { Flex, Image, SpinningLoader, Text, useSporeColors } from 'ui/src'
 import { BINANCE_WALLET_ICON } from 'ui/src/assets'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Passkey } from 'ui/src/components/icons/Passkey'
@@ -15,7 +15,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { Loader } from '~/components/Icons/LoadingSpinner'
 import { DetectedBadge } from '~/components/WalletModal/shared'
 import { UniswapBrandedIcon } from '~/components/WalletModal/UniswapBrandedIcon'
 import { useRecentConnectorId } from '~/connection/constants'
@@ -116,7 +115,7 @@ function RightSideDetail({
   detected?: boolean
 }) {
   if (isPendingConnection) {
-    return <Loader />
+    return <SpinningLoader size={16} color="$accent1" unstyled />
   } else if (isRecent) {
     return <RecentBadge />
   } else if (detected) {

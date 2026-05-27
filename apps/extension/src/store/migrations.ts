@@ -7,6 +7,7 @@ import {
 import {
   addActivityVisibility,
   addDismissedBridgedAndCompatibleWarnings,
+  addEnableCustomGasFeeEntry,
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
@@ -70,6 +71,7 @@ export const migrations = {
   29: addActivityVisibility,
   30: migrateDismissedTokenWarnings,
   31: setLanguageToNavigatorLanguage,
+  32: addEnableCustomGasFeeEntry,
 }
 
-export const EXTENSION_STATE_VERSION = 31
+export const EXTENSION_STATE_VERSION = 32

@@ -1,7 +1,11 @@
 import { axisRight, Axis as d3Axis, NumberValue, ScaleLinear, select } from 'd3'
 import { useMemo } from 'react'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+
+const AXIS_SUBSCRIPT_THRESHOLD = 0.01
 
 const TEXT_Y_OFFSET = 5
 
@@ -51,6 +55,7 @@ export const AxisRight = ({
   max?: number
 }) => {
   const { formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const tickValues = useMemo(() => {
     const minCoordinate = min ? yScale(min) : undefined
     const maxCoordinate = max ? yScale(max) : undefined
@@ -70,9 +75,12 @@ export const AxisRight = ({
         axisGenerator={axisRight(yScale)
           .tickValues(tickValues)
           .tickFormat((d) =>
-            formatNumberOrString({
-              value: d as number,
-              type: NumberType.TokenQuantityStats,
+            formatPriceWithSubscript({
+              price: d as number,
+              locale,
+              formatNumberOrString,
+              numberType: NumberType.TokenQuantityStats,
+              subscriptThreshold: AXIS_SUBSCRIPT_THRESHOLD,
             }),
           )}
         height={height}

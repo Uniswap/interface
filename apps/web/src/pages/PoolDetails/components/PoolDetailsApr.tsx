@@ -23,8 +23,7 @@ export const PoolDetailsApr = ({ poolApr, rewardsApr }: { poolApr: Percent; rewa
       width="100%"
       flexDirection="column"
       mt={-24}
-      mb={24}
-      $xl={{ my: 0 }}
+      $xl={{ mt: 0 }}
     >
       <Flex>
         <Text variant="body2" color="$neutral2">

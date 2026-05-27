@@ -1,6 +1,7 @@
 /* oxlint-disable max-lines */
 import { type Provider } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
+import { TradingApi } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { createSearchParams } from 'react-router'
 import { changeChain } from 'src/app/features/dapp/changeChain'
@@ -52,11 +53,14 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionOriginType,
+  TransactionStatus,
   TransactionType,
   type TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
@@ -621,20 +625,36 @@ export function* handleSendCalls({
 
     if (is4337) {
       // 4337 UserOp path — gas-sponsored dapp request
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.SendCalls,
+        unsignedUserOperation,
+        dappInfo: {
+          name: dappInfo.displayName,
+          icon: dappInfo.iconUrl,
+        },
+      }
       const executeUserOpParams: ExecuteUserOpParams = {
         userOp: unsignedUserOperation,
         account: activeAccount,
         chainId,
-        typeInfo: {
-          type: TransactionType.SendCalls,
-          unsignedUserOperation,
-          dappInfo: {
-            name: dappInfo.displayName,
-            icon: dappInfo.iconUrl,
-          },
-        },
+        typeInfo,
       }
       const { userOpHash } = yield* call(executeUserOpSaga, executeUserOpParams)
+
+      yield* put(
+        addTransaction({
+          routing: TradingApi.Routing.CLASSIC,
+          id: createTransactionId(),
+          chainId,
+          typeInfo,
+          from: activeAccount.address,
+          addedTime: Date.now(),
+          status: TransactionStatus.Pending,
+          userOpHash,
+          options: { request: {} },
+          transactionOriginType: TransactionOriginType.External,
+        }),
+      )
 
       yield* put(
         addWalletCallTransaction({
@@ -648,10 +668,7 @@ export function* handleSendCalls({
       const response: SendCallsResponse = {
         type: DappResponseType.SendCallsResponse,
         requestId: request.requestId,
-        response: {
-          id: batchId,
-          capabilities: request.capabilities || {},
-        },
+        response: { id: batchId },
       }
 
       yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
@@ -693,7 +710,12 @@ export function* handleSendCalls({
         requestId: request.requestId,
         response: {
           id: batchId,
-          capabilities: request.capabilities || {},
+          capabilities: {
+            caip345: {
+              caip2: `eip155:${chainId}`,
+              transactionHashes: [transactionHash],
+            },
+          },
         },
       }
 

@@ -62,7 +62,7 @@ export function createChainedActionSwapTxAndGasInfoService(ctx?: {
 
       const gasFee: GasFeeResult = {
         value: newQuote.gasFee,
-        displayValue: convertGasFeeToDisplayValue(newQuote.gasFee, gasStrategy),
+        displayValue: convertGasFeeToDisplayValue({ gasFee: newQuote.gasFee, gasStrategy }),
         isLoading: false,
         error: null,
       }

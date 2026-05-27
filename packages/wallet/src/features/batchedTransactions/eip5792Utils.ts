@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
 import { selectBatchedTransactionById } from 'wallet/src/features/batchedTransactions/selectors'
 import { GetCallsStatusResult } from 'wallet/src/features/dappRequests/types'
 
@@ -41,6 +42,16 @@ function getTransactionStatusCode(status: TransactionStatus): TransactionStatusC
 }
 
 /**
+ * Tx was finalized as a failure without a receipt (i.e. tx watcher timeout, bundler drop).
+ * Reverted-but-mined txs have a receipt and don't hit this branch.
+ */
+function isFinalizedOffchainFailure(transaction: TransactionDetails): boolean {
+  return (
+    !transaction.receipt && isFinalizedTxStatus(transaction.status) && transaction.status !== TransactionStatus.Success
+  )
+}
+
+/**
  * Helper generator function to get the status of a batch of calls.
  * Fetches batch transaction details and associated transaction receipts from the Redux store.
  * @param batchId The ID of the batch transaction.
@@ -56,7 +67,7 @@ export function* getCallsStatusHelper(
     return { error: 'Batch transaction not found' }
   }
 
-  const { chainId, txHashes } = batchedTransaction
+  const { chainId, txHashes, userOpHash } = batchedTransaction
 
   // Get all transactions for the account
   const allTransactions = yield* select(selectTransactions)
@@ -66,26 +77,51 @@ export function* getCallsStatusHelper(
 
   let overallStatus = getTransactionStatusCode(TransactionStatus.Pending)
 
-  for (const hash of txHashes ?? []) {
-    const transaction: TransactionDetails | undefined = transactions.find((tx) => tx.hash === hash)
-
-    if (!transaction?.receipt) {
-      continue
+  if (userOpHash) {
+    const transaction = transactions.find((tx) => tx.userOpHash === userOpHash)
+    if (transaction) {
+      if (transaction.receipt && transaction.hash) {
+        overallStatus = getTransactionStatusCode(transaction.status)
+        foundReceipts.push({
+          transactionHash: transaction.hash,
+          status: mapTransactionStatusToEip5792Status(transaction.status),
+          blockHash: transaction.receipt.blockHash,
+          blockNumber: BigNumber.from(transaction.receipt.blockNumber).toHexString(),
+          gasUsed: BigNumber.from(transaction.receipt.gasUsed).toHexString(),
+          logs: [],
+        })
+      } else if (isFinalizedOffchainFailure(transaction)) {
+        overallStatus = TransactionStatusCode.OffchainFailure
+      }
     }
+  } else if (txHashes) {
+    for (const hash of txHashes) {
+      const transaction: TransactionDetails | undefined = transactions.find((tx) => tx.hash === hash)
 
-    // TODO: change this logic when we have NON-ATOMIC batch transactions,
-    // but as of now, we can just use the status of the first and only transaction
-    overallStatus = getTransactionStatusCode(transaction.status)
+      if (!transaction) {
+        continue
+      }
 
-    foundReceipts.push({
-      transactionHash: hash,
-      status: mapTransactionStatusToEip5792Status(transaction.status),
-      blockHash: transaction.receipt.blockHash,
-      blockNumber: BigNumber.from(transaction.receipt.blockNumber).toHexString(),
-      gasUsed: BigNumber.from(transaction.receipt.gasUsed).toHexString(),
-      logs: [], // Logs not supported yet
-    })
+      if (transaction.receipt) {
+        // TODO(SWAP-2543): need to investigate possibibility of non-atomic 5792 transactions,
+        // but as of now, we can just use the status of the first and only transaction
+        overallStatus = getTransactionStatusCode(transaction.status)
+
+        foundReceipts.push({
+          transactionHash: hash,
+          status: mapTransactionStatusToEip5792Status(transaction.status),
+          blockHash: transaction.receipt.blockHash,
+          blockNumber: BigNumber.from(transaction.receipt.blockNumber).toHexString(),
+          gasUsed: BigNumber.from(transaction.receipt.gasUsed).toHexString(),
+          logs: [], // Logs not supported yet
+        })
+      } else if (isFinalizedOffchainFailure(transaction)) {
+        overallStatus = TransactionStatusCode.OffchainFailure
+      }
+    }
   }
+
+  const transactionHashes = foundReceipts.map((r) => r.transactionHash)
 
   return {
     data: {
@@ -94,7 +130,12 @@ export function* getCallsStatusHelper(
       chainId: BigNumber.from(chainId).toHexString(),
       receipts: foundReceipts,
       status: overallStatus,
-      capabilities: {}, // TODO: add capabilities, when we have them
+      capabilities: {
+        caip345: {
+          caip2: `eip155:${chainId}`,
+          transactionHashes,
+        },
+      },
     },
   }
 }

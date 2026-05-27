@@ -9,6 +9,9 @@ import { load } from 'cheerio'
 // @ts-expect-error
 import uppercamelcase from 'uppercamelcase'
 
+// Generates .tsx from src/assets/icons/*.svg and re-exports hand-written icons in components/icons
+// without a matching SVG (does not create missing .tsx files).
+
 // Types
 
 interface DirectoryPair {
@@ -79,6 +82,7 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
     .map((name: string) => path.basename(name, '.tsx'))
     .filter((name: string) => !generatedClassNames.has(name))
     .filter((name: string) => name !== 'index' && name !== 'exported')
+    .filter((name: string) => !name.endsWith('.stories'))
     .sort()
 
   for (const className of existingComponents) {

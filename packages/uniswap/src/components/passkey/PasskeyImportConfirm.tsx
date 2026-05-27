@@ -77,7 +77,7 @@ export function PasskeyImportConfirm({
               {t('onboarding.passkey.found.title')}
             </Text>
 
-            <Text color="$neutral2" variant="body1">
+            <Text color="$neutral2" textAlign="center" variant="body2">
               {t('onboarding.passkey.found.subtitle', { count: walletCount })}
             </Text>
           </Flex>

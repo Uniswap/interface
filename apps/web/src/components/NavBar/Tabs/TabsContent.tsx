@@ -2,20 +2,21 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { useSporeColors } from 'ui/src'
+import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { Compass } from 'ui/src/components/icons/Compass'
 import { CreditCard } from 'ui/src/components/icons/CreditCard'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
+import { SwapDotted } from 'ui/src/components/icons/SwapDotted'
 import { Wallet } from 'ui/src/components/icons/Wallet'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { Limit } from '~/components/Icons/Limit'
-import { SwapV2 } from '~/components/Icons/SwapV2'
 import { MenuItem } from '~/components/NavBar/CompanyMenu/Content'
 import { PageType } from '~/hooks/useIsPage'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
+import { EntryPointKind, resolveEntryPoint } from '~/utils/createPositionEntryPoint'
 
 export type TabsSection = {
   title: string
@@ -33,13 +34,15 @@ export type TabsItem = MenuItem & {
 
 export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
-  const { pathname } = useLocation()
+  const { pathname, search, state } = useLocation()
   const { chainId: portfolioChainId, isExternalWallet } = usePortfolioRoutes()
   const colors = useSporeColors()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
   const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
   const isToucanLaunchAuctionEnabled = useFeatureFlag(FeatureFlags.ToucanLaunchAuction)
   const isAddLiquidityRevamp = useFeatureFlag(FeatureFlags.AddLiquidityRevamp)
+  const entryPoint = resolveEntryPoint({ search, state })
+  const isPortfolioPoolsEntryPointActive = entryPoint.kind === EntryPointKind.PortfolioPools
 
   return [
     {
@@ -51,14 +54,14 @@ export const useTabsContent = (): TabsSection[] => {
       items: [
         {
           label: t('common.swap'),
-          icon: <SwapV2 fill={colors.neutral2.val} />,
+          icon: <SwapDotted size="$icon.24" color="$neutral2" />,
           href: '/swap',
           internal: true,
           elementName: ElementName.NavbarTradeDropdownSwap,
         },
         {
           label: t('swap.limit'),
-          icon: <Limit fill={colors.neutral2.val} />,
+          icon: <ChartBar size="$icon.24" color="$neutral2" />,
           href: '/limit',
           internal: true,
           elementName: ElementName.NavbarTradeDropdownLimit,
@@ -115,7 +118,8 @@ export const useTabsContent = (): TabsSection[] => {
     {
       title: t('common.pool'),
       href: '/positions',
-      isActive: pathname.startsWith('/positions') || pathname.startsWith('/liquidity'),
+      isActive:
+        !isPortfolioPoolsEntryPointActive && (pathname.startsWith('/positions') || pathname.startsWith('/liquidity')),
       icon: <Pools color="$accent1" size="$icon.20" />,
       elementName: ElementName.NavbarPoolTab,
       items: [
@@ -149,7 +153,7 @@ export const useTabsContent = (): TabsSection[] => {
         tab: PortfolioTab.Overview,
         chainId: portfolioChainId,
       }),
-      isActive: pathname.startsWith(PageType.PORTFOLIO) && !isExternalWallet,
+      isActive: (pathname.startsWith(PageType.PORTFOLIO) && !isExternalWallet) || isPortfolioPoolsEntryPointActive,
       icon: <Wallet color="$accent1" size="$icon.20" />,
       elementName: ElementName.NavbarPortfolioTab,
       items: [

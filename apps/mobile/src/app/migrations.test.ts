@@ -168,6 +168,7 @@ import {
   v93Schema,
   v95Schema,
   v96Schema,
+  v97Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
@@ -195,6 +196,7 @@ import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import { getWalletDeviceLanguage } from 'uniswap/src/i18n/utils'
 import {
   testAddActivityVisibility,
+  testAddEnableCustomGasFeeEntry,
   testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
   testRemoveTHBFromCurrency,
@@ -760,5 +762,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v96 to v97', () => {
     testSetWalletDeviceLanguage(migrations[97], v96Schema, jest.mocked(getWalletDeviceLanguage))
+  })
+
+  it('migrates from v97 to v98', () => {
+    testAddEnableCustomGasFeeEntry(migrations[98], v97Schema)
   })
 })

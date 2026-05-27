@@ -80,7 +80,7 @@ describe('attemptPinDecryption', () => {
     })
     expect(result).toMatchObject({ success: false, error: 'rate_limited', errorMessage: 'too many attempts' })
     expect(EmbeddedWalletApiClient.fetchOprfEvaluate).toHaveBeenCalledWith(
-      expect.objectContaining({ blindedElement: 'blinded', isRecovery: true, authMethodId: hashAuthMethodId(email) }),
+      expect.objectContaining({ blindedElement: 'blinded', authMethodId: hashAuthMethodId(email) }),
       accessToken,
     )
   })

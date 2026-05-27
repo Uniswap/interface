@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Flex, Text, TextProps } from 'ui/src'
+import { parseForSubscriptNotation, trimFractionalTrailingZeros } from 'utilities/src/format/parseForSubscriptNotation'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
-import { parseForSubscriptNotation } from '~/utils/numbers/parseForSubscriptNotation'
 
 interface SubscriptZeroPriceProps {
   /** The numeric value to format */
@@ -65,7 +65,7 @@ export function SubscriptZeroPrice({
       return null
     }
     const decimalPlaces = parsed.leadingZeros + maxSignificantDigits
-    const fullNumber = value.toFixed(decimalPlaces)
+    const fullNumber = trimFractionalTrailingZeros(value.toFixed(decimalPlaces))
     return `${prefix ?? ''}${fullNumber}${symbol ? ` ${symbol}` : ''}`
   }, [parsed.useSubscript, parsed.leadingZeros, value, maxSignificantDigits, prefix, symbol])
 
@@ -85,7 +85,7 @@ export function SubscriptZeroPrice({
   const subscriptTopOffset = isHeading ? 5 : 3
 
   const subscriptContent = (
-    <Flex row alignItems="baseline" gap="$none" cursor="default">
+    <Flex row alignItems="baseline" flexWrap="nowrap" gap="$none">
       <Text variant={variant} color={color} {...sizeProps}>
         {prefix ?? ''}0.0
       </Text>

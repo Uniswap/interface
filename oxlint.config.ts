@@ -659,9 +659,9 @@ export default defineConfig({
     // PER-PROJECT OVERRIDES
     // ═══════════════════════════════════════════════════════════════════
 
-    // ── apps/cli ──────────────────────────────────────────────────────
+    // ── apps/cli, config-cli ──────────────────────────────────────────────────────
     {
-      files: ['apps/cli/**'],
+      files: ['apps/cli/**', 'packages/config-cli/**'],
       rules: {
         'no-console': 'off',
         'typescript/explicit-function-return-type': 'off',

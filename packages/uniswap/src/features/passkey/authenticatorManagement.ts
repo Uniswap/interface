@@ -16,8 +16,6 @@ import {
   loadNeckMetadata,
   setDeviceSession,
   signWithDeviceKey,
-  storeNeckMetadata,
-  storeNeckSigningKey,
 } from 'uniswap/src/features/passkey/deviceSession'
 import { authenticateWithPasskey, refreshNeckSession } from 'uniswap/src/features/passkey/embeddedWallet'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
@@ -85,9 +83,10 @@ export async function listAuthenticators(walletId?: string): Promise<{
 }
 
 export async function startAddAuthenticatorSession(walletId?: string): Promise<string> {
-  // Each call binds a new server-side pub key; reusing a stale one fails.
-  const neckMeta = loadNeckMetadata()
-  const resolvedWalletId = walletId ?? neckMeta?.walletId
+  // NECK_NEW is intentionally ephemeral: the server doesn't persist it in DDB
+  // for this flow, so the wallet's prior NECK remains the device key validated
+  // by deviceAuth endpoints. Persisting NECK_NEW would shadow it and break
+  // subsequent signed calls — keep it in the in-memory deviceSession only.
   const { privateKey, publicKeyBase64: devicePublicKey } = await generateDeviceKeyPair()
 
   const challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
@@ -111,17 +110,6 @@ export async function startAddAuthenticatorSession(walletId?: string): Promise<s
     throw new Error('StartAuthenticatedSession did not return policy details')
   }
 
-  // Persist NECK from session response
-  if (resolvedWalletId) {
-    storeNeckSigningKey(resolvedWalletId, privateKey)
-    storeNeckMetadata({
-      publicKeyBase64: devicePublicKey,
-      walletId: resolvedWalletId,
-      deviceKeyQuorumId: neckMeta?.deviceKeyQuorumId ?? '',
-    })
-  }
-
-  // Keep legacy in-memory session for registerNewAuthenticator backward compat
   setDeviceSession({
     privateKey,
     policyId: sessionResp.policyId,

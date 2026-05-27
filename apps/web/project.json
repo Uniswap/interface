@@ -321,7 +321,7 @@
       }
     },
     "test:cloud": {
-      "command": "NODE_OPTIONS='--no-deprecation' vitest run functions --config functions/vitest.config.ts",
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run functions --config functions/vitest.config.mts",
       "options": {
         "cwd": "{projectRoot}"
       }

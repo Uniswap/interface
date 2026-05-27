@@ -32,9 +32,9 @@ export function KeyManagementModal({
         }
         onClose={onClose}
         goBack={goBack}
-        footer={<PrivyWatermark pb="$spacing24" />}
+        footer={<PrivyWatermark pt="$spacing24" />}
       >
-        <Flex px="$spacing32" mb="$spacing32" width="100%">
+        <Flex width="100%">
           <Flex row alignSelf="stretch">
             <Button
               testID={TestID.Continue}

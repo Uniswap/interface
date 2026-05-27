@@ -3,6 +3,8 @@ import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { X } from 'ui/src/components/icons/X'
 import { CrossChainIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -21,7 +23,6 @@ import {
 import type { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PendingPortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PendingPortfolioLogo'
 import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { useOpenOffchainActivityModal } from '~/components/modals/OffchainActivityModal'
 import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
 import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'
@@ -46,7 +47,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
   return (
     <ToastRegularSimple
       onDismiss={onClose}
-      icon={<AlertTriangleFilled color="$yellow" size="32px" />}
+      icon={<AlertTriangleFilled color="$neutral2" size="$icon.32" />}
       text={
         <Flex gap="$gap4" flexWrap="wrap" flex={1}>
           <Text variant="body4" color="$neutral1">
@@ -108,8 +109,11 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
   const showPortfolioLogo = success || pending || !!activity.offchainOrderDetails
 
   const isCrossChainActivity = activity.outputChainId && activity.chainId !== activity.outputChainId
-  const pendingCustomIcon = isCrossChainActivity ? <CrossChainIcon status={TransactionStatus.Pending} /> : undefined
-  const completedCustomIcon = isCrossChainActivity ? <CrossChainIcon status={activity.status} /> : undefined
+  const pendingCustomIcon =
+    activity.portfolioLogoCustomIcon ??
+    (isCrossChainActivity ? <CrossChainIcon status={TransactionStatus.Pending} /> : undefined)
+  const completedCustomIcon =
+    activity.portfolioLogoCustomIcon ?? (isCrossChainActivity ? <CrossChainIcon status={activity.status} /> : undefined)
   const pendingPortfolioLogo = (
     <PendingPortfolioLogo
       chainId={activity.chainId}
@@ -159,22 +163,31 @@ export function ActivityPopupContent({ activity, onClick, onClose }: ActivityPop
             </Flex>
           ) : (
             <Flex justifyContent="center">
-              <AlertTriangleFilled color="$neutral2" size="32px" />
+              <AlertTriangleFilled color="$neutral2" size="$icon.32" />
             </Flex>
           )}
           <Flex justifyContent="center" gap="$gap4" fill>
-            <Text variant="body2" color="$neutral1">
-              {activity.title}
-            </Text>
-            {typeof activity.descriptor === 'string' ? (
-              <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
-                {activity.descriptor}
-              </Text>
-            ) : (
-              <Flex overflow="hidden" maxHeight={28}>
-                {activity.descriptor}
+            <Flex row alignItems="center" gap="$gap8" minWidth={0}>
+              {activity.isUniswapX ? (
+                <Flex flexShrink={0} alignItems="center" justifyContent="center">
+                  <UniswapX size="$icon.12" />
+                </Flex>
+              ) : null}
+              <Flex gap="$gap4" flex={1} minWidth={0}>
+                <Text variant="body2" color="$neutral1">
+                  {activity.title}
+                </Text>
+                {typeof activity.descriptor === 'string' ? (
+                  <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
+                    {activity.descriptor}
+                  </Text>
+                ) : (
+                  <Flex overflow="hidden" maxHeight={28}>
+                    {activity.descriptor}
+                  </Flex>
+                )}
               </Flex>
-            )}
+            </Flex>
           </Flex>
         </Flex>
       </TouchableArea>
@@ -209,7 +222,11 @@ export function TransactionPopupContent({ hash, onClose }: { hash: string; onClo
       return
     }
     window.open(
-      getExplorerLink({ chainId: activity.chainId, data: activity.hash, type: ExplorerDataType.TRANSACTION }),
+      getExplorerLink({
+        chainId: activity.chainId,
+        data: activity.hash,
+        type: ExplorerDataType.TRANSACTION,
+      }),
       '_blank',
     )
   }
@@ -230,7 +247,10 @@ export function PlanPopupContent({ planId, onClose }: { planId: string; onClose:
   const openTransactionDetailsModal = useOpenTransactionDetailsModal()
   const { formatNumberOrString } = useLocalizationContext()
   const { data: activity } = useQuery(
-    getTransactionToActivityQueryOptions({ transaction: plan, formatNumber: formatNumberOrString }),
+    getTransactionToActivityQueryOptions({
+      transaction: plan,
+      formatNumber: formatNumberOrString,
+    }),
   )
 
   if (!activity || !plan) {
@@ -249,7 +269,10 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
   const { formatNumberOrString } = useLocalizationContext()
 
   const { data: activity } = useQuery(
-    getTransactionToActivityQueryOptions({ transaction: order, formatNumber: formatNumberOrString }),
+    getTransactionToActivityQueryOptions({
+      transaction: order,
+      formatNumber: formatNumberOrString,
+    }),
   )
 
   if (!activity || !order) {

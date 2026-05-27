@@ -57,4 +57,26 @@ describe('getPositionUrl', () => {
     }
     expect(getPositionUrl(position)).toBe('/positions/v4/ethereum/456')
   })
+
+  it('appends entryPoint as a URL-encoded query param when provided', () => {
+    const position: PositionInfo = {
+      ...BASE_POSITION,
+      version: ProtocolVersion.V4,
+      tokenId: '456',
+      owner: 'owner',
+    }
+    expect(getPositionUrl(position, { entryPoint: '/portfolio/pools' })).toBe(
+      '/positions/v4/ethereum/456?entryPoint=%2Fportfolio%2Fpools',
+    )
+  })
+
+  it('returns the bare path when entryPoint option is undefined', () => {
+    const position: PositionInfo = {
+      ...BASE_POSITION,
+      version: ProtocolVersion.V4,
+      tokenId: '456',
+      owner: 'owner',
+    }
+    expect(getPositionUrl(position, {})).toBe('/positions/v4/ethereum/456')
+  })
 })

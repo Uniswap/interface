@@ -18,6 +18,7 @@ import {
   CreateAuctionStep,
   type CreateAuctionStoreState,
   DEFAULT_CREATE_AUCTION_STATE,
+  DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT,
   DEFAULT_EXISTING_TOKEN_FORM,
   DEFAULT_POST_AUCTION_LIQUIDITY_PERCENT,
   MAX_POST_AUCTION_LIQUIDITY_TIERS,
@@ -276,18 +277,30 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
                   ...state.configureAuction,
                   raiseCurrency,
                   floorPrice: '',
+                  floorPriceInput: undefined,
                   committed: updateCommittedPostAuctionLiquidity(committed, postAuctionLiquidityAllocation),
                 },
               }
             })
           },
-          setFloorPrice: (floorPrice) => {
+          setFloorPrice: (floorPrice, input) => {
             set((state) => {
               const { committed, postAuctionLiquidityAllocation } = state.configureAuction
+              const floorPriceInput = input && input.rawValue.trim() !== '' ? { ...input, floorPrice } : undefined
+              if (
+                state.configureAuction.floorPrice === floorPrice &&
+                state.configureAuction.floorPriceInput?.floorPrice === floorPriceInput?.floorPrice &&
+                state.configureAuction.floorPriceInput?.rawValue === floorPriceInput?.rawValue &&
+                state.configureAuction.floorPriceInput?.denomination === floorPriceInput?.denomination &&
+                state.configureAuction.floorPriceInput?.inputCurrency === floorPriceInput?.inputCurrency
+              ) {
+                return {}
+              }
               return {
                 configureAuction: {
                   ...state.configureAuction,
                   floorPrice,
+                  floorPriceInput,
                   committed: updateCommittedPostAuctionLiquidity(committed, postAuctionLiquidityAllocation),
                 },
               }
@@ -450,9 +463,11 @@ export const createCreateAuctionStore = (): CreateAuctionStore =>
               const nextAllocation = existingCommitted
                 ? postAuctionLiquidityAllocation
                 : createSinglePostAuctionLiquidityAllocation(previewPercent)
+              const auctionSupplyPercent =
+                tokenForm.mode === TokenMode.EXISTING ? DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT : undefined
               const committedBase = isSameSupply
                 ? rebaseAuctionTokenAmounts(existingCommitted, totalSupply.currency)
-                : buildAuctionAmountsFromLiquidityPreview(totalSupply, previewPercent)
+                : buildAuctionAmountsFromLiquidityPreview(totalSupply, { previewPercent, auctionSupplyPercent })
               const committed = updateCommittedPostAuctionLiquidity(committedBase, nextAllocation)
 
               return {

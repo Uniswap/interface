@@ -23,7 +23,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { AddressDisplay } from '~/components/AccountDetails/AddressDisplay'
 import { useSetMenu, MenuStateVariant } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { getProviderIcon } from '~/components/Passkey/authenticatorProvider'
 import { StatusIcon } from '~/components/StatusIcon'
 import { useDisconnect } from '~/hooks/useDisconnect'
@@ -109,7 +109,7 @@ export function RemovePasskeyModal() {
       logger.error(error, { tags: { file: 'RemovePasskeyModal', function: 'handleDeleteAuthenticator' } })
     },
     onSettled: () => {
-      invalidateListAuthenticators(queryClient, walletId)
+      resetListAuthenticators(queryClient, walletId)
     },
   })
 

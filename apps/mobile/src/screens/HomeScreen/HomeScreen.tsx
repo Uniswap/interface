@@ -71,6 +71,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hooks'
 import { setIncrementNumPostSwapNudge } from 'wallet/src/features/behaviorHistory/slice'
+import { HomeScreenEarningSection } from 'wallet/src/features/earn/HomeScreenEarningSection'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
@@ -364,6 +365,7 @@ function HomeScreen({
             </Flex>
           </TouchableArea>
         )}
+        <HomeScreenEarningSection evmAddress={activeAccount.address} mt="$spacing12" mx="$spacing12" />
         {promoBanner}
       </Flex>
     )

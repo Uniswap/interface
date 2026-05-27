@@ -126,7 +126,11 @@ const TableSeparatorRow = styled(Flex, {
 })
 
 const TableHead = (
-  props: PropsWithChildren<{ $isSticky: boolean; $top: number; mb?: FlexProps['mb'] }>,
+  props: PropsWithChildren<{
+    $isSticky: boolean
+    $top: number
+    mb?: FlexProps['mb']
+  }>,
 ): JSX.Element => (
   <Flex
     width="100%"
@@ -307,7 +311,12 @@ export function Table<T extends RowData>({
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer
                     key={header.id}
-                    style={getCommonPinningStyles({ column: header.column, colors, v2, isHeader: true })}
+                    style={getCommonPinningStyles({
+                      column: header.column,
+                      colors,
+                      v2,
+                      isHeader: true,
+                    })}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </CellContainer>

@@ -1541,7 +1541,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - ExpoNativeExtensions (0.0.5):
+  - ExpoNativeExtensions (0.0.11):
     - ExpoModulesCore
   - ExpoScreenCapture (8.0.8):
     - ExpoModulesCore
@@ -5360,7 +5360,7 @@ SPEC CHECKSUMS:
   ExpoLocalAuthentication: 8f11d958b956fa372c0a49975f54ed1dc617ae1d
   ExpoLocalization: 6c6f0f89ad2822001ab0bc2eb6d4d980c77f080c
   ExpoModulesCore: 693b89b05dce9a2f14c2688bd870e8251a9c1cac
-  ExpoNativeExtensions: 6473752d98717e690d7a68298f166aac81fc9a16
+  ExpoNativeExtensions: 5038e6687bce8a8fa1f5141d88510ac0eda14cd0
   ExpoScreenCapture: 0c785ab7e1fa38943f04b16060d54ae8f886544a
   ExpoSecureStore: f44dee1354536bdb3d7fab8cc451ee737c41beca
   ExpoStoreReview: 65a4b93a904179d08113b1032d483478198fc302

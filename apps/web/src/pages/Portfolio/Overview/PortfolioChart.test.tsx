@@ -1,5 +1,6 @@
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { UTCTimestamp } from 'lightweight-charts'
+import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PortfolioChart } from '~/pages/Portfolio/Overview/PortfolioChart'
@@ -71,6 +72,9 @@ const defaultProps = {
   isTotalValueMatch: true,
 }
 
+const tokensWithBalance: PortfolioTotalValue = { balanceUSD: 8368.94, percentChange: -6.09, absoluteChangeUSD: -510 }
+const poolsWithBalance: PortfolioTotalValue = { balanceUSD: 7373.05, percentChange: 1.02, absoluteChangeUSD: 75 }
+
 describe('PortfolioChart', () => {
   beforeEach(() => {
     mockPriceChartBodyCrosshairData.data = undefined
@@ -84,6 +88,19 @@ describe('PortfolioChart', () => {
 
     expect(header.compareDocumentPosition(chartBody) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(screen.queryByTestId('legacy-price-chart')).not.toBeInTheDocument()
+  })
+
+  it('passes balance breakdown values to the external balance header', () => {
+    render(
+      <PortfolioChart
+        {...defaultProps}
+        showBalanceHeaderRow
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+      />,
+    )
+
+    expect(screen.getByTestId(TestID.BalanceBreakdownPopover)).toBeInTheDocument()
   })
 
   it('syncs chart crosshair data into the balance header while scrubbing', async () => {

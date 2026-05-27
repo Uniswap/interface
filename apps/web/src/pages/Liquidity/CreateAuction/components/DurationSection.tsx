@@ -1,7 +1,10 @@
-import { useMemo } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { DateRangePickerCard } from '~/pages/Liquidity/CreateAuction/components/DatePicker/DateRangePickerCard'
+import {
+  DateRangePickerCard,
+  type DateRangePickerCardHandle,
+} from '~/pages/Liquidity/CreateAuction/components/DatePicker/DateRangePickerCard'
 import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
 import {
   CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED,
@@ -10,17 +13,23 @@ import {
   getMinStartTime,
 } from '~/pages/Liquidity/CreateAuction/utils/duration'
 
-export function DurationSection({
-  startTime,
-  endTime,
-  onChange,
-}: {
+export type DurationSectionHandle = {
+  openCalendar: (mode: 'start' | 'end') => void
+}
+
+type DurationSectionProps = {
   startTime: Date | undefined
   endTime: Date | undefined
   onChange: (next: { startTime: Date | undefined; endTime: Date | undefined }) => void
-}) {
+}
+
+export const DurationSection = forwardRef<DurationSectionHandle, DurationSectionProps>(function DurationSection(
+  { startTime, endTime, onChange },
+  ref,
+) {
   const { t } = useTranslation()
   const tokenColor = useCreateAuctionTokenColor()
+  const dateRangePickerRef = useRef<DateRangePickerCardHandle>(null)
   const minProceedLeadTimeLabel = useMemo(
     () => formatLeadMinutesLabel(CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED, t),
     [t],
@@ -29,6 +38,14 @@ export function DurationSection({
   const minProceedStartTime = getMinAuctionStartTimeToProceed()
   const isStartTimeInvalid = startTime !== undefined && startTime.getTime() < minProceedStartTime.getTime()
   const isRangeInvalid = startTime !== undefined && endTime !== undefined && endTime.getTime() <= startTime.getTime()
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      openCalendar: (mode) => dateRangePickerRef.current?.openCalendar(mode),
+    }),
+    [],
+  )
 
   return (
     <Flex gap="$spacing12">
@@ -41,6 +58,7 @@ export function DurationSection({
         </Text>
       </Flex>
       <DateRangePickerCard
+        ref={dateRangePickerRef}
         startLabel={t('toucan.createAuction.step.configureAuction.duration.startDate')}
         endLabel={t('toucan.createAuction.step.configureAuction.duration.endDate')}
         startTimeLabel={t('toucan.createAuction.step.configureAuction.duration.startTime')}
@@ -69,4 +87,4 @@ export function DurationSection({
       )}
     </Flex>
   )
-}
+})

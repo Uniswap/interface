@@ -23,6 +23,7 @@ import { SwapFormHeader } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenDetails'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapTokenSelector/SwapTokenSelector'
 import { SwitchCurrenciesButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwitchCurrenciesButton'
+import { useResetGasOverridesOnInputChainChange } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/useResetGasOverridesOnInputChainChange'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -64,6 +65,7 @@ export function SwapFormScreen({
   }))
 
   const { trade, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({ trade: s.trade, chainId: s.chainId }))
+  useResetGasOverridesOnInputChainChange()
   const tradeRouting = trade.trade?.routing
 
   const filteredSettings = filterSettingsByPlatformAndTradeRouting(settings, {

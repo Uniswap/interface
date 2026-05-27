@@ -2,12 +2,12 @@
 import { FeatureFlags, useFeatureFlag, useStatsigClientStatus } from '@universe/gating'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
+import { SpinningLoader } from 'ui/src'
 import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import i18n from 'uniswap/src/i18n'
-import { Loader } from '~/components/Icons/LoadingSpinner'
 import { getExploreDescription, getExploreTitle } from '~/pages/getExploreTitle'
 import { getPortfolioDescription, getPortfolioTitle } from '~/pages/getPortfolioTitle'
 import {
@@ -113,7 +113,7 @@ function CreateAuctionRouteGate(): JSX.Element {
   const { isStatsigReady } = useStatsigClientStatus()
 
   if (!isStatsigReady) {
-    return <Loader />
+    return <SpinningLoader color="$accent1" />
   }
   if (!isToucanLaunchAuctionEnabled) {
     return <Navigate to="/not-found" replace />

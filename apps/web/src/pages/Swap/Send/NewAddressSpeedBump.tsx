@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text } from 'ui/src'
+import { Person } from 'ui/src/components/icons/Person'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UserIcon } from '~/components/Icons/UserIcon'
 import type { RecipientData } from '~/features/Swap/state/send/hooks'
 import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
@@ -45,7 +45,6 @@ const RecipientDisplay = ({ recipientData }: { recipientData?: RecipientData }) 
 }
 export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const {
     derivedSendInfo: { recipientData },
   } = useSendContext()
@@ -74,7 +73,7 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
     <Dialog
       isOpen={isOpen}
       onClose={onDismiss}
-      icon={<UserIcon fill={colors.neutral2.val} width={28} height={28} />}
+      icon={<Person color="$neutral2" size="$icon.28" />}
       iconBackgroundColor="$surface3"
       title={t('speedBump.newAddress.warning.title')}
       subtext={t('speedBump.newAddress.warning.description')}

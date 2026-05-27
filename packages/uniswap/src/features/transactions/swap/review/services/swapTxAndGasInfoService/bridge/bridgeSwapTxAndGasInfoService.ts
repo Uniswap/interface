@@ -11,6 +11,7 @@ export function createBridgeSwapTxAndGasInfoService(ctx: {
   gasStrategy: GasStrategy
   transactionSettings: TransactionSettings
   v4SwapEnabled: boolean
+  hasOverrides?: boolean
 }): SwapTxAndGasInfoService<BridgeTrade> {
   const getEVMSwapTransactionRequestInfo = createGetEVMSwapTransactionRequestInfo(ctx)
 

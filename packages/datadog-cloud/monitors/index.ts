@@ -23,3 +23,5 @@ export {
   privyEmbeddedWalletSecurityMonitors,
   privyEmbeddedWalletBusinessMonitors,
 } from './privy-embedded-wallet'
+
+export { liquidityFeErrorTrackingMonitors } from './liquidity-fe'

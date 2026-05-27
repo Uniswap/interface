@@ -66,7 +66,6 @@ export const PortfolioChart = memo(function PortfolioChart({
           <Loader.Graph />
         ) : (
           <>
-            <DotGrid width={COLLAPSED_CHART_WIDTH} height={COLLAPSED_CHART_VISIBLE_HEIGHT} />
             <Flex direction="ltr" style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
               <SparklineChart
                 data={data}

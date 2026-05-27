@@ -8,6 +8,8 @@ import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
 import { useWalletEncode4337Query } from 'uniswap/src/data/apiClients/tradingApi/useWalletEncode4337Query'
 import { useWalletEncode7702Query } from 'uniswap/src/data/apiClients/tradingApi/useWalletEncode7702Query'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { buildGasServiceUrgencyOverride } from 'uniswap/src/features/gas/components/NetworkCostEditor/buildGasServiceUrgencyOverride'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import type { RpcUserOperation } from 'viem/account-abstraction'
@@ -23,12 +25,14 @@ interface UsePrepareAndSignSendCallsTransactionParams {
   request: DappRequestStoreItemForSendCallsTxn
   account: Account
   chainId?: UniverseChainId
+  gasOverrides?: GasFeeOverrides
 }
 
 interface UsePrepareAndSignSendCallsTransactionResult {
   gasFeeResult: GasFeeResult
   isInvalidGasFeeResult: boolean
   showSmartWalletActivation: boolean
+  isSponsoredUserOp: boolean
 
   // 7702 path
   encodedTransactionRequest?: EthTransaction
@@ -50,6 +54,7 @@ export function usePrepareAndSignSendCallsTransaction({
   request,
   account,
   chainId,
+  gasOverrides,
 }: UsePrepareAndSignSendCallsTransactionParams): UsePrepareAndSignSendCallsTransactionResult {
   const is7677GasSponsorshipEnabled = useFeatureFlag(FeatureFlags.Support7677GasSponsorship)
 
@@ -107,12 +112,19 @@ export function usePrepareAndSignSendCallsTransaction({
   const encodedTransaction = encoded7702data?.encoded
   const encodedRequestId = encoded7702data?.requestId
 
+  // No `recommended` baseline available here — when only one of maxBaseFeeGwei /
+  // priorityFeeGwei is overridden, maxFeePerGas is omitted and the gas service
+  // falls back to its own estimate for that combined field.
+  const { urgency, gasLimitOverride } = useMemo(() => buildGasServiceUrgencyOverride({ gasOverrides }), [gasOverrides])
+
   // TODO(SWAP-2508): Need to handle case where userOp fails sponsored: should still fetch gas estimation for userOps
   const { gasFeeResult, isInvalidGasFeeResult } = useTransactionGasEstimation({
     baseTx: shouldUse4337 ? undefined : encodedTransaction,
     chainId,
     skip: shouldUse4337 || !encodedTransaction?.to,
     smartContractDelegationAddress: delegationData?.contractAddress,
+    urgency,
+    gasLimitOverride,
   })
 
   const encodedTransactionRequestWithGasInfo: EthTransaction | undefined = useMemo(
@@ -141,6 +153,7 @@ export function usePrepareAndSignSendCallsTransaction({
     gasFeeResult: effectiveGasFeeResult,
     isInvalidGasFeeResult,
     showSmartWalletActivation: delegationData?.needsDelegation ?? false,
+    isSponsoredUserOp: shouldUse4337,
 
     // 7702 path fields
     encodedTransactionRequest: encodedTransactionRequestWithGasInfo,

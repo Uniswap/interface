@@ -1,6 +1,6 @@
-import { toSubscript } from '~/components/Charts/utils/subscript'
-import { getSubscriptNotationParts } from '~/utils/numbers/getSubscriptNotationParts'
-import { roundForDisplay } from '~/utils/numbers/roundForDisplay'
+import { getSubscriptNotationParts } from 'utilities/src/format/getSubscriptNotationParts'
+import { roundForDisplay } from 'utilities/src/format/roundForDisplay'
+import { toSubscript } from 'utilities/src/format/toSubscript'
 
 /** Threshold for using subscript notation (4+ leading zeros) */
 const SUBSCRIPT_THRESHOLD = 4

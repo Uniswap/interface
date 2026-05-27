@@ -7,6 +7,10 @@ import { fireEvent, render, within } from 'src/test/test-utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`
+const mainnetNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.Mainnet}`
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
@@ -136,7 +140,7 @@ describe('TokenItem', () => {
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
       )
 
-      expect(queryByTestId('network-logo')).toBeFalsy()
+      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeFalsy()
     })
 
     it('should show network logo when flag is off even with networkCount > 1', () => {
@@ -145,7 +149,7 @@ describe('TokenItem', () => {
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
       )
 
-      expect(queryByTestId('network-logo')).toBeTruthy()
+      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
     })
 
     it('should show network logo when flag is on but no networkCount', () => {
@@ -155,7 +159,7 @@ describe('TokenItem', () => {
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
       )
 
-      expect(queryByTestId('network-logo')).toBeTruthy()
+      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
     })
 
     it('should show network logo when flag is on but networkCount is 1', () => {
@@ -165,7 +169,7 @@ describe('TokenItem', () => {
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
       )
 
-      expect(queryByTestId('network-logo')).toBeTruthy()
+      expect(queryByTestId(arbitrumNetworkLogoTestID)).toBeTruthy()
     })
 
     it('should show mainnet network logo when flag is on for single-chain mainnet asset', () => {
@@ -175,7 +179,7 @@ describe('TokenItem', () => {
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
       )
 
-      expect(queryByTestId('network-logo')).toBeTruthy()
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeTruthy()
     })
 
     it('should hide mainnet network logo when flag is off for mainnet asset', () => {
@@ -184,7 +188,7 @@ describe('TokenItem', () => {
         <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
       )
 
-      expect(queryByTestId('network-logo')).toBeFalsy()
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
     })
   })
 

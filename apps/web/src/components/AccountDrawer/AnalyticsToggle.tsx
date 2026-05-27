@@ -40,7 +40,7 @@ export function AnalyticsToggle() {
             <Tooltip.Trigger>
               <InfoCircle size="$icon.16" color="$neutral3" />
             </Tooltip.Trigger>
-            <Tooltip.Content zIndex="$tooltip" maxWidth="290px">
+            <Tooltip.Content maxWidth="290px">
               <Text variant="body3" color="$neutral2">
                 {t('analytics.allow.message')}
               </Text>

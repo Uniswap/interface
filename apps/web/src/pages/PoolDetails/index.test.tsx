@@ -38,6 +38,14 @@ vi.mock('~/hooks/useColor', async () => {
   }
 })
 
+vi.mock('nuqs', async () => {
+  const actual = await vi.importActual('nuqs')
+  return {
+    ...actual,
+    useQueryState: vi.fn().mockReturnValue([null, vi.fn()]),
+  }
+})
+
 vi.mock('~/pages/Swap', () => ({
   SwapPage: () => React.createElement(React.Fragment),
   Swap: () => React.createElement(React.Fragment),

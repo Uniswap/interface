@@ -1,4 +1,4 @@
-import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -53,3 +53,13 @@ export const lpStatusConfig = {
   },
   [PositionStatus.UNSPECIFIED]: undefined,
 }
+
+export const LP_POSITION_PROTOCOL_VERSIONS = [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+export const LP_POSITION_STATUS_FILTER_OPTIONS = [
+  PositionStatus.IN_RANGE,
+  PositionStatus.OUT_OF_RANGE,
+  PositionStatus.CLOSED,
+]
+
+export const DEFAULT_LP_POSITION_PROTOCOL_FILTER = [...LP_POSITION_PROTOCOL_VERSIONS]
+export const DEFAULT_LP_POSITION_STATUS_FILTER = [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE]

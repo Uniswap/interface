@@ -2,6 +2,9 @@ import { useNavigation } from '@react-navigation/native'
 import type { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
 import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import type { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
+import type { EarnDepositReviewModalProps } from 'src/components/earn/EarnDepositReviewModal'
+import type { EarnVaultModalProps } from 'src/components/earn/EarnVaultModal'
+import type { EarnYouNeedTokenModalProps } from 'src/components/earn/EarnYouNeedTokenModal'
 import type { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import type {
   RestoreWalletModalState,
@@ -32,6 +35,7 @@ import type { TransactionState } from 'uniswap/src/features/transactions/types/t
 import type { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { FiatOnRampScreens, MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import type { SharedUnitagScreenParams, UnitagStackParamList } from 'uniswap/src/types/screens/mobile'
+import type { AboutModalState } from 'wallet/src/components/settings/about/AboutModal'
 import type { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import type { SmartWalletEnabledModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
 import type { SmartWalletNudgeState } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
@@ -87,6 +91,7 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsCloudBackupPasswordCreate]: { address: Address }
   [MobileScreens.SettingsCloudBackupProcessing]: CloudBackupFormParams
   [MobileScreens.SettingsCloudBackupStatus]: { address: Address }
+  [MobileScreens.SettingsDisclosures]: undefined
   [MobileScreens.SettingsHelpCenter]: undefined
   [MobileScreens.SettingsLanguage]: undefined
   [MobileScreens.SettingsNotifications]: undefined
@@ -212,8 +217,10 @@ export type AppStackParamList = {
   [ModalName.PrivateKeySpeedBumpModal]: undefined
   [ModalName.SmartWalletNudge]: SmartWalletNudgeState
   [ModalName.SettingsAppearance]: undefined
+  [ModalName.NetworkCostPicker]: undefined
   [ModalName.PermissionsModal]: undefined
   [ModalName.PortfolioBalanceModal]: undefined
+  [ModalName.About]: AboutModalState
   [ModalName.LanguageSelector]: undefined
   [ModalName.SmartWalletInfoModal]: undefined
   [ModalName.ConfirmDisableSmartWalletScreen]: undefined
@@ -222,6 +229,9 @@ export type AppStackParamList = {
   [ModalName.ReportTokenIssue]: ReportTokenModalProps
   [ModalName.ReportPortfolioData]: ReportPortfolioDataModalProps
   [ModalName.ReportTokenData]: ReportTokenDataModalProps
+  [ModalName.EarnDepositReview]: EarnDepositReviewModalProps
+  [ModalName.EarnVault]: EarnVaultModalProps
+  [ModalName.EarnYouNeedToken]: EarnYouNeedTokenModalProps
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

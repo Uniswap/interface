@@ -84,7 +84,7 @@ describe('encryptAndStoreRecovery', () => {
 
     await encryptAndStoreRecovery(params)
     expect(EmbeddedWalletApiClient.fetchOprfEvaluate).toHaveBeenCalledWith(
-      expect.objectContaining({ blindedElement: 'blinded', isRecovery: false }),
+      expect.objectContaining({ blindedElement: 'blinded', authMethodId: expect.any(String) }),
       params.accessToken,
     )
   })

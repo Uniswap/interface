@@ -4,8 +4,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import PROVIDE_LIQUIDITY from '~/assets/images/provideLiquidity.png'
 import V4_HOOK from '~/assets/images/v4Hooks.png'
+import { LearnMoreTile } from '~/features/Liquidity/components/LearnMoreTiles'
 import { ExternalArrowLink } from '~/features/Liquidity/ExternalArrowLink'
-import { LearnMoreTile } from '~/features/Liquidity/PositionsEmptyStates'
 import { TopPools } from '~/pages/Positions/TopPools'
 
 interface PositionsSidebarProps {

@@ -2,7 +2,11 @@ import { useFeatureFlag } from '@universe/gating'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DAI_CURRENCY_INFO, daiCurrencyInfo, ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render, within } from 'uniswap/src/test/test-utils'
+
+const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`
+const mainnetNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.Mainnet}`
 
 vi.mock('ui/src/components/UniversalImage/internal/PlainImage', async (importOriginal) => {
   const actual = await importOriginal<typeof import('ui/src/components/UniversalImage/internal/PlainImage.web')>()
@@ -110,7 +114,7 @@ describe(SplitLogo, () => {
         />,
       )
 
-      const icon = getByTestId('network-logo')
+      const icon = getByTestId(arbitrumNetworkLogoTestID)
 
       expect(icon).toBeTruthy()
     })
@@ -125,7 +129,7 @@ describe(SplitLogo, () => {
         />,
       )
 
-      const icon = queryByTestId('network-logo')
+      const icon = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(icon).toBeFalsy()
     })
@@ -140,7 +144,7 @@ describe(SplitLogo, () => {
         />,
       )
 
-      expect(queryByTestId('network-logo')).toBeFalsy()
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
     })
 
     it('renders icon for Mainnet when multichain token UX is enabled', () => {
@@ -154,7 +158,7 @@ describe(SplitLogo, () => {
         />,
       )
 
-      expect(getByTestId('network-logo')).toBeTruthy()
+      expect(getByTestId(mainnetNetworkLogoTestID)).toBeTruthy()
     })
   })
 })

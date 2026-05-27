@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
+import { zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -183,7 +184,7 @@ const Toolbar = () => {
         <Dropdown
           containerStyle={{ width: 'auto' }}
           buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
-          dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
+          dropdownStyle={{ width: 200, borderRadius: '$rounded16', zIndex: zIndexes.popover }}
           adaptToSheet
           menuLabel={
             <Text variant="buttonLabel3" lineHeight="16px" whiteSpace="nowrap">

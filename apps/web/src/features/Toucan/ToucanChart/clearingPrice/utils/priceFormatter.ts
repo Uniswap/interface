@@ -1,5 +1,5 @@
-import { toSubscript } from '~/components/Charts/utils/subscript'
-import { getSubscriptNotationParts } from '~/utils/numbers/getSubscriptNotationParts'
+import { getSubscriptNotationParts } from 'utilities/src/format/getSubscriptNotationParts'
+import { toSubscript } from 'utilities/src/format/toSubscript'
 
 /** Threshold for using subscript notation (number of leading zeros after decimal) */
 const SUBSCRIPT_THRESHOLD = 4

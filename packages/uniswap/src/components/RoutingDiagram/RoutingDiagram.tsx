@@ -98,7 +98,7 @@ function HopBadge({ hop }: { hop: RoutingHop }): JSX.Element {
           <BadgeText>{badgeText}</BadgeText>
         </OpaqueBadge>
       </Tooltip.Trigger>
-      <Tooltip.Content zIndex={zIndexes.overlay}>
+      <Tooltip.Content>
         <Text variant="body4">{tooltipText}</Text>
         <Tooltip.Arrow />
       </Tooltip.Content>

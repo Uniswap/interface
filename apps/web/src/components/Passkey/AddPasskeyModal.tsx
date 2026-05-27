@@ -19,7 +19,7 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { useListAuthenticatorsQuery } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
-import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useAccount } from '~/hooks/useAccount'
 import { useModalState } from '~/hooks/useModalState'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
@@ -72,7 +72,7 @@ export function AddPasskeyModal() {
       logger.error(error, { tags: { file: 'AddPasskeyModal', function: 'registerAuthenticator' } })
     },
     onSettled: () => {
-      invalidateListAuthenticators(queryClient, walletId)
+      resetListAuthenticators(queryClient, walletId)
       handleClose()
     },
   })

@@ -2,12 +2,18 @@ import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes
 import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 
-export function getPositionUrl(position: PositionInfo): string {
+export function getPositionUrl(position: PositionInfo, options?: { entryPoint?: string }): string {
   const chainUrlParam = getChainUrlParam(position.chainId)
+  let path: string
   if (position.version === ProtocolVersion.V2) {
-    return `/positions/v2/${chainUrlParam}/${position.liquidityToken.address}`
+    path = `/positions/v2/${chainUrlParam}/${position.liquidityToken.address}`
   } else if (position.version === ProtocolVersion.V3) {
-    return `/positions/v3/${chainUrlParam}/${position.tokenId}`
+    path = `/positions/v3/${chainUrlParam}/${position.tokenId}`
+  } else {
+    path = `/positions/v4/${chainUrlParam}/${position.tokenId}`
   }
-  return `/positions/v4/${chainUrlParam}/${position.tokenId}`
+  if (options?.entryPoint) {
+    return `${path}?${new URLSearchParams({ entryPoint: options.entryPoint }).toString()}`
+  }
+  return path
 }

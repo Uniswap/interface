@@ -39,6 +39,7 @@ export interface EVMSwapInstructionsService {
 interface EVMSwapInstructionsServiceContext {
   v4SwapEnabled: boolean
   gasStrategy: GasStrategy
+  gasOverrides: TradingApi.UrgencyOverrides | undefined
   /** A function that should be provided in wallet environments that support signing permits without prompting the user. Allows fetching swap instructions earlier for some flows.*/
   presignPermit?: PresignPermitFn
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
@@ -48,10 +49,11 @@ interface EVMSwapInstructionsServiceContext {
 function createLegacyEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'swapDelegationAddress'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, swapRepository } = ctx
+  const { gasStrategy, gasOverrides, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
     gasStrategy,
+    gasOverrides,
   })
 
   const service: EVMSwapInstructionsService = {
@@ -84,10 +86,11 @@ function createLegacyEVMSwapInstructionsService(
 function createWalletCallEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'presignPermit'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, swapRepository } = ctx
+  const { gasStrategy, gasOverrides, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
     gasStrategy,
+    gasOverrides,
   })
 
   const service: EVMSwapInstructionsService = {

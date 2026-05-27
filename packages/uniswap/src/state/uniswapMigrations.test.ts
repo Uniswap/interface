@@ -13,6 +13,7 @@ import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 import {
   addActivityVisibility,
   addDismissedBridgedAndCompatibleWarnings,
+  addEnableCustomGasFeeEntry,
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
@@ -418,5 +419,30 @@ describe('migrateDismissedTokenWarnings', () => {
     const result = migrateDismissedTokenWarnings(state)
     expect(result.tokens.dismissedTokenWarnings).toEqual({})
     expect(result.otherData).toBe('preserved')
+  })
+})
+
+// Mobile: 98
+// Extension: 32
+// Web: 62
+describe('addEnableCustomGasFeeEntry', () => {
+  it('initializes userSettings.enableCustomGasFeeEntry to false', () => {
+    const state = { userSettings: { hideSmallBalances: true }, otherData: 'preserved' }
+    const result = addEnableCustomGasFeeEntry(state)
+    expect(result.userSettings.enableCustomGasFeeEntry).toBe(false)
+    expect(result.userSettings.hideSmallBalances).toBe(true)
+    expect(result.otherData).toBe('preserved')
+  })
+
+  it('overwrites a preexisting enableCustomGasFeeEntry value', () => {
+    const state = { userSettings: { enableCustomGasFeeEntry: true } }
+    const result = addEnableCustomGasFeeEntry(state)
+    expect(result.userSettings.enableCustomGasFeeEntry).toBe(false)
+  })
+
+  it('returns state unchanged when userSettings is missing', () => {
+    const state = { otherData: 'preserved' }
+    const result = addEnableCustomGasFeeEntry(state)
+    expect(result).toBe(state)
   })
 })

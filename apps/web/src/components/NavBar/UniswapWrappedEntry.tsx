@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Snowflake } from 'ui/src/components/icons/Snowflake'
-import { zIndexes } from 'ui/src/theme'
 import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
@@ -66,7 +65,7 @@ export function UniswapWrappedEntry() {
               </Text>
             </Trace>
           </Tooltip.Trigger>
-          <Tooltip.Content zIndex={zIndexes.overlay} display={isMobileWeb ? 'none' : 'flex'}>
+          <Tooltip.Content display={isMobileWeb ? 'none' : 'flex'}>
             <Tooltip.Arrow />
             <Flex centered>
               <Text variant="buttonLabel4" color="$accent1">

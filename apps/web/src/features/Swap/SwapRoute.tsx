@@ -9,7 +9,7 @@ function RouteLabel({ trade }: { trade: SubmittableTrade }) {
   return (
     <Flex row width="100%" justifyContent="space-between" alignItems="center">
       <Text variant="body3" color="$neutral2">
-        {t('swap.orderRouting')}
+        {t('common.bestRoute')}
       </Text>
       <RouterLabel trade={trade} color="$neutral1" />
     </Flex>

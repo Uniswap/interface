@@ -1,21 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import {
-  ColorTokens,
-  Flex,
-  FlexProps,
-  Skeleton,
-  styled,
-  Text,
-  TextProps,
-  Tooltip,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { ColorTokens, Flex, FlexProps, Skeleton, styled, Text, TextProps, Tooltip, useMedia } from 'ui/src'
+import { ArrowChange } from 'ui/src/components/icons/ArrowChange'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { ArrowChangeDown } from '~/components/Icons/ArrowChangeDown'
-import { ArrowChangeUp } from '~/components/Icons/ArrowChangeUp'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { useStatsBannerData } from '~/features/Toucan/Auction/hooks/useStatsBannerData'
 
@@ -101,10 +89,8 @@ function PriceChangeIndicator({
   changePercentFormatted,
 }: PriceChangeIndicatorProps) {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const media = useMedia()
 
-  const arrowColor = isPositiveChange ? colors.statusSuccess.val : colors.statusCritical.val
   const arrowSize = media.lg ? 10 : 16
   const showArrow = changeLabel === 'aboveFloor' || changePercent !== 0
   const isZeroPastHour = changeLabel === 'pastHour' && changePercent === 0
@@ -116,9 +102,9 @@ function PriceChangeIndicator({
     <Flex row alignItems="center" gap="$spacing2">
       {showArrow &&
         (isPositiveChange ? (
-          <ArrowChangeUp width={arrowSize} height={arrowSize} color={arrowColor} />
+          <ArrowChange color="$statusSuccess" rotate="180deg" size={arrowSize} />
         ) : (
-          <ArrowChangeDown width={arrowSize} height={arrowSize} color={arrowColor} />
+          <ArrowChange color="$statusCritical" size={arrowSize} />
         ))}
       <StatSecondaryText color={textColor}>
         {changePercentFormatted} {!media.xl && suffix}
@@ -357,7 +343,6 @@ export function AuctionStatsBanner() {
             borderColor="$surface3"
             py="$spacing8"
             px="$spacing12"
-            zIndex="$tooltip"
           >
             <Flex gap="$spacing4">
               <Flex row justifyContent="space-between" gap="$spacing12">

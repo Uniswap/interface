@@ -48,6 +48,7 @@ export function TopLevelModals() {
       <OAuthRedirectProvider value={true}>
         <ModalRenderer modalName={ModalName.PrivacyPolicy} />
         <ModalRenderer modalName={ModalName.PrivacyChoices} />
+        <ModalRenderer modalName={ModalName.Disclosures} />
         <ModalRenderer modalName={ModalName.GetTheApp} />
         <ModalRenderer modalName={ModalName.FeatureFlags} />
         <ModalRenderer modalName={ModalName.UniWalletConnect} />
@@ -62,6 +63,7 @@ export function TopLevelModals() {
         <ModalRenderer modalName={ModalName.RecoverWallet} />
         <ModalRenderer modalName={ModalName.DeletePasskey} />
         <ModalRenderer modalName={ModalName.RemoveBackupLogin} />
+        <ModalRenderer modalName={ModalName.UnitagRateLimitSpeedbump} />
       </OAuthRedirectProvider>
     )
   }
@@ -80,8 +82,8 @@ export function TopLevelModals() {
       <ModalRenderer modalName={ModalName.GetTheApp} />
       <ModalRenderer modalName={ModalName.PrivacyPolicy} />
       <ModalRenderer modalName={ModalName.PrivacyChoices} />
+      <ModalRenderer modalName={ModalName.Disclosures} />
       <ModalRenderer modalName={ModalName.FeatureFlags} />
-      <ModalRenderer modalName={ModalName.SolanaPromo} />
       {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
       {shouldShowDevFlags && <AnalyticsDebugOverlayLazy />}
       <ModalRenderer modalName={ModalName.AddLiquidity} />
@@ -108,6 +110,7 @@ export function TopLevelModals() {
       <ModalRenderer modalName={ModalName.DeletePasskey} />
       <ModalRenderer modalName={ModalName.RemoveBackupLogin} />
       <ModalRenderer modalName={ModalName.DataApiOutage} />
+      <ModalRenderer modalName={ModalName.UnitagRateLimitSpeedbump} />
     </OAuthRedirectProvider>
   )
 }

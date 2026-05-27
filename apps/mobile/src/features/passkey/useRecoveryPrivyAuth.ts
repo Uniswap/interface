@@ -1,4 +1,10 @@
-import { useAuthorizationSignature, useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/expo'
+import {
+  useAuthorizationSignature,
+  useGetEncryptedAuthorizationKey,
+  useLoginWithEmail,
+  useLoginWithOAuth,
+  usePrivy,
+} from '@privy-io/expo'
 import { useCallback, useMemo } from 'react'
 import type { RecoveryPrivyAuth } from 'uniswap/src/features/passkey/recoveryPrivyAuth'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -16,6 +22,7 @@ export function useRecoveryPrivyAuth(): RecoveryPrivyAuth {
   const { sendCode, loginWithCode } = useLoginWithEmail()
   const oauthHook = useLoginWithOAuth()
   const { generateAuthorizationSignature: privyGenerateAuthorizationSignature } = useAuthorizationSignature()
+  const { getEncryptedAuthorizationKey } = useGetEncryptedAuthorizationKey()
 
   // Privy's `sendCode` / `oauthHook.login` throw "Already logged in" if an
   // authenticated session exists. Drop the existing session so the recovery flow can
@@ -48,6 +55,13 @@ export function useRecoveryPrivyAuth(): RecoveryPrivyAuth {
       payload as Parameters<typeof privyGenerateAuthorizationSignature>[0],
     )
     return { signature: result.signature }
+  })
+
+  // Expo's `useGetEncryptedAuthorizationKey` handles PAT-based auth internally, so we
+  // ignore the `accessToken` / `privyAppId` params that the web implementation needs.
+  const fetchEncryptedBlob = useEvent(async ({ keyId }: { keyId: string }): Promise<string> => {
+    const { ciphertext } = await getEncryptedAuthorizationKey({ id: keyId })
+    return ciphertext
   })
 
   // Privy Expo drives OAuth via an in-app browser and updates `user` when it completes.
@@ -83,6 +97,7 @@ export function useRecoveryPrivyAuth(): RecoveryPrivyAuth {
     loginWithEmailCode,
     initOAuth,
     generateAuthorizationSignature,
+    fetchEncryptedBlob,
     oauthReturn,
     clearOAuthReturn,
   }

@@ -1,10 +1,11 @@
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { EarnVaultFlow, EarnVaultTab } from 'uniswap/src/features/earn/hooks/useEarnVaultModalFlow'
 import type { EarnPositionInfo, EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import type { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import type { EarnVaultFlow, EarnVaultTab } from '~/features/earn/hooks/useEarnVaultModalFlow'
 
 export type EarnVaultModalVaultData = {
   availableBalance: number
+  balanceLookupSettled: boolean
   currencyInfo: ReturnType<typeof useCurrencyInfo>
   hasPosition: boolean
   isConnected: boolean
@@ -32,7 +33,7 @@ export type EarnVaultModalTabState = {
 }
 
 export type EarnVaultModalContentProps = {
-  accountDrawerOpen: () => void
+  onConnectWallet: () => void
   flow: EarnVaultFlow
   flowHandlers: EarnVaultModalFlowHandlers
   tabState: EarnVaultModalTabState

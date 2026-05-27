@@ -2,8 +2,9 @@ import { To, useLocation } from 'react-router'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { getTokenUrl } from 'uniswap/src/utils/linking'
+import { getEarnVaultUrl, getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -129,6 +130,25 @@ export async function focusOrCreateTokensExploreTab({ currencyId }: { currencyId
     logger.error(new Error('Failed to get token URL'), {
       tags: { file: 'navigation/utils.ts', function: 'focusOrCreateTokensExploreTab' },
       extra: { currencyId },
+    })
+    return undefined
+  }
+
+  return focusOrCreateUniswapInterfaceTab({
+    url,
+    // We want to reuse the active tab only if it's already in any other TDP.
+    // oxlint-disable-next-line security/detect-non-literal-regexp
+    reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfaceTokensUrl)}`),
+  })
+}
+
+export async function focusOrCreateEarnVaultTab({ vault }: { vault: EarnVaultInfo }): Promise<void> {
+  const url = getEarnVaultUrl(vault)
+
+  if (!url) {
+    logger.error(new Error('Failed to get earn vault URL'), {
+      tags: { file: 'navigation/utils.ts', function: 'focusOrCreateEarnVaultTab' },
+      extra: { vaultId: vault.id, currencyId: vault.currencyId },
     })
     return undefined
   }

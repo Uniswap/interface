@@ -154,16 +154,35 @@ function getCustomPriceHistogramLayerSortWidth(min: number, max: number): number
   return upper - min
 }
 
+/**
+ * Vertical space reserved for the custom-range histogram stack. When valid tiers’ liquidity
+ * percents sum above 100%, the stack is taller than {@link CONTAINER_HEIGHT}; this grows the
+ * baseline so bars stay below the final clearing price indicator.
+ */
+export function getCustomPriceHistogramStackExtentHeight(entries: CustomPriceRangeEntry[]): number {
+  const sumPercent = entries
+    .filter(isCustomPriceRangeEntryValid)
+    .reduce((acc, entry) => acc + Math.max(0, entry.liquidityPercent), 0)
+  if (sumPercent <= 0) {
+    return CONTAINER_HEIGHT
+  }
+  return CONTAINER_HEIGHT * Math.max(1, sumPercent / 100)
+}
+
 export function getCustomPriceHistogramLayers({
   entries,
   barColor,
   neutral1Color,
+  stackExtentHeight,
 }: {
   entries: CustomPriceRangeEntry[]
   barColor: string
   neutral1Color: string
+  /** Defaults to {@link getCustomPriceHistogramStackExtentHeight}(entries). */
+  stackExtentHeight?: number
 }): CustomPriceHistogramLayer[] {
-  let nextY = PRICE_INDICATOR_TOP_OFFSET + CONTAINER_HEIGHT
+  const stackHeight = stackExtentHeight ?? getCustomPriceHistogramStackExtentHeight(entries)
+  let nextY = PRICE_INDICATOR_TOP_OFFSET + stackHeight
 
   // Stack widest ranges at the bottom and narrowest on top, regardless of table order.
   // Lookups elsewhere key off entryId, so highlighting stays correct across this reorder.
@@ -243,8 +262,16 @@ export function PriceHistogram(props: PriceHistogramProps) {
   const centerX = startX + centerIndex * (HISTOGRAM_BAR_WIDTH + HISTOGRAM_BAR_GAP) + HISTOGRAM_BAR_WIDTH / 2
   const labelHeight = CUSTOM_RANGE_LABEL_HEIGHT
   const indicatorTop = labelHeight + PRICE_INDICATOR_TOP_OFFSET
-  const chartHeight = labelHeight + PRICE_INDICATOR_TOP_OFFSET + CONTAINER_HEIGHT
   const customPriceRanges = props.strategy === PriceRangeStrategy.CUSTOM_RANGE ? props.customPriceRanges : undefined
+  const customHistogramStackExtentHeight = useMemo(
+    () =>
+      customPriceRanges !== undefined ? getCustomPriceHistogramStackExtentHeight(customPriceRanges) : CONTAINER_HEIGHT,
+    [customPriceRanges],
+  )
+  const chartHeight =
+    labelHeight +
+    PRICE_INDICATOR_TOP_OFFSET +
+    (customPriceRanges !== undefined ? customHistogramStackExtentHeight : CONTAINER_HEIGHT)
 
   const finalClearingPriceLabel = t('toucan.statsBanner.finalClearingPrice')
 
@@ -288,8 +315,9 @@ export function PriceHistogram(props: PriceHistogramProps) {
       entries: customPriceRanges,
       barColor: props.barColor,
       neutral1Color: colors.neutral1.val,
+      stackExtentHeight: customHistogramStackExtentHeight,
     })
-  }, [colors.neutral1.val, customPriceRanges, props.barColor])
+  }, [colors.neutral1.val, customHistogramStackExtentHeight, customPriceRanges, props.barColor])
 
   const svgAccessibleTitle = useMemo(() => {
     if (props.strategy === PriceRangeStrategy.CUSTOM_RANGE && customPriceRanges !== undefined) {

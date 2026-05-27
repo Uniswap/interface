@@ -34,6 +34,7 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
   const { toggle: toggleIsOpen, value: isOpen } = useBooleanState(false)
   const { t } = useTranslation()
   const { toggleModal: togglePrivacyPolicy } = useModalState(ModalName.PrivacyPolicy)
+  const { toggleModal: toggleDisclosures } = useModalState(ModalName.Disclosures)
   const { openModal: openPrivacyChoices } = useModalState(ModalName.PrivacyChoices)
   const handleOnMenuPress = useCallback(
     (handler: () => void) => () => {
@@ -64,6 +65,7 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
         <MenuLink href={uniswapUrls.termsOfServiceUrl} target="_blank">
           {t('common.termsOfService')}
         </MenuLink>
+        <MenuLink onPress={handleOnMenuPress(toggleDisclosures)}>{t('common.disclosures')}</MenuLink>
       </Flex>
     </Expand>
   )

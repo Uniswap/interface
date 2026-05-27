@@ -1,49 +1,34 @@
-import { useQuery } from '@tanstack/react-query'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import {
-  getListEarnPositionsQueryOptions,
-  getListEarnVaultsQueryOptions,
-} from 'uniswap/src/data/apiClients/dataApiService/earn'
-import { EARN_SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
+import { EarnVaultChip } from 'uniswap/src/features/earn/EarnVaultChip'
+import { useEarnVaults } from 'uniswap/src/features/earn/hooks/useEarnVaults'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
-import { getEarnPositionInfosByVaultId, getEarnVaultInfos } from 'uniswap/src/features/earn/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { useActiveAccount } from '~/features/accounts/store/hooks'
-import { EarnVaultChip } from '~/features/earn/EarnVaultChip'
+import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { EarnVaultModal } from '~/features/earn/EarnVaultModal'
+import { useEarnVaultConnectFlow } from '~/features/earn/hooks/useEarnVaultConnectFlow'
+import { useEarnVaultModalState } from '~/features/earn/hooks/useEarnVaultModalState'
 
 export function EarnVaultsSection() {
   const { t } = useTranslation()
-  const evmAccount = useActiveAccount(Platform.EVM)
-  const [selectedVault, setSelectedVault] = useState<EarnVaultInfo | null>(null)
+  const evmAccountAddress = useActiveAddress(Platform.EVM)
+  const { positionsByVaultId, vaults } = useEarnVaults({ account: evmAccountAddress })
+  const { closeModal, openModal, selectedVaultState } = useEarnVaultModalState()
 
-  const vaultsQueryParams = useMemo(() => ({ chainIds: EARN_SUPPORTED_CHAIN_IDS }), [])
-  const positionsQueryParams = useMemo(
-    () => (evmAccount?.address ? { walletAddress: evmAccount.address, chainIds: EARN_SUPPORTED_CHAIN_IDS } : undefined),
-    [evmAccount?.address],
+  const selectedVault = selectedVaultState?.vault ?? null
+  const setSelectedVault = useCallback(
+    (vault: EarnVaultInfo | null) => {
+      if (vault) {
+        openModal(vault)
+      } else {
+        closeModal()
+      }
+    },
+    [closeModal, openModal],
   )
-
-  const vaultsQuery = useQuery(getListEarnVaultsQueryOptions({ params: vaultsQueryParams }))
-  const positionsQuery = useQuery(
-    getListEarnPositionsQueryOptions({
-      params: positionsQueryParams,
-      enabled: !!positionsQueryParams,
-    }),
-  )
-
-  const vaults = useMemo(() => getEarnVaultInfos(vaultsQuery.data?.vaults), [vaultsQuery.data?.vaults])
-
-  const positionsByVaultId = useMemo(
-    () => getEarnPositionInfosByVaultId(positionsQuery.data?.positions),
-    [positionsQuery.data?.positions],
-  )
-
-  const handleClose = useCallback(() => {
-    setSelectedVault(null)
-  }, [])
+  const { onConnectWallet } = useEarnVaultConnectFlow({ selectedVault, setSelectedVault })
 
   return (
     <>
@@ -73,15 +58,22 @@ export function EarnVaultsSection() {
           $md={{ flexDirection: 'column' }}
         >
           {vaults.map((vault) => (
-            <EarnVaultChip key={vault.id} vault={vault} onPress={() => setSelectedVault(vault)} />
+            <EarnVaultChip
+              key={vault.id}
+              vault={vault}
+              position={positionsByVaultId.get(vault.id)}
+              onPress={() => openModal(vault)}
+            />
           ))}
         </Flex>
       </Flex>
       <EarnVaultModal
-        vault={selectedVault}
-        prefetchedPosition={selectedVault ? positionsByVaultId.get(selectedVault.id) : undefined}
-        isOpen={selectedVault !== null}
-        onClose={handleClose}
+        vault={selectedVaultState?.vault ?? null}
+        prefetchedPosition={selectedVaultState?.vault ? positionsByVaultId.get(selectedVaultState.vault.id) : undefined}
+        initialView={selectedVaultState?.initialView}
+        isOpen={selectedVaultState !== null}
+        onClose={closeModal}
+        onConnectWallet={onConnectWallet}
       />
     </>
   )

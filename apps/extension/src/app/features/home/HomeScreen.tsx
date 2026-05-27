@@ -44,6 +44,7 @@ import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modal
 import { SmartWalletUpgradeModals } from 'wallet/src/components/smartWallet/modals/SmartWalletUpgradeModal'
 import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hooks'
 import { setIncrementNumPostSwapNudge } from 'wallet/src/features/behaviorHistory/slice'
+import { HomeScreenEarningSection } from 'wallet/src/features/earn/HomeScreenEarningSection'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
@@ -248,6 +249,8 @@ export const HomeScreen = memo(function HomeScreenInner(): JSX.Element {
               </Flex>
 
               <PortfolioActionButtons />
+
+              <HomeScreenEarningSection evmAddress={address} />
 
               <ExtensionNotificationServiceManager />
 

@@ -1,6 +1,6 @@
-import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { type Currency, CurrencyAmount, type Percent } from '@uniswap/sdk-core'
 import {
-  DEFAULT_AUCTION_SUPPLY_PERCENT,
+  DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT,
   MIN_POST_AUCTION_LIQUIDITY_PERCENT,
   type PostAuctionLiquidityAllocation,
   PostAuctionLiquidityAllocationType,
@@ -19,13 +19,16 @@ import {
 
 export function buildAuctionAmountsFromLiquidityPreview(
   totalSupply: CurrencyAmount<Currency>,
-  previewPercent: number,
+  {
+    previewPercent,
+    auctionSupplyPercent = DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT,
+  }: { previewPercent: number; auctionSupplyPercent?: Percent },
 ): {
   totalSupply: CurrencyAmount<Currency>
   auctionSupplyAmount: CurrencyAmount<Currency>
   postAuctionLiquidityAmount: CurrencyAmount<Currency>
 } {
-  const auctionSupplyAmount = totalSupply.multiply(DEFAULT_AUCTION_SUPPLY_PERCENT)
+  const auctionSupplyAmount = totalSupply.multiply(auctionSupplyPercent)
   return {
     totalSupply,
     auctionSupplyAmount,

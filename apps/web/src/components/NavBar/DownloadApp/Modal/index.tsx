@@ -1,6 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { atom, useAtom } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatedPager, Flex, useMedia, WebBottomSheet } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -12,6 +12,7 @@ import { KeyManagementModal } from '~/components/NavBar/DownloadApp/Modal/KeyMan
 import { PasskeyGenerationModal } from '~/components/NavBar/DownloadApp/Modal/PasskeyGeneration'
 import { useIOSBodyScrollLock } from '~/hooks/useIOSBodyScrollLock'
 import { useModalState } from '~/hooks/useModalState'
+import { useAppSelector } from '~/state/hooks'
 
 export enum Page {
   DownloadApp = 0,
@@ -24,14 +25,28 @@ export const downloadAppModalPageAtom = atom<Page>(Page.DownloadApp)
 
 export function GetTheAppModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const initialPage = isEmbeddedWalletEnabled ? Page.ChooseUnitag : Page.DownloadApp
+  const initialInnerPage = useAppSelector((state) => {
+    const modal = state.application.openModal
+    return modal?.name === ModalName.GetTheApp ? modal.initialState?.initialInnerPage : undefined
+  })
+  const showMobileDownload = initialInnerPage === 'mobile'
+  const initialPage = showMobileDownload || !isEmbeddedWalletEnabled ? Page.DownloadApp : Page.ChooseUnitag
 
   const [page, setPage] = useAtom(downloadAppModalPageAtom)
   const { isOpen, closeModal } = useModalState(ModalName.GetTheApp)
+
+  // Read `initialPage` through a ref inside the 500ms timeout so the post-close reset uses
+  // the recomputed value (after Redux clears `openModal` and `showMobileDownload` flips
+  // false) instead of the stale closure captured when `close` was created.
+  const initialPageRef = useRef(initialPage)
+  useEffect(() => {
+    initialPageRef.current = initialPage
+  }, [initialPage])
+
   const close = useCallback(() => {
     closeModal()
-    setTimeout(() => setPage(initialPage), 500)
-  }, [closeModal, setPage, initialPage])
+    setTimeout(() => setPage(initialPageRef.current), 500)
+  }, [closeModal, setPage])
 
   const [unitag, setUnitag] = useState('')
   useEffect(() => {
@@ -40,7 +55,7 @@ export function GetTheAppModal() {
 
   const media = useMedia()
   const isSheet = media.md
-  const isDismissible = !isEmbeddedWalletEnabled
+  const isDismissible = !isEmbeddedWalletEnabled || showMobileDownload
 
   const keyboardHeight = useIOSBodyScrollLock(isOpen)
 
@@ -48,7 +63,7 @@ export function GetTheAppModal() {
     <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none" width="100%">
       {/* The Page enum value corresponds to the modal page's index */}
       <AnimatedPager currentIndex={page}>
-        <DownloadAppsModal onClose={close} />
+        <DownloadAppsModal onClose={close} initialInnerPage={showMobileDownload ? 'mobile' : undefined} />
         <ChooseUnitagModal
           setUnitag={setUnitag}
           goBack={isEmbeddedWalletEnabled ? undefined : () => setPage(Page.DownloadApp)}
@@ -87,9 +102,9 @@ export function GetTheAppModal() {
       name={ModalName.DownloadApp}
       isModalOpen={isOpen}
       isDismissible={isDismissible}
-      maxWidth={520}
+      maxWidth={480}
       onClose={close}
-      padding={0}
+      padding="$spacing32"
     >
       {content}
     </Modal>

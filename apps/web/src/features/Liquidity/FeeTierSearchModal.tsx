@@ -11,7 +11,6 @@ import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { Search } from 'ui/src/components/icons/Search'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { zIndexes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -412,7 +411,7 @@ export function FeeTierSearchModal({
                             <Tooltip.Trigger>
                               <LpIncentivesAprDisplay lpIncentiveRewardApr={pool.boostedApr} isSmall ml="$spacing8" />
                             </Tooltip.Trigger>
-                            <Tooltip.Content zIndex={zIndexes.tooltip}>
+                            <Tooltip.Content>
                               <Tooltip.Arrow />
                               <Text variant="body4" color="$neutral2" textAlign="center">
                                 {t('pool.incentives.eligibleTooltip')}

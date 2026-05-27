@@ -1,14 +1,12 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { SendModalProps } from '~/pages/Swap/Send/SendReviewModal'
 
 export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const primaryButton = useMemo(
     () => ({
@@ -21,7 +19,11 @@ export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: Se
   )
 
   const secondaryButton = useMemo(
-    () => ({ text: t('common.button.continue'), onPress: onConfirm, variant: 'branded' as const }),
+    () => ({
+      text: t('common.button.continue'),
+      onPress: onConfirm,
+      variant: 'branded' as const,
+    }),
     [t, onConfirm],
   )
 
@@ -29,7 +31,7 @@ export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: Se
     <Dialog
       isOpen={isOpen}
       onClose={onDismiss}
-      icon={<AlertTriangleFilled fill={colors.neutral2.val} size="28px" />}
+      icon={<AlertTriangleFilled color="$neutral2" size="$icon.28" />}
       iconBackgroundColor="$surface3"
       title={t('speedBump.smartContractAddress.warning.title')}
       subtext={t('speedBump.smartContractAddress.warning.description')}

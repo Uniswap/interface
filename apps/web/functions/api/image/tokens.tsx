@@ -82,6 +82,8 @@ export async function tokenImageHandler(c: Context) {
                       position: 'absolute',
                       right: '2px',
                       bottom: '0px',
+                      borderRadius: '12px',
+                      objectFit: 'cover',
                     }}
                   />
                 )}
@@ -117,6 +119,8 @@ export async function tokenImageHandler(c: Context) {
                       position: 'absolute',
                       right: '2px',
                       bottom: '0px',
+                      borderRadius: '12px',
+                      objectFit: 'cover',
                     }}
                   />
                 )}

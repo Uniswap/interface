@@ -1,4 +1,4 @@
-import { StatsigClient } from '@statsig/react-bindings'
+import { StatsigClient, type StatsigOptions, type StatsigUser } from '@statsig/react-bindings'
 import { getConfig } from '@universe/config'
 import { isTestEnv } from '@universe/environment'
 import { LocalOverrideAdapterWrapper } from '@universe/gating/src/LocalOverrideAdapterWrapper'
@@ -44,4 +44,12 @@ export function getOverrideAdapter(): LocalOverrideAdapterWrapper {
 
 export function getStatsigClient(): StatsigClient {
   return StatsigClient.instance(getStatsigApiKeyOrThrow())
+}
+
+/**
+ * Web counterpart to the native `bootstrapStatsigClient`. Web doesn't currently
+ * need this for any saga path, but the symmetric API lets it opt in the same way.
+ */
+export function bootstrapStatsigClient(user: StatsigUser, options: StatsigOptions): StatsigClient {
+  return new StatsigClient(getStatsigApiKeyOrThrow(), user, options)
 }

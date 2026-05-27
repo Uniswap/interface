@@ -33,7 +33,7 @@ export type TableProps<T extends RowData = unknown> = {
   maxHeight?: number
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
-  v2: boolean
+  v2?: boolean
   hideHeader?: boolean
   externalScrollSync?: boolean
   scrollGroup?: string

@@ -1,23 +1,20 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { type PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, IconButton, Image, Text, Tooltip, useSporeColors } from 'ui/src'
+import { Button, Flex, IconButton, Image, Text, Tooltip } from 'ui/src'
 import { PlusCircle } from 'ui/src/components/icons/PlusCircle'
+import { Power } from 'ui/src/components/icons/Power'
 import { SwitchArrows } from 'ui/src/components/icons/SwitchArrows'
 import { type AppTFunction } from 'ui/src/i18n/types'
-import { zIndexes } from 'ui/src/theme'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { Power } from '~/components/Icons/Power'
 import { useAccountsStore, useActiveConnector, useActiveWallet } from '~/features/accounts/store/hooks'
 import { type ExternalWallet } from '~/features/accounts/store/types'
 import { useDisconnect } from '~/hooks/useDisconnect'
@@ -43,50 +40,21 @@ export function useOnDisconnect() {
   })
 }
 
-function DisconnectTraceWrapper({ children }: PropsWithChildren) {
-  const evmConnectorId = useActiveConnector(Platform.EVM)?.externalLibraryId
-  const svmConnectorId = useActiveConnector(Platform.SVM)?.externalLibraryId
-
-  return (
-    <Trace
-      logPress
-      element={ElementName.DisconnectWalletButton}
-      properties={{ connector_id: evmConnectorId, svm_connector_id: svmConnectorId }}
-    >
-      {children}
-    </Trace>
-  )
-}
-
 export function DisconnectButton() {
-  const onDisconnect = useOnDisconnect()
-  const isSolanaEnabled = useFeatureFlag(FeatureFlags.Solana)
-
-  // If Solana is enabled, a menu is shown to allow switching wallets and disconnecting.
-  if (isSolanaEnabled) {
-    return (
-      <DisconnectMenuTooltip>
-        <PowerIconButton pointer={false} />
-      </DisconnectMenuTooltip>
-    )
-  }
-
   return (
-    <DisconnectTraceWrapper>
-      <PowerIconButton onPress={onDisconnect} pointer={true} />
-    </DisconnectTraceWrapper>
+    <DisconnectMenuTooltip>
+      <PowerIconButton pointer={false} />
+    </DisconnectMenuTooltip>
   )
 }
 
 function PowerIconButton({ onPress, pointer }: { onPress?: () => void; pointer: boolean }) {
-  const colors = useSporeColors()
-
   return (
     <IconButton
       size="small"
       emphasis="text-only"
       data-testid={TestID.WalletDisconnect}
-      icon={<Power height={24} width={24} color={colors.neutral2.val} />}
+      icon={<Power size="$icon.24" color="$neutral2" />}
       borderRadius="$rounded32"
       hoverStyle={{
         backgroundColor: '$surface2',
@@ -101,7 +69,7 @@ function DisconnectMenuTooltip({ children }: PropsWithChildren) {
   return (
     <Tooltip placement="bottom-end">
       <Tooltip.Trigger>{children}</Tooltip.Trigger>
-      <Tooltip.Content pointerEvents="auto" paddingVertical={8} paddingHorizontal={8} zIndex={zIndexes.overlay}>
+      <Tooltip.Content pointerEvents="auto" paddingVertical={8} paddingHorizontal={8}>
         <DisconnectMenu />
       </Tooltip.Content>
     </Tooltip>
@@ -270,7 +238,6 @@ function SwitchWalletButtonRow({ variant, platform }: { variant: SwitchButtonVar
 function InLineDisconnectButton() {
   const onDisconnect = useOnDisconnect()
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const evmConnectorId = useActiveConnector(Platform.EVM)?.externalLibraryId
   const svmConnectorId = useActiveConnector(Platform.SVM)?.externalLibraryId
   const isEmbeddedWallet = useIsEmbeddedWallet()
@@ -286,7 +253,7 @@ function InLineDisconnectButton() {
 
   return (
     <DisconnectMenuButtonRow onPress={handleDisconnect} testId={TestID.WalletDisconnectInModal}>
-      <Power height={16} width={16} color={colors.neutral1.val} />
+      <Power size="$icon.16" color="$neutral1" />
       <Text variant="buttonLabel3" color="$neutral1" lineHeight={20}>
         {isEmbeddedWallet ? t('settings.logOut') : t('common.button.disconnect')}
       </Text>

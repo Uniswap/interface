@@ -1,16 +1,8 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, type ComponentRef } from 'react'
 import { Input } from 'ui/src'
+import { getLocaleNumberSeparators } from 'utilities/src/format/localeNumberSeparators'
 
 type InputRef = ComponentRef<typeof Input>
-
-/** Locale's decimal + thousand separators, derived from Intl.NumberFormat. */
-export function getLocaleSeparators(locale: string): { decimal: string; group: string } {
-  const parts = Intl.NumberFormat(locale).formatToParts(1234.5)
-  return {
-    decimal: parts.find((p) => p.type === 'decimal')?.value ?? '.',
-    group: parts.find((p) => p.type === 'group')?.value ?? ',',
-  }
-}
 
 /**
  * Formats a canonical "1234.56" (dot-decimal, no separators) string with locale thousand+decimal
@@ -40,7 +32,7 @@ export function formatLocalizedNumber({
   if (!/^\d*\.?\d*$/.test(rawValue)) {
     return rawValue
   }
-  const { decimal, group } = getLocaleSeparators(locale)
+  const { decimal, group } = getLocaleNumberSeparators(locale)
   const dotIdx = rawValue.indexOf('.')
   const intPart = dotIdx === -1 ? rawValue : rawValue.slice(0, dotIdx)
   let fracPart = dotIdx === -1 ? '' : rawValue.slice(dotIdx + 1)
@@ -77,14 +69,14 @@ function insertGroupSeparators(intPart: string, group: string): string {
  */
 export function parseLocalizedNumber(input: string, locale: string): string | null {
   if (/[kmbt]$/i.test(input)) {
-    const { group, decimal } = getLocaleSeparators(locale)
+    const { group, decimal } = getLocaleNumberSeparators(locale)
     let normalized = group ? input.split(group).join('') : input
     if (decimal !== '.') {
       normalized = normalized.replace(decimal, '.')
     }
     return normalized
   }
-  const { decimal, group } = getLocaleSeparators(locale)
+  const { decimal, group } = getLocaleNumberSeparators(locale)
   let normalized = input
   if (group) {
     normalized = normalized.split(group).join('')
@@ -167,7 +159,7 @@ export function useLocalizedNumberInput({
   const inputRef = useRef<InputRef | null>(null)
   const pendingCursorRef = useRef<number | null>(null)
 
-  const { group } = useMemo(() => getLocaleSeparators(locale), [locale])
+  const { group } = useMemo(() => getLocaleNumberSeparators(locale), [locale])
   const displayValue = useMemo(() => formatLocalizedNumber({ rawValue, locale }), [rawValue, locale])
 
   const handleChange = useCallback(

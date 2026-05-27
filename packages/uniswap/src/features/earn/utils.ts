@@ -88,15 +88,16 @@ export function getEarnPositionInfo(position: DataApiEarnPosition | undefined): 
 
   const vaultInfo = getEarnVaultInfo(position.vault)
 
-  if (!vaultInfo || !position.sharesRaw) {
+  if (!vaultInfo) {
     return undefined
   }
 
   return {
     vaultId: vaultInfo.id,
     depositedUsd: position.currentAssetsUsd ?? 0,
+    depositedRaw: position.currentAssetsRaw || '0',
     apyPercent: vaultInfo.apyPercent,
-    sharesRaw: position.sharesRaw,
+    sharesRaw: position.sharesRaw || '0',
   }
 }
 
@@ -190,6 +191,43 @@ export function getProjectedAnnualEarningsUsd({
   return balanceUsd * (apyPercent / 100)
 }
 
+export function getTotalEarnDepositedUsd(positions: Iterable<EarnPositionInfo>): number {
+  let totalDepositedUsd = 0
+
+  for (const position of positions) {
+    if (hasEarnPosition(position)) {
+      totalDepositedUsd += position.depositedUsd
+    }
+  }
+
+  return totalDepositedUsd
+}
+
+export function getEarnVaultsSortedByPosition({
+  positionsByVaultId,
+  vaults,
+}: {
+  positionsByVaultId: ReadonlyMap<string, EarnPositionInfo>
+  vaults: readonly EarnVaultInfo[]
+}): EarnVaultInfo[] {
+  return [...vaults].sort((vaultA, vaultB) => {
+    const positionA = positionsByVaultId.get(vaultA.id)
+    const positionB = positionsByVaultId.get(vaultB.id)
+    const hasPositionA = hasEarnPosition(positionA)
+    const hasPositionB = hasEarnPosition(positionB)
+
+    if (hasPositionA !== hasPositionB) {
+      return hasPositionA ? -1 : 1
+    }
+
+    if (positionA && positionB) {
+      return positionB.depositedUsd - positionA.depositedUsd
+    }
+
+    return 0
+  })
+}
+
 export function hasEarnPosition(position: EarnPositionInfo | undefined): boolean {
   if (!position) {
     return false
@@ -199,14 +237,18 @@ export function hasEarnPosition(position: EarnPositionInfo | undefined): boolean
     return true
   }
 
-  const sharesRaw = position.sharesRaw.trim()
-  if (!sharesRaw) {
+  return isPositiveRawAmount(position.depositedRaw) || isPositiveRawAmount(position.sharesRaw)
+}
+
+function isPositiveRawAmount(rawAmount: string): boolean {
+  const rawAmountTrimmed = rawAmount.trim()
+  if (!rawAmountTrimmed) {
     return false
   }
 
   try {
-    return BigInt(sharesRaw) > BigInt(0)
+    return BigInt(rawAmountTrimmed) > BigInt(0)
   } catch {
-    return Number(sharesRaw) > 0
+    return Number(rawAmountTrimmed) > 0
   }
 }

@@ -1,13 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { memo } from 'react'
-import { Flex, useSporeColors } from 'ui/src'
-import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
+import { Flex } from 'ui/src'
+import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { ReactComponent as UnknownStatus } from '~/assets/svg/contract-interaction.svg'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 
@@ -25,31 +24,26 @@ interface PortfolioLogoProps {
 export const PORTFOLIO_LOGO_DEFAULT_SIZE = 40
 
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
-  const colors = useSporeColors()
-
   if (isTestnetChain(props.chainId)) {
     return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
   }
 
   return (
     <Flex alignItems="center" top={0} left={0} style={props.style}>
-      <Flex position="relative">{getLogo(props, colors)}</Flex>
+      <Flex position="relative">{getLogo(props)}</Flex>
     </Flex>
   )
 })
 
-function getLogo(
-  {
-    accountAddress,
-    currencies,
-    images,
-    fallbackSymbols,
-    chainId,
-    customIcon,
-    size = PORTFOLIO_LOGO_DEFAULT_SIZE,
-  }: PortfolioLogoProps,
-  colors: UseSporeColorsReturn,
-) {
+function getLogo({
+  accountAddress,
+  currencies,
+  images,
+  fallbackSymbols,
+  chainId,
+  customIcon,
+  size = PORTFOLIO_LOGO_DEFAULT_SIZE,
+}: PortfolioLogoProps) {
   if (accountAddress) {
     return <AccountIcon address={accountAddress} size={size} />
   }
@@ -74,5 +68,12 @@ function getLogo(
   if (images && images.length === 1) {
     return <TokenLogo url={images[0]} size={size} chainId={chainId} symbol={fallbackSymbols?.[0]} />
   }
-  return <UnknownStatus width={size} height={size} color={colors.neutral2.val} />
+  if (customIcon && !accountAddress && !currencies?.length && !images?.length) {
+    return (
+      <Flex alignItems="center" height={size} justifyContent="center" width={size}>
+        {customIcon}
+      </Flex>
+    )
+  }
+  return <ContractInteraction size={size} color="$neutral2" />
 }

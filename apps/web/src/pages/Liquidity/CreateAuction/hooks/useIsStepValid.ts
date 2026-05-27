@@ -12,17 +12,9 @@ export function useIsStepValid(step: CreateAuctionStep): boolean {
     switch (step) {
       case CreateAuctionStep.ADD_TOKEN_INFO:
         if (tokenForm.mode === TokenMode.CREATE_NEW) {
-          return (
-            tokenForm.name.trim().length > 0 &&
-            tokenForm.symbol.trim().length > 0 &&
-            tokenForm.description.trim().length > 0
-          )
+          return tokenForm.name.trim().length > 0 && tokenForm.symbol.trim().length > 0
         }
-        return (
-          tokenForm.existingTokenCurrencyInfo !== undefined &&
-          tokenForm.description.trim().length > 0 &&
-          tokenForm.totalSupply !== undefined
-        )
+        return tokenForm.existingTokenCurrencyInfo !== undefined && tokenForm.totalSupply !== undefined
 
       case CreateAuctionStep.CONFIGURE_AUCTION: {
         const { committed, floorPrice, postAuctionLiquidityAllocation, startTime, endTime } = configureAuction

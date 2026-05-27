@@ -18,7 +18,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useCancelOrdersGasEstimate } from '~/components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { DetailLineItem } from '~/components/DetailLineItem'
-import { LoaderV3 } from '~/components/Icons/LoadingSpinner'
+import { LogoLoadingSpinner } from '~/components/LogoLoadingSpinner'
 import { ExternalLink } from '~/theme/components/Links'
 
 const ModalHeader = styled(GetHelpHeader, {
@@ -69,7 +69,7 @@ function useCancelOrdersDialogContent(
     case CancellationState.PENDING_SIGNATURE:
       return {
         title: t('common.confirmCancellation'),
-        icon: <LoaderV3 size="64px" color={colors.accent1.val} />,
+        icon: <LogoLoadingSpinner size="64px" color={colors.accent1.val} />,
       }
     case CancellationState.PENDING_CONFIRMATION:
       return {

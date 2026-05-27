@@ -2,26 +2,27 @@ import { GraphQLApi } from '@universe/api'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Flex, styled, Text, TouchableArea, useSporeColors, View } from 'ui/src'
+import { Anchor, Flex, styled, Text, TouchableArea, useSporeColors, View } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { getTokenDetailsURL, gqlToCurrency } from '~/appGraphql/data/util'
-import { EtherscanLogo } from '~/components/Icons/Etherscan'
-import { ExplorerIcon } from '~/components/Icons/ExplorerIcon'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useCopyClipboard } from '~/hooks/useCopyClipboard'
-import { ExternalLink } from '~/theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/styles'
+import { anonymizeLink } from '~/utils/anonymizeLink'
 import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const TokenName = styled(Text, {
@@ -105,6 +106,7 @@ interface PoolDetailsLinkProps {
 
 export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetailsLinkProps) {
   const colors = useSporeColors()
+  const ExplorerLogo = useBlockExplorerLogo(chainId)
   const { t } = useTranslation()
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
@@ -123,6 +125,15 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
       data: address ?? '',
       type: isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     })
+
+  const handleExplorerLinkPress = useCallback(() => {
+    if (!explorerUrl) {
+      return
+    }
+    sendAnalyticsEvent(InterfaceEventName.ExternalLinkClicked, {
+      label: anonymizeLink(explorerUrl),
+    })
+  }, [explorerUrl])
 
   const navigate = useNavigate()
   const { defaultChainId } = useEnabledChains()
@@ -159,7 +170,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   }
 
   return (
-    <Flex row justifyContent="space-between">
+    <Flex row alignItems="center" justifyContent="space-between">
       <TokenTextWrapper
         data-testid={
           isPool ? `pdp-pool-logo-${tokens[0]?.symbol}-${tokens[1]?.symbol}` : `pdp-token-logo-${tokens[0]?.symbol}`
@@ -208,15 +219,19 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
           </MouseoverTooltip>
         )}
         {explorerUrl && (
-          <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>
+          <Anchor
+            color={colors.neutral1.val}
+            data-testid={`explorer-url-${explorerUrl}`}
+            href={explorerUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+            textDecorationLine="none"
+            onPress={handleExplorerLinkPress}
+          >
             <ExplorerWrapper>
-              {chainId === UniverseChainId.Mainnet ? (
-                <EtherscanLogo width="16px" height="16px" fill={colors.neutral1.val} />
-              ) : (
-                <ExplorerIcon width="16px" height="16px" fill={colors.neutral1.val} />
-              )}
+              <ExplorerLogo size="$icon.16" color={colors.neutral1.val} />
             </ExplorerWrapper>
-          </ExternalLink>
+          </Anchor>
         )}
       </ButtonsRow>
     </Flex>

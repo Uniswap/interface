@@ -457,6 +457,9 @@ export interface UseTradeArgs {
   generatePermitAsTransaction?: boolean
   isV4HookPoolsEnabled?: boolean
   walletExecutionContext?: TradingApi.WalletExecutionContext
+  // User-supplied gas fee overrides (e.g. custom max fee / priority / gas limit) routed to the
+  // TAPI `urgency.overrides` payload when the GasFeeOverrides feature flag is on.
+  gasOverrides?: TradingApi.UrgencyOverrides
 }
 
 export type SwapFee = {
@@ -582,8 +585,8 @@ function transformToPriorityOrderInfo(orderInfo: TradingApi.PriorityOrderInfo): 
 }
 
 export type ValidatedIndicativeQuoteResponse = TradingApi.QuoteResponse & {
-  input: Required<TradingApi.ClassicInput>
-  output: Required<TradingApi.ClassicOutput>
+  input: Required<Pick<TradingApi.QuoteInput, 'amount' | 'token'>>
+  output: Required<Pick<TradingApi.QuoteOutput, 'amount' | 'token' | 'recipient'>>
 }
 
 export function validateIndicativeQuoteResponse(

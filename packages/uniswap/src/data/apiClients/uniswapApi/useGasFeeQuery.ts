@@ -1,12 +1,14 @@
+import { type PartialMessage } from '@bufbuild/protobuf'
 import { type TransactionRequest } from '@ethersproject/providers'
 import { keepPreviousData, skipToken, type UseQueryResult } from '@tanstack/react-query'
+import type { Urgency } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import {
   type GasFeeResultWithoutState,
   type GasStrategy,
   type UseQueryWithImmediateGarbageCollectionApiHelperHookArgs,
   useQueryWithImmediateGarbageCollection,
 } from '@universe/api'
-import { useStatsigClientStatus } from '@universe/gating'
+import { FeatureFlags, getFeatureFlag, useStatsigClientStatus } from '@universe/gating'
 import { fetchGasFeeV2 } from 'uniswap/src/data/apiClients/gasService/fetchGasFeeV2'
 import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -22,6 +24,8 @@ export function useGasFeeQuery({
     fallbackGasLimit?: number
     smartContractDelegationAddress?: Address
     gasStrategy?: GasStrategy
+    urgency?: PartialMessage<Urgency>
+    gasLimitOverride?: string
   },
   GasFeeResultWithoutState
 > & { shouldUsePreviousValueDuringLoading?: boolean }): UseQueryResult<GasFeeResultWithoutState> {
@@ -32,6 +36,8 @@ export function useGasFeeQuery({
     params?.fallbackGasLimit,
     params?.smartContractDelegationAddress,
     params?.gasStrategy,
+    params?.urgency,
+    params?.gasLimitOverride,
   ]
 
   return useQueryWithImmediateGarbageCollection<GasFeeResultWithoutState>({
@@ -50,6 +56,8 @@ export async function fetchGasFeeQuery(params: {
   smartContractDelegationAddress?: Address
   isStatsigReady: boolean
   gasStrategy?: GasStrategy
+  urgency?: PartialMessage<Urgency>
+  gasLimitOverride?: string
 }): Promise<GasFeeResultWithoutState> {
   const {
     tx,
@@ -57,9 +65,21 @@ export async function fetchGasFeeQuery(params: {
     smartContractDelegationAddress,
     isStatsigReady,
     gasStrategy: overrideGasStrategy,
+    urgency,
+    gasLimitOverride,
   } = params
   const gasStrategy =
     overrideGasStrategy || getActiveGasStrategy({ chainId: tx.chainId, type: 'general', isStatsigReady })
 
-  return fetchGasFeeV2({ tx, gasStrategy, smartContractDelegationAddress, fallbackGasLimit })
+  const shouldUseUrgency = getFeatureFlag(FeatureFlags.GasFeeOverrides)
+
+  return fetchGasFeeV2({
+    tx,
+    gasStrategy,
+    smartContractDelegationAddress,
+    fallbackGasLimit,
+    urgency,
+    gasLimitOverride,
+    shouldUseUrgency,
+  })
 }

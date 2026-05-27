@@ -23,7 +23,7 @@ import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { AddPasskeyStep } from '~/components/Passkey/RecoverWalletSteps'
 import { useRecoveryPrivyAuth } from '~/components/Passkey/useRecoveryPrivyAuth'
 import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
@@ -92,7 +92,7 @@ export function RecoverWalletModal(): JSX.Element {
         wallet_address: recoveryResult.walletAddress,
       })
 
-      void invalidateListAuthenticators(queryClient, recoveryResult.walletId)
+      void resetListAuthenticators(queryClient, recoveryResult.walletId)
       handleClose()
     },
   )
@@ -105,8 +105,8 @@ export function RecoverWalletModal(): JSX.Element {
     showAddPasskeyStep: true,
   })
 
-  // Safe against re-fire: EmailEntry's back button is wired to `handleClose`, not
-  // `flow.handleBack`, so the user can't return to Login mid-session.
+  // Safe against re-fire: EmailEntry hides its back arrow, so the user can't return to
+  // Login mid-session.
   const initialMethod = useAppSelector(
     (state) => (state.application.openModal as Partial<RecoverWalletModalParams> | null)?.initialState?.initialMethod,
   )
@@ -167,6 +167,7 @@ export function RecoverWalletModal(): JSX.Element {
             sendCodeMutation={flow.sendCodeMutation}
             handleBack={handleClose}
             handleClose={handleClose}
+            hideBack
             t={t}
           />
         )}

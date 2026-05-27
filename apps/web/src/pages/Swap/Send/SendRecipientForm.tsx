@@ -2,6 +2,7 @@ import { type ElementRef, MouseEvent, useCallback, useRef, useState } from 'reac
 import { useTranslation } from 'react-i18next'
 import { capitalize } from 'tsafe'
 import {
+  AdaptiveWebPopoverContent,
   Flex,
   Input,
   Popover,
@@ -14,7 +15,6 @@ import {
 } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { X } from 'ui/src/components/icons/X'
-import { zIndexes } from 'ui/src/theme'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -147,7 +147,7 @@ const AutocompleteRow = ({
                   <Tooltip.Trigger>
                     <Text variant="subheading2">{formattedAddress}</Text>
                   </Tooltip.Trigger>
-                  <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
+                  <Tooltip.Content maxWidth="fit-content">
                     <Text variant="body4">{address}</Text>
                   </Tooltip.Content>
                 </Tooltip>
@@ -167,7 +167,7 @@ const AutocompleteRow = ({
                     {formattedAddress}
                   </Text>
                 </Tooltip.Trigger>
-                <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
+                <Tooltip.Content maxWidth="fit-content">
                   <Text variant="body4">{address}</Text>
                 </Tooltip.Content>
               </Tooltip>
@@ -400,9 +400,11 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
           )}
         </RecipientWrapper>
       </Popover.Anchor>
-      <Popover.Content
+      <AdaptiveWebPopoverContent
+        adaptWhen={false}
+        isOpen={isFocusing}
+        placement="bottom"
         disableFocusScope
-        zIndex={zIndexes.overlay}
         background="transparent"
         animation="quick"
         animateOnly={['transform', 'opacity']}
@@ -421,7 +423,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
             selectRecipient={selectValidatedRecipient}
           />
         ) : null}
-      </Popover.Content>
+      </AdaptiveWebPopoverContent>
     </Popover>
   )
 }

@@ -269,11 +269,10 @@ export async function signInWithPasskey(
     const neckMeta = loadNeckMetadata()
     const hasLiveKey = neckMeta ? hasActiveNeckKey(neckMeta.walletId) : false
     let devicePublicKey = neckMeta?.publicKeyBase64
-    let freshPrivateKey: CryptoKey | undefined
-    if (!devicePublicKey || !hasLiveKey) {
-      const keyPair = await generateDeviceKeyPair()
-      devicePublicKey = keyPair.publicKeyBase64
-      freshPrivateKey = keyPair.privateKey
+    let freshKeyPair: { privateKey: CryptoKey; publicKeyBase64: string } | undefined
+    if ((!devicePublicKey || !hasLiveKey) && !!walletId) {
+      freshKeyPair = await generateDeviceKeyPair()
+      devicePublicKey = freshKeyPair.publicKeyBase64
     }
 
     let credential: string | undefined
@@ -301,10 +300,10 @@ export async function signInWithPasskey(
     }
     if (signInRespJson.walletAddress && signInRespJson.walletId) {
       // Persist NECK so subsequent signing flows find it in memory
-      if (freshPrivateKey) {
-        storeNeckSigningKey(signInRespJson.walletId, freshPrivateKey)
+      if (freshKeyPair && !!walletId) {
+        storeNeckSigningKey(signInRespJson.walletId, freshKeyPair.privateKey)
         storeNeckMetadata({
-          publicKeyBase64: devicePublicKey,
+          publicKeyBase64: freshKeyPair.publicKeyBase64,
           walletId: signInRespJson.walletId,
           deviceKeyQuorumId: '',
         })

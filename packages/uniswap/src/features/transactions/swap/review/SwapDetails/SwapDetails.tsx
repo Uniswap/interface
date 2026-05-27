@@ -41,6 +41,7 @@ interface SwapDetailsProps {
   setTokenWarningChecked?: (checked: boolean) => void
   txSimulationErrors?: TradingApi.TransactionFailureReason[]
   includesDelegation?: boolean
+  NetworkCostRowSlot?: React.ReactNode
 }
 
 export function SwapDetails({
@@ -60,6 +61,7 @@ export function SwapDetails({
   setTokenWarningChecked,
   txSimulationErrors,
   includesDelegation,
+  NetworkCostRowSlot,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -132,6 +134,7 @@ export function SwapDetails({
         routingType={routing}
         txSimulationErrors={txSimulationErrors}
         includesDelegation={includesDelegation}
+        NetworkCostRowSlot={NetworkCostRowSlot}
         CollapsedInfoRow={
           showCollapsedPriceImpactRow ? <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} /> : undefined
         }

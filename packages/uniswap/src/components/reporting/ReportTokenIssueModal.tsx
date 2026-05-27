@@ -25,11 +25,16 @@ export type ReportTokenModalProps = {
   source?: 'portfolio' | 'token-details'
   isMarkedSpam?: Maybe<boolean>
   isMultichainAsset?: boolean
+  shouldReportMultichainAsset?: boolean
   onReportSuccess?: () => void
 }
 
 export const ReportTokenIssueModalPropsAtom = atom<
-  Pick<ReportTokenModalProps, 'source' | 'currency' | 'isMarkedSpam' | 'isMultichainAsset'> | undefined
+  | Pick<
+      ReportTokenModalProps,
+      'source' | 'currency' | 'isMarkedSpam' | 'isMultichainAsset' | 'shouldReportMultichainAsset'
+    >
+  | undefined
 >(undefined)
 
 export function ReportTokenIssueModal({
@@ -38,6 +43,7 @@ export function ReportTokenIssueModal({
   source = 'token-details',
   isMarkedSpam,
   isMultichainAsset = false,
+  shouldReportMultichainAsset = false,
   onReportSuccess,
   onClose,
 }: ReportTokenModalProps & BaseModalProps): JSX.Element {
@@ -86,6 +92,7 @@ export function ReportTokenIssueModal({
           address: currency.address,
           event: TokenReportEventType.FalseNegative,
           assetType: ReportAssetType.Token,
+          ...(shouldReportMultichainAsset && { multichain: true }),
         }).catch((error: unknown) => {
           // Still show success since analytics and local hiding succeeded, but log the issue for monitoring
           logger.warn('ReportTokenIssueModal', 'submitReport', 'Failed to submit token report to backend', {

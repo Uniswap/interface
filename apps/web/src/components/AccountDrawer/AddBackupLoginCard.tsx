@@ -6,6 +6,7 @@ import { Envelope } from 'ui/src/components/icons/Envelope'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { iconSizes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { hasActiveNeckKey as checkHasActiveNeckKey } from 'uniswap/src/features/passkey/deviceSession'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -14,6 +15,7 @@ import { getPrivyAppId } from '~/config'
 import { useAccount } from '~/hooks/useAccount'
 import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
 import { setOpenModal } from '~/state/application/reducer'
+import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 export function AddBackupLoginCard(): JSX.Element | null {
   const { t } = useTranslation()
@@ -22,7 +24,9 @@ export function AddBackupLoginCard(): JSX.Element | null {
   const account = useAccount()
   const isEmbeddedWallet = account.connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
   const isPortfolioZero = useIsPortfolioZero()
-  const { data: authData, isLoading, isError } = useListAuthenticatorsQuery({ skipIfNoSessionOrCache: true })
+  const { walletId } = useEmbeddedWalletState()
+  const hasActiveNeckKey = !!walletId && checkHasActiveNeckKey(walletId)
+  const { data: authData, isLoading, isError } = useListAuthenticatorsQuery({ skip: !hasActiveNeckKey })
   const hasRecoveryMethod = (authData?.recoveryMethods.length ?? 0) > 0
 
   const onPressCard = useEvent(() => {

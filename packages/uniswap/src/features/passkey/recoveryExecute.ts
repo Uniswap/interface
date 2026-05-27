@@ -45,7 +45,6 @@ export async function attemptPinDecryption({
     const oprfResponse = await EmbeddedWalletApiClient.fetchOprfEvaluate(
       {
         blindedElement,
-        isRecovery: true,
         authMethodId,
       },
       accessToken,

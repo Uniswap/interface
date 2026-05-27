@@ -100,7 +100,7 @@ function VolumeChartHeader({
   return (
     <ChartHeader
       value={
-        <Text variant="heading2" color="inherit">
+        <Text variant="heading3" color="inherit">
           {display.volume}
         </Text>
       }

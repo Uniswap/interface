@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Anchor, Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
-import { zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { buildTokenMarketPriceKey } from '~/features/Toucan/hooks/useTokenMarketPrices'
@@ -89,7 +88,7 @@ export function TopVerifiedAuctionsSection() {
               <InfoCircleFilled size="$icon.16" color="$neutral2" />
             </Anchor>
           </Tooltip.Trigger>
-          <Tooltip.Content zIndex={zIndexes.overlay}>
+          <Tooltip.Content>
             <Text variant="body4" color="$neutral1">
               {t('toucan.filter.verifiedLaunch.tooltip')}
             </Text>

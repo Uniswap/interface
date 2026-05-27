@@ -19,6 +19,7 @@ export enum MobileScreens {
   SettingsCloudBackupPasswordConfirm = 'SettingsCloudBackupPasswordConfirm',
   SettingsCloudBackupProcessing = 'SettingsCloudBackupProcessing',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
+  SettingsDisclosures = 'SettingsDisclosures',
   SettingsLanguage = 'SettingsLanguage',
   SettingsNotifications = 'SettingsNotifications',
   SettingsPrivacy = 'SettingsPrivacy',

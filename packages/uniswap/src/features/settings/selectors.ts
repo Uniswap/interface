@@ -17,3 +17,6 @@ export const selectIsTestnetModeEnabled = (state: UniswapState): boolean =>
 
 export const selectDeviceAccessTimeoutMinutes = (state: UniswapState): number | undefined =>
   deviceAccessTimeoutToMinutes(state.userSettings.deviceAccessTimeout)
+
+export const selectEnableCustomGasFeeEntry = (state: UniswapState): boolean =>
+  state.userSettings.enableCustomGasFeeEntry

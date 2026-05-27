@@ -3,20 +3,25 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { NumberType } from 'utilities/src/format/types'
 import { ChartHeader } from '~/components/Charts/ChartHeader'
 import { Chart } from '~/components/Charts/ChartModel'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
+import { PriceChartData } from '~/components/Charts/PriceChart'
+import { PriceChartDelta } from '~/components/Charts/PriceChart/PriceChartDelta'
 import { ChartType } from '~/components/Charts/utils'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import { LoadingChart } from '~/features/Explore/chart/LoadingChart'
 import { useLiquidityBarData } from '~/features/Liquidity/charts/LiquidityChart'
 import { getTokenOrZeroAddress } from '~/features/Liquidity/utils/currency'
+import { ChartPriceText, PriceDisplayContainer } from '~/pages/PoolDetails/components/ChartSection/ChartPriceDisplay'
 import {
   buildDepthData,
   DepthPoint,
@@ -55,6 +60,7 @@ export function DepthChart({
   hooks,
   poolId,
   onZoomActionsReady,
+  priceEntries,
 }: {
   tokenA: Currency
   tokenB: Currency
@@ -66,9 +72,11 @@ export function DepthChart({
   hooks?: string
   poolId?: string
   onZoomActionsReady?: (actions: DepthChartZoomActions) => void
+  priceEntries?: PriceChartData[]
 }) {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
 
@@ -202,6 +210,7 @@ export function DepthChart({
         height={PDP_CHART_HEIGHT_PX}
         Model={DepthChartModel}
         params={params}
+        showDottedBackground
         TooltipBody={({ data }: { data: DepthPoint }) => {
           // Gap sentinel: LW tooltip suppressed — we render sell+buy pair as React components instead.
           if (gapTime !== null && (data.time as number) === gapTime) {
@@ -234,9 +243,9 @@ export function DepthChart({
           return (
             <ChartHeader
               value={
-                <Text variant="heading3">
-                  <Flex row gap="$spacing4">
-                    {`1 ${baseDescriptor} =`}{' '}
+                <PriceDisplayContainer>
+                  <Flex row>
+                    <ChartPriceText>{`1 ${baseDescriptor} = `}</ChartPriceText>
                     <SubscriptZeroPrice
                       variant="heading3"
                       value={displayPrice}
@@ -244,7 +253,22 @@ export function DepthChart({
                       symbol={quoteDescriptor}
                     />
                   </Flex>
-                </Text>
+                  {!isBaseStable && baseUsdCurrencyAmount && (
+                    <ChartPriceText color="$neutral2">
+                      {'(' +
+                        convertFiatAmountFormatted(baseUsdCurrencyAmount.toSignificant(), NumberType.FiatTokenPrice) +
+                        ')'}
+                    </ChartPriceText>
+                  )}
+                </PriceDisplayContainer>
+              }
+              additionalFields={
+                priceEntries && priceEntries.length >= 2 ? (
+                  <PriceChartDelta
+                    startingPrice={priceEntries[0].close}
+                    endingPrice={priceEntries[priceEntries.length - 1].close}
+                  />
+                ) : undefined
               }
             />
           )

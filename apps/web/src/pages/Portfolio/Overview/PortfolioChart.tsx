@@ -11,6 +11,7 @@ import {
   useMedia,
   useSporeColors,
 } from 'ui/src'
+import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -52,6 +53,8 @@ interface PortfolioChartProps {
   setSelectedPeriod: (period: ChartPeriod) => void
   onHoverPeriod?: (period: ChartPeriod) => void
   portfolioTotalBalanceUSD?: number
+  tokensValue?: PortfolioTotalValue
+  poolsValue?: PortfolioTotalValue
   isTotalValueMatch: boolean
   /** portfolio_pools_balances flag: when removed, make this the default and drop the legacy chart-internal header path. */
   showBalanceHeaderRow?: boolean
@@ -65,6 +68,8 @@ export function PortfolioChart({
   isChartEmpty,
   error,
   portfolioTotalBalanceUSD,
+  tokensValue,
+  poolsValue,
   selectedPeriod,
   setSelectedPeriod,
   onHoverPeriod,
@@ -153,6 +158,8 @@ export function PortfolioChart({
       {shouldShowBalanceHeader && (
         <PortfolioBalanceHeader
           portfolioTotalBalanceUSD={portfolioTotalBalanceUSD}
+          tokensValue={tokensValue}
+          poolsValue={poolsValue}
           series={series}
           chartPercentChange={chartPercentChange}
           selectedPeriod={selectedPeriod}

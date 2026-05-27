@@ -46,6 +46,24 @@
         "cwd": "{projectRoot}"
       }
     },
+    "android:beta:release:local": {
+      "command": "bash ./scripts/runAndroidLocal.sh beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:dev:release:local": {
+      "command": "bash ./scripts/runAndroidLocal.sh dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:prod:release:local": {
+      "command": "bash ./scripts/runAndroidLocal.sh prod",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "check:bundlesize": {
       "command": "./scripts/checkBundleSize.sh",
       "options": {
@@ -72,7 +90,25 @@
       }
     },
     "env:android:keystore:download": {
-      "command": "bash ./scripts/downloadAndroidKeystore.sh",
+      "command": "bash ./scripts/downloadAndroidKeystore.sh beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:android:keystore:download:beta": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:android:keystore:download:dev": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:android:keystore:download:prod": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh prod",
       "options": {
         "cwd": "{projectRoot}"
       }

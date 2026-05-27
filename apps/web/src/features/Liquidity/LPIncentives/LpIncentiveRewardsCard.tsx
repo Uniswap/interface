@@ -1,8 +1,6 @@
 import type { Token } from '@uniswap/sdk-core'
 import { HexString } from '@universe/encoding'
 import { isMobileWeb } from '@universe/environment'
-import { useAtom } from 'jotai'
-import ms from 'ms'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -27,15 +25,18 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import dottedBackgroundDark from '~/assets/images/dotted-grid-dark.png'
 import dottedBackground from '~/assets/images/dotted-grid.png'
 import tokenLogo from '~/assets/images/token-logo.png'
-import { lpIncentivesLastClaimedAtom } from '~/features/Liquidity/hooks/useLpIncentives'
-import { LP_INCENTIVES_REWARD_TOKEN } from '~/features/Liquidity/LPIncentives/constants'
+import {
+  LP_INCENTIVES_CHAIN_IDS,
+  LP_INCENTIVES_DUST_THRESHOLD,
+  LP_INCENTIVES_REWARD_TOKEN,
+} from '~/features/Liquidity/LPIncentives/constants'
+import { useEffectivelyClaimed } from '~/features/Liquidity/LPIncentives/hooks/useEffectivelyClaimed'
 import { formatTokenAmount } from '~/features/Liquidity/LPIncentives/utils/formatTokenAmount'
 
 interface LpIncentiveRewardsCardProps {
@@ -47,13 +48,11 @@ interface LpIncentiveRewardsCardProps {
   initialHasCollectedRewards: boolean
 }
 
-const FIVE_MINUTES_MS = ms('5m')
-
 export function LpIncentiveRewardsCard({
   onCollectRewards,
   token = LP_INCENTIVES_REWARD_TOKEN,
   walletAddress,
-  chainIds = [UniverseChainId.Mainnet as number],
+  chainIds = LP_INCENTIVES_CHAIN_IDS,
   setTokenRewards,
   initialHasCollectedRewards,
 }: LpIncentiveRewardsCardProps) {
@@ -71,22 +70,10 @@ export function LpIncentiveRewardsCard({
     error,
   } = useGetPoolsRewards({ walletAddress, chainIds }, Boolean(walletAddress))
 
-  const [lastClaimed, setLastClaimed] = useAtom(lpIncentivesLastClaimedAtom)
-
-  // TODO: refactor business logic into separate hook
-  // Determine if rewards are effectively claimed, considering initial state and recent optimistic updates
-  const effectivelyClaimed = useMemo(() => {
-    if (initialHasCollectedRewards) {
-      return true
-    }
-    if (!lastClaimed || !rewardsData?.totalUnclaimedAmountUni) {
-      return false
-    }
-
-    const timeDiff = Date.now() - lastClaimed.timestamp
-
-    return timeDiff < FIVE_MINUTES_MS && rewardsData.totalUnclaimedAmountUni === lastClaimed.amount
-  }, [initialHasCollectedRewards, lastClaimed, rewardsData?.totalUnclaimedAmountUni])
+  const effectivelyClaimed = useEffectivelyClaimed({
+    tokenRewards: rewardsData?.totalUnclaimedAmountUni,
+    hasCollectedRewards: initialHasCollectedRewards,
+  })
 
   const { lpIncentiveRewards, userHasRewards, isParseRewardsError } = useMemo(() => {
     if (effectivelyClaimed) {
@@ -98,12 +85,11 @@ export function LpIncentiveRewardsCard({
     }
 
     try {
-      const threshold = BigInt(10) ** BigInt(token.decimals - 3)
       const rewards = rewardsData?.totalUnclaimedAmountUni ?? '0'
 
       return {
         lpIncentiveRewards: formatTokenAmount(rewards, token.decimals),
-        userHasRewards: BigInt(rewards) >= threshold, // Returns true if rewards are at least 0.001 UNI
+        userHasRewards: BigInt(rewards) >= LP_INCENTIVES_DUST_THRESHOLD,
         isParseRewardsError: false,
       }
     } catch (e) {
@@ -131,13 +117,6 @@ export function LpIncentiveRewardsCard({
     const rewards = rewardsData?.totalUnclaimedAmountUni ?? '0'
     setTokenRewards(rewards)
   }, [rewardsData?.totalUnclaimedAmountUni, setTokenRewards, effectivelyClaimed])
-
-  // Clear last claimed from local storage if timestamp past expiration
-  useEffect(() => {
-    if (lastClaimed && Date.now() - lastClaimed.timestamp > FIVE_MINUTES_MS) {
-      setLastClaimed(null)
-    }
-  }, [lastClaimed, setLastClaimed])
 
   const rewardsError = useMemo((): boolean => {
     return !!error || isParseRewardsError

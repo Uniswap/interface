@@ -1,6 +1,7 @@
 import { TradingApi } from '@universe/api'
 import type { FeatureFlags } from '@universe/gating'
 import type { AppTFunction } from 'ui/src/i18n/types'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import type { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 
@@ -40,6 +41,8 @@ export interface TransactionSettingsState {
   slippageWarningModalSeen: boolean
   isV4HookPoolsEnabled: boolean
   isSlippageDirty: boolean
+  /** Per-transaction gas overrides set by the Network cost editor. Cleared on form reset. */
+  gasOverrides?: GasFeeOverrides
 }
 
 export type TransactionSettings = TransactionSettingsState & { autoSlippageTolerance?: number }

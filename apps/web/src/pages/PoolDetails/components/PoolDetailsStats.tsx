@@ -45,16 +45,6 @@ const StatsWrapper = styled(Flex, {
     justifyContent: 'space-between',
     mt: 0,
   },
-  variants: {
-    loaded: {
-      true: {
-        mt: -24,
-        $xl: {
-          mt: 0,
-        },
-      },
-    },
-  },
 })
 
 const StatItemColumn = styled(Flex, {
@@ -235,7 +225,7 @@ export function PoolDetailsStats({
   }
 
   return (
-    <StatsWrapper loaded>
+    <StatsWrapper>
       <HeaderText>{t('common.stats')}</HeaderText>
       <StatItemColumn>
         <Text variant="body1" color="$neutral2">

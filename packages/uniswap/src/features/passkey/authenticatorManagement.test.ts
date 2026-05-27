@@ -10,6 +10,8 @@ import {
   generateDeviceKeyPair,
   getDeviceSession,
   setDeviceSession,
+  storeNeckMetadata,
+  storeNeckSigningKey,
 } from 'uniswap/src/features/passkey/deviceSession'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
 import { type MockedFunction, vi } from 'vitest'
@@ -145,7 +147,7 @@ describe('authenticatorManagement', () => {
   })
 
   describe('startAddAuthenticatorSession', () => {
-    it('sets device session on success', async () => {
+    it('sets the ephemeral device session without persisting NECK on success', async () => {
       mockFetchChallengeRequest.mockResolvedValue({
         challengeOptions: 'challenge-json',
       } as unknown as Awaited<ReturnType<typeof EmbeddedWalletApiClient.fetchChallengeRequest>>)
@@ -161,7 +163,8 @@ describe('authenticatorManagement', () => {
 
       expect(result).toBe('existing-credential-123')
       expect(mockAuthenticatePasskey).toHaveBeenCalledWith('challenge-json')
-      // Device session should now be set
+      expect(storeNeckSigningKey).not.toHaveBeenCalled()
+      expect(storeNeckMetadata).not.toHaveBeenCalled()
       expect(getDeviceSession()).not.toBeNull()
       expect(getDeviceSession()?.policyId).toBe('policy-abc')
     })

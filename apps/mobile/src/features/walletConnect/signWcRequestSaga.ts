@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { buildAuthObject, getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
@@ -18,8 +19,15 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
-import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DappRequestInfo, DappRequestType, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { addWalletCallTransaction } from 'wallet/src/features/batchedTransactions/slice'
@@ -121,16 +129,37 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
       // oxlint-disable-next-line typescript/no-unnecessary-condition
     } else if (method === EthMethod.WalletSendCalls && isUserOpRequest(params.request)) {
       // 4337 UserOp path — gas-sponsored dapp request
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.SendCalls,
+        unsignedUserOperation: params.request.unsignedUserOperation,
+        dappInfo: {
+          name: params.dappRequestInfo.name,
+          icon: params.dappRequestInfo.icon ?? undefined,
+        },
+      }
       const userOpParams: ExecuteUserOpParams = {
         userOp: params.request.unsignedUserOperation,
         account,
         chainId: params.request.chainId,
-        typeInfo: {
-          type: TransactionType.WCConfirm,
-          dappRequestInfo: params.dappRequestInfo,
-        },
+        typeInfo,
       }
       const { userOpHash } = yield* call(executeUserOpSaga, userOpParams)
+
+      const txId = createTransactionId()
+      yield* put(
+        addTransaction({
+          routing: TradingApi.Routing.CLASSIC,
+          id: txId,
+          chainId: params.request.chainId,
+          typeInfo,
+          from: account.address,
+          addedTime: Date.now(),
+          status: TransactionStatus.Pending,
+          userOpHash,
+          options: { request: {} },
+          transactionOriginType: TransactionOriginType.External,
+        }),
+      )
 
       result = { id: params.request.id }
 

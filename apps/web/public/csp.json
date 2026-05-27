@@ -22,7 +22,10 @@
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
     "https://wrapped.uniswap.org",
-    "https://auth.privy.io"
+    "https://auth.privy.io",
+    "https://privy.dev.ew.unihq.org",
+    "https://privy.app.corn-staging.com",
+    "https://privy.app.uniswap.org"
   ],
   "mediaSrc": ["'self'", "*"],
   "formAction": ["'none'"],

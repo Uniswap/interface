@@ -1,9 +1,13 @@
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { UTCTimestamp } from 'lightweight-charts'
+import type { PortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/buildPortfolioBalance'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import type { PriceChartData } from '~/components/Charts/PriceChart'
 import { PortfolioBalanceHeader } from '~/pages/Portfolio/Overview/PortfolioBalanceHeader'
 import { render, screen } from '~/test-utils/render'
+
+const tokensWithBalance: PortfolioTotalValue = { balanceUSD: 8368.94, percentChange: -6.09, absoluteChangeUSD: -510 }
+const poolsWithBalance: PortfolioTotalValue = { balanceUSD: 7373.05, percentChange: 1.02, absoluteChangeUSD: 75 }
 
 const mockPriceChartDelta = vi.hoisted(() => vi.fn())
 
@@ -216,5 +220,40 @@ describe('PortfolioBalanceHeader', () => {
     )
 
     expect(screen.getByText('-')).toBeInTheDocument()
+  })
+
+  it('does not render the BalanceBreakdownPopover when only one side has a balance', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={8368.94}
+        tokensValue={tokensWithBalance}
+        poolsValue={undefined}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        selectedPeriod={ChartPeriod.DAY}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.queryByTestId(TestID.BalanceBreakdownPopover)).not.toBeInTheDocument()
+  })
+
+  it('renders the BalanceBreakdownPopover trigger around the headline value when both tokens and pools are positive', () => {
+    render(
+      <PortfolioBalanceHeader
+        portfolioTotalBalanceUSD={15741.99}
+        tokensValue={tokensWithBalance}
+        poolsValue={poolsWithBalance}
+        series={makeSeries([100, 110])}
+        chartPercentChange={{ percentChange: 10, absoluteChangeUSD: 10 }}
+        selectedPeriod={ChartPeriod.DAY}
+        isPortfolioZero={false}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.getByTestId(TestID.BalanceBreakdownPopover)).toBeInTheDocument()
+    expect(screen.getByText(/15,741\.99/)).toBeInTheDocument()
   })
 })

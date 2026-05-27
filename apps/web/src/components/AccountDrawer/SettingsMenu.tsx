@@ -1,13 +1,16 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { FileListLock } from 'ui/src/components/icons/FileListLock'
+import { Gas } from 'ui/src/components/icons/Gas'
 import { Language } from 'ui/src/components/icons/Language'
 import { Power } from 'ui/src/components/icons/Power'
 import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -36,6 +39,7 @@ export function SettingsMenu({
   openRecoveryPhraseSettings,
   openPortfolioBalanceSettings,
   openStorageSettings,
+  openNetworkCostSettings,
 }: {
   onClose: () => void
   openLanguageSettings: () => void
@@ -44,6 +48,7 @@ export function SettingsMenu({
   openRecoveryPhraseSettings: () => void
   openPortfolioBalanceSettings: () => void
   openStorageSettings: () => void
+  openNetworkCostSettings: () => void
 }) {
   const { t } = useTranslation()
   const activeLanguage = useCurrentLanguage()
@@ -51,6 +56,8 @@ export function SettingsMenu({
   const languageInfo = useLanguageInfo(activeLanguage)
   const connectedWithEmbeddedWallet = useIsEmbeddedWallet()
   const onLogOut = useOnDisconnect()
+  const isGasFeeOverridesEnabled = useFeatureFlag(FeatureFlags.GasFeeOverrides)
+  const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
 
   return (
     <SlideOutMenu title={t('common.settings')} onClose={onClose}>
@@ -73,7 +80,11 @@ export function SettingsMenu({
             testId={TestID.LanguageSettingsButton}
           />
           <SettingsButton
-            icon={<ChartBar size="$icon.24" color="$neutral2" />}
+            icon={
+              <Flex centered width="$icon.24" height="$icon.24">
+                <ChartBar size="$icon.18" color="$neutral2" />
+              </Flex>
+            }
             title={t('settings.setting.balancesActivity.title')}
             onClick={openPortfolioBalanceSettings}
             testId="portfolio-balance-settings-button"
@@ -103,6 +114,15 @@ export function SettingsMenu({
 
         <Flex gap="$gap8">
           <SectionHeader title={t('common.advanced')} />
+          {isGasFeeOverridesEnabled && connectedWithEmbeddedWallet && (
+            <SettingsButton
+              icon={<Gas size="$icon.24" color="$neutral2" />}
+              title={t('settings.networkCosts.title')}
+              currentState={enableCustomGasFeeEntry ? t('gas.override.mode.custom') : t('gas.override.mode.auto')}
+              onClick={openNetworkCostSettings}
+              testId={TestID.WalletSettingsNetworkCosts}
+            />
+          )}
           <SettingsButton
             icon={<DocumentList size="$icon.24" color="$neutral2" />}
             title={t('settings.setting.storage.title')}

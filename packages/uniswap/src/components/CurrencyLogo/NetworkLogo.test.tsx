@@ -41,7 +41,7 @@ describe('NetworkLogo', () => {
     const { queryByTestId } = render(<NetworkLogo chainId={'chainWithoutLogo' as unknown as UniverseChainId} />)
 
     // The wrapper may still exist, but the logo element should not be rendered
-    expect(queryByTestId('network-logo')).toBeNull()
+    expect(queryByTestId('network-logo-chainWithoutLogo')).toBeNull()
   })
 })
 

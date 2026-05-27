@@ -1,18 +1,9 @@
-import { lazy, PropsWithChildren, ReactNode, Suspense, useState } from 'react'
+import { lazy, PropsWithChildren, ReactNode, Suspense, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  AnimatedPager,
-  Flex,
-  FlexProps,
-  Image,
-  Loader,
-  ModalCloseIcon,
-  styled,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatedPager, Flex, FlexProps, Image, Loader, ModalCloseIcon, styled, Text, TouchableArea } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
+import { AndroidLogo } from 'ui/src/components/icons/AndroidLogo'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { iconSizes, zIndexes } from 'ui/src/theme'
@@ -25,8 +16,6 @@ import ExtensionIllustration from '~/assets/images/extensionIllustration.png'
 import PlayStoreBadge from '~/assets/images/play-store-badge.png'
 import WalletIllustration from '~/assets/images/walletIllustration.png'
 import { Wiggle } from '~/components/animations/Wiggle'
-import { AndroidLogo } from '~/components/Icons/AndroidLogo'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
 import { useAccount } from '~/hooks/useAccount'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 import { ExternalLink } from '~/theme/components/Links'
@@ -80,16 +69,22 @@ function ModalContent({
   children,
   logo,
   ...rest
-}: PropsWithChildren<{ title: string; subtext?: string; logo?: ReactNode; header?: ReactNode }> & FlexProps) {
+}: PropsWithChildren<{
+  title: string
+  subtext?: string
+  logo?: ReactNode
+  header?: ReactNode
+}> &
+  FlexProps) {
   return (
-    <Flex p={24} alignItems="center" gap="$spacing32" {...rest}>
+    <Flex alignItems="center" gap="$spacing32" {...rest}>
       <Flex alignItems="center" gap="$spacing12">
         {header}
         <Flex alignItems="center" gap="$spacing8">
           <Text variant="heading3" color="$neutral1">
             {title}
           </Text>
-          <Text variant="body2" color="$neutral2" textAlign="center" maxWidth="65%" $md={{ maxWidth: '80%' }}>
+          <Text variant="body2" color="$neutral2" textAlign="center">
             {subtext}
           </Text>
         </Flex>
@@ -123,7 +118,6 @@ function DownloadMobile() {
       title={t('common.downloadUniswapApp')}
       subtext={t('common.scanQRDownload')}
       maxWidth="620px"
-      px="60px"
       my="$spacing24"
     >
       <BadgeLink href="https://uniswapwallet.onelink.me/8q3y/m4i9qsez?af_qr=true">
@@ -158,7 +152,6 @@ enum Page {
 
 function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const account = useAccount()
 
   return (
@@ -182,10 +175,10 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
               >
                 <Flex row gap="$spacing8" alignItems="center">
                   <WiggleIcon>
-                    <AppleLogo fill={colors.neutral1.val} />
+                    <AppleLogo color="$neutral1" size="$icon.24" />
                   </WiggleIcon>
                   <WiggleIcon>
-                    <AndroidLogo fill={colors.neutral1.val} />
+                    <AndroidLogo color="$neutral1" size="$icon.24" />
                   </WiggleIcon>
                 </Flex>
               </Trace>
@@ -211,9 +204,22 @@ function DownloadApps({ setPage }: { setPage: (page: Page) => void }) {
   )
 }
 
-export function DownloadAppsModal({ goBack, onClose }: { goBack?: () => void; onClose: () => void }) {
-  const [page, setPage] = useState<Page>(Page.DownloadApps)
-  const showBackButton = goBack || page !== Page.DownloadApps
+export function DownloadAppsModal({
+  goBack,
+  onClose,
+  initialInnerPage,
+}: {
+  goBack?: () => void
+  onClose: () => void
+  initialInnerPage?: 'mobile'
+}) {
+  const [page, setPage] = useState<Page>(initialInnerPage === 'mobile' ? Page.DownloadMobile : Page.DownloadApps)
+
+  useEffect(() => {
+    setPage(initialInnerPage === 'mobile' ? Page.DownloadMobile : Page.DownloadApps)
+  }, [initialInnerPage])
+
+  const showBackButton = !initialInnerPage && (goBack || page !== Page.DownloadApps)
 
   const onPressBack = useEvent(() => {
     if (page === Page.DownloadMobile) {
@@ -228,12 +234,9 @@ export function DownloadAppsModal({ goBack, onClose }: { goBack?: () => void; on
       <Flex
         row
         position="absolute"
-        top="$spacing24"
         width="100%"
         justifyContent={showBackButton ? 'space-between' : 'flex-end'}
         zIndex={zIndexes.modal}
-        pl="$spacing24"
-        pr="$spacing24"
       >
         {showBackButton && (
           <TouchableArea onPress={onPressBack}>

@@ -30,7 +30,7 @@
       }
     },
     "tradingapi:schema": {
-      "command": "curl https://trading-api-labs.interface.gateway.uniswap.org/v1/api.json -o ./src/clients/trading/api.json",
+      "command": "gh auth status >/dev/null 2>&1 || { echo 'Error: gh CLI is not installed or not authenticated. Run `gh auth login` first.' >&2; exit 1; } && SCHEMA=$(gh api repos/Uniswap/backend/contents/packages/services/trading/docs/api-reference/openapi.json --jq '.content') || { echo 'Error: Failed to fetch schema. Ensure you have access to Uniswap/backend.' >&2; exit 1; } && echo \"$SCHEMA\" | base64 -d > ./src/clients/trading/api.json",
       "options": {
         "cwd": "{projectRoot}"
       }

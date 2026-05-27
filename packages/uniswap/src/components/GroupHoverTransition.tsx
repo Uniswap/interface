@@ -8,6 +8,7 @@ interface GroupHoverTransitionProps {
   height: number
   transition?: string
   useGroupItemHover?: boolean
+  widthMode?: 'content' | 'container'
 }
 
 /**
@@ -23,6 +24,7 @@ function _GroupHoverTransition({
   height,
   transition = 'transform 0.1s ease-in-out',
   useGroupItemHover = false,
+  widthMode = 'content',
 }: GroupHoverTransitionProps): JSX.Element {
   if (!showTransition) {
     return (
@@ -34,8 +36,12 @@ function _GroupHoverTransition({
 
   const hoverStyle = { y: -height }
 
+  // Use widthMode='container' when the parent sets the width and the content needs to adapt.
+  const wrapperProps =
+    widthMode === 'container' ? ({ width: '100%', minWidth: 0 } as const) : ({ minWidth: 'max-content' } as const)
+
   return (
-    <Flex position="relative" overflow="hidden" height={height} minWidth="max-content">
+    <Flex position="relative" overflow="hidden" height={height} {...wrapperProps}>
       <Flex
         alignItems="flex-start"
         transition={transition}

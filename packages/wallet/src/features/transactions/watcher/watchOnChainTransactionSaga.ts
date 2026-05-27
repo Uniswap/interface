@@ -98,7 +98,11 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options.rpcSubmissionTimestampMs) {
+  if (
+    (isBridge(transaction) || isClassic(transaction)) &&
+    !transaction.options.rpcSubmissionTimestampMs &&
+    !transaction.userOpHash
+  ) {
     // Transaction was not submitted yet, ignore it for now
     // Once it's submitted, it'll be updated and the watcher will pick it up
     return undefined
@@ -106,6 +110,18 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
   if (isPlanTransactionDetails(transaction)) {
     return yield* call(waitForPlanUpdateOrFinalizedState, transaction)
+  }
+
+  // 4337 UserOp path: poll Trading API /swaps with userOpHashes
+  if (transaction.userOpHash) {
+    const { status: userOpStatus, txHash: resolvedHash } = yield* call(waitForTransactionStatus, transaction)
+    const resolvedTxHash = resolvedHash ?? transaction.hash
+
+    if (resolvedTxHash) {
+      yield* spawn(updateTransactionWithReceipt, { ...transaction, hash: resolvedTxHash }, provider)
+    }
+
+    return { ...transaction, status: userOpStatus, hash: resolvedTxHash }
   }
 
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
@@ -148,9 +164,9 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
   // For non-bridge transactions, use Trading API polling
   // Trading API returns status but not receipt/networkFee, so update the transaction with these after the transaction is confirmed
   yield* spawn(updateTransactionWithReceipt, { ...transaction, hash }, provider)
-  status = yield* call(waitForTransactionStatus, { ...transaction, hash })
+  const { status: classicStatus } = yield* call(waitForTransactionStatus, { ...transaction, hash })
 
-  return { ...transaction, status, hash }
+  return { ...transaction, status: classicStatus, hash }
 }
 
 /**

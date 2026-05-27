@@ -21,6 +21,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import type { FeeData } from 'uniswap/src/features/positions/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { type FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
@@ -150,13 +151,17 @@ function PoolDescription({
   token1?: Token | TokenStats
   chainId: UniverseChainId
 }) {
-  const currencies = [token0 ? gqlToCurrency(token0) : undefined, token1 ? gqlToCurrency(token1) : undefined]
+  const currency0 = token0 ? gqlToCurrency(token0) : undefined
+  const currency1 = token1 ? gqlToCurrency(token1) : undefined
+  const reverse = currency0 && currency1 ? shouldReverseForWaterfall(currency0, currency1) : false
+  const [baseToken, quoteToken] = reverse ? [token1, token0] : [token0, token1]
+  const currencies = reverse ? [currency1, currency0] : [currency0, currency1]
 
   return (
     <Flex row gap="$gap8" alignItems="center" maxWidth="100%">
       <DoubleCurrencyLogo currencies={currencies} size={24} />
       <EllipsisText>
-        {token0?.symbol}/{token1?.symbol}
+        {baseToken?.symbol}/{quoteToken?.symbol}
       </EllipsisText>
     </Flex>
   )
@@ -507,7 +512,7 @@ export function PoolsTable({
             sortingFn: 'basic',
             cell: ({ row }: { row?: Row<PoolTableValues> }) => {
               if (!row?.original) {
-                return null
+                return <Cell loading={showLoadingSkeleton} />
               }
 
               const { apr, token0CurrencyId, token1CurrencyId, rewardApr } = row.original

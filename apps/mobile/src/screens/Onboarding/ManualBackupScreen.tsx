@@ -4,6 +4,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -12,7 +13,7 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Button, Flex, flexStyles, Text, useMedia, useSporeColors } from 'ui/src'
 import { EyeSlash, FileListLock, GraduationCap, Key, Lock, PapersText, Pen } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -149,8 +150,12 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               : t('onboarding.recoveryPhrase.view.title')
           }
         >
-          <Flex grow justifyContent="space-between">
-            <Flex grow>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
+            showsVerticalScrollIndicator={false}
+            style={flexStyles.fill}
+          >
+            <Flex grow justifyContent="space-between">
               <MnemonicDisplay
                 enableRevealButton={onboardingExperimentEnabled}
                 mnemonicId={mnemonicId}
@@ -159,9 +164,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
                   setDisplayContinueButtonEnabled(true)
                 }}
               />
-            </Flex>
-            <Flex justifyContent="flex-end">
-              <Flex row>
+              <Flex row mt="$spacing16">
                 <Button
                   size="large"
                   variant="branded"
@@ -173,7 +176,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
                 </Button>
               </Flex>
             </Flex>
-          </Flex>
+          </ScrollView>
           {!seedWarningAcknowledged &&
             (onboardingExperimentEnabled ? (
               <ManualBackWarningModal onBack={navigation.goBack} onContinue={() => setSeedWarningAcknowledged(true)} />

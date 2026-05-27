@@ -29,7 +29,7 @@ exports[`TokenLogo > renders without error 1`] = `
       >
         <div
           class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-          data-testid="network-logo"
+          data-testid="network-logo-42161"
           style="width: 19px; height: 19px; border-radius: 5.7px; border-width: 1.5px; border-style: solid;"
         >
           <div

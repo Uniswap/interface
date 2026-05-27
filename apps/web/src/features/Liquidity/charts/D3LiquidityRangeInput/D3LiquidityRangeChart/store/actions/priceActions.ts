@@ -60,7 +60,7 @@ export const createPriceActions = ({
     }
   },
 
-  setPriceStrategy: ({ priceStrategy, animate = true }: { priceStrategy: DefaultPriceStrategy; animate: boolean }) => {
+  setPriceStrategy: ({ priceStrategy, animate }: { priceStrategy: DefaultPriceStrategy; animate: boolean }) => {
     const { actions, renderingContext, minTick: defaultMinTick, maxTick: defaultMaxTick } = get()
     if (!renderingContext) {
       return

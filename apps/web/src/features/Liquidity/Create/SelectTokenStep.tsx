@@ -491,6 +491,7 @@ export function SelectTokensStep({
                 }
                 isLpIncentivesEnabled={isLpIncentivesEnabled}
                 hasLpRewards={feeTierHasLpRewards}
+                allowDynamicFee={!!hook}
                 isExpanded={isShowMoreFeeTiersEnabled}
                 onToggleExpand={toggleShowMoreFeeTiersEnabled}
                 headerInlineContent={

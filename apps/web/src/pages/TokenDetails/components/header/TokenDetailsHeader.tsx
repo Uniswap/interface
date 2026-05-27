@@ -85,11 +85,12 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
   const openReportTokenModal = useEvent(() => {
-    setModalProps({
+    void setModalProps({
       source: 'token-details',
       currency,
       isMarkedSpam: tokenQuery.data?.token?.project?.isSpam,
       isMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset,
+      shouldReportMultichainAsset: multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined,
     })
     openModal()
   })
@@ -216,6 +217,7 @@ export function TokenDetailsHeader({ isCompact }: TokenDetailsHeaderProps) {
       <ReportTokenDataModal
         currency={currency}
         isMarkedSpam={tokenQuery.data?.token?.project?.isSpam}
+        shouldReportMultichainAsset={multichainTokenUxEnabled && isMultiChainAsset && selectedChainId === undefined}
         onReportSuccess={onReportSuccess}
         isOpen={isReportDataIssueModalOpen}
         onClose={closeReportDataIssueModal}

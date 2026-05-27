@@ -13,6 +13,14 @@ import {
   sideSeriesOptions,
   tooltipTransform,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChartModel.helpers'
+import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
+
+/**
+ * Below this magnitude the TokenTx formatter's `FiveDecimals` rule rounds every value
+ * in [1e-5, 1e-3) to "0.00001" — adjacent depth-chart ticks then render as the same
+ * X-axis label. Anything under this threshold routes through the subscript helper.
+ */
+const DEPTH_AXIS_SUBSCRIPT_THRESHOLD = 0.001
 
 export type DepthChartZoomActions = {
   zoomIn: () => void
@@ -183,6 +191,7 @@ export class DepthChartModel extends ChartModel<DepthPoint> {
       return
     }
     this.midLineEl.style.left = `${xCoord + paneLeft}px`
+    this.midLineEl.style.height = `${this.api.paneSize().height}px`
     this.midLineEl.style.display = 'block'
   }
 
@@ -222,6 +231,7 @@ export class DepthChartModel extends ChartModel<DepthPoint> {
     this.rightOverlayEl.style.width = `${chartWidth - buyX}px`
     this.rightOverlayEl.style.display = 'block'
     this.mirrorLineEl.style.left = `${buyX}px`
+    this.mirrorLineEl.style.height = `${this.api.paneSize().height}px`
     this.mirrorLineEl.style.display = 'block'
 
     const sellRef = this.depthSellData[this.depthSellData.length - 2] ?? sellAnchor
@@ -324,6 +334,7 @@ export class DepthChartModel extends ChartModel<DepthPoint> {
     this.rightOverlayEl.style.display = 'block'
 
     this.mirrorLineEl.style.left = `${mirrorX}px`
+    this.mirrorLineEl.style.height = `${this.api.paneSize().height}px`
     this.mirrorLineEl.style.display = 'block'
 
     const mirrorSeries = isSellSide ? this.buySeries : this.sellSeries
@@ -444,7 +455,14 @@ export class DepthChartModel extends ChartModel<DepthPoint> {
 
     const nonDefault = buildChartOptions({
       formatFiat: (n) => params.format.convertFiatAmountFormatted(n, NumberType.FiatTokenStats),
-      formatTokenTx: (n) => params.format.formatNumberOrString({ value: n, type: NumberType.TokenTx }),
+      formatTokenTx: (n) =>
+        formatPriceWithSubscript({
+          price: n,
+          locale: params.locale,
+          formatNumberOrString: params.format.formatNumberOrString,
+          numberType: NumberType.TokenTx,
+          subscriptThreshold: DEPTH_AXIS_SUBSCRIPT_THRESHOLD,
+        }),
       crosshairColor: params.crosshairColor,
       tickPriceLookup: (time) => this.timeToPrice.get(time),
     })

@@ -1,10 +1,10 @@
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
 import { SwapResult } from '~/hooks/useSwapCallback'
 import { TradeSummary } from '~/pages/Swap/Limit/ConfirmSwapModal/TradeSummary'
 import { InterfaceTrade, TradeFillType } from '~/state/routing/types'
@@ -85,7 +85,7 @@ export function Error({ errorType, trade, showTrade, swapResult, onRetry }: Erro
         justifyContent="center"
         mb="$spacing4"
       >
-        <AlertTriangleFilled data-testid="pending-modal-failure-icon" size="24px" />
+        <AlertTriangleFilled color="$neutral2" data-testid="pending-modal-failure-icon" size="$icon.24" />
       </Flex>
       <Text variant="subheading1" color="$neutral1" mt="$spacing8">
         {title}

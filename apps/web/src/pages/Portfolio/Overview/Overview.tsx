@@ -9,7 +9,10 @@ import {
 } from 'uniswap/src/data/rest/getPortfolioChart'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import {
+  usePortfolioBalanceBreakdown,
+  usePortfolioTotalValue,
+} from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { usePortfolioChartBalanceMismatch } from 'uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
@@ -62,6 +65,14 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
   const filterChainIds = useMemo(() => (chainId ? [chainId] : allChainIds), [chainId, allChainIds])
 
   const { data: portfolioData } = usePortfolioTotalValue({
+    evmAddress: portfolioAddresses.evmAddress,
+    svmAddress: portfolioAddresses.svmAddress,
+    chainIds: filterChainIds,
+  })
+
+  // Shares the React Query cache entry with `usePortfolioTotalValue` (same input → same key,
+  // different `select`), so this does not trigger an additional network request.
+  const { data: portfolioBreakdown } = usePortfolioBalanceBreakdown({
     evmAddress: portfolioAddresses.evmAddress,
     svmAddress: portfolioAddresses.svmAddress,
     chainIds: filterChainIds,
@@ -156,6 +167,8 @@ export const PortfolioOverview = memo(function PortfolioOverview() {
           <Trace section={SectionName.PortfolioOverviewTab} element={ElementName.PortfolioChart}>
             <PortfolioChart
               portfolioTotalBalanceUSD={portfolioData?.balanceUSD}
+              tokensValue={portfolioBreakdown?.tokens}
+              poolsValue={portfolioBreakdown?.pools}
               isPortfolioZero={isPortfolioZero}
               series={series}
               chartPercentChange={chartPercentChange}

@@ -1,11 +1,14 @@
-import { GraphQLApi } from '@universe/api'
+import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { GraphQLApi, parseRestProtocolVersion } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useEffect, useMemo, useState } from 'react'
+import { useQueryState } from 'nuqs'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Flex, Separator, styled, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shouldReverseForWaterfall } from 'uniswap/src/features/tokens/waterfallPriority'
@@ -20,6 +23,7 @@ import { useColor } from '~/hooks/useColor'
 import { useScrollCompact } from '~/hooks/useScrollCompact'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { ChartSection } from '~/pages/PoolDetails/components/ChartSection'
+import { OrderBook } from '~/pages/PoolDetails/components/ChartSection/OrderBook'
 import { PoolDetailsApr } from '~/pages/PoolDetails/components/PoolDetailsApr'
 import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
 import { PoolDetailsHeader } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeader'
@@ -110,7 +114,12 @@ export function PoolDetailsPage() {
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
-  const { data: poolData, loading } = usePoolData({
+  const [orderBookLoading, setOrderBookLoading] = useState(false)
+  const handleOrderBookLoadingChange = useCallback((l: boolean) => setOrderBookLoading(l), [])
+  const isLiquidityDepthChartEnabled = useFeatureFlag(FeatureFlags.LpPdpDepthChart)
+  const [chartParam] = useQueryState('chart')
+  const showOrderBook = isLiquidityDepthChartEnabled && chartParam?.toLowerCase() === 'depth'
+  const { data: poolData, loading: poolLoading } = usePoolData({
     poolIdOrAddress: normalizeAddress(poolAddress ?? '', AddressStringFormat.Lowercase),
     chainId: chainInfo?.id,
     isPoolAddress: isEVMAddress(poolAddress),
@@ -148,6 +157,14 @@ export function PoolDetailsPage() {
       }),
     [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
   )
+  const [orderBookCurrencyA, orderBookCurrencyB] = useMemo(
+    () => [
+      poolData?.token0 ? gqlToCurrency(poolData.token0) : undefined,
+      poolData?.token1 ? gqlToCurrency(poolData.token1) : undefined,
+    ],
+    [poolData?.token0, poolData?.token1],
+  )
+
   const navigate = useNavigate()
 
   const colors = useSporeColors()
@@ -162,7 +179,8 @@ export function PoolDetailsPage() {
   })
 
   const isInvalidPool = !poolAddress || !chainInfo
-  const poolNotFound = (!loading && !poolData) || isInvalidPool
+  const loading = poolLoading || orderBookLoading
+  const poolNotFound = (!poolLoading && !poolData) || isInvalidPool
 
   const metatagProperties = useMemo(() => {
     const token0Symbol = poolData?.token0.symbol
@@ -267,6 +285,24 @@ export function PoolDetailsPage() {
             $lg={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
             $xl={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
           >
+            {showOrderBook &&
+              poolData?.protocolVersion !== GraphQLApi.ProtocolVersion.V2 &&
+              poolData?.feeTier &&
+              orderBookCurrencyA &&
+              orderBookCurrencyB && (
+                <OrderBook
+                  tokenA={orderBookCurrencyA}
+                  tokenB={orderBookCurrencyB}
+                  feeTier={Number(poolData.feeTier.feeAmount)}
+                  isReversed={isReversed}
+                  chainId={fromGraphQLChain(chainInfo.backendChain.chain) ?? chainInfo.id}
+                  version={parseRestProtocolVersion(poolData.protocolVersion) ?? RestProtocolVersion.V3}
+                  hooks={poolData.hookAddress}
+                  poolId={poolData.idOrAddress}
+                  height={356}
+                  onLoadingChange={handleOrderBookLoadingChange}
+                />
+              )}
             <Flex $lg={{ marginTop: -24 }} $xl={{ marginTop: -24 }} min-height="fit-content">
               <PoolDetailsStatsButtons
                 chainId={chainInfo.id}

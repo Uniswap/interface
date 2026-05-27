@@ -16,15 +16,6 @@ vi.mock('@web3-react/core', () => ({
 vi.mock('~/hooks/useAccount', () => ({
   useAccount: () => '0xYourAccountAddress',
 }))
-vi.mock('~/state/multichain/useMultichainContext', async () => {
-  const actual = await vi.importActual('~/state/multichain/useMultichainContext')
-  return {
-    ...actual,
-    useMultichainContext: () => ({
-      chainId: 1,
-    }),
-  }
-})
 vi.mock('~/hooks/useTransactionGasFee', async () => {
   const actual = await vi.importActual('~/hooks/useTransactionGasFee')
   return {
@@ -48,8 +39,9 @@ vi.mock('~/hooks/useUSDTokenUpdater', () => ({
 vi.mock('~/lib/hooks/useCurrencyBalance', () => ({
   useCurrencyBalances: () => [undefined, undefined],
 }))
+const useCreateTransferTransactionMock = vi.fn((_transferInfo?: { chainId?: number }) => undefined)
 vi.mock('~/utils/transfer', () => ({
-  useCreateTransferTransaction: () => undefined,
+  useCreateTransferTransaction: (transferInfo?: { chainId?: number }) => useCreateTransferTransactionMock(transferInfo),
 }))
 vi.mock('uniswap/src/features/ens/api', () => ({
   useENSName: vi.fn(),
@@ -274,5 +266,29 @@ describe('useDerivedSendInfo', () => {
     const info = result.current
 
     expect(info.recipientData).toEqual(validatedRecipientData)
+  })
+
+  it('passes the input currency chainId to the transfer transaction', () => {
+    const worldChainCurrency = {
+      chainId: 480,
+      isNative: false,
+      isToken: true,
+      address: '0x03C7054BCB39f7b2e5B2c7AcB37583e32D70Cfa3',
+      decimals: 8,
+      symbol: 'WBTC',
+      name: 'Wrapped BTC',
+      equals: () => false,
+    } as unknown as NonNullable<SendState['inputCurrency']>
+
+    const mockSendState: SendState = {
+      ...defaultSendState,
+      inputCurrency: worldChainCurrency,
+    }
+
+    renderHook(() => useDerivedSendInfo(mockSendState))
+
+    expect(useCreateTransferTransactionMock).toHaveBeenCalled()
+    const transferInfo = useCreateTransferTransactionMock.mock.calls.at(-1)?.[0]
+    expect(transferInfo).toMatchObject({ chainId: 480 })
   })
 })

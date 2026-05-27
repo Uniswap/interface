@@ -8,6 +8,7 @@ export const NumericalInputWrapper = styled(View, {
   position: 'relative',
   maxWidth: '100%',
   width: 'max-content',
+  transition: 'none',
 })
 
 export type StyledNumericalInputLayoutProps = {

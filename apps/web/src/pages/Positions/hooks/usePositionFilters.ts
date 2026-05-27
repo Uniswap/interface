@@ -1,10 +1,11 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { atom, useAtom } from 'jotai'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DEFAULT_LP_POSITION_PROTOCOL_FILTER, DEFAULT_LP_POSITION_STATUS_FILTER } from '~/features/Liquidity/constants'
 
 const chainFilterAtom = atom<UniverseChainId | null>(null)
-const versionFilterAtom = atom<ProtocolVersion[]>([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
-const statusFilterAtom = atom<PositionStatus[]>([PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE])
+const versionFilterAtom = atom<ProtocolVersion[]>([...DEFAULT_LP_POSITION_PROTOCOL_FILTER])
+const statusFilterAtom = atom<PositionStatus[]>([...DEFAULT_LP_POSITION_STATUS_FILTER])
 
 export interface UsePositionFiltersResult {
   chainFilter: UniverseChainId | null

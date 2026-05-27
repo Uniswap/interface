@@ -20,9 +20,11 @@ import {
   Coins,
   FileListLock,
   HelpCenter,
+  InfoCircle,
   Language as LanguageIcon,
   LineChartDots,
   Lock,
+  LockViewfinder,
   Settings,
   ShieldCheck,
   Sliders,
@@ -33,6 +35,7 @@ import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistor
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { NetworkCostPickerModal } from 'uniswap/src/features/gas/components/NetworkCostPickerModal'
 import { Language, WALLET_SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
 import { getLanguageInfo, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
@@ -49,6 +52,8 @@ import { changeLanguage } from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { AboutModal } from 'wallet/src/components/settings/about/AboutModal'
 import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'
 import { PortfolioBalanceModal } from 'wallet/src/components/settings/portfolioBalance/PortfolioBalanceModal'
 import { SmartWalletAdvancedSettingsModal } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
@@ -79,6 +84,8 @@ export function SettingsScreen(): JSX.Element {
   const [isAdvancedModalOpen, setIsAdvancedModalOpen] = useState(false)
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
   const [isPasskeyModalOpen, setIsPasskeyModalOpen] = useState(false)
+  const [isNetworkCostModalOpen, setIsNetworkCostModalOpen] = useState(false)
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false)
   const [isDefaultProvider, setIsDefaultProvider] = useState(true)
 
   // Auto-open advanced settings modal if navigating with openAdvancedSettings state
@@ -135,6 +142,27 @@ export function SettingsScreen(): JSX.Element {
     setIsAdvancedModalOpen(false)
   }, [navigateTo])
 
+  const handleNetworkCostPress = useCallback(() => {
+    setIsNetworkCostModalOpen(true)
+    setIsAdvancedModalOpen(false)
+  }, [])
+
+  const handleNetworkCostModalClose = useCallback(() => setIsNetworkCostModalOpen(false), [])
+
+  const handleAboutModalClose = useEvent(() => setIsAboutModalOpen(false))
+
+  const handleOpenPrivacyPolicy = useEvent(() => {
+    window.open(uniswapUrls.privacyPolicyUrl, '_blank', 'noopener,noreferrer')
+  })
+
+  const handleOpenTermsOfService = useEvent(() => {
+    window.open(uniswapUrls.termsOfServiceUrl, '_blank', 'noopener,noreferrer')
+  })
+
+  const handleDisclosuresPress = useEvent(() => {
+    navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.Disclosures}`)
+  })
+
   useEffect(() => {
     getIsDefaultProviderFromStorage()
       .then((newIsDefaultProvider) => setIsDefaultProvider(newIsDefaultProvider))
@@ -174,6 +202,15 @@ export function SettingsScreen(): JSX.Element {
         onClose={handleAdvancedModalClose}
         onPressSmartWallet={handleSmartWalletPress}
         onPressStorage={handleStoragePress}
+        onPressNetworkCost={handleNetworkCostPress}
+      />
+      <NetworkCostPickerModal isOpen={isNetworkCostModalOpen} onClose={handleNetworkCostModalClose} />
+      <AboutModal
+        isOpen={isAboutModalOpen}
+        onClose={handleAboutModalClose}
+        onPressPrivacyPolicy={handleOpenPrivacyPolicy}
+        onPressTermsOfService={handleOpenTermsOfService}
+        onPressDisclosures={handleDisclosuresPress}
       />
       {hasPasskeyBackup && (
         <PasskeyManagementModal
@@ -261,7 +298,7 @@ export function SettingsScreen(): JSX.Element {
           <Flex pt="$padding16">
             <SettingsSection title={t('settings.section.privacyAndSecurity')}>
               <SettingsItem
-                Icon={Lock}
+                Icon={LockViewfinder}
                 title={t('settings.setting.deviceAccess.title')}
                 onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
               />
@@ -293,6 +330,12 @@ export function SettingsScreen(): JSX.Element {
                 title={t('settings.setting.helpCenter.title')}
                 url={uniswapUrls.helpArticleUrls.extensionHelp}
                 RightIcon={ArrowUpRight}
+              />
+              <SettingsItem
+                Icon={InfoCircle}
+                title={t('settings.section.about')}
+                testID={TestID.SettingsAbout}
+                onPress={(): void => setIsAboutModalOpen(true)}
               />
               <Text
                 color="$neutral3"

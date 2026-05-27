@@ -1,11 +1,10 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TextProps, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -113,11 +112,18 @@ function BookRowItem({
   formatAmount: (v: number) => string
 }) {
   const barWidth = maxAmount > 0 ? (row.amount / maxAmount) * 100 : 0
-  const color = row.side === 'ask' ? askColor : bidColor
+  const colorToken = row.side === 'ask' ? '$statusCritical' : '$statusSuccess'
   const barColor = row.side === 'ask' ? opacify(20, askColor) : opacify(20, bidColor)
 
   return (
-    <Flex position="relative" height={ROW_HEIGHT} justifyContent="center">
+    <Flex
+      group="item"
+      position="relative"
+      height={ROW_HEIGHT}
+      justifyContent="center"
+      hoverStyle={{ backgroundColor: '$surface3' }}
+      style={{ transition: 'background-color 0.1s ease' }}
+    >
       <Flex
         position="absolute"
         right={0}
@@ -130,7 +136,7 @@ function BookRowItem({
         <Flex width="34%">
           <SubscriptZeroPrice
             variant="body4"
-            color={color}
+            color={colorToken}
             value={row.displayPrice}
             subscriptThreshold={6}
             maxSignificantDigits={6}
@@ -138,12 +144,22 @@ function BookRowItem({
           />
         </Flex>
         <Flex width="33%" alignItems="flex-end">
-          <Text variant="body4" color="$neutral1">
+          <Text
+            variant="body4"
+            color="$neutral2"
+            $group-item-hover={{ color: colorToken }}
+            style={{ transition: 'color 0.1s ease' }}
+          >
             {formatAmount(row.amount)}
           </Text>
         </Flex>
         <Flex width="33%" alignItems="flex-end">
-          <Text variant="body4" color="$neutral2">
+          <Text
+            variant="body4"
+            color="$neutral2"
+            $group-item-hover={{ color: colorToken }}
+            style={{ transition: 'color 0.1s ease' }}
+          >
             {formatAmount(row.total)}
           </Text>
         </Flex>
@@ -161,16 +177,18 @@ export function OrderBook({
   version,
   hooks,
   poolId,
+  height,
   onLoadingChange,
 }: {
   tokenA: Currency
   tokenB: Currency
-  feeTier: FeeAmount
+  feeTier: number
   isReversed: boolean
   chainId: UniverseChainId
   version: RestProtocolVersion
   hooks?: string
   poolId?: string
+  height?: number
   onLoadingChange?: (loading: boolean) => void
 }) {
   const { t } = useTranslation()
@@ -220,28 +238,38 @@ export function OrderBook({
 
   useEffect(() => {
     onLoadingChange?.(loading)
+    return () => onLoadingChange?.(false)
   }, [loading, onLoadingChange])
 
   const { quote } = getDisplayPair({ tokenA, tokenB, isReversed })
   const quoteSymbol = quote.symbol ?? quote.name ?? t('common.tokenB')
+
+  const feeTierLabel = `${feeTier / BIPS_BASE}%`
+
+  const spreadPct = useMemo(() => {
+    const bestAsk = asks.length > 0 ? asks[asks.length - 1] : null
+    const bestBid = bids.length > 0 ? bids[0] : null
+    if (!bestAsk || !bestBid || midPrice <= 0) return null
+    const spread = bestAsk.displayPrice - bestBid.displayPrice
+    return spread > 0 ? (spread / midPrice) * 100 : null
+  }, [asks, bids, midPrice])
 
   const maxAskAmount = useMemo(() => Math.max(...asks.map((r) => r.amount), 0), [asks])
   const maxBidAmount = useMemo(() => Math.max(...bids.map((r) => r.amount), 0), [bids])
 
   const formatAmount = (v: number) => formatNumberOrString({ value: v, type: NumberType.TokenNonTx })
 
-  const scrollContainerRef = useRef<HTMLElement>(null)
-  const midPriceRef = useRef<HTMLElement>(null)
+  const asksScrollRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     if (asks.length === 0) return
     requestAnimationFrame(() => {
-      const container = scrollContainerRef.current
-      const midEl = midPriceRef.current
-      if (!container || !midEl) return
-      container.scrollTop = midEl.offsetTop - container.clientHeight / 2 + midEl.offsetHeight / 2
+      const asksContainer = asksScrollRef.current
+      if (asksContainer) {
+        asksContainer.scrollTop = asksContainer.scrollHeight
+      }
     })
-  }, [asks, bids])
+  }, [asks])
 
   const realAskBars = Math.max(0, asks.length)
   const realBidBars = Math.max(0, bids.length)
@@ -250,7 +278,14 @@ export function OrderBook({
   }
 
   return (
-    <Flex borderRadius="$rounded16" borderColor="$surface3" borderWidth="$spacing1" backgroundColor="$surface2">
+    <Flex
+      borderRadius="$rounded16"
+      borderColor="$surface3"
+      borderWidth="$spacing1"
+      backgroundColor="$surface2"
+      height={height}
+      overflow={height !== undefined ? 'hidden' : undefined}
+    >
       {/* Column headers */}
       <Flex row px="$padding8" pt="$padding16" pb="$padding4">
         <Flex width="34%">
@@ -270,11 +305,28 @@ export function OrderBook({
         </Flex>
       </Flex>
 
-      {/* Scrollable rows — overflowY scroll so scrollTop is directly settable */}
+      {/* Asks (sell orders) — independently scrollable, scrolled to bottom so closest-to-mid shows first */}
       <Flex
-        ref={scrollContainerRef}
-        maxHeight={480}
-        style={{ overflowY: 'scroll', borderBottomLeftRadius: 'inherit', borderBottomRightRadius: 'inherit' }}
+        ref={asksScrollRef}
+        className="scrollbar-hidden"
+        style={
+          height !== undefined
+            ? {
+                flex: '1 1 0',
+                minHeight: 0,
+                overflowY: 'scroll',
+                scrollbarWidth: 'none',
+                maskImage: 'linear-gradient(to bottom, transparent 0px, #000 24px)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0px, #000 24px)',
+              }
+            : {
+                height: 240,
+                overflowY: 'scroll',
+                scrollbarWidth: 'none',
+                maskImage: 'linear-gradient(to bottom, transparent 0px, #000 24px)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0px, #000 24px)',
+              }
+        }
       >
         {asks.map((row) => (
           <BookRowItem
@@ -286,28 +338,65 @@ export function OrderBook({
             formatAmount={formatAmount}
           />
         ))}
+      </Flex>
 
-        <Flex ref={midPriceRef}>
-          <Flex
-            px="$padding8"
-            py="$padding8"
-            borderTopWidth="$spacing1"
-            borderTopColor="$surface3"
-            borderBottomWidth="$spacing1"
-            borderBottomColor="$surface3"
-          >
-            <SubscriptZeroPrice
-              variant="subheading2"
-              color={bidColor as TextProps['color']}
-              value={midPrice}
-              subscriptThreshold={6}
-              maxSignificantDigits={6}
-              symbol={quoteSymbol}
-              disableTooltip
-            />
-          </Flex>
+      {/* Mid price row — pinned between the two scroll sections */}
+      <Flex
+        row
+        px="$padding8"
+        py="$padding8"
+        borderTopWidth="$spacing1"
+        borderTopColor="$surface3"
+        borderBottomWidth="$spacing1"
+        borderBottomColor="$surface3"
+        justifyContent="space-between"
+        alignItems="center"
+        flexShrink={0}
+      >
+        <Flex row gap="$gap4" alignItems="center">
+          <Text variant="body4" color="$neutral2">
+            {t('chart.type.depth.spread')}
+          </Text>
+          <Text variant="body4" color="$neutral1">
+            {spreadPct !== null ? `${spreadPct.toFixed(2)}%` : '—'}
+          </Text>
         </Flex>
+        <Flex row gap="$gap4" alignItems="center">
+          <Text variant="body4" color="$neutral2">
+            {t('chart.type.depth.feeTier')}
+          </Text>
+          <Text variant="body4" color="$neutral1">
+            {feeTierLabel}
+          </Text>
+        </Flex>
+      </Flex>
 
+      {/* Bids (buy orders) — independently scrollable, top shows closest-to-mid by default */}
+      <Flex
+        className="scrollbar-hidden"
+        style={
+          height !== undefined
+            ? {
+                flex: '1 1 0',
+                minHeight: 0,
+                overflowY: 'scroll',
+                scrollbarWidth: 'none',
+                borderBottomLeftRadius: 'inherit',
+                borderBottomRightRadius: 'inherit',
+                maskImage: 'linear-gradient(to top, transparent 0px, black 24px)',
+                WebkitMaskImage: 'linear-gradient(to top, transparent 0px, black 24px)',
+              }
+            : {
+                height: 240,
+                overflowY: 'scroll',
+                scrollbarWidth: 'none',
+                borderBottomLeftRadius: 'inherit',
+                borderBottomRightRadius: 'inherit',
+                maskImage: 'linear-gradient(to top, transparent 0px, black 24px)',
+                WebkitMaskImage: 'linear-gradient(to top, transparent 0px, black 24px)',
+              }
+        }
+      >
         {bids.map((row) => (
           <BookRowItem
             key={row.tick}

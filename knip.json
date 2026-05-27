@@ -145,6 +145,7 @@
         "vite-plugin-commonjs",
         "vite-plugin-node-polyfills",
         "vite-plugin-svgr",
+        "vite-tsconfig-paths",
         "@chromatic-com/storybook",
         "@cloudflare/workers-types",
         "@crowdin/cli",
@@ -248,8 +249,7 @@
     },
     "packages/config-cli": {
       "entry": [
-        "src/main.ts",
-        "src/errors.ts"
+        "src/main.ts"
       ]
     },
     "packages/environment": {

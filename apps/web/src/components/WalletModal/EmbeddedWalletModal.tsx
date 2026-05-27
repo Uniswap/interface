@@ -5,13 +5,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Envelope } from 'ui/src/components/icons/Envelope'
 import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Person } from 'ui/src/components/icons/Person'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -20,7 +20,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
 import { OptionRow } from '~/components/Passkey/BackupLoginComponents'
 import { RECOVER_OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { WalletModalLayout } from '~/components/WalletModal/WalletModalLayout'
@@ -37,7 +36,6 @@ export const passkeySignInPendingAtom = atom(false)
 
 export function EmbeddedWalletConnectionsModal(): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const accountDrawer = useAccountDrawer()
   const dispatch = useDispatch()
   const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
@@ -66,7 +64,9 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
 
   const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
     onError: (oauthError) => {
-      logger.error(oauthError, { tags: { file: 'EmbeddedWalletModal', function: 'handleInitOAuth' } })
+      logger.error(oauthError, {
+        tags: { file: 'EmbeddedWalletModal', function: 'handleInitOAuth' },
+      })
       sessionStorage.removeItem(RECOVER_OAUTH_PENDING_KEY)
       setOauthProvider(null)
     },
@@ -92,7 +92,12 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
   })
 
   const handleEmailRecovery = useEvent(() => {
-    dispatch(setOpenModal({ name: ModalName.RecoverWallet, initialState: { initialMethod: 'email' } }))
+    dispatch(
+      setOpenModal({
+        name: ModalName.RecoverWallet,
+        initialState: { initialMethod: 'email' },
+      }),
+    )
   })
 
   if (showLoginView) {
@@ -169,7 +174,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
             {/* Recovery options */}
             <Flex borderRadius="$rounded16" overflow="hidden" gap="$spacing2">
               <OptionRow
-                icon={<AppleLogo height={20} width={20} fill={colors.neutral1.val} />}
+                icon={<AppleLogo color="$neutral1" size="$icon.20" />}
                 label={t('account.passkey.backupLogin.add.apple')}
                 onPress={() => handleInitOAuth('apple')}
                 element={ElementName.LoginWithApple}

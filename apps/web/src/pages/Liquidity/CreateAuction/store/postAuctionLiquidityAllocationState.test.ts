@@ -8,6 +8,7 @@ import {
   updateCommittedPostAuctionLiquidity,
 } from '~/pages/Liquidity/CreateAuction/store/postAuctionLiquidityAllocationState'
 import {
+  DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT,
   MIN_POST_AUCTION_LIQUIDITY_PERCENT,
   PostAuctionLiquidityAllocationType,
   UNBOUNDED_TIER_ID,
@@ -107,9 +108,21 @@ describe('buildAuctionAmountsFromLiquidityPreview', () => {
   it('splits total supply using the preview percent', () => {
     const decimals = TEST_TOKEN_1.decimals
     const totalSupply = CurrencyAmount.fromRawAmount(TEST_TOKEN_1, (1_000n * 10n ** BigInt(decimals)).toString())
-    const { auctionSupplyAmount, postAuctionLiquidityAmount } = buildAuctionAmountsFromLiquidityPreview(totalSupply, 50)
+    const { auctionSupplyAmount, postAuctionLiquidityAmount } = buildAuctionAmountsFromLiquidityPreview(totalSupply, {
+      previewPercent: 50,
+    })
     expect(auctionSupplyAmount.equalTo(totalSupply.multiply(new Percent(25, 100)))).toBe(true)
     expect(postAuctionLiquidityAmount.greaterThan(0)).toBe(true)
+  })
+
+  it('uses the provided auctionSupplyPercent override', () => {
+    const decimals = TEST_TOKEN_1.decimals
+    const totalSupply = CurrencyAmount.fromRawAmount(TEST_TOKEN_1, (1_000n * 10n ** BigInt(decimals)).toString())
+    const { auctionSupplyAmount } = buildAuctionAmountsFromLiquidityPreview(totalSupply, {
+      previewPercent: 50,
+      auctionSupplyPercent: DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT,
+    })
+    expect(auctionSupplyAmount.equalTo(totalSupply)).toBe(true)
   })
 })
 
@@ -140,7 +153,7 @@ describe('updateCommittedPostAuctionLiquidity', () => {
   it('recomputes post-auction liquidity from the current allocation', () => {
     const decimals = TEST_TOKEN_1.decimals
     const totalSupply = CurrencyAmount.fromRawAmount(TEST_TOKEN_1, (1_000n * 10n ** BigInt(decimals)).toString())
-    const committed = buildAuctionAmountsFromLiquidityPreview(totalSupply, 50)
+    const committed = buildAuctionAmountsFromLiquidityPreview(totalSupply, { previewPercent: 50 })
     const updated = updateCommittedPostAuctionLiquidity(committed, {
       type: PostAuctionLiquidityAllocationType.SINGLE,
       percent: MIN_POST_AUCTION_LIQUIDITY_PERCENT,

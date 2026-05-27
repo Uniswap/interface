@@ -6,6 +6,7 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { WITHDRAW_DESTINATION_CHAIN_IDS } from 'uniswap/src/features/earn/constants'
 import type { EarnVaultInfo } from 'uniswap/src/features/earn/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -30,10 +31,6 @@ const INPUT_MAX_WIDTH = 360
 const FIAT_DECIMALS = 2
 
 const PERCENT_OPTIONS = [0.25, 0.5, 0.75, 1] as const
-
-// TODO(CONS-1787): drive from the chains supported by the withdraw quote endpoint.
-const WITHDRAW_DESTINATION_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Unichain, UniverseChainId.Mainnet]
-export const DEFAULT_WITHDRAW_CHAIN_ID = WITHDRAW_DESTINATION_CHAIN_IDS[0]
 
 interface WithdrawAmountViewProps {
   vault: EarnVaultInfo

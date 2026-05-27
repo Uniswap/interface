@@ -1,7 +1,8 @@
 import { FeatureFlags } from '@universe/gating'
-import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import { getWalletBalancesQuery, PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
+  usePortfolioBalanceBreakdown,
   usePortfolioBalancePart,
   usePortfolioTotalValue,
 } from 'uniswap/src/features/dataApi/balances/usePortfolioBalancePart'
@@ -402,5 +403,108 @@ describe(usePortfolioTotalValue, () => {
     expect(wrapped.current.data).toEqual(canonical.current.data)
     expect(wrapped.current.loading).toBe(canonical.current.loading)
     expect(wrapped.current.networkStatus).toEqual(canonical.current.networkStatus)
+  })
+})
+
+describe(usePortfolioBalanceBreakdown, () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    window.localStorage.clear()
+
+    mockUseEnabledChains.mockReturnValue({ chains: [UniverseChainId.Mainnet] })
+    mockUsePlatformBasedFetchPolicy.mockReturnValue({ pollInterval: false })
+    mockUseCurrencyIdToVisibility.mockReturnValue({})
+    mockUseHideSmallBalancesSetting.mockReturnValue(false)
+    mockUseHideSpamTokensSetting.mockReturnValue(false)
+    mockUseGetPortfolioQuery.mockReturnValue(makeQueryResult(PORTFOLIO_TOTAL_FROM_GET_PORTFOLIO))
+
+    mockUseGetWalletBalancesQuery.mockImplementation(({ select }) => {
+      const rawResponse = {
+        balance: {
+          total: { valueUsd: 1300, percentChange1d: 3, absoluteChange1d: 100 },
+          tokens: { valueUsd: 1000, percentChange1d: 2, absoluteChange1d: 50 },
+          pools: { valueUsd: 300, percentChange1d: 5, absoluteChange1d: 50 },
+        },
+      }
+      return makeQueryResult(select ? select(rawResponse) : rawResponse)
+    })
+  })
+
+  it('disables the GetWalletBalances query when the PortfolioPoolsBalances flag is off', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
+
+    renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
+
+    expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+  })
+
+  it('returns undefined data when the PortfolioPoolsBalances flag is off even if GetWalletBalances has cached data', () => {
+    mockUseFeatureFlag.mockReturnValue(false)
+
+    const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
+
+    expect(result.current.data).toBeUndefined()
+  })
+
+  it('enables the GetWalletBalances query and returns the full breakdown when the flag is on', () => {
+    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
+
+    const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
+
+    expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: true }))
+    expect(result.current.data).toEqual({
+      total: { balanceUSD: 1300, percentChange: 3, absoluteChangeUSD: 100 },
+      tokens: { balanceUSD: 1000, percentChange: 2, absoluteChangeUSD: 50 },
+      pools: { balanceUSD: 300, percentChange: 5, absoluteChangeUSD: 50 },
+    })
+  })
+
+  it('disables the query when no evm/svm address is provided', () => {
+    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
+
+    renderHookWithProviders(() => usePortfolioBalanceBreakdown({}))
+
+    expect(mockUseGetWalletBalancesQuery).toHaveBeenCalledWith(expect.objectContaining({ enabled: false }))
+  })
+
+  it('passes the same input shape as usePortfolioBalancePart so query keys stay aligned', () => {
+    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
+
+    renderHookWithProviders(() =>
+      usePortfolioBalancePart({ part: PortfolioBalancePart.Total, evmAddress: '0x123', svmAddress: 'svm456' }),
+    )
+    const partInput = mockUseGetWalletBalancesQuery.mock.calls.at(-1)?.[0]?.input
+    expect(partInput).toBeDefined()
+
+    mockUseGetWalletBalancesQuery.mockClear()
+
+    renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123', svmAddress: 'svm456' }))
+    const breakdownInput = mockUseGetWalletBalancesQuery.mock.calls.at(-1)?.[0]?.input
+    expect(breakdownInput).toBeDefined()
+
+    expect(breakdownInput).toEqual(partInput)
+    expect(getWalletBalancesQuery({ input: breakdownInput }).queryKey).toEqual(
+      getWalletBalancesQuery({ input: partInput }).queryKey,
+    )
+  })
+
+  it('passes through query metadata (loading/error/refetch) from the underlying query', () => {
+    mockUseFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.PortfolioPoolsBalances)
+    const refetch = vi.fn()
+    mockUseGetWalletBalancesQuery.mockReturnValue({
+      data: undefined,
+      isFetching: true,
+      refetch,
+      error: new Error('Network error'),
+      status: 'error',
+      dataUpdatedAt: 0,
+    })
+
+    const { result } = renderHookWithProviders(() => usePortfolioBalanceBreakdown({ evmAddress: '0x123' }))
+
+    expect(result.current.data).toBeUndefined()
+    expect(result.current.loading).toBe(true)
+    expect(result.current.error).toEqual(expect.any(Error))
+    expect(result.current.refetch).toBe(refetch)
   })
 })

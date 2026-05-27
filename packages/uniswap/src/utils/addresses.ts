@@ -206,6 +206,23 @@ export function areAddressesEqual(params: AreAddressesEqualParams): boolean {
 }
 
 /**
+ * Compare two EVM addresses for equality, returning `false` when either side is missing.
+ *
+ * Wraps `areAddressesEqual` so callers that may receive an undefined address aren't fooled by its
+ * `undefined === undefined → true` short-circuit (which would otherwise mark "no address" as equal).
+ */
+export function areEvmAddressesEqual(addressA: Maybe<string>, addressB: Maybe<string>): boolean {
+  if (!addressA || !addressB) {
+    return false
+  }
+
+  return areAddressesEqual({
+    addressInput1: { address: addressA, platform: Platform.EVM },
+    addressInput2: { address: addressB, platform: Platform.EVM },
+  })
+}
+
+/**
  * Prepend '0x' if the input address does not start with '0x'/'0X'
  */
 export function ensureLeading0x(input: Address): Address {

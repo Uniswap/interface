@@ -27,7 +27,6 @@ const child = spawn('wxt', {
     ...process.env,
     WXT_ABSOLUTE_OUTDIR: absoluteOutdir,
     WXT_CHROME_USER_DATA_DIR: process.env['WXT_CHROME_USER_DATA_DIR'] ?? getChromeUserDataDir(absoluteOutdir),
-    WXT_NO_OPEN_BROWSER: 'true',
   },
 })
 

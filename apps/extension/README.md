@@ -68,8 +68,6 @@ bun extension start:absolute
 bun extension start:absolute:windows
 ```
 
-`start:absolute` is configured to not launch a browser automatically.
-
 Absolute output directories by platform:
 - Mac: `/Users/Shared/stretch`
 - Linux: `/var/tmp/stretch`

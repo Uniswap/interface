@@ -17,6 +17,7 @@ function makeRpcClient(): EmbeddedWalletClientContext['rpcClient'] {
     addAuthenticator: vi.fn(),
     deleteAuthenticator: vi.fn(),
     oprfEvaluate: vi.fn(),
+    checkRecoveryAvailability: vi.fn(),
     setupRecovery: vi.fn(),
     executeRecovery: vi.fn(),
     reportDecryptionResult: vi.fn(),
@@ -40,13 +41,10 @@ describe('createEmbeddedWalletApiClient', () => {
       vi.mocked(rpcClient.oprfEvaluate).mockResolvedValue({ evaluatedElement: 'eval' } as never)
       const client = createEmbeddedWalletApiClient({ rpcClient })
 
-      await client.fetchOprfEvaluate(
-        { blindedElement: 'blinded', isRecovery: true, authMethodId: 'amid' },
-        'fake-token',
-      )
+      await client.fetchOprfEvaluate({ blindedElement: 'blinded', authMethodId: 'amid' }, 'fake-token')
 
       expect(rpcClient.oprfEvaluate).toHaveBeenCalledWith(
-        { blindedElement: 'blinded', isRecovery: true, authMethodId: 'amid' },
+        { blindedElement: 'blinded', authMethodId: 'amid' },
         { headers: { Authorization: 'Bearer fake-token' } },
       )
     })
@@ -56,8 +54,32 @@ describe('createEmbeddedWalletApiClient', () => {
       vi.mocked(rpcClient.oprfEvaluate).mockResolvedValue({ evaluatedElement: 'eval' } as never)
       const client = createEmbeddedWalletApiClient({ rpcClient })
 
-      const result = await client.fetchOprfEvaluate({ blindedElement: 'b' }, 'tok')
+      const result = await client.fetchOprfEvaluate({ blindedElement: 'b', authMethodId: 'a' }, 'tok')
       expect(result).toEqual({ evaluatedElement: 'eval' })
+    })
+  })
+
+  describe('fetchCheckRecoveryAvailability', () => {
+    it('attaches the Privy access token as a Bearer Authorization header', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.checkRecoveryAvailability).mockResolvedValue({ available: true } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      await client.fetchCheckRecoveryAvailability({ authMethodId: 'amid' }, 'fake-token')
+
+      expect(rpcClient.checkRecoveryAvailability).toHaveBeenCalledWith(
+        { authMethodId: 'amid' },
+        { headers: { Authorization: 'Bearer fake-token' } },
+      )
+    })
+
+    it('forwards the response from the rpc client', async () => {
+      const rpcClient = makeRpcClient()
+      vi.mocked(rpcClient.checkRecoveryAvailability).mockResolvedValue({ available: false } as never)
+      const client = createEmbeddedWalletApiClient({ rpcClient })
+
+      const result = await client.fetchCheckRecoveryAvailability({ authMethodId: 'a' }, 'tok')
+      expect(result).toEqual({ available: false })
     })
   })
 })

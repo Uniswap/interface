@@ -31,7 +31,6 @@ import { useSendContext } from '~/features/Swap/state/send/SendContext'
 import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
 import { AlternateCurrencyDisplay } from '~/pages/Swap/common/AlternateCurrencyDisplay'
 import { NumericalInputMimic, NumericalInputSymbolContainer, StyledNumericalInput } from '~/pages/Swap/common/shared'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 import { SwitchNetworkAction } from '~/state/popups/types'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
@@ -127,9 +126,7 @@ export function SendCurrencyInputForm({
   onCurrencyChange?: (selected: CurrencyState) => void
 }) {
   const { t } = useTranslation()
-  const { chainId } = useMultichainContext()
   const { defaultChainId } = useEnabledChains()
-  const supportedChainId = useSupportedChainId(chainId)
   const { isTestnetModeEnabled } = useEnabledChains()
   const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
   const appFiatCurrency = useAppFiatCurrency()
@@ -137,6 +134,8 @@ export function SendCurrencyInputForm({
 
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { inputInFiat, exactAmountToken, exactAmountFiat, inputCurrency } = sendState
+  const chainId = inputCurrency?.chainId
+  const supportedChainId = useSupportedChainId(chainId)
   const { currencyBalance, exactAmountOut, parsedTokenAmount } = derivedSendInfo
   const maxInputAmount = useMaxAmountSpend({
     currencyAmount: currencyBalance,

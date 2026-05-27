@@ -47,6 +47,7 @@ export interface SubmitDataReportParams {
   walletAddress: string
   chainId?: number
   tokenAddress?: string
+  multichain?: boolean
 }
 
 interface SubmitDataReportRequestBody {
@@ -56,6 +57,7 @@ interface SubmitDataReportRequestBody {
   walletAddress: string
   chainId?: number
   tokenAddress?: string
+  multichain?: boolean
 }
 
 interface SubmitReportRequestBody {
@@ -63,6 +65,7 @@ interface SubmitReportRequestBody {
   address: string
   event: TokenReportEventType
   details: string
+  multichain?: boolean
 }
 
 interface SubmitTokenReportParams {
@@ -70,6 +73,7 @@ interface SubmitTokenReportParams {
   address: string
   event: TokenReportEventType
   assetType: ReportAssetType
+  multichain?: boolean
 }
 
 interface SubmitReportResponse {
@@ -88,6 +92,7 @@ async function submitDataReport({
   walletAddress,
   chainId,
   tokenAddress,
+  multichain,
   fetchClient,
 }: SubmitDataReportParams & { fetchClient: FetchClient }): Promise<void> {
   const requestBody: SubmitDataReportRequestBody = {
@@ -97,6 +102,7 @@ async function submitDataReport({
     ...(details && { details }),
     ...(chainId !== undefined && { chainId }),
     ...(tokenAddress && { tokenAddress }),
+    ...(multichain === true && { multichain: true }),
   }
 
   try {
@@ -131,6 +137,7 @@ async function submitTokenReport({
   address,
   event,
   assetType,
+  multichain,
   fetchClient,
 }: SubmitTokenReportParams & { fetchClient: FetchClient }): Promise<void> {
   const requestBody: SubmitReportRequestBody = {
@@ -138,6 +145,7 @@ async function submitTokenReport({
     address,
     event,
     details: ASSET_TO_REPORT_STRING[assetType],
+    ...(multichain === true && { multichain: true }),
   }
 
   try {

@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, getContrastPassingTextColor, Text, Tooltip } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import {
@@ -164,7 +163,7 @@ export function ValuationSliderV1({
               </Flex>
             </Tooltip.Trigger>
             {fiatFdvDisplay && (
-              <Tooltip.Content zIndex={zIndexes.tooltip} p="$spacing12">
+              <Tooltip.Content p="$spacing12">
                 <Text variant="body4" color="$neutral1" whiteSpace="nowrap">
                   {fiatFdvDisplay}
                 </Text>

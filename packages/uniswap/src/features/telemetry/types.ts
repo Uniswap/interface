@@ -598,6 +598,7 @@ type TokenReportProperties = {
   token_contract_address?: string
   chain_id: UniverseChainId
   text?: string
+  report_multichain_asset?: boolean
 }
 
 type PoolReportProperties = {
@@ -1294,6 +1295,15 @@ export type UniverseEventProperties = {
   [WalletEventName.BackupMethodRemoved]: {
     backupMethodType: 'manual' | 'cloud' | 'passkey' | 'maybe-manual'
     newBackupCount: number
+  }
+  [WalletEventName.CustomGasOverridesApplied]: {
+    chainId?: number
+    hasMaxBaseFeeOverride: boolean
+    hasPriorityFeeOverride: boolean
+    hasGasLimitOverride: boolean
+    hasWarning: boolean
+    /** Which UI surface mounted the editor that produced this event. */
+    surface: 'swap_form' | 'dapp_request'
   }
   [WalletEventName.DappRequestCardPressed]: DappRequestCardEventProperties
   [WalletEventName.DappRequestCardClosed]: DappRequestCardEventProperties

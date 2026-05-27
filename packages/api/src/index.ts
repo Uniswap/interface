@@ -234,6 +234,35 @@ export type {
   NotificationsClientContext,
 } from '@universe/api/src/clients/notifications/types'
 
+// Config Service API (server-side only)
+export { createConfigServerClient } from '@universe/api/src/clients/configService/createConfigServerClient'
+export type {
+  ApproveProposedParamReply,
+  ConfigServerClientConfig,
+  ConfigServerClient,
+  CreateScopeResponse,
+  GetParameterValueResponse,
+  GetParameterValuesInScopeResponse,
+  GetProposedParamResponse,
+  GetProposedParamsInScopeResponse,
+  ListParameterNamesResponse,
+  ListScopesResponse,
+  ParameterEntry,
+  SetParameterReply,
+} from '@universe/api/src/clients/configService/createConfigServerClient'
+export { createSecretsServerClient } from '@universe/api/src/clients/configService/createSecretsServerClient'
+export type {
+  ApproveSecretChangeReply,
+  GetProposedSecretChangeResponse,
+  GetProposedSecretChangesInScopeResponse,
+  GetSecretValueResponse,
+  ListSecretsResponse,
+  SecretChangeReply,
+  SecretMetadataResponse,
+  SecretsServerClientConfig,
+  SecretsServerClient,
+} from '@universe/api/src/clients/configService/createSecretsServerClient'
+
 // FOR (Fiat On-Ramp) API
 export { createForApiClient, type ForApiClient } from '@universe/api/src/clients/for/createForApiClient'
 export { transformPaymentMethods } from '@universe/api/src/clients/for/utils'

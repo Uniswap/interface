@@ -10,7 +10,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import type { TokenQueryData } from '~/appGraphql/data/Token'
-import { useActiveAccount } from '~/features/accounts/store/hooks'
+import { useActiveAddress } from '~/features/accounts/store/hooks'
 import { useTokenDetailsEarnData } from '~/pages/TokenDetails/components/earn/useTokenDetailsEarnData'
 import type { TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import type { MultiChainMap } from '~/pages/TokenDetails/context/TDPContext'
@@ -25,7 +25,7 @@ vi.mock('@tanstack/react-query', async () => {
 })
 
 vi.mock('~/features/accounts/store/hooks', () => ({
-  useActiveAccount: vi.fn(),
+  useActiveAddress: vi.fn(),
 }))
 
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
@@ -33,7 +33,7 @@ vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
 }))
 
 const useQueryMock = vi.mocked(useQuery)
-const useActiveAccountMock = vi.mocked(useActiveAccount)
+const useActiveAddressMock = vi.mocked(useActiveAddress)
 const useTDPStoreMock = vi.mocked(useTDPStore)
 
 const WALLET_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
@@ -68,9 +68,22 @@ function mockEarnQueries({
   positions?: DataApiEarnPosition[]
   vaults?: DataApiEarnVault[]
 } = {}): void {
-  useQueryMock
-    .mockReturnValueOnce(mockQueryResult({ data: { vaults } }))
-    .mockReturnValueOnce(mockQueryResult({ data: { positions } }))
+  useQueryMock.mockImplementation(
+    ({ queryKey, select }: { queryKey?: readonly unknown[]; select?: (data: unknown) => unknown }) => {
+      switch (queryKey?.[1]) {
+        case 'listEarnVaults': {
+          const data = { vaults }
+          return mockQueryResult({ data: select ? select(data) : data })
+        }
+        case 'listEarnPositions': {
+          const data = { positions }
+          return mockQueryResult({ data: select ? select(data) : data })
+        }
+        default:
+          return mockQueryResult({ data: undefined, isSuccess: false })
+      }
+    },
+  )
 }
 
 function createDataApiVault(overrides: Partial<DataApiEarnVault> = {}): DataApiEarnVault {
@@ -142,7 +155,7 @@ function createBalance({ balanceUSD, quantity }: { balanceUSD: number; quantity:
 describe(useTokenDetailsEarnData, () => {
   beforeEach(() => {
     useQueryMock.mockReset()
-    useActiveAccountMock.mockReturnValue({ address: WALLET_ADDRESS } as ReturnType<typeof useActiveAccount>)
+    useActiveAddressMock.mockReturnValue(WALLET_ADDRESS)
     mockTDPStore({})
   })
 

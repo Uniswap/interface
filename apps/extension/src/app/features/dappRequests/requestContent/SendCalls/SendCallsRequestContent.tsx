@@ -14,7 +14,10 @@ import {
   type SendCallsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { TransactionType, type TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { type EthTransaction } from 'uniswap/src/types/walletConnect'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappSendCallsScanningContent } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
@@ -24,7 +27,10 @@ import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/ris
 interface SendCallsRequestContentProps {
   dappRequest: SendCallsRequest
   transactionGasFeeResult: GasFeeResult
+  encodedTransactionRequest?: EthTransaction
   showSmartWalletActivation?: boolean
+  gasOverrides?: GasFeeOverrides
+  onChangeGasOverrides?: (overrides: GasFeeOverrides | undefined) => void
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
   onCancel: () => Promise<void>
 }
@@ -36,7 +42,10 @@ function SendCallsRequestContentWithScanning({
   dappRequest,
   chainId,
   transactionGasFeeResult,
+  encodedTransactionRequest,
   showSmartWalletActivation,
+  gasOverrides,
+  onChangeGasOverrides,
   onConfirm,
   onCancel,
 }: SendCallsRequestContentProps & { chainId: UniverseChainId }): JSX.Element {
@@ -71,6 +80,9 @@ function SendCallsRequestContentWithScanning({
         gasFee={transactionGasFeeResult}
         requestMethod={dappRequest.type}
         showSmartWalletActivation={showSmartWalletActivation}
+        tx={encodedTransactionRequest}
+        gasOverrides={gasOverrides}
+        onChangeGasOverrides={onChangeGasOverrides}
         confirmedRisk={confirmedRisk}
         onConfirmRisk={setConfirmedRisk}
         onRiskLevelChange={setRiskLevel}
@@ -125,6 +137,10 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
       : undefined
   }, [dappRequest])
 
+  const [gasOverrides, setGasOverrides] = useState<GasFeeOverrides | undefined>(undefined)
+  const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
+  const effectiveGasOverrides = enableCustomGasFeeEntry ? gasOverrides : undefined
+
   const {
     gasFeeResult,
     encodedTransactionRequest,
@@ -132,10 +148,12 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     showSmartWalletActivation,
     preSignedTransaction,
     unsignedUserOperation,
+    isSponsoredUserOp,
   } = usePrepareAndSignSendCallsTransaction({
     request,
     account: currentAccount,
     chainId,
+    gasOverrides: effectiveGasOverrides,
   })
 
   const onConfirmRequest = useCallback(async () => {
@@ -157,13 +175,20 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     await onCancel(request)
   }, [onCancel, request])
 
+  const isOverridesEligible = enableCustomGasFeeEntry && !isSponsoredUserOp
+
   if (chainId) {
     return (
       <SendCallsRequestContentWithScanning
         dappRequest={dappRequest}
         chainId={chainId}
         transactionGasFeeResult={gasFeeResult}
+        encodedTransactionRequest={encodedTransactionRequest}
         showSmartWalletActivation={showSmartWalletActivation}
+        // 4337 sponsored userOps: paymaster pays — no override row. Auto mode:
+        // withhold setter so the footer falls back to <NetworkFeeFooter />.
+        gasOverrides={isOverridesEligible ? effectiveGasOverrides : undefined}
+        onChangeGasOverrides={isOverridesEligible ? setGasOverrides : undefined}
         onCancel={onCancelRequest}
         onConfirm={onConfirmRequest}
       />

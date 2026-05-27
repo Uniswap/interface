@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { Flex, styled, Text } from 'ui/src'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
+import { fonts } from 'ui/src/theme'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
@@ -262,11 +263,13 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
             onPress={() => inputRef.current?.focus()}
             onLayout={onLayout}
           >
-            {error && (
-              <Text variant="body3" userSelect="none" color="$statusCritical">
-                {error.message}
-              </Text>
-            )}
+            <Flex height={fonts.body3.lineHeight}>
+              {error && (
+                <Text variant="body3" userSelect="none" color="$statusCritical">
+                  {error.message}
+                </Text>
+              )}
+            </Flex>
             <NumericalInputWrapper>
               <Flex onLayout={onExtraElementLayout}>
                 {inputInFiat && (
@@ -302,6 +305,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
                   inputInFiat={inputInFiat}
                   exactAmountOut={amountOut}
                   onToggle={() => {
+                    onSetFontSize(amountOut || '0')
                     setBuyFormState((state) => ({
                       ...state,
                       inputInFiat: !state.inputInFiat,

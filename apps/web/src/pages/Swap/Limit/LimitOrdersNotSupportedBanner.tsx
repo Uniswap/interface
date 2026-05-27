@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { AlertTriangleFilled } from '~/components/Icons/AlertTriangleFilled'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 
 interface LimitOrdersNotSupportedBannerProps {
   onMoreDetails: () => void
@@ -11,7 +11,7 @@ export function LimitOrdersNotSupportedBanner({ onMoreDetails }: LimitOrdersNotS
 
   return (
     <Flex row backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12" gap="$spacing12">
-      <AlertTriangleFilled width={20} height={20} color="$neutral1" />
+      <AlertTriangleFilled color="$neutral1" size="$icon.20" />
       <Flex row $sm={{ flexDirection: 'column' }}>
         <Text variant="body3" color="$neutral1">
           {`${t('smartWallets.delegationMismatchModal.limitOrders.unsupported')} `}

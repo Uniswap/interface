@@ -18,6 +18,9 @@ export interface UserSettingsState {
   isTestnetModeEnabled?: boolean
   hapticsEnabled: boolean
   deviceAccessTimeout: DeviceAccessTimeout
+  /** Wallet-level opt-in for the Network cost editor. `false` defers to the
+   *  gas-service recommendation; `true` lets the user supply per-tx overrides. */
+  enableCustomGasFeeEntry: boolean
 }
 
 export const initialUserSettingsState: UserSettingsState = {
@@ -29,6 +32,7 @@ export const initialUserSettingsState: UserSettingsState = {
   isTestnetModeEnabled: false,
   hapticsEnabled: true,
   deviceAccessTimeout: DEFAULT_DEVICE_ACCESS_TIMEOUT,
+  enableCustomGasFeeEntry: false,
 }
 
 const slice = createSlice({
@@ -63,6 +67,9 @@ const slice = createSlice({
     setDeviceAccessTimeout: (state, { payload }: PayloadAction<DeviceAccessTimeout>) => {
       state.deviceAccessTimeout = payload
     },
+    setEnableCustomGasFeeEntry: (state, { payload }: PayloadAction<boolean>) => {
+      state.enableCustomGasFeeEntry = payload
+    },
     resetUserSettings: () => initialUserSettingsState,
   },
 })
@@ -76,6 +83,7 @@ export const {
   setIsTestnetModeEnabled,
   setHapticsEnabled,
   setDeviceAccessTimeout,
+  setEnableCustomGasFeeEntry,
   resetUserSettings,
 } = slice.actions
 

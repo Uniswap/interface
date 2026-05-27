@@ -1,7 +1,6 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -48,7 +47,7 @@ export const ChainBalanceRow = memo(function ChainBalanceRowInner({
               <NetworkLogo chainId={chainId as UniverseChainId} size={24} />
             </Flex>
           </Tooltip.Trigger>
-          <Tooltip.Content zIndex={zIndexes.overlay} animationDirection="right">
+          <Tooltip.Content animationDirection="right">
             <Text variant="body4">{networkLogoTooltip}</Text>
             <Tooltip.Arrow />
           </Tooltip.Content>

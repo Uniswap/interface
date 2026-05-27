@@ -1,6 +1,5 @@
 import { WalletName as SolanaWalletName, WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
 import { Wallet as SolanaWallet, useWallet as useSolanaWallet } from '@solana/wallet-adapter-react'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import type { Account } from 'uniswap/src/features/accounts/store/types/Account'
@@ -395,15 +394,10 @@ function useEVMWalletInfos(pendingConnection: ExternalWallet | undefined): Platf
 /** Hook that builds SVM wallet infos from Solana wallet adapter data. */
 function useSVMWalletInfos(): PlatformWalletInfo<Platform.SVM>[] {
   const solanaWallet = useSolanaWallet()
-  const isSolanaEnabled = useFeatureFlag(FeatureFlags.Solana)
 
   return useMemo(() => {
     const activeSolanaWallet = solanaWallet.wallet
     const allSolanaWallets = solanaWallet.wallets
-
-    if (!isSolanaEnabled) {
-      return []
-    }
 
     return allSolanaWallets.flatMap((wallet) => {
       const currentSolanaWalletIsActive = wallet.adapter.name === activeSolanaWallet?.adapter.name
@@ -421,7 +415,7 @@ function useSVMWalletInfos(): PlatformWalletInfo<Platform.SVM>[] {
       return buildSVMWalletInfo(walletToUse, currentSolanaWalletIsActive)
     })
     // `@solana/wallet-adapter` has inconsistent behavior for when sub-fields of the `useSolanaWallet` return types re-render -- to account for this, we use the entire return value as a dependency instead of its fields.
-  }, [solanaWallet, isSolanaEnabled])
+  }, [solanaWallet])
 }
 
 /** Main hook that combines EVM and SVM wallet data into unified accounts state. */

@@ -3,7 +3,7 @@ import { memo } from 'react'
 import type { ColorTokens, GeneratedIcon } from 'ui/src'
 import { Flex, Tooltip as TooltipComponent } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
-import { type IconSizeTokens, zIndexes } from 'ui/src/theme'
+import { type IconSizeTokens } from 'ui/src/theme'
 import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
 import { useModalVisibility } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/useTransactionSettingsModalStore'
 
@@ -85,7 +85,7 @@ export const TransactionSettingsButtonWithTooltip = memo(
       return (
         <TooltipComponent>
           <TooltipComponent.Trigger>{button}</TooltipComponent.Trigger>
-          <TooltipComponent.Content zIndex={zIndexes.overlay}>{Tooltip}</TooltipComponent.Content>
+          <TooltipComponent.Content>{Tooltip}</TooltipComponent.Content>
         </TooltipComponent>
       )
     }

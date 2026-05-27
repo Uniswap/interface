@@ -67,6 +67,13 @@ const xLayerCommonToken = new Token(
   'USDC',
   'USD Coin',
 )
+const baseCommonToken = new Token(
+  UniverseChainId.Base,
+  '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+  6,
+  'USDC',
+  'USD Coin',
+)
 const unichainUsdtToken = new Token(
   UniverseChainId.Unichain,
   '0x588ce4f028d8e7b53b687865d6a67b3a54c75518',
@@ -80,6 +87,7 @@ const mainnetCurrencyInfo2 = makeCurrencyInfo({ token: mainnetToken2 })
 const arbitrumCurrencyInfo = makeCurrencyInfo({ token: arbitrumToken })
 const lineaCommonCurrencyInfo = makeCurrencyInfo({ token: lineaCommonToken })
 const xLayerCommonCurrencyInfo = makeCurrencyInfo({ token: xLayerCommonToken })
+const baseCommonCurrencyInfo = makeCurrencyInfo({ token: baseCommonToken })
 const unichainUsdtCurrencyInfo = makeCurrencyInfo({ token: unichainUsdtToken })
 
 const allCommonBaseCurrencies = [
@@ -88,6 +96,7 @@ const allCommonBaseCurrencies = [
   arbitrumCurrencyInfo,
   lineaCommonCurrencyInfo,
   xLayerCommonCurrencyInfo,
+  baseCommonCurrencyInfo,
   unichainUsdtCurrencyInfo,
 ]
 
@@ -138,6 +147,35 @@ const xLayerUsdgToken = new Token(
 
 const xLayerCurrencies = [makeCurrencyInfo({ token: xLayerUsdtToken }), makeCurrencyInfo({ token: xLayerUsdgToken })]
 
+// Base-specific quick-select currencies
+const baseUsdcToken = new Token(
+  UniverseChainId.Base,
+  '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+  6,
+  'USDC',
+  'USD Coin',
+)
+const baseUsdtToken = new Token(
+  UniverseChainId.Base,
+  '0xfde4c96c8593536e31f229ea8f37b2ada2699bb2',
+  6,
+  'USDT',
+  'Tether USD',
+)
+const baseCbBtcToken = new Token(
+  UniverseChainId.Base,
+  '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf',
+  8,
+  'cbBTC',
+  'Coinbase Wrapped BTC',
+)
+
+const baseCurrencies = [
+  makeCurrencyInfo({ token: baseUsdcToken }),
+  makeCurrencyInfo({ token: baseUsdtToken }),
+  makeCurrencyInfo({ token: baseCbBtcToken }),
+]
+
 // --- Mock helpers ---
 
 const defaultGqlResult = {
@@ -176,6 +214,9 @@ function setupDefaultMocks({
   xLayerData = xLayerCurrencies,
   xLayerError,
   xLayerLoading = false,
+  baseData = baseCurrencies,
+  baseError,
+  baseLoading = false,
 }: {
   chainFilter: UniverseChainId | null
   commonBase?: CurrencyInfo[] | null
@@ -187,6 +228,9 @@ function setupDefaultMocks({
   xLayerData?: CurrencyInfo[]
   xLayerError?: Error
   xLayerLoading?: boolean
+  baseData?: CurrencyInfo[]
+  baseError?: Error
+  baseLoading?: boolean
 }): void {
   mockUseAllCommonBaseCurrencies.mockReturnValue({
     data: commonBase === null ? undefined : (commonBase ?? allCommonBaseCurrencies),
@@ -195,7 +239,7 @@ function setupDefaultMocks({
     refetch: vi.fn(),
   })
 
-  // useCurrencyInfosWithLoading is called twice: first for XLayer, then for Linea.
+  // useCurrencyInfosWithLoading is called three times: first for XLayer, then for Linea, then for Base.
   // Each call receives { skip: true } when the chain doesn't match.
   mockUseCurrencyInfosWithLoading
     .mockReturnValueOnce(
@@ -207,6 +251,11 @@ function setupDefaultMocks({
       chainFilter === UniverseChainId.Linea
         ? { data: lineaData, error: lineaError, loading: lineaLoading, refetch: vi.fn() }
         : { ...skippedResult, loading: lineaLoading },
+    )
+    .mockReturnValueOnce(
+      chainFilter === UniverseChainId.Base
+        ? { data: baseData, error: baseError, loading: baseLoading, refetch: vi.fn() }
+        : { ...skippedResult, loading: baseLoading },
     )
 }
 
@@ -262,6 +311,27 @@ describe(useCommonTokensOptions, () => {
       expect(result.current.data).toHaveLength(xLayerCurrencies.length)
     })
 
+    it('returns Base-specific tokens when chainFilter is Base', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Base })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Base,
+        }),
+      )
+
+      await waitFor(() => {
+        expect(result.current.loading).toBe(false)
+      })
+
+      const currencyIds = result.current.data?.map((opt) => opt.currencyInfo.currencyId) ?? []
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Base, baseUsdcToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Base, baseUsdtToken.address))
+      expect(currencyIds).toContain(buildCurrencyId(UniverseChainId.Base, baseCbBtcToken.address))
+      expect(result.current.data).toHaveLength(baseCurrencies.length)
+    })
+
     it('returns common base tokens filtered to Mainnet when chainFilter is Mainnet', async () => {
       setupDefaultMocks({ chainFilter: UniverseChainId.Mainnet })
 
@@ -284,42 +354,6 @@ describe(useCommonTokensOptions, () => {
   })
 
   describe('filtering from common base', () => {
-    it('excludes Linea tokens from common base when no chain filter', async () => {
-      setupDefaultMocks({ chainFilter: null })
-
-      const { result } = renderHook(() =>
-        useCommonTokensOptions({
-          portfolioData: makePortfolioData(),
-          chainFilter: null,
-        }),
-      )
-
-      await waitFor(() => {
-        expect(result.current.loading).toBe(false)
-      })
-
-      const chainIds = result.current.data?.map((opt) => opt.currencyInfo.currency.chainId) ?? []
-      expect(chainIds).not.toContain(UniverseChainId.Linea)
-    })
-
-    it('excludes XLayer tokens from common base when no chain filter', async () => {
-      setupDefaultMocks({ chainFilter: null })
-
-      const { result } = renderHook(() =>
-        useCommonTokensOptions({
-          portfolioData: makePortfolioData(),
-          chainFilter: null,
-        }),
-      )
-
-      await waitFor(() => {
-        expect(result.current.loading).toBe(false)
-      })
-
-      const chainIds = result.current.data?.map((opt) => opt.currencyInfo.currency.chainId) ?? []
-      expect(chainIds).not.toContain(UniverseChainId.XLayer)
-    })
-
     it('excludes USDT on Unichain from common base', async () => {
       setupDefaultMocks({ chainFilter: null })
 
@@ -499,6 +533,19 @@ describe(useCommonTokensOptions, () => {
         useCommonTokensOptions({
           portfolioData: makePortfolioData(),
           chainFilter: UniverseChainId.XLayer,
+        }),
+      )
+
+      expect(result.current.loading).toBe(true)
+    })
+
+    it('is loading when Base currencies are loading', async () => {
+      setupDefaultMocks({ chainFilter: UniverseChainId.Base, baseLoading: true })
+
+      const { result } = renderHook(() =>
+        useCommonTokensOptions({
+          portfolioData: makePortfolioData(),
+          chainFilter: UniverseChainId.Base,
         }),
       )
 

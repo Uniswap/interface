@@ -1,5 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { hasActiveNeckKey } from 'uniswap/src/features/passkey/deviceSession'
+import { useQuery } from '@tanstack/react-query'
 import type { Authenticator, RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
 import { AuthenticatorNameType, listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -42,11 +41,8 @@ type ListAuthenticatorsQueryResult = {
   lastExportedMs?: number
 }
 
-export function useListAuthenticatorsQuery({
-  skipIfNoSessionOrCache = false,
-}: { skipIfNoSessionOrCache?: boolean } = {}) {
+export function useListAuthenticatorsQuery({ skip }: { skip?: boolean } = {}) {
   const { walletId } = useEmbeddedWalletState()
-  const queryClient = useQueryClient()
 
   // Mirror to sessionStorage so the cache survives the top-level OAuth redirect.
   // Without this, the post-redirect refetch loses the in-memory NECK and re-prompts
@@ -54,18 +50,8 @@ export function useListAuthenticatorsQuery({
   useSessionStoragePersistedQuery({
     queryKey: [ReactQueryCacheKey.ListAuthenticators, walletId],
     storageKey: getListAuthenticatorsStorageKey(walletId),
-    enabled: !!walletId,
+    enabled: !!walletId && !skip,
   })
-
-  // Gate the fetch on (NECK in memory || cache hit) when the caller opts in:
-  // listAuthenticators triggers a passkey prompt if no live NECK, so for
-  // ambient surfaces we only want to query when it'll be silent. Cache lookup
-  // runs after the sessionStorage hydration above, so a persisted entry counts.
-  const hasSessionOrCache =
-    !!walletId &&
-    (hasActiveNeckKey(walletId) ||
-      queryClient.getQueryData<ListAuthenticatorsQueryResult>([ReactQueryCacheKey.ListAuthenticators, walletId]) !==
-        undefined)
 
   return useQuery<ListAuthenticatorsQueryResult>({
     queryKey: [ReactQueryCacheKey.ListAuthenticators, walletId],
@@ -83,7 +69,7 @@ export function useListAuthenticatorsQuery({
         lastExportedMs: result.lastExportedMs,
       }
     },
-    enabled: !!walletId && (!skipIfNoSessionOrCache || hasSessionOrCache),
+    enabled: !!walletId && !skip,
     staleTime: 20 * ONE_MINUTE_MS,
   })
 }

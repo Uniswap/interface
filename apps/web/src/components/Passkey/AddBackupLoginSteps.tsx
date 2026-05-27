@@ -1,7 +1,9 @@
 import type { UseMutationResult } from '@tanstack/react-query'
 import type { TFunction } from 'i18next'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
-import { Button, Flex, Input, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Input, ModalCloseIcon, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { Envelope } from 'ui/src/components/icons/Envelope'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { EyeOff } from 'ui/src/components/icons/EyeOff'
@@ -9,11 +11,8 @@ import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { LockViewfinder } from 'ui/src/components/icons/LockViewfinder'
 import { Person } from 'ui/src/components/icons/Person'
 import { Shield } from 'ui/src/components/icons/Shield'
-import { X } from 'ui/src/components/icons/X'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
 import {
   BackupMethodSummary,
   DigitInputRow,
@@ -23,6 +22,7 @@ import {
   StepHeader,
 } from '~/components/Passkey/BackupLoginComponents'
 import { PrivyWatermark } from '~/components/Passkey/PrivyWatermark'
+import { GetHelpButton } from '~/pages/ExtensionPasskeyAuthPopUp/views'
 
 export function MethodSelectStep({
   handleClose,
@@ -39,13 +39,10 @@ export function MethodSelectStep({
   onSelectEmail: () => void
   t: TFunction
 }) {
-  const colors = useSporeColors()
   return (
     <Trace logImpression modal={ModalName.AddBackupLogin}>
       <Flex width="100%" alignItems="flex-end">
-        <TouchableArea variant="unstyled" onPress={handleClose}>
-          <X size="$icon.20" color="$neutral2" />
-        </TouchableArea>
+        <ModalCloseIcon size="$icon.20" onClose={handleClose} />
       </Flex>
       <Flex gap="$gap16" alignItems="center" width="100%" px="$padding4">
         <IconBox>
@@ -62,7 +59,7 @@ export function MethodSelectStep({
       </Flex>
       <Flex width="100%" borderRadius="$rounded16" overflow="hidden" gap="$spacing2">
         <OptionRow
-          icon={<AppleLogo height={20} width={20} fill={colors.neutral1.val} />}
+          icon={<AppleLogo color="$neutral1" size="$icon.20" testID="apple-logo" />}
           label={t('account.passkey.backupLogin.add.apple')}
           onPress={() => handleInitOAuth('apple')}
           element={ElementName.AddBackupLoginApple}
@@ -235,6 +232,74 @@ export function EmailCodeStep({
   )
 }
 
+function getMethodLabel(provider: 'google' | 'apple' | null, t: TFunction): string {
+  if (provider === 'google') {
+    return t('account.passkey.backupLogin.alreadyInUse.method.google')
+  }
+  if (provider === 'apple') {
+    return t('account.passkey.backupLogin.alreadyInUse.method.apple')
+  }
+  return t('account.passkey.backupLogin.alreadyInUse.method.email')
+}
+
+export function AlreadyInUseStep({
+  handleClose,
+  handleSignOut,
+  handleTryAgain,
+  oauthProvider,
+  t,
+}: {
+  handleClose: () => void
+  handleSignOut: () => void
+  handleTryAgain: () => void
+  oauthProvider: 'google' | 'apple' | null
+  t: TFunction
+}) {
+  const methodLabel = getMethodLabel(oauthProvider, t)
+  return (
+    <Trace logImpression modal={ModalName.AddBackupLogin}>
+      <Flex gap={0}>
+        <Flex row width="100%" justifyContent="flex-end" alignItems="center" gap="$gap12">
+          <GetHelpButton t={t} />
+          <ModalCloseIcon size="$icon.20" onClose={handleClose} />
+        </Flex>
+        <Flex gap="$gap16" alignItems="center" width="100%" px="$padding4" mt={0}>
+          <IconBox>
+            <AlertTriangleFilled size="$icon.24" color="$neutral1" />
+          </IconBox>
+          <Flex gap="$gap8" alignItems="center" maxWidth={360}>
+            <Text variant="subheading1" textAlign="center">
+              {t('account.passkey.backupLogin.alreadyInUse.title')}
+            </Text>
+            <Text variant="body2" textAlign="center" color="$neutral2">
+              {t('account.passkey.backupLogin.alreadyInUse.body', { methodLabel })}
+            </Text>
+            <Text variant="body2" textAlign="center" color="$neutral2">
+              {t('account.passkey.backupLogin.alreadyInUse.suffix')}
+            </Text>
+          </Flex>
+        </Flex>
+      </Flex>
+      <Flex row width="100%" gap="$gap8">
+        <Trace logPress element={ElementName.AddBackupLoginAlreadyInUseSignOut}>
+          <Flex row flex={1} alignSelf="stretch">
+            <Button variant="default" emphasis="tertiary" size="medium" onPress={handleSignOut}>
+              {t('common.button.signOut')}
+            </Button>
+          </Flex>
+        </Trace>
+        <Trace logPress element={ElementName.AddBackupLoginAlreadyInUseTryAgain}>
+          <Flex row flex={1} alignSelf="stretch">
+            <Button variant="default" emphasis="secondary" size="medium" onPress={handleTryAgain}>
+              {t('common.button.tryAgain')}
+            </Button>
+          </Flex>
+        </Trace>
+      </Flex>
+    </Trace>
+  )
+}
+
 export function PasscodeIntroStep({
   email,
   handleClose,
@@ -253,9 +318,7 @@ export function PasscodeIntroStep({
   return (
     <Trace logImpression modal={ModalName.AddBackupLogin}>
       <Flex width="100%" alignItems="flex-end">
-        <TouchableArea variant="unstyled" onPress={handleClose}>
-          <X size="$icon.20" color="$neutral2" />
-        </TouchableArea>
+        <ModalCloseIcon size="$icon.20" onClose={handleClose} />
       </Flex>
       <Flex gap="$gap16" alignItems="center" width="100%" px="$padding4">
         <IconBox>
@@ -354,26 +417,31 @@ export function PasscodeStep({
             {passcodeError}
           </Text>
         )}
-        {isEncrypting && (
-          <Flex row gap="$gap8" alignItems="center" justifyContent="center">
-            <SpinningLoader size={16} />
-            <Text variant="body3" color="$neutral2">
-              {t('account.passkey.backupLogin.passcode.encrypting')}
-            </Text>
-          </Flex>
-        )}
-        <Flex alignItems="center">
-          <TouchableArea variant="unstyled" onPress={() => setShowPasscode(!showPasscode)} disabled={inputsDisabled}>
-            <Flex row gap="$gap4" alignItems="center">
-              {showPasscode ? <EyeOff size="$icon.16" color="$neutral2" /> : <Eye size="$icon.16" color="$neutral2" />}
+        <Flex row alignItems="center" justifyContent="center" minHeight={28}>
+          {isEncrypting ? (
+            <Flex row gap="$gap8" alignItems="center">
+              <SpinningLoader size={16} unstyled color="$neutral2" />
               <Text variant="buttonLabel3" color="$neutral2">
-                {showPasscode ? t('common.hide.button') : t('common.show.button')}
+                {t('account.passkey.backupLogin.passcode.encrypting')}
               </Text>
             </Flex>
-          </TouchableArea>
+          ) : (
+            <TouchableArea variant="unstyled" onPress={() => setShowPasscode(!showPasscode)} disabled={inputsDisabled}>
+              <Flex row gap="$gap4" alignItems="center">
+                {showPasscode ? (
+                  <EyeOff size="$icon.16" color="$neutral2" />
+                ) : (
+                  <Eye size="$icon.16" color="$neutral2" />
+                )}
+                <Text variant="buttonLabel3" color="$neutral2">
+                  {showPasscode ? t('common.hide.button') : t('common.show.button')}
+                </Text>
+              </Flex>
+            </TouchableArea>
+          )}
         </Flex>
-        {children}
       </Flex>
+      {children}
     </Trace>
   )
 }

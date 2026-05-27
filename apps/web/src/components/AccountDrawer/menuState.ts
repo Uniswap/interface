@@ -16,6 +16,7 @@ export enum MenuStateVariant {
   RECOVERY_PHRASE_DOWNLOAD_PROMPT = 'recovery_phrase_download_prompt',
   OTHER_WALLETS = 'other_wallets',
   STORAGE_SETTINGS = 'storage_settings',
+  NETWORK_COST_SETTINGS = 'network_cost_settings',
 }
 
 type MenuState =

@@ -78,6 +78,7 @@ export function submitTokenDataReport({
   walletAddress,
   reportOptions,
   reportTexts,
+  reportMultichainAsset = false,
 }: {
   chainId: UniverseChainId
   tokenAddress?: string
@@ -86,6 +87,7 @@ export function submitTokenDataReport({
   walletAddress?: string
   reportOptions: TokenDataReportOption[]
   reportTexts: Map<TokenDataReportOption, string>
+  reportMultichainAsset?: boolean
 }): void {
   sendAnalyticsEvent(UniswapEventName.DataReportSubmitted, {
     type: 'data',
@@ -102,6 +104,7 @@ export function submitTokenDataReport({
     performance_text: reportTexts.get(TokenDataReportOption.Performance),
     something_else: reportOptions.includes(TokenDataReportOption.Other),
     text: reportTexts.get(TokenDataReportOption.Other),
+    report_multichain_asset: reportMultichainAsset,
   })
 }
 
@@ -111,12 +114,14 @@ export function submitTokenWarningDataReport({
   tokenName,
   isMarkedSpam,
   reportText,
+  reportMultichainAsset = false,
 }: {
   chainId: UniverseChainId
   tokenAddress?: string
   tokenName?: string
   isMarkedSpam?: Maybe<boolean>
   reportText: string
+  reportMultichainAsset?: boolean
 }): void {
   sendAnalyticsEvent(UniswapEventName.DataReportSubmitted, {
     type: 'token_warning',
@@ -125,6 +130,7 @@ export function submitTokenWarningDataReport({
     chain_id: chainId,
     text: reportText,
     is_marked_spam: isMarkedSpam,
+    report_multichain_asset: reportMultichainAsset,
   })
 }
 

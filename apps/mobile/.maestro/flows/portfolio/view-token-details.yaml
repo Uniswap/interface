@@ -61,6 +61,13 @@ env:
 
 - waitForAnimationToEnd
 
+# RN 0.81 timing: wait for the back button's testID to settle in the
+# accessibility tree before tapping.
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.Back}
+    timeout: 15000
+
 # Go back to portfolio
 - tapOn:
     id: ${output.testIds.Back}
@@ -138,6 +145,13 @@ env:
       text: ".*[Cc]opied.*"
     timeout: 2000
     optional: true
+
+# Dismiss the MultichainAddressSheet opened by CopyAddress before
+# tapping the screen-level back button.
+- swipe:
+    direction: DOWN
+    duration: 300
+- waitForAnimationToEnd
 
 # Go back to portfolio
 - tapOn:

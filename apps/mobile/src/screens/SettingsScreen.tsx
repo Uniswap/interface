@@ -30,13 +30,13 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
+import { useAboutModalState } from 'src/features/settings/hooks/useAboutModalState'
 import { useAdvancedSettingsMenuState } from 'src/features/settings/hooks/useAdvancedSettingsMenuState'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { importFromCloudBackupOption, restoreFromCloudBackupOption } from 'src/screens/Import/constants'
 import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
 import {
   Bell,
-  BookOpen,
   Chart,
   Cloud,
   Coins,
@@ -44,11 +44,11 @@ import {
   Faceid,
   FileListLock,
   Fingerprint,
+  InfoCircle,
   Key,
   Language,
   LikeSquare,
   LineChartDots,
-  Lock,
   MessageQuestion,
   ShieldCheck,
   Sliders,
@@ -96,6 +96,7 @@ export function SettingsScreen(): JSX.Element {
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
   const isSmartWalletSettingsEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
+  const aboutModalState = useAboutModalState()
 
   const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
 
@@ -335,28 +336,11 @@ export function SettingsScreen(): JSX.Element {
             text: t('settings.action.help'),
             icon: <MessageQuestion {...svgProps} />,
           },
-        ],
-      },
-      {
-        subTitle: t('settings.section.about'),
-        data: [
           {
-            screen: MobileScreens.WebView,
-            screenProps: {
-              uriLink: uniswapUrls.privacyPolicyUrl,
-              headerTitle: t('settings.action.privacy'),
-            },
-            text: t('settings.action.privacy'),
-            icon: <Lock {...svgProps} />,
-          },
-          {
-            screen: MobileScreens.WebView,
-            screenProps: {
-              uriLink: uniswapUrls.termsOfServiceUrl,
-              headerTitle: t('settings.action.terms'),
-            },
-            text: t('settings.action.terms'),
-            icon: <BookOpen {...svgProps} />,
+            navigationModal: ModalName.About,
+            navigationProps: aboutModalState,
+            text: t('settings.section.about'),
+            icon: <InfoCircle {...svgProps} />,
           },
         ],
       },
@@ -405,6 +389,7 @@ export function SettingsScreen(): JSX.Element {
     isTestnetModeEnabled,
     isSmartWalletSettingsEnabled,
     advancedSettingsState,
+    aboutModalState,
     notificationOSPermission,
     navigation,
     hasCopiedPrivateKeys,

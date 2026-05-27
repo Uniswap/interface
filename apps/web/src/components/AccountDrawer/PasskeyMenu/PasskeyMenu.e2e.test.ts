@@ -15,6 +15,7 @@ const WALLET_SIGNIN_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletServi
 const START_AUTHENTICATED_SESSION_URL =
   '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/StartAuthenticatedSession'
 const ADD_AUTHENTICATOR_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/AddAuthenticator'
+const PREPARE_ADD_AUTHENTICATOR_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/PrepareAddAuthenticator'
 const DELETE_AUTHENTICATOR_URL = '**/uniswap.privyembeddedwallet.v1.EmbeddedWalletService/DeleteAuthenticator'
 
 const TEST_WALLET_ID = 'test-wallet-id'
@@ -213,7 +214,7 @@ test.describe(
       await expect(skeletons.first()).toBeVisible()
     })
 
-    test('opens verify passkey modal when trash icon is clicked', async ({ page }) => {
+    test('opens delete passkey speedbump when trash icon is clicked', async ({ page }) => {
       await setupEmbeddedWalletState(page)
       await setupNeckMocks(page)
       await setupNeckAwareChallengeRoute(page)
@@ -227,19 +228,14 @@ test.describe(
 
       const drawer = page.getByTestId(TestID.AccountDrawer)
 
-      // Wait for authenticators to load
       await expect(drawer.getByText('iCloud')).toBeVisible()
-
-      // Hover over the first authenticator to reveal the trash icon
       await drawer.getByText('iCloud').hover()
 
-      // The overflow menu button should appear and be clickable
-      // After clicking, select "Remove" from the context menu, then the verify passkey modal opens
       const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
       await expect(trashButtons.first()).toBeVisible()
-      await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
+      await trashButtons.first().dispatchEvent('click')
       await page.getByText('Remove').click()
-      await expect(page.getByText('Passkey required')).toBeVisible()
+      await expect(page.getByText('Make sure you have a backup')).toBeVisible()
     })
 
     test('hides delete affordance when only one authenticator exists', async ({ page }) => {
@@ -330,6 +326,13 @@ test.describe(
         await route.fulfill({ path: Mocks.EmbeddedWallet.start_authenticated_session })
       })
 
+      await page.route(PREPARE_ADD_AUTHENTICATOR_URL, async (route) => {
+        await route.fulfill({
+          contentType: 'application/json',
+          body: JSON.stringify({ signingPayload: 'mock-signing-payload' }),
+        })
+      })
+
       await page.route(ADD_AUTHENTICATOR_URL, async (route) => {
         callOrder.push('AddAuthenticator')
         await route.fulfill({ path: Mocks.EmbeddedWallet.add_authenticator })
@@ -346,8 +349,8 @@ test.describe(
       await expect(page.getByText('This device')).toBeVisible()
       await page.getByText('This device').click()
 
-      // Wait for both API calls to complete
-      await page.waitForResponse((resp) => resp.url().includes('AddAuthenticator'))
+      // endsWith — substring match would also catch the PrepareAddAuthenticator response
+      await page.waitForResponse((resp) => resp.url().endsWith('/AddAuthenticator'))
 
       expect(callOrder).toEqual(['StartAuthenticatedSession', 'AddAuthenticator'])
     })
@@ -383,19 +386,20 @@ test.describe(
       await drawer.getByText('iCloud').hover()
 
       const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
-      await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
+      await trashButtons.first().dispatchEvent('click')
       await page.getByText('Remove').click()
 
-      // Wait for the Challenge request to fire (triggered by VerifyPasskeyMenu verify button)
-      await expect(page.getByText('Passkey required')).toBeVisible()
-      // Set up waitForResponse BEFORE the click to avoid race condition
+      await expect(page.getByText('Make sure you have a backup')).toBeVisible()
+      await page.getByRole('button', { name: /continue/i }).click()
+      await page.getByTestId(TestID.DeletePasskeyAcknowledge).click()
+
+      // Subscribe before clicking to avoid losing the response to a race
       const challengeResponsePromise = page.waitForResponse((resp) => resp.url().includes('Challenge'))
-      await page.getByRole('button', { name: /sign in with passkey/i }).click()
+      await page.getByRole('button', { name: /^delete$/i }).click()
       await challengeResponsePromise
 
       // Action enum is serialized as string name in protobuf JSON — assert DELETE_AUTHENTICATOR, not DELETE_RECORD
       expect(capturedChallengeBody?.action).toBe('DELETE_AUTHENTICATOR')
-      // authenticatorId should be the credentialId of the targeted authenticator
       expect(capturedChallengeBody?.authenticatorId).toBeDefined()
     })
 
@@ -428,21 +432,15 @@ test.describe(
       await expect(drawer.getByText('iCloud')).toBeVisible()
       await expect(drawer.getByText('Chrome')).toBeVisible()
 
-      // Hover to reveal overflow menu and click it, then select "Remove"
       await drawer.getByText('iCloud').hover()
       const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
-      await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
+      await trashButtons.first().dispatchEvent('click')
       await page.getByText('Remove').click()
 
-      // Verify passkey modal opens — click verify
-      await expect(page.getByText('Passkey required')).toBeVisible()
-      await page.getByRole('button', { name: /sign in with passkey/i }).click()
-
-      // Speedbump warns to back up recovery phrase — click Continue
-      await expect(page.getByText('Are you sure?')).toBeVisible()
+      await expect(page.getByText('Make sure you have a backup')).toBeVisible()
       await page.getByRole('button', { name: /continue/i }).click()
 
-      // Delete confirmation modal opens — must check the acknowledge checkbox to enable delete
+      // Acknowledge checkbox must be checked to enable the Delete button
       await expect(page.getByRole('button', { name: /^delete$/i })).toBeDisabled()
       await page.getByTestId(TestID.DeletePasskeyAcknowledge).click()
       await expect(page.getByRole('button', { name: /^delete$/i })).toBeEnabled()
@@ -470,14 +468,12 @@ test.describe(
       await drawer.getByText('iCloud').hover()
 
       const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
-      await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
+      await trashButtons.first().dispatchEvent('click')
       await page.getByText('Remove').click()
 
-      // Verify modal opens first; clicking sign-in advances to the speedbump warning
-      // that recommends backing up the recovery phrase before proceeding.
-      await expect(page.getByText('Passkey required')).toBeVisible()
-      await page.getByRole('button', { name: /sign in with passkey/i }).click()
-      await expect(page.getByText('Are you sure?')).toBeVisible()
+      await expect(page.getByText('Make sure you have a backup')).toBeVisible()
+      await page.getByRole('button', { name: /continue/i }).click()
+      await expect(page.getByText('Delete passkey')).toBeVisible()
     })
 
     test('deleting a non-last passkey keeps the wallet connected', async ({ page }) => {
@@ -509,13 +505,10 @@ test.describe(
       await drawer.getByText('iCloud').hover()
 
       const trashButtons = page.locator(`[data-testid="${TestID.DeletePasskey}"]`)
-      await trashButtons.first().dispatchEvent('mousedown', { button: 0, bubbles: true, cancelable: true })
+      await trashButtons.first().dispatchEvent('click')
       await page.getByText('Remove').click()
 
-      await expect(page.getByText('Passkey required')).toBeVisible()
-      await page.getByRole('button', { name: /sign in with passkey/i }).click()
-
-      await expect(page.getByText('Are you sure?')).toBeVisible()
+      await expect(page.getByText('Make sure you have a backup')).toBeVisible()
       await page.getByRole('button', { name: /continue/i }).click()
 
       await page.getByTestId(TestID.DeletePasskeyAcknowledge).click()

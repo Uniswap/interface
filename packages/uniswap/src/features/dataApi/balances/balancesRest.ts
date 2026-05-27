@@ -255,4 +255,8 @@ export function convertRestBalanceToPortfolioBalance(
   })
 }
 
-export { usePortfolioBalancePart, usePortfolioTotalValue } from './usePortfolioBalancePart'
+export {
+  usePortfolioBalanceBreakdown,
+  usePortfolioBalancePart,
+  usePortfolioTotalValue,
+} from './usePortfolioBalancePart'

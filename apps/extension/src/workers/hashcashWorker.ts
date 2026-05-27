@@ -14,6 +14,7 @@
  */
 export function createHashcashWorker(): Worker {
   return new Worker(
+    /* webpackChunkName: "hashcash-worker" */
     new URL('../../../../packages/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts', import.meta.url),
     { type: 'module' },
   )

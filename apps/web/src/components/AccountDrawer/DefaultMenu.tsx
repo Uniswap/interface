@@ -8,6 +8,7 @@ import { LocalCurrencyMenu } from '~/components/AccountDrawer/LocalCurrencyMenu'
 import { MainMenu } from '~/components/AccountDrawer/MainMenu/MainMenu'
 import { MenuStateVariant, useMenuState, useSetMenuCallback } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
+import { NetworkCostMenu } from '~/components/AccountDrawer/NetworkCostMenu'
 import { PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PortfolioBalanceMenu } from '~/components/AccountDrawer/PortfolioBalanceMenu'
 import { RecoveryPhraseDownloadPrompt } from '~/components/AccountDrawer/RecoveryPhraseMenu/RecoveryPhraseDownloadPrompt'
@@ -29,6 +30,7 @@ export function DefaultMenu() {
   const openRecoveryPhraseDownloadPrompt = useSetMenuCallback(MenuStateVariant.RECOVERY_PHRASE_DOWNLOAD_PROMPT)
   const openRecoveryPhraseWarning = useSetMenuCallback(MenuStateVariant.RECOVERY_PHRASE)
   const openStorageSettings = useSetMenuCallback(MenuStateVariant.STORAGE_SETTINGS)
+  const openNetworkCostSettings = useSetMenuCallback(MenuStateVariant.NETWORK_COST_SETTINGS)
 
   const { isOpen: drawerOpen } = useAccountDrawer()
 
@@ -48,6 +50,7 @@ export function DefaultMenu() {
       [MenuStateVariant.RECOVERY_PHRASE_DOWNLOAD_PROMPT]: 2,
       [MenuStateVariant.RECOVERY_PHRASE]: 3,
       [MenuStateVariant.STORAGE_SETTINGS]: 3,
+      [MenuStateVariant.NETWORK_COST_SETTINGS]: 3,
     }
 
     if (!prevMenuVariant || prevMenuVariant === menuState.variant) {
@@ -103,6 +106,7 @@ export function DefaultMenu() {
             openRecoveryPhraseSettings={openRecoveryPhraseDownloadPrompt}
             openPortfolioBalanceSettings={openPortfolioBalanceSettings}
             openStorageSettings={openStorageSettings}
+            openNetworkCostSettings={openNetworkCostSettings}
           />
         )
       case MenuStateVariant.LANGUAGE_SETTINGS:
@@ -113,6 +117,8 @@ export function DefaultMenu() {
         return <LocalCurrencyMenu onClose={openSettings} />
       case MenuStateVariant.STORAGE_SETTINGS:
         return <StorageMenu onClose={openSettings} />
+      case MenuStateVariant.NETWORK_COST_SETTINGS:
+        return <NetworkCostMenu onClose={openSettings} />
       case MenuStateVariant.PASSKEYS:
         return <PasskeyMenu onClose={openSettings} />
       case MenuStateVariant.RECOVERY_PHRASE_DOWNLOAD_PROMPT:
@@ -131,6 +137,7 @@ export function DefaultMenu() {
     openRecoveryPhraseDownloadPrompt,
     openRecoveryPhraseWarning,
     openStorageSettings,
+    openNetworkCostSettings,
     openSettings,
     returnToMain,
   ])

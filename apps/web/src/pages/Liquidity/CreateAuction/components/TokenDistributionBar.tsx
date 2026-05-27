@@ -58,12 +58,19 @@ export function TokenDistributionBar({
     segment,
     flex,
     color,
+    marginRight = 0,
   }: {
     segment: DistributionBarSegment
     flex: number
     color: string
+    marginRight?: number
   }) => (
-    <Flex flex={flex} position="relative">
+    <Flex
+      flex={flex}
+      position="relative"
+      marginRight={marginRight}
+      $platform-web={{ transition: 'flex 200ms ease-in-out, margin-right 200ms ease-in-out' }}
+    >
       <Flex height="$spacing12" borderRadius="$rounded4" backgroundColor={color} opacity={segmentOpacity(segment)} />
       <Flex
         position="absolute"
@@ -134,7 +141,14 @@ export function TokenDistributionBar({
 
       <Flex gap="$spacing4">
         {totalSoldPercent > 0 && (
-          <Flex row alignItems="flex-end" gap="$spacing8" width={totalSoldWidth} maxWidth="100%">
+          <Flex
+            row
+            alignItems="flex-end"
+            gap="$spacing8"
+            width={totalSoldWidth}
+            maxWidth="100%"
+            $platform-web={{ transition: 'width 200ms ease-in-out' }}
+          >
             <Flex row flex={1} alignItems="flex-start">
               <Flex
                 width={SOLD_BRACKET_RADIUS_PX}
@@ -169,7 +183,13 @@ export function TokenDistributionBar({
         )}
 
         <Flex row height="$spacing12" gap={BAR_GAP_PX}>
-          {showFundraise && renderBarSegment({ segment: 'fundraise', flex: fundraisePercent, color: fundraiseColor })}
+          {renderBarSegment({
+            segment: 'fundraise',
+            flex: Math.max(0, fundraisePercent),
+            color: fundraiseColor,
+            // Keep the segment mounted so flex can animate to 0; cancel its trailing gap when collapsed.
+            marginRight: showFundraise ? 0 : -BAR_GAP_PX,
+          })}
           {renderBarSegment({ segment: 'raiseSideLp', flex: lpLegPercent, color: raiseSideLpColor })}
           {renderBarSegment({ segment: 'tokenSideLp', flex: lpLegPercent, color: tokenSideLpColor })}
         </Flex>

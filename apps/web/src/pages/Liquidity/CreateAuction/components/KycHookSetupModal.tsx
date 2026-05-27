@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { ValidationType } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Button,
@@ -11,21 +12,26 @@ import {
   Text,
   TouchableArea,
 } from 'ui/src'
+import { Code } from 'ui/src/components/icons/Code'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
+import { ExternalLink as ExternalLinkIcon } from 'ui/src/components/icons/ExternalLink'
+import { Page } from 'ui/src/components/icons/Page'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { UserCheck } from 'ui/src/components/icons/UserCheck'
 import { fonts } from 'ui/src/theme/fonts'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { TransactionRequestDetails } from 'uniswap/src/components/transactions/requests/TransactionRequestDetails'
+import { AuctionQueryClient } from 'uniswap/src/data/apiClients/liquidityService/AuctionQueryClient'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { shortenAddress } from 'utilities/src/addresses'
-import { isAddress, zeroAddress } from '~/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { shortenAddress, shortenHash } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
+import { isAddress } from '~/chains'
+import { CopyHelper } from '~/theme/components/CopyHelper'
 import { ExternalLink } from '~/theme/components/Links'
 
-const MOCK_KYC_HOOK_VALIDATION_ADDRESS = '0x1234567890123456789012345678901234567891'
-type KycPreviewMeta = { functionName: string; contractName: string; rawDataPreview: string }
+const KYC_HOOK_PLACEHOLDER_ADDRESS = '0x1234567890123456789012345678901234567891'
+type KycPreview = { hookName: string; interfaceId: string }
 type Phase = 'enter' | 'validating' | 'preview'
 
 export function KycHookSetupModal({
@@ -45,7 +51,7 @@ export function KycHookSetupModal({
   const [phase, setPhase] = useState<Phase>('enter')
   const [draftAddress, setDraftAddress] = useState('')
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [previewMeta, setPreviewMeta] = useState<KycPreviewMeta | null>(null)
+  const [preview, setPreview] = useState<KycPreview | null>(null)
   const [detailsExpanded, setDetailsExpanded] = useState(true)
   const modalSessionRef = useRef(0)
 
@@ -55,7 +61,7 @@ export function KycHookSetupModal({
       setPhase('enter')
       setDraftAddress(initialAddress ?? '')
       setSubmitError(null)
-      setPreviewMeta(null)
+      setPreview(null)
       setDetailsExpanded(true)
     }
   }, [isOpen, initialAddress])
@@ -70,26 +76,36 @@ export function KycHookSetupModal({
     setSubmitError(null)
     setPhase('validating')
     const sessionAtStart = modalSessionRef.current
-    await new Promise((r) => setTimeout(r, 1200))
-    if (sessionAtStart !== modalSessionRef.current) {
-      return
-    }
-    if (
-      areAddressesEqual({
-        addressInput1: { address: trimmedAddress, chainId },
-        addressInput2: { address: zeroAddress, chainId },
+    const validationFailedMessage = t('toucan.createAuction.step.configureAuction.kyc.modal.error.validationFailed')
+
+    try {
+      const response = await AuctionQueryClient.validateAuctionHook({
+        hookAddress: trimmedAddress,
+        chainId: Number(chainId),
+        hookType: ValidationType.KYC_VERIFICATION,
       })
-    ) {
+
+      if (sessionAtStart !== modalSessionRef.current) {
+        return
+      }
+
+      const result = response.results.find((r) => r.hookType === ValidationType.KYC_VERIFICATION)
+      if (!response.isContract || !result || !result.supported) {
+        setPhase('enter')
+        setSubmitError(validationFailedMessage)
+        return
+      }
+
+      setPreview({ hookName: result.hookName, interfaceId: result.interfaceId })
+      setPhase('preview')
+    } catch (e) {
+      if (sessionAtStart !== modalSessionRef.current) {
+        return
+      }
+      logger.error(e, { tags: { file: 'KycHookSetupModal', function: 'handleValidateEnter' } })
       setPhase('enter')
-      setSubmitError(t('toucan.createAuction.step.configureAuction.kyc.modal.error.validationFailed'))
-      return
+      setSubmitError(validationFailedMessage)
     }
-    setPreviewMeta({
-      functionName: 'onKycValidation',
-      contractName: 'KYC hook',
-      rawDataPreview: trimmedAddress,
-    })
-    setPhase('preview')
   }, [chainId, trimmedAddress, t])
 
   const handleConfirmPreview = useCallback(() => {
@@ -99,6 +115,16 @@ export function KycHookSetupModal({
     onAccepted(trimmedAddress)
     onClose()
   }, [trimmedAddress, onAccepted, onClose])
+
+  const explorerLink = useMemo(
+    () =>
+      getExplorerLink({
+        chainId,
+        data: trimmedAddress,
+        type: ExplorerDataType.ADDRESS,
+      }),
+    [chainId, trimmedAddress],
+  )
 
   return (
     <Modal
@@ -166,7 +192,7 @@ export function KycHookSetupModal({
                           setSubmitError(null)
                         }
                       }}
-                      placeholder={shortenAddress({ address: MOCK_KYC_HOOK_VALIDATION_ADDRESS, chars: 6 })}
+                      placeholder={shortenAddress({ address: KYC_HOOK_PLACEHOLDER_ADDRESS, chars: 6 })}
                       placeholderTextColor="$neutral3"
                       height={fonts.subheading2.lineHeight}
                       fontSize={fonts.subheading2.fontSize}
@@ -177,7 +203,7 @@ export function KycHookSetupModal({
                       backgroundColor="$transparent"
                     />
                   </Flex>
-                ) : previewMeta ? (
+                ) : preview ? (
                   <Flex
                     width="100%"
                     backgroundColor="$surface2"
@@ -214,13 +240,48 @@ export function KycHookSetupModal({
                       </TouchableArea>
 
                       {detailsExpanded && (
-                        <TransactionRequestDetails
-                          functionName={previewMeta.functionName}
-                          contractName={previewMeta.contractName}
-                          contractAddress={trimmedAddress}
-                          rawData={previewMeta.rawDataPreview}
-                          chainId={chainId}
-                        />
+                        <Flex gap="$spacing12">
+                          <Flex row alignItems="center" justifyContent="space-between" height={16}>
+                            <Flex row gap="$spacing8" alignItems="center">
+                              <Page color="$neutral2" size="$icon.16" />
+                              <Text color="$neutral2" variant="body4">
+                                {t('common.text.contract')}
+                              </Text>
+                            </Flex>
+                            <ExternalLink
+                              href={explorerLink}
+                              style={{ textDecoration: 'none', color: 'inherit', stroke: 'inherit' }}
+                            >
+                              <Flex row gap="$spacing4" alignItems="center">
+                                <Text color="$neutral1" verticalAlign="center" variant="body4">
+                                  {preview.hookName}
+                                </Text>
+                                <ExternalLinkIcon color="$neutral2" size="$icon.12" />
+                              </Flex>
+                            </ExternalLink>
+                          </Flex>
+
+                          <Flex row alignItems="center" justifyContent="space-between" height={16}>
+                            <Flex row gap="$spacing8" alignItems="center">
+                              <Code color="$neutral2" size="$icon.16" />
+                              <Text color="$neutral2" variant="body4">
+                                {t('toucan.createAuction.step.configureAuction.kyc.modal.interfaceId')}
+                              </Text>
+                            </Flex>
+                            <CopyHelper
+                              toCopy={preview.interfaceId}
+                              iconSize={16}
+                              iconPosition="right"
+                              color="$neutral1"
+                            >
+                              <Text color="$neutral1" variant="body4">
+                                {preview.interfaceId.length > 12
+                                  ? shortenHash(preview.interfaceId, 4)
+                                  : preview.interfaceId}
+                              </Text>
+                            </CopyHelper>
+                          </Flex>
+                        </Flex>
                       )}
                     </Flex>
                   </Flex>
@@ -251,11 +312,9 @@ export function KycHookSetupModal({
                   isDisabled={!canSubmitEnter}
                   onPress={phase === 'preview' ? handleConfirmPreview : handleValidateEnter}
                 >
-                  <Text variant="buttonLabel3" color="$surface1">
-                    {phase === 'enter'
-                      ? t('toucan.createAuction.step.configureAuction.kyc.modal.cta.validate')
-                      : t('common.button.confirm')}
-                  </Text>
+                  {phase === 'enter'
+                    ? t('toucan.createAuction.step.configureAuction.kyc.modal.cta.validate')
+                    : t('common.button.confirm')}
                 </Button>
               </Flex>
             </Flex>

@@ -9,11 +9,13 @@ import { Flex, styled, Text, useMedia, View } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { TOKEN_AMOUNT_DISPLAY_FLOOR } from 'utilities/src/format/localeBasedFormats'
 import { NumberType } from 'utilities/src/format/types'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
 import {
@@ -29,6 +31,7 @@ import { TableText } from '~/components/Table/shared/TableText'
 import { TimestampCell } from '~/components/Table/shared/TimestampCell'
 import { FilterHeaderRow } from '~/components/Table/styled'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
 import { ExternalLink } from '~/theme/components/Links'
 import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
@@ -94,6 +97,7 @@ export function PoolDetailsTransactionsTable({
   const chainId = useChainIdFromUrlParam() ?? UniverseChainId.Mainnet
   const activeLocalCurrency = useAppFiatCurrency()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<PoolTableTransactionType[]>([
@@ -224,9 +228,12 @@ export function PoolDetailsTransactionsTable({
         cell: (inputTokenAmount) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
             <TableText>
-              {formatNumberOrString({
-                value: Math.abs(inputTokenAmount.getValue?.() ?? 0),
-                type: NumberType.TokenTx,
+              {formatPriceWithSubscript({
+                price: Math.abs(inputTokenAmount.getValue?.() ?? 0),
+                locale,
+                formatNumberOrString,
+                numberType: NumberType.TokenTx,
+                subscriptThreshold: TOKEN_AMOUNT_DISPLAY_FLOOR,
               })}
             </TableText>
           </Cell>
@@ -245,9 +252,12 @@ export function PoolDetailsTransactionsTable({
         cell: (outputTokenAmount) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
             <TableText>
-              {formatNumberOrString({
-                value: Math.abs(outputTokenAmount.getValue?.() ?? 0),
-                type: NumberType.TokenTx,
+              {formatPriceWithSubscript({
+                price: Math.abs(outputTokenAmount.getValue?.() ?? 0),
+                locale,
+                formatNumberOrString,
+                numberType: NumberType.TokenTx,
+                subscriptThreshold: TOKEN_AMOUNT_DISPLAY_FLOOR,
               })}
             </TableText>
           </Cell>
@@ -285,6 +295,7 @@ export function PoolDetailsTransactionsTable({
     filterModalIsOpen,
     convertFiatAmountFormatted,
     formatNumberOrString,
+    locale,
     showLoadingSkeleton,
     token0,
     token1?.symbol,

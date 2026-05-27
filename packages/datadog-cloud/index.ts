@@ -8,6 +8,7 @@ import {
   devPortalAuthMonitors,
   devPortalGatewayMonitors,
   devPortalLogMonitors,
+  liquidityFeErrorTrackingMonitors,
   swapFeApiMonitors,
   swapFeCiMonitors,
   swapFeOnChainMonitors,
@@ -58,6 +59,7 @@ const teamMonitors: Record<string, { monitors: MonitorDefinition[]; category: st
     { monitors: privyEmbeddedWalletSecurityMonitors, category: 'security' },
     { monitors: privyEmbeddedWalletBusinessMonitors, category: 'business' },
   ],
+  'liquidity-fe': [{ monitors: liquidityFeErrorTrackingMonitors, category: 'error-tracking' }],
 }
 
 // Get monitors for current team

@@ -6,6 +6,7 @@ import {
 import {
   type AddAuthenticatorResponse,
   type ChallengeResponse,
+  type CheckRecoveryAvailabilityResponse,
   type CreateWalletResponse,
   type DeleteAuthenticatorResponse,
   type DeleteRecoveryResponse,
@@ -41,6 +42,7 @@ export type {
   AuthenticationTypes,
   Authenticator,
   ChallengeResponse,
+  CheckRecoveryAvailabilityResponse,
   CreateWalletResponse,
   DeleteAuthenticatorResponse,
   DeleteRecoveryResponse,
@@ -257,12 +259,20 @@ export function createEmbeddedWalletApiClient({
   async function fetchOprfEvaluate(
     params: {
       blindedElement: string
-      isRecovery?: boolean
-      authMethodId?: string
+      authMethodId: string
     },
     accessToken: string,
   ): Promise<OprfEvaluateResponse> {
     return await rpcClient.oprfEvaluate(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+  }
+
+  async function fetchCheckRecoveryAvailability(
+    params: { authMethodId: string },
+    accessToken: string,
+  ): Promise<CheckRecoveryAvailabilityResponse> {
+    return await rpcClient.checkRecoveryAvailability(params, {
       headers: { Authorization: `Bearer ${accessToken}` },
     })
   }
@@ -361,6 +371,7 @@ export function createEmbeddedWalletApiClient({
     fetchAddAuthenticatorRequest,
     fetchDeleteAuthenticatorRequest,
     fetchOprfEvaluate,
+    fetchCheckRecoveryAvailability,
     fetchSetupRecovery,
     fetchExecuteRecovery,
     fetchReportDecryptionResult,

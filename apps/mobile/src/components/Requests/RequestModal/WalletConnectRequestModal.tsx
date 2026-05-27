@@ -29,7 +29,10 @@ import {
 import { spacing } from 'ui/src/theme'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSelfCallWithData, isSignTypedDataRequest } from 'uniswap/src/features/dappRequests/utils'
+import { buildGasServiceUrgencyOverride } from 'uniswap/src/features/gas/components/NetworkCostEditor/buildGasServiceUrgencyOverride'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -66,6 +69,22 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   // Initialize with null to indicate scan hasn't completed yet
   const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
   const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
+  const [gasOverrides, setGasOverrides] = useState<GasFeeOverrides | undefined>(undefined)
+  const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
+  // 4337 sponsored userOps: paymaster pays. UwULinkErc20Send short-circuits to
+  // its own modal before this component renders, so we don't need to filter it
+  // here. The override row is hidden for sponsored userOps by withholding the
+  // setter from the content — matching the extension SendCalls gate.
+  const isSponsoredUserOp = isUserOpRequest(request) && request.gasSponsored
+  const isOverridesEligible = enableCustomGasFeeEntry && !isSponsoredUserOp
+  const effectiveGasOverrides = isOverridesEligible ? gasOverrides : undefined
+  // No `recommended` baseline available here — when only one of maxBaseFeeGwei /
+  // priorityFeeGwei is overridden, maxFeePerGas is omitted and the gas service
+  // falls back to its own estimate for that combined field.
+  const { urgency, gasLimitOverride } = useMemo(
+    () => buildGasServiceUrgencyOverride({ gasOverrides: effectiveGasOverrides }),
+    [effectiveGasOverrides],
+  )
 
   const enablePermitMismatchUx = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const enableEip5792Methods = useFeatureFlag(FeatureFlags.Eip5792Methods)
@@ -114,6 +133,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     : delegationData?.currentDelegationAddress
   const gasFee = useTransactionGasFee({
     tx,
+    urgency,
+    gasLimitOverride,
     ...(smartContractDelegationAddress && { smartContractDelegationAddress }),
   })
 
@@ -341,7 +362,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         request={request}
         showSmartWalletActivation={shouldDelegate}
         confirmedRisk={confirmedRisk}
+        gasOverrides={isOverridesEligible ? effectiveGasOverrides : undefined}
         onConfirmRisk={setConfirmedRisk}
+        onChangeGasOverrides={isOverridesEligible ? setGasOverrides : undefined}
         onRiskLevelChange={setRiskLevel}
       />
     </ModalWithOverlay>

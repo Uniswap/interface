@@ -37,6 +37,7 @@ import {
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   TransactionDetails,
+  TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
@@ -147,7 +148,7 @@ function useTransactionDetailsInfoRows({
           const dappInfo = (
             <DappInfoRow
               key="dappInfo"
-              label={t('swap.details.orderRouting')}
+              label={t('common.bestRoute')}
               iconUrl={typeInfo.routingDappInfo.icon}
               name={typeInfo.routingDappInfo.name}
             />
@@ -278,6 +279,14 @@ function TransactionHashRow({
   }
 
   if (!hash) {
+    return null
+  }
+
+  if (
+    'batchInfo' in transactionDetails &&
+    transactionDetails.batchInfo &&
+    transactionDetails.status === TransactionStatus.Pending
+  ) {
     return null
   }
 

@@ -64,7 +64,7 @@ function NetworkLogoInner({
   const imageSize = size + SUBPIXEL_COMPENSATION - borderWidth * 2 // this prevents the border from cutting off the logo
 
   return logo ? (
-    <Flex centered testID="network-logo" overflow="hidden" style={imageStyle} zIndex={zIndexes.mask}>
+    <Flex centered testID={`network-logo-${chainId}`} overflow="hidden" style={imageStyle} zIndex={zIndexes.mask}>
       <NetworkImage logo={logo} imageSize={imageSize} transition={transition} />
     </Flex>
   ) : null

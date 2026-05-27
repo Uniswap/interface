@@ -5,6 +5,7 @@ import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useAccountsStore } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -99,6 +100,9 @@ export function useDerivedSwapInfo({
   })
   const caip25Info = useAccountsStore((s) => s.getActiveConnector(Platform.EVM)?.session?.caip25Info)
   const walletExecutionContext = useMemo(() => getWalletExecutionContext(caip25Info), [caip25Info])
+  // tx is unavailable at quote time (this hook runs before the /swap response
+  // resolves); recommended falls back to undefined, which is fine for full overrides.
+  const gasOverrides = useTradingApiGasOverrides({ tx: undefined })
   const tradeParams = useMemo(
     () => ({
       account,
@@ -112,6 +116,7 @@ export function useDerivedSwapInfo({
       generatePermitAsTransaction,
       isV4HookPoolsEnabled,
       walletExecutionContext,
+      gasOverrides,
     }),
     [
       account,
@@ -125,6 +130,7 @@ export function useDerivedSwapInfo({
       generatePermitAsTransaction,
       isV4HookPoolsEnabled,
       walletExecutionContext,
+      gasOverrides,
     ],
   )
 

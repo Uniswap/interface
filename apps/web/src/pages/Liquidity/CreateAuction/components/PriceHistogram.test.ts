@@ -8,6 +8,7 @@ import {
   getConcentratedPriceHistogramHeights,
   getCustomPriceHistogramLayerTitle,
   getCustomPriceHistogramLayers,
+  getCustomPriceHistogramStackExtentHeight,
   getHistogramXForPercentFromClearing,
   getLayeredPriceHistogramColor,
   getPriceHistogramBarCountForWidth,
@@ -61,6 +62,36 @@ describe('PriceHistogram helpers', () => {
     expect(layers[1]?.y).toBeCloseTo(28.2)
     expect(layers[2]?.height).toBeCloseTo(19.2)
     expect(layers[2]?.y).toBe(9)
+  })
+
+  it('grows stack extent when liquidity sums above 100% so the top tier stays below the clearing-price offset', () => {
+    const entries = [
+      {
+        id: 'custom-range-a',
+        liquidityPercent: 60,
+        minPercentFromClearing: -100,
+        maxPercentFromClearing: CUSTOM_PRICE_RANGE_POSITIVE_INFINITY,
+      },
+      {
+        id: 'custom-range-b',
+        liquidityPercent: 60,
+        minPercentFromClearing: -50,
+        maxPercentFromClearing: 100,
+      },
+    ]
+
+    expect(getCustomPriceHistogramStackExtentHeight(entries)).toBeCloseTo(48 * 1.2)
+
+    const layers = getCustomPriceHistogramLayers({
+      barColor: '#02d497',
+      neutral1Color: '#000000',
+      entries,
+    })
+
+    expect(layers.map((layer) => layer.entryId)).toEqual(['custom-range-a', 'custom-range-b'])
+    const minY = Math.min(...layers.map((layer) => layer.y))
+    expect(minY).toBeCloseTo(9)
+    expect(Math.max(...layers.map((layer) => layer.y + layer.height))).toBeCloseTo(9 + 48 * 1.2)
   })
 
   it('stacks layers by range width descending so wider ranges sit at the bottom', () => {

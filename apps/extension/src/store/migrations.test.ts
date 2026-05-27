@@ -41,6 +41,7 @@ import {
   v27Schema,
   v29Schema,
   v30Schema,
+  v31Schema,
 } from 'src/store/schema'
 import { USDC } from 'uniswap/src/constants/tokens'
 import { initialAppearanceSettingsState } from 'uniswap/src/features/appearance/slice'
@@ -57,6 +58,7 @@ import { TransactionStatus, TransactionType } from 'uniswap/src/features/transac
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import {
   testAddActivityVisibility,
+  testAddEnableCustomGasFeeEntry,
   testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
   testRemoveTHBFromCurrency,
@@ -379,5 +381,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v30 to v31', () => {
     testSetLanguageToNavigatorLanguage(migrations[31], v30Schema)
+  })
+
+  it('migrates from v31 to v32', () => {
+    testAddEnableCustomGasFeeEntry(migrations[32], v31Schema)
   })
 })

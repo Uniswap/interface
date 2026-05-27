@@ -104,6 +104,16 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
         : parsedOutputAmount && limitPrice.invert().quote(parsedOutputAmount)
     }
 
+    // Price.quote() can produce zero-quotient amounts when the derived side is too small
+    // (e.g. selling EURC for a tiny MOG amount). Treat these as undefined to prevent
+    // placing orders with zero sell/buy values.
+    if (parsedInputAmount?.quotient.toString() === '0') {
+      parsedInputAmount = undefined
+    }
+    if (parsedOutputAmount?.quotient.toString() === '0') {
+      parsedOutputAmount = undefined
+    }
+
     return {
       [CurrencyField.INPUT]: parsedInputAmount,
       [CurrencyField.OUTPUT]: parsedOutputAmount,

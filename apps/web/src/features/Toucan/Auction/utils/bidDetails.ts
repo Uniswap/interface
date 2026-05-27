@@ -1,5 +1,5 @@
+import { toSubscript } from 'utilities/src/format/toSubscript'
 import { formatUnits } from '~/chains'
-import { toSubscript } from '~/components/Charts/utils/subscript'
 import { AuctionBidStatus, AuctionProgressState, UserBid } from '~/features/Toucan/Auction/store/types'
 
 // ─────────────────────────────────────────────────────────────────────────────

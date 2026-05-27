@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import type { LayoutChangeEvent } from 'react-native'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Button, ColorTokens, Flex, GeneratedIcon, getContrastPassingTextColor } from 'ui/src'
+import { Button, ColorTokens, Flex, GeneratedIcon, getContrastPassingTextColor, useDynamicFontSizing } from 'ui/src'
 import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
 import { GridView, X } from 'ui/src/components/icons'
-import { opacify, validColor } from 'ui/src/theme'
+import { opacify, validColor, fonts } from 'ui/src/theme'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
@@ -13,6 +14,17 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+
+const CTA_MAX_LABEL_FONT_SIZE = fonts.buttonLabel1.fontSize
+const CTA_MIN_LABEL_FONT_SIZE = fonts.buttonLabel4.fontSize
+const CTA_MAX_CHAR_WIDTH_AT_MAX_FONT_SIZE = 10
+
+const FadeProps = (ready: boolean, onLayout?: (event: LayoutChangeEvent) => void) => ({
+  animation: 'quicker' as const,
+  animateOnly: ['opacity'] as string[],
+  opacity: ready ? 1 : 0,
+  onLayout,
+})
 
 function CTAButton({
   title,
@@ -23,6 +35,10 @@ function CTAButton({
   tokenColor,
   disabled,
   icon: Icon,
+  onLayout,
+  onIconLayout,
+  labelFontSize,
+  showLabel = true,
 }: {
   title: string
   element: ElementName
@@ -32,19 +48,48 @@ function CTAButton({
   tokenColor?: string | null
   disabled?: boolean
   icon?: GeneratedIcon
+  onLayout?: (event: LayoutChangeEvent) => void
+  onIconLayout?: (event: LayoutChangeEvent) => void
+  labelFontSize?: number
+  showLabel?: boolean
 }): JSX.Element {
+  const usesDynamicFontSizing = Boolean(onLayout || onIconLayout)
+  const iconColor = tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'
+
+  const buttonIcon = useMemo(() => {
+    if (!Icon) {
+      return undefined
+    }
+
+    if (!usesDynamicFontSizing) {
+      return <Icon color={iconColor} />
+    }
+
+    return (
+      <Flex {...FadeProps(showLabel, onIconLayout)}>
+        <Icon size="$icon.24" color={iconColor} />
+      </Flex>
+    )
+  }, [usesDynamicFontSizing, onIconLayout, Icon, showLabel, iconColor])
+
   return (
     <Trace logPress element={element} section={SectionName.TokenDetails}>
       <Button
         variant="branded"
         opacity={disabled ? 0.5 : undefined}
-        icon={Icon ? <Icon color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'} /> : undefined}
+        icon={buttonIcon}
         backgroundColor={validColor(tokenColor)}
         size="large"
         testID={testID}
         onPress={disabled ? onPressDisabled : onPress}
       >
-        {title}
+        {usesDynamicFontSizing ? (
+          <Flex fill={!showLabel} {...FadeProps(showLabel, onLayout)}>
+            <Button.Text fontSize={labelFontSize}>{title}</Button.Text>
+          </Flex>
+        ) : (
+          title
+        )}
       </Button>
     </Trace>
   )
@@ -203,6 +248,63 @@ export function TokenDetailsBuySellButtons({
     toggleActionMenu,
   } = useActionButtonState(actionMenuOptions)
 
+  const buyLabel = buyButtonTitle ?? t('common.button.buy')
+  const sellLabel = t('common.button.sell')
+
+  const [buySized, setBuySized] = useState(false)
+  const [sellSized, setSellSized] = useState(false)
+
+  const {
+    onLayout: onBuyLayout,
+    fontSize: buyLabelFontSize,
+    onSetFontSize: onSetBuyLabelFontSize,
+    onExtraElementLayout: onBuyIconLayout,
+  } = useDynamicFontSizing({
+    maxCharWidthAtMaxFontSize: CTA_MAX_CHAR_WIDTH_AT_MAX_FONT_SIZE,
+    maxFontSize: CTA_MAX_LABEL_FONT_SIZE,
+    minFontSize: CTA_MIN_LABEL_FONT_SIZE,
+  })
+
+  const {
+    onLayout: onSellLayout,
+    fontSize: sellLabelFontSize,
+    onSetFontSize: onSetSellLabelFontSize,
+  } = useDynamicFontSizing({
+    maxCharWidthAtMaxFontSize: CTA_MAX_CHAR_WIDTH_AT_MAX_FONT_SIZE,
+    maxFontSize: CTA_MAX_LABEL_FONT_SIZE,
+    minFontSize: CTA_MIN_LABEL_FONT_SIZE,
+  })
+
+  const labelsReady = userHasBalance ? buySized && sellSized : buySized
+
+  const handleBuyLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      if (event.nativeEvent.layout.width === 0) {
+        return
+      }
+      onBuyLayout(event)
+      onSetBuyLabelFontSize(buyLabel)
+      setBuySized(true)
+    },
+    [onBuyLayout, buyLabel, onSetBuyLabelFontSize],
+  )
+
+  const handleSellLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      if (event.nativeEvent.layout.width === 0) {
+        return
+      }
+      onSellLayout(event)
+      onSetSellLabelFontSize(sellLabel)
+      setSellSized(true)
+    },
+    [onSellLayout, onSetSellLabelFontSize, sellLabel],
+  )
+
+  const sharedLabelFontSize = useMemo(() => {
+    return userHasBalance ? Math.min(buyLabelFontSize, sellLabelFontSize) : buyLabelFontSize
+  }, [buyLabelFontSize, sellLabelFontSize, userHasBalance])
+
   return (
     <Flex
       row
@@ -219,8 +321,12 @@ export function TokenDetailsBuySellButtons({
           element={ElementName.Buy}
           icon={buyButtonIcon}
           testID={TestID.TokenDetailsBuyButton}
-          title={buyButtonTitle ?? t('common.button.buy')}
+          title={buyLabel}
           tokenColor={tokenColor}
+          labelFontSize={sharedLabelFontSize}
+          showLabel={labelsReady}
+          onLayout={handleBuyLayout}
+          onIconLayout={onBuyIconLayout}
           onPress={onPressBuy}
           onPressDisabled={onPressDisabled}
         />
@@ -229,8 +335,11 @@ export function TokenDetailsBuySellButtons({
             disabled={disabled}
             element={ElementName.Sell}
             testID={TestID.TokenDetailsSellButton}
-            title={t('common.button.sell')}
+            title={sellLabel}
             tokenColor={tokenColor}
+            labelFontSize={sharedLabelFontSize}
+            showLabel={labelsReady}
+            onLayout={handleSellLayout}
             onPress={onPressSell}
             onPressDisabled={onPressDisabled}
           />

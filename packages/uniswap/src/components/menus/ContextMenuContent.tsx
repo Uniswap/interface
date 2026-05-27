@@ -103,6 +103,7 @@ export function MenuContent({
               <Fragment key={index}>
                 {showDivider && <Separator my="$spacing6" />}
                 <DropdownMenuSheetItem
+                  allowMultiline
                   role="none"
                   variant={isWebPlatform ? 'small' : 'medium'}
                   icon={

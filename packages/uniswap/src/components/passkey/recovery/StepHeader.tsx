@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react'
-import { Flex, TouchableArea } from 'ui/src'
+import { Flex, ModalCloseIcon, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { X } from 'ui/src/components/icons/X'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function StepHeader({
   onBack,
   onClose,
   headerActions,
+  hideBack,
 }: {
   onBack: () => void
   onClose: () => void
@@ -18,20 +18,20 @@ export function StepHeader({
    * window chrome).
    */
   headerActions?: ReactNode | null
+  /** Hide the left-side back arrow while keeping the right-side actions. */
+  hideBack?: boolean
 }): JSX.Element | null {
   if (headerActions === null) {
     return null
   }
-  const right = headerActions ?? (
-    <TouchableArea variant="unstyled" testID={TestID.StepHeaderClose} onPress={onClose}>
-      <X size="$icon.20" color="$neutral2" />
-    </TouchableArea>
-  )
+  const right = headerActions ?? <ModalCloseIcon testId={TestID.StepHeaderClose} size="$icon.20" onClose={onClose} />
   return (
-    <Flex row width="100%" justifyContent="space-between" alignItems="center">
-      <TouchableArea variant="unstyled" testID={TestID.StepHeaderBack} onPress={onBack}>
-        <BackArrow size="$icon.20" color="$neutral2" />
-      </TouchableArea>
+    <Flex row width="100%" justifyContent={hideBack ? 'flex-end' : 'space-between'} alignItems="center">
+      {!hideBack && (
+        <TouchableArea variant="unstyled" testID={TestID.StepHeaderBack} onPress={onBack}>
+          <BackArrow size="$icon.20" color="$neutral2" />
+        </TouchableArea>
+      )}
       {right}
     </Flex>
   )

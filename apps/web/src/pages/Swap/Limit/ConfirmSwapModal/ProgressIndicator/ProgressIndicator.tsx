@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, useSporeColors } from 'ui/src'
+import { Sign } from 'ui/src/components/icons/Sign'
+import { Swap } from 'ui/src/components/icons/Swap'
 import { DEP_accentColors } from 'ui/src/theme'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { Sign } from '~/components/Icons/Sign'
-import { Swap } from '~/components/Icons/Swap'
 import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { useBlockConfirmationTime } from '~/features/Swap/hooks/useBlockConfirmationTime'
 import { useAccount } from '~/hooks/useAccount'
@@ -137,7 +137,11 @@ export function ProgressIndicator({
         learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
       },
       [ConfirmModalState.PERMITTING]: {
-        icon: <Sign />,
+        icon: (
+          <Flex centered width={ICON_SIZE} height={ICON_SIZE} borderRadius="$roundedFull" backgroundColor="$accent1">
+            <Sign size="$icon.12" />
+          </Flex>
+        ),
         rippleColor: colors.accent1.val,
         previewTitle: t('common.signMessage'),
         actionRequiredTitle: t('common.signMessageWallet'),
@@ -145,7 +149,11 @@ export function ProgressIndicator({
         learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
       },
       [ConfirmModalState.PENDING_CONFIRMATION]: {
-        icon: <Swap />,
+        icon: (
+          <Flex centered width={ICON_SIZE} height={ICON_SIZE} borderRadius="$roundedFull" backgroundColor="$neutral2">
+            <Swap size="$icon.12" color="$white" />
+          </Flex>
+        ),
         rippleColor: DEP_accentColors.blue400,
         previewTitle: isLimitTrade(trade) ? t('common.confirm') : t('swap.confirmSwap'),
         actionRequiredTitle: isLimitTrade(trade) ? t('common.confirmWallet') : t('common.confirmSwap'),

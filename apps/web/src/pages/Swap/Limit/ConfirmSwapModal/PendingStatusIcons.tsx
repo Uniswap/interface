@@ -1,10 +1,10 @@
 import { Flex, styled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ConfirmedIcon, SubmittedIcon } from '~/components/AccountDrawer/MiniPortfolio/Activity/Logos'
-import { LoaderV3 } from '~/components/Icons/LoadingSpinner'
+import { LogoLoadingSpinner } from '~/components/LogoLoadingSpinner'
 import { FadePresence } from '~/theme/components/FadePresence'
 
-const LoadingIndicator = styled(LoaderV3, {
+const LoadingIndicator = styled(LogoLoadingSpinner, {
   color: '$neutral3',
   width: 'calc(100% + 8px)',
   height: 'calc(100% + 8px)',

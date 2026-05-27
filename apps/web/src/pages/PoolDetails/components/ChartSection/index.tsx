@@ -6,9 +6,10 @@ import { useAtomValue } from 'jotai/utils'
 import { createParser, useQueryState } from 'nuqs'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SegmentedControl, styled, Text, useMedia } from 'ui/src'
+import { Flex, SegmentedControl, useMedia } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { NumberType } from 'utilities/src/format/types'
@@ -33,13 +34,14 @@ import {
 import { ZoomButtons } from '~/features/Liquidity/charts/D3LiquidityChartShared/components/ZoomButtons'
 import { usePoolPriceChartData } from '~/features/Liquidity/charts/usePoolPriceChartData'
 import { tryParseCurrencyAmount } from '~/lib/utils/tryParseCurrencyAmount'
+import { ChartPriceText, PriceDisplayContainer } from '~/pages/PoolDetails/components/ChartSection/ChartPriceDisplay'
 import {
   D3LiquidityPoolChart,
   D3LiquidityPoolChartZoomActions,
 } from '~/pages/PoolDetails/components/ChartSection/D3LiquidityPoolChart'
 import { DepthChart } from '~/pages/PoolDetails/components/ChartSection/DepthChart'
 import { usePDPVolumeChartData } from '~/pages/PoolDetails/components/ChartSection/hooks'
-import { EllipsisTamaguiStyle } from '~/theme/components/styles'
+import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
 
 const PDP_CHART_HEIGHT_PX = 356
 const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY, ChartType.DEPTH] as const
@@ -86,6 +88,7 @@ type TDPChartState = {
   selectedChartType: PoolsDetailsChartType
   activeQuery: ActiveQuery
   dataQuality?: DataQuality
+  priceEntries?: PriceChartData[]
 }
 
 function usePDPChartState({
@@ -141,6 +144,7 @@ function usePDPChartState({
       setChartType,
       selectedChartType: normalizedChartType,
       activeQuery,
+      priceEntries: priceQuery.entries,
     }
   }, [chartType, normalizedChartType, volumeQuery, priceQuery, timePeriod, setChartType])
 }
@@ -157,7 +161,7 @@ export function ChartSection(props: ChartSectionProps) {
     props.poolData?.token1 && gqlToCurrency(props.poolData.token1),
   ]
 
-  const { setChartType, timePeriod, setTimePeriod, activeQuery, selectedChartType } = usePDPChartState({
+  const { setChartType, timePeriod, setTimePeriod, activeQuery, selectedChartType, priceEntries } = usePDPChartState({
     poolData: props.poolData,
     isReversed: props.isReversed,
     chain: props.chain ?? GraphQLApi.Chain.Ethereum,
@@ -193,7 +197,7 @@ export function ChartSection(props: ChartSectionProps) {
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
     if (activeQuery.chartType === ChartType.LIQUIDITY) {
       if (selectedChartType === ChartType.DEPTH) {
-        return <DepthChart {...selectedChartProps} onZoomActionsReady={setZoomActions} />
+        return <DepthChart {...selectedChartProps} onZoomActionsReady={setZoomActions} priceEntries={priceEntries} />
       }
       return <D3LiquidityPoolChart {...selectedChartProps} onZoomActionsReady={setZoomActions} />
     }
@@ -211,7 +215,6 @@ export function ChartSection(props: ChartSectionProps) {
             {...selectedChartProps}
             data={activeQuery.entries}
             stale={stale}
-            tokenFormatType={NumberType.TokenNonTx}
             overrideColor={props.isReversed ? props.tokenBColor : props.tokenAColor}
           />
         )
@@ -300,27 +303,12 @@ export function ChartSection(props: ChartSectionProps) {
   )
 }
 
-const PriceDisplayContainer = styled(Flex, {
-  flexWrap: 'wrap',
-  columnGap: '$spacing4',
-})
-
-const ChartPriceText = styled(Text, {
-  variant: 'heading2',
-  ...EllipsisTamaguiStyle,
-  $md: {
-    fontSize: 24,
-    lineHeight: 32,
-  },
-})
-
 function PriceChart({
   tokenA,
   tokenB,
   isReversed,
   data,
   stale,
-  tokenFormatType,
   overrideColor,
 }: {
   tokenA: Token | NativeCurrency
@@ -328,15 +316,20 @@ function PriceChart({
   isReversed: boolean
   data: PriceChartData[]
   stale: boolean
-  tokenFormatType?: NumberType
   overrideColor?: string
 }) {
-  const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const locale = useCurrentLocale()
   const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
 
+  const yAxisFormatter = useMemo(
+    () => (price: number) => formatPriceWithSubscript({ price, locale, formatNumberOrString }),
+    [locale, formatNumberOrString],
+  )
+
   const params = useMemo(
-    () => ({ data, stale, type: PriceChartType.LINE, tokenFormatType }),
-    [data, stale, tokenFormatType],
+    () => ({ data, stale, type: PriceChartType.LINE, yAxisFormatter }),
+    [data, stale, yAxisFormatter],
   )
 
   const lastPrice = data[data.length - 1]
@@ -352,14 +345,17 @@ function PriceChart({
     >
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
+        // `usePoolPriceChartData` populates only the candlestick fields (open/high/low/close)
+        // even though the TS type also exposes `value`. Always read `close` here — it's the
+        // field with the actual price.
         const priceDisplay = (
           <PriceDisplayContainer>
             <ChartPriceText>
-              {`1 ${baseCurrency.symbol} = ${formatCurrencyAmount({
-                // oxlint-disable-next-line typescript/no-unnecessary-condition
-                value: tryParseCurrencyAmount((displayValue?.value ?? displayValue.close).toString(), baseCurrency),
-              })} 
-            ${quoteCurrency.symbol}`}
+              {`1 ${baseCurrency.symbol} = ${formatPriceWithSubscript({
+                price: displayValue.close,
+                locale,
+                formatNumberOrString,
+              })} ${quoteCurrency.symbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">
               {/* the usd price is only calculated for the most recent data point so hide it when selecting a crosshair */}

@@ -19,6 +19,7 @@ export function EmailEntryStep({
   handleBack,
   handleClose,
   headerActions,
+  hideBack,
   t,
 }: {
   email: string
@@ -31,17 +32,18 @@ export function EmailEntryStep({
   handleBack: () => void
   handleClose: () => void
   headerActions?: ReactNode | null
+  hideBack?: boolean
   t: TFunction
 }): JSX.Element {
   const canSubmit = isValidEmail && !isLoading && isReady
   return (
     <Trace logImpression modal={ModalName.RecoverWallet}>
-      <StepHeader headerActions={headerActions} onBack={handleBack} onClose={handleClose} />
+      <StepHeader headerActions={headerActions} hideBack={hideBack} onBack={handleBack} onClose={handleClose} />
       <Flex gap="$gap16" alignItems="center" width="100%" px="$spacing4">
         <IconBox>
           <Person size="$icon.24" color="$neutral1" />
         </IconBox>
-        <Flex gap="$gap8" alignItems="center" maxWidth={360}>
+        <Flex gap="$gap8" alignItems="center" maxWidth={320}>
           <Text variant="subheading1" textAlign="center">
             {t('account.passkey.recovery.email.title')}
           </Text>

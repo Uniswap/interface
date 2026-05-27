@@ -1,24 +1,22 @@
+import { AndroidLogo } from 'ui/src/components/icons/AndroidLogo'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { IcloudPasswordLogo } from 'ui/src/components/icons/IcloudPasswordLogo'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Windows } from 'ui/src/components/icons/Windows'
-import { iconSizes } from 'ui/src/theme'
 import { AuthenticatorNameType } from 'uniswap/src/features/passkey/embeddedWallet'
 import i18n from 'uniswap/src/i18n'
-import { AndroidLogo } from '~/components/Icons/AndroidLogo'
 import { AuthenticatorProvider } from '~/types/authenticatorProvider'
 
 export { AuthenticatorProvider }
 
 export function getProviderIcon(provider: AuthenticatorProvider): JSX.Element {
-  // AndroidLogo is a raw SVG component without a `size` prop; the rest are Tamagui icons.
   switch (provider) {
     case AuthenticatorProvider.Google:
       return <GoogleLogoGradient size="$icon.20" />
     case AuthenticatorProvider.Apple:
       return <IcloudPasswordLogo size="$icon.20" />
     case AuthenticatorProvider.Android:
-      return <AndroidLogo height={iconSizes.icon20} width={iconSizes.icon20} />
+      return <AndroidLogo size="$icon.20" color="$neutral1" />
     case AuthenticatorProvider.Microsoft:
       return <Windows size="$icon.20" color="$neutral1" />
     default:

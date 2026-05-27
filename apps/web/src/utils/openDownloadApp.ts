@@ -11,8 +11,6 @@ const APP_DOWNLOAD_LINKS: Partial<{ [key in ElementName]: string }> = {
   [ElementName.UniswapWalletBannerDownloadButton]: 'https://uniswapwallet.onelink.me/8q3y/jh9orof3',
 }
 
-export const RECOVERY_PHRASE_DOWNLOAD_PROMPT_ONELINK = 'https://uniswapwallet.onelink.me/8q3y/m4i9qsez'
-
 export const MICROSITE_LINK = 'https://wallet.uniswap.org/'
 
 type OpenDownloadAppOptions = {

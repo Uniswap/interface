@@ -28,7 +28,11 @@ export interface EarnVaultInfo {
 export interface EarnPositionInfo {
   vaultId: string
   depositedUsd: number
+  /** Raw underlying token balance currently represented by the user's vault shares. */
+  depositedRaw: string
   apyPercent: number
-  /** Raw vault shares balance. */
+  /** Raw ERC-4626 vault share balance. */
   sharesRaw: string
 }
+
+export type EarnVaultTab = 'balance' | 'details'

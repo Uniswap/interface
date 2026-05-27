@@ -22,6 +22,7 @@ import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { ExploreScreenParams } from 'src/app/navigation/types'
+import { StartEarningSection } from 'src/components/earn/StartEarningSection'
 import { FavoritesSection } from 'src/components/explore/ExploreSections/FavoritesSection'
 import { NetworkPills, NetworkPillsProps } from 'src/components/explore/ExploreSections/NetworkPillsRow'
 import { SortButton } from 'src/components/explore/SortButton'
@@ -324,6 +325,7 @@ const ListHeader = memo(function ListHeader({
   return (
     <Sortable.Layer>
       {showFavorites && <FavoritesSection showLoading={showLoading} listRef={listRef} />}
+      <StartEarningSection />
       <Flex row alignItems="center" justifyContent="space-between" px="$spacing12">
         <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
           {t('explore.tokens.top.title')}

@@ -6,7 +6,6 @@ import { Flex, styled, Text, Tooltip, TouchableArea, useMedia } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { Globe } from 'ui/src/components/icons/Globe'
 import { XTwitter } from 'ui/src/components/icons/XTwitter'
-import { zIndexes } from 'ui/src/theme/zIndexes'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useAuctionStatsData } from '~/features/Toucan/Auction/hooks/useAuctionStatsData'
 import { formatTimestampToDate } from '~/features/Toucan/Auction/utils/formatting'
@@ -75,7 +74,7 @@ export function formatImpliedTokenPrice({
             </Text>
           </Flex>
         </Tooltip.Trigger>
-        <Tooltip.Content zIndex={zIndexes.overlay}>
+        <Tooltip.Content>
           <Text variant="body4" color="$neutral1" maxWidth={250}>
             {t('toucan.auction.stats.impliedTokenPrice.tooltip')}
           </Text>

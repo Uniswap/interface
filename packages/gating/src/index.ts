@@ -83,6 +83,7 @@ export {
 export { LocalOverrideAdapterWrapper } from '@universe/gating/src/LocalOverrideAdapterWrapper'
 export type { StatsigOptions, StatsigUser, StorageProvider } from '@universe/gating/src/sdk/statsig'
 export {
+  bootstrapStatsigClient,
   getOverrideAdapter,
   getStatsigClient,
   StatsigClient,

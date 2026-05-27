@@ -165,16 +165,17 @@ export default defineConfig({
         lib.name = `__wxt_cs_${lib.name}`
       }
     },
-    // Validate build output after dev builds complete
+    // Validate build output after every build (dev and production). The script scans for
+    // bundler regressions that only surface at runtime — most notably classic
+    // `importScripts(` worker chunk loading, which produces the `chunks/chunks/<hash>.js`
+    // NetworkError in shipped builds. Skipping production here is how that bug shipped to
+    // v1.73.0/v1.74.0 unnoticed, so validation now runs on both modes.
     'build:done': async (wxt) => {
-      // Only validate in development mode (dev server)
-      if (wxt.config.mode !== 'development') {
-        return
-      }
       const { execSync } = await import('node:child_process')
+      const modeFlag = wxt.config.mode === 'development' ? '--dev' : '--prod'
       try {
         // Run script directly to avoid Nx dependsOn chain that would trigger a full rebuild
-        execSync('bun run scripts/validateBuildOutput.ts --dev', {
+        execSync(`bun run scripts/validateBuildOutput.ts ${modeFlag}`, {
           cwd: wxt.config.root,
           stdio: 'inherit',
         })
@@ -506,7 +507,8 @@ export default defineConfig({
       },
 
       build: {
-        sourcemap: isProduction ? false : 'hidden',
+        // Always emit hidden sourcemaps. Prod uploads them to Datadog for symbolication; the zip step excludes *.map so they don't ship to users.
+        sourcemap: 'hidden',
         minify: isProduction ? 'esbuild' : undefined,
         rollupOptions: {
           output: {
@@ -519,6 +521,18 @@ export default defineConfig({
         commonjsOptions: {
           include: [/buffer/, /jsbi/, /node_modules/, /cookie/, /void-elements/, /@apollo\/client/],
           transformMixedEsModules: true,
+        },
+      },
+
+      // Use `format: 'es'` to emit module workers for correct imports in Chrome extensions.
+      worker: {
+        format: 'es',
+        rollupOptions: {
+          output: {
+            entryFileNames: 'assets/[name]-[hash].js',
+            chunkFileNames: 'assets/[name]-[hash].js',
+            assetFileNames: 'assets/[name]-[hash].[ext]',
+          },
         },
       },
 

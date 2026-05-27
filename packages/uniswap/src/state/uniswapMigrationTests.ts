@@ -70,3 +70,11 @@ export function testMigrateDismissedTokenWarnings(migration: (state: any) => any
     }
   }
 }
+
+// Mobile: 98
+// Extension: 32
+// Web: 62
+export function testAddEnableCustomGasFeeEntry(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.userSettings.enableCustomGasFeeEntry).toBe(false)
+}

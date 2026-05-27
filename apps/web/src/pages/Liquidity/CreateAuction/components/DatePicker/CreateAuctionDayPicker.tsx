@@ -124,6 +124,7 @@ function useShellStyle(tokenColor?: TokenAccentHex): CSSProperties {
       '--auction-calendar-accent-strong': accentStrong,
       '--auction-calendar-accent-strong-hovered': accentStrongHovered,
       '--auction-calendar-accent-soft': accentSoft,
+      '--auction-calendar-accent-foreground': colors.background.val,
       '--auction-calendar-surface1': colors.surface1.val,
       '--auction-calendar-surface2': colors.surface2.val,
     } as CSSProperties
@@ -132,6 +133,7 @@ function useShellStyle(tokenColor?: TokenAccentHex): CSSProperties {
     colors.accent1.val,
     colors.accent1Hovered.val,
     colors.accent2.val,
+    colors.background.val,
     colors.neutral1.val,
     colors.neutral2.val,
     colors.neutral3.val,

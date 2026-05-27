@@ -2,7 +2,6 @@ import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text, useMedia } from 'ui/src'
-import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { fonts } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -19,7 +18,7 @@ import {
   useLocalizedNumberInput,
 } from '~/pages/Liquidity/CreateAuction/utils/localizedNumberInput'
 
-const QUICK_SELECT_PERCENTS = [2, 5, 10] as const
+const QUICK_SELECT_PERCENTS = [10, 25, 50] as const
 
 /**
  * Parses a suffixed input string into a CurrencyAmount with exact precision.
@@ -148,71 +147,61 @@ export function AuctionSupplySelector({
       p="$spacing16"
       gap="$spacing8"
     >
-      {/* Header: "Deposit amount" + help icon */}
-      <Flex row alignItems="center" gap="$spacing4">
-        <Text variant="buttonLabel3" color="$neutral2">
-          {t('toucan.createAuction.step.configureAuction.depositAmount')}
+      <Text variant="buttonLabel3" color="$neutral2">
+        {t('toucan.createAuction.step.configureAuction.depositAmount')}
+      </Text>
+
+      {/* Amount input — always takes the full row */}
+      <Flex row alignItems="center" flexWrap="wrap" gap="$spacing4" minWidth={0}>
+        {isFocused ? (
+          <Input
+            ref={inputRef}
+            autoFocus
+            unstyled
+            outlineStyle="none"
+            $platform-web={{
+              fieldSizing: 'content',
+              minWidth: '1ch',
+              maxWidth: '100%',
+            }}
+            value={focusedDisplay}
+            onChangeText={handleChange}
+            onBlur={handleBlur}
+            placeholder="0"
+            placeholderTextColor="$neutral3"
+            fontFamily="$heading"
+            fontSize={fonts.heading3.fontSize}
+            lineHeight={fonts.heading3.lineHeight}
+            fontWeight={fonts.heading3.fontWeight}
+            color={exceedsTotalSupply ? '$statusCritical' : '$neutral1'}
+            backgroundColor="$transparent"
+          />
+        ) : (
+          <Text variant="heading3" color="$neutral1" cursor="text" onPress={handleFocus}>
+            {displayUnfocused}
+          </Text>
+        )}
+        <Text flexShrink={0} variant="heading3" color="$neutral3">
+          {tokenSymbol}
         </Text>
-        <QuestionInCircleFilled size="$icon.16" color="$neutral3" />
       </Flex>
 
-      {/* Amount + total supply on top; preset pills beside on wide cards, below when narrow */}
+      {/* Total supply + preset pills: same row when wide, stacked when narrow */}
       <Flex
         row={!stackPresetPills}
         alignItems={stackPresetPills ? 'stretch' : 'center'}
         justifyContent={stackPresetPills ? 'flex-start' : 'space-between'}
-        gap={stackPresetPills ? '$spacing12' : '$spacing8'}
+        gap="$spacing8"
         width="100%"
       >
-        <Flex
-          flex={stackPresetPills ? undefined : 1}
-          flexBasis={stackPresetPills ? undefined : 0}
-          flexGrow={stackPresetPills ? undefined : 1}
-          minWidth={0}
-          gap="$spacing4"
-          maxWidth="100%"
-        >
-          <Flex row alignItems="center" flexWrap="wrap" gap="$spacing4" minWidth={0}>
-            {isFocused ? (
-              <Input
-                ref={inputRef}
-                autoFocus
-                height={fonts.heading3.lineHeight}
-                $platform-web={{
-                  fieldSizing: 'content',
-                  minWidth: '1ch',
-                  maxWidth: '100%',
-                }}
-                value={focusedDisplay}
-                onChangeText={handleChange}
-                onBlur={handleBlur}
-                placeholder="0"
-                placeholderTextColor="$neutral3"
-                fontSize={fonts.heading3.fontSize}
-                lineHeight={fonts.heading3.lineHeight}
-                fontWeight={fonts.heading3.fontWeight}
-                color={exceedsTotalSupply ? '$statusCritical' : '$neutral1'}
-                px="$none"
-                backgroundColor="$transparent"
-              />
-            ) : (
-              <Text variant="heading3" color="$neutral1" cursor="text" onPress={handleFocus}>
-                {displayUnfocused}
-              </Text>
-            )}
-            <Text flexShrink={0} variant="heading3" color="$neutral3">
-              {tokenSymbol}
-            </Text>
-          </Flex>
-          <Text variant="body4" color="$neutral2">
-            {t('toucan.auction.totalSupply')}: {totalSupplyFormatted} {tokenSymbol}
-          </Text>
-        </Flex>
+        <Text variant="body4" color="$neutral2">
+          {t('toucan.auction.totalSupply')}: {totalSupplyFormatted} {tokenSymbol}
+        </Text>
 
         <Flex
           gap="$spacing2"
           maxWidth="100%"
-          alignSelf={stackPresetPills ? 'stretch' : 'flex-end'}
+          alignSelf={stackPresetPills ? 'stretch' : 'center'}
           width={stackPresetPills ? '100%' : undefined}
           flexShrink={0}
           $platform-web={{

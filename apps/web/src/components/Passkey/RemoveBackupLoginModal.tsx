@@ -7,10 +7,8 @@ import { deleteRecoveryMethod } from 'uniswap/src/features/passkey/embeddedWalle
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  getRecoveryMethodLabel,
-  invalidateListAuthenticators,
-} from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { getRecoveryMethodLabel } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useModalState } from '~/hooks/useModalState'
 import type { RemoveBackupLoginModalParams } from '~/state/application/reducer'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
@@ -36,7 +34,7 @@ export function RemoveBackupLoginModal() {
       return await deleteRecoveryMethod(walletId)
     },
     onSuccess: () => {
-      invalidateListAuthenticators(queryClient, walletId)
+      queryClient.invalidateQueries({ queryKey: [ReactQueryCacheKey.ListAuthenticators] })
       onClose()
     },
     onError: (error) => {

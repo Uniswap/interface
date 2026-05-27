@@ -78,7 +78,7 @@ export function PasskeyGenerationModal({
         onClose={onClose}
         goBack={goBack}
       >
-        <Flex px="$spacing32" mb="$spacing32" width="100%">
+        <Flex width="100%">
           <Trace logPress element={ElementName.CreatePasskey}>
             <Button
               testID={TestID.CreatePasskey}

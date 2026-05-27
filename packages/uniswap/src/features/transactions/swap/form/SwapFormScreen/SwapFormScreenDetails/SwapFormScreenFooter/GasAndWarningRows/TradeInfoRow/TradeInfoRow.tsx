@@ -1,4 +1,5 @@
 import { isMobileApp, isWebApp } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Accordion, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
@@ -8,9 +9,11 @@ import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useEnableCustomGasFeeEntry } from 'uniswap/src/features/gas/hooks/useEnableCustomGasFeeEntry'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
 import { CanonicalBridgeLinkBanner } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/CanonicalBridgeLinkBanner'
 import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/GasInfoRow'
+import { GasInfoRowWithCustomGasEnabled } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/GasInfoRowWithCustomGasEnabled'
 import { TradeWarning } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeWarning'
 import { useDebouncedTrade } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/useDebouncedTrade'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
@@ -26,13 +29,21 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
 
   const currencies = useSwapFormStoreDerivedSwapInfo((s) => s.currencies)
   const derivedSwapInfo = useSwapFormStoreDerivedSwapInfo((s) => s)
+  const isGasFeeOverridesEnabled = useFeatureFlag(FeatureFlags.GasFeeOverrides)
+  const enableCustomGasFeeEntry = useEnableCustomGasFeeEntry()
 
   if (isTestnetModeEnabled) {
     return null
   }
 
   if (isMobileApp) {
-    return <GasInfoRow gasInfo={gasInfo} />
+    // Only swap to the tappable chip when the user has opted into custom entry.
+    // Otherwise we keep the <GasInfoRow> + NetworkFeeWarning tooltip pair.
+    return isGasFeeOverridesEnabled && enableCustomGasFeeEntry ? (
+      <GasInfoRowWithCustomGasEnabled gasInfo={gasInfo} />
+    ) : (
+      <GasInfoRow gasInfo={gasInfo} />
+    )
   }
 
   // On interface, if the warning is a no quotes found warning, we want to show an external link to a canonical bridge

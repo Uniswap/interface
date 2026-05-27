@@ -14,8 +14,13 @@ save = "exact"
 # Supply chain protection: reject package versions published less than 3 days ago
 # @uniswap/client-* packages are internal service definitions that are frequently
 # updated alongside backend proto changes and are trusted as first-party packages.
+# @privy-io/expo, @privy-io/js-sdk-core, and @privy-io/routes are allowed for
+# time-sensitive SDK upgrades coordinated with Privy.
 minimumReleaseAge = 259200
 minimumReleaseAgeExcludes = [
+  "@privy-io/expo",
+  "@privy-io/js-sdk-core",
+  "@privy-io/routes",
   "@uniswap/client-conversion-proxy",
   "@uniswap/client-data-api",
   "@uniswap/client-enclave-data-proxy",

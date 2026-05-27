@@ -164,7 +164,11 @@ describe('signing', () => {
           messages: ['hello'],
           auth: {
             case: 'deviceAuth',
-            value: { deviceSignature: 'mock-device-signature', walletId: 'wallet-1' },
+            value: {
+              deviceSignature: 'mock-device-signature',
+              walletId: 'wallet-1',
+              signingPayload: 'mock-signing-payload',
+            },
           },
         }),
       )
@@ -421,7 +425,11 @@ describe('signing', () => {
           nonce: 5,
           auth: {
             case: 'deviceAuth',
-            value: { deviceSignature: 'mock-device-signature', walletId: 'wallet-1' },
+            value: {
+              deviceSignature: 'mock-device-signature',
+              walletId: 'wallet-1',
+              signingPayload: 'mock-signing-payload',
+            },
           },
         }),
       )
@@ -499,7 +507,11 @@ describe('signing', () => {
           authorizationContractAddress: '0xcontract',
           auth: {
             case: 'deviceAuth',
-            value: { deviceSignature: 'mock-device-signature', walletId: 'wallet-1' },
+            value: {
+              deviceSignature: 'mock-device-signature',
+              walletId: 'wallet-1',
+              signingPayload: 'mock-signing-payload',
+            },
           },
         }),
       )

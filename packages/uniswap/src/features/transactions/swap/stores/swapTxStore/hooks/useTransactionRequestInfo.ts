@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
+import { useTradingApiGasOverrides } from 'uniswap/src/features/gas/hooks/useTradingApiGasOverrides'
 import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { processUniswapXResponse } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/utils'
@@ -33,6 +34,9 @@ function useSwapTransactionRequestInfo({
   const trace = useTrace()
   const gasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const transactionSettings = useAllTransactionSettings()
+  // tx is unavailable at quote time (this hook runs before the /swap response
+  // resolves); recommended falls back to undefined, which is fine for full overrides.
+  const gasOverrides = useTradingApiGasOverrides({ tx: undefined })
 
   const permitData = derivedSwapInfo.trade.trade?.quote.permitData
   // On interface, we do not fetch signature until after swap is clicked, as it requires user interaction.
@@ -51,7 +55,10 @@ function useSwapTransactionRequestInfo({
   const swapDelegationInfo = useUniswapContextSelector((ctx) => ctx.getSwapDelegationInfo?.(derivedSwapInfo.chainId))
   const overrideSimulation = !!swapDelegationInfo?.delegationAddress
 
-  const prepareSwapRequestParams = useMemo(() => createPrepareSwapRequestParams({ gasStrategy }), [gasStrategy])
+  const prepareSwapRequestParams = useMemo(
+    () => createPrepareSwapRequestParams({ gasStrategy, gasOverrides }),
+    [gasStrategy, gasOverrides],
+  )
 
   const swapRequestParams = useMemo(() => {
     if (!swapQuoteResponse) {
@@ -113,7 +120,16 @@ function useSwapTransactionRequestInfo({
     },
   )
 
-  const processSwapResponse = useMemo(() => createProcessSwapResponse({ gasStrategy }), [gasStrategy])
+  // Only treat as "overrides" for the display path when the user explicitly
+  // set `gasLimit`. The backend skips its `limitInflationFactor` (1.15x) only
+  // for an explicit top-level `gasLimit`; partial overrides (maxBaseFee or
+  // priority only) still get the inflated auto-probed limit, so the display
+  // should keep its inflation backoff in that case.
+  const hasOverrides = gasOverrides?.gasLimit !== undefined
+  const processSwapResponse = useMemo(
+    () => createProcessSwapResponse({ gasStrategy, hasOverrides }),
+    [gasStrategy, hasOverrides],
+  )
 
   const result = useMemo(
     () =>

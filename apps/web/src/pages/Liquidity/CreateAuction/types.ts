@@ -43,6 +43,7 @@ type CreateNewTokenFields = {
   imageUrl: string
   network: UniverseChainId
   xProfile: string
+  websiteLink: string
   totalSupply: CurrencyAmount<Currency>
 }
 
@@ -50,6 +51,7 @@ type ExistingTokenFields = {
   existingTokenCurrencyInfo: CurrencyInfo | undefined
   description: string
   xProfile: string
+  websiteLink: string
   totalSupply: CurrencyAmount<Currency> | undefined
 }
 
@@ -57,8 +59,11 @@ export type CreateNewTokenFormState = { mode: TokenMode.CREATE_NEW } & CreateNew
 export type ExistingTokenFormState = { mode: TokenMode.EXISTING } & ExistingTokenFields
 export type TokenFormState = CreateNewTokenFormState | ExistingTokenFormState
 
-/** Default share of total token supply deposited into the auction when advancing from token info. */
-export const DEFAULT_AUCTION_SUPPLY_PERCENT = new Percent(25, 100)
+/** Default share of total token supply deposited into the auction for new tokens. */
+export const DEFAULT_NEW_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(25, 100)
+
+/** Default share for existing tokens: auction the user's entire wallet balance. */
+export const DEFAULT_EXISTING_TOKEN_AUCTION_SUPPLY_PERCENT = new Percent(100, 100)
 
 export enum RaiseCurrency {
   ETH = 'ETH',
@@ -67,6 +72,18 @@ export enum RaiseCurrency {
 
 /** What currency the user types floor price / FDV in (raise token vs USD fiat). */
 export type InputCurrency = 'raise' | 'usd'
+
+/** What the floor-price numeric input represents. */
+export type FloorPriceDenomination = 'floorPrice' | 'fdv'
+
+export type FloorPriceInputState = {
+  /** Canonical floor price this display draft produced; used to avoid hydrating stale input text. */
+  floorPrice: string
+  /** Dot-decimal, unlocalized value exactly as the user entered it. */
+  rawValue: string
+  denomination: FloorPriceDenomination
+  inputCurrency: InputCurrency
+}
 
 export enum PostAuctionLiquidityAllocationType {
   SINGLE = 'single',
@@ -117,6 +134,7 @@ export type ConfigureAuctionFormState = {
   postAuctionLiquidityAllocation: PostAuctionLiquidityAllocation
   raiseCurrency: RaiseCurrency
   floorPrice: string
+  floorPriceInput: FloorPriceInputState | undefined
   kycValidationHookAddress: string | undefined
 }
 
@@ -210,6 +228,7 @@ export const DEFAULT_EXISTING_TOKEN_FORM: ExistingTokenFormState = {
   existingTokenCurrencyInfo: undefined,
   description: '',
   xProfile: '',
+  websiteLink: '',
   totalSupply: undefined,
 }
 
@@ -244,6 +263,7 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
     imageUrl: '',
     network: UniverseChainId.Unichain,
     xProfile: '',
+    websiteLink: '',
     totalSupply: NEW_TOKEN_DEFAULT_TOTAL_SUPPLY,
   },
   configureAuction: {
@@ -256,6 +276,7 @@ export const DEFAULT_CREATE_AUCTION_STATE: CreateAuctionState = {
     },
     raiseCurrency: RaiseCurrency.ETH,
     floorPrice: '',
+    floorPriceInput: undefined,
     kycValidationHookAddress: undefined,
   },
 }
@@ -282,7 +303,7 @@ interface CreateAuctionStoreActions {
   setStartTime: (startTime: Date | undefined) => void
   setEndTime: (endTime: Date | undefined) => void
   setRaiseCurrency: (currency: RaiseCurrency) => void
-  setFloorPrice: (price: string) => void
+  setFloorPrice: (price: string, input?: Omit<FloorPriceInputState, 'floorPrice'>) => void
   setKycValidationHookAddress: (address: string | undefined) => void
   setFee: (fee: FeeData) => void
   setPriceRangeStrategy: (strategy: PriceRangeStrategy) => void

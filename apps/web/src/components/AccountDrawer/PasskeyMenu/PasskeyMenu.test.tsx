@@ -5,7 +5,7 @@ import { listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { invalidateListAuthenticators, PasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { PasskeyMenu, resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
 
@@ -309,27 +309,39 @@ describe('PasskeyMenu', () => {
   })
 })
 
-describe('invalidateListAuthenticators', () => {
+describe('resetListAuthenticators', () => {
   beforeEach(() => {
     sessionStorage.clear()
   })
 
-  it('removes the sessionStorage mirror and invalidates the query', async () => {
+  it('removes the sessionStorage mirror and resets the query', async () => {
     sessionStorage.setItem('listAuth:wallet-1', JSON.stringify({ authenticators: [], recoveryMethods: [] }))
     const queryClient = new QueryClient()
-    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries')
+    const resetSpy = vi.spyOn(queryClient, 'resetQueries')
 
-    await invalidateListAuthenticators(queryClient, 'wallet-1')
+    await resetListAuthenticators(queryClient, 'wallet-1')
 
     expect(sessionStorage.getItem('listAuth:wallet-1')).toBeNull()
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.ListAuthenticators] })
+    expect(resetSpy).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.ListAuthenticators] })
+  })
+
+  it('drops cached data so the next observer refetches', async () => {
+    const queryClient = new QueryClient()
+    queryClient.setQueryData([ReactQueryCacheKey.ListAuthenticators, 'wallet-1'], {
+      authenticators: [{ credentialId: 'cred-1' }],
+      recoveryMethods: [],
+    })
+
+    await resetListAuthenticators(queryClient, 'wallet-1')
+
+    expect(queryClient.getQueryData([ReactQueryCacheKey.ListAuthenticators, 'wallet-1'])).toBeUndefined()
   })
 
   it('handles a null walletId by clearing the empty-suffix sessionStorage key', async () => {
     sessionStorage.setItem('listAuth:', JSON.stringify({ authenticators: [], recoveryMethods: [] }))
     const queryClient = new QueryClient()
 
-    await invalidateListAuthenticators(queryClient, null)
+    await resetListAuthenticators(queryClient, null)
 
     expect(sessionStorage.getItem('listAuth:')).toBeNull()
   })

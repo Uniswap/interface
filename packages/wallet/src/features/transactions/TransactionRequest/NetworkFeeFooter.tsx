@@ -36,6 +36,19 @@ const SignatureMethods: Array<string> = [
   DappRequestType.SignTypedData,
 ]
 
+/**
+ * Returns true when the supplied request method is one that submits a tx
+ * on-chain (and therefore costs gas). Exported so the gas-overrides Network
+ * cost row can mirror the same gating used to hide the legacy fee footer for
+ * signature-only methods.
+ */
+export function isGasBearingMethod(requestMethod: string | undefined): boolean {
+  if (typeof requestMethod !== 'string') {
+    return true
+  }
+  return !SignatureMethods.includes(requestMethod)
+}
+
 export function NetworkFeeFooter({
   chainId,
   showNetworkLogo,

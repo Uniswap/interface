@@ -2,7 +2,6 @@ import { isExtensionApp, isMobileApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
-import { zIndexes } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -63,7 +62,7 @@ const TooltipWarning = (): JSX.Element => {
       <Tooltip.Trigger>
         <AlertTriangleFilled color="$neutral3" size="$icon.16" />
       </Tooltip.Trigger>
-      <Tooltip.Content ml="$spacing12" px="$none" py="$none" zIndex={zIndexes.overlay}>
+      <Tooltip.Content ml="$spacing12" px="$none" py="$none">
         <Flex
           backgroundColor="$surface3"
           borderColor="$surface3"

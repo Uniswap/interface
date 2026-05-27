@@ -53,6 +53,7 @@ import { LoadingFullscreen, LoadingRows } from '~/components/Loader/styled'
 import { MouseoverTooltip } from '~/components/Tooltip'
 import { BaseQuoteFiatAmount } from '~/features/Liquidity/BaseQuoteFiatAmount'
 import { WrappedLiquidityPositionRangeChart } from '~/features/Liquidity/charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useGetRangeDisplay } from '~/features/Liquidity/hooks/useGetRangeDisplay/useGetRangeDisplay'
 import { useLpIncentivesFormattedEarnings } from '~/features/Liquidity/hooks/useLpIncentivesFormattedEarnings'
 import { useReportPositionHandler } from '~/features/Liquidity/hooks/useReportPositionHandler'
@@ -126,6 +127,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
   const account = useAccount()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
   const { pathname } = useLocation()
+  const breadcrumb = useEntryPointBreadcrumb()
   const {
     data,
     isLoading: positionLoading,
@@ -330,8 +332,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
         }
         actionButton={
           <Flex row centered>
-            <Button width="fit-content" variant="branded" onPress={() => navigate('/positions')}>
-              {t('common.backToPositions')}
+            <Button width="fit-content" variant="branded" onPress={() => navigate(breadcrumb.to)}>
+              {breadcrumb.label}
             </Button>
           </Flex>
         }
@@ -374,8 +376,8 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       <BodyWrapper mb={100}>
         <Flex gap="$gap20">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-            <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-              <ArrowLeft size="$icon.16" /> {t('pool.positions.title')}
+            <BreadcrumbNavLink style={{ gap: '8px' }} to={breadcrumb.to}>
+              <ArrowLeft size="$icon.16" /> {breadcrumb.label}
             </BreadcrumbNavLink>
           </BreadcrumbNavContainer>
           <Flex

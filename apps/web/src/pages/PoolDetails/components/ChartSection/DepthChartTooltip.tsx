@@ -2,6 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
@@ -10,6 +12,8 @@ import {
   getDisplayPair,
   toDisplayPrice,
 } from '~/pages/PoolDetails/components/ChartSection/DepthChart.utils'
+import { formatFiatWithSubscript } from '~/pages/PoolDetails/components/formatFiatWithSubscript'
+import { formatPriceWithSubscript } from '~/pages/PoolDetails/components/formatPriceWithSubscript'
 
 export const TooltipShell = ({ children }: { children: ReactNode }) => (
   <Flex
@@ -67,7 +71,10 @@ export function DepthSideTooltipContent({
   usdSymbol?: string
 }) {
   const { t } = useTranslation()
-  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatNumberOrString, convertFiatAmountFormatted, convertFiatAmount, addFiatSymbolToNumber } =
+    useLocalizationContext()
+  const locale = useCurrentLocale()
+  const fiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { base, quote } = getDisplayPair({ tokenA, tokenB, isReversed })
   const baseSymbol = base.symbol ?? base.name ?? ''
   const quoteSymbol = quote.symbol ?? quote.name ?? ''
@@ -96,7 +103,11 @@ export function DepthSideTooltipContent({
           <SubscriptZeroPrice
             variant="body4"
             value={displayPrice}
-            subscriptThreshold={6}
+            // Match the rest of the depth chart's subscript treatment: anything from
+            // 4 leading zeros onward (e.g. WBTC/USDC's ~9.67e-6) gets the subscript glyph,
+            // and we keep 6 sig digits so adjacent depth ticks render as distinct strings.
+            subscriptThreshold={4}
+            maxSignificantDigits={6}
             symbol={quoteSymbol}
             disableTooltip
           />
@@ -111,7 +122,13 @@ export function DepthSideTooltipContent({
               label={t('common.amount')}
               value={
                 <Text variant="body4">
-                  {formatNumberOrString({ value: baseAmount, type: NumberType.TokenNonTx })} {baseSymbol}
+                  {formatPriceWithSubscript({
+                    price: baseAmount,
+                    locale,
+                    formatNumberOrString,
+                    numberType: NumberType.TokenNonTx,
+                  })}{' '}
+                  {baseSymbol}
                 </Text>
               }
             />
@@ -119,7 +136,18 @@ export function DepthSideTooltipContent({
           {usdAmount !== undefined && (
             <TooltipRow
               label={t('chart.type.depth.amountUSD', { symbol: usdSymbol ?? 'USDC' })}
-              value={<Text variant="body4">{convertFiatAmountFormatted(usdAmount, NumberType.FiatTokenStats)}</Text>}
+              value={
+                <Text variant="body4">
+                  {formatFiatWithSubscript({
+                    usdValue: usdAmount,
+                    locale,
+                    fiatCurrencyInfo,
+                    convertFiatAmount,
+                    convertFiatAmountFormatted,
+                    addFiatSymbolToNumber,
+                  })}
+                </Text>
+              }
             />
           )}
         </>

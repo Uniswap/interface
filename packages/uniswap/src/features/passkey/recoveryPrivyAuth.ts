@@ -16,6 +16,12 @@ export interface RecoveryPrivyAuth {
   initOAuth: (provider: 'google' | 'apple') => Promise<void>
   generateAuthorizationSignature: (payload: object) => Promise<{ signature: string }>
   /**
+   * Fetches an encrypted authorization key blob from Privy. Provided by the platform
+   * because mobile uses the `useGetEncryptedAuthorizationKey` hook from `@privy-io/expo`
+   * (which handles PAT-based auth internally), while web hits the REST endpoint directly.
+   */
+  fetchEncryptedBlob: (params: { accessToken: string; keyId: string; privyAppId: string }) => Promise<string>
+  /**
    * OAuth return state. `pending: true` while Privy is still exchanging the OAuth code;
    * resolves to `{ provider, providerEmail }` on success, or `{ provider: null }` if
    * the user abandoned the redirect.

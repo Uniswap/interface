@@ -6,7 +6,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { useTimeout } from 'utilities/src/time/timing'
-import { invalidateListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { PhraseDisplayContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/PhraseDisplayContent'
 import { WarningContent } from '~/components/AccountDrawer/RecoveryPhraseMenu/WarningContent'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
@@ -56,7 +56,7 @@ export function RecoveryPhraseMenu({ onClose }: { onClose: () => void }) {
         setSeedPhrase(phrase)
         setStep(ExportStep.DISPLAY)
         // Refresh the lastExported timestamp surfaced in the delete passkey speedbump.
-        void invalidateListAuthenticators(queryClient, walletId)
+        void resetListAuthenticators(queryClient, walletId)
       }
     } catch (e) {
       logger.error(e, {

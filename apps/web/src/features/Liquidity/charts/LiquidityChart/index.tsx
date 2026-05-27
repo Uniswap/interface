@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
+import { tickToPrice } from '@uniswap/v3-sdk'
 import { tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import JSBI from 'jsbi'
 import { UTCTimestamp } from 'lightweight-charts'
@@ -24,7 +24,7 @@ export function useLiquidityBarData({
   poolId,
 }: {
   sdkCurrencies: { [field in PositionField]: Currency }
-  feeTier: FeeAmount
+  feeTier: number
   isReversed: boolean
   chainId: UniverseChainId
   version: ProtocolVersion
@@ -40,7 +40,7 @@ export function useLiquidityBarData({
     version,
     poolId,
     chainId,
-    tickSpacing: tickSpacing ?? TICK_SPACINGS[feeTier],
+    tickSpacing,
     hooks,
   })
 
@@ -54,14 +54,12 @@ export function useLiquidityBarData({
 
   useEffect(() => {
     async function formatData() {
-      if (!ticksProcessed || activeTick === undefined || !liquidity) {
+      if (!ticksProcessed || activeTick === undefined || !liquidity || tickSpacing === undefined) {
         return
       }
 
       let activeRangePercentage: number | undefined
       let activeRangeIndex: number | undefined
-
-      const poolTickSpacing = tickSpacing ?? TICK_SPACINGS[feeTier]
 
       const barData: LiquidityBarData[] = []
       for (let index = 0; index < ticksProcessed.length; index++) {
@@ -76,7 +74,7 @@ export function useLiquidityBarData({
 
         if (isActive && currentTick !== undefined) {
           activeRangeIndex = index
-          activeRangePercentage = 1 - (currentTick - t.tick) / poolTickSpacing
+          activeRangePercentage = 1 - (currentTick - t.tick) / tickSpacing
 
           price0 =
             version === ProtocolVersion.V3
@@ -90,7 +88,7 @@ export function useLiquidityBarData({
         const { amount0Locked, amount1Locked } = calculateTokensLocked({
           token0: sdkCurrencies.TOKEN0,
           token1: sdkCurrencies.TOKEN1,
-          tickSpacing: poolTickSpacing,
+          tickSpacing,
           currentTick: currentTick ?? 0,
           amount: JSBI.BigInt(t.liquidityActive.toString()),
           nextTick,

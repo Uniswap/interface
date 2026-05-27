@@ -1,4 +1,5 @@
 import { FeatureFlags } from '@universe/gating'
+import type { PortfolioBalanceBreakdown } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { PortfolioOverview } from '~/pages/Portfolio/Overview/Overview'
@@ -6,6 +7,11 @@ import { render, screen } from '~/test-utils/render'
 
 const mockPortfolioPoolsBalancesEnabled = vi.hoisted(() => ({ value: true }))
 const mockShowDemoView = vi.hoisted(() => ({ value: false }))
+const mockPortfolioBreakdown = vi.hoisted(
+  (): {
+    value: PortfolioBalanceBreakdown | undefined
+  } => ({ value: undefined }),
+)
 
 vi.mock('@universe/gating', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@universe/gating')>()
@@ -41,6 +47,7 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
 
 vi.mock('uniswap/src/features/dataApi/balances/balancesRest', () => ({
   usePortfolioTotalValue: () => ({ data: { balanceUSD: 110 } }),
+  usePortfolioBalanceBreakdown: () => ({ data: mockPortfolioBreakdown.value }),
 }))
 
 vi.mock('uniswap/src/features/portfolio/usePortfolioChartBalanceMismatch', () => ({
@@ -80,8 +87,21 @@ vi.mock('~/pages/Portfolio/Overview/OverviewTables', () => ({
 }))
 
 vi.mock('~/pages/Portfolio/Overview/PortfolioChart', () => ({
-  PortfolioChart: ({ showBalanceHeaderRow }: { showBalanceHeaderRow?: boolean }) => (
-    <div data-testid={TestID.PortfolioTotalBalance} data-show-balance-header-row={String(showBalanceHeaderRow)}>
+  PortfolioChart: ({
+    showBalanceHeaderRow,
+    tokensValue,
+    poolsValue,
+  }: {
+    showBalanceHeaderRow?: boolean
+    tokensValue?: { balanceUSD: number }
+    poolsValue?: { balanceUSD: number }
+  }) => (
+    <div
+      data-testid={TestID.PortfolioTotalBalance}
+      data-show-balance-header-row={String(showBalanceHeaderRow)}
+      data-token-balance-usd={tokensValue?.balanceUSD}
+      data-pool-balance-usd={poolsValue?.balanceUSD}
+    >
       Portfolio Chart
     </div>
   ),
@@ -99,6 +119,7 @@ describe('PortfolioOverview', () => {
   beforeEach(() => {
     mockPortfolioPoolsBalancesEnabled.value = true
     mockShowDemoView.value = false
+    mockPortfolioBreakdown.value = undefined
   })
 
   it('passes the balance header row flag to the portfolio chart and renders action tiles as the second column', () => {
@@ -126,5 +147,18 @@ describe('PortfolioOverview', () => {
     render(<PortfolioOverview />)
 
     expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toHaveAttribute('data-show-balance-header-row', 'false')
+  })
+
+  it('passes token and pool breakdown values to the portfolio chart', () => {
+    mockPortfolioBreakdown.value = {
+      total: { balanceUSD: 15741.99, percentChange: 3.72, absoluteChangeUSD: 564.23 },
+      tokens: { balanceUSD: 8368.94, percentChange: -6.09, absoluteChangeUSD: -510 },
+      pools: { balanceUSD: 7373.05, percentChange: 1.02, absoluteChangeUSD: 75 },
+    }
+
+    render(<PortfolioOverview />)
+
+    expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toHaveAttribute('data-token-balance-usd', '8368.94')
+    expect(screen.getByTestId(TestID.PortfolioTotalBalance)).toHaveAttribute('data-pool-balance-usd', '7373.05')
   })
 })

@@ -30,6 +30,13 @@ export interface UniswapBehaviorHistoryState {
   }
   hasDismissedUniswapWrapped2025Banner?: boolean
   hasDismissedCrosschainSwapsPromoBanner?: boolean
+  /**
+   * Per-user dismissal flag for the pools-balance coachmark on the Portfolio Overview.
+   * Defaults to `true` in `initialUniswapBehaviorHistoryState` so brand-new users never see it;
+   * existing users' persisted state predates this key and resolves to `undefined` (i.e. not dismissed),
+   * so they see it once until they dismiss.
+   */
+  hasDismissedPoolsBalanceCoachmark?: boolean
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -52,6 +59,7 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasSeenToucanIntroModal: false,
   hasDismissedUniswapWrapped2025Banner: false,
   hasDismissedCrosschainSwapsPromoBanner: false,
+  hasDismissedPoolsBalanceCoachmark: true,
 }
 
 const slice = createSlice({
@@ -124,6 +132,9 @@ const slice = createSlice({
     setHasDismissedCrosschainSwapsPromoBanner: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedCrosschainSwapsPromoBanner = action.payload
     },
+    setPoolsBalanceCoachmarkDismissed: (state) => {
+      state.hasDismissedPoolsBalanceCoachmark = true
+    },
   },
 })
 
@@ -147,6 +158,7 @@ export const {
   setHasDismissedBridgedAssetsBannerV2,
   setHasDismissedUniswapWrapped2025Banner,
   setHasDismissedCrosschainSwapsPromoBanner,
+  setPoolsBalanceCoachmarkDismissed,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

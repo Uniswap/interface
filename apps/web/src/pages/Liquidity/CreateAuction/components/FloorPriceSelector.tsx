@@ -1,5 +1,6 @@
 import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import type { Ref } from 'react'
+import { useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Input, Text, TouchableArea } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
@@ -7,26 +8,36 @@ import { fonts } from 'ui/src/theme'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NumberType } from 'utilities/src/format/types'
+import { SubscriptZeroPrice } from '~/components/SubscriptZeroPrice'
 import {
   commitDraftToFloorPrice,
+  draftMirrorsPersisted,
   exceedsDecimalCap,
   getDisplayValueForMode,
+  isDraftFloorBelowMinimumRepresentable,
   maxDecimalsForDraftInput,
+  pickDisplayValueForToggleTarget,
+  previewFloorPriceForFdvUsdDraft,
   type FloorPriceDenomination,
   type InputCurrency,
 } from '~/pages/Liquidity/CreateAuction/components/floorPriceSelectorDraft'
-import { RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
-import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
 import {
-  formatLocalizedNumber,
-  useLocalizedNumberInput,
-} from '~/pages/Liquidity/CreateAuction/utils/localizedNumberInput'
+  FLOOR_PRICE_SELECTOR_SUBSCRIPT_THRESHOLD,
+  useFloorPriceSelectorDisplay,
+} from '~/pages/Liquidity/CreateAuction/components/useFloorPriceSelectorDisplay'
+import { type FloorPriceInputState, RaiseCurrency } from '~/pages/Liquidity/CreateAuction/types'
+import { getRaiseCurrencyAsCurrency } from '~/pages/Liquidity/CreateAuction/utils'
+import { useLocalizedNumberInput } from '~/pages/Liquidity/CreateAuction/utils/localizedNumberInput'
+
+export type FloorPriceSelectorHandle = {
+  focus: () => void
+}
 
 export function FloorPriceSelector({
+  ref,
   chainId,
   floorPrice,
+  floorPriceInput,
   raiseCurrency,
   tokenTotalSupply,
   inputCurrency,
@@ -34,27 +45,39 @@ export function FloorPriceSelector({
   onInputCurrencyChange,
   onFloorPriceChange,
 }: {
+  ref?: Ref<FloorPriceSelectorHandle>
   chainId: UniverseChainId
   floorPrice: string
+  floorPriceInput: FloorPriceInputState | undefined
   raiseCurrency: RaiseCurrency
   tokenTotalSupply: CurrencyAmount<Currency>
   inputCurrency: InputCurrency
   usdPriceNum: number | null
   onInputCurrencyChange: (next: InputCurrency) => void
-  onFloorPriceChange: (value: string) => void
+  onFloorPriceChange: (value: string, input?: Omit<FloorPriceInputState, 'floorPrice'>) => void
 }) {
   const { t } = useTranslation()
 
+  const matchingFloorPriceInput =
+    floorPriceInput?.floorPrice === floorPrice && floorPriceInput.inputCurrency === inputCurrency
+      ? floorPriceInput
+      : undefined
+  const persistedInputIsParentControlled =
+    matchingFloorPriceInput?.denomination === 'floorPrice' && matchingFloorPriceInput.inputCurrency === 'raise'
+
   const [isFocused, setIsFocused] = useState(false)
-  const [denomination, setDenomination] = useState<FloorPriceDenomination>('floorPrice')
-  // Local value (dot-normalized) used in all modes except floorPrice+raise,
-  // where the parent's `floorPrice` prop is the direct source of truth.
-  const [localValue, setLocalValue] = useState('')
+  const [denomination, setDenomination] = useState<FloorPriceDenomination>(
+    matchingFloorPriceInput?.denomination ?? 'floorPrice',
+  )
+  // Local value (dot-normalized); floorPrice+raise reads canonical value from parent `floorPrice`.
+  const [localValue, setLocalValue] = useState(
+    matchingFloorPriceInput && !persistedInputIsParentControlled ? matchingFloorPriceInput.rawValue : '',
+  )
   const prevRaiseCurrencyRef = useRef(raiseCurrency)
+  const skipNextDraftCommitRef = useRef(Boolean(matchingFloorPriceInput && !persistedInputIsParentControlled))
   /** True when the user cleared the draft input; avoids treating initial empty draft as "clear canonical floor price". */
   const allowEmptyCanonicalSyncRef = useRef(false)
 
-  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const { code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
   const locale = useCurrentLocale()
 
@@ -68,20 +91,74 @@ export function FloorPriceSelector({
     [locale],
   )
 
-  const floorPriceNum = parseFloat(floorPrice)
-  const totalSupplyNum = parseFloat(tokenTotalSupply.toExact())
+  // In floorPrice+raise mode the parent's `floorPrice` prop is the direct source of truth.
+  const isParentControlled = denomination === 'floorPrice' && inputCurrency === 'raise'
+
+  /** While typing FDV in USD, derive canonical floor from draft so conversions (e.g. ETH FDV) stay in sync before the commit effect runs. */
+  const floorPriceForDisplay = useMemo(
+    () =>
+      previewFloorPriceForFdvUsdDraft({
+        isParentControlled,
+        floorPrice,
+        localValue,
+        denomination,
+        inputCurrency,
+        usdPriceNum,
+        tokenTotalSupply,
+        raiseCurrency: raiseCurrencyObj,
+      }),
+    [
+      denomination,
+      floorPrice,
+      inputCurrency,
+      isParentControlled,
+      localValue,
+      raiseCurrencyObj,
+      tokenTotalSupply,
+      usdPriceNum,
+    ],
+  )
+
+  const floorPriceNum = parseFloat(floorPriceForDisplay)
   const hasValidFloorPrice = Number.isFinite(floorPriceNum) && floorPriceNum > 0
 
-  // FDV in raise currency, always derived from the canonical floorPrice prop.
-  const fdvRaiseNum = hasValidFloorPrice && Number.isFinite(totalSupplyNum) ? floorPriceNum * totalSupplyNum : null
+  const fdvRaiseNum = useMemo(() => {
+    if (!hasValidFloorPrice || !raiseCurrencyObj) {
+      return null
+    }
+    const s = getDisplayValueForMode({
+      denomination: 'fdv',
+      inputCurrency: 'raise',
+      floorPrice: floorPriceForDisplay,
+      hasValidFloorPrice,
+      tokenTotalSupply,
+      raiseCurrency: raiseCurrencyObj,
+      usdPriceNum: null,
+    })
+    const n = s ? parseFloat(s) : NaN
+    return Number.isFinite(n) ? n : null
+  }, [floorPriceForDisplay, hasValidFloorPrice, raiseCurrencyObj, tokenTotalSupply])
 
-  // In floorPrice+raise mode the parent prop is the source of truth; all other modes use localValue.
-  const isParentControlled = denomination === 'floorPrice' && inputCurrency === 'raise'
   const rawDisplayValue = isParentControlled ? floorPrice : localValue
 
-  // When returning from Review (or any remount), `localValue` starts empty while the store still
-  // holds canonical floor price in raise terms. Hydrate the draft from props; skip while focused so
-  // we do not fight in-progress typing.
+  const unfocusedNumeric = useMemo(() => {
+    const trimmed = rawDisplayValue.trim()
+    const n = trimmed ? parseFloat(trimmed) : NaN
+    return Number.isFinite(n) ? n : null
+  }, [rawDisplayValue])
+
+  const { inputLabel, pillContent, bottomRowContent } = useFloorPriceSelectorDisplay({
+    denomination,
+    inputCurrency,
+    fiatCurrencyCode,
+    raiseCurrency,
+    usdPriceNum,
+    fdvRaiseNum,
+    hasValidFloorPrice,
+    floorPriceNum,
+  })
+
+  // Hydrate draft from props on remount; skip while focused to avoid fighting in-progress typing.
   useLayoutEffect(() => {
     if (isParentControlled || isFocused) {
       return
@@ -92,29 +169,56 @@ export function FloorPriceSelector({
     if (inputCurrency === 'usd' && usdPriceNum === null) {
       return
     }
+    if (
+      floorPriceInput?.floorPrice === floorPrice &&
+      floorPriceInput.denomination === denomination &&
+      floorPriceInput.inputCurrency === inputCurrency
+    ) {
+      if (localValue !== floorPriceInput.rawValue) {
+        skipNextDraftCommitRef.current = true
+        setLocalValue(floorPriceInput.rawValue)
+      }
+      return
+    }
+    // If draft commits to the same canonical floor as the store, keep the user's string as entered.
+    if (localValue.trim() !== '') {
+      const committedFromDraft = commitDraftToFloorPrice({
+        localValue,
+        denomination,
+        inputCurrency,
+        usdPriceNum,
+        tokenTotalSupply,
+        raiseCurrency: raiseCurrencyObj,
+      })
+      if (committedFromDraft === floorPrice) {
+        return
+      }
+    }
     const display = getDisplayValueForMode({
       denomination,
       inputCurrency,
-      floorPriceNum,
-      totalSupplyNum,
-      usdPriceNum,
+      floorPrice,
       hasValidFloorPrice,
+      tokenTotalSupply,
+      raiseCurrency: raiseCurrencyObj,
+      usdPriceNum,
     })
     setLocalValue(display)
   }, [
     denomination,
     floorPrice,
-    floorPriceNum,
+    floorPriceInput,
     hasValidFloorPrice,
     inputCurrency,
     isFocused,
     isParentControlled,
-    totalSupplyNum,
+    localValue,
+    raiseCurrencyObj,
+    tokenTotalSupply,
     usdPriceNum,
   ])
 
-  // Validation+commit handler. The hook delivers the dot-decimal normalized value; we apply the
-  // decimal-cap check before either writing to the parent (parent-controlled) or storing as draft.
+  // Hook gives dot-decimal string; apply decimal-cap then write parent or draft.
   const handleRawChange = useCallback(
     (raw: string) => {
       if (!isParentControlled) {
@@ -125,16 +229,59 @@ export function FloorPriceSelector({
         if (maxDecimals !== undefined && exceedsDecimalCap(raw, maxDecimals)) {
           return
         }
-        onFloorPriceChange(raw)
+        if (
+          raiseCurrencyObj &&
+          isDraftFloorBelowMinimumRepresentable({
+            localValue: raw,
+            denomination,
+            inputCurrency,
+            usdPriceNum,
+            tokenTotalSupply,
+            raiseCurrency: raiseCurrencyObj,
+          })
+        ) {
+          return
+        }
+        onFloorPriceChange(
+          raw,
+          raw.trim() !== ''
+            ? {
+                rawValue: raw,
+                denomination,
+                inputCurrency,
+              }
+            : undefined,
+        )
         return
       }
       const maxDecimals = maxDecimalsForDraftInput(inputCurrency, raiseCurrencyObj?.decimals)
       if (exceedsDecimalCap(raw, maxDecimals)) {
         return
       }
+      if (
+        raiseCurrencyObj &&
+        isDraftFloorBelowMinimumRepresentable({
+          localValue: raw,
+          denomination,
+          inputCurrency,
+          usdPriceNum,
+          tokenTotalSupply,
+          raiseCurrency: raiseCurrencyObj,
+        })
+      ) {
+        return
+      }
       setLocalValue(raw)
     },
-    [inputCurrency, isParentControlled, onFloorPriceChange, raiseCurrencyObj?.decimals],
+    [
+      denomination,
+      inputCurrency,
+      isParentControlled,
+      onFloorPriceChange,
+      raiseCurrencyObj,
+      tokenTotalSupply,
+      usdPriceNum,
+    ],
   )
 
   const {
@@ -147,10 +294,7 @@ export function FloorPriceSelector({
     onChangeRaw: handleRawChange,
   })
 
-  // Draft modes commit localValue → canonical floor price on user-controlled changes.
-  // `usdPriceNum` is intentionally omitted from deps (live oracle would cause drift on every tick);
-  // we snapshot it at commit time. On raise-currency change we treat the draft as empty so we
-  // don't push a value derived from stale `localValue` × the new token.
+  // Commit draft to canonical floor on changes; clear draft on raise-currency change; re-run when USD price arrives.
   useEffect(() => {
     const raiseCurrencyChanged = prevRaiseCurrencyRef.current !== raiseCurrency
     prevRaiseCurrencyRef.current = raiseCurrency
@@ -164,6 +308,13 @@ export function FloorPriceSelector({
     }
 
     const draftForCommit = raiseCurrencyChanged ? '' : localValue
+    if (skipNextDraftCommitRef.current) {
+      skipNextDraftCommitRef.current = false
+      return
+    }
+    if (draftMirrorsPersisted({ floorPriceInput, draftForCommit, denomination, inputCurrency, floorPrice })) {
+      return
+    }
     const next = commitDraftToFloorPrice({
       localValue: draftForCommit,
       denomination,
@@ -175,13 +326,26 @@ export function FloorPriceSelector({
     if (next === '' && floorPrice !== '' && !allowEmptyCanonicalSyncRef.current) {
       return
     }
-    if (next !== floorPrice) {
-      onFloorPriceChange(next)
+    const nextInput =
+      draftForCommit.trim() !== ''
+        ? {
+            rawValue: draftForCommit,
+            denomination,
+            inputCurrency,
+          }
+        : undefined
+    if (
+      next !== floorPrice ||
+      floorPriceInput?.rawValue !== nextInput?.rawValue ||
+      floorPriceInput?.denomination !== nextInput?.denomination ||
+      floorPriceInput?.inputCurrency !== nextInput?.inputCurrency
+    ) {
+      onFloorPriceChange(next, nextInput)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- usdPriceNum omitted: see comment above
   }, [
     denomination,
     floorPrice,
+    floorPriceInput,
     inputCurrency,
     isParentControlled,
     localValue,
@@ -189,117 +353,38 @@ export function FloorPriceSelector({
     raiseCurrency,
     raiseCurrencyObj,
     tokenTotalSupply,
-  ])
-
-  // ─── Derived display strings ──────────────────────────────────────────────
-
-  // Label next to the input: currency + optional "FDV" suffix.
-  const inputLabel = useMemo(() => {
-    const currencyStr = inputCurrency === 'usd' ? fiatCurrencyCode : raiseCurrency
-    return denomination === 'fdv' ? `${currencyStr} ${t('stats.fdv')}` : currencyStr
-  }, [inputCurrency, denomination, fiatCurrencyCode, raiseCurrency, t])
-
-  // Pill: shows the other denomination in the active currency (USD when inputCurrency='usd' and
-  // the oracle has resolved, otherwise raise currency).
-  const pillText = useMemo(() => {
-    const usdMode = inputCurrency === 'usd' && usdPriceNum !== null && usdPriceNum > 0
-    const symbol = usdMode ? fiatCurrencyCode : raiseCurrency
-    const raiseValue = denomination === 'floorPrice' ? fdvRaiseNum : hasValidFloorPrice ? floorPriceNum : null
-    const value = usdMode && raiseValue !== null ? raiseValue * usdPriceNum : raiseValue
-    const display =
-      value !== null ? formatNumberOrString({ value: value.toString(), type: NumberType.TokenNonTx }) : '0'
-    const suffix =
-      denomination === 'floorPrice' ? t('stats.fdv') : t('toucan.createAuction.step.configureAuction.tokenPrice')
-    return `${display} ${symbol} ${suffix}`
-  }, [
-    denomination,
-    inputCurrency,
     usdPriceNum,
-    fiatCurrencyCode,
-    fdvRaiseNum,
-    hasValidFloorPrice,
-    floorPriceNum,
-    raiseCurrency,
-    formatNumberOrString,
-    t,
   ])
 
-  // Bottom row: shows the other currency representation.
-  const bottomText = useMemo(() => {
-    if (inputCurrency === 'usd') {
-      // Show raise-currency equivalent.
-      if (denomination === 'floorPrice') {
-        const display = hasValidFloorPrice
-          ? formatNumberOrString({ value: floorPrice, type: NumberType.TokenNonTx })
-          : '0'
-        return `${display} ${raiseCurrency}`
-      }
-      const display =
-        fdvRaiseNum !== null
-          ? formatNumberOrString({ value: fdvRaiseNum.toString(), type: NumberType.TokenNonTx })
-          : '0'
-      return `${display} ${raiseCurrency} ${t('stats.fdv')}`
-    }
-    // Show fiat equivalent.
-    if (!hasValidFloorPrice || usdPriceNum === null) {
-      return `${convertFiatAmountFormatted(0, NumberType.FiatTokenPrice)} ${fiatCurrencyCode}`
-    }
-    const raiseAmount = denomination === 'fdv' && fdvRaiseNum !== null ? fdvRaiseNum : floorPriceNum
-    return `${convertFiatAmountFormatted(raiseAmount * usdPriceNum, NumberType.FiatTokenPrice)} ${fiatCurrencyCode}`
-  }, [
-    inputCurrency,
-    denomination,
-    hasValidFloorPrice,
-    floorPrice,
-    floorPriceNum,
-    fdvRaiseNum,
-    raiseCurrency,
-    usdPriceNum,
-    convertFiatAmountFormatted,
-    fiatCurrencyCode,
-    formatNumberOrString,
-    t,
-  ])
+  // Toggle: skipNextDraftCommitRef avoids snapshot drift; pickDisplayValueForToggleTarget restores rawValue when it matches.
+  const pickToggleDisplay = useCallback(
+    (targetDenomination: FloorPriceDenomination, targetInputCurrency: InputCurrency) =>
+      pickDisplayValueForToggleTarget({
+        targetDenomination,
+        targetInputCurrency,
+        floorPrice,
+        floorPriceInput,
+        hasValidFloorPrice,
+        tokenTotalSupply,
+        raiseCurrency: raiseCurrencyObj,
+        usdPriceNum,
+      }),
+    [floorPrice, floorPriceInput, hasValidFloorPrice, raiseCurrencyObj, tokenTotalSupply, usdPriceNum],
+  )
 
-  // ─── Toggle handlers ──────────────────────────────────────────────────────
-
-  // Pill: toggle denomination, keeping inputCurrency unchanged.
   const toggleDenomination = useCallback(() => {
     const next: FloorPriceDenomination = denomination === 'floorPrice' ? 'fdv' : 'floorPrice'
-    const displayValue = getDisplayValueForMode({
-      denomination: next,
-      inputCurrency,
-      floorPriceNum,
-      totalSupplyNum,
-      usdPriceNum,
-      hasValidFloorPrice,
-    })
-    setLocalValue(displayValue)
+    skipNextDraftCommitRef.current = true
+    setLocalValue(pickToggleDisplay(next, inputCurrency))
     setDenomination(next)
-  }, [denomination, inputCurrency, hasValidFloorPrice, floorPriceNum, totalSupplyNum, usdPriceNum])
+  }, [denomination, inputCurrency, pickToggleDisplay])
 
-  // Bottom row: toggle inputCurrency, keeping denomination unchanged.
   const toggleInputCurrency = useCallback(() => {
     const next: InputCurrency = inputCurrency === 'raise' ? 'usd' : 'raise'
-    const displayValue = getDisplayValueForMode({
-      denomination,
-      inputCurrency: next,
-      floorPriceNum,
-      totalSupplyNum,
-      usdPriceNum,
-      hasValidFloorPrice,
-    })
-    setLocalValue(displayValue)
+    skipNextDraftCommitRef.current = true
+    setLocalValue(pickToggleDisplay(denomination, next))
     onInputCurrencyChange(next)
-  }, [
-    inputCurrency,
-    denomination,
-    hasValidFloorPrice,
-    floorPriceNum,
-    totalSupplyNum,
-    usdPriceNum,
-    onInputCurrencyChange,
-  ])
+  }, [inputCurrency, denomination, pickToggleDisplay, onInputCurrencyChange])
 
   const handleFocus = useCallback(() => {
     setIsFocused(true)
@@ -309,10 +394,18 @@ export function FloorPriceSelector({
     setIsFocused(false)
   }, [])
 
-  // Unfocused: cap fractional digits so long conversion results (e.g. 33.33333… ETH) don't
-  // break the layout. Focused Input keeps full precision so the user's typed value is preserved.
-  const unfocusedDisplayValue = formatLocalizedNumber({ rawValue: rawDisplayValue, locale, maxDecimals: 8 })
-  const unfocusedDisplayText = unfocusedDisplayValue.length > 0 ? unfocusedDisplayValue : `0${decimalSeparator}00`
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus: () => {
+        setIsFocused(true)
+        requestAnimationFrame(() => {
+          inputRef.current?.focus()
+        })
+      },
+    }),
+    [inputRef],
+  )
 
   return (
     <Flex
@@ -331,9 +424,9 @@ export function FloorPriceSelector({
         </Text>
         <TouchableArea onPress={toggleDenomination} flexShrink={0}>
           <Flex backgroundColor="$surface3" borderRadius="$roundedFull" px="$spacing8" py="$spacing6">
-            <Text variant="buttonLabel4" color="$neutral1">
-              {pillText}
-            </Text>
+            <Flex row alignItems="baseline" gap="$spacing4" flexShrink={1} maxWidth="100%" flexWrap="wrap">
+              {pillContent}
+            </Flex>
           </Flex>
         </TouchableArea>
       </Flex>
@@ -343,7 +436,8 @@ export function FloorPriceSelector({
             <Input
               ref={inputRef}
               autoFocus
-              height={fonts.heading3.lineHeight}
+              unstyled
+              outlineStyle="none"
               $platform-web={{
                 fieldSizing: 'content',
                 minWidth: '1ch',
@@ -355,35 +449,51 @@ export function FloorPriceSelector({
               placeholder={`0${decimalSeparator}00`}
               placeholderTextColor="$neutral3"
               keyboardType="decimal-pad"
+              fontFamily="$heading"
               fontSize={fonts.heading3.fontSize}
               lineHeight={fonts.heading3.lineHeight}
               fontWeight={fonts.heading3.fontWeight}
               color="$neutral1"
-              px="$none"
               backgroundColor="$transparent"
             />
-          ) : (
-            <Text
-              variant="heading3"
-              color={unfocusedDisplayValue.length > 0 ? '$neutral1' : '$neutral3'}
-              cursor="text"
-              onPress={handleFocus}
-            >
-              {unfocusedDisplayText}
+          ) : unfocusedNumeric === null ? (
+            <Text variant="heading3" color="$neutral3" cursor="text" onPress={handleFocus}>
+              {`0${decimalSeparator}00`}
             </Text>
+          ) : (
+            <TouchableArea onPress={handleFocus} flexShrink={1} minWidth={0} cursor="text">
+              <SubscriptZeroPrice
+                value={unfocusedNumeric}
+                variant="heading3"
+                color="$neutral1"
+                minSignificantDigits={1}
+                maxSignificantDigits={4}
+                subscriptThreshold={FLOOR_PRICE_SELECTOR_SUBSCRIPT_THRESHOLD}
+                fontSize={fonts.heading3.fontSize}
+                lineHeight={fonts.heading3.lineHeight}
+                disableTooltip
+              />
+            </TouchableArea>
           )}
           <Text variant="heading3" color="$neutral2" flexShrink={0}>
             {inputLabel}
           </Text>
         </Flex>
-        <TouchableArea onPress={toggleInputCurrency}>
-          <Flex row alignItems="center" gap="$spacing4">
-            <Text variant="subheading2" color="$neutral2">
-              {bottomText}
-            </Text>
-            <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
-          </Flex>
-        </TouchableArea>
+        {bottomRowContent !== null && (
+          <TouchableArea
+            onPress={toggleInputCurrency}
+            disabled={usdPriceNum === null}
+            alignSelf="flex-start"
+            maxWidth="100%"
+          >
+            <Flex row alignItems="center" gap="$spacing4" flexWrap="wrap" maxWidth="100%">
+              <Flex row alignItems="baseline" gap="$spacing4" flexShrink={1} flexWrap="wrap" minWidth={0}>
+                {bottomRowContent}
+              </Flex>
+              {usdPriceNum !== null && <ArrowDownArrowUp color="$neutral2" size="$icon.16" flexShrink={0} />}
+            </Flex>
+          </TouchableArea>
+        )}
       </Flex>
     </Flex>
   )

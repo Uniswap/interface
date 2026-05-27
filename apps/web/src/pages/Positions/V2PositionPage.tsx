@@ -19,6 +19,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from '~/features/Liquidity/LiquidityPositionInfo'
 import { TextLoader } from '~/features/Liquidity/Loader'
@@ -85,6 +86,7 @@ function V2PositionPage() {
   const account = useAccount()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
   const chainInfo = getChainInfo(chainId ?? UniverseChainId.Mainnet)
+  const breadcrumb = useEntryPointBreadcrumb()
 
   const {
     data,
@@ -153,8 +155,8 @@ function V2PositionPage() {
         }
         actionButton={
           <Flex row centered>
-            <Button width="fit-content" variant="branded" onPress={() => navigate('/positions')}>
-              {t('common.backToPositions')}
+            <Button width="fit-content" variant="branded" onPress={() => navigate(breadcrumb.to)}>
+              {breadcrumb.label}
             </Button>
           </Flex>
         }
@@ -179,8 +181,8 @@ function V2PositionPage() {
         <Flex gap="$gap20" width="100%">
           <Flex row width="100%" justifyContent="flex-start" alignItems="center">
             <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-              <BreadcrumbNavLink to="/positions">
-                {t('pool.positions.title')} <RotatableChevron direction="right" size="$icon.16" />
+              <BreadcrumbNavLink to={breadcrumb.to}>
+                {breadcrumb.label} <RotatableChevron direction="right" size="$icon.16" />
               </BreadcrumbNavLink>
               {positionInfo && <Text variant="subheading2">{shortenAddress({ address: positionInfo.poolId })}</Text>}
             </BreadcrumbNavContainer>

@@ -122,7 +122,6 @@ interface ModalTemplateProps {
  * ModalTemplate component
  *
  * A reusable template for rendering modal notifications.
- * Extracted from SolanaPromoModal to be shared across the notification system.
  *
  * Features:
  * - Centered modal with gradient background
@@ -132,9 +131,7 @@ interface ModalTemplateProps {
  * - Close button in top-right corner
  * - Fully customizable layout via children prop
  *
- * Used by:
- * - ModalNotification (notification API-driven modals)
- * - SolanaPromoModal (hardcoded promotional modal)
+ * Used by ModalNotification (notification API-driven modals).
  */
 export function ModalTemplate({
   isOpen,

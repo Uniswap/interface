@@ -62,7 +62,7 @@ async function signWithDeviceSessionOrPasskey<T>({
   const deviceSignature = await signWithDeviceKey(neckPrivateKey, challenge.signingPayload)
   return signRequest({
     case: 'deviceAuth',
-    value: { deviceSignature, walletId: resolvedWalletId },
+    value: { deviceSignature, walletId: resolvedWalletId, signingPayload: challenge.signingPayload },
   })
 }
 

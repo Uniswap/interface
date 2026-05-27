@@ -21,6 +21,7 @@ import { DeviceAccessScreen } from 'src/app/features/settings/DeviceAccessScreen
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
 import { HashcashBenchmarkScreen } from 'src/app/features/settings/HashcashBenchmarkScreen'
 import { SessionsDebugScreen } from 'src/app/features/settings/SessionsDebugScreen'
+import { SettingsDisclosuresScreen } from 'src/app/features/settings/SettingsDisclosuresScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
@@ -126,6 +127,10 @@ const router = createHashRouter([
           {
             path: SettingsRoutes.Storage,
             element: <SettingsStorageScreen />,
+          },
+          {
+            path: SettingsRoutes.Disclosures,
+            element: <SettingsDisclosuresScreen />,
           },
         ],
       },

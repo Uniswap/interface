@@ -15,6 +15,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
+import { PortfolioBalanceCountIndicator } from '~/pages/Portfolio/components/PortfolioBalanceCountIndicator'
 import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
@@ -27,18 +28,7 @@ const TokenCountIndicator = memo(({ count }: { count: number }) => {
   const { t } = useTranslation()
 
   return (
-    <Flex row alignItems="center">
-      <Flex
-        borderRadius="$roundedFull"
-        backgroundColor="$neutral2"
-        width="$spacing4"
-        height="$spacing4"
-        mx="$spacing8"
-      />
-      <Text variant="body3" color="$neutral2">
-        {t('portfolio.tokens.balance.totalTokens', { numTokens: count, count })}
-      </Text>
-    </Flex>
+    <PortfolioBalanceCountIndicator label={t('portfolio.tokens.balance.totalTokens', { numTokens: count, count })} />
   )
 })
 

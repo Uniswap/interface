@@ -32,8 +32,12 @@ import {
 import { FiatOnRampActionModal } from 'src/components/home/FiatOnRampActionModal'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
+import { AboutSettingsScreen } from 'src/components/modals/ReactNavigationModals/AboutSettingsScreen'
 import { AdvancedSettingsModal } from 'src/components/modals/ReactNavigationModals/AdvancedSettingsModal'
 import { BridgedAssetModalScreen } from 'src/components/modals/ReactNavigationModals/BridgedAssetModal'
+import { EarnDepositReviewModalScreen } from 'src/components/modals/ReactNavigationModals/EarnDepositReviewModal'
+import { EarnVaultModalScreen } from 'src/components/modals/ReactNavigationModals/EarnVaultModal'
+import { EarnYouNeedTokenModalScreen } from 'src/components/modals/ReactNavigationModals/EarnYouNeedTokenModal'
 import { HiddenTokenInfoModalScreen } from 'src/components/modals/ReactNavigationModals/HiddenTokenInfoModalScreen'
 import { PasskeyManagementModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyManagementModalScreen'
 import { PermissionsSettingsScreen } from 'src/components/modals/ReactNavigationModals/PermissionsSettingsScreen'
@@ -52,6 +56,7 @@ import { ConnectionsDappListModal } from 'src/components/Settings/ConnectionsDap
 import { EditLabelSettingsModal } from 'src/components/Settings/EditWalletModal/EditLabelSettingsModal'
 import { EditProfileSettingsModal } from 'src/components/Settings/EditWalletModal/EditProfileSettingsModal'
 import { ManageWalletsModal } from 'src/components/Settings/ManageWalletsModal'
+import { NetworkCostPickerModalScreen } from 'src/components/Settings/NetworkCostPickerModalScreen'
 import { SettingsAppearanceModal } from 'src/components/Settings/SettingsAppearanceModal'
 import { SettingsBiometricModal } from 'src/components/Settings/SettingsBiometricModal'
 import { BuyNativeTokenModal } from 'src/components/TokenDetails/BuyNativeTokenModal'
@@ -100,6 +105,7 @@ import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCl
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
 import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
+import { SettingsDisclosuresScreen } from 'src/screens/SettingsDisclosuresScreen'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { SettingsLanguageModal } from 'src/screens/SettingsLanguageModal'
 import { SettingsNotificationsScreen } from 'src/screens/SettingsNotificationsScreen'
@@ -177,6 +183,7 @@ function SettingsStackGroup(): JSX.Element {
       <SettingsStack.Screen component={SettingsSmartWalletScreen} name={MobileScreens.SettingsSmartWallet} />
       <SettingsStack.Screen component={SettingsStorageScreen} name={MobileScreens.SettingsStorage} />
       <SettingsStack.Screen component={SettingsPrivacyScreen} name={MobileScreens.SettingsPrivacy} />
+      <SettingsStack.Screen component={SettingsDisclosuresScreen} name={MobileScreens.SettingsDisclosures} />
       <SettingsStack.Screen component={SettingsNotificationsScreen} name={MobileScreens.SettingsNotifications} />
       <SettingsStack.Screen component={ViewPrivateKeysScreen} name={MobileScreens.ViewPrivateKeys} />
       <SettingsStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
@@ -396,6 +403,9 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
         <AppStack.Screen component={SwapModal} name={ModalName.Swap} />
         <AppStack.Screen component={ExploreModal} name={ModalName.Explore} />
+        <AppStack.Screen component={EarnDepositReviewModalScreen} name={ModalName.EarnDepositReview} />
+        <AppStack.Screen component={EarnVaultModalScreen} name={ModalName.EarnVault} />
+        <AppStack.Screen component={EarnYouNeedTokenModalScreen} name={ModalName.EarnYouNeedToken} />
         <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
         <AppStack.Screen component={FiatOnRampActionModal} name={ModalName.FiatOnRampAction} />
         <AppStack.Screen component={FundWalletModal} name={ModalName.FundWallet} />
@@ -433,8 +443,10 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={AdvancedSettingsModal} name={ModalName.SmartWalletAdvancedSettingsModal} />
         <AppStack.Screen component={SmartWalletEnabledModalScreen} name={ModalName.SmartWalletEnabledModal} />
         <AppStack.Screen component={SettingsAppearanceModal} name={ModalName.SettingsAppearance} />
+        <AppStack.Screen component={NetworkCostPickerModalScreen} name={ModalName.NetworkCostPicker} />
         <AppStack.Screen component={PermissionsSettingsScreen} name={ModalName.PermissionsModal} />
         <AppStack.Screen component={PortfolioBalanceSettingsScreen} name={ModalName.PortfolioBalanceModal} />
+        <AppStack.Screen component={AboutSettingsScreen} name={ModalName.About} />
         <AppStack.Screen component={SmartWalletNudgeScreen} name={ModalName.SmartWalletNudge} />
         <AppStack.Screen component={BridgedAssetModalScreen} name={ModalName.BridgedAsset} />
         <AppStack.Screen component={WormholeModalScreen} name={ModalName.Wormhole} />

@@ -2,14 +2,14 @@ import Portal from '@reach/portal'
 import { type QueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Button, Flex, Loader, Popover, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Loader, Popover, Text, TouchableArea } from 'ui/src'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { Buoy } from 'ui/src/components/icons/Buoy'
 import { Envelope } from 'ui/src/components/icons/Envelope'
 import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { Trash } from 'ui/src/components/icons/Trash'
-import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import type { RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -26,25 +26,21 @@ import {
 } from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { MenuColumn } from '~/components/AccountDrawer/shared'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
 import { getProviderIcon } from '~/components/Passkey/authenticatorProvider'
 import { getPrivyAppId } from '~/config'
 import { setOpenModal } from '~/state/application/reducer'
 import { useAppDispatch } from '~/state/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-/**
- * Invalidates the listAuthenticators cache and clears its sessionStorage mirror.
- * The mirror's subscription only writes for active observers, so when PasskeyMenu
- * is unmounted a plain invalidate leaves stale sessionStorage that rehydrates
- * back into the cache on re-mount and masks the invalidation.
- */
-export function invalidateListAuthenticators(
-  queryClient: QueryClient,
-  walletId: string | null | undefined,
-): Promise<void> {
+// Use resetQueries (not invalidateQueries) and manually clear the sessionStorage
+// mirror: the mirror's subscription only writes for active observers, so when
+// PasskeyMenu is unmounted a plain invalidate leaves stale sessionStorage that
+// rehydrates back into the cache on re-mount and masks the invalidation.
+export function resetListAuthenticators(queryClient: QueryClient, walletId: string | null | undefined): Promise<void> {
   sessionStorage.removeItem(getListAuthenticatorsStorageKey(walletId))
-  return queryClient.invalidateQueries({ queryKey: [ReactQueryCacheKey.ListAuthenticators] })
+  return queryClient.resetQueries({
+    queryKey: [ReactQueryCacheKey.ListAuthenticators],
+  })
 }
 
 // Uses Tamagui Popover directly (not the shared ContextMenu) because this row
@@ -165,12 +161,12 @@ function LoadingPasskeyRow() {
   )
 }
 
-function getRecoveryMethodIcon(type: string, colors: UseSporeColorsReturn) {
+function getRecoveryMethodIcon(type: string) {
   switch (type.toLowerCase()) {
     case 'google':
       return <GoogleLogoGradient size="$icon.20" />
     case 'apple':
-      return <AppleLogo height={iconSizes.icon20} width={iconSizes.icon20} fill={colors.neutral1.val} />
+      return <AppleLogo color="$neutral1" size="$icon.20" />
     default:
       return <Envelope size="$icon.20" color="$neutral1" />
   }
@@ -188,8 +184,6 @@ export function getRecoveryMethodLabel(type: string): string {
 }
 
 const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRemove: () => void }) => {
-  const colors = useSporeColors()
-
   return (
     <Flex row gap="$gap12" alignItems="center" pb="$padding16">
       <Flex
@@ -200,7 +194,7 @@ const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRem
         alignItems="center"
         justifyContent="center"
       >
-        {getRecoveryMethodIcon(method.type, colors)}
+        {getRecoveryMethodIcon(method.type)}
       </Flex>
       <Flex flex={1} minWidth={0}>
         <Text variant="body2">{getRecoveryMethodLabel(method.type)}</Text>

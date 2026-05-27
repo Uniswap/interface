@@ -36,6 +36,7 @@ yarn-error.log*
 .env
 .env.local
 .env.defaults.local
+.env.tmp
 
 # turbo
 .turbo
@@ -97,6 +98,9 @@ CLAUDE.local.md
 .cursor/mcp.json
 .cursor/rules/local-workflow.mdc
 .cursor/*.log
+
+# argent — skills-lock.json carries per-user absolute paths; the .agents/skills/ tree itself is committed (editor-side .claude/skills/argent-* are symlinks into it)
+skills-lock.json
 
 # lefthook
 .lefthook/

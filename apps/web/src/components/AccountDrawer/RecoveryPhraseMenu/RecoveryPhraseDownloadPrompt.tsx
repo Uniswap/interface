@@ -11,7 +11,8 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import flowersImage from '~/assets/images/recovery-phrase-flowers.png'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 import { GooglePlayStoreLogo } from '~/components/Icons/GooglePlayStoreLogo'
-import { RECOVERY_PHRASE_DOWNLOAD_PROMPT_ONELINK } from '~/utils/openDownloadApp'
+import { setOpenModal } from '~/state/application/reducer'
+import { useAppDispatch } from '~/state/hooks'
 
 const ICON_DROP_SHADOW =
   'drop-shadow(0px 2px 2.5px rgba(18, 18, 23, 0.03)) drop-shadow(0px 6px 6px rgba(18, 18, 23, 0.04))'
@@ -20,8 +21,9 @@ const FADE_OVERLAY = (color: string) => {
   return `linear-gradient(270deg, ${opacify(0, color)} 0%, ${opacify(100, color)} 100%)`
 }
 
-function CardBackground() {
+function CardBackground({ variant = 'extension' }: { variant?: 'mobile' | 'extension' }) {
   const { surface1 } = useSporeColors()
+  const isMobile = variant === 'mobile'
   return (
     <Flex position="absolute" top={0} right={0} bottom={0} width="30%" overflow="hidden">
       <Flex
@@ -33,12 +35,12 @@ function CardBackground() {
         style={{
           backgroundImage: `url(${flowersImage})`,
           backgroundSize: '200% auto',
-          backgroundPosition: '75% 50%',
+          backgroundPosition: isMobile ? '25% 50%' : '75% 50%',
           backgroundRepeat: 'no-repeat',
           filter: `blur(8.5px)`,
           pointerEvents: 'none',
-          opacity: 0.65,
-          transform: 'rotate(-125deg)',
+          opacity: 0.5,
+          transform: isMobile ? 'rotate(45deg)' : 'rotate(-125deg)',
         }}
       />
       <Flex
@@ -100,9 +102,10 @@ export function RecoveryPhraseDownloadPrompt({
   onContinueOnWeb: () => void
 }) {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
 
   const onPressMobile = (): void => {
-    window.open(RECOVERY_PHRASE_DOWNLOAD_PROMPT_ONELINK, '_blank', 'noopener,noreferrer')
+    dispatch(setOpenModal({ name: ModalName.GetTheApp, initialState: { initialInnerPage: 'mobile' } }))
   }
 
   const onPressExtension = (): void => {
@@ -130,7 +133,7 @@ export function RecoveryPhraseDownloadPrompt({
             <Trace logPress element={ElementName.UniswapWalletModalDownloadButton}>
               <DownloadCard
                 title={t('common.mobileApp')}
-                background={<CardBackground />}
+                background={<CardBackground variant="mobile" />}
                 onPress={onPressMobile}
                 iconSlot={
                   <Flex row alignItems="center" gap="$spacing4" style={{ filter: ICON_DROP_SHADOW }}>
@@ -152,7 +155,7 @@ export function RecoveryPhraseDownloadPrompt({
             <Trace logPress element={ElementName.ExtensionDownloadButton}>
               <DownloadCard
                 title={t('common.browserExtension')}
-                background={<CardBackground />}
+                background={<CardBackground variant="extension" />}
                 onPress={onPressExtension}
                 iconSlot={
                   <Flex
@@ -183,7 +186,9 @@ export function RecoveryPhraseDownloadPrompt({
                 <Text variant="buttonLabel3" color="$neutral2">
                   {t('setting.recoveryPhrase.downloadPrompt.continueOnWeb')}
                 </Text>
-                <ArrowRight size="$icon.16" color="$neutral2" />
+                <Flex centered width={iconSizes.icon16} height={iconSizes.icon16}>
+                  <ArrowRight size="$icon.12" color="$neutral2" />
+                </Flex>
               </Flex>
             </TouchableArea>
           </Trace>

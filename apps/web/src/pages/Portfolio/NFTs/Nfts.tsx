@@ -3,6 +3,7 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, useMedia } from 'ui/src'
+import { InlineExpandoRow } from 'uniswap/src/components/ExpandoRow/InlineExpandoRow'
 import { NftsList } from 'uniswap/src/components/nfts/NftsList'
 import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -13,7 +14,6 @@ import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { PortfolioExpandoRow } from '~/pages/Portfolio/components/PortfolioExpandoRow'
 import { SearchInput } from '~/pages/Portfolio/components/SearchInput'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
@@ -74,7 +74,7 @@ export function PortfolioNfts(): JSX.Element {
   // Memoize renderExpandoRow to avoid recreating the function on every render
   const renderExpandoRow = useCallback(
     ({ isExpanded, label, onPress }: { isExpanded: boolean; label: string; onPress: () => void }) => (
-      <PortfolioExpandoRow isExpanded={isExpanded} label={label} onPress={onPress} />
+      <InlineExpandoRow isExpanded={isExpanded} label={label} onPress={onPress} />
     ),
     [],
   )

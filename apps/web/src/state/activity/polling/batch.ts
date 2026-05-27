@@ -86,14 +86,13 @@ export function usePollPendingBatchTransactions(onActivityUpdate: OnActivityUpda
           finalizeBatch({ transaction, onActivityUpdate, hash, status: updatedStatus })
         }
         if (result.status >= 400) {
-          if (receipt) {
-            const hash = receipt.transactionHash
-            finalizeBatch({ transaction, onActivityUpdate, hash, status: TransactionStatus.Failed })
-            return
-          }
-          throw new Error(
-            `Failure status of ${result.status} received from ${transaction.batchInfo.connectorId ?? 'wallet'} with no receipt`,
-          )
+          // Per EIP-5792, status 400 (OffchainFailure) means the batch was never included onchain
+          // Status 500 (ChainRulesFailure, batch reverted) should include a receipt, but if
+          // the wallet doesn't surface one we still treat the batch as definitively
+          // failed rather than retrying.
+          const hash = receipt?.transactionHash
+          finalizeBatch({ transaction, onActivityUpdate, hash, status: TransactionStatus.Failed })
+          return
         }
       } catch (error) {
         FAILURE_COUNT_MAP[transaction.batchInfo.batchId] = (FAILURE_COUNT_MAP[transaction.batchInfo.batchId] ?? 0) + 1

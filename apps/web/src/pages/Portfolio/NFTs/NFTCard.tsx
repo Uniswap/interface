@@ -243,8 +243,9 @@ function NFTCardInner(props: NftCardProps): JSX.Element {
           <GroupHoverTransition
             height={SUBTITLE_HEIGHT}
             useGroupItemHover
+            widthMode="container"
             defaultContent={
-              <Flex row alignItems="center" gap="$spacing4" justifyContent="space-between" height={SUBTITLE_HEIGHT}>
+              <Flex width="100%" row alignItems="center" gap="$spacing4" height={SUBTITLE_HEIGHT}>
                 <Text
                   variant="body4"
                   color="$neutral2"

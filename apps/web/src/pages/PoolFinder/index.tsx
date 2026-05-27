@@ -19,6 +19,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/Breadcru
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { V2Unsupported } from '~/components/V2Unsupported'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
 import { CurrencySelector } from '~/features/Liquidity/Create/SelectTokenStep'
 import { useAccount } from '~/hooks/useAccount'
 import { useNetworkSupportsV2 } from '~/hooks/useNetworkSupportsV2'
@@ -34,6 +35,7 @@ export function PoolFinder() {
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const breadcrumb = useEntryPointBreadcrumb()
   const [success, setSuccess] = useState(false)
 
   const [currency0, setCurrency0] = useState<Currency | undefined>(() =>
@@ -83,8 +85,8 @@ export function PoolFinder() {
     <Trace logImpression page={InterfacePageName.PoolPage}>
       <Flex width="100%" py="$spacing48" px="$spacing40" maxWidth={650}>
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-          <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-            <ArrowLeft size="$icon.16" /> {t('pool.positions.title')}
+          <BreadcrumbNavLink style={{ gap: '8px' }} to={breadcrumb.to}>
+            <ArrowLeft size="$icon.16" /> {breadcrumb.label}
           </BreadcrumbNavLink>
         </BreadcrumbNavContainer>
 
