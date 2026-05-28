@@ -1,9 +1,15 @@
 /* oxlint-disable max-params */
-import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
+import {
+  isMobileApp,
+  isWebApp,
+  isWebPlatform,
+  isDevEnv,
+  isTestEnv,
+  isDatadogEnabled,
+  localDevDatadogEnabled,
+} from '@universe/environment'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { type LoggerErrorContext, type LogLevel } from 'utilities/src/logger/types'
-import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -13,7 +19,6 @@ import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 // perhaps because the declarations are not applying to external packages
 // but somehow its also not picking up the declarations here
 declare global {
-  // oxlint-disable-next-line typescript/ban-ts-comment
   // @ts-ignore its ok
   const __DEV__: boolean
 }
@@ -84,16 +89,14 @@ function logMessage(
       // because `console.debug` and `console.warn` only support one single argument in Reactotron.
       // Alternatively, we could improve this in the future by removing the Reactotron log plugin and instead
       // manually call `Reactotron.display(...)` here with some custom formatting.
-      // oxlint-disable-next-line no-console -- Console logging needed for debugging
       console.log(...formatMessage({ level, fileName, functionName, message }), ...args)
     } else {
-      // oxlint-disable-next-line no-console -- Console logging needed for debugging
       console[level](...formatMessage({ level, fileName, functionName, message }), ...args)
     }
   }
 
   // don't log if datadog isn't enabled on the build or by the switch
-  if (!datadogEnabledBuild || !datadogEnabled) {
+  if (!isDatadogEnabled() || !datadogEnabled) {
     return
   }
 
@@ -119,12 +122,11 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
 
   // Log to console directly for dev builds or interface for debugging
   if (__DEV__ || isWebApp) {
-    // oxlint-disable-next-line no-console -- Console logging needed for debugging
     console.error(error, captureContext)
   }
 
   // don't log if datadog isn't enabled on the build or by the switch
-  if (!datadogEnabledBuild || !datadogEnabled) {
+  if (!isDatadogEnabled() || !datadogEnabled) {
     return
   }
 

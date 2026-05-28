@@ -2,6 +2,7 @@ import { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService
 import { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
 import { provideUniswapIdentifierService } from '@universe/api/src/provideUniswapIdentifierService'
 import { getTransport } from '@universe/api/src/transport'
+import { REQUEST_SOURCE } from '@universe/environment'
 import {
   createNoopSessionService,
   createSessionClient,
@@ -10,7 +11,6 @@ import {
   type SessionService,
 } from '@universe/sessions'
 import type { Logger } from 'utilities/src/logger/logger'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 function provideSessionService(ctx: {
   getBaseUrl: () => string

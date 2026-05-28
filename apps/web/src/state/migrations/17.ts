@@ -11,7 +11,7 @@ export type PersistAppStateV17 = {
   }
 }
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 function searchResultId(searchResult: PreV55SearchResult): string {
   const { type } = searchResult
   const address = isPoolSearchResult(searchResult) ? searchResult.poolId : searchResult.address

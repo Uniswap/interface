@@ -8,12 +8,12 @@ import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { AccountOption } from '~/components/ReceiveCryptoModal/AccountOption'
 import { ProviderOption } from '~/components/ReceiveCryptoModal/ProviderOption'
-import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
 import { ProviderConnectedView } from '~/pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from '~/pages/Swap/Buy/ProviderConnectionError'
 import { CopyToClipboard } from '~/theme/components/CopyHelper'
+import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />

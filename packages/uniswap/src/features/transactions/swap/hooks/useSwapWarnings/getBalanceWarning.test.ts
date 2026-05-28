@@ -5,7 +5,7 @@ import { getBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-vi.mock('utilities/src/platform', () => ({
+vi.mock('@universe/environment', () => ({
   isAndroid: false,
   isIOS: false,
   isWebPlatform: true,
@@ -18,7 +18,6 @@ vi.mock('utilities/src/platform', () => ({
   isSafari: false,
   isMobileWebSafari: false,
   isMobileWebAndroid: false,
-  isBrowser: true,
   isExtensionApp: false,
   isMobileApp: false,
   isWebApp: true,

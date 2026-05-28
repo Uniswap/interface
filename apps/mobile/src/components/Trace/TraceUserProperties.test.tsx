@@ -19,7 +19,6 @@ import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // `any` is the actual type used by `jest.spyOn`
-// oxlint-disable-next-line max-params
 function mockFn(module: any, func: string, returnValue: any): jest.SpyInstance<any, unknown[]> {
   return jest.spyOn(module, func).mockImplementation(() => returnValue)
 }

@@ -28,6 +28,8 @@ export interface MultichainTokenOption extends BaseOption {
   type: OnchainItemListOptionType.MultichainToken
   multichainResult: MultichainSearchResult
   primaryCurrencyInfo: CurrencyInfo
+  /** From recent search history: open TDP with this `?chain=` when present. */
+  tdpChainFilter?: UniverseChainId
 }
 
 export interface PoolOption extends BaseOption {

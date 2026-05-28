@@ -1,5 +1,30 @@
-import { jsonParse, jsonStringify } from 'utilities/src/serialization/json'
+import { jsonParse, jsonStringify, looksLikeJson } from 'utilities/src/serialization/json'
 import { describe, expect, it } from 'vitest'
+
+describe('looksLikeJson', () => {
+  it('returns true for object-like strings', () => {
+    expect(looksLikeJson('{"a":1}')).toBe(true)
+  })
+
+  it('returns true for array-like strings', () => {
+    expect(looksLikeJson('[1,2,3]')).toBe(true)
+  })
+
+  it('returns true with leading whitespace', () => {
+    expect(looksLikeJson('  { "a": 1 }')).toBe(true)
+    expect(looksLikeJson('\n[1]')).toBe(true)
+  })
+
+  it('returns false for plain strings', () => {
+    expect(looksLikeJson('hello')).toBe(false)
+    expect(looksLikeJson('123')).toBe(false)
+    expect(looksLikeJson('true')).toBe(false)
+  })
+
+  it('returns false for empty string', () => {
+    expect(looksLikeJson('')).toBe(false)
+  })
+})
 
 describe('BigInt serialization utilities', () => {
   describe('stringify', () => {

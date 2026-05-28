@@ -31,6 +31,7 @@ export function Password({
 
   const shouldShowBiometricUnlockEnrollment = useShouldShowBiometricUnlockEnrollment({ flow: 'onboarding' })
 
+  // oxlint-disable-next-line no-shadow
   const onPasswordNext = useEvent(async (password: string) => {
     if (shouldShowBiometricUnlockEnrollment) {
       setPassword(password)

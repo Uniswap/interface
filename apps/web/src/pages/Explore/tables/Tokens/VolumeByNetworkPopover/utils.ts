@@ -3,11 +3,12 @@ import type { TFunction } from 'i18next'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { TimePeriod } from '~/appGraphql/data/util'
 import {
   sortMultichainTokenByVolume,
   TIME_PERIOD_TO_VOLUME_KEY,
-} from '~/state/explore/listTokens/utils/multichainVolume'
+} from '~/features/Explore/state/listTokens/utils/multichainVolume'
 
 export function getVolumeLabelForTimePeriod(t: TFunction, timePeriod: TimePeriod): string {
   switch (timePeriod) {
@@ -29,7 +30,7 @@ export function getVolumeLabelForTimePeriod(t: TFunction, timePeriod: TimePeriod
 }
 
 export function getChainLogoUrl(chainId: UniverseChainId | undefined): string | undefined {
-  if (chainId === undefined) {
+  if (chainId === undefined || !isUniverseChainId(chainId)) {
     return undefined
   }
   const networkName = getChainInfo(chainId).assetRepoNetworkName
@@ -59,4 +60,33 @@ export function getPercentageDisplay(volume: number, totalVolume: number): strin
   }
   const percentage = (volume / totalVolume) * 100
   return percentage === Math.round(percentage) ? `${Math.round(percentage)}%` : `${percentage.toFixed(1)}%`
+}
+
+/** Minimal shape accepted by `useNavigateToTokenDetails` for multichain API tokens. */
+export type VolumePopoverTokenDetailsInput = { chainId: number; address: string }
+
+export type NavigateVolumePopoverToTokenDetails = (
+  currency: VolumePopoverTokenDetailsInput,
+  chainFilter?: UniverseChainId,
+) => void
+
+/**
+ * Opens TDP for the given chain's deployment of a multichain token, optionally setting the chain query param.
+ */
+export function navigateVolumePopoverToTokenDetails({
+  navigateToTokenDetails,
+  mcToken,
+  chainId,
+  chainQueryFilter,
+}: {
+  navigateToTokenDetails: NavigateVolumePopoverToTokenDetails
+  mcToken: MultichainToken | undefined
+  chainId: UniverseChainId
+  chainQueryFilter?: UniverseChainId
+}): void {
+  const deployment = mcToken?.chainTokens.find((ct) => ct.chainId === chainId)
+  if (!deployment) {
+    return
+  }
+  navigateToTokenDetails({ chainId: deployment.chainId, address: deployment.address }, chainQueryFilter)
 }

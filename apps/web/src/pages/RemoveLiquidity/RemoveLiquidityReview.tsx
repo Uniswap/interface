@@ -1,7 +1,8 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
@@ -20,13 +21,13 @@ import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/type
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { getLPBaseAnalyticsProperties } from '~/components/Liquidity/analytics'
-import { useGetPoolTokenPercentage } from '~/components/Liquidity/hooks/useGetPoolTokenPercentage'
-import { TokenInfo } from '~/components/Liquidity/TokenInfo'
-import { DetailLineItem } from '~/components/swap/DetailLineItem'
+import { DetailLineItem } from '~/components/DetailLineItem'
+import { getLPBaseAnalyticsProperties } from '~/features/Liquidity/analytics'
+import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
+import { TokenInfo } from '~/features/Liquidity/TokenInfo'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useRemoveLiquidityModalContext } from '~/pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from '~/pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { liquiditySaga } from '~/state/sagas/liquidity/liquiditySaga'
@@ -46,6 +47,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const account = useWallet().evmAccount
   const dispatch = useDispatch()
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
   const { needsPasskeySignin } = useGetPasskeyAuthStatus(connectedAccount.connector?.id)
 
   const { txContext, gasFeeEstimateUSD } = removeLiquidityTxContext
@@ -92,14 +94,18 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     currency0AmountToRemove,
     currency1AmountToRemove,
   } = useMemo(() => {
+    // oxlint-disable-next-line no-shadow
     const unwrappedCurrency0AmountToRemove = CurrencyAmount.fromRawAmount(currency0, currency0Amount.quotient)
       .multiply(percent)
       .divide(100)
+    // oxlint-disable-next-line no-shadow
     const unwrappedCurrency1AmountToRemove = CurrencyAmount.fromRawAmount(currency1, currency1Amount.quotient)
       .multiply(percent)
       .divide(100)
 
+    // oxlint-disable-next-line no-shadow
     const currency0AmountToRemove = currency0Amount.multiply(percent).divide(100)
+    // oxlint-disable-next-line no-shadow
     const currency1AmountToRemove = currency1Amount.multiply(percent).divide(100)
 
     return {
@@ -153,6 +159,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
             currency0AmountUsd: currency0AmountToRemoveUSD,
             currency1AmountUsd: currency1AmountToRemoveUSD,
             version,
+            isCentralizedPricesEnabled,
           }),
           expectedAmountBaseRaw: unwrappedCurrency0AmountToRemove.quotient.toString(),
           expectedAmountQuoteRaw: unwrappedCurrency1AmountToRemove.quotient.toString(),
@@ -232,7 +239,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans i18nKey="pool.newSpecificPosition" values={{ symbol: currency0Amount.currency.symbol }} />
+                    {t('pool.newSpecificPosition', { symbol: currency0Amount.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (
@@ -252,7 +259,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               LineItem={{
                 Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    <Trans i18nKey="pool.newSpecificPosition" values={{ symbol: currency1Amount.currency.symbol }} />
+                    {t('pool.newSpecificPosition', { symbol: currency1Amount.currency.symbol })}
                   </Text>
                 ),
                 Value: () => (

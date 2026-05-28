@@ -1,0 +1,567 @@
+diff --git a/lib/base-provider.js b/lib/base-provider.js
+--- a/lib/base-provider.js
++++ b/lib/base-provider.js
+@@ -2582,4 +2582,8 @@
+     return BaseProvider;
+ }(abstract_provider_1.Provider));
+ exports.BaseProvider = BaseProvider;
+-//# sourceMappingURL=base-provider.js.map
+\ No newline at end of file
++(function () {
++    var ens = require("./ens-universal-resolver-helpers.js");
++    ens.install(BaseProvider, Resolver);
++})();
++//# sourceMappingURL=base-provider.js.map
+diff --git a/lib/ens-universal-resolver-helpers.js b/lib/ens-universal-resolver-helpers.js
+new file mode 100644
+index 0000000..1111111 100644
+--- /dev/null
++++ b/lib/ens-universal-resolver-helpers.js
+@@ -0,0 +1,250 @@
++'use strict'
++/**
++ * ENS Universal Resolver for ethers v5 providers (replaces @ensdomains/ethers-patch-v5).
++ * Includes tunneling batch gateway (inverted ENSIP-21) from ensdomains/ethers-patch PR #3.
++ * Installed from BaseProvider source via install() — no mutation of shared ethers utils.
++ */
++const { ens_normalize } = require('@adraffy/ens-normalize')
++const { Contract } = require('@ethersproject/contracts')
++const { BigNumber } = require('@ethersproject/bignumber')
++const { getAddress } = require('@ethersproject/address')
++const { hexlify, isHexString } = require('@ethersproject/bytes')
++const { keccak256 } = require('@ethersproject/keccak256')
++const { id: labelhash } = require('@ethersproject/hash')
++const { Interface } = require('@ethersproject/abi')
++const { toUtf8Bytes } = require('@ethersproject/strings')
++const { Logger } = require('@ethersproject/logger')
++
++const patchLogger = new Logger('@ethersproject/providers/ens-universe')
++const logger0 = new Logger('ethers-patch')
++const UR_PROXY = '0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe'
++const LOCAL_BATCH_GATEWAY = 'x-batch-gateway:true'
++const EXTERNAL_BATCH_GATEWAY_ERROR = 'batch gateway failed'
++const ABI_FRAGMENTS = [
++  'function requireResolver(bytes) view returns ((bytes name, uint256 offset, bytes32 node, address resolver, bool extended))',
++  'function resolve(bytes, bytes) view returns (bytes)',
++  'function name(bytes32) view returns (string)',
++  'function addr(bytes32) view returns (address)',
++  'function addr(bytes32, uint256) view returns (bytes)',
++  'function query((address, string[], bytes)[]) view returns (bool[], bytes[])',
++]
++const COIN_TYPE_ETH = BigInt(60)
++const COIN_TYPE_DEFAULT = BigInt(1) << BigInt(31)
++const ABI = new Interface(ABI_FRAGMENTS)
++const TUNNEL_STORAGE = Symbol('tunnelingBatchGateways')
++
++function isEVMCoinType(coinType) {
++  return (
++    coinType === COIN_TYPE_ETH ||
++    (coinType >= BigInt(0) && (coinType ^ COIN_TYPE_DEFAULT) < COIN_TYPE_DEFAULT)
++  )
++}
++
++function getReverseName(lowerAddress, coinType) {
++  return `${lowerAddress.slice(2)}.${
++    coinType === COIN_TYPE_ETH
++      ? 'addr'
++      : coinType === COIN_TYPE_DEFAULT
++        ? 'default'
++        : coinType.toString(16)
++  }.reverse`
++}
++
++function namesplit(name) {
++  return name ? name.split('.') : []
++}
++
++function dnsEncode(name) {
++  const m = namesplit(name).map((x) => toUtf8Bytes(x))
++  const v = new Uint8Array(m.reduce((a, x) => a + 1 + x.length, 1))
++  let pos = 0
++  for (const x of m) {
++    if (x.length > 255) {
++      throw new Error('invalid DNS encoded entry; length exceeds 255 bytes')
++    }
++    v[pos++] = x.length
++    v.set(x, pos)
++    pos += x.length
++  }
++  return hexlify(v)
++}
++
++function namehash(name) {
++  return namesplit(name).reduceRight(
++    (h, x) => keccak256(h + labelhash(x).slice(2)),
++    '0x'.padEnd(66, '0'),
++  )
++}
++
++async function callResolver(resolver, fragment, ...args) {
++  const f = ABI.getFunction(fragment)
++  const r = new Contract(resolver.address, ABI, resolver.provider)
++  const node = namehash(resolver.name)
++  if (await resolver.supportsWildcard()) {
++    const res = ABI.decodeFunctionResult(
++      f,
++      await r['resolve'](
++        dnsEncode(resolver.name),
++        ABI.encodeFunctionData(f, [node, ...args]),
++        { ccipReadEnabled: true },
++      ),
++    )
++    return f.outputs?.length === 1 ? res[0] : res
++  }
++  const fnName = f.format()
++  const bound = r[fnName]
++  if (!bound) {
++    throw new Error(`ens universe: missing contract fn ${fnName}`)
++  }
++  return bound.call(r, node, ...args, { ccipReadEnabled: true })
++}
++
++async function fetchAddress(resolver, coinType) {
++  if (coinType === COIN_TYPE_ETH) {
++    return callResolver(resolver, 'addr(bytes32)')
++  }
++  const a = await callResolver(resolver, 'addr(bytes32,uint256)', coinType)
++  return isEVMCoinType(coinType) ? (a === '0x' ? a.padEnd(42, '0') : getAddress(a)) : a
++}
++
++async function getResolverImpl(provider, Resolver, name) {
++  const UR = new Contract(UR_PROXY, ABI, provider)
++  try {
++    const normalized = ens_normalize(name)
++    const result = await UR['requireResolver'](dnsEncode(normalized))
++    const resolver = new Resolver(provider, result.resolver, normalized)
++    resolver._supportsEip2544 = Promise.resolve(result.extended)
++    return resolver
++  } catch {
++    return null
++  }
++}
++
++async function resolveNameImpl(provider, Resolver, resolveNameOrig, name, coinType) {
++  if (coinType === 'old') {
++    return resolveNameOrig.call(provider, name)
++  }
++  if (coinType === undefined || coinType === null) {
++    coinType = COIN_TYPE_ETH
++  }
++  const awaitedName = await name
++  const coinTypeBn = BigNumber.from(coinType).toBigInt()
++  if (isHexString(awaitedName) && awaitedName.length === 42) {
++    return getAddress(awaitedName)
++  }
++  const fwd = await getResolverImpl(provider, Resolver, awaitedName)
++  if (!fwd) {
++    return null
++  }
++  try {
++    const a = await fetchAddress(fwd, coinTypeBn)
++    if (!/^0x0+$/.test(a)) {
++      return a
++    }
++  } catch (err) {
++    if (!err || err.code !== Logger.errors.CALL_EXCEPTION) {
++      throw err
++    }
++  }
++  return null
++}
++
++async function lookupAddressImpl(provider, Resolver, lookupAddressOrig, address, coinType) {
++  if (coinType === 'old') {
++    return lookupAddressOrig.call(provider, address)
++  }
++  if (coinType === undefined || coinType === null) {
++    coinType = COIN_TYPE_ETH
++  }
++  const awaitedAddress = await address
++  if (!isHexString(awaitedAddress) || awaitedAddress === '0x') {
++    patchLogger.throwArgumentError('invalid address', 'address', awaitedAddress)
++  }
++  const lower = awaitedAddress.toLowerCase()
++  const coinTypeBn = BigNumber.from(coinType).toBigInt()
++  const reverseName = getReverseName(lower, coinTypeBn)
++  try {
++    const rev = await getResolverImpl(provider, Resolver, reverseName)
++    if (rev) {
++      const resolvedName = await callResolver(rev, 'name')
++      if (resolvedName && ens_normalize(resolvedName) === resolvedName) {
++        const fwd = await getResolverImpl(provider, Resolver, resolvedName)
++        if (fwd) {
++          const checked = await fetchAddress(fwd, coinTypeBn)
++          if (lower === checked.toLowerCase()) {
++            return resolvedName
++          }
++        }
++      }
++    }
++  } catch {
++    // ignore
++  }
++  return null
++}
++
++function install(BaseProvider, Resolver) {
++  const ccipReadFetchOrig = BaseProvider.prototype.ccipReadFetch
++
++  const tunnellingCcipReadFetch = async function (tx, calldata, urls) {
++    if (this.disableCcipRead || !urls.length || !tx.to) {
++      return null
++    }
++    const tunnels = this.getTunnelingBatchGateways()
++    if (urls.includes(LOCAL_BATCH_GATEWAY)) {
++      return ccipReadFetchOrig.call(this, tx, calldata, tunnels)
++    }
++    const sender = tx.to.toLowerCase()
++    const response = await ccipReadFetchOrig.call(
++      this,
++      tx,
++      ABI.encodeFunctionData('query', [[[sender, urls, calldata]]]),
++      tunnels,
++    )
++    if (!response) return null
++    const decoded = ABI.decodeFunctionResult('query', response)
++    const failures = decoded[0]
++    const responses = decoded[1]
++    if (failures[0]) {
++      const error = `${EXTERNAL_BATCH_GATEWAY_ERROR}: ${responses[0]}`
++      return logger0.throwError(
++        `error encountered during CCIP fetch: ${error}`,
++        Logger.errors.SERVER_ERROR,
++        {
++          urls,
++          errorMessages: [error],
++        },
++      )
++    }
++    return responses[0]
++  }
++
++  BaseProvider.prototype.setTunnelingBatchGateways = function (urls) {
++    if (!urls || !urls.length) {
++      this[TUNNEL_STORAGE] = undefined
++      delete this.ccipReadFetch
++    } else {
++      this[TUNNEL_STORAGE] = urls
++      this.ccipReadFetch = tunnellingCcipReadFetch
++    }
++  }
++
++  BaseProvider.prototype.getTunnelingBatchGateways = function () {
++    return this[TUNNEL_STORAGE] ?? []
++  }
++
++  const resolveNameOrig = BaseProvider.prototype.resolveName
++  const lookupAddressOrig = BaseProvider.prototype.lookupAddress
++
++  BaseProvider.prototype.getResolver = function (name) {
++    return getResolverImpl(this, Resolver, name)
++  }
++  BaseProvider.prototype.resolveName = function (name, coinType) {
++    return resolveNameImpl(this, Resolver, resolveNameOrig, name, coinType)
++  }
++  BaseProvider.prototype.lookupAddress = function (address, coinType) {
++    return lookupAddressImpl(this, Resolver, lookupAddressOrig, address, coinType)
++  }
++}
++
++module.exports = { install }
+diff --git a/lib.esm/base-provider.js b/lib.esm/base-provider.js
+--- a/lib.esm/base-provider.js
++++ b/lib.esm/base-provider.js
+@@ -22,6 +22,7 @@
+ import { fetchJson, poll } from "@ethersproject/web";
+ import bech32 from "bech32";
+ import { Logger } from "@ethersproject/logger";
++import { install as installEnsUniversalResolver } from "./ens-universal-resolver-helpers.mjs";
+ import { version } from "./_version";
+ const logger = new Logger(version);
+ import { Formatter } from "./formatter";
+@@ -2004,4 +2005,5 @@
+         return this;
+     }
+ }
+-//# sourceMappingURL=base-provider.js.map
+\ No newline at end of file
++installEnsUniversalResolver(BaseProvider, Resolver);
++//# sourceMappingURL=base-provider.js.map
+diff --git a/lib.esm/ens-universal-resolver-helpers.mjs b/lib.esm/ens-universal-resolver-helpers.mjs
+new file mode 100644
+index 0000000..1111111 100644
+--- /dev/null
++++ b/lib.esm/ens-universal-resolver-helpers.mjs
+@@ -0,0 +1,247 @@
++'use strict'
++/**
++ * ENS Universal Resolver for ethers v5 providers (ESM) — see ens-universal-resolver-helpers.js.
++ * Includes tunneling batch gateway (inverted ENSIP-21) from ensdomains/ethers-patch PR #3.
++ */
++import { ens_normalize } from '@adraffy/ens-normalize'
++import { Contract } from '@ethersproject/contracts'
++import { BigNumber } from '@ethersproject/bignumber'
++import { getAddress } from '@ethersproject/address'
++import { hexlify, isHexString } from '@ethersproject/bytes'
++import { keccak256 } from '@ethersproject/keccak256'
++import { id as labelhash } from '@ethersproject/hash'
++import { Interface } from '@ethersproject/abi'
++import { toUtf8Bytes } from '@ethersproject/strings'
++import { Logger } from '@ethersproject/logger'
++
++const patchLogger = new Logger('@ethersproject/providers/ens-universe')
++const logger0 = new Logger('ethers-patch')
++const UR_PROXY = '0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe'
++const LOCAL_BATCH_GATEWAY = 'x-batch-gateway:true'
++const EXTERNAL_BATCH_GATEWAY_ERROR = 'batch gateway failed'
++const ABI_FRAGMENTS = [
++  'function requireResolver(bytes) view returns ((bytes name, uint256 offset, bytes32 node, address resolver, bool extended))',
++  'function resolve(bytes, bytes) view returns (bytes)',
++  'function name(bytes32) view returns (string)',
++  'function addr(bytes32) view returns (address)',
++  'function addr(bytes32, uint256) view returns (bytes)',
++  'function query((address, string[], bytes)[]) view returns (bool[], bytes[])',
++]
++const COIN_TYPE_ETH = BigInt(60)
++const COIN_TYPE_DEFAULT = BigInt(1) << BigInt(31)
++const ABI = new Interface(ABI_FRAGMENTS)
++const TUNNEL_STORAGE = Symbol('tunnelingBatchGateways')
++
++function isEVMCoinType(coinType) {
++  return (
++    coinType === COIN_TYPE_ETH ||
++    (coinType >= BigInt(0) && (coinType ^ COIN_TYPE_DEFAULT) < COIN_TYPE_DEFAULT)
++  )
++}
++
++function getReverseName(lowerAddress, coinType) {
++  return `${lowerAddress.slice(2)}.${
++    coinType === COIN_TYPE_ETH
++      ? 'addr'
++      : coinType === COIN_TYPE_DEFAULT
++        ? 'default'
++        : coinType.toString(16)
++  }.reverse`
++}
++
++function namesplit(name) {
++  return name ? name.split('.') : []
++}
++
++function dnsEncode(name) {
++  const m = namesplit(name).map((x) => toUtf8Bytes(x))
++  const v = new Uint8Array(m.reduce((a, x) => a + 1 + x.length, 1))
++  let pos = 0
++  for (const x of m) {
++    if (x.length > 255) {
++      throw new Error('invalid DNS encoded entry; length exceeds 255 bytes')
++    }
++    v[pos++] = x.length
++    v.set(x, pos)
++    pos += x.length
++  }
++  return hexlify(v)
++}
++
++function namehash(name) {
++  return namesplit(name).reduceRight(
++    (h, x) => keccak256(h + labelhash(x).slice(2)),
++    '0x'.padEnd(66, '0'),
++  )
++}
++
++async function callResolver(resolver, fragment, ...args) {
++  const f = ABI.getFunction(fragment)
++  const r = new Contract(resolver.address, ABI, resolver.provider)
++  const node = namehash(resolver.name)
++  if (await resolver.supportsWildcard()) {
++    const res = ABI.decodeFunctionResult(
++      f,
++      await r['resolve'](
++        dnsEncode(resolver.name),
++        ABI.encodeFunctionData(f, [node, ...args]),
++        { ccipReadEnabled: true },
++      ),
++    )
++    return f.outputs?.length === 1 ? res[0] : res
++  }
++  const fnName = f.format()
++  const bound = r[fnName]
++  if (!bound) {
++    throw new Error(`ens universe: missing contract fn ${fnName}`)
++  }
++  return bound.call(r, node, ...args, { ccipReadEnabled: true })
++}
++
++async function fetchAddress(resolver, coinType) {
++  if (coinType === COIN_TYPE_ETH) {
++    return callResolver(resolver, 'addr(bytes32)')
++  }
++  const a = await callResolver(resolver, 'addr(bytes32,uint256)', coinType)
++  return isEVMCoinType(coinType) ? (a === '0x' ? a.padEnd(42, '0') : getAddress(a)) : a
++}
++
++async function getResolverImpl(provider, Resolver, name) {
++  const UR = new Contract(UR_PROXY, ABI, provider)
++  try {
++    const normalized = ens_normalize(name)
++    const result = await UR['requireResolver'](dnsEncode(normalized))
++    const resolver = new Resolver(provider, result.resolver, normalized)
++    resolver._supportsEip2544 = Promise.resolve(result.extended)
++    return resolver
++  } catch {
++    return null
++  }
++}
++
++async function resolveNameImpl(provider, Resolver, resolveNameOrig, name, coinType) {
++  if (coinType === 'old') {
++    return resolveNameOrig.call(provider, name)
++  }
++  if (coinType === undefined || coinType === null) {
++    coinType = COIN_TYPE_ETH
++  }
++  const awaitedName = await name
++  const coinTypeBn = BigNumber.from(coinType).toBigInt()
++  if (isHexString(awaitedName) && awaitedName.length === 42) {
++    return getAddress(awaitedName)
++  }
++  const fwd = await getResolverImpl(provider, Resolver, awaitedName)
++  if (!fwd) {
++    return null
++  }
++  try {
++    const a = await fetchAddress(fwd, coinTypeBn)
++    if (!/^0x0+$/.test(a)) {
++      return a
++    }
++  } catch (err) {
++    if (!err || err.code !== Logger.errors.CALL_EXCEPTION) {
++      throw err
++    }
++  }
++  return null
++}
++
++async function lookupAddressImpl(provider, Resolver, lookupAddressOrig, address, coinType) {
++  if (coinType === 'old') {
++    return lookupAddressOrig.call(provider, address)
++  }
++  if (coinType === undefined || coinType === null) {
++    coinType = COIN_TYPE_ETH
++  }
++  const awaitedAddress = await address
++  if (!isHexString(awaitedAddress) || awaitedAddress === '0x') {
++    patchLogger.throwArgumentError('invalid address', 'address', awaitedAddress)
++  }
++  const lower = awaitedAddress.toLowerCase()
++  const coinTypeBn = BigNumber.from(coinType).toBigInt()
++  const reverseName = getReverseName(lower, coinTypeBn)
++  try {
++    const rev = await getResolverImpl(provider, Resolver, reverseName)
++    if (rev) {
++      const resolvedName = await callResolver(rev, 'name')
++      if (resolvedName && ens_normalize(resolvedName) === resolvedName) {
++        const fwd = await getResolverImpl(provider, Resolver, resolvedName)
++        if (fwd) {
++          const checked = await fetchAddress(fwd, coinTypeBn)
++          if (lower === checked.toLowerCase()) {
++            return resolvedName
++          }
++        }
++      }
++    }
++  } catch {
++    // ignore
++  }
++  return null
++}
++
++export function install(BaseProvider, Resolver) {
++  const ccipReadFetchOrig = BaseProvider.prototype.ccipReadFetch
++
++  const tunnellingCcipReadFetch = async function (tx, calldata, urls) {
++    if (this.disableCcipRead || !urls.length || !tx.to) {
++      return null
++    }
++    const tunnels = this.getTunnelingBatchGateways()
++    if (urls.includes(LOCAL_BATCH_GATEWAY)) {
++      return ccipReadFetchOrig.call(this, tx, calldata, tunnels)
++    }
++    const sender = tx.to.toLowerCase()
++    const response = await ccipReadFetchOrig.call(
++      this,
++      tx,
++      ABI.encodeFunctionData('query', [[[sender, urls, calldata]]]),
++      tunnels,
++    )
++    if (!response) return null
++    const decoded = ABI.decodeFunctionResult('query', response)
++    const failures = decoded[0]
++    const responses = decoded[1]
++    if (failures[0]) {
++      const error = `${EXTERNAL_BATCH_GATEWAY_ERROR}: ${responses[0]}`
++      return logger0.throwError(
++        `error encountered during CCIP fetch: ${error}`,
++        Logger.errors.SERVER_ERROR,
++        {
++          urls,
++          errorMessages: [error],
++        },
++      )
++    }
++    return responses[0]
++  }
++
++  BaseProvider.prototype.setTunnelingBatchGateways = function (urls) {
++    if (!urls || !urls.length) {
++      this[TUNNEL_STORAGE] = undefined
++      delete this.ccipReadFetch
++    } else {
++      this[TUNNEL_STORAGE] = urls
++      this.ccipReadFetch = tunnellingCcipReadFetch
++    }
++  }
++
++  BaseProvider.prototype.getTunnelingBatchGateways = function () {
++    return this[TUNNEL_STORAGE] ?? []
++  }
++
++  const resolveNameOrig = BaseProvider.prototype.resolveName
++  const lookupAddressOrig = BaseProvider.prototype.lookupAddress
++
++  BaseProvider.prototype.getResolver = function (name) {
++    return getResolverImpl(this, Resolver, name)
++  }
++  BaseProvider.prototype.resolveName = function (name, coinType) {
++    return resolveNameImpl(this, Resolver, resolveNameOrig, name, coinType)
++  }
++  BaseProvider.prototype.lookupAddress = function (address, coinType) {
++    return lookupAddressImpl(this, Resolver, lookupAddressOrig, address, coinType)
++  }
++}
+diff --git a/package.json b/package.json
+--- a/package.json
++++ b/package.json
+@@ -16,7 +16,7 @@
+   "dependencies": {
+     "@ethersproject/abstract-provider": "^5.7.0",
+     "@ethersproject/abstract-signer": "^5.7.0",
+-    "@ethersproject/address": "^5.7.0",
++    "@ethersproject/address": "5.7.0",
+     "@ethersproject/base64": "^5.7.0",
+     "@ethersproject/basex": "^5.7.0",
+     "@ethersproject/bignumber": "^5.7.0",
+@@ -33,7 +33,11 @@
+     "@ethersproject/transactions": "^5.7.0",
+     "@ethersproject/web": "^5.7.0",
+     "bech32": "1.1.4",
+-    "ws": "7.4.6"
++    "ws": "7.4.6",
++    "@adraffy/ens-normalize": "1.11.1",
++    "@ethersproject/contracts": "5.7.0",
++    "@ethersproject/abi": "5.7.0",
++    "@ethersproject/keccak256": "5.7.0"
+   },
+   "description": "Ethereum Providers for ethers.",
+   "ethereum": "donations.ethers.eth",

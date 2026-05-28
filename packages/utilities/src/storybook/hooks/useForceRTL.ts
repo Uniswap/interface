@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-// oxlint-disable-next-line typescript/no-restricted-imports
 import { I18nManager } from 'react-native'
 
 type UseForceRTL = (startWithRTL: boolean) => { toggleRTL: () => void; isRTL: boolean }

@@ -1,6 +1,6 @@
 import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { LinearGradient } from 'expo-linear-gradient'
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { I18nManager, StyleSheet } from 'react-native'
 import { DotGrid } from 'src/components/charts/DotGrid'
@@ -54,16 +54,6 @@ export const PortfolioChart = memo(function PortfolioChart({
   const isRTL = I18nManager.isRTL
   const chartWidth = fullWidth - CHART_HORIZONTAL_PADDING
 
-  // Slice data to only the points visible in the collapsed chart width
-  const collapsedData = useMemo(() => {
-    if (data.length <= 2) {
-      return data
-    }
-    const visibleRatio = COLLAPSED_CHART_WIDTH / chartWidth
-    const visibleCount = Math.max(2, Math.ceil(data.length * visibleRatio))
-    return data.slice(-visibleCount)
-  }, [data, chartWidth])
-
   if (!isExpanded) {
     return (
       <Flex
@@ -76,10 +66,9 @@ export const PortfolioChart = memo(function PortfolioChart({
           <Loader.Graph />
         ) : (
           <>
-            <DotGrid width={COLLAPSED_CHART_WIDTH} height={COLLAPSED_CHART_VISIBLE_HEIGHT} />
             <Flex direction="ltr" style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
               <SparklineChart
-                data={collapsedData}
+                data={data}
                 width={COLLAPSED_CHART_WIDTH}
                 height={COLLAPSED_CHART_VISIBLE_HEIGHT}
                 color={chartColor}

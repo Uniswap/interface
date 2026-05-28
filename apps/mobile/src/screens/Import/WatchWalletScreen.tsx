@@ -13,10 +13,10 @@ import { Button, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -163,7 +163,6 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     setValue(text?.trim())
   }
 
-  // oxlint-disable-next-line react/exhaustive-deps -- Only want to reset timer on value change
   useEffect(() => {
     const delayFn = setTimeout(() => {
       setShowLiveCheck(true)

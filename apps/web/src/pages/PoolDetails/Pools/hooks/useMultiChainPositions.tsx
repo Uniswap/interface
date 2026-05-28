@@ -1,8 +1,8 @@
+import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { computePoolAddress, Pool, Position } from '@uniswap/v3-sdk'
-import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
@@ -66,7 +66,7 @@ type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean
  * @param chains - chains to fetch positions from
  * @returns positions, fees
  */
-export default function useMultiChainPositions(account: string): UseMultiChainPositionsData {
+export function useMultiChainPositions(account: string): UseMultiChainPositionsData {
   const { chains } = useEnabledChains()
 
   const pms = useV3ManagerContracts(chains)
@@ -223,13 +223,13 @@ export default function useMultiChainPositions(account: string): UseMultiChainPo
 
   const fetchAllPositions = useCallback(async () => {
     positionsFetching.current = true
+    // oxlint-disable-next-line no-shadow
     const positions = (await Promise.all(chains.map(fetchPositionsForChain))).flat()
     positionsFetching.current = false
     setPositions(positions)
   }, [chains, fetchPositionsForChain, setPositions])
 
   // Fetches positions when existing positions are stale and the document has focus
-  // oxlint-disable-next-line react/exhaustive-deps -- +positionsFetching
   useEffect(() => {
     if (positionsFetching.current || cachedPositions?.stale === false) {
       return undefined
@@ -257,9 +257,7 @@ export default function useMultiChainPositions(account: string): UseMultiChainPo
         const fees = feeMap[key]
           ? [
               // We parse away from SDK/ethers types so fees can be multiplied by primitive number prices
-              // oxlint-disable-next-line typescript/no-unnecessary-condition
               parseFloat(CurrencyAmount.fromRawAmount(position.pool.token0, feeMap[key]?.[0].toString()).toExact()),
-              // oxlint-disable-next-line typescript/no-unnecessary-condition
               parseFloat(CurrencyAmount.fromRawAmount(position.pool.token1, feeMap[key]?.[1].toString()).toExact()),
             ]
           : undefined

@@ -4,6 +4,8 @@ import { queryOptions, useQuery } from '@tanstack/react-query'
 import type { Currency } from '@uniswap/sdk-core'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import { createElement } from 'react'
+import { SwapDotted } from 'ui/src/components/icons/SwapDotted'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -42,8 +44,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import UniswapXBolt from '~/assets/svg/bolt.svg'
-import StaticRouteIcon from '~/assets/svg/static_route.svg'
 import {
   getActivityTitle,
   getCancelledTransactionTitleTable,
@@ -167,7 +167,7 @@ async function parseSwap({
       isSwap: true,
     }),
     currencies: [tokenIn, tokenOut],
-    prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
+    ...(swap.isUniswapXOrder ? { isUniswapX: true } : {}),
   }
 }
 
@@ -197,7 +197,7 @@ async function parseConfirmedSwap({
       isSwap: true,
     }),
     currencies: [tokenIn, tokenOut],
-    prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
+    ...(swap.isUniswapXOrder ? { isUniswapX: true } : {}),
   }
 }
 
@@ -231,7 +231,6 @@ async function parseBridge({
     chainId: currencyIdToChain(bridge.inputCurrencyId) ?? chainId,
     outputChainId: currencyIdToChain(bridge.outputCurrencyId) ?? chainId,
     currencies: [tokenIn, tokenOut],
-    prefixIconSrc: undefined,
   }
 }
 
@@ -599,7 +598,7 @@ async function parseUniswapXOrderLocal({
     title,
     status: orderTextTableEntry.status,
     statusMessage,
-    prefixIconSrc: UniswapXBolt,
+    isUniswapX: true,
     offchainOrderDetails,
   }
 }
@@ -762,7 +761,7 @@ export async function transactionToActivity({
       additionalFields = {
         title: i18n.t('common.permit'),
         descriptor: i18n.t('notification.transaction.unknown.success.short'),
-        logos: [StaticRouteIcon],
+        portfolioLogoCustomIcon: createElement(SwapDotted, { size: '$icon.24', color: '$neutral2' }),
       }
     } else if (info.type === TransactionType.Plan) {
       additionalFields = await parsePlan({
@@ -775,6 +774,7 @@ export async function transactionToActivity({
     const activity = { ...defaultFields, ...additionalFields }
 
     // Skip the canceled transaction override for UniswapX orders since they handle it specially
+    // oxlint-disable-next-line no-shadow
     const isUniswapX = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
     const CancelledTransactionTitleTable = getCancelledTransactionTitleTable()
     if (details.status === TransactionStatus.Canceled && !isUniswapX) {

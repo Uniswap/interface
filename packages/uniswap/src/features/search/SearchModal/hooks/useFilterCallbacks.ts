@@ -3,6 +3,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalNameType, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { buildNetworkFilterSelectedChainFields } from 'uniswap/src/features/telemetry/utils/buildNetworkFilterSelectedChainFields'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
 
 export function useFilterCallbacks(
@@ -44,8 +45,9 @@ export function useFilterCallbacks(
   const onChangeChainFilter = useCallback(
     (newChainFilter: typeof chainFilter) => {
       setChainFilter(newChainFilter)
+      const networkFilterChainFields = buildNetworkFilterSelectedChainFields(newChainFilter)
       sendAnalyticsEvent(UniswapEventName.NetworkFilterSelected, {
-        chain: newChainFilter ?? 'All',
+        ...networkFilterChainFields,
         modal: modalName,
       })
     },

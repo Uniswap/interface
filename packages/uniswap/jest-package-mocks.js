@@ -26,6 +26,14 @@ jest.mock('uniswap/src/data/getVersionHeader', () => {
   return jest.requireActual('uniswap/src/data/getVersionHeader.web')
 })
 
+jest.mock('uniswap/src/data/rest/tokenRankings', () => {
+  const actual = jest.requireActual('uniswap/src/data/rest/tokenRankings')
+  return {
+    ...actual,
+    useTokenRankingsQuery: jest.fn(() => ({ data: undefined, isLoading: false, isFetching: false, error: null })),
+  }
+})
+
 jest.mock('@universe/gating', () => {
   const actual = jest.requireActual('@universe/gating')
   return {

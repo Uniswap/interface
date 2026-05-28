@@ -1,4 +1,7 @@
-import { initialTransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/createTransactionSettingsStore'
+import {
+  createTransactionSettingsStore,
+  initialTransactionSettingsState,
+} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/createTransactionSettingsStore'
 import { isDefaultTradeRouteOptions } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/isDefaultTradeRouteOptions'
 
 describe('createTransactionSettingsStore', () => {
@@ -24,5 +27,17 @@ describe('createTransactionSettingsStore', () => {
 
       expect(isDefault).toBe(false)
     })
+  })
+
+  it('sets and clears gasOverrides', () => {
+    const { store } = createTransactionSettingsStore()
+    store.getState().actions.setGasOverrides({ maxBaseFeeGwei: '3.5', priorityFeeGwei: '2', gasLimit: '500000' })
+    expect(store.getState().gasOverrides).toEqual({
+      maxBaseFeeGwei: '3.5',
+      priorityFeeGwei: '2',
+      gasLimit: '500000',
+    })
+    store.getState().actions.clearGasOverrides()
+    expect(store.getState().gasOverrides).toBeUndefined()
   })
 })

@@ -1,7 +1,7 @@
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from 'react-native-mmkv'
 import { logger } from 'utilities/src/logger/logger'
 
-const storage = new MMKV({ id: 'onboarding-timestamp' })
+const storage = createMMKV({ id: 'onboarding-timestamp' })
 const ONBOARDING_TIMESTAMP_KEY = 'onboardingCompletedTimestamp'
 
 export function setOnboardingTimestamp(): void {
@@ -28,7 +28,7 @@ export function getOnboardingTimestamp(): number | undefined {
 
 export function clearOnboardingTimestamp(): void {
   try {
-    storage.delete(ONBOARDING_TIMESTAMP_KEY)
+    storage.remove(ONBOARDING_TIMESTAMP_KEY)
   } catch (error) {
     logger.error(error, {
       tags: { file: 'onboardingTimestamp.ts', function: 'clearOnboardingTimestamp' },

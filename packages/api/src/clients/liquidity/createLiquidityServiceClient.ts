@@ -1,18 +1,8 @@
 import { type PromiseClient } from '@connectrpc/connect'
 import { type LiquidityService as V1LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
 import type {
-  CheckApprovalLPRequest,
-  CheckApprovalLPResponse,
-  ClaimLPFeesRequest,
-  ClaimLPFeesResponse,
   ClaimLPRewardsRequest,
   ClaimLPRewardsResponse,
-  CreateLPPositionRequest,
-  CreateLPPositionResponse,
-  DecreaseLPPositionRequest,
-  DecreaseLPPositionResponse,
-  IncreaseLPPositionRequest,
-  IncreaseLPPositionResponse,
   MigrateV2ToV3LPPositionRequest,
   MigrateV2ToV3LPPositionResponse,
   MigrateV3ToV4LPPositionRequest,
@@ -41,12 +31,7 @@ interface V1LiquidityServiceClientContext {
 }
 
 export interface V1LiquidityServiceClient {
-  checkApproval: (params: CheckApprovalLPRequest) => Promise<CheckApprovalLPResponse>
-  claimLpFees: (params: ClaimLPFeesRequest) => Promise<ClaimLPFeesResponse>
   claimRewards: (params: ClaimLPRewardsRequest) => Promise<ClaimLPRewardsResponse>
-  createLpPosition: (params: CreateLPPositionRequest) => Promise<CreateLPPositionResponse>
-  decreaseLpPosition: (params: DecreaseLPPositionRequest) => Promise<DecreaseLPPositionResponse>
-  increaseLpPosition: (params: IncreaseLPPositionRequest) => Promise<IncreaseLPPositionResponse>
   migrateV2ToV3LpPosition: (params: MigrateV2ToV3LPPositionRequest) => Promise<MigrateV2ToV3LPPositionResponse>
   migrateV3ToV4LpPosition: (params: MigrateV3ToV4LPPositionRequest) => Promise<MigrateV3ToV4LPPositionResponse>
   poolInfo: (params: PoolInfoRequest) => Promise<PoolInfoResponse>
@@ -56,12 +41,7 @@ export function createV1LiquidityServiceClient({
   rpcClient,
 }: V1LiquidityServiceClientContext): V1LiquidityServiceClient {
   return {
-    checkApproval: (params) => rpcClient.checkLPApproval(params),
-    claimLpFees: (params) => rpcClient.claimLPFees(params),
     claimRewards: (params) => rpcClient.claimLPRewards(params),
-    createLpPosition: (params) => rpcClient.createLPPosition(params),
-    decreaseLpPosition: (params) => rpcClient.decreaseLPPosition(params),
-    increaseLpPosition: (params) => rpcClient.increaseLPPosition(params),
     migrateV2ToV3LpPosition: (params) => rpcClient.migrateV2ToV3LPPosition(params),
     migrateV3ToV4LpPosition: (params) => rpcClient.migrateV3ToV4LPPosition(params),
     poolInfo: (params) => rpcClient.poolInfo(params),

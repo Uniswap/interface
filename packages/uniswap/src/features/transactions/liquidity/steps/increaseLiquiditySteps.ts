@@ -1,7 +1,7 @@
 import {
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
-  IncreasePositionTransactionStepBatched,
+  IncreasePositionTransactionStepWalletCall,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { Permit2SignatureStep } from 'uniswap/src/features/transactions/steps/permit2Signature'
@@ -15,7 +15,7 @@ export type IncreaseLiquiditySteps =
   | Permit2TransactionStep
   | IncreasePositionTransactionStep
   | IncreasePositionTransactionStepAsync
-  | IncreasePositionTransactionStepBatched
+  | IncreasePositionTransactionStepWalletCall
 
 export type IncreaseLiquidityFlow =
   | {

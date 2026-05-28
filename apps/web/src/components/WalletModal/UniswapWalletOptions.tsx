@@ -1,23 +1,26 @@
+import { isMobileWeb, isWebIOS } from '@universe/environment'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAtom } from 'jotai'
 import { PropsWithChildren } from 'react'
-import { Trans } from 'react-i18next'
-import { Flex, Image, Text } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { useTranslation } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
 import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
+import { Passkey } from 'ui/src/components/icons/Passkey'
 import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
-import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { iconSizes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { GooglePlayStoreLogo } from '~/components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from '~/components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from '~/components/WalletModal/shared'
+import { UniswapBrandedIcon } from '~/components/WalletModal/UniswapBrandedIcon'
 import { useWalletWithId } from '~/features/accounts/store/hooks'
 import { useConnectWallet } from '~/features/wallet/connection/hooks/useConnectWallet'
+import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
 import { persistHideMobileAppPromoBannerAtom } from '~/state/application/atoms'
 import { openDownloadApp } from '~/utils/openDownloadApp'
 
@@ -52,11 +55,38 @@ export function OptionContainer({ hideBackground, recent, children, onPress, tes
   )
 }
 
+function PasskeyLoginOption({ onSuccess }: { onSuccess: () => void }) {
+  const { t } = useTranslation()
+  const { signInWithPasskey: handlePasskeyLogin } = useSignInWithPasskey({ onSuccess })
+
+  return (
+    <OptionContainer onPress={handlePasskeyLogin} testID={TestID.LogIn}>
+      <Flex
+        width={iconSizes.icon32}
+        height={iconSizes.icon32}
+        minWidth={iconSizes.icon32}
+        alignItems="center"
+        justifyContent="center"
+        backgroundColor="$accent2"
+        borderRadius="$rounded8"
+      >
+        <Passkey color="$accent1" size="$icon.24" />
+      </Flex>
+      <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
+        {t('nav.logIn.button')}
+      </Text>
+    </OptionContainer>
+  )
+}
+
 export function UniswapWalletOptions() {
+  const { t } = useTranslation()
   const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   const uniswapExtensionWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
   const uniswapMobileWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID)
+  const embeddedWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID)
 
   const accountDrawer = useAccountDrawer()
   const setMenu = useSetMenu()
@@ -79,9 +109,9 @@ export function UniswapWalletOptions() {
           >
             <Flex row grow justifyContent="space-between" alignItems="center">
               <Flex row gap="$gap12" alignItems="center">
-                <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
+                <UniswapBrandedIcon withChromeBadge />
                 <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
-                  <Trans i18nKey="common.extension" />
+                  {t('common.extension')}
                 </Text>
               </Flex>
               <DetectedBadge />
@@ -90,28 +120,18 @@ export function UniswapWalletOptions() {
         ) : !isMobileWeb ? (
           <DownloadWalletOption />
         ) : null}
+        {isEmbeddedWalletEnabled && embeddedWallet ? <PasskeyLoginOption onSuccess={onSuccess} /> : null}
         <OptionContainer
           onPress={() => (uniswapMobileWallet ? connectWallet({ wallet: uniswapMobileWallet, onSuccess }) : undefined)}
         >
-          {isMobileWeb ? (
-            <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
-          ) : (
-            <ScanQr
-              size={iconSizes.icon40}
-              minWidth={iconSizes.icon40}
-              color="$accent1"
-              backgroundColor="$accent2"
-              borderRadius={8}
-              p={7}
-            />
-          )}
+          <UniswapBrandedIcon />
           <Flex row justifyContent="space-between">
             <Flex>
               <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
-                <Trans i18nKey="common.uniswapMobile" />
+                {t('common.uniswapMobile')}
               </Text>
               <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                {isMobileWeb ? <Trans i18nKey="wallet.appSignIn" /> : <Trans i18nKey="wallet.scanToConnect" />}
+                {isMobileWeb ? t('wallet.appSignIn') : t('wallet.scanToConnect')}
               </Text>
             </Flex>
           </Flex>
@@ -129,14 +149,10 @@ export function UniswapWalletOptions() {
             <Flex row grow alignItems="center">
               <Flex grow>
                 <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
-                  <Trans i18nKey="common.getUniswapWallet" />
+                  {t('common.getUniswapWallet')}
                 </Text>
                 <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                  {isWebIOS ? (
-                    <Trans i18nKey="common.downloadAppStore" />
-                  ) : (
-                    <Trans i18nKey="common.downloadPlayStore" />
-                  )}
+                  {isWebIOS ? t('common.downloadAppStore') : t('common.downloadPlayStore')}
                 </Text>
               </Flex>
               {isWebIOS ? (

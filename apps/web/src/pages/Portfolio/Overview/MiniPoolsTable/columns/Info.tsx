@@ -5,9 +5,9 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { PositionInfo } from '~/components/Liquidity/types'
 import { BIPS_BASE } from '~/constants/misc'
 
 // Helper function to get fee label from position

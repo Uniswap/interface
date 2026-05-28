@@ -8,7 +8,6 @@ export const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const [hasChangedOnce, setHasChangedOnce] = useState(false)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- Only run when currentPage is changed
   useEffect(() => {
     if (!hasChangedOnce) {
       // avoid setting scroll to top on initial load

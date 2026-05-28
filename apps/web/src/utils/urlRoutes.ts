@@ -10,6 +10,8 @@ export function getCurrentPageFromLocation(locationPathname: string): InterfaceP
       return InterfacePageName.SwapPage
     case locationPathname.startsWith('/portfolio/tokens'):
       return InterfacePageName.PortfolioTokensPage
+    case locationPathname.startsWith('/portfolio/pools'):
+      return InterfacePageName.PortfolioPoolsPage
     case locationPathname.startsWith('/portfolio/defi'):
       return InterfacePageName.PortfolioDefiPage
     case locationPathname.startsWith('/portfolio/nfts'):

@@ -226,6 +226,7 @@ function NumberSprite({ char, charset, color }: { char: string; charset: string[
 
   return (
     <SpriteContainer variants={variants}>
+      {/* oxlint-disable-next-line no-shadow */}
       {chars.map((char, index) => {
         const charVariants = {
           initial: {

@@ -2,21 +2,33 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useLocation } from 'react-router'
 import { Flex } from 'ui/src'
 import { TransitionItem } from 'ui/src/animations/components/AnimatePresencePager'
-import PortfolioActivity from '~/pages/Portfolio/Activity/Activity'
+import { PortfolioActivity } from '~/pages/Portfolio/Activity/Activity'
 import { PortfolioDefi } from '~/pages/Portfolio/Defi'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioTabsAnimation } from '~/pages/Portfolio/Header/hooks/usePortfolioTabsAnimation'
 import { PortfolioNfts } from '~/pages/Portfolio/NFTs/Nfts'
 import { PortfolioOverview } from '~/pages/Portfolio/Overview/Overview'
+import { PortfolioPools } from '~/pages/Portfolio/Pools/Pools'
 import { PortfolioTokens } from '~/pages/Portfolio/Tokens/Tokens'
 import { PortfolioTab } from '~/pages/Portfolio/types'
 
-const renderPortfolioContent = (tab: PortfolioTab | undefined, isPortfolioDefiTabEnabled: boolean) => {
+function renderPortfolioContent({
+  tab,
+  isPortfolioDefiTabEnabled,
+  portfolioPoolsBalancesEnabled,
+}: {
+  tab: PortfolioTab | undefined
+  isPortfolioDefiTabEnabled: boolean
+  portfolioPoolsBalancesEnabled: boolean
+}) {
   switch (tab) {
     case PortfolioTab.Overview:
       return <PortfolioOverview />
     case PortfolioTab.Tokens:
       return <PortfolioTokens />
+    case PortfolioTab.Pools:
+      // If pools tab is disabled, usePortfolioRoutes will redirect to overview tab
+      return portfolioPoolsBalancesEnabled ? <PortfolioPools /> : <></>
     case PortfolioTab.Defi:
       // If defi tab is disabled, usePortfolioRoutes will redirect to overview tab
       return isPortfolioDefiTabEnabled ? <PortfolioDefi /> : <></>
@@ -34,11 +46,12 @@ export function PortfolioContent({ disabled }: { disabled?: boolean }): JSX.Elem
   const animationType = usePortfolioTabsAnimation(pathname)
   const { tab } = usePortfolioRoutes()
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
+  const portfolioPoolsBalancesEnabled = useFeatureFlag(FeatureFlags.PortfolioPoolsBalances)
 
   return (
     <Flex flex={1} position="relative" $platform-web={disabled ? { pointerEvents: 'none' } : undefined}>
       <TransitionItem childKey={pathname} animationType={animationType} animation="fast">
-        {renderPortfolioContent(tab, isPortfolioDefiTabEnabled)}
+        {renderPortfolioContent({ tab, isPortfolioDefiTabEnabled, portfolioPoolsBalancesEnabled })}
       </TransitionItem>
     </Flex>
   )

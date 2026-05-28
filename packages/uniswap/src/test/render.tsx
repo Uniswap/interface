@@ -1,5 +1,3 @@
-/* oxlint-disable typescript/no-explicit-any -- legacy code needs review */
-
 import 'uniswap/src/i18n'
 import { InMemoryCache, Resolvers } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'

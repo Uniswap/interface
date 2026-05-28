@@ -14,6 +14,7 @@ pre-commit:
         CI: "true"
         FORCE_COLOR: "0"
       run: TERM=dumb bun g:check:fast
+      fail_text: "If this is a fresh git worktree, run 'bun install' first — fast-checks needs node_modules/."
       stage_fixed: true
 
     git-secrets:
@@ -31,7 +32,9 @@ pre-commit:
       run: |
         export TERM=dumb
         if command -v trufflehog &> /dev/null; then
-          trufflehog git file://. --since-commit HEAD --only-verified --fail
+          # Scan staged diff via stdin so the hook works in git worktrees (where .git is
+          # a file, not a directory) and actually scans the pending commit's content.
+          git diff --cached --no-color | trufflehog stdin --only-verified --fail
         else
           echo "trufflehog not installed, skipping..."
         fi

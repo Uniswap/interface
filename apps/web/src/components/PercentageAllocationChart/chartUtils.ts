@@ -7,6 +7,23 @@ const MAX_SMALL_ITEMS = 4
 /** Default minimum bar width (px); used by adjustItemWidths and bar components. Override via options/props when needed. */
 export const MIN_BAR_WIDTH = 8
 
+/** Aggregated "rest of chains" segments — always rendered last in the bar (e.g. explore volume popover). */
+function isTrailingAggregateOther(item: PercentageAllocationItem): boolean {
+  return item.id === 'other' || item.id === 'others'
+}
+
+/** Sort by share descending, but keep aggregate "other(s)" last regardless of size. */
+function sortItemsForAllocationBar(items: PercentageAllocationItem[]): PercentageAllocationItem[] {
+  return [...items].sort((a, b) => {
+    const aOther = isTrailingAggregateOther(a)
+    const bOther = isTrailingAggregateOther(b)
+    if (aOther !== bOther) {
+      return aOther ? 1 : -1
+    }
+    return b.percentage - a.percentage
+  })
+}
+
 function computeMinAutoPercentage({
   items,
   chartWidth,
@@ -101,7 +118,7 @@ export function adjustItemWidths({
     }))
   }
 
-  const sortedItems = [...items].sort((a, b) => b.percentage - a.percentage)
+  const sortedItems = sortItemsForAllocationBar(items)
   const minWidthPercentage = computeMinAutoPercentage({ items: sortedItems, chartWidth, minBarWidth })
   const groupedItems = groupOthers({ t, items: sortedItems, minWidthPercentage })
   const newMinWidthPercentage = computeMinAutoPercentage({

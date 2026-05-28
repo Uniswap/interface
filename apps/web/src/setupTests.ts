@@ -1,7 +1,24 @@
 /* oxlint-disable max-lines */
 import '@testing-library/jest-dom' // jest custom assertions
-import 'jest-styled-components' // adds style diffs to snapshot tests
 import '~/polyfills' // add polyfills
+
+// ResizeObserver is not available in jsdom — provide a minimal stub for tests
+if (typeof globalThis.ResizeObserver === 'undefined') {
+  globalThis.ResizeObserver = class ResizeObserver {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+  }
+}
+
+// Deterministic crypto.randomUUID for snapshot stability
+let _testUuidCounter = 0
+crypto.randomUUID = (() => `test-uuid-${_testUuidCounter++}`) as typeof crypto.randomUUID
+// Reset counter between tests so snapshots are stable
+beforeEach(() => {
+  _testUuidCounter = 0
+  crypto.randomUUID = (() => `test-uuid-${_testUuidCounter++}`) as typeof crypto.randomUUID
+})
 // oxlint-disable-next-line
 import './test-utils/mockTamagui' // mock problematic Tamagui components
 import { Readable } from 'stream'
@@ -108,6 +125,7 @@ globalThis.origin = 'https://app.uniswap.org'
 // oxlint-disable-next-line no-lone-blocks -- block used to scope polyfill assignments
 {
   window.open = vi.fn()
+  window.scrollTo = vi.fn()
   window.getComputedStyle = vi.fn()
 
   if (typeof globalThis.TextEncoder === 'undefined') {
@@ -134,6 +152,35 @@ globalThis.origin = 'https://app.uniswap.org'
 
   globalThis.performance.measure = vi.fn()
   globalThis.performance.mark = vi.fn()
+
+  // jsdom does not implement Canvas 2D (getContext('2d') logs console.error).
+  // DynamicSizeText and similar code need a minimal context with measureText.
+  const canvasProto = HTMLCanvasElement.prototype
+  const originalGetContext = canvasProto.getContext
+  const patchedGetContext = function (
+    this: HTMLCanvasElement,
+    contextId: string,
+    ...args: unknown[]
+  ): RenderingContext | null {
+    if (contextId === '2d') {
+      let font = ''
+      return {
+        get font(): string {
+          return font
+        },
+        set font(value: string) {
+          font = value
+        },
+        measureText(text: string): TextMetrics {
+          const match = /^(\d+)px/.exec(font)
+          const px = match ? Number.parseInt(match[1], 10) : 16
+          return { width: Math.max(1, text.length * px * 0.52) } as TextMetrics
+        },
+      } as unknown as CanvasRenderingContext2D
+    }
+    return originalGetContext.call(this, contextId, ...args) as RenderingContext | null
+  }
+  canvasProto.getContext = patchedGetContext as typeof originalGetContext
 
   globalThis.React = React
 }
@@ -223,8 +270,8 @@ vi.mock('utilities/src/telemetry/analytics/constants', () => ({
   __esModule: true,
 }))
 
-vi.mock('utilities/src/platform', async () => {
-  const actual = await vi.importActual('utilities/src/platform')
+vi.mock('@universe/environment', async () => {
+  const actual = await vi.importActual('@universe/environment')
   return {
     ...actual,
     isWebPlatform: true,

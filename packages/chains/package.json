@@ -1,0 +1,44 @@
+{
+  "name": "@universe/chains",
+  "version": "0.0.0",
+  "dependencies": {
+    "@ethersproject/abstract-signer": "5.7.0",
+    "@ethersproject/address": "5.7.0",
+    "@ethersproject/bignumber": "5.7.0",
+    "@ethersproject/hash": "5.7.0",
+    "@ethersproject/properties": "5.7.0",
+    "@ethersproject/providers": "5.7.2",
+    "@ethersproject/units": "5.7.0",
+    "@ethersproject/web": "5.7.1",
+    "@uniswap/sdk-core": "7.12.1",
+    "@universe/encoding": "workspace:^",
+    "ethers": "5.7.2",
+    "utilities": "workspace:^",
+    "viem": "2.30.5",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@edge-runtime/vm": "5.0.0",
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "@universe/sessions": "workspace:^",
+    "typescript": "5.9.2",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "typecheck": "nx typecheck chains",
+    "check": "nx check chains",
+    "check:fast": "nx check:fast chains",
+    "check:deps:usage": "nx check:deps:usage chains",
+    "format": "nx format chains",
+    "format:check": "nx format:check chains",
+    "lint": "nx lint chains",
+    "lint:fix": "nx lint:fix chains"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

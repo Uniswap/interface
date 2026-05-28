@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { memo, useState } from 'react'
 import {
@@ -17,7 +18,6 @@ import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { isMobileApp } from 'utilities/src/platform'
 
 interface TokenLogoProps {
   url?: string | null
@@ -27,7 +27,6 @@ interface TokenLogoProps {
   size?: number
   hideNetworkLogo?: boolean
   alwaysShowNetworkLogo?: boolean
-  showMainnetNetworkLogo?: boolean
   networkCount?: number
   networkLogoBorderWidth?: number
   loading?: boolean
@@ -132,7 +131,6 @@ export const TokenLogo = memo(function TokenLogoInner({
   size = iconSizes.icon40,
   hideNetworkLogo,
   alwaysShowNetworkLogo,
-  showMainnetNetworkLogo = false,
   networkCount,
   networkLogoBorderWidth = isMobileApp ? 2 : 1.5,
   loading,
@@ -156,7 +154,7 @@ export const TokenLogo = memo(function TokenLogoInner({
     alwaysShowNetworkLogo,
     hideNetworkLogo,
     chainId,
-    showMainnetNetworkLogo,
+    showMainnetNetworkLogo: multichainTokenUxEnabled,
   })
   const networkLogoSize = Math.round(size * STATUS_RATIO)
 
@@ -222,7 +220,8 @@ export const TokenLogo = memo(function TokenLogoInner({
           position="absolute"
           top="2%"
           left="2%"
-          borderRadius={size / 2}
+          borderRadius="$roundedFull"
+          transition={transition}
         />
       )}
 
@@ -232,7 +231,8 @@ export const TokenLogo = memo(function TokenLogoInner({
         size={{ height: tokenSize, width: tokenSize }}
         style={{
           image: {
-            borderRadius: size / 2,
+            // High value auto-maps to max, preventing CSS animation issues
+            borderRadius: size,
             zIndex: zIndexes.default,
             ...(transition && { transition }),
           },
@@ -244,7 +244,7 @@ export const TokenLogo = memo(function TokenLogoInner({
 
       {isTestnetToken && (
         <Flex
-          borderRadius={size / 2}
+          borderRadius="$roundedFull"
           borderStyle="dashed"
           borderColor="$neutral3"
           borderWidth={borderWidth}
@@ -252,6 +252,7 @@ export const TokenLogo = memo(function TokenLogoInner({
           width={size}
           style={{ boxSizing: 'border-box' }}
           position="absolute"
+          transition={transition}
         />
       )}
 

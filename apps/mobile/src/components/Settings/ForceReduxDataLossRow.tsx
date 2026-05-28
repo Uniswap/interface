@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { DevSettings } from 'react-native'
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from 'react-native-mmkv'
 import { Flex, type IconProps, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron, UniswapLogo } from 'ui/src/components/icons'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -18,7 +18,7 @@ export function ForceReduxDataLossRow({ iconProps }: { iconProps: IconProps }): 
   const onConfirm = (): void => {
     setShowConfirmModal(false)
     // Clear the default MMKV instance which stores Redux persisted state
-    const storage = new MMKV()
+    const storage = createMMKV()
     storage.clearAll()
     logger.debug('ForceReduxDataLossRow', 'onConfirm', 'MMKV storage cleared, exiting app')
 

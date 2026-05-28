@@ -1,5 +1,3 @@
-/* oxlint-disable no-restricted-syntax */
-
 import { UNI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -42,17 +40,20 @@ test.describe(
 
     test('should automatically navigate to the new TDP (erc20)', async ({ page }) => {
       await page.getByTestId(OUTPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
 
-      await expect(page.url()).toContain(normalizeAddress(USDT.address, AddressStringFormat.Lowercase))
-      await expect(page.url()).not.toContain(normalizeAddress(UNI_MAINNET.address, AddressStringFormat.Lowercase))
+      expect(page.url()).toContain(normalizeAddress(USDT.address, AddressStringFormat.Lowercase))
+      expect(page.url()).not.toContain(normalizeAddress(UNI_MAINNET.address, AddressStringFormat.Lowercase))
     })
 
     test('should navigate to the new TDP with correct tokens selected', async ({ page }) => {
       await page.getByTestId(INPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
 
       await page.getByTestId(OUTPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-WBTC').first().click()
 
       await expect(page.getByTestId(INPUT_TOKEN_LABEL)).toContainText('USDT')
@@ -62,6 +63,7 @@ test.describe(
     test('should not share swap state with the main swap page', async ({ page }) => {
       await expect(page.getByTestId(OUTPUT_TOKEN_LABEL)).toContainText('UNI')
       await page.getByTestId(INPUT_TOKEN_LABEL).click()
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
       await page.goto('/swap')
 
@@ -70,9 +72,27 @@ test.describe(
       await expect(page.getByTestId(INPUT_TOKEN_LABEL)).not.toContainText('USDT')
     })
 
+    test('inline swap is visible only when TDP mobile bottom bar is hidden', async ({ page }) => {
+      await test.step('wide viewport: bottom bar hidden, inline swap visible', async () => {
+        await expect(page.getByTestId(TestID.TokenDetailsMobileBottomBar)).toBeHidden()
+        await expect(page.getByTestId(TestID.TokenDetailsSwap)).toBeVisible()
+        await expect(page.getByTestId(INPUT_TOKEN_LABEL)).toBeVisible()
+        await expect(page.getByTestId(OUTPUT_TOKEN_LABEL)).toBeVisible()
+      })
+
+      await test.step('narrow viewport: bottom bar visible, inline swap hidden', async () => {
+        await page.setViewportSize({ width: 900, height: 800 })
+        await expect(page.getByTestId(TestID.TokenDetailsMobileBottomBar)).toBeVisible()
+        await expect(page.getByTestId(TestID.TokenDetailsSwap)).toBeHidden()
+        await expect(page.getByTestId(INPUT_TOKEN_LABEL)).toBeHidden()
+        await expect(page.getByTestId(OUTPUT_TOKEN_LABEL)).toBeHidden()
+      })
+    })
+
     test.describe('swap input', () => {
       test('should handle amount into input', async ({ page }) => {
         await page.getByTestId(INPUT_TOKEN_LABEL).click()
+        // oxlint-disable-next-line eslint-js/no-restricted-syntax
         await page.getByTestId('token-option-1-USDT').first().click()
 
         await page.getByTestId(TestID.AmountInputIn).clear()

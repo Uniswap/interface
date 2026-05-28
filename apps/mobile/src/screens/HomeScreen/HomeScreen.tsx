@@ -12,11 +12,10 @@ import Animated, { FadeIn, interpolateColor, useAnimatedStyle, useDerivedValue }
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
-import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { ActivityContent } from 'src/components/activity/ActivityContent'
 import { HomeExploreTab } from 'src/components/home/HomeExploreTab'
 import { OnboardingIntroCardStack } from 'src/components/home/introCards/OnboardingIntroCardStack'
 import { NftsTab } from 'src/components/home/NftsTab'
@@ -60,8 +59,9 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
-import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { DataApiOutageBanner } from 'uniswap/src/features/dataApi/outage/DataApiOutageBanner'
+import { DataApiOutageModalContent } from 'uniswap/src/features/dataApi/outage/DataApiOutageModalContent'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -71,13 +71,14 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hooks'
 import { setIncrementNumPostSwapNudge } from 'wallet/src/features/behaviorHistory/slice'
+import { HomeScreenEarningSection } from 'wallet/src/features/earn/HomeScreenEarningSection'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
 type HomeRoute = {
   key: (typeof SectionName)[keyof typeof SectionName]
   title: string
-} & Pick<TabLabelProps, 'textStyleType' | 'enableNotificationBadge'>
+} & Pick<TabLabelProps, 'textStyleType'>
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 
@@ -130,7 +131,6 @@ function HomeScreen({
   const hideSplashScreen = useHideSplashScreen()
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
 
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
   const isPnLEnabled = useFeatureFlag(FeatureFlags.ProfitLoss)
   const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
   const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
@@ -158,7 +158,6 @@ function HomeScreen({
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const tokensTitle = t('home.tokens.title')
   const nftsTitle = t('home.nfts.title')
-  const activityTitle = t('home.activity.title')
   const exploreTitle = t('home.explore.title')
 
   const routes = useMemo((): HomeRoute[] => {
@@ -174,13 +173,10 @@ function HomeScreen({
     const tabs: Array<HomeRoute> = [
       { key: SectionName.HomeTokensTab, title: tokensTitle },
       { key: SectionName.HomeNFTsTab, title: nftsTitle },
-      ...(!isBottomTabsEnabled
-        ? [{ key: SectionName.HomeActivityTab, title: activityTitle, enableNotificationBadge: true }]
-        : []),
     ]
 
     return tabs
-  }, [showEmptyWalletState, tokensTitle, nftsTitle, isBottomTabsEnabled, activityTitle, exploreTitle])
+  }, [showEmptyWalletState, tokensTitle, nftsTitle, exploreTitle])
 
   useEffect(
     function syncTabIndex() {
@@ -215,15 +211,12 @@ function HomeScreen({
   const {
     tokensTabScrollValue,
     nftsTabScrollValue,
-    activityTabScrollValue,
     exploreTabScrollValue,
     tokensTabScrollHandler,
     nftsTabScrollHandler,
-    activityTabScrollHandler,
     exploreTabScrollHandler,
     tokensTabScrollRef,
     nftsTabScrollRef,
-    activityTabScrollRef,
     exploreTabScrollRef,
     resetScrollState,
   } = useHomeScrollRefs()
@@ -233,14 +226,10 @@ function HomeScreen({
       return exploreTabScrollValue.value
     } else if (tabIndex === HomeScreenTabIndex.Tokens) {
       return tokensTabScrollValue.value
-    } else if (tabIndex === HomeScreenTabIndex.NFTs) {
+    } else {
       return nftsTabScrollValue.value
-    } else if (tabIndex === HomeScreenTabIndex.Activity) {
-      return activityTabScrollValue.value
     }
-    return 0
   }, [
-    activityTabScrollValue.value,
     exploreTabScrollValue.value,
     showEmptyWalletState,
     nftsTabScrollValue.value,
@@ -248,30 +237,16 @@ function HomeScreen({
     tokensTabScrollValue.value,
   ])
 
-  // Only enable scroll to top for bottom tab mode
-  const dummyRef = useRef(null)
-  useScrollToTop(isBottomTabsEnabled ? tokensTabScrollRef : dummyRef)
-  useScrollToTop(isBottomTabsEnabled ? exploreTabScrollRef : dummyRef)
+  useScrollToTop(tokensTabScrollRef)
+  useScrollToTop(exploreTabScrollRef)
   // We need to create a new ref for this because the nfts tab is a flash list, which is not supported by useScrollToTop
   const nftsScrollToTopRef = useRef({
     scrollToTop: () => nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true }),
   })
 
-  useScrollToTop(isBottomTabsEnabled ? nftsScrollToTopRef : dummyRef)
-
-  // clear the notification indicator if the user is on the activity tab
-  const hasNotifications = useSelectAddressHasNotifications(activeAccount.address)
-  useEffect(() => {
-    if (isBottomTabsEnabled) {
-      return
-    }
-    if (tabIndex === 2 && hasNotifications) {
-      dispatch(setNotificationStatus({ address: activeAccount.address, hasNotifications: false }))
-    }
-  }, [dispatch, activeAccount.address, tabIndex, hasNotifications, isBottomTabsEnabled])
+  useScrollToTop(nftsScrollToTopRef)
 
   // If accounts are switched, we want to scroll to top and show full header
-  // oxlint-disable-next-line react/exhaustive-deps -- we want to trigger this effect also when activeAccount changes
   useEffect(() => {
     resetScrollState()
   }, [activeAccount, resetScrollState])
@@ -292,17 +267,8 @@ function HomeScreen({
     () => [
       { list: tokensTabScrollRef, position: tokensTabScrollValue, index: 0 },
       { list: nftsTabScrollRef, position: nftsTabScrollValue, index: 1 },
-      ...(!isBottomTabsEnabled ? [{ list: activityTabScrollRef, position: activityTabScrollValue, index: 2 }] : []),
     ],
-    [
-      activityTabScrollRef,
-      activityTabScrollValue,
-      isBottomTabsEnabled,
-      nftsTabScrollRef,
-      nftsTabScrollValue,
-      tokensTabScrollRef,
-      tokensTabScrollValue,
-    ],
+    [nftsTabScrollRef, nftsTabScrollValue, tokensTabScrollRef, tokensTabScrollValue],
   )
 
   const { sync } = useScrollSync({ currentTabIndex, scrollPairs, headerConfig })
@@ -318,6 +284,16 @@ function HomeScreen({
   }, [setIsLayoutReady])
 
   const viewOnlyLabel = t('home.warning.viewOnly')
+
+  // Portfolio outage detection — shares the same React Query cache key as PortfolioBalance, no extra fetch
+  const { error: portfolioError, dataUpdatedAt: portfolioDataUpdatedAt } = usePortfolioTotalValue({
+    evmAddress: activeAccount.address,
+    chainIds: chains,
+  })
+
+  const [isOutageSheetOpen, setIsOutageSheetOpen] = useState(false)
+  const handleOutageBannerPress = useEvent(() => setIsOutageSheetOpen(true))
+  const handleOutageSheetClose = useEvent(() => setIsOutageSheetOpen(false))
 
   const handleDismissWrappedBanner = useCallback(() => {
     dispatch(setHasDismissedUniswapWrapped2025Banner(true))
@@ -357,8 +333,9 @@ function HomeScreen({
         pointerEvents="box-none"
         backgroundColor="$surface1"
         pb={hasIntroCards ? '$none' : showEmptyWalletState ? '$spacing8' : '$spacing16'}
-        px={isBottomTabsEnabled ? '$none' : '$spacing12'}
+        px="$none"
       >
+        {portfolioError && <DataApiOutageBanner onPress={handleOutageBannerPress} />}
         {shouldShowWrappedBanner && (
           <Flex>
             <UniswapWrapped2025Banner
@@ -388,19 +365,21 @@ function HomeScreen({
             </Flex>
           </TouchableArea>
         )}
+        <HomeScreenEarningSection evmAddress={activeAccount.address} mt="$spacing12" mx="$spacing12" />
         {promoBanner}
       </Flex>
     )
   }, [
     hasIntroCards,
     showEmptyWalletState,
-    isBottomTabsEnabled,
     isPnLEnabled,
     chains,
     shouldShowWrappedBanner,
     handleDismissWrappedBanner,
     handlePressWrappedBanner,
     activeAccount.address,
+    portfolioError,
+    handleOutageBannerPress,
     isSignerAccount,
     onPressViewOnlyLabel,
     viewOnlyLabel,
@@ -408,7 +387,8 @@ function HomeScreen({
   ])
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
-  const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
+  const paddingBottom =
+    insets.bottom + ESTIMATED_BOTTOM_TABS_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({ paddingTop, paddingBottom }),
@@ -457,18 +437,10 @@ function HomeScreen({
 
   const renderTabLabel = useCallback(
     ({ route, focused, isExternalProfile }: { route: HomeRoute; focused: boolean; isExternalProfile?: boolean }) => {
-      const { textStyleType: theme, enableNotificationBadge, ...rest } = route
-      return (
-        <TabLabel
-          enableNotificationBadge={isBottomTabsEnabled ? false : enableNotificationBadge}
-          focused={focused}
-          isExternalProfile={isExternalProfile}
-          route={rest}
-          textStyleType={theme}
-        />
-      )
+      const { textStyleType: theme, ...rest } = route
+      return <TabLabel focused={focused} isExternalProfile={isExternalProfile} route={rest} textStyleType={theme} />
     },
-    [isBottomTabsEnabled],
+    [],
   )
 
   const renderTabBar = useCallback(
@@ -576,21 +548,6 @@ function HomeScreen({
               />
             </Freeze>
           )
-        case SectionName.HomeActivityTab:
-          return (
-            <Freeze freeze={tabIndex !== HomeScreenTabIndex.Activity && isHomeScreenBlur}>
-              <ActivityContent
-                ref={activityTabScrollRef}
-                containerProps={sharedProps}
-                headerHeight={headerHeight}
-                owner={activeAccount.address}
-                refreshing={refreshing}
-                scrollHandler={activityTabScrollHandler}
-                testID={TestID.ActivityTab}
-                onRefresh={onRefreshHomeData}
-              />
-            </Freeze>
-          )
         case SectionName.HomeExploreTab:
           return (
             <HomeExploreTab
@@ -619,8 +576,6 @@ function HomeScreen({
       onRefreshHomeData,
       nftsTabScrollRef,
       nftsTabScrollHandler,
-      activityTabScrollRef,
-      activityTabScrollHandler,
       exploreTabScrollRef,
       exploreTabScrollHandler,
     ],
@@ -676,7 +631,11 @@ function HomeScreen({
           />
         )}
       </View>
-      {!isBottomTabsEnabled && <NavBar />}
+      <DataApiOutageModalContent
+        isOpen={isOutageSheetOpen}
+        lastUpdatedAt={portfolioDataUpdatedAt}
+        onClose={handleOutageSheetClose}
+      />
       <AnimatedFlex
         height={insets.top}
         position="absolute"

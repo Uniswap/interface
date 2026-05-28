@@ -6,7 +6,6 @@
  *
  * For unit tests of individual migrations, see mobileMigrations.test.ts.
  */
-/* oxlint-disable typescript/no-explicit-any -- Migration test functions need flexible any types */
 /* oxlint-disable max-lines */
 /* oxlint-disable max-params */
 import { BigNumber } from '@ethersproject/bignumber'

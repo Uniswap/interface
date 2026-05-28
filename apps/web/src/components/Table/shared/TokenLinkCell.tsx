@@ -10,6 +10,7 @@ import { currencyId as toCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL, gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
 import { EllipsisText } from '~/components/Table/shared/TableText'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 const StyledInternalLink = styled(Link, {
   ...ClickableTamaguiStyle,
@@ -24,15 +25,7 @@ const StyledInternalLink = styled(Link, {
  * @param token
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
-export const TokenLinkCell = ({
-  token,
-  hideLogo,
-  showMainnetNetworkLogo,
-}: {
-  token: GraphQLApi.Token
-  hideLogo?: boolean
-  showMainnetNetworkLogo?: boolean
-}) => {
+export const TokenLinkCell = ({ token, hideLogo }: { token: GraphQLApi.Token; hideLogo?: boolean }) => {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
@@ -45,6 +38,7 @@ export const TokenLinkCell = ({
       to={getTokenDetailsURL({
         address: unwrappedToken.address,
         chain: token.chain,
+        chainQueryParam: getChainUrlParam(chainId),
       })}
     >
       <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
@@ -56,7 +50,6 @@ export const TokenLinkCell = ({
             url={currencyInfo?.logoUrl ?? token.project?.logo?.url}
             symbol={currencyInfo?.currency.symbol ?? token.symbol}
             name={currencyInfo?.currency.name}
-            showMainnetNetworkLogo={showMainnetNetworkLogo}
           />
         )}
       </Flex>

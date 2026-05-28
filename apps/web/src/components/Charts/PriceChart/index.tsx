@@ -11,7 +11,7 @@ import {
   PriceLineOptions,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { ReactNode, useMemo } from 'react'
+import { ReactElement, ReactNode, useMemo } from 'react'
 import { Flex } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
@@ -227,6 +227,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
     // Handles changes in data, e.g. time period selection
     if (this.originalData !== data) {
       this.originalData = data
+      // oxlint-disable-next-line no-shadow
       const { adjustedData, lowPriceRangeScaleFactor, min, max } = PriceChartModel.getAdjustedPrices(data)
       this.data = adjustedData
       this.lowPriceRangeScaleFactor = lowPriceRangeScaleFactor
@@ -297,6 +298,52 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 }
 
+interface PriceChartBodyProps {
+  type: PriceChartType
+  height: number
+  data: PriceChartData[]
+  stale: boolean
+  timePeriod?: GraphQLApi.HistoryDuration
+  overrideColor?: string
+  hideYAxis?: boolean
+  yAxisFormatter?: (price: number) => string
+  onCrosshairChange?: (crosshairData?: PriceChartData) => void
+  /** Optional overlay render prop with access to the chart's current crosshair data. */
+  children?: (crosshairData?: PriceChartData) => ReactElement | null
+}
+
+export function PriceChartBody({
+  data,
+  height,
+  type,
+  stale,
+  timePeriod,
+  overrideColor,
+  hideYAxis,
+  yAxisFormatter,
+  onCrosshairChange,
+  children,
+}: PriceChartBodyProps) {
+  return (
+    <Chart
+      Model={PriceChartModel}
+      params={useMemo(
+        () => ({ data, type, stale, timePeriod, hideYAxis, yAxisFormatter }),
+        [data, stale, type, timePeriod, hideYAxis, yAxisFormatter],
+      )}
+      height={height}
+      overrideColor={overrideColor}
+      TooltipBody={type === PriceChartType.CANDLESTICK ? CandlestickTooltip : undefined}
+      onCrosshairChange={onCrosshairChange}
+      showDottedBackground={true}
+      showLeftFadeOverlay={type === PriceChartType.LINE}
+      showCustomHoverMarker={type === PriceChartType.LINE}
+    >
+      {children}
+    </Chart>
+  )
+}
+
 interface PriceChartProps {
   type: PriceChartType
   height: number
@@ -338,21 +385,17 @@ export function PriceChart({
   })
 
   return (
-    <Chart
-      Model={PriceChartModel}
-      params={useMemo(
-        () => ({ data, type, stale, timePeriod, hideYAxis, yAxisFormatter }),
-        [data, stale, type, timePeriod, hideYAxis, yAxisFormatter],
-      )}
+    <PriceChartBody
+      data={data}
       height={height}
+      type={type}
+      stale={stale}
+      timePeriod={timePeriod}
       overrideColor={overrideColor}
-      TooltipBody={type === PriceChartType.CANDLESTICK ? CandlestickTooltip : undefined}
-      showDottedBackground={true}
-      showLeftFadeOverlay={type === PriceChartType.LINE}
-      showCustomHoverMarker={type === PriceChartType.LINE}
+      hideYAxis={hideYAxis}
+      yAxisFormatter={yAxisFormatter}
     >
       {(crosshairData) => {
-        // Use override value when provided, otherwise use chart data value
         const headerValue = crosshairData ? crosshairData.value : (headerTotalValueOverride ?? lastPrice.value)
 
         return (
@@ -379,6 +422,6 @@ export function PriceChart({
           />
         )
       }}
-    </Chart>
+    </PriceChartBody>
   )
 }

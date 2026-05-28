@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+// Standard HD wallet mnemonic length (BIP-39 12 words). Embedded wallets use 24.
+fileprivate let mnemonicLengthHD = 12
+
 @objcMembers class MnemonicDisplayView: NSObject {
   private var vc = UIHostingController(rootView: MnemonicDisplay())
   
@@ -53,7 +56,7 @@ class MnemonicDisplayProps: ObservableObject {
   @Published var mnemonicId: String = ""
   @Published var copyText: String = ""
   @Published var copiedText: String = ""
-  @Published var mnemonicWords: [String] = Array(repeating: "", count: 12)
+  @Published var mnemonicWords: [String] = Array(repeating: "", count: mnemonicLengthHD)
   var onHeightMeasured: ((CGFloat) -> Void)?
   var onEmptyMnemonic: ((String) -> Void)?
 }
@@ -73,7 +76,7 @@ struct MnemonicDisplay: View {
   }
   
   var body: some View {
-    if (props.mnemonicWords.count > 12) {
+    if (props.mnemonicWords.count > mnemonicLengthHD) {
       ScrollView {
         content
       }.fadeOutBottom(fadeLength: 50)

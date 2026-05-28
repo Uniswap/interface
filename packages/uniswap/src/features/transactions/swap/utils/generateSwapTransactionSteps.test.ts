@@ -17,8 +17,8 @@ import {
 // Use vi.hoisted to create a mutable mock state that can be changed between tests
 const mockPlatformState = vi.hoisted(() => ({ isWebApp: false }))
 
-vi.mock('utilities/src/platform', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('utilities/src/platform')>()
+vi.mock('@universe/environment', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/environment')>()
   return {
     ...actual,
     get isWebApp(): boolean {

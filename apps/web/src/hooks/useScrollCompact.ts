@@ -1,44 +1,61 @@
-import { useEffect, useState } from 'react'
-
-interface UseScrollCompactOptions {
-  scrollY?: number
-  thresholdCompact?: number
-  thresholdExpanded?: number
-  enabled?: boolean
-}
+import { useCallback, useRef, useSyncExternalStore } from 'react'
+import { getScrollY, subscribe } from '~/state/scroll/scrollStore'
 
 const DEFAULT_THRESHOLD_COMPACT = 120
 const DEFAULT_THRESHOLD_EXPANDED = 60
 
-/**
- * Returns whether the header/content should be in "compact" mode based on scroll position.
- * Uses hysteresis (different thresholds for compact vs expanded) to avoid flickering.
- * Shared by Portfolio header and Token Details header for scroll-to-shrink behavior.
- */
+interface applyThresholdsInput {
+  prev: boolean
+  y: number
+  compact: number
+  expanded: number
+}
+
+function applyThresholds({ prev, y, compact, expanded }: applyThresholdsInput): boolean {
+  if (!prev && y > compact) {
+    return true
+  }
+  if (prev && y < expanded) {
+    return false
+  }
+  return prev
+}
+
 export function useScrollCompact({
-  scrollY,
   thresholdCompact = DEFAULT_THRESHOLD_COMPACT,
   thresholdExpanded = DEFAULT_THRESHOLD_EXPANDED,
-  enabled = true,
-}: UseScrollCompactOptions): boolean {
-  const [isCompact, setIsCompact] = useState(false)
+}: {
+  thresholdCompact?: number
+  thresholdExpanded?: number
+}): boolean {
+  const compactRef = useRef(false)
 
-  useEffect(() => {
-    if (!enabled || scrollY === undefined) {
-      setIsCompact(false)
-      return
-    }
+  const subscribeToStore = useCallback(
+    (onStoreChange: () => void) => {
+      compactRef.current = applyThresholds({
+        prev: compactRef.current,
+        y: getScrollY(),
+        compact: thresholdCompact,
+        expanded: thresholdExpanded,
+      })
 
-    setIsCompact((prevIsCompact) => {
-      if (!prevIsCompact && scrollY > thresholdCompact) {
-        return true
-      }
-      if (prevIsCompact && scrollY < thresholdExpanded) {
-        return false
-      }
-      return prevIsCompact
-    })
-  }, [enabled, scrollY, thresholdCompact, thresholdExpanded])
+      return subscribe(() => {
+        const next = applyThresholds({
+          prev: compactRef.current,
+          y: getScrollY(),
+          compact: thresholdCompact,
+          expanded: thresholdExpanded,
+        })
+        if (next !== compactRef.current) {
+          compactRef.current = next
+          onStoreChange()
+        }
+      })
+    },
+    [thresholdCompact, thresholdExpanded],
+  )
 
-  return isCompact
+  const getSnapshot = useCallback(() => compactRef.current, [])
+
+  return useSyncExternalStore(subscribeToStore, getSnapshot, () => false)
 }

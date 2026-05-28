@@ -1,3 +1,4 @@
+import { isMobileApp, isWebApp } from '@universe/environment'
 import { ReactNode } from 'react'
 import {
   Button,
@@ -16,7 +17,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { parseCustomIconLink } from 'uniswap/src/components/notifications/iconUtils'
 import { ElementName, type ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
 
 const MODAL_MAX_WIDTH = 440
 
@@ -122,7 +122,6 @@ interface ModalTemplateProps {
  * ModalTemplate component
  *
  * A reusable template for rendering modal notifications.
- * Extracted from SolanaPromoModal to be shared across the notification system.
  *
  * Features:
  * - Centered modal with gradient background
@@ -132,9 +131,7 @@ interface ModalTemplateProps {
  * - Close button in top-right corner
  * - Fully customizable layout via children prop
  *
- * Used by:
- * - ModalNotification (notification API-driven modals)
- * - SolanaPromoModal (hardcoded promotional modal)
+ * Used by ModalNotification (notification API-driven modals).
  */
 export function ModalTemplate({
   isOpen,

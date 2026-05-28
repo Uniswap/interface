@@ -101,6 +101,32 @@ describe('createBaseNotificationProcessor', () => {
       expect(result.primary[2].id).toBe('banner-3-id')
     })
 
+    it('honors notificationTypeLimits override to raise the LOWER_LEFT_BANNER cap', async () => {
+      const tracker = createMockTracker()
+      const processor = createBaseNotificationProcessor(tracker, {
+        notificationTypeLimits: { [ContentStyle.LOWER_LEFT_BANNER]: 5 },
+      })
+      const notifications: InAppNotification[] = [
+        createMockNotification({ name: 'banner-1', timestamp: 1000, style: ContentStyle.LOWER_LEFT_BANNER }),
+        createMockNotification({ name: 'banner-2', timestamp: 2000, style: ContentStyle.LOWER_LEFT_BANNER }),
+        createMockNotification({ name: 'banner-3', timestamp: 3000, style: ContentStyle.LOWER_LEFT_BANNER }),
+        createMockNotification({ name: 'banner-4', timestamp: 4000, style: ContentStyle.LOWER_LEFT_BANNER }),
+        createMockNotification({ name: 'banner-5', timestamp: 5000, style: ContentStyle.LOWER_LEFT_BANNER }),
+        createMockNotification({ name: 'banner-6', timestamp: 6000, style: ContentStyle.LOWER_LEFT_BANNER }),
+      ]
+
+      const result = await processor.process(notifications)
+
+      expect(result.primary).toHaveLength(5)
+      expect(result.primary.map((n) => n.id)).toEqual([
+        'banner-1-id',
+        'banner-2-id',
+        'banner-3-id',
+        'banner-4-id',
+        'banner-5-id',
+      ])
+    })
+
     it('limits each style independently', async () => {
       const tracker = createMockTracker()
       const processor = createBaseNotificationProcessor(tracker)

@@ -1,4 +1,5 @@
 import { EventConsumer, EventMapBase } from '@react-navigation/core'
+import { isWebPlatform } from '@universe/environment'
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import Animated, {
@@ -18,7 +19,6 @@ import { Jiggly } from 'ui/src/animations'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { imageSizes } from 'ui/src/theme'
-import { isWebPlatform } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import {

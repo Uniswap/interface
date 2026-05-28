@@ -1,3 +1,4 @@
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import {
   DynamicConfigs,
   EmbeddedWalletConfigKey,
@@ -28,7 +29,6 @@ import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
 import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function GatingOverrides(): JSX.Element {

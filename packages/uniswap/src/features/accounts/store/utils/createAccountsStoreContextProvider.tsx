@@ -1,4 +1,4 @@
-/* oxlint-disable typescript/explicit-function-return-type */
+import { isDevEnv } from '@universe/environment'
 import { createContext, PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react'
 import type {
   AccountsData,
@@ -6,7 +6,6 @@ import type {
   AccountsState,
   AccountsStore,
 } from 'uniswap/src/features/accounts/store/types/AccountsState'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
@@ -44,6 +43,7 @@ export function createAccountsStoreContextProvider<TData extends AccountsData, T
     return <AccountsStoreContext.Provider value={store}>{children}</AccountsStoreContext.Provider>
   }
 
+  // oxlint-disable-next-line typescript/explicit-function-return-type
   function useAccountsStoreContext() {
     const context = useContext(AccountsStoreContext)
     if (!context) {

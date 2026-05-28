@@ -1,5 +1,7 @@
+import { type PartialMessage } from '@bufbuild/protobuf'
 import { type TransactionRequest } from '@ethersproject/providers'
 import { keepPreviousData, skipToken, type UseQueryResult } from '@tanstack/react-query'
+import type { Urgency } from '@uniswap/client-unirpc-v2/dist/uniswap/unirpc/v2/service_pb'
 import {
   type GasFeeResultWithoutState,
   type GasStrategy,
@@ -7,9 +9,7 @@ import {
   useQueryWithImmediateGarbageCollection,
 } from '@universe/api'
 import { FeatureFlags, getFeatureFlag, useStatsigClientStatus } from '@universe/gating'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { fetchGasFeeV2 } from 'uniswap/src/data/apiClients/gasService/fetchGasFeeV2'
-import { UniswapApiClient } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
 import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
@@ -24,17 +24,20 @@ export function useGasFeeQuery({
     fallbackGasLimit?: number
     smartContractDelegationAddress?: Address
     gasStrategy?: GasStrategy
+    urgency?: PartialMessage<Urgency>
+    gasLimitOverride?: string
   },
   GasFeeResultWithoutState
 > & { shouldUsePreviousValueDuringLoading?: boolean }): UseQueryResult<GasFeeResultWithoutState> {
   const { isStatsigReady } = useStatsigClientStatus()
   const queryKey = [
     ReactQueryCacheKey.UniswapApi,
-    uniswapUrls.gasServicePath,
     params?.tx,
     params?.fallbackGasLimit,
     params?.smartContractDelegationAddress,
     params?.gasStrategy,
+    params?.urgency,
+    params?.gasLimitOverride,
   ]
 
   return useQueryWithImmediateGarbageCollection<GasFeeResultWithoutState>({
@@ -53,6 +56,8 @@ export async function fetchGasFeeQuery(params: {
   smartContractDelegationAddress?: Address
   isStatsigReady: boolean
   gasStrategy?: GasStrategy
+  urgency?: PartialMessage<Urgency>
+  gasLimitOverride?: string
 }): Promise<GasFeeResultWithoutState> {
   const {
     tx,
@@ -60,15 +65,21 @@ export async function fetchGasFeeQuery(params: {
     smartContractDelegationAddress,
     isStatsigReady,
     gasStrategy: overrideGasStrategy,
+    urgency,
+    gasLimitOverride,
   } = params
   const gasStrategy =
     overrideGasStrategy || getActiveGasStrategy({ chainId: tx.chainId, type: 'general', isStatsigReady })
 
-  const shouldUseGasServiceV2 = getFeatureFlag(FeatureFlags.GasServiceV2)
+  const shouldUseUrgency = getFeatureFlag(FeatureFlags.GasFeeOverrides)
 
-  if (shouldUseGasServiceV2) {
-    return fetchGasFeeV2({ tx, gasStrategy, smartContractDelegationAddress, fallbackGasLimit })
-  }
-
-  return UniswapApiClient.fetchGasFee({ tx, fallbackGasLimit, gasStrategy, smartContractDelegationAddress })
+  return fetchGasFeeV2({
+    tx,
+    gasStrategy,
+    smartContractDelegationAddress,
+    fallbackGasLimit,
+    urgency,
+    gasLimitOverride,
+    shouldUseUrgency,
+  })
 }

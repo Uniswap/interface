@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router'
 import { useMedia } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 import { NetworkFilter } from '~/components/NetworkFilter/NetworkFilter'
-import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/features/params/chainParams'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { useExploreParams } from '~/pages/Explore/redirects'
+import { ExploreTab } from '~/types/explore'
+import { getChainIdFromChainUrlParam, getChainUrlParam } from '~/utils/params/chainParams'
 
 function buildExploreUrl(tabName: ExploreTab | undefined, chainId: UniverseChainId | undefined): string {
   const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
@@ -29,6 +30,8 @@ export function TableNetworkFilter({ networks }: { networks?: UniverseChainId[] 
       onPress={onNetworkPress}
       currentChainId={currentChainId}
       networks={networks}
+      tab={tabName}
+      tracePage={InterfacePageName.ExplorePage}
     />
   )
 }

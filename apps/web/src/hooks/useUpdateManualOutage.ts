@@ -32,7 +32,6 @@ export function useUpdateManualOutage({
 }) {
   const isOffline = useIsOffline()
 
-  // oxlint-disable-next-line react/exhaustive-deps -- trigger is intentionally included to force re-execution when its value changes
   useEffect(() => {
     if (!chainId || isOffline) {
       return

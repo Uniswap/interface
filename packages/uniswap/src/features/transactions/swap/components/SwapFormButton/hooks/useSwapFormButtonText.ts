@@ -2,6 +2,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
+import { useShowGetStarted } from 'uniswap/src/features/passkey/ShowGetStartedContext'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -32,7 +33,7 @@ export const useSwapFormButtonText = (): string => {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const { insufficientBalanceWarning, blockingWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()
 
-  const isLogIn = isEmbeddedWalletEnabled
+  const showGetStarted = useShowGetStarted()
 
   const nativeCurrency = nativeOnChain(chainId)
 
@@ -53,7 +54,10 @@ export const useSwapFormButtonText = (): string => {
   }
 
   if (isDisconnected) {
-    return isLogIn ? t('nav.logIn.button') : t('common.connectWallet.button')
+    if (showGetStarted) {
+      return t('common.getStarted')
+    }
+    return isEmbeddedWalletEnabled ? t('common.connect.button') : t('common.connectWallet.button')
   }
 
   if (isMissingPlatformWallet) {

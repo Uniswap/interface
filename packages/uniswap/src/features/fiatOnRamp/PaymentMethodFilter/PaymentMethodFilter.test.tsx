@@ -14,25 +14,16 @@ const { mockIsAndroid, mockIsIOS, mockIsWebAndroid, mockIsWebIOS } = vi.hoisted(
   mockIsWebIOS: vi.fn().mockReturnValue(false),
 }))
 
-vi.mock('utilities/src/platform', () => ({
-  isAndroid: mockIsAndroid,
-  isIOS: mockIsIOS,
-  isWebAndroid: mockIsWebAndroid,
-  isWebIOS: mockIsWebIOS,
-  isWebPlatform: true,
-  isMobileWeb: false,
-  isTouchable: false,
-  isHoverable: true,
-  isChrome: true,
-  isSafari: false,
-  isMobileWebSafari: false,
-  isMobileWebAndroid: false,
-  isBrowser: true,
-  isExtensionApp: false,
-  isMobileApp: false,
-  isWebApp: true,
-  isWebAppDesktop: true,
-}))
+vi.mock('@universe/environment', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@universe/environment')>()
+  return {
+    ...actual,
+    isAndroid: mockIsAndroid,
+    isIOS: mockIsIOS,
+    isWebAndroid: mockIsWebAndroid,
+    isWebIOS: mockIsWebIOS,
+  }
+})
 
 vi.mock('react-i18next', () => ({
   useTranslation: (): { t: (key: string) => string } => ({

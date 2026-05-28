@@ -8,7 +8,6 @@ const mockNavigateToSwapFlow = jest.fn()
 const mockNavigateToSend = jest.fn()
 
 jest.mock('wallet/src/contexts/WalletNavigationContext', () => ({
-  // oxlint-disable-next-line typescript/explicit-function-return-type
   useWalletNavigation: () => ({
     navigateToSwapFlow: mockNavigateToSwapFlow,
     navigateToSend: mockNavigateToSend,
@@ -16,7 +15,6 @@ jest.mock('wallet/src/contexts/WalletNavigationContext', () => ({
 }))
 
 jest.mock('wallet/src/features/wallet/hooks', () => ({
-  // oxlint-disable-next-line typescript/explicit-function-return-type
   useActiveAccountAddressWithThrow: () => '0xTestAddress',
 }))
 
@@ -76,12 +74,10 @@ let mockCrossChainResult = {
 }
 
 jest.mock('uniswap/src/data/balances/hooks/useCrossChainBalances', () => ({
-  // oxlint-disable-next-line typescript/explicit-function-return-type
   useCrossChainBalances: () => mockCrossChainResult,
 }))
 
 jest.mock('uniswap/src/data/graphql/uniswap-data-api/fragments', () => ({
-  // oxlint-disable-next-line typescript/explicit-function-return-type
   useTokenBasicProjectPartsFragment: () => ({
     data: { project: { tokens: [] } },
   }),

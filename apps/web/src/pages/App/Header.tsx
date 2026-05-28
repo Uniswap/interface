@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { Flex } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
-import Navbar from '~/components/NavBar/index'
+import { Navbar } from '~/components/NavBar/index'
 import {
   MobileAppPromoBanner,
   useMobileAppPromoBannerEligible,

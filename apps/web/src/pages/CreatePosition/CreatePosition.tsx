@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
+import { zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -16,15 +17,15 @@ import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { Dropdown } from '~/components/Dropdowns/Dropdown'
-import { DynamicFeeTierSpeedbump } from '~/components/Liquidity/Create/DynamicFeeTierSpeedbump'
-import { FormStepsWrapper, FormWrapper } from '~/components/Liquidity/Create/FormWrapper'
-import { useLiquidityUrlState } from '~/components/Liquidity/Create/hooks/useLiquidityUrlState'
-import { useLPSlippageValue } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
-import ResetCreatePositionFormModal from '~/components/Liquidity/Create/ResetCreatePositionsFormModal'
-import { DEFAULT_POSITION_STATE, PositionFlowStep } from '~/components/Liquidity/Create/types'
-import { FeeTierSearchModal } from '~/components/Liquidity/FeeTierSearchModal'
-import { getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
-import { LPSettings } from '~/components/LPSettings'
+import { DynamicFeeTierSpeedbump } from '~/features/Liquidity/Create/DynamicFeeTierSpeedbump'
+import { FormStepsWrapper, FormWrapper } from '~/features/Liquidity/Create/FormWrapper'
+import { useLiquidityUrlState } from '~/features/Liquidity/Create/hooks/useLiquidityUrlState'
+import { useLPSlippageValue } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
+import { ResetCreatePositionFormModal } from '~/features/Liquidity/Create/ResetCreatePositionsFormModal'
+import { DEFAULT_POSITION_STATE, PositionFlowStep } from '~/features/Liquidity/Create/types'
+import { FeeTierSearchModal } from '~/features/Liquidity/FeeTierSearchModal'
+import { LPSettings } from '~/features/Liquidity/LPSettings'
+import { getProtocolVersionLabel } from '~/features/Liquidity/utils/protocolVersion'
 import {
   CreateLiquidityContextProvider,
   DEFAULT_PRICE_RANGE_STATE,
@@ -183,7 +184,8 @@ const Toolbar = () => {
         <Dropdown
           containerStyle={{ width: 'auto' }}
           buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
-          dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
+          dropdownStyle={{ width: 200, borderRadius: '$rounded16', zIndex: zIndexes.popover }}
+          adaptToSheet
           menuLabel={
             <Text variant="buttonLabel3" lineHeight="16px" whiteSpace="nowrap">
               {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) })}
@@ -294,7 +296,7 @@ function CreatePositionContent({
   )
 }
 
-export default function CreatePosition() {
+export function CreatePosition() {
   // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...&feeTier=...&hook=...`
   const { protocolVersion } = useParams<{
     protocolVersion: string
@@ -319,3 +321,5 @@ export default function CreatePosition() {
     />
   )
 }
+
+export default CreatePosition

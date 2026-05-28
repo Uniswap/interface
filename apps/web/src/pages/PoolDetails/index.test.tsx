@@ -3,13 +3,13 @@ import { useParams } from 'react-router'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { usePoolData } from '~/appGraphql/data/pools/usePoolData'
-import PoolDetails from '~/pages/PoolDetails'
+import { PoolDetailsPage as PoolDetails } from '~/pages/PoolDetails'
 import store from '~/state'
 import { mocked } from '~/test-utils/mocked'
 import { validParams, validPoolDataResponse } from '~/test-utils/pools/fixtures'
 import { act, render, waitFor } from '~/test-utils/render'
 
-// oxlint-disable-next-line import/no-unused-modules, jest/no-export
+// oxlint-disable-next-line jest/no-export
 export const mockNavigate = vi.fn()
 
 vi.mock('react-router', async () => {
@@ -38,8 +38,17 @@ vi.mock('~/hooks/useColor', async () => {
   }
 })
 
+vi.mock('nuqs', async () => {
+  const actual = await vi.importActual('nuqs')
+  return {
+    ...actual,
+    useQueryState: vi.fn().mockReturnValue([null, vi.fn()]),
+  }
+})
+
 vi.mock('~/pages/Swap', () => ({
-  default: () => React.createElement(React.Fragment),
+  SwapPage: () => React.createElement(React.Fragment),
+  Swap: () => React.createElement(React.Fragment),
 }))
 
 describe('PoolDetailsPage', () => {

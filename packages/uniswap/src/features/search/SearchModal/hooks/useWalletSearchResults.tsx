@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { OnchainItemListOptionType, WalletOption } from 'uniswap/src/components/lists/items/types'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
@@ -10,7 +11,6 @@ import { useENS } from 'uniswap/src/features/ens/useENS'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { isWebApp } from 'utilities/src/platform'
 
 // oxlint-disable-next-line complexity
 export function useWalletSearchResults(

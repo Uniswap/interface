@@ -80,10 +80,6 @@ interface AttributionInput {
  */
 export function createAttributionTracker({ analyticsService, cookie }: AttributionTrackerDeps) {
   return async ({ request, userId }: AttributionInput): Promise<{ setCookieHeader: string | null }> => {
-    if (!userId) {
-      return { setCookieHeader: null }
-    }
-
     const url = new URL(request.url)
     const ua = request.headers.get('user-agent') ?? ''
     const referrer = request.headers.get('Referer') ?? undefined
@@ -101,6 +97,17 @@ export function createAttributionTracker({ analyticsService, cookie }: Attributi
     const existingUtm = await cookie.parse(request.headers.get('Cookie'))
     const isFirstUtm = hasUtm && !existingUtm
 
+    // Persist the first-touch UTM cookie even for anonymous visitors so
+    // attribution survives the redirect through signup/login into the dashboard.
+    const setCookieHeader = isFirstUtm ? await cookie.serialize(utmData) : null
+
+    // Amplitude identify requires a userId — skip if we don't have one yet.
+    // The cookie above still captures first-touch; a later authenticated request
+    // picks it up via `existingUtm` below.
+    if (!userId) {
+      return { setCookieHeader }
+    }
+
     // Build traits — setOnce in the service means these won't overwrite
     const traits: UserTraits = {}
     const country = getClientCountry(request)
@@ -116,19 +123,26 @@ export function createAttributionTracker({ analyticsService, cookie }: Attributi
       traits.referrer = stripQueryParams(referrer)
       traits.referringDomain = extractDomain(referrer)
     }
-    if (hasUtm) {
-      if (utmData['utm_source']) {
-        traits.utmSource = utmData['utm_source']
-      }
-      if (utmData['utm_medium']) {
-        traits.utmMedium = utmData['utm_medium']
-      }
-      if (utmData['utm_campaign']) {
-        traits.utmCampaign = utmData['utm_campaign']
-      }
-      if (utmData['utm_content']) {
-        traits.utmContent = utmData['utm_content']
-      }
+
+    // Prefer URL params; fall back to the cookie for users who arrived
+    // anonymously and are now authenticated. setOnce on the service side
+    // guarantees we never overwrite an earlier first-touch value.
+    const utmSource = utmData['utm_source'] ?? existingUtm?.['utm_source']
+    const utmMedium = utmData['utm_medium'] ?? existingUtm?.['utm_medium']
+    const utmCampaign = utmData['utm_campaign'] ?? existingUtm?.['utm_campaign']
+    const utmContent = utmData['utm_content'] ?? existingUtm?.['utm_content']
+
+    if (utmSource) {
+      traits.utmSource = utmSource
+    }
+    if (utmMedium) {
+      traits.utmMedium = utmMedium
+    }
+    if (utmCampaign) {
+      traits.utmCampaign = utmCampaign
+    }
+    if (utmContent) {
+      traits.utmContent = utmContent
     }
 
     // Only identify if we have something meaningful to set
@@ -137,8 +151,6 @@ export function createAttributionTracker({ analyticsService, cookie }: Attributi
       analyticsService.identify(userId, traits)
     }
 
-    return {
-      setCookieHeader: isFirstUtm ? await cookie.serialize(utmData) : null,
-    }
+    return { setCookieHeader }
   }
 }

@@ -15,10 +15,11 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 
 function useDappRequestTokenRecipientInfo(request: DappRequestBaseType, dappUrl: string): Maybe<CurrencyInfo> {
   const activeChain = useDappLastChainId(dappUrl)
@@ -31,23 +32,29 @@ function useDappRequestTokenRecipientInfo(request: DappRequestBaseType, dappUrl:
   return useCurrencyInfo(identifier)
 }
 
-function parseSpenderAddress(data: string): string {
-  // Check if the data is of the correct length for "approve(address,uint256)"
-  // It should have 10 characters for "0x" + function selector and 64 characters for each parameter
-  if (data.length !== 10 + 64 * 2) {
-    throw new Error('Invalid data length')
+// approve(address,uint256) calldata layout:
+// 0x | 8 hex selector | 64 hex address (24 left-pad zeros + 40 hex address) | 64 hex amount
+const APPROVE_CALLDATA_LENGTH = 10 + 64 * 2
+
+function parseSpenderAddress(data: string): string | undefined {
+  if (data.length !== APPROVE_CALLDATA_LENGTH) {
+    return undefined
   }
 
-  // The first argument (address) starts 10 characters in (after "0x" + 8 characters for function selector)
-  // and spans the next 64 characters, but the first 24 are padding zeros for the 40-character address
-  const addressHex = data.slice(34, 74) // From position 34 to 74 to capture the address
+  const address = `0x${data.slice(34, 74)}`
+  return getValidAddress({ address, platform: Platform.EVM }) ?? undefined
+}
 
-  // Validate if the address hex is correctly formatted
-  if (!/^[0-9a-fA-F]{40}$/.test(addressHex)) {
-    throw new Error('Invalid characters in hex string')
+function isApproveAmountZero(data: string): boolean {
+  if (data.length !== APPROVE_CALLDATA_LENGTH) {
+    return false
   }
-
-  return `0x${addressHex}`
+  try {
+    // Read the uint256 amount arg: skip "0x" + selector + address arg (74 chars), take the next 64.
+    return BigNumber.from(`0x${data.slice(74, 138)}`).isZero()
+  } catch {
+    return false
+  }
 }
 
 interface ApproveRequestContentProps {
@@ -65,26 +72,21 @@ export function ApproveRequestContent({
 }: ApproveRequestContentProps): JSX.Element {
   const { t } = useTranslation()
   const { dappUrl } = useDappRequestQueueContext()
-  const activeChain = useDappLastChainId(dappUrl)
-  const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, activeChain)
 
-  // To detect a revoke, both the transaction value and the parsed arg amount value must be zero
-  const isArgAmountZero = parsedTransactionData?.args.some(
-    (arg) =>
-      arg !== null && typeof arg === 'object' && !Array.isArray(arg) && arg._hex && BigNumber.from(arg._hex).isZero(),
-  )
-  const isRevoke = dappRequest.transaction.value === '0x0' && isArgAmountZero
+  // To detect a revoke, both the transaction value and the approve() amount must be zero
+  const isRevoke = dappRequest.transaction.value === '0x0' && isApproveAmountZero(dappRequest.transaction.data ?? '')
 
   const tokenInfo = useDappRequestTokenRecipientInfo(dappRequest, dappUrl)
   const tokenSymbol = tokenInfo?.currency.symbol
   const spender = parseSpenderAddress(dappRequest.transaction.data ?? '')
-  const transactionTypeInfo: TransactionTypeInfo | undefined = dappRequest.transaction.to
-    ? {
-        type: TransactionType.Approve,
-        tokenAddress: dappRequest.transaction.to,
-        spender,
-      }
-    : undefined
+  const transactionTypeInfo: TransactionTypeInfo | undefined =
+    dappRequest.transaction.to && spender
+      ? {
+          type: TransactionType.Approve,
+          tokenAddress: dappRequest.transaction.to,
+          spender,
+        }
+      : undefined
   const onConfirmWithTransactionTypeInfo = (): Promise<void> => onConfirm(transactionTypeInfo)
   const titleCopy = tokenSymbol
     ? isRevoke

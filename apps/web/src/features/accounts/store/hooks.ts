@@ -1,5 +1,3 @@
-/* oxlint-disable import/no-unused-modules */
-
 import { useMemo } from 'react'
 import { AccessPattern } from 'uniswap/src/features/accounts/store/types/Connector'
 import { createUseActiveAccount } from 'uniswap/src/features/accounts/store/utils/accounts'

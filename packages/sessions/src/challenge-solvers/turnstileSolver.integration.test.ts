@@ -32,7 +32,6 @@ beforeAll(() => {
     const element = originalCreateElement(tagName)
     if (tagName === 'div') {
       // Track created divs for assertions
-      // oxlint-disable-next-line no-extra-semi
       ;(element as any)._testCreated = true
     }
     return element
@@ -43,7 +42,6 @@ beforeAll(() => {
       // Simulate script load immediately
       setTimeout(() => {
         // Set up the mock turnstile API
-        // oxlint-disable-next-line no-extra-semi
         ;(window as any).turnstile = mockTurnstileAPI
         if (node.onload) {
           node.onload({} as Event)
@@ -55,14 +53,12 @@ beforeAll(() => {
 
   const originalBodyAppendChild = document.body.appendChild.bind(document.body)
   vi.spyOn(document.body, 'appendChild').mockImplementation((node) => {
-    // oxlint-disable-next-line no-extra-semi
     ;(node as any)._testAppended = true
     // Actually append to the DOM so we can query it later
     return originalBodyAppendChild(node)
   })
 
   vi.spyOn(Element.prototype, 'removeChild').mockImplementation(function (this: Element, child: Node) {
-    // oxlint-disable-next-line no-extra-semi
     ;(child as any)._testRemoved = true
     return child
   })

@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import { BaseSyntheticEvent, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -16,7 +17,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { AnimatedUnitagDisplayNameProps } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 
 export function AnimatedUnitagDisplayName({

@@ -87,11 +87,16 @@ export function useAdvancedSettingsMenuState(options?: UseAdvancedSettingsMenuSt
     navigation.navigate(MobileScreens.SettingsStorage)
   }, [navigation])
 
+  const onPressNetworkCost = useCallback((): void => {
+    navigation.navigate(ModalName.NetworkCostPicker)
+  }, [navigation])
+
   return {
     isTestnetEnabled: isTestnetModeEnabled,
     onTestnetModeToggled,
     onPressSmartWallet,
     onPressStorage,
+    onPressNetworkCost,
     handleTestnetModeToggle,
   }
 }

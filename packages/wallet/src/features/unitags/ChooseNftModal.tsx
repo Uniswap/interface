@@ -1,3 +1,4 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons'
@@ -11,7 +12,6 @@ import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithC
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 

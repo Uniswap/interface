@@ -11,7 +11,7 @@
  * Usage: see vercel.json buildCommand
  */
 import { cpSync, existsSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { dirname, extname, resolve } from 'node:path'
 
 const ROOT = resolve(import.meta.dirname, '..')
 const OUTPUT_DIR = resolve(ROOT, '.vercel/output')
@@ -57,6 +57,44 @@ const tsconfigPathsPlugin: BunPlugin = {
   },
 }
 
+// Vite-style `?inline` query: import asset as a base64 data URL string.
+// Bun's bundler has no built-in handler for it, so we resolve the underlying
+// file and emit a synthesized JS module exporting the data URL.
+const INLINE_MIME_TYPES: Record<string, string> = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+}
+
+const inlineAssetPlugin: BunPlugin = {
+  name: 'inline-asset',
+  setup(build) {
+    build.onResolve({ filter: /\?inline$/ }, (args) => {
+      const cleanSpecifier = args.path.replace(/\?inline$/, '')
+      const importerDir = args.importer ? dirname(args.importer) : ROOT
+      const resolvedPath = Bun.resolveSync(cleanSpecifier, importerDir)
+      return { path: resolvedPath, namespace: 'inline-asset' }
+    })
+
+    build.onLoad({ filter: /.*/, namespace: 'inline-asset' }, async (args) => {
+      const ext = extname(args.path).toLowerCase()
+      const mime = INLINE_MIME_TYPES[ext]
+      if (!mime) {
+        throw new Error(`[inline-asset] Unsupported extension ${ext} for ${args.path}`)
+      }
+      const buffer = await Bun.file(args.path).arrayBuffer()
+      const dataUrl = `data:${mime};base64,${Buffer.from(buffer).toString('base64')}`
+      return {
+        loader: 'js',
+        contents: `export default ${JSON.stringify(dataUrl)};`,
+      }
+    })
+  },
+}
+
 // ── Step 1: Clean and create output directory ───────────────────────────
 console.log('[build-vercel] Creating .vercel/output/ directory structure...')
 if (existsSync(OUTPUT_DIR)) {
@@ -85,7 +123,7 @@ const bundleResult = await Bun.build({
   naming: 'index.mjs',
   target: 'node',
   format: 'esm',
-  plugins: [tsconfigPathsPlugin],
+  plugins: [tsconfigPathsPlugin, inlineAssetPlugin],
 })
 
 if (!bundleResult.success) {

@@ -1,0 +1,34 @@
+{
+  "name": "@universe/chains",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/chains/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {},
+    "typecheck:tsc": {},
+    "typecheck:tsgo": {},
+    "format": {},
+    "format:check": {},
+    "lint:oxlint": {},
+    "lint:oxlint:fix": {},
+    "lint:oxlint:fast": {},
+    "lint": {},
+    "lint:fix": {},
+    "check": {},
+    "check:fast": {},
+    "check:deps:usage": {},
+    "test:integration": {
+      "command": "vitest run --config vitest.integration.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

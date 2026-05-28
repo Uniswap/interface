@@ -212,28 +212,26 @@ export function ContextMenu({
   }, [handleMenuClose, menuItems, onPressAny, trackItemClicks, elementName, sectionName, trace, closeMenu])
 
   // Render the menu content component
-  const MenuContent = useEvent(
-    // oxlint-disable-next-line universe-custom/no-nested-component-definitions -- memoized render callback
-    () =>
-      contentOverride ? (
-        <>{contentOverride}</>
-      ) : (
-        <Flex
-          backgroundColor="$surface1"
-          p="$spacing8"
-          borderRadius="$rounded20"
-          borderColor="$surface3"
-          borderWidth="$spacing1"
-          gap="$spacing4"
-          alignItems="flex-start"
-          minWidth={MIN_CONTEXT_MENU_WIDTH}
-          maxWidth={maxMenuWidth}
-          shadowRadius="$spacing4"
-          shadowColor="$shadowColor"
-        >
-          {menuSheetItems}
-        </Flex>
-      ),
+  const MenuContent = useEvent(() =>
+    contentOverride ? (
+      <>{contentOverride}</>
+    ) : (
+      <Flex
+        backgroundColor="$surface1"
+        p="$spacing8"
+        borderRadius="$rounded20"
+        borderColor="$surface3"
+        borderWidth="$spacing1"
+        gap="$spacing4"
+        alignItems="flex-start"
+        minWidth={MIN_CONTEXT_MENU_WIDTH}
+        maxWidth={maxMenuWidth}
+        shadowRadius="$spacing4"
+        shadowColor="$shadowColor"
+      >
+        {menuSheetItems}
+      </Flex>
+    ),
   )
 
   const onPress = useEvent(() => {

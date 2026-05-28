@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { Flex, Popover, styled, Text, useMedia } from 'ui/src'
+import { ArrowChange } from 'ui/src/components/icons/ArrowChange'
 import { Hamburger } from 'ui/src/components/icons/Hamburger'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ArrowChangeDown } from '~/components/Icons/ArrowChangeDown'
 import { NavIcon } from '~/components/Logo/NavIcon'
 import { MenuDropdown } from '~/components/NavBar/CompanyMenu/MenuDropdown'
 import { MobileMenuDrawer } from '~/components/NavBar/CompanyMenu/MobileMenuDrawer'
@@ -29,11 +29,9 @@ export function CompanyMenu() {
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(false)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +popoverRef
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
   }, [popoverRef])
-  // oxlint-disable-next-line react/exhaustive-deps -- location dependency is sufficient for this effect
   useEffect(() => {
     // Immediately reset state to prevent flash during transitions
     setIsOpen(false)
@@ -53,7 +51,7 @@ export function CompanyMenu() {
           $platform-web={{ containerType: 'normal' }}
         >
           <Trace logPress element={ElementName.NavbarCompanyMenuLogo}>
-            <Link to="/?intro=true" style={{ textDecoration: 'none' }}>
+            <Link to="/?intro=true" onClick={(e) => e.stopPropagation()} style={{ textDecoration: 'none' }}>
               <Flex row alignItems="center" gap="$gap4" data-testid={TestID.NavUniswapLogo}>
                 <NavIcon />
                 {isLargeScreen && (
@@ -67,7 +65,7 @@ export function CompanyMenu() {
           {media.md && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
           {!media.md && (
             <ArrowDownWrapper open={isOpen}>
-              <ArrowChangeDown width="12px" height="12px" />
+              <ArrowChange size="$icon.12" />
             </ArrowDownWrapper>
           )}
         </Flex>

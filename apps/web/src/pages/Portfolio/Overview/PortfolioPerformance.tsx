@@ -25,7 +25,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance() {
   const isDemoView = useShowDemoView()
   const { chainId } = usePortfolioRoutes()
   const { evmAddress, svmAddress } = usePortfolioAddresses()
-  const { chains: allChainIds } = useEnabledChains()
+  const { chains: allChainIds, isTestnetModeEnabled } = useEnabledChains()
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)
 
   const [selectedPeriod, setSelectedPeriod] = useState<ProfitLossPeriod>(ProfitLossPeriod.ALL)
@@ -67,7 +67,7 @@ export const PortfolioPerformance = memo(function PortfolioPerformance() {
     })
   }, [profitLoss, selectedPeriod])
 
-  if (!isProfitLossEnabled || isDemoView || isError) {
+  if (!isProfitLossEnabled || isDemoView || isError || isTestnetModeEnabled || (data && !profitLoss)) {
     return null
   }
 

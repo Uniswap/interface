@@ -30,6 +30,10 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
   private val mnemonicIdFlow = MutableStateFlow("")
   private val shouldShowSmallTextFlow = MutableStateFlow(false)
   private val selectedWordPlaceholderFlow = MutableStateFlow("")
+  private val pageStartFlow = MutableStateFlow(0)
+  private val pageSizeFlow = MutableStateFlow(0)
+  private val currentPageFlow = MutableStateFlow(0)
+  private val totalPagesFlow = MutableStateFlow(0)
 
   override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
     val ethersRs = RnEthersRs(reactContext)
@@ -42,6 +46,10 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
         val mnemonicId by mnemonicIdFlow.collectAsState()
         val shouldShowSmallText by shouldShowSmallTextFlow.collectAsState()
         val selectedWordPlaceholder by selectedWordPlaceholderFlow.collectAsState()
+        val pageStart by pageStartFlow.collectAsState()
+        val pageSize by pageSizeFlow.collectAsState()
+        val currentPage by currentPageFlow.collectAsState()
+        val totalPages by totalPagesFlow.collectAsState()
 
         viewModel.updatePlaceholder(selectedWordPlaceholder)
 
@@ -50,6 +58,10 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
             mnemonicId = mnemonicId,
             viewModel = viewModel,
             shouldShowSmallText = shouldShowSmallText,
+            pageStart = pageStart,
+            pageSize = pageSize,
+            currentPage = currentPage,
+            totalPages = totalPages,
           ) {
             context as ReactContext
             reactContext
@@ -89,6 +101,26 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
   @ReactProp(name = "selectedWordPlaceholder")
   fun setSelectedWordPlaceholder(view: View, selectedWordPlaceholder: String) {
     selectedWordPlaceholderFlow.update { selectedWordPlaceholder }
+  }
+
+  @ReactProp(name = "pageStart", defaultInt = 0)
+  fun setPageStart(view: View, pageStart: Int) {
+    pageStartFlow.update { pageStart }
+  }
+
+  @ReactProp(name = "pageSize", defaultInt = 0)
+  fun setPageSize(view: View, pageSize: Int) {
+    pageSizeFlow.update { pageSize }
+  }
+
+  @ReactProp(name = "currentPage", defaultInt = 0)
+  fun setCurrentPage(view: View, currentPage: Int) {
+    currentPageFlow.update { currentPage }
+  }
+
+  @ReactProp(name = "totalPages", defaultInt = 0)
+  fun setTotalPages(view: View, totalPages: Int) {
+    totalPagesFlow.update { totalPages }
   }
 
   companion object {

@@ -1,4 +1,3 @@
-// oxlint-disable-next-line typescript/no-restricted-imports
 import {
   NetInfoConnectedStates,
   NetInfoNoConnectionState,

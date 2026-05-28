@@ -4,7 +4,7 @@ import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { PoolDetailsStats } from '~/pages/PoolDetails/components/PoolDetailsStats'
 import store from '~/state'
-import mockMediaSize from '~/test-utils/mockMediaSize'
+import { mockMediaSize } from '~/test-utils/mockMediaSize'
 import { validPoolDataResponse } from '~/test-utils/pools/fixtures'
 import { act, render, screen } from '~/test-utils/render'
 

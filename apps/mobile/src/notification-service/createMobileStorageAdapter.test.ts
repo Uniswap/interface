@@ -6,7 +6,7 @@ const mockMMKV = {
 }
 
 jest.mock('react-native-mmkv', () => ({
-  MMKV: jest.fn().mockImplementation(() => mockMMKV),
+  createMMKV: jest.fn(() => mockMMKV),
 }))
 
 const mockLoggerError = jest.fn()
@@ -23,7 +23,7 @@ describe('createMobileStorageAdapter', () => {
     jest.clearAllMocks()
     jest.resetModules()
     jest.doMock('react-native-mmkv', () => ({
-      MMKV: jest.fn().mockImplementation(() => mockMMKV),
+      createMMKV: jest.fn(() => mockMMKV),
     }))
     jest.doMock('utilities/src/logger/logger', () => ({
       getLogger: (): { error: jest.Mock } => ({

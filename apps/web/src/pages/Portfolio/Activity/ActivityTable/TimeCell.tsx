@@ -1,8 +1,8 @@
 import { memo, useMemo } from 'react'
 import { Flex, Text, TextProps } from 'ui/src'
 import { useFormattedTimeForActivity } from 'uniswap/src/components/activity/hooks/useFormattedTime'
+import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransition'
 import { FORMAT_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
-import { GroupHoverTransition } from '~/components/GroupHoverTransition'
 
 const FORMAT_DATE_WITH_WEEKDAY = 'ddd MMM D, YYYY'
 const CELL_HEIGHT = 36

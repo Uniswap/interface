@@ -8,9 +8,9 @@ import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplore
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
-import { deriveFromSections } from '~/components/Explore/stickyHeader/HeaderActions/deriveHeaderActions'
-import type { HeaderAction, HeaderActionSection } from '~/components/Explore/stickyHeader/HeaderActions/types'
-import { useShareAction } from '~/components/Explore/stickyHeader/HeaderActions/useShareAction'
+import { deriveFromSections } from '~/components/StickyCollapsibleHeader/HeaderActions/deriveHeaderActions'
+import type { HeaderAction, HeaderActionSection } from '~/components/StickyCollapsibleHeader/HeaderActions/types'
+import { useShareAction } from '~/components/StickyCollapsibleHeader/HeaderActions/useShareAction'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 
 type UsePoolDetailsHeaderActionsParams = {

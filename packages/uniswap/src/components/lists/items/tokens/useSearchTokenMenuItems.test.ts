@@ -22,11 +22,11 @@ vi.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: vi.fn(() => ({ isTestnetModeEnabled: false })),
 }))
 
-vi.mock('uniswap/src/features/favorites/useSelectHasTokenFavorited', () => ({
+vi.mock('uniswap/src/features/favorites/hooks/useSelectHasTokenFavorited', () => ({
   useSelectHasTokenFavorited: vi.fn(() => false),
 }))
 
-vi.mock('uniswap/src/features/favorites/useToggleFavoriteCallback', () => ({
+vi.mock('uniswap/src/features/favorites/hooks/useToggleFavoriteCallback', () => ({
   useToggleFavoriteCallback: vi.fn(() => vi.fn()),
 }))
 

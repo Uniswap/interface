@@ -1,4 +1,5 @@
 import 'react-native-reanimated'
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +30,6 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -74,7 +74,6 @@ export function WalletConnectModal({
   }, [hasPendingSessionError])
 
   const onScanCode = useCallback(
-    // oxlint-disable-next-line complexity -- biome-parity: oxlint is stricter here
     async (uri: string) => {
       // don't scan any QR codes if there is an error popup open or camera is frozen
       if (!activeAccount || hasPendingSessionError || shouldFreezeCamera) {

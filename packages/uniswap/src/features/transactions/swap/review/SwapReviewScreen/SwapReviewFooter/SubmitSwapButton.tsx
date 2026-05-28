@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ButtonVariant } from 'ui/src'
@@ -21,16 +22,28 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapT
 import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWebApp } from 'utilities/src/platform'
 
 interface SubmitSwapButtonProps {
   disabled: boolean
   onSubmit: () => void
   showPendingUI: boolean
   warning?: Warning
+  /**
+   * When true, force the button into the amber `warning` variant regardless of
+   * `warning?.severity`. Set by the gas-overrides flow when saved network-cost
+   * overrides trigger a non-blocking validation warning (e.g. priority fee
+   * underpriced). The user can still submit — the amber color flags risk.
+   */
+  gasOverrideWarning?: boolean
 }
 
-export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }: SubmitSwapButtonProps): JSX.Element {
+export function SubmitSwapButton({
+  disabled,
+  onSubmit,
+  showPendingUI,
+  warning,
+  gasOverrideWarning,
+}: SubmitSwapButtonProps): JSX.Element {
   const { t } = useTranslation()
   const { renderBiometricsIcon, passkeyAuthStatus } = useTransactionModalContext()
 
@@ -75,7 +88,9 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
       ? 'critical'
       : warning?.severity === WarningSeverity.Medium
         ? 'warning'
-        : undefined
+        : gasOverrideWarning
+          ? 'warning'
+          : undefined
 
   switch (true) {
     case indicative: {

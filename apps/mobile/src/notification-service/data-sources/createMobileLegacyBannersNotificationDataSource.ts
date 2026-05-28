@@ -14,7 +14,6 @@ import { checkUnitagClaim } from 'src/notification-service/data-sources/banners/
 import { logger } from 'utilities/src/logger/logger'
 import {
   selectHasDismissedNoAppFeesAnnouncement,
-  selectHasSkippedUnitagPrompt,
   selectHasViewedNotificationsCard,
 } from 'wallet/src/features/behaviorHistory/selectors'
 
@@ -51,6 +50,12 @@ export function createMobileLegacyBannersNotificationDataSource(
    * Migrates legacy dismissal state from Redux to the notification system.
    * This runs once on the first poll to ensure users who dismissed cards in the old system
    * don't see them again.
+   *
+   * Note: `hasSkippedUnitagPrompt` is intentionally NOT migrated. In the legacy flow it was
+   * dispatched after the create-new onboarding step (not on user dismissal of the banner),
+   * so migrating it would permanently suppress the UnitagClaim banner for every new mobile
+   * wallet. Eligibility for that banner is determined solely by whether the active account
+   * already has a unitag — see `checkUnitagClaim`.
    */
   const migrateLegacyDismissalState = async (): Promise<void> => {
     if (hasMigratedLegacyState) {
@@ -59,17 +64,6 @@ export function createMobileLegacyBannersNotificationDataSource(
 
     try {
       const state = getState()
-
-      // Migrate Unitag skip state
-      const hasSkippedUnitag = selectHasSkippedUnitagPrompt(state)
-      if (hasSkippedUnitag) {
-        logger.info(
-          'createMobileLegacyBannersNotificationDataSource',
-          'migrateLegacyDismissalState',
-          'Migrating Unitag skip from legacy Redux state',
-        )
-        await tracker.track(BannerId.UnitagClaim, { timestamp: Date.now() })
-      }
 
       // Migrate No App Fees dismissal
       const noAppFeesWasDismissed = selectHasDismissedNoAppFeesAnnouncement(state)

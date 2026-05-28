@@ -13,17 +13,14 @@ type ScrollRefType = FlashListAnyType | FlatListAnyType
 interface ScrollRefs {
   tokensTabScrollValue: ReturnType<typeof useSharedValue<number>>
   nftsTabScrollValue: ReturnType<typeof useSharedValue<number>>
-  activityTabScrollValue: ReturnType<typeof useSharedValue<number>>
   exploreTabScrollValue: ReturnType<typeof useSharedValue<number>>
 
   tokensTabScrollHandler: ReturnType<typeof useAnimatedScrollHandler>
   nftsTabScrollHandler: ReturnType<typeof useAnimatedScrollHandler>
-  activityTabScrollHandler: ReturnType<typeof useAnimatedScrollHandler>
   exploreTabScrollHandler: ReturnType<typeof useAnimatedScrollHandler>
 
   tokensTabScrollRef: ReturnType<typeof useAnimatedRef<FlatList<TokenBalanceListRow>>>
   nftsTabScrollRef: ReturnType<typeof useAnimatedRef<FlashListAnyType>>
-  activityTabScrollRef: ReturnType<typeof useAnimatedRef<FlatListAnyType>>
   exploreTabScrollRef: ReturnType<typeof useAnimatedRef<FlatListAnyType>>
 
   resetScrollState: () => void
@@ -50,26 +47,21 @@ const useCreateScrollRef = <T extends ScrollRefType>(): {
 export function useHomeScrollRefs(): ScrollRefs {
   const tokensTabScrollRef = useCreateScrollRef<FlatList<TokenBalanceListRow>>()
   const nftsTabScrollRef = useCreateScrollRef<FlashListAnyType>()
-  const activityTabScrollRef = useCreateScrollRef<FlatListAnyType>()
   const exploreTabScrollRef = useCreateScrollRef<FlatListAnyType>()
 
   const resetScrollState = useCallback(() => {
     tokensTabScrollRef.scrollValue.value = 0
     nftsTabScrollRef.scrollValue.value = 0
-    activityTabScrollRef.scrollValue.value = 0
     exploreTabScrollRef.scrollValue.value = 0
     tokensTabScrollRef.scrollRef.current?.scrollToOffset({ offset: 0, animated: true })
     nftsTabScrollRef.scrollRef.current?.scrollToOffset({ offset: 0, animated: true })
-    activityTabScrollRef.scrollRef.current?.scrollToOffset({ offset: 0, animated: true })
     exploreTabScrollRef.scrollRef.current?.scrollToOffset({ offset: 0, animated: true })
   }, [
     tokensTabScrollRef.scrollValue,
     nftsTabScrollRef.scrollValue,
-    activityTabScrollRef.scrollValue,
     exploreTabScrollRef.scrollValue,
     tokensTabScrollRef.scrollRef,
     nftsTabScrollRef.scrollRef,
-    activityTabScrollRef.scrollRef,
     exploreTabScrollRef.scrollRef,
   ])
 
@@ -81,10 +73,6 @@ export function useHomeScrollRefs(): ScrollRefs {
     nftsTabScrollValue: nftsTabScrollRef.scrollValue,
     nftsTabScrollHandler: nftsTabScrollRef.scrollHandler,
     nftsTabScrollRef: nftsTabScrollRef.scrollRef,
-
-    activityTabScrollValue: activityTabScrollRef.scrollValue,
-    activityTabScrollHandler: activityTabScrollRef.scrollHandler,
-    activityTabScrollRef: activityTabScrollRef.scrollRef,
 
     exploreTabScrollValue: exploreTabScrollRef.scrollValue,
     exploreTabScrollHandler: exploreTabScrollRef.scrollHandler,

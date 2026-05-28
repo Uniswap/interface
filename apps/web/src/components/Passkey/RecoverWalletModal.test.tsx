@@ -1,15 +1,18 @@
-import { useAuthorizationSignature, useLoginWithEmail, usePrivy } from '@privy-io/react-auth'
+import { useAuthorizationSignature, useLoginWithEmail, useLoginWithOAuth, usePrivy } from '@privy-io/react-auth'
 import { fireEvent, waitFor } from '@testing-library/react'
 import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { attemptPinDecryption, executeRecovery } from 'uniswap/src/features/passkey/recoveryExecute'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { RecoverWalletModal } from '~/components/Passkey/RecoverWalletModal'
 import { useModalState } from '~/hooks/useModalState'
+import store from '~/state'
+import { setCloseModal, setOpenModal } from '~/state/application/reducer'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('@privy-io/react-auth', () => ({
   useAuthorizationSignature: vi.fn(),
   useLoginWithEmail: vi.fn(),
+  useLoginWithOAuth: vi.fn(),
   usePrivy: vi.fn(),
 }))
 
@@ -32,8 +35,19 @@ vi.mock('uniswap/src/features/passkey/recoveryExecute', () => ({
   executeRecovery: vi.fn(),
 }))
 
+vi.mock('uniswap/src/features/passkey/privyBlobStore', () => ({
+  fetchEncryptedBlob: vi.fn().mockResolvedValue('blob-fixture'),
+  storeEncryptedBlob: vi.fn(),
+}))
+
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   registerNewPasskey: vi.fn(),
+}))
+
+vi.mock('uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient', () => ({
+  unitagsApiClient: {
+    fetchAddress: vi.fn().mockResolvedValue({ username: null }),
+  },
 }))
 
 vi.mock('uniswap/src/features/telemetry/send', () => ({
@@ -63,8 +77,13 @@ vi.mock('~/components/WalletModal/useWagmiConnectorWithId', () => ({
   useWagmiConnectorWithId: () => mockConnector,
 }))
 
-vi.mock('~/components/Web3Provider/walletConnect', () => ({
+vi.mock('~/connection/walletConnect', () => ({
   walletTypeToAmplitudeWalletType: vi.fn(() => 'embedded'),
+}))
+
+vi.mock('~/config', () => ({
+  getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id' })),
+  getPrivyConfig: vi.fn(() => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' })),
 }))
 
 const mockOnClose = vi.fn()
@@ -81,6 +100,9 @@ function setupMocks() {
     sendCode: mockSendCode,
     loginWithCode: mockLoginWithCode,
   } as unknown as ReturnType<typeof useLoginWithEmail>)
+  vi.mocked(useLoginWithOAuth).mockReturnValue({
+    initOAuth: vi.fn(),
+  } as unknown as ReturnType<typeof useLoginWithOAuth>)
   vi.mocked(usePrivy).mockReturnValue({
     getAccessToken: mockGetAccessToken,
     ready: true,
@@ -103,8 +125,16 @@ function pasteIntoFirstInput(code: string) {
   })
 }
 
+async function selectEmailLogin() {
+  fireEvent.click(screen.getByText('Email'))
+  await waitFor(() => {
+    expect(screen.getByPlaceholderText('Recovery email')).toBeInTheDocument()
+  })
+}
+
 async function goToEmailCodeStep() {
   mockSendCode.mockResolvedValue(undefined)
+  await selectEmailLogin()
   typeEmail('test@example.com')
   fireEvent.click(screen.getByText('Continue'))
   await waitFor(() => {
@@ -132,17 +162,29 @@ async function goToEnterPinStep() {
 }
 
 describe('RecoverWalletModal', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks()
-    process.env.PRIVY_APP_ID = 'test-privy-app-id'
     sessionStorage.clear()
+    store.dispatch(setCloseModal(ModalName.RecoverWallet))
+    const { fetchEncryptedBlob } = await import('uniswap/src/features/passkey/privyBlobStore')
+    vi.mocked(fetchEncryptedBlob).mockResolvedValue('blob-fixture')
   })
 
-  it('renders email entry step by default when no OAuth pending', () => {
+  it('renders email entry step after selecting email login when no OAuth pending', async () => {
     setupMocks()
     render(<RecoverWalletModal />)
-    expect(screen.getByPlaceholderText('Recovery email')).toBeInTheDocument()
+    await selectEmailLogin()
     expect(screen.getByText('Continue')).toBeInTheDocument()
+  })
+
+  it('opens directly on email entry when initialMethod=email is supplied (skips Login step)', async () => {
+    setupMocks()
+    store.dispatch(setOpenModal({ name: ModalName.RecoverWallet, initialState: { initialMethod: 'email' } }))
+    render(<RecoverWalletModal />)
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Recovery email')).toBeInTheDocument()
+    })
+    expect(screen.queryByText('Continue with passkey')).not.toBeInTheDocument()
   })
 
   it('renders OAUTH_LOADING when OAuth pending in sessionStorage', () => {
@@ -174,14 +216,12 @@ describe('RecoverWalletModal', () => {
     expect(inputs).toHaveLength(4)
   })
 
-  it('back from email entry closes modal', () => {
+  it('hides the back arrow on email entry step', async () => {
     setupMocks()
     render(<RecoverWalletModal />)
-    expect(screen.getByPlaceholderText('Recovery email')).toBeInTheDocument()
+    await selectEmailLogin()
 
-    fireEvent.click(screen.getByTestId('step-header-back'))
-
-    expect(mockOnClose).toHaveBeenCalled()
+    expect(screen.queryByTestId('step-header-back')).not.toBeInTheDocument()
   })
 
   it('happy path: correct PIN advances to ADD_PASSKEY step', async () => {
@@ -201,11 +241,13 @@ describe('RecoverWalletModal', () => {
     })
   })
 
-  it('wrong PIN: shows error and resets input', async () => {
+  it('wrong PIN: shows the i18n error and resets input', async () => {
     setupMocks()
     render(<RecoverWalletModal />)
     await goToEnterPinStep()
 
+    // Server's `errorMessage` is intentionally generic SDK copy. The UI must show
+    // the product-owned i18n string instead so the message is consistent.
     vi.mocked(attemptPinDecryption).mockResolvedValue({
       success: false,
       error: 'wrong_pin',
@@ -215,8 +257,9 @@ describe('RecoverWalletModal', () => {
     pasteIntoFirstInput('9999')
 
     await waitFor(() => {
-      expect(screen.getByText('Incorrect PIN')).toBeInTheDocument()
+      expect(screen.getByText('Incorrect passcode. Please try again.')).toBeInTheDocument()
     })
+    expect(screen.queryByText('Incorrect PIN')).not.toBeInTheDocument()
     // Inputs should be reset (empty)
     const inputs = document.querySelectorAll('input[inputmode="numeric"]') as NodeListOf<HTMLInputElement>
     expect(inputs[0]!.value).toBe('')
@@ -239,6 +282,7 @@ describe('RecoverWalletModal', () => {
     await waitFor(() => {
       expect(screen.getByText(/Try again in/i)).toBeInTheDocument()
     })
+    expect(screen.queryByText('Incorrect passcode. Please try again.')).not.toBeInTheDocument()
     expect(screen.queryByText('Incorrect PIN')).not.toBeInTheDocument()
   })
 
@@ -278,24 +322,6 @@ describe('RecoverWalletModal', () => {
       expect(screen.getByText(/Try again in/i)).toBeInTheDocument()
     })
     expect(screen.queryByText('Too many attempts')).not.toBeInTheDocument()
-  })
-
-  it('no_blobs: shows error message', async () => {
-    setupMocks()
-    render(<RecoverWalletModal />)
-    await goToEnterPinStep()
-
-    vi.mocked(attemptPinDecryption).mockResolvedValue({
-      success: false,
-      error: 'no_blobs',
-      errorMessage: 'No recovery data found for this account.',
-    })
-
-    pasteIntoFirstInput('1234')
-
-    await waitFor(() => {
-      expect(screen.getByText('No recovery data found for this account.')).toBeInTheDocument()
-    })
   })
 
   it('Add passkey button triggers executeRecovery', async () => {

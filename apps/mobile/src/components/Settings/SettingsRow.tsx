@@ -19,6 +19,7 @@ import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
+import { AboutModalState } from 'wallet/src/components/settings/about/AboutModal'
 import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 
 export const SETTINGS_ROW_HEIGHT = 60
@@ -46,6 +47,7 @@ type SettingsNavigationModal =
   | typeof ModalName.SettingsAppearance
   | typeof ModalName.PermissionsModal
   | typeof ModalName.PortfolioBalanceModal
+  | typeof ModalName.About
   | typeof ModalName.LanguageSelector
 
 export interface SettingsSectionItem {
@@ -57,6 +59,7 @@ export interface SettingsSectionItem {
     | ConnectionsDappsListModalState
     | EditWalletSettingsModalState
     | SmartWalletAdvancedSettingsModalState
+    | AboutModalState
   externalLink?: string
   action?: JSX.Element
   disabled?: boolean

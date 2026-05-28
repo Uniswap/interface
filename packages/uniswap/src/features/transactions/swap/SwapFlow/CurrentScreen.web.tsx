@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -12,7 +13,6 @@ import {
   SwapReviewScreen,
   SwapReviewScreenProviders,
 } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
-import { isWebApp } from 'utilities/src/platform'
 
 export function CurrentScreen({
   settings,

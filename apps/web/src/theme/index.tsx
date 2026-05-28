@@ -97,7 +97,6 @@ function getSettings(darkMode: boolean) {
   }
 }
 
-// oxlint-disable-next-line import/no-unused-modules -- used in styled.d.ts
 export function getTheme(darkMode: boolean, overriddenColors?: Partial<ThemeColors>) {
   const [colors, deprecatedColors] = darkMode ? [darkTheme, darkDeprecatedTheme] : [lightTheme, lightDeprecatedTheme]
   const colorsWithOverrides = applyOverriddenColors(colors, overriddenColors)

@@ -5,7 +5,6 @@ import { getAnvilManager } from '~/playwright/anvil/anvil-manager'
  * Ensures Anvil is cleanly stopped after all tests complete.
  */
 // this is used in playwright.config.ts
-// oxlint-disable-next-line import/no-unused-modules
 export default async function globalTeardown() {
   console.log('Stopping Anvil after all tests...')
   await getAnvilManager().stop()

@@ -1,5 +1,5 @@
+import { isDevEnv } from '@universe/environment'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'

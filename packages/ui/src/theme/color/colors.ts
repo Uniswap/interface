@@ -159,8 +159,8 @@ export const networkColors = {
     dark: '#E8E8F0',
   },
   xlayer: {
-    light: '#A7A7A747',
-    dark: '#A7A7A724',
+    light: '#383838',
+    dark: '#A7A7A7',
   },
   worldchain: {
     light: '#222222',

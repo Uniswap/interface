@@ -1,3 +1,4 @@
+import { Environment } from '@universe/config'
 import { poolImageHandler } from 'functions/api/image/pools'
 import { positionImageHandler } from 'functions/api/image/positions'
 import { tokenImageHandler } from 'functions/api/image/tokens'
@@ -10,10 +11,30 @@ type Bindings = {
   ASSETS?: { fetch: typeof fetch } // Only present on Cloudflare Workers
 }
 
+/**
+ * URL segment -> upstream env. The segment values match
+ * `ENTRY_GATEWAY_PROXY_ENV_SEGMENT` exported from @universe/api.
+ *
+ * The mapping is the proxy's only piece of "knowledge" about envs — there is
+ * no feature registry, just a path-segment match. Callers that need to pin
+ * a request to a specific env declare it at their call site (e.g.
+ * `getEntryGatewayUrl({ env: Environment.Production })` produces `/entry-gateway/prod`).
+ */
+const ENTRY_GATEWAY_ENV_BY_SEGMENT: Record<string, Environment> = {
+  dev: Environment.Development,
+  staging: Environment.Staging,
+  prod: Environment.Production,
+}
+
 /** Platform-specific dependencies injected by each entry point. */
 interface AppConfig {
   fetchSpaHtml: (c: Context) => Promise<Response>
-  getEntryGatewayUrl: (c: Context) => string
+  /**
+   * Resolves the upstream Entry Gateway URL. When `env` is provided, the
+   * proxy is requesting the URL for that specific backend environment
+   * regardless of the deployment default.
+   */
+  getEntryGatewayUrl: (c: Context, env?: Environment) => string
   getWebSocketUrl: (c: Context) => string
   getTrustedClientIp: (c: Context) => string | undefined
 }
@@ -56,6 +77,20 @@ function cacheControl(maxAge: number) {
   }
 }
 
+/**
+ * If the path starts with an env segment (`/prod`, `/staging`, `/dev`),
+ * returns the matching upstream env and the remaining path; otherwise
+ * returns `undefined` env and the original path so the deployment default
+ * is used.
+ */
+function resolveEnvFromPath(path: string): { env: Environment | undefined; remainingPath: string } {
+  const match = path.match(/^\/(prod|staging|dev)(?=\/|$)(.*)$/)
+  if (!match) {
+    return { env: undefined, remainingPath: path }
+  }
+  return { env: ENTRY_GATEWAY_ENV_BY_SEGMENT[match[1]], remainingPath: match[2] || '/' }
+}
+
 export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getWebSocketUrl, getTrustedClientIp }: AppConfig) {
   const app = new Hono<{ Bindings: Bindings }>()
 
@@ -68,8 +103,14 @@ export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getWebSocketUrl, g
 
   // ── BFF proxy: entry-gateway ─────────────────────────────────────────
   app.all('/entry-gateway/*', async (c) => {
-    const backendUrl = getEntryGatewayUrl(c)
-    const path = c.req.path.slice('/entry-gateway'.length) || '/'
+    const initialPath = c.req.path.slice('/entry-gateway'.length) || '/'
+
+    // Env-pinned proxy paths (e.g. `/entry-gateway/prod/<service>`) force
+    // the request onto a specific backend env regardless of the deployment.
+    // Used by services that have a fixed env requirement (see
+    // `getEntryGatewayUrl({ env })` in @universe/api).
+    const { env, remainingPath } = resolveEnvFromPath(initialPath)
+    const backendUrl = getEntryGatewayUrl(c, env)
     const query = new URL(c.req.url).search
 
     // Forward the real client IP so the EGW authorizer (and downstream
@@ -81,7 +122,7 @@ export function createApp({ fetchSpaHtml, getEntryGatewayUrl, getWebSocketUrl, g
     // there's no Cloudflare to sanitize headers).
     const clientIp = getTrustedClientIp(c)
 
-    const targetUrl = `${backendUrl}${path}${query}`
+    const targetUrl = `${backendUrl}${remainingPath}${query}`
     // redirect:'manual' prevents SSRF via 3xx redirects to internal services
     const response = await proxy(targetUrl, {
       ...c.req,

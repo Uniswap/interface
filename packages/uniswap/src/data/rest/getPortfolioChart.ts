@@ -1,12 +1,13 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
-import { QueryKey, queryOptions, UseQueryResult, useQuery } from '@tanstack/react-query'
+import { QueryKey, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { GetPortfolioChartRequest, GetPortfolioChartResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { transformInput, WithoutWalletAccount } from '@universe/api'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 import { buildAccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { persistableQueryOptions } from 'utilities/src/reactQuery/persistableQueryOptions'
 import { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 export type GetPortfolioChartInput = {
@@ -34,7 +35,7 @@ export const getPortfolioHistoricalValueChartQuery = ({
 
   const { walletAccount: _walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
 
-  return queryOptions({
+  return persistableQueryOptions({
     queryKey: [ReactQueryCacheKey.GetPortfolioChart, accountAddressesByPlatform, inputWithoutWalletAccount] as const,
     queryFn: async (): Promise<GetPortfolioChartResponse | undefined> => {
       if (!transformedInput) {

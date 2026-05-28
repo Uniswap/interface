@@ -1,32 +1,51 @@
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { DatePickerCard } from '~/pages/Liquidity/CreateAuction/components/DatePickerCard'
-import { StepperCard } from '~/pages/Liquidity/CreateAuction/components/StepperCard'
+import {
+  DateRangePickerCard,
+  type DateRangePickerCardHandle,
+} from '~/pages/Liquidity/CreateAuction/components/DatePicker/DateRangePickerCard'
+import { useCreateAuctionTokenColor } from '~/pages/Liquidity/CreateAuction/hooks/useCreateAuctionTokenColor'
+import {
+  CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED,
+  formatLeadMinutesLabel,
+  getMinAuctionStartTimeToProceed,
+  getMinStartTime,
+} from '~/pages/Liquidity/CreateAuction/utils/duration'
 
-const MIN_START_TIME_OFFSET_MINUTES = 5
-
-export function getMinStartTime(): Date {
-  const min = new Date()
-  min.setMinutes(min.getMinutes() + MIN_START_TIME_OFFSET_MINUTES)
-  return min
+export type DurationSectionHandle = {
+  openCalendar: (mode: 'start' | 'end') => void
 }
 
-export function DurationSection({
-  maxDurationDays,
-  startTime,
-  onStartTimeChange,
-  onDecrement,
-  onIncrement,
-}: {
-  maxDurationDays: number
+type DurationSectionProps = {
   startTime: Date | undefined
-  onStartTimeChange: (date: Date | undefined) => void
-  onDecrement: () => void
-  onIncrement: () => void
-}) {
+  endTime: Date | undefined
+  onChange: (next: { startTime: Date | undefined; endTime: Date | undefined }) => void
+}
+
+export const DurationSection = forwardRef<DurationSectionHandle, DurationSectionProps>(function DurationSection(
+  { startTime, endTime, onChange },
+  ref,
+) {
   const { t } = useTranslation()
+  const tokenColor = useCreateAuctionTokenColor()
+  const dateRangePickerRef = useRef<DateRangePickerCardHandle>(null)
+  const minProceedLeadTimeLabel = useMemo(
+    () => formatLeadMinutesLabel(CREATE_AUCTION_MIN_LEAD_MINUTES_TO_PROCEED, t),
+    [t],
+  )
   const minStartTime = getMinStartTime()
-  const isStartTimeInvalid = startTime !== undefined && startTime.getTime() < minStartTime.getTime()
+  const minProceedStartTime = getMinAuctionStartTimeToProceed()
+  const isStartTimeInvalid = startTime !== undefined && startTime.getTime() < minProceedStartTime.getTime()
+  const isRangeInvalid = startTime !== undefined && endTime !== undefined && endTime.getTime() <= startTime.getTime()
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      openCalendar: (mode) => dateRangePickerRef.current?.openCalendar(mode),
+    }),
+    [],
+  )
 
   return (
     <Flex gap="$spacing12">
@@ -38,27 +57,34 @@ export function DurationSection({
           {t('toucan.createAuction.step.configureAuction.duration.description')}
         </Text>
       </Flex>
-      <Flex row gap="$spacing12">
-        <DatePickerCard
-          label={t('toucan.createAuction.step.configureAuction.duration.startTime')}
-          date={startTime}
-          minDate={minStartTime}
-          placeholder={t('toucan.createAuction.dateTimePlaceholder')}
-          onDateChange={onStartTimeChange}
-          ariaLabel={t('toucan.createAuction.step.configureAuction.duration.startTime')}
-        />
-        <StepperCard
-          label={t('toucan.createAuction.step.configureAuction.duration.maxDuration')}
-          value={t('common.day.count', { count: maxDurationDays })}
-          onDecrement={onDecrement}
-          onIncrement={onIncrement}
-        />
-      </Flex>
+      <DateRangePickerCard
+        ref={dateRangePickerRef}
+        startLabel={t('toucan.createAuction.step.configureAuction.duration.startDate')}
+        endLabel={t('toucan.createAuction.step.configureAuction.duration.endDate')}
+        startTimeLabel={t('toucan.createAuction.step.configureAuction.duration.startTime')}
+        endTimeLabel={t('toucan.createAuction.step.configureAuction.duration.endTime')}
+        startDate={startTime}
+        endDate={endTime}
+        minStartDate={minStartTime}
+        startPlaceholder={t('toucan.createAuction.step.configureAuction.duration.startDate.placeholder')}
+        endPlaceholder={t('toucan.createAuction.step.configureAuction.duration.endDate.placeholder')}
+        ariaLabelStart={t('toucan.createAuction.step.configureAuction.duration.startDate')}
+        ariaLabelEnd={t('toucan.createAuction.step.configureAuction.duration.endDate')}
+        tokenColor={tokenColor}
+        onChange={(next) => onChange({ startTime: next.startDate, endTime: next.endDate })}
+      />
       {isStartTimeInvalid && (
         <Text variant="body4" color="$statusCritical" textAlign="center">
-          {t('toucan.createAuction.step.configureAuction.duration.startTime.error')}
+          {t('toucan.createAuction.step.configureAuction.duration.startTime.error', {
+            time: minProceedLeadTimeLabel,
+          })}
+        </Text>
+      )}
+      {!isStartTimeInvalid && isRangeInvalid && (
+        <Text variant="body4" color="$statusCritical" textAlign="center">
+          {t('toucan.createAuction.step.configureAuction.duration.range.error')}
         </Text>
       )}
     </Flex>
   )
-}
+})

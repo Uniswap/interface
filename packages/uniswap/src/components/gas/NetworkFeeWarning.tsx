@@ -1,4 +1,5 @@
 import { FormattedUniswapXGasFeeInfo } from '@universe/api'
+import { isMobileApp, isWebApp, isWebPlatform } from '@universe/environment'
 import { PropsWithChildren } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Text, UniswapXText, useSporeColors } from 'ui/src'
@@ -14,7 +15,6 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NetworkCostBanner } from 'uniswap/src/features/smartWallet/banner/NetworkCostBanner'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 export function NetworkFeeWarning({
   gasFeeHighRelativeToValue,

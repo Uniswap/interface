@@ -95,6 +95,7 @@ function useTokenCache() {
   const set = useCallback(
     (token?: Token) => {
       if (token) {
+        // oxlint-disable-next-line no-shadow
         setCache((cache) => ({ ...cache, [currencyKey(token)]: serializeToken(token) }))
       }
     },

@@ -1,8 +1,8 @@
+import { isAndroid } from '@universe/environment'
 import { Flex, type FlexProps, TouchableArea } from 'ui/src'
 import { NFTViewer } from 'uniswap/src/components/nfts/NFTViewer'
 import { ESTIMATED_NFT_LIST_ITEM_SIZE } from 'uniswap/src/features/nfts/constants'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
-import { isAndroid, isWebPlatform } from 'utilities/src/platform'
 
 export type NftViewProps = {
   item: NFTItem
@@ -17,7 +17,9 @@ export function NftView({ item, onPress, index, openContextMenu, hoverAnimation 
   const nftView = (
     <NFTViewer
       svgRenderingDisabled
-      autoplay={!isWebPlatform}
+      // Disable autoplay in the grid — animated GIF/WebP NFTs hold per-cell frame
+      // buffers and tank scroll perf on memory-constrained devices.
+      autoplay={false}
       imageDimensions={item.imageDimensions}
       limitGIFSize={ESTIMATED_NFT_LIST_ITEM_SIZE}
       placeholderContent={item.name || item.collectionName}

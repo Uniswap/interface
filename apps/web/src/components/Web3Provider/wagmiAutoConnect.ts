@@ -1,9 +1,9 @@
-import { isPlaywrightEnv } from 'utilities/src/environment/env'
-import { isAddress } from 'viem'
+import { isE2eTestEnv } from '@universe/environment'
 import { connect } from 'wagmi/actions'
-import { PLAYWRIGHT_CONNECT_ADDRESS } from '~/components/Web3Provider/constants'
-import { createRejectableMockConnector } from '~/components/Web3Provider/rejectableConnector'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { isAddress } from '~/chains'
+import { PLAYWRIGHT_CONNECT_ADDRESS } from '~/connection/constants'
+import { createRejectableMockConnector } from '~/connection/rejectableConnector'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 
 export function setupWagmiAutoConnect() {
   const params = new URLSearchParams(window.location.search)
@@ -11,7 +11,7 @@ export function setupWagmiAutoConnect() {
   const eagerlyConnectAddress = params.get('eagerlyConnectAddress') ?? undefined
 
   // Automatically connect if running under Playwright (used by E2E tests)
-  if (isPlaywrightEnv() && isEagerlyConnect) {
+  if (isE2eTestEnv() && isEagerlyConnect) {
     // setTimeout avoids immediate disconnection caused by race condition in wagmi mock connector
     setTimeout(() => {
       connect(wagmiConfig, {

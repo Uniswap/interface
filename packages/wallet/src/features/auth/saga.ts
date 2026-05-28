@@ -6,6 +6,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { AuthActionType, AuthSagaError, LockParams, UnlockParams } from 'wallet/src/features/auth/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* auth(params: UnlockParams | LockParams) {
   logger.debug('authSaga', 'auth', `Using monitored auth saga`)
 
@@ -16,6 +17,7 @@ function* auth(params: UnlockParams | LockParams) {
   }
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* unlock({ password }: UnlockParams) {
   logger.debug('authSaga', 'unlock', `Unlocking wallet`)
   const success = yield* call(Keyring.unlock, password)
@@ -28,6 +30,7 @@ function* unlock({ password }: UnlockParams) {
   })
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* lock() {
   logger.debug('authSaga', 'lock', `Locking wallet`)
   yield* call(Keyring.lock)

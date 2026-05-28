@@ -1,10 +1,10 @@
+import { isExtensionApp } from '@universe/environment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, useSporeColors } from 'ui/src'
 import { Camera, PhotoStacked, Share, Trash } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isExtensionApp } from 'utilities/src/platform'
 import { ChooseNftModal, ChooseNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
 import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/photoSelection'
 

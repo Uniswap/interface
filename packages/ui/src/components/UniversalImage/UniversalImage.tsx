@@ -18,9 +18,13 @@ export function UniversalImage({
   fallback,
   testID,
   onLoad,
+  onError,
   allowLocalUri = false,
   autoplay = true,
   allowUndefinedSize = false,
+  skipSizeCalculation = false,
+  transitionMs,
+  priority,
 }: UniversalImageProps): JSX.Element | null {
   // Allow calculation of fields as needed
   const [width, setWidth] = useState(size.width)
@@ -43,10 +47,9 @@ export function UniversalImage({
 
   // Calculate width/height and check for an error in the image retrieval
   // TODO(apps-infra): See if we can remove this when Expo Image is fully enabled
-  // oxlint-disable-next-line react/exhaustive-deps -- +width, height
   useEffect(() => {
     // If we know dimension skip calculating width/height
-    if (!uri || sizeKnown || isRequireSource) {
+    if (skipSizeCalculation || !uri || sizeKnown || isRequireSource) {
       return
     }
 
@@ -57,9 +60,12 @@ export function UniversalImage({
         setWidth(calculatedWidth)
         setHeight(calculatedHeight)
       },
-      () => setErrored(true),
+      () => {
+        setErrored(true)
+        onError?.()
+      },
     )
-  }, [width, height, sizeKnown, uri, isRequireSource])
+  }, [width, height, sizeKnown, uri, isRequireSource, skipSizeCalculation, onError])
 
   // Handle local URI
   if (isRequireSource) {
@@ -114,6 +120,7 @@ export function UniversalImage({
           size={size}
           style={style?.image}
           uri={imageHttpUrl}
+          onError={onError}
         />
       </Flex>
     )
@@ -122,13 +129,17 @@ export function UniversalImage({
   // Handle a plain image
   return (
     <PlainImage
+      autoplay={autoplay}
       fallback={fallback}
+      priority={priority}
       resizeMode={size.resizeMode}
       size={computedSize}
       style={style?.image}
       testID={testID ? `img-${testID}` : undefined}
+      transitionMs={transitionMs}
       uri={imageHttpUrl}
       onLoad={onLoad}
+      onError={onError}
     />
   )
 }

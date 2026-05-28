@@ -20,17 +20,17 @@ import { CompatibleAddressModal } from 'uniswap/src/features/transactions/modals
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { useGroupedRecentTransfers } from '~/hooks/useGroupedRecentTransfers'
+import { useGroupedRecentTransfers } from '~/features/Swap/hooks/useGroupedRecentTransfers'
+import { useSendCallback } from '~/features/Swap/hooks/useSendCallback'
+import { useSendContext } from '~/features/Swap/state/send/SendContext'
+import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
 import { useModalState } from '~/hooks/useModalState'
-import { useSendCallback } from '~/hooks/useSendCallback'
 import { NewAddressSpeedBumpModal } from '~/pages/Swap/Send/NewAddressSpeedBump'
 import { SelfSendSpeedBumpModal } from '~/pages/Swap/Send/SelfSendSpeedBump'
-import SendCurrencyInputForm from '~/pages/Swap/Send/SendCurrencyInputForm'
+import { SendCurrencyInputForm } from '~/pages/Swap/Send/SendCurrencyInputForm'
 import { SendRecipientForm } from '~/pages/Swap/Send/SendRecipientForm'
 import { SendReviewModalInner } from '~/pages/Swap/Send/SendReviewModal'
 import { SmartContractSpeedBumpModal } from '~/pages/Swap/Send/SmartContractSpeedBump'
-import { useSendContext } from '~/state/send/SendContext'
-import { CurrencyState } from '~/state/swap/types'
 
 export type SendFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -160,7 +160,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     setSendFormModalState(newState ?? SendFormModalState.None)
   }, [])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +recipientData?.address
   useEffect(() => {
     setSendFormSpeedBumpState(() => ({
       [SendSpeedBump.SELF_SEND_SPEED_BUMP]: isCurrentWallet,
@@ -353,7 +352,7 @@ export function SendForm(props: SendFormProps) {
         exactAmountToken: undefined,
         exactAmountFiat: '',
         recipient: '',
-        validatedRecipient: undefined,
+        validatedRecipientData: undefined,
         inputInFiat: true,
       }))
     },

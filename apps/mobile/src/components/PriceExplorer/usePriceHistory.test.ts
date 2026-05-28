@@ -248,7 +248,6 @@ describe(useTokenPriceHistory, () => {
     const yearTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(yearPriceHistory)
 
     const { resolvers } = queryResolvers({
-      // oxlint-disable-next-line max-params
       tokenProjects: (parent, args, context, info) => {
         switch (info.variableValues['duration']) {
           case GraphQLApi.HistoryDuration.Day:

@@ -18,7 +18,7 @@ interface DelegationMismatchModalProps {
   onClose: () => void
 }
 
-function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
+export function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
   const { t } = useTranslation()
   const account = useAccount()
   const { displayName } = useWalletDisplay(account.address)

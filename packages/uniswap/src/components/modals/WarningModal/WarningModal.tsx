@@ -1,12 +1,17 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { type PropsWithChildren, type ReactNode, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorValue } from 'react-native'
-import { Button, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, FlexProps, Text, TouchableArea, useShadowPropsShort, useSporeColors } from 'ui/src'
 import type { ButtonEmphasis, ButtonProps, ButtonVariant } from 'ui/src/components/buttons/Button/types'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ShieldMagnifyingGlass } from 'ui/src/components/icons/ShieldMagnifyingGlass'
 import { X } from 'ui/src/components/icons/X'
 import { opacify, zIndexes } from 'ui/src/theme'
+import { ContextMenu, type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
+import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
+import { ContextMenuTriggerButton } from 'uniswap/src/components/menus/ContextMenuTriggerButton'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
@@ -18,7 +23,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { SwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/createSwapFormStore'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
@@ -170,7 +174,6 @@ export function WarningModalContent({
   sendReport,
   ...props
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
-  const { t } = useTranslation()
   const { headerText: alertHeaderTextColor } = getAlertColor(severity)
 
   const defaultButtonSize = isMobileApp ? 'medium' : 'small'
@@ -203,10 +206,15 @@ export function WarningModalContent({
 
   return (
     <Flex {...wrapperProps}>
-      {showCloseButton && onClose && !closeHeaderComponent && (
-        <TouchableArea position="absolute" right={0} top={0} zIndex={zIndexes.default} onPress={onClose}>
-          <X color="$neutral2" size="$icon.24" />
-        </TouchableArea>
+      {!closeHeaderComponent && (showCloseButton || sendReport) && (
+        <Flex row centered gap="$spacing4" position="absolute" right={0} top={0} zIndex={zIndexes.default}>
+          {sendReport && <ReportWarningContextMenu onPressReport={showReportUI} />}
+          {showCloseButton && onClose && (
+            <TouchableArea onPress={onClose}>
+              <X color="$neutral2" size="$icon.24" />
+            </TouchableArea>
+          )}
+        </Flex>
       )}
 
       {closeHeaderComponent}
@@ -254,14 +262,45 @@ export function WarningModalContent({
           )}
         </Flex>
       )}
-      {sendReport && (
-        <TouchableArea onPress={showReportUI}>
-          <Text color="$neutral2" variant="buttonLabel3">
-            {t('reporting.token.warning.button')}
-          </Text>
-        </TouchableArea>
-      )}
     </Flex>
+  )
+}
+
+function ReportWarningContextMenu({ onPressReport }: { onPressReport: () => void }): JSX.Element {
+  const { t } = useTranslation()
+  const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
+  const shadowProps = useShadowPropsShort()
+
+  const menuItems: MenuOptionItem[] = [
+    {
+      label: t('reporting.token.warning.button'),
+      onPress: onPressReport,
+      Icon: ShieldMagnifyingGlass,
+    },
+  ]
+
+  return (
+    <ContextMenu
+      menuItems={menuItems}
+      contentOverride={
+        <MenuContent
+          trackItemClicks
+          items={menuItems}
+          handleCloseMenu={closeMenu}
+          elementName={ElementName.TokenWarningReportContextMenu}
+          sectionName={SectionName.DisputeTokenWarning}
+          containerStyles={shadowProps}
+        />
+      }
+      triggerMode={ContextMenuTriggerMode.Primary}
+      isOpen={isOpen}
+      openMenu={openMenu}
+      closeMenu={closeMenu}
+      elementName={ElementName.TokenWarningReportContextMenu}
+      sectionName={SectionName.DisputeTokenWarning}
+    >
+      <ContextMenuTriggerButton />
+    </ContextMenu>
   )
 }
 

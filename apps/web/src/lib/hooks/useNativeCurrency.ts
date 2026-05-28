@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-export default function useNativeCurrency(chainId: UniverseChainId | null | undefined): NativeCurrency | Token {
+export function useNativeCurrency(chainId: UniverseChainId | null | undefined): NativeCurrency | Token {
   return useMemo(
     () =>
       chainId

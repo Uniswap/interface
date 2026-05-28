@@ -7,6 +7,7 @@ const DEFAULT_ALLOWED_NETWORKS = [
   UniverseChainId.Unichain,
   UniverseChainId.Base,
   UniverseChainId.ArbitrumOne,
+  UniverseChainId.Sepolia,
 ]
 
 export function useCreateAuctionAllowedNetworks(): UniverseChainId[] {

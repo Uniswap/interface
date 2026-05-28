@@ -1,6 +1,8 @@
 import { useTrace } from '@uniswap/analytics'
-import { TradingApi } from '@universe/api'
+import { SharedQueryClient, TradingApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   extractPlanFieldsFromTypeInfo,
@@ -8,10 +10,11 @@ import {
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import type { UniswapXOrderUpdate } from '~/state/activity/types'
 import { useAppDispatch } from '~/state/hooks'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { logUniswapXSwapFinalized } from '~/tracing/swapFlowLoggers'
 
 interface HandleUniswapXActivityUpdateParams {
@@ -22,6 +25,7 @@ interface HandleUniswapXActivityUpdateParams {
 export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivityUpdateParams) => void {
   const dispatch = useAppDispatch()
   const analyticsContext = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
 
   return useCallback(
     ({ activity, popupDismissalTime }: HandleUniswapXActivityUpdateParams): void => {
@@ -64,6 +68,8 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
           update.status === TransactionStatus.Expired)
       ) {
         // Log successful non-limit orders (for swap metrics) and all cancelled/expired orders
+        const inputCurrencyId = extractTransactionTypeInfoAttribute(original.typeInfo, 'inputCurrencyId')
+        const inputAddress = inputCurrencyId?.includes('-') ? currencyIdToAddress(inputCurrencyId) : undefined
         logUniswapXSwapFinalized({
           id: original.id,
           hash: update.hash,
@@ -75,9 +81,18 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
           swapStartTimestamp: extractTransactionTypeInfoAttribute(original.typeInfo, 'swapStartTimestamp'),
           planAnalytics: extractPlanFieldsFromTypeInfo(original.typeInfo),
           transactedUSDValue: extractTransactionTypeInfoAttribute(original.typeInfo, 'transactedUSDValue'),
+          priceSource: inputAddress
+            ? getDisplayedPriceSource({
+                isCentralizedPricesEnabled,
+                surface: 'usdc',
+                chainId: activity.chainId,
+                address: inputAddress,
+                queryClient: SharedQueryClient,
+              })
+            : undefined,
         })
       }
     },
-    [dispatch, analyticsContext],
+    [dispatch, analyticsContext, isCentralizedPricesEnabled],
   )
 }

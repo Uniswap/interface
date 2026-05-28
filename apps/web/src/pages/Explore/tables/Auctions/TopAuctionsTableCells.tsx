@@ -6,8 +6,8 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { OrderDirection } from '~/appGraphql/data/util'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { EllipsisText } from '~/components/Table/shared/TableText'
-import { getAuctionMetadata } from '~/components/Toucan/Config/config'
-import type { EnrichedAuction } from '~/state/explore/topAuctions/useTopAuctions'
+import { getAuctionMetadata } from '~/features/Toucan/Config/config'
+import type { EnrichedAuction } from '~/features/Toucan/hooks/useTopAuctions/useTopAuctions'
 
 /**
  * Sort fields for auction table
@@ -53,29 +53,28 @@ export function AuctionTableHeader({
 }
 
 export function TokenNameCell({ auction }: { auction: EnrichedAuction }) {
-  // Check for metadata overrides from config
-  const metadataOverride =
+  // Check for logo override from config
+  const logoOverride =
     auction.auction?.chainId && auction.auction.tokenAddress
-      ? getAuctionMetadata({ chainId: auction.auction.chainId, tokenAddress: auction.auction.tokenAddress })
+      ? getAuctionMetadata({ chainId: auction.auction.chainId, tokenAddress: auction.auction.tokenAddress })?.logoUrl
       : undefined
-
-  const tokenName = metadataOverride?.tokenName ?? auction.auction?.tokenName
-  const tokenSymbol = metadataOverride?.tokenSymbol ?? auction.auction?.tokenSymbol
 
   return (
     <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start">
       <Flex pr="$spacing4">
         <TokenLogo
-          url={metadataOverride?.logoUrl ?? auction.logoUrl}
+          url={logoOverride ?? auction.logoUrl}
           size={24}
           chainId={auction.auction?.chainId}
-          symbol={tokenSymbol}
-          name={tokenName}
+          symbol={auction.auction?.tokenSymbol}
+          name={auction.auction?.tokenName}
         />
       </Flex>
-      <EllipsisText>{tokenName ?? tokenSymbol ?? auction.auction?.tokenAddress ?? '—'}</EllipsisText>
+      <EllipsisText>
+        {auction.auction?.tokenName ?? auction.auction?.tokenSymbol ?? auction.auction?.tokenAddress ?? '—'}
+      </EllipsisText>
       <EllipsisText $platform-web={{ minWidth: 'fit-content' }} $lg={{ display: 'none' }} color="$neutral2">
-        {tokenSymbol}
+        {auction.auction?.tokenSymbol}
       </EllipsisText>
       {auction.verified && <CheckmarkCircle size="$icon.16" color="$accent1" />}
     </Flex>

@@ -1,9 +1,9 @@
+import { SearchTokensResponse } from '@uniswap/client-data-api/dist/data/v1/search_pb'
 import {
-  ChainToken,
   MultichainToken,
+  ChainToken,
   type Token as SearchToken,
-  SearchTokensResponse,
-} from '@uniswap/client-search/dist/search/v1/api_pb'
+} from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 
 /**
  * Transforms a SearchTokens response that uses the legacy flat `tokens[]`

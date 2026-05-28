@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { memo } from 'react'
 import { Flex } from 'ui/src'
@@ -36,8 +37,9 @@ import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionWarning } from 'uniswap/src/features/transactions/TransactionDetails/TransactionWarning'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebPlatform } from 'utilities/src/platform'
+import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 
 interface SwapReviewScreenProps {
   hideContent: boolean
@@ -81,6 +83,7 @@ export function SwapReviewScreenProviders({
 }
 
 export function SwapReviewScreen(): JSX.Element | null {
+  usePerformanceLogger(DDRumManualTiming.SwapReviewScreenRender, [])
   const { acceptedDerivedSwapInfo, isWrap, newTradeRequiresAcceptance } = useSwapReviewTransactionStore((s) => ({
     acceptedDerivedSwapInfo: s.acceptedDerivedSwapInfo,
     isWrap: s.isWrap,
@@ -163,7 +166,7 @@ export function SwapReviewScreen(): JSX.Element | null {
           )}
         </Flex>
       </SwapReviewContentWrapper>
-      <SwapReviewFooter />
+      {!hideContent && <SwapReviewFooter />}
     </>
   )
 }

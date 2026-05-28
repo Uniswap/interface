@@ -97,7 +97,6 @@ export function DecimalPadCalculateSpace({
     decimalPadRef.current?.setMaxHeight(height - additionalElementsHeight)
   })
 
-  // oxlint-disable-next-line react/exhaustive-deps -- we only want to run it when additionalElementsHeight is changed
   useEffect(() => {
     if (precalculatedHeight !== undefined) {
       return
@@ -145,7 +144,6 @@ export const DecimalPadInput = memo(
     const [disabledKeys, setDisabledKeys] = useState<Partial<Record<KeyLabel, boolean>>>({})
     const [maxHeight, setMaxHeight] = useState<number | null>(null)
 
-    // oxlint-disable-next-line react/exhaustive-deps -- -updateDisabledKeys, +selectionRef,maxDecimals
     useEffect(() => {
       updateDisabledKeys(valueRef.current)
       // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
@@ -218,6 +216,7 @@ export const DecimalPadInput = memo(
         setDisabledKeys((prevDisabledKeys) => {
           let isUpdated = false
           const newDisabledKeys = Object.fromEntries(
+            // oxlint-disable-next-line max-nested-callbacks
             Object.entries(disableKeysConditions).map(([key, condition]) => {
               const isDisabled = condition(value)
               if (isDisabled !== prevDisabledKeys[key as KeyLabel]) {
@@ -229,7 +228,7 @@ export const DecimalPadInput = memo(
           // Prevent unnecessary re-renders and return the same value
           // if no key was updated (react state won't be updated if value is the
           // same as the previous one in terms of referential equality)
-          // oxlint-disable-next-line typescript/no-unsafe-return, typescript/no-unnecessary-condition
+          // oxlint-disable-next-line typescript/no-unnecessary-condition
           return isUpdated ? newDisabledKeys : prevDisabledKeys
         })
       },

@@ -1,7 +1,7 @@
+import { isTestEnv } from '@universe/environment'
 import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/src'
 import { config } from 'ui/src/tamagui.config'
 import { useSelectedColorScheme } from 'uniswap/src/features/appearance/hooks'
-import { isTestEnv } from 'utilities/src/environment/env'
 
 // without <NavigationProvider>
 // this exported Provider is useful for tests

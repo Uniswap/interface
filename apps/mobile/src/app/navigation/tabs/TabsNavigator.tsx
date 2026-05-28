@@ -17,7 +17,11 @@ export const TabsNavigator = (): JSX.Element => {
       screenOptions={{
         headerShown: false,
         lazy: false, // Mount all tabs on first render
-        freezeOnBlur: false, // Allow effects to run on unfocused tabs to fully initialize
+        // RN 0.81 + reanimated 3.19.4 + screens 4.16.0: leaving blurred
+        // tabs unfrozen lets their Apollo subscriptions and reanimated
+        // worklets keep ticking on the JS thread, which contends with
+        // user input.
+        freezeOnBlur: true,
       }}
     >
       <Tab.Screen name={MobileScreens.Home} component={WrappedHomeScreen} />

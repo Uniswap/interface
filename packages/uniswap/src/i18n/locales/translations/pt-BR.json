@@ -860,7 +860,6 @@
   "fiatOffRamp.unsupportedToken.message": "Não há suporte para a venda deste token. Troque este ativo por um dos tokens com suporte.",
   "fiatOffRamp.unsupportedToken.swap": "Trocar por um token com suporte",
   "fiatOffRamp.unsupportedToken.title": "Token sem suporte",
-  "fiatOffRamp.welcome.tooltip": "Venda suas criptomoedas para uma conta bancária ou cartão de débito.",
   "fiatOnRamp.button.chooseToken": "Escolher token",
   "fiatOnRamp.cexTransferModal.description": "Não há suporte para a compra de criptomoedas com cartão na sua região. Transfira ativos de uma conta em uma bolsa centralizada para carregar sua carteira.",
   "fiatOnRamp.cexTransferModal.title": "Transferir para começar",

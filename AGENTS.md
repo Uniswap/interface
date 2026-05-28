@@ -159,3 +159,38 @@ Be cognizant of the app or package within which a given change is being made. Be
 
 
 <!-- nx configuration end-->
+
+## Cursor Cloud specific instructions
+
+### Environment
+
+- Node.js v22.22.2 and Bun 1.3.11 are pre-installed and match `.nvmrc` / `.bun-version`.
+- The `tsgo` binary is at `node_modules/.bin/tsgo` (not globally in PATH). The `bun g:typecheck` script handles this automatically.
+- Set `export LEFTHOOK=0` to disable git hooks in Cloud Agent sessions (no TTY for interactive hooks).
+- All backend APIs are external (no local databases or Docker needed for development).
+
+### Web App
+
+- **Start dev server**: `bun web dev` → runs on `http://localhost:3000/`
+- **Run tests**: `bunx nx run web:test -- --run` (317 test files, ~2.5 min)
+- **Lint (fast)**: `bunx nx run web:format` (formatting) and `bunx nx run web:lint` (oxlint)
+- **Typecheck**: `bun g:typecheck` runs `tsgo -b` globally (fastest). Per-project: `bunx nx run web:typecheck`.
+- The `web:typecheck:cloud` target typechecks the `apps/web/functions/` (edge functions) separately and may fail independently of the main app.
+- The web app loads live data from Uniswap's public APIs without requiring API keys for basic swap quotes and token exploration.
+
+### Extension
+
+- **Start dev server**: `bun extension dev` → WXT builds the extension and opens Chrome with it pre-loaded.
+- A pre-built extension is available at `/var/tmp/stretch` and is already loaded in the default Chrome profile (`/home/ubuntu/.config/google-chrome`).
+- The extension wallet is **already onboarded**. To unlock it, use the password from the `EXTENSION_UNLOCK_PASSWORD` environment variable.
+- To type the password programmatically: write it to a temp file with `python3 -c "import os; open('/tmp/ext_pw.txt','w').write(os.environ['EXTENSION_UNLOCK_PASSWORD'])"`, then read/type from that file (the env var value is redacted in shell output but available to processes).
+- The extension opens as a **side panel** in Chrome (not a popup). Click the Uniswap icon in the toolbar or use Ctrl+Shift+U.
+- The wallet contains a small amount of ETH and cBTC on Ethereum mainnet.
+- **Known limitation**: connecting the extension wallet to the web app on `localhost` does not currently work (the `externally_connectable` manifest only allows `app.uniswap.org` and staging origins).
+
+### Gotchas
+
+- `bun install` runs a `preinstall` script that validates Node/Bun versions and will fail if they don't match `.nvmrc` / `.bun-version`.
+- The `postinstall` script runs `git config core.hooksPath .husky && bun g:prepare`. The `g:prepare` step (`nx run-many -t prepare`) generates codegen files needed for typecheck/build.
+- Mobile requires native tooling (Xcode, CocoaPods, Android SDK) not available in Cloud Agent VMs.
+- When running `bun extension dev`, WXT creates a `web-ext.config.ts` override file (gitignored) to customize browser startup behavior. You can set `startUrls`, `chromiumArgs`, or `WXT_NO_OPEN_BROWSER=true` as needed.

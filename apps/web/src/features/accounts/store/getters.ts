@@ -1,5 +1,3 @@
-/* oxlint-disable import/no-unused-modules */
-
 import { Account } from 'uniswap/src/features/accounts/store/types/Account'
 import { AccountsGetters } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'

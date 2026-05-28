@@ -52,7 +52,7 @@ describe(MultichainAddressList, () => {
     const rows = getAllByTestId(TestID.MultichainCopyAddress)
     fireEvent.press(rows[0]!, ON_PRESS_EVENT_PAYLOAD)
 
-    expect(onCopyAddress).toHaveBeenCalledWith(TEST_ENTRIES[0]!.address)
+    expect(onCopyAddress).toHaveBeenCalledWith(TEST_ENTRIES[0]!.address, TEST_ENTRIES[0]!.chainId)
   })
 
   it('sets copied state when showInlineFeedback is true and resets after timeout', () => {
@@ -64,7 +64,7 @@ describe(MultichainAddressList, () => {
     const rows = getAllByTestId(TestID.MultichainCopyAddress)
     fireEvent.press(rows[0]!, ON_PRESS_EVENT_PAYLOAD)
 
-    expect(onCopyAddress).toHaveBeenCalledWith(TEST_ENTRIES[0]!.address)
+    expect(onCopyAddress).toHaveBeenCalledWith(TEST_ENTRIES[0]!.address, TEST_ENTRIES[0]!.chainId)
 
     // Timer resets the copied state after COPY_FEEDBACK_RESET_MS
     act(() => {
@@ -84,7 +84,7 @@ describe(MultichainAddressList, () => {
     const rows = getAllByTestId(TestID.MultichainCopyAddress)
     fireEvent.press(rows[0]!, ON_PRESS_EVENT_PAYLOAD)
 
-    expect(onCopyAddress).toHaveBeenCalledWith(TEST_ENTRIES[0]!.address)
+    expect(onCopyAddress).toHaveBeenCalledWith(TEST_ENTRIES[0]!.address, TEST_ENTRIES[0]!.chainId)
     expect(queryByText('Copied')).toBeFalsy()
   })
 })

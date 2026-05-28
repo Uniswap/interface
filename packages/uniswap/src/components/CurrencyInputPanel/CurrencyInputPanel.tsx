@@ -1,3 +1,4 @@
+import { isExtensionApp, isMobileWeb, isWebAppDesktop } from '@universe/environment'
 //! tamagui-ignore
 // tamagui-ignore
 /* oxlint-disable complexity */
@@ -16,9 +17,9 @@ import { CurrencyInputPanelInput } from 'uniswap/src/components/CurrencyInputPan
 import { CurrencyInputPanelValue } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelValue'
 import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtensionApp, isMobileWeb, isWebAppDesktop } from 'utilities/src/platform'
 
 export const CurrencyInputPanel = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(
@@ -61,6 +62,7 @@ export const CurrencyInputPanel = memo(
         inputSuffix,
         allowOverflow,
         balanceVariant,
+        actualGasFee,
       } = props
 
       const isShortMobileDevice = useIsShortMobileDevice()
@@ -97,6 +99,25 @@ export const CurrencyInputPanel = memo(
         [onSetPresetValue],
       )
 
+      const maxInputAmount = useMaxAmountSpend({
+        currencyAmount: currencyBalance,
+        txType: transactionType,
+      })
+
+      const handlePressBalance = useCallback(() => {
+        if (isOutput) {
+          // For the output (Buy) panel, set the exact output amount to the balance
+          if (currencyBalance && currencyBalance.greaterThan(0)) {
+            onSetExactAmount(currencyBalance.toExact())
+          }
+        } else {
+          // For the input (Sell) panel, use max amount which accounts for gas reserves
+          if (maxInputAmount && maxInputAmount.greaterThan(0)) {
+            handleSetPresetValue(maxInputAmount.toExact(), 'max')
+          }
+        }
+      }, [isOutput, currencyBalance, maxInputAmount, onSetExactAmount, handleSetPresetValue])
+
       const renderPreset = useCallback(
         (preset: PresetPercentage) => (
           <PresetAmountButton
@@ -107,10 +128,11 @@ export const CurrencyInputPanel = memo(
             transactionType={transactionType}
             elementName={ElementName.PresetPercentage}
             buttonProps={PRESET_BUTTON_PROPS}
+            actualGasFee={actualGasFee}
             onSetPresetValue={handleSetPresetValue}
           />
         ),
-        [currencyAmount, currencyBalance, currencyField, handleSetPresetValue, transactionType],
+        [currencyAmount, currencyBalance, currencyField, handleSetPresetValue, transactionType, actualGasFee],
       )
 
       return (
@@ -136,6 +158,7 @@ export const CurrencyInputPanel = memo(
               currencyInfo={currencyInfo}
               showDefaultTokenOptions={showDefaultTokenOptions}
               hidePresets={hidePresets}
+              actualGasFee={actualGasFee}
               onSetPresetValue={handleSetPresetValue}
             />
             <CurrencyInputPanelInput
@@ -207,6 +230,11 @@ export const CurrencyInputPanel = memo(
                     showInsufficientBalanceWarning={showInsufficientBalanceWarning}
                     hideBalance={!!hidePresets}
                     variant={balanceVariant}
+                    onPressBalance={
+                      !disabled && (isOutput || onSetPresetValue) && currencyBalance?.greaterThan(0)
+                        ? handlePressBalance
+                        : undefined
+                    }
                   />
                   {/* Max button */}
                   {showMaxButton && onSetPresetValue && (
@@ -219,6 +247,7 @@ export const CurrencyInputPanel = memo(
                       buttonProps={{
                         borderWidth: 0,
                       }}
+                      actualGasFee={actualGasFee}
                       onSetPresetValue={handleSetPresetValue}
                     />
                   )}

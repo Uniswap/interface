@@ -3,16 +3,10 @@
   "display": "Web App",
   "extends": ["../../tsconfig.base.json"],
   "include": ["**/*.ts", "**/*.tsx", "**/*.json", "declarations.d.ts"],
-  "exclude": ["node_modules", ".output", "wxt.config.ts"],
+  "exclude": ["node_modules", ".output", "wxt.config.ts", "oxlint.config.ts"],
   "references": [
     {
-      "path": "../../packages/wallet"
-    },
-    {
-      "path": "../../packages/utilities"
-    },
-    {
-      "path": "../../packages/uniswap"
+      "path": "../../packages/environment"
     },
     {
       "path": "../../packages/ui"
@@ -27,7 +21,22 @@
       "path": "../../packages/gating"
     },
     {
+      "path": "../../packages/encoding"
+    },
+    {
+      "path": "../../packages/config"
+    },
+    {
       "path": "../../packages/api"
+    },
+    {
+      "path": "../../packages/wallet"
+    },
+    {
+      "path": "../../packages/uniswap"
+    },
+    {
+      "path": "../../packages/utilities"
     }
   ],
   "compilerOptions": {

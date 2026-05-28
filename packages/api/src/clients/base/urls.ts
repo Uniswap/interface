@@ -1,5 +1,13 @@
-import { isBetaEnv, isDevEnv, isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
-import { isAndroid, isExtensionApp, isMobileApp, isWebApp } from 'utilities/src/platform'
+import {
+  isAndroid,
+  isExtensionApp,
+  isMobileApp,
+  isWebApp,
+  isBetaEnv,
+  isDevEnv,
+  isE2eTestEnv,
+  isTestEnv,
+} from '@universe/environment'
 
 export enum TrafficFlows {
   GraphQL = 'graphql',
@@ -16,7 +24,7 @@ export const helpUrl = 'https://support.uniswap.org/hc/en-us'
 
 const FLOWS_USING_BETA = [TrafficFlows.FOR]
 
-const isDevOrBeta = isPlaywrightEnv() ? false : isDevEnv() || isBetaEnv()
+const isDevOrBeta = isE2eTestEnv() ? false : isDevEnv() || isBetaEnv()
 
 export function getCloudflarePrefix(flow?: TrafficFlows): string {
   if (flow && isDevOrBeta && FLOWS_USING_BETA.includes(flow)) {
@@ -31,7 +39,7 @@ export function getCloudflarePrefix(flow?: TrafficFlows): string {
     return 'extension'
   }
 
-  if (isPlaywrightEnv() || isWebApp) {
+  if (isE2eTestEnv() || isWebApp) {
     return 'interface'
   }
 
@@ -43,7 +51,7 @@ export function getCloudflarePrefix(flow?: TrafficFlows): string {
 }
 
 export function getServicePrefix(flow?: TrafficFlows): string {
-  if (flow && (isPlaywrightEnv() || !(isDevOrBeta && FLOWS_USING_BETA.includes(flow)))) {
+  if (flow && (isE2eTestEnv() || !(isDevOrBeta && FLOWS_USING_BETA.includes(flow)))) {
     return flow + '.'
   } else {
     return ''
@@ -53,13 +61,13 @@ export function getServicePrefix(flow?: TrafficFlows): string {
 export function getCloudflareApiBaseUrl(params?: { flow?: TrafficFlows; postfix?: string }): string {
   const { flow, postfix } = params ?? {}
   let baseUrl
-  if (flow === TrafficFlows.TradingApi && !isPlaywrightEnv()) {
+  if (flow === TrafficFlows.TradingApi && !isE2eTestEnv()) {
     // This is an exception that only applies to dev + TAPI where the order of the prefix matters
     baseUrl = `https://${isDevEnv() ? 'beta.' : ''}trading-api-labs.${getCloudflarePrefix(flow)}.gateway.uniswap.org`
   }
   // DataApi: use staging entry gateway in dev to avoid CORS issues with beta.gateway.
   // Entry gateway doesn't use the /v2 path prefix, so postfix is intentionally ignored here.
-  else if (flow === TrafficFlows.DataApi && isDevEnv() && !isPlaywrightEnv()) {
+  else if (flow === TrafficFlows.DataApi && isDevEnv() && !isE2eTestEnv()) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
   } else if (flow === TrafficFlows.DataApi) {
     baseUrl = `https://${getCloudflarePrefix(flow)}.gateway.uniswap.org`

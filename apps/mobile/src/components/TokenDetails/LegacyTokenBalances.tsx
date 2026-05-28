@@ -8,6 +8,7 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { InlineNetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { sortBalancesByValue } from 'uniswap/src/components/tokenDetails/utils'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import type { DataApiOutageProps } from 'uniswap/src/features/dataApi/types'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
@@ -20,10 +21,12 @@ import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hoo
 export function LegacyTokenBalances({
   currentChainBalance,
   otherChainBalances,
+  isOutage,
+  dataUpdatedAt,
 }: {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
-}): JSX.Element {
+} & DataApiOutageProps): JSX.Element {
   const { t } = useTranslation()
   const activeAccount = useActiveAccount()
   const displayName = useDisplayName(activeAccount?.address, { includeUnitagSuffix: true })?.name
@@ -49,7 +52,13 @@ export function LegacyTokenBalances({
       {currentChainBalance && (
         <Flex gap="$spacing24">
           <Separator />
-          <TokenBalanceHeader balance={currentChainBalance} displayName={displayName} isReadonly={isReadonly} />
+          <TokenBalanceHeader
+            balance={currentChainBalance}
+            displayName={displayName}
+            isReadonly={isReadonly}
+            isOutage={isOutage}
+            dataUpdatedAt={dataUpdatedAt}
+          />
         </Flex>
       )}
       {hasOtherChainBalances && otherChainBalances ? (

@@ -7,6 +7,7 @@ import {
   searchHistoryReducer,
   searchResultId,
 } from 'uniswap/src/features/search/searchHistorySlice'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 describe('searchHistorySlice', () => {
   describe('searchResultId', () => {
@@ -26,6 +27,34 @@ describe('searchHistorySlice', () => {
         address: null,
       })
       expect(result).toBe('token-1-null')
+    })
+
+    it('generates correct id for multichain token search result', () => {
+      const result = searchResultId({
+        type: SearchHistoryResultType.MultichainToken,
+        multichainId: 'mc:usdc',
+        name: 'USD Coin',
+        symbol: 'USDC',
+        tokenCurrencyIds: [buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')],
+      })
+      expect(result).toBe('multichain-token-mc:usdc-all')
+    })
+
+    it('generates distinct ids for multichain token with and without TDP chain filter', () => {
+      const base = {
+        type: SearchHistoryResultType.MultichainToken as const,
+        multichainId: 'mc:eth',
+        name: 'Ether',
+        symbol: 'ETH',
+        tokenCurrencyIds: [buildNativeCurrencyId(UniverseChainId.Mainnet)],
+      }
+      expect(searchResultId(base)).toBe('multichain-token-mc:eth-all')
+      expect(
+        searchResultId({
+          ...base,
+          tdpChainFilter: UniverseChainId.Unichain,
+        }),
+      ).toBe(`multichain-token-mc:eth-${UniverseChainId.Unichain}`)
     })
   })
 
@@ -126,6 +155,45 @@ describe('searchHistorySlice', () => {
         type: SearchHistoryResultType.Token,
         chainId: UniverseChainId.Mainnet,
       })
+    })
+
+    it('adds multichain token search result to history', () => {
+      const state = searchHistoryReducer(
+        initialSearchHistoryState,
+        addToSearchHistory({
+          searchResult: {
+            type: SearchHistoryResultType.MultichainToken,
+            multichainId: 'mc:usdc',
+            name: 'USD Coin',
+            symbol: 'USDC',
+            tokenCurrencyIds: [buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')],
+          },
+        }),
+      )
+
+      expect(state.results).toHaveLength(1)
+      expect(state.results[0]).toMatchObject({
+        type: SearchHistoryResultType.MultichainToken,
+        multichainId: 'mc:usdc',
+        symbol: 'USDC',
+      })
+    })
+
+    it('rejects multichain token search result with empty tokenCurrencyIds', () => {
+      const state = searchHistoryReducer(
+        initialSearchHistoryState,
+        addToSearchHistory({
+          searchResult: {
+            type: SearchHistoryResultType.MultichainToken,
+            multichainId: 'mc:empty',
+            name: 'X',
+            symbol: 'X',
+            tokenCurrencyIds: [],
+          },
+        }),
+      )
+
+      expect(state.results).toHaveLength(0)
     })
 
     it('allows wallet and etherscan search results regardless of chainId validation', () => {

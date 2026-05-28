@@ -1,5 +1,6 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
+import { hexToNumber, HexString } from '@universe/encoding'
 import { dappStore } from 'src/app/features/dapp/store'
 import { getOrderedConnectedAddresses } from 'src/app/features/dapp/utils'
 import { isArcBrowser } from 'src/app/utils/chrome'
@@ -43,7 +44,6 @@ import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -218,9 +218,31 @@ function makeInjected(): void {
     },
   })
 
-  externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.SwitchChain, (message) => {
+  externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.SwitchChain, async (message) => {
     setChainIdAndMaybeEmit(message.chainId)
-    setProvider(new JsonRpcProvider(message.providerUrl, parseInt(message.chainId)))
+    // Route through the wallet's ProviderManager so chain switches inherit the
+    // same UniRPC + observability wiring as the init path below. Constructing a
+    // bare JsonRpcProvider with `message.providerUrl` would bypass the entry
+    // gateway and emit no telemetry. The chainId in the message is the source
+    // of truth for routing; the providerUrl from the message is now unused
+    // (kept in the protocol for backward compatibility — TODO: remove once
+    // background scripts stop sending it).
+    //
+    // chainId arrives as a hex string (e.g. "0x1") — parse with explicit
+    // radix 16 to match the init path below. ProviderManager.getProvider
+    // throws on unsupported chains; log and bail rather than crashing the
+    // message listener so subsequent dapp messages still flow.
+    const chainIdNum = parseInt(message.chainId, 16)
+    try {
+      const provider = walletContextValue.providers.getProvider(chainIdNum)
+      setProvider(provider)
+    } catch (error) {
+      await logContentScriptError({
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        fileName: 'injected.content.ts',
+        functionName: 'SwitchChainListener',
+      })
+    }
   })
 
   externalDappMessageChannel.addMessageListener(ExtensionToDappRequestType.UpdateConnections, (message) => {
@@ -235,7 +257,7 @@ function makeInjected(): void {
       const provider = getProvider()
 
       if (chainId && !provider) {
-        const chainIdNum = parseInt(chainId, 16)
+        const chainIdNum = hexToNumber(chainId)
         const defaultProvider = walletContextValue.providers.getProvider(chainIdNum)
         setProvider(defaultProvider)
       }
@@ -306,9 +328,9 @@ function makeInjected(): void {
   })
 }
 
-// oxlint-disable-next-line import/no-unused-modules
 export default defineContentScript({
   matches:
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax allow process.env access
     __DEV__ || process.env.BUILD_ENV === 'dev'
       ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
       : ['https://*/*'],

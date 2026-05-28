@@ -1,9 +1,8 @@
 import { createFetchClient, type FetchClient, provideSessionService } from '@universe/api'
+import { isMobileApp, isWebApp, REQUEST_SOURCE } from '@universe/environment'
 import { getIsSessionServiceEnabled } from '@universe/gating'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 export const BASE_UNISWAP_HEADERS = {
   'x-request-source': REQUEST_SOURCE,

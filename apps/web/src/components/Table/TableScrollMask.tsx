@@ -12,3 +12,17 @@ export const TableScrollMask = styled(View, {
   pointerEvents: 'none',
   background: `linear-gradient(to right, transparent, var(--surface1))`,
 })
+
+/** Bottom fade overlay indicating vertically scrollable content. */
+export const TableBottomFade = styled(View, {
+  position: 'absolute',
+  zIndex: zIndexes.default,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  height: 100,
+  pointerEvents: 'none',
+  background: 'linear-gradient(to bottom, transparent, var(--surface1))',
+  borderBottomRightRadius: '$rounded12',
+  borderBottomLeftRadius: '$rounded12',
+})

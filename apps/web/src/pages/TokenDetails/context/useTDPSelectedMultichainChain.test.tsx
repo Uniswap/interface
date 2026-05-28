@@ -3,12 +3,12 @@ import { GraphQLApi } from '@universe/api'
 import type { ReactNode } from 'react'
 import { MemoryRouter, useSearchParams } from 'react-router'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getChainUrlParam } from '~/features/params/chainParams'
-import { CHAIN_SEARCH_PARAM } from '~/features/params/chainQueryParam'
 import { createTDPStore, type TDPState } from '~/pages/TokenDetails/context/createTDPStore'
 import { TDPStoreContext } from '~/pages/TokenDetails/context/TDPContext'
 import { useTDPSelectedMultichainChain } from '~/pages/TokenDetails/context/useTDPSelectedMultichainChain'
 import { validTokenProjectResponse } from '~/test-utils/tokens/fixtures'
+import { getChainUrlParam } from '~/utils/params/chainParams'
+import { CHAIN_SEARCH_PARAM } from '~/utils/params/chainQueryParam'
 
 const ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
 
@@ -69,22 +69,22 @@ describe('useTDPSelectedMultichainChain', () => {
     expect(result.current.selectedMultichainChainId).toBe(UniverseChainId.Base)
   })
 
-  it('updates the store and sets ?chain= when selecting a network', () => {
+  it('sets ?chain= when selecting a network', () => {
     const { result, store } = renderWithStore('/explore/tokens/ethereum/0xabc?foo=bar', createPendingTDPState())
 
     act(() => {
       result.current.setSelectedMultichainChainId(UniverseChainId.ArbitrumOne)
     })
 
-    expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.ArbitrumOne)
+    expect(store.getState().selectedMultichainChainId).toBeUndefined()
     expect(result.current.searchString).toContain(
       `${CHAIN_SEARCH_PARAM}=${getChainUrlParam(UniverseChainId.ArbitrumOne)}`,
     )
     expect(result.current.searchString).toContain('foo=bar')
-    expect(result.current.selectedMultichainChainId).toBe(UniverseChainId.ArbitrumOne)
+    expect(result.current.selectedMultichainChainId).toBeUndefined()
   })
 
-  it('clears the store and removes ?chain= when selecting undefined', () => {
+  it('removes ?chain= when selecting undefined', () => {
     const { result, store } = renderWithStore(
       `/explore/tokens/ethereum/0xabc?${CHAIN_SEARCH_PARAM}=base`,
       createPendingTDPState({ selectedMultichainChainId: UniverseChainId.Base }),
@@ -94,8 +94,8 @@ describe('useTDPSelectedMultichainChain', () => {
       result.current.setSelectedMultichainChainId(undefined)
     })
 
-    expect(store.getState().selectedMultichainChainId).toBeUndefined()
+    expect(store.getState().selectedMultichainChainId).toBe(UniverseChainId.Base)
     expect(result.current.searchString).not.toContain(CHAIN_SEARCH_PARAM)
-    expect(result.current.selectedMultichainChainId).toBeUndefined()
+    expect(result.current.selectedMultichainChainId).toBe(UniverseChainId.Base)
   })
 })

@@ -1,17 +1,18 @@
 import { GraphQLApi } from '@universe/api'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { supportedChainIdFromGQLChain } from '~/appGraphql/data/chainUtils'
 import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
-import { LiquidityPositionInfoBadges } from '~/components/Liquidity/LiquidityPositionInfoBadges'
-import { LPIncentiveRewardsBadge } from '~/components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
-import { PoolStat } from '~/state/explore/types'
+import { LiquidityPositionInfoBadges } from '~/features/Liquidity/LiquidityPositionInfoBadges'
+import { LPIncentiveRewardsBadge } from '~/features/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
+import { PoolStat } from '~/types/explore'
 
 export function TopPoolsCard({ pool }: { pool: PoolStat }) {
+  const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const { formatPercent } = useLocalizationContext()
 
@@ -50,7 +51,7 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
       </Flex>
       <Flex alignItems="flex-end" gap="$gap4">
         <Text variant="body2" color="$neutral2">
-          {formatPercent(pool.apr.toFixed(3))} <Trans i18nKey="pool.apr" />
+          {formatPercent(pool.apr.toFixed(3))} {t('pool.apr')}
         </Text>
         {formattedApr && <LPIncentiveRewardsBadge formattedRewardApr={formattedApr} />}
       </Flex>

@@ -1,5 +1,5 @@
 import type { ApiNotificationTrackerContext } from '@universe/notifications'
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from 'react-native-mmkv'
 import { getLogger } from 'utilities/src/logger/logger'
 import { z } from 'zod'
 
@@ -16,7 +16,7 @@ type NotificationStorage = z.infer<typeof NotificationStorageSchema>
 
 // Create a dedicated MMKV instance for notifications
 // This keeps notification data separate from Redux persist storage
-const notificationStorage = new MMKV({ id: 'notifications' })
+const notificationStorage = createMMKV({ id: 'notifications' })
 
 /**
  * Parses and validates notification storage data from MMKV

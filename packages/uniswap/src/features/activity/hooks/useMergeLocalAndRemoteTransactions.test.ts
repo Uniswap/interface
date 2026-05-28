@@ -1,4 +1,3 @@
-/* oxlint-disable typescript/explicit-function-return-type */
 import { TradeType } from '@uniswap/sdk-core'
 import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -177,6 +176,55 @@ describe('useMergeLocalAndRemoteTransactions', () => {
       expect(chainTransactions).toBeDefined()
       const finalizedTx = chainTransactions?.[UniverseChainId.Mainnet]?.[localTx.id]
       expect(finalizedTx?.status).toBe(TransactionStatus.Success)
+    })
+
+    it('keeps a pending bridge pending when remote success should be handled by bridge resumption', () => {
+      ;(useEnabledChains as Mock).mockReturnValue({
+        chains: [UniverseChainId.Mainnet, UniverseChainId.ArbitrumOne],
+      })
+
+      const SHARED_HASH = '0xbridgehash'
+      const networkFee = {
+        quantity: '0.001',
+        tokenSymbol: 'ETH',
+        tokenAddress: '0xnative',
+        chainId: UniverseChainId.Mainnet,
+        valueType: ValueType.Exact,
+      }
+      const bridgeTypeInfo = {
+        type: TransactionType.Bridge,
+        inputCurrencyId: '42161-0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+        inputCurrencyAmountRaw: '1000000000000000000',
+        outputCurrencyId: '1-0xc02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        outputCurrencyAmountRaw: '990000000000000000',
+        // Preserve the bridge even if depositConfirmed has not rehydrated yet.
+        depositConfirmed: false,
+      }
+      const localTx = createTestTransaction({
+        chainId: UniverseChainId.ArbitrumOne,
+        hash: SHARED_HASH,
+        status: TransactionStatus.Pending,
+        typeInfo: bridgeTypeInfo,
+      })
+      const remoteTx = createTestTransaction({
+        chainId: UniverseChainId.ArbitrumOne,
+        hash: SHARED_HASH,
+        status: TransactionStatus.Success,
+        typeInfo: bridgeTypeInfo,
+        networkFee,
+      })
+
+      const { result, store } = renderMergeHook([remoteTx], [localTx])
+
+      expect(result.current).toHaveLength(1)
+      expect(result.current?.[0]).toEqual({
+        ...localTx,
+        networkFee,
+      })
+
+      const state = store.getState()
+      const preservedTx = state.transactions[TEST_WALLET]?.[UniverseChainId.ArbitrumOne]?.[localTx.id]
+      expect(preservedTx?.status).toBe(TransactionStatus.Pending)
     })
   })
 

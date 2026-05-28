@@ -8,6 +8,7 @@ import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, or
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import SidebarApp from 'src/app/core/SidebarApp'
+import { prefetchExtensionStatsigUserId } from 'src/app/core/StatsigProvider'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { getReduxStore } from 'src/store/store'
@@ -44,6 +45,7 @@ export function makeSidebar(): void {
     )
   }
 
+  prefetchExtensionStatsigUserId()
   StoreSynchronization.init(ExtensionAppLocation.SidePanel)
   initializePortfolioQueryOverrides({ store: getReduxStore() })
   initSidebar()

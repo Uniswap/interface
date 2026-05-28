@@ -5,7 +5,7 @@
       "dependsOn": ["build:icons"]
     },
     "build:icons": {
-      "command": "bunx tsx ./src/scripts/componentize-icons.ts && nx run ui:format:generated",
+      "command": "bun run ./src/scripts/componentize-icons.ts && nx run ui:format:generated",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -18,7 +18,7 @@
       "outputs": ["{projectRoot}/src/components/icons/**", "{projectRoot}/src/components/logos/**"]
     },
     "build:icons:missing": {
-      "command": "bunx tsx ./src/scripts/componentize-icons.ts --skip-existing && nx run ui:format:generated",
+      "command": "bun run ./src/scripts/componentize-icons.ts --skip-existing && nx run ui:format:generated",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -33,8 +33,17 @@
     "typecheck": {},
     "typecheck:tsc": {},
     "typecheck:tsgo": {},
-    "format": {},
+    "format": {
+      "command": "oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json . '!src/components/icons' '!src/components/logos'"
+    },
     "format:check": {},
+    "format:generated": {
+      "command": "for i in 1 2 3; do oxlint --silent --fix --fix-suggestions --fix-dangerously --disable-nested-config -D sort-imports -D no-unused-vars --threads=1 src/components/icons src/components/logos; done; oxfmt --threads=4 -c $NX_WORKSPACE_ROOT/.oxfmtrc.json src/components/icons src/components/logos",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": false
+    },
     "lint:oxlint": {},
     "lint:oxlint:fix": {},
     "lint:oxlint:fast": {},
@@ -54,13 +63,6 @@
       "options": {
         "cwd": "{projectRoot}"
       }
-    },
-    "format:generated": {
-      "command": "for i in 1 2 3; do oxlint --silent --fix --fix-suggestions --fix-dangerously -D sort-imports --threads=1 src/components/icons src/components/logos; done; oxfmt --threads=4 src/components/icons src/components/logos",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "cache": false
     }
   }
 }

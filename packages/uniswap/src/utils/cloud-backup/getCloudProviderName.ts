@@ -1,4 +1,4 @@
-import { isAndroid } from 'utilities/src/platform'
+import { isAndroid } from '@universe/environment'
 
 export function getCloudProviderName(): string {
   if (isAndroid) {

@@ -1,8 +1,8 @@
 import { RemoveScroll as TamaguiRemoveScroll } from '@tamagui/remove-scroll'
+import { isMobileWeb } from '@universe/environment'
 import type { ReactNode } from 'react'
 import { RemoveScroll as ReactRemoveScroll } from 'react-remove-scroll'
 import type { RemoveScrollProps } from 'ui/src/components/RemoveScroll/RemoveScroll'
-import { isMobileWeb } from 'utilities/src/platform'
 
 /**
  * On mobile web we use @tamagui/remove-scroll, which only sets overflow:hidden

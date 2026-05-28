@@ -1,17 +1,17 @@
 import { memo, useMemo } from 'react'
 import { Flex, styled } from 'ui/src'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
-import useSimplePagination from '~/hooks/useSimplePagination'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
+import { TABLE_PAGE_SIZE } from '~/features/Explore/state'
+import { useExploreTablesFilterStore } from '~/features/Explore/state/exploreTablesFilterStore'
+import { useListTokens } from '~/features/Explore/state/listTokens/useListTokens'
+import { useExploreBackendSortingEnabled } from '~/features/Explore/state/useExploreBackendSortingEnabled'
+import { useSimplePagination } from '~/hooks/useSimplePagination'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
 import {
   TokenTableSortStoreContextProvider,
   useTokenTableSortStore,
 } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
-import { TABLE_PAGE_SIZE } from '~/state/explore'
-import { useListTokens } from '~/state/explore/listTokens/useListTokens'
-import { useExploreBackendSortingEnabled } from '~/state/explore/useExploreBackendSortingEnabled'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const TableWrapper = styled(Flex, {
   m: '0 auto',

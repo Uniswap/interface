@@ -4,7 +4,11 @@ import 'utilities/src/logger/mocks'
 import { useFeatureFlag } from '@universe/gating'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { render } from 'uniswap/src/test/test-utils'
+
+const arbitrumNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.ArbitrumOne}`
+const mainnetNetworkLogoTestID = `${TestID.NetworkLogoPrefix}${UniverseChainId.Mainnet}`
 
 vi.mock('ui/src/components/UniversalImage/internal/PlainImage', async (importOriginal) => {
   const actual = await importOriginal<typeof import('ui/src/components/UniversalImage/internal/PlainImage.web')>()
@@ -98,6 +102,36 @@ describe('TokenLogo', () => {
     })
   })
 
+  describe('alwaysShowNetworkLogo', () => {
+    it('shows network logo for Mainnet when alwaysShowNetworkLogo is true', () => {
+      vi.mocked(useFeatureFlag).mockReturnValue(false)
+      const { queryByTestId } = render(
+        <TokenLogo alwaysShowNetworkLogo chainId={UniverseChainId.Mainnet} symbol="ETH" url="https://example.com" />,
+      )
+
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeTruthy()
+    })
+
+    it('does not show network logo for Mainnet without alwaysShowNetworkLogo', () => {
+      vi.mocked(useFeatureFlag).mockReturnValue(false)
+      const { queryByTestId } = render(
+        <TokenLogo chainId={UniverseChainId.Mainnet} symbol="ETH" url="https://example.com" networkCount={1} />,
+      )
+
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
+    })
+
+    it('shows count badge for multi-chain token when multichain UX is enabled', () => {
+      vi.mocked(useFeatureFlag).mockReturnValue(true)
+      const { queryByTestId } = render(
+        <TokenLogo chainId={UniverseChainId.Mainnet} symbol="USDC" url="https://example.com" networkCount={3} />,
+      )
+
+      expect(queryByTestId('multichain-count-badge')).toBeTruthy()
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
+    })
+  })
+
   describe('network logo', () => {
     beforeEach(() => {
       vi.mocked(useFeatureFlag).mockReturnValue(false)
@@ -108,7 +142,7 @@ describe('TokenLogo', () => {
         <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />,
       )
 
-      const networkLogo = queryByTestId('network-logo')
+      const networkLogo = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(networkLogo).toBeTruthy()
     })
@@ -123,7 +157,7 @@ describe('TokenLogo', () => {
         />,
       )
 
-      const networkLogo = queryByTestId('network-logo')
+      const networkLogo = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(networkLogo).toBeTruthy()
     })
@@ -133,7 +167,7 @@ describe('TokenLogo', () => {
         <TokenLogo hideNetworkLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />,
       )
 
-      const networkLogo = queryByTestId('network-logo')
+      const networkLogo = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(networkLogo).toBeFalsy()
     })
@@ -141,40 +175,26 @@ describe('TokenLogo', () => {
     it('does not render network logo when chainId is not specified', () => {
       const { queryByTestId } = render(<TokenLogo symbol="DAI" url="https://example.com" />)
 
-      const networkLogo = queryByTestId('network-logo')
+      const networkLogo = queryByTestId(arbitrumNetworkLogoTestID)
 
       expect(networkLogo).toBeFalsy()
     })
 
-    it('does not render network logo on Mainnet when showMainnetNetworkLogo is omitted', () => {
+    it('does not render network logo on Mainnet when multichain token UX is disabled', () => {
       const { queryByTestId } = render(
         <TokenLogo chainId={UniverseChainId.Mainnet} symbol="DAI" url="https://example.com" />,
       )
 
-      expect(queryByTestId('network-logo')).toBeFalsy()
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeFalsy()
     })
 
-    it('does not render network logo on Mainnet when showMainnetNetworkLogo is false', () => {
+    it('renders network logo on Mainnet when multichain token UX is enabled', () => {
+      vi.mocked(useFeatureFlag).mockReturnValue(true)
       const { queryByTestId } = render(
-        <TokenLogo
-          chainId={UniverseChainId.Mainnet}
-          showMainnetNetworkLogo={false}
-          symbol="DAI"
-          url="https://example.com"
-        />,
+        <TokenLogo chainId={UniverseChainId.Mainnet} symbol="DAI" url="https://example.com" />,
       )
 
-      expect(queryByTestId('network-logo')).toBeFalsy()
-    })
-
-    it('renders network logo when chainId is Mainnet and showMainnetNetworkLogo is true', () => {
-      const { queryByTestId } = render(
-        <TokenLogo showMainnetNetworkLogo chainId={UniverseChainId.Mainnet} symbol="DAI" url="https://example.com" />,
-      )
-
-      const networkLogo = queryByTestId('network-logo')
-
-      expect(networkLogo).toBeTruthy()
+      expect(queryByTestId(mainnetNetworkLogoTestID)).toBeTruthy()
     })
   })
 })

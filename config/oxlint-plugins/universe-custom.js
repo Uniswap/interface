@@ -6,6 +6,10 @@
  * oxlint supports type-aware JS plugins.
  */
 
+import { readFileSync } from 'node:fs'
+import { dirname, join, relative, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 // ── Utilities ──────────────────────────────────────────────────────────
 
 function isHook(node) {
@@ -82,12 +86,18 @@ const noUnwrappedT = {
 
     return {
       JSXExpressionContainer(node) {
-        if (node.expression?.callee?.name !== 't') return
-        if (node.parent.type === 'JSXAttribute') return
+        if (node.expression?.callee?.name !== 't') {
+          return
+        }
+        if (node.parent.type === 'JSXAttribute') {
+          return
+        }
         reportIfBlocked({ node, childName: 't()' })
       },
       JSXIdentifier(node) {
-        if (node.name !== TRANSLATION_COMPONENT_NAME) return
+        if (node.name !== TRANSLATION_COMPONENT_NAME) {
+          return
+        }
         reportIfBlocked({ node, childName: TRANSLATION_COMPONENT_NAME })
       },
     }
@@ -123,9 +133,13 @@ const customMapSort = {
 
     return {
       NewExpression(node) {
-        if (node.callee.name !== 'Map') return
+        if (node.callee.name !== 'Map') {
+          return
+        }
         const keys = getMapKeys(node)
-        if (!Array.isArray(keys)) return
+        if (!Array.isArray(keys)) {
+          return
+        }
         const sortedKeys = [...keys].sort()
         if (keys.join(',') !== sortedKeys.join(',')) {
           context.report({
@@ -200,7 +214,9 @@ const noTransformPercentageStrings = {
     }
 
     function isPercentageTemplateLiteral(node) {
-      if (node.type !== 'TemplateLiteral') return false
+      if (node.type !== 'TemplateLiteral') {
+        return false
+      }
       const lastQuasi = node.quasis[node.quasis.length - 1]
       return lastQuasi && lastQuasi.value.raw.endsWith('%')
     }
@@ -214,13 +230,19 @@ const noTransformPercentageStrings = {
     }
 
     function getValueString(node) {
-      if (node.type === 'Literal') return String(node.value)
-      if (node.type === 'TemplateLiteral') return '<template>%'
+      if (node.type === 'Literal') {
+        return String(node.value)
+      }
+      if (node.type === 'TemplateLiteral') {
+        return '<template>%'
+      }
       return '<unknown>%'
     }
 
     function checkTransformObject(node) {
-      if (node.type !== 'ObjectExpression') return
+      if (node.type !== 'ObjectExpression') {
+        return
+      }
       for (const property of node.properties) {
         if (isTransformProperty(property)) {
           const value = property.value
@@ -236,16 +258,22 @@ const noTransformPercentageStrings = {
     }
 
     function checkTransformArray(node) {
-      if (node.type !== 'ArrayExpression') return
+      if (node.type !== 'ArrayExpression') {
+        return
+      }
       for (const element of node.elements) {
-        if (element) checkTransformObject(element)
+        if (element) {
+          checkTransformObject(element)
+        }
       }
     }
 
     function isInJSXContext(node) {
       let parent = node.parent
       while (parent) {
-        if (parent.type === 'JSXExpressionContainer') return true
+        if (parent.type === 'JSXExpressionContainer') {
+          return true
+        }
         parent = parent.parent
       }
       return false
@@ -253,7 +281,9 @@ const noTransformPercentageStrings = {
 
     return {
       Property(node) {
-        if (isInJSXContext(node)) return
+        if (isInJSXContext(node)) {
+          return
+        }
         if (node.key.type === 'Identifier' && node.key.name === 'transform' && node.value.type === 'ArrayExpression') {
           checkTransformArray(node.value)
         }
@@ -332,13 +362,21 @@ const enforceQueryOptionsResult = {
     const prohibitedTypes = new Set(['UseQueryOptions', 'UseQueryResult', 'QueryOptions'])
 
     function checkFunctionReturnType(node) {
-      if (processedFunctions.has(node)) return
+      if (processedFunctions.has(node)) {
+        return
+      }
       processedFunctions.add(node)
-      if (!node.returnType?.typeAnnotation) return
-      if (isHook(node)) return
+      if (!node.returnType?.typeAnnotation) {
+        return
+      }
+      if (isHook(node)) {
+        return
+      }
 
       const typeAnnotation = node.returnType.typeAnnotation
-      if (typeAnnotation.type !== 'TSTypeReference' || !typeAnnotation.typeName) return
+      if (typeAnnotation.type !== 'TSTypeReference' || !typeAnnotation.typeName) {
+        return
+      }
 
       const typeName =
         typeAnnotation.typeName.type === 'Identifier'
@@ -375,7 +413,9 @@ const enforceQueryOptionsResult = {
     return {
       ImportDeclaration(node) {
         const importValue = node.source?.value
-        if (!importValue) return
+        if (!importValue) {
+          return
+        }
         if (
           importValue.includes('reactQuery/queryOptions') ||
           importValue.includes('utilities/src/reactQuery') ||
@@ -395,7 +435,9 @@ const enforceQueryOptionsResult = {
       FunctionExpression: checkFunctionReturnType,
       ArrowFunctionExpression: checkFunctionReturnType,
       ExportNamedDeclaration(node) {
-        if (!node.declaration) return
+        if (!node.declaration) {
+          return
+        }
         if (node.declaration.type === 'FunctionDeclaration') {
           checkFunctionReturnType(node.declaration)
         } else if (node.declaration.type === 'VariableDeclaration') {
@@ -460,8 +502,6 @@ const noReduxModals = {
 // ── no-relative-import-paths ───────────────────────────────────────────
 // Ported from eslint-plugin-no-relative-import-paths (original lacks schema)
 
-import { join, sep, relative, dirname } from 'node:path'
-
 const noRelativeImportPaths = {
   meta: {
     type: 'layout',
@@ -484,8 +524,12 @@ const noRelativeImportPaths = {
     const prefix = context.options[0]?.prefix || ''
 
     function isParentFolder(relPath) {
-      if (!relPath.startsWith('../')) return false
-      if (rootDir === '') return true
+      if (!relPath.startsWith('../')) {
+        return false
+      }
+      if (rootDir === '') {
+        return true
+      }
       const absoluteRootPath = context.getCwd() + sep + rootDir
       const absoluteFilePath = join(dirname(context.getFilename()), relPath)
       return absoluteFilePath.startsWith(absoluteRootPath) && context.getFilename().startsWith(absoluteRootPath)
@@ -544,7 +588,9 @@ function isComponentName(name) {
 }
 
 function getFunctionName(node) {
-  if (node.id?.name) return node.id.name
+  if (node.id?.name) {
+    return node.id.name
+  }
   const parent = node.parent
   if (parent?.type === 'VariableDeclarator' && parent.id?.type === 'Identifier') {
     return parent.id.name
@@ -554,8 +600,12 @@ function getFunctionName(node) {
 
 function returnsJSX(node) {
   const body = node.body
-  if (!body) return false
-  if (body.type === 'JSXElement' || body.type === 'JSXFragment') return true
+  if (!body) {
+    return false
+  }
+  if (body.type === 'JSXElement' || body.type === 'JSXFragment') {
+    return true
+  }
   if (body.type === 'BlockStatement') {
     return containsJSXReturn(body)
   }
@@ -566,17 +616,27 @@ function containsJSXReturn(block) {
   for (const stmt of block.body) {
     if (stmt.type === 'ReturnStatement' && stmt.argument) {
       const arg = stmt.argument
-      if (arg.type === 'JSXElement' || arg.type === 'JSXFragment') return true
+      if (arg.type === 'JSXElement' || arg.type === 'JSXFragment') {
+        return true
+      }
       if (arg.type === 'ConditionalExpression') {
-        if (arg.consequent.type === 'JSXElement' || arg.alternate.type === 'JSXElement') return true
+        if (arg.consequent.type === 'JSXElement' || arg.alternate.type === 'JSXElement') {
+          return true
+        }
       }
       if (arg.type === 'LogicalExpression') {
-        if (arg.right.type === 'JSXElement') return true
+        if (arg.right.type === 'JSXElement') {
+          return true
+        }
       }
     }
     if (stmt.type === 'IfStatement') {
-      if (stmt.consequent.type === 'BlockStatement' && containsJSXReturn(stmt.consequent)) return true
-      if (stmt.alternate?.type === 'BlockStatement' && containsJSXReturn(stmt.alternate)) return true
+      if (stmt.consequent.type === 'BlockStatement' && containsJSXReturn(stmt.consequent)) {
+        return true
+      }
+      if (stmt.alternate?.type === 'BlockStatement' && containsJSXReturn(stmt.alternate)) {
+        return true
+      }
     }
   }
   return false
@@ -592,7 +652,9 @@ function isRenderPropValue(node) {
     node.parent.parent.parent?.type === 'CallExpression'
   ) {
     const callee = node.parent.parent.parent.callee
-    if (callee?.property?.name === 'createElement') return true
+    if (callee?.property?.name === 'createElement') {
+      return true
+    }
   }
   return false
 }
@@ -628,11 +690,17 @@ const noNestedComponentDefinitions = {
       // Only flag named functions with uppercase component names.
       // Anonymous arrows in .map(), useCallback, useMemo etc. are
       // render callbacks, not component definitions.
-      if (!name || !isComponentName(name)) return
-      if (!returnsJSX(node)) return
+      if (!name || !isComponentName(name)) {
+        return
+      }
+      if (!returnsJSX(node)) {
+        return
+      }
 
       const parentComponent = findParentComponent(node)
-      if (!parentComponent) return
+      if (!parentComponent) {
+        return
+      }
 
       context.report({ node: node.id || node, messageId: 'nested', data: { name } })
     }
@@ -676,20 +744,30 @@ const jsxPropOrder = {
     const callbackRe = new RegExp(options.callbackPattern || '^on[A-Z].+')
 
     function getGroup(attr) {
-      if (attr.type === 'JSXSpreadAttribute') return null // skip spreads — can't know their group
+      if (attr.type === 'JSXSpreadAttribute') {
+        return null
+      } // skip spreads — can't know their group
       const name =
-        attr.name?.type === 'JSXNamespacedName'
-          ? `${attr.name.namespace.name}:${attr.name.name.name}`
-          : attr.name?.name
-      if (!name) return 'unknown'
-      if (reservedRe.test(name)) return 'reserved'
-      if (callbackRe.test(name)) return 'callback'
-      if (attr.value === null) return 'shorthand-prop'
+        attr.name?.type === 'JSXNamespacedName' ? `${attr.name.namespace.name}:${attr.name.name.name}` : attr.name?.name
+      if (!name) {
+        return 'unknown'
+      }
+      if (reservedRe.test(name)) {
+        return 'reserved'
+      }
+      if (callbackRe.test(name)) {
+        return 'callback'
+      }
+      if (attr.value === null) {
+        return 'shorthand-prop'
+      }
       return 'unknown'
     }
 
     function getAttrName(attr) {
-      if (attr.type === 'JSXSpreadAttribute') return '{...spread}'
+      if (attr.type === 'JSXSpreadAttribute') {
+        return '{...spread}'
+      }
       if (attr.name?.type === 'JSXNamespacedName') {
         return `${attr.name.namespace.name}:${attr.name.name.name}`
       }
@@ -699,7 +777,9 @@ const jsxPropOrder = {
     return {
       JSXOpeningElement(node) {
         const attrs = node.attributes
-        if (attrs.length < 2) return
+        if (attrs.length < 2) {
+          return
+        }
 
         let maxGroupIndex = -1
         let maxGroupName = ''
@@ -708,7 +788,9 @@ const jsxPropOrder = {
         for (const attr of attrs) {
           const group = getGroup(attr)
           const groupIndex = groups.indexOf(group)
-          if (groupIndex === -1) continue
+          if (groupIndex === -1) {
+            continue
+          }
 
           if (groupIndex < maxGroupIndex) {
             context.report({
@@ -754,14 +836,214 @@ const enumMemberNaming = {
     return {
       TSEnumMember(node) {
         const name =
-          node.id.type === 'Identifier'
-            ? node.id.name
-            : node.id.type === 'Literal'
-              ? String(node.id.value)
-              : null
+          node.id.type === 'Identifier' ? node.id.name : node.id.type === 'Literal' ? String(node.id.value) : null
         if (name && !PASCAL_CASE_RE.test(name)) {
           context.report({ node: node.id, messageId: 'notPascalCase', data: { name } })
         }
+      },
+    }
+  },
+}
+
+// ── no-tolowercase-address-currencyid ──────────────────────────────────
+
+const ADDRESS_NAME_RE =
+  /address|addr|token|contract|pool|currency|wallet|signer|account|recipient|sender|swapper|owner|hash|order|tx|transaction|txn/i
+const CURRENCY_NAME_RE = /currencyid|tokenid/i
+
+function getVariableName(node) {
+  if (node.type === 'Identifier') {
+    return node.name
+  }
+  if (node.type === 'MemberExpression' && node.property) {
+    if (node.property.type === 'Identifier') {
+      return node.property.name
+    }
+    if (node.property.type === 'Literal') {
+      return String(node.property.value)
+    }
+  }
+  return null
+}
+
+const noToLowerCaseAddressCurrencyId = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description:
+        'Disallow using .toLowerCase() on addresses or currencyIds, since Solana addresses are case-sensitive',
+    },
+    schema: [],
+    messages: {
+      noToLowerCaseAddress:
+        'Do not use .toLowerCase() on addresses. Use areAddressesEqual() or normalizeTokenAddressForCache() from packages/uniswap instead.',
+      noToLowerCaseCurrencyId:
+        'Do not use .toLowerCase() on currencyIds. Use areCurrencyIdsEqual() or normalizeCurrencyIdForMapLookup() from packages/uniswap instead.',
+    },
+  },
+  create(context) {
+    return {
+      'CallExpression[callee.property.name="toLowerCase"][arguments.length=0]'(node) {
+        const objectNode = node.callee.object
+        const variableName = getVariableName(objectNode)
+        if (!variableName) {
+          return
+        }
+
+        if (CURRENCY_NAME_RE.test(variableName)) {
+          context.report({ node, messageId: 'noToLowerCaseCurrencyId' })
+        } else if (ADDRESS_NAME_RE.test(variableName)) {
+          context.report({ node, messageId: 'noToLowerCaseAddress' })
+        }
+      },
+    }
+  },
+}
+
+// ── import-boundary (JSON) ─────────────────────────────────────────────
+// Modes:
+//   importerAllowlist — only paths matching allowedImporterPathMarkers may import
+//     modules matching importPrefixes; imports from within importerInternalPathMarkers are always allowed.
+//   importerDenylist — if a module matches importPrefixes and the importer path matches
+//     deniedImporterPathMarkers, the import is forbidden (no allowlist).
+
+const __importBoundaryDir = dirname(fileURLToPath(import.meta.url))
+
+function getPhysicalFilenameForBoundary(context) {
+  const fn = context.filename ?? context.getFilename?.()
+  if (typeof fn !== 'string' || fn === '<input>' || fn === '<text>') {
+    return ''
+  }
+  return fn.split('\\').join('/')
+}
+
+function physicalPathHasMarker(physicalPath, markers) {
+  return markers.some((m) => physicalPath.includes(m))
+}
+
+function moduleImportSuffixForBoundary(source, boundary) {
+  if (typeof source !== 'string') {
+    return null
+  }
+  for (const prefix of boundary.importPrefixes) {
+    if (source.startsWith(prefix)) {
+      return source.slice(prefix.length)
+    }
+  }
+  if (boundary.bareModuleSources.includes(source)) {
+    return ''
+  }
+  return null
+}
+
+function loadImportBoundaries() {
+  const configPath = join(__importBoundaryDir, 'import-boundaries.json')
+  const raw = readFileSync(configPath, 'utf8')
+  const { boundaries } = JSON.parse(raw)
+  if (!Array.isArray(boundaries) || boundaries.length === 0) {
+    throw new Error(`import-boundaries.json must define a non-empty "boundaries" array (${configPath})`)
+  }
+  return boundaries.map((b, i) => {
+    const id = b.id ?? `boundary[${i}]`
+    const mode = b.mode ?? 'importerAllowlist'
+    if (mode !== 'importerAllowlist' && mode !== 'importerDenylist') {
+      throw new Error(
+        `import-boundaries.json: boundary "${id}" has unknown "mode" "${mode}" (use "importerAllowlist" or "importerDenylist")`,
+      )
+    }
+    if (typeof b.message !== 'string' || !b.message.trim()) {
+      throw new Error(`import-boundaries.json: boundary "${id}" needs a non-empty "message" string`)
+    }
+    if (!Array.isArray(b.importPrefixes) || b.importPrefixes.length === 0) {
+      throw new Error(`import-boundaries.json: boundary "${id}" needs a non-empty "importPrefixes"`)
+    }
+    if (!Array.isArray(b.bareModuleSources)) {
+      throw new Error(`import-boundaries.json: boundary "${id}" must set "bareModuleSources" (array, may be empty)`)
+    }
+
+    if (mode === 'importerDenylist') {
+      if (!Array.isArray(b.deniedImporterPathMarkers) || b.deniedImporterPathMarkers.length === 0) {
+        throw new Error(
+          `import-boundaries.json: boundary "${id}" (importerDenylist) needs non-empty "deniedImporterPathMarkers"`,
+        )
+      }
+      return {
+        id,
+        mode,
+        message: b.message,
+        deniedImporterPathMarkers: b.deniedImporterPathMarkers,
+        importPrefixes: b.importPrefixes,
+        bareModuleSources: b.bareModuleSources,
+      }
+    }
+
+    for (const key of ['importerInternalPathMarkers', 'allowedImporterPathMarkers']) {
+      if (b[key] == null || (Array.isArray(b[key]) && b[key].length === 0)) {
+        throw new Error(`import-boundaries.json: boundary "${id}" needs a non-empty "${key}"`)
+      }
+    }
+    return {
+      id,
+      mode,
+      message: b.message,
+      importerInternalPathMarkers: b.importerInternalPathMarkers,
+      allowedImporterPathMarkers: b.allowedImporterPathMarkers,
+      importPrefixes: b.importPrefixes,
+      bareModuleSources: b.bareModuleSources,
+    }
+  })
+}
+
+const importBoundaryBoundaries = loadImportBoundaries()
+
+const importBoundary = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'Enforce import boundaries from config/oxlint-plugins/import-boundaries.json.',
+    },
+    schema: [],
+    messages: {},
+  },
+  create(context) {
+    const physicalPath = getPhysicalFilenameForBoundary(context)
+
+    function reportIfDisallowedImport(node, sourceValue) {
+      if (sourceValue === undefined || sourceValue === null) {
+        return
+      }
+      for (const boundary of importBoundaryBoundaries) {
+        const suffix = moduleImportSuffixForBoundary(sourceValue, boundary)
+        if (suffix === null) {
+          continue
+        }
+        if (boundary.mode === 'importerDenylist') {
+          if (physicalPathHasMarker(physicalPath, boundary.deniedImporterPathMarkers)) {
+            context.report({ node, message: boundary.message })
+          }
+          continue
+        }
+        // importerAllowlist: imports of this feature are only allowed from internal + allowlisted paths.
+        if (physicalPathHasMarker(physicalPath, boundary.importerInternalPathMarkers)) {
+          continue
+        }
+        if (physicalPathHasMarker(physicalPath, boundary.allowedImporterPathMarkers)) {
+          return
+        }
+        context.report({ node, message: boundary.message })
+        return
+      }
+    }
+
+    return {
+      ImportDeclaration(node) {
+        reportIfDisallowedImport(node, node.source?.value)
+      },
+      ImportExpression(node) {
+        if (node.source?.type !== 'Literal' || typeof node.source.value !== 'string') {
+          return
+        }
+        reportIfDisallowedImport(node.source, node.source.value)
       },
     }
   },
@@ -779,9 +1061,11 @@ const plugin = {
     'enforce-query-options-result': enforceQueryOptionsResult,
     'no-redux-modals': noReduxModals,
     'no-relative-import-paths': noRelativeImportPaths,
+    'import-boundary': importBoundary,
     'no-nested-component-definitions': noNestedComponentDefinitions,
     'jsx-prop-order': jsxPropOrder,
     'enum-member-naming': enumMemberNaming,
+    'no-tolowercase-address-currencyid': noToLowerCaseAddressCurrencyId,
   },
 }
 

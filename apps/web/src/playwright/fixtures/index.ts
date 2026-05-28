@@ -1,3 +1,4 @@
+// oxlint-disable eslint-js/no-restricted-syntax
 // oxlint-disable-next-line no-restricted-imports -- playwright test utilities needed for test fixtures
 import { mergeTests } from '@playwright/test'
 import { test as amplitudeTest } from '~/playwright/fixtures/amplitude'
@@ -7,8 +8,7 @@ import { test as graphqlTest } from '~/playwright/fixtures/graphql'
 import { test as tradingApiTest } from '~/playwright/fixtures/tradingApi'
 
 /* oxlint-disable no-restricted-imports -- playwright re-export needed for test framework */
-// oxlint-disable-next-line no-restricted-syntax
-// oxlint-disable-next-line no-restricted-imports -- biome-parity: oxlint is stricter here
+// oxlint-disable-next-line no-restricted-syntax no-restricted-imports -- biome-parity: oxlint is stricter here
 export * from '@playwright/test'
 
 /* oxlint-enable no-restricted-imports */

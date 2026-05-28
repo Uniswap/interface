@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { providers } from 'ethers/lib/ethers'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,7 +22,6 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export interface PlanCancellationInfo {
   isPlanCancellation: true

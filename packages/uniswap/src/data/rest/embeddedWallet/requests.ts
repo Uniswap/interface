@@ -3,16 +3,16 @@ import { EmbeddedWalletService as OldEmbeddedWalletService } from '@uniswap/clie
 import { EmbeddedWalletService as NewEmbeddedWalletService } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect'
 import type { EmbeddedWalletClientContext } from '@universe/api'
 import { createEmbeddedWalletApiClient, getTransport } from '@universe/api'
+import { isMobileApp, REQUEST_SOURCE } from '@universe/environment'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
-import { isMobileApp } from 'utilities/src/platform'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
+import { getEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 
 function createEmbeddedWalletTransport(): Transport {
   return getTransport({
     getBaseUrl: () => uniswapUrls.privyEmbeddedWalletUrl,
     getHeaders: () => ({
-      ...(isMobileApp && { Origin: uniswapUrls.requestOriginUrl }),
+      ...(isMobileApp && { Origin: getEmbeddedWalletBaseUrl() }),
       'x-request-source': REQUEST_SOURCE,
       'x-app-version': getVersionHeader(),
     }),

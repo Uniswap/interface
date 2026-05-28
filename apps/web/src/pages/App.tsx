@@ -5,7 +5,7 @@ import { useSporeColors } from 'ui/src'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import ErrorBoundary from '~/components/ErrorBoundary'
+import { ErrorBoundary } from '~/components/ErrorBoundary'
 import { useFeatureFlagUrlOverrides } from '~/featureFlags/useFeatureFlagUrlOverrides'
 import { Body } from '~/pages/App/Body'
 import { AppLayout } from '~/pages/App/Layout'
@@ -14,14 +14,14 @@ import { ResetPortfolioChainOnEntryEffect } from '~/pages/App/utils/ResetPortfol
 import { UserPropertyUpdater } from '~/pages/App/utils/UserPropertyUpdater'
 import { useDynamicMetatags } from '~/pages/metatags'
 import { findRouteByPath } from '~/pages/RouteDefinitions'
-import DarkModeQueryParamReader from '~/theme/components/DarkModeQueryParamReader'
+import { DarkModeQueryParamReader } from '~/theme/components/DarkModeQueryParamReader'
 import { isPathBlocked } from '~/utils/blockedPaths'
 import { MICROSITE_LINK } from '~/utils/openDownloadApp'
 import { getCurrentPageFromLocation } from '~/utils/urlRoutes'
 
 const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH]
 
-export default function App() {
+export function App() {
   const colors = useSporeColors()
 
   const location = useLocation()

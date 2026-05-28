@@ -1,3 +1,4 @@
+import { isMobileWeb, isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
 import { SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
@@ -6,7 +7,6 @@ import {
   useTransactionSettingsAutoSlippageToleranceStore,
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { isMobileWeb, isWebPlatform } from 'utilities/src/platform'
 
 export function SlippageWarning(): JSX.Element | null {
   const { t } = useTranslation()

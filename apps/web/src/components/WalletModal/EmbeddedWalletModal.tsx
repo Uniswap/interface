@@ -3,27 +3,30 @@ import { atom, useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { Envelope } from 'ui/src/components/icons/Envelope'
 import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
-import { EnvelopeLock } from 'ui/src/components/icons/EnvelopeLock'
-import { GoogleLogo } from 'ui/src/components/icons/GoogleLogo'
+import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Person } from 'ui/src/components/icons/Person'
-import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { iconSizes } from 'ui/src/theme'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
 import { OptionRow } from '~/components/Passkey/BackupLoginComponents'
 import { RECOVER_OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { WalletModalLayout } from '~/components/WalletModal/WalletModalLayout'
 import { WalletOptionsGrid } from '~/components/WalletModal/WalletOptionsGrid'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
+import { setOpenModal } from '~/state/application/reducer'
 
 // TODO: [INFRA-1559] Replace Jotai atoms with Zustand store
 /** Shared atom so RecentlyConnectedModal can trigger the login view in the account drawer */
@@ -33,10 +36,9 @@ export const passkeySignInPendingAtom = atom(false)
 
 export function EmbeddedWalletConnectionsModal(): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const accountDrawer = useAccountDrawer()
+  const dispatch = useDispatch()
   const { openModal: openGetTheApp } = useModalState(ModalName.GetTheApp)
-  const { openModal: openRecoverWallet } = useModalState(ModalName.RecoverWallet)
   const [showLoginView, setShowLoginView] = useAtom(showEmbeddedLoginViewAtom)
 
   const handleCreateAccount = useEvent(() => {
@@ -57,31 +59,45 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
 
   const handleBackToConnect = useEvent(() => setShowLoginView(false))
 
-  const { ready: privyReady } = usePrivy()
+  const { ready: privyReady, user, logout } = usePrivy()
   const [oauthProvider, setOauthProvider] = useState<'google' | 'apple' | null>(null)
 
   const { initOAuth, loading: oauthLoading } = useLoginWithOAuth({
     onError: (oauthError) => {
-      logger.error(oauthError, { tags: { file: 'EmbeddedWalletModal', function: 'handleInitOAuth' } })
+      logger.error(oauthError, {
+        tags: { file: 'EmbeddedWalletModal', function: 'handleInitOAuth' },
+      })
       sessionStorage.removeItem(RECOVER_OAUTH_PENDING_KEY)
       setOauthProvider(null)
     },
   })
 
-  const handleInitOAuth = useEvent((provider: 'google' | 'apple') => {
+  const disableOauth = isPasskeyLoading || oauthLoading
+
+  const handleInitOAuth = useEvent(async (provider: 'google' | 'apple'): Promise<void> => {
     if (!privyReady) {
       return
     }
+    // Privy's `initOAuth` throws "Already logged in" if an authenticated session
+    // exists. Drop the existing session so this sign-in starts from a clean state.
+    if (user) {
+      await logout()
+    }
     setOauthProvider(provider)
     sessionStorage.setItem(RECOVER_OAUTH_PENDING_KEY, provider)
-    // Note: initOAuth triggers a full page redirect — there is no onSuccess callback.
+    // Note: initOAuth triggers a full page redirect. There is no onSuccess callback.
     // Cleanup of RECOVER_OAUTH_PENDING_KEY happens post-redirect in useOAuthRedirectRouter
     // and useOAuthResult once the linked account is detected.
-    initOAuth({ provider })
+    await initOAuth({ provider })
   })
 
   const handleEmailRecovery = useEvent(() => {
-    openRecoverWallet()
+    dispatch(
+      setOpenModal({
+        name: ModalName.RecoverWallet,
+        initialState: { initialMethod: 'email' },
+      }),
+    )
   })
 
   if (showLoginView) {
@@ -93,7 +109,10 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
             <TouchableArea variant="unstyled" onPress={handleBackToConnect}>
               <BackArrow size="$icon.20" color="$neutral1" />
             </TouchableArea>
-            <TouchableArea variant="unstyled" onPress={() => window.open('https://support.uniswap.org', '_blank')}>
+            <TouchableArea
+              variant="unstyled"
+              onPress={() => window.open(uniswapUrls.helpArticleUrls.passkeysInfo, '_blank')}
+            >
               <Flex
                 row
                 gap="$gap4"
@@ -135,7 +154,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
               <Flex row alignSelf="stretch">
                 <Button variant="branded" size="medium" onPress={handlePasskeyLogin} isDisabled={isPasskeyLoading}>
                   {isPasskeyLoading ? (
-                    <SpinningLoader size={20} color="$white" />
+                    <SpinningLoader size={20} color="$neutral2" />
                   ) : (
                     t('account.passkey.login.continueWithPasskey')
                   )}
@@ -155,27 +174,27 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
             {/* Recovery options */}
             <Flex borderRadius="$rounded16" overflow="hidden" gap="$spacing2">
               <OptionRow
-                icon={<AppleLogo height={20} width={20} fill={colors.neutral1.val} />}
+                icon={<AppleLogo color="$neutral1" size="$icon.20" />}
                 label={t('account.passkey.backupLogin.add.apple')}
                 onPress={() => handleInitOAuth('apple')}
                 element={ElementName.LoginWithApple}
                 loading={oauthLoading && oauthProvider === 'apple'}
-                disabled={oauthLoading && oauthProvider !== 'apple'}
+                disabled={disableOauth && oauthProvider !== 'apple'}
               />
               <OptionRow
-                icon={<GoogleLogo size="$icon.20" color="$neutral1" />}
+                icon={<GoogleLogoGradient size={iconSizes.icon20} />}
                 label={t('account.passkey.backupLogin.add.google')}
                 onPress={() => handleInitOAuth('google')}
                 element={ElementName.LoginWithGoogle}
                 loading={oauthLoading && oauthProvider === 'google'}
-                disabled={oauthLoading && oauthProvider !== 'google'}
+                disabled={disableOauth && oauthProvider !== 'google'}
               />
               <OptionRow
-                icon={<EnvelopeLock size="$icon.20" color="$neutral1" />}
+                icon={<Envelope size="$icon.20" color="$blueBase" />}
                 label={t('account.passkey.backupLogin.add.email')}
                 onPress={handleEmailRecovery}
                 element={ElementName.LoginWithEmail}
-                disabled={oauthLoading && oauthProvider !== null}
+                disabled={disableOauth}
               />
             </Flex>
           </Flex>
@@ -196,7 +215,7 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
         }
       >
         <WalletOptionsGrid showMobileConnector={true} showOtherWallets={true} />
-        <Flex row alignItems="center" justifyContent="center" width="100%" gap="$gap16" py="$spacing4">
+        <Flex row alignItems="center" justifyContent="center" width="100%" gap="$gap16" py="$spacing4" px="$spacing12">
           <Separator />
           <Text variant="body4" color="$neutral3">
             {t('common.or')}
@@ -212,16 +231,22 @@ export function EmbeddedWalletConnectionsModal(): JSX.Element {
             </Flex>
           </Trace>
           <Trace logPress element={ElementName.SignIn}>
-            <Flex row alignSelf="stretch">
-              <Button variant="branded" emphasis="secondary" size="medium" onPress={handleLogIn}>
-                <Flex row gap="$gap4">
-                  <Passkey size="$icon.20" color="$accent1" />
-                  <Text variant="buttonLabel2" color="$accent1">
-                    {t('nav.logIn.button')}
-                  </Text>
-                </Flex>
-              </Button>
-            </Flex>
+            <TouchableArea
+              group
+              animation={null}
+              alignSelf="center"
+              variant="unstyled"
+              hoverable={false}
+              testID={TestID.LogIn}
+              onPress={handleLogIn}
+            >
+              <Flex row gap="$gap4" alignItems="center">
+                <Passkey size="$icon.20" color="$accent1" $group-hover={{ color: '$accent1Hovered' }} />
+                <Text variant="buttonLabel2" color="$accent1" $group-hover={{ color: '$accent1Hovered' }}>
+                  {t('nav.logIn.button')}
+                </Text>
+              </Flex>
+            </TouchableArea>
           </Trace>
         </Flex>
       </WalletModalLayout>

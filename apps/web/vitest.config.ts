@@ -7,6 +7,11 @@ export default defineConfig({
     pool: 'threads',
     globals: true,
     environment: 'jsdom',
+    // process.env.APP_ID is sourced from apps/web/.env, but Vitest does not
+    // auto-inject non-VITE_ prefixed .env vars into the test process's process.env.
+    env: {
+      APP_ID: 'web',
+    },
     setupFiles: ['./src/setupTests.ts', './vite/mockAssets.tsx'],
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     exclude: [

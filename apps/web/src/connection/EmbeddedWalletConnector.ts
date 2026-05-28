@@ -1,5 +1,5 @@
+import { HexString } from '@universe/encoding'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import { HexString } from 'utilities/src/addresses/hex'
 import {
   getAddress,
   ProviderConnectInfo,
@@ -9,7 +9,8 @@ import {
   UserRejectedRequestError,
 } from 'viem'
 import { ChainNotConfiguredError, createConnector } from 'wagmi'
-import { EmbeddedWalletProvider, embeddedWalletProvider, Listener } from '~/connection/EmbeddedWalletProvider'
+import { EmbeddedWalletProvider, Listener } from '~/connection/EmbeddedWalletProvider'
+import { embeddedWalletProvider } from '~/connection/embeddedWalletProviderInstance'
 import { getEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface EmbeddedWalletParameters {

@@ -1,3 +1,4 @@
+import { META_TAG_FETCH_TIMEOUT_MS } from 'functions/constants'
 import { Data } from 'functions/utils/cache'
 import getPool from 'functions/utils/getPool'
 import getPosition from 'functions/utils/getPosition'
@@ -5,6 +6,7 @@ import { getRequest } from 'functions/utils/getRequest'
 import getToken from 'functions/utils/getToken'
 import { Context, Next } from 'hono'
 import { encode } from 'html-entities'
+import { withTimeout } from 'uniswap/src/utils/polling'
 import { paths } from '~/pages/paths'
 import { MetaTagInjectorInput } from '~/shared-cloud/metatags'
 
@@ -166,13 +168,16 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
 
     if (exploreData) {
       const origin = requestURL.origin
-      const exploreMeta = await fetchExploreData({
-        type: exploreData.type,
-        networkName: exploreData.networkName,
-        address: exploreData.address,
-        origin,
-        requestUrl: c.req.url,
-      })
+      const exploreMeta = await withTimeout(
+        fetchExploreData({
+          type: exploreData.type,
+          networkName: exploreData.networkName,
+          address: exploreData.address,
+          origin,
+          requestUrl: c.req.url,
+        }),
+        { timeoutMs: META_TAG_FETCH_TIMEOUT_MS, errorMsg: 'fetchExploreData timeout' },
+      ).catch(() => null)
 
       if (!exploreMeta) {
         return originalResponse
@@ -181,13 +186,16 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
       data = exploreMeta
     } else if (positionData) {
       const origin = requestURL.origin
-      const positionMeta = await fetchPositionData({
-        version: positionData.version,
-        chainName: positionData.chainName,
-        identifier: positionData.identifier,
-        origin,
-        requestUrl: c.req.url,
-      })
+      const positionMeta = await withTimeout(
+        fetchPositionData({
+          version: positionData.version,
+          chainName: positionData.chainName,
+          identifier: positionData.identifier,
+          origin,
+          requestUrl: c.req.url,
+        }),
+        { timeoutMs: META_TAG_FETCH_TIMEOUT_MS, errorMsg: 'fetchPositionData timeout' },
+      ).catch(() => null)
 
       if (!positionMeta) {
         return originalResponse

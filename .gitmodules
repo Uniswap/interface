@@ -1,3 +1,0 @@
-[submodule "apps/dev-portal/content/docs"]
-	path = apps/dev-portal/content/docs
-	url = https://github.com/Uniswap/docs-content

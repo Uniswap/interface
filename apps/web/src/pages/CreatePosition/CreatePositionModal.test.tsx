@@ -24,7 +24,7 @@ vi.mock('react-router', async () => ({
 }))
 
 vi.mock('~/hooks/useSelectChain', () => ({
-  default: vi.fn(),
+  useSelectChain: vi.fn(),
 }))
 
 vi.mock('~/hooks/useAccount', () => ({
@@ -59,7 +59,7 @@ import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { CreatePositionModal } from '~/pages/CreatePosition/CreatePositionModal'
 import { act, fireEvent, render } from '~/test-utils/render'

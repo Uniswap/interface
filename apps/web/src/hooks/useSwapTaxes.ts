@@ -1,18 +1,18 @@
 import { Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 import { BIPS_BASE, ZERO_PERCENT } from '~/constants/misc'
+import { getInterfaceProvider } from '~/constants/providers'
 import { useAccount } from '~/hooks/useAccount'
-import { useContract } from '~/hooks/useContract'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
-function getFeeOnTransferAddress(chainId?: UniverseChainId) {
+function getFeeOnTransferAddress(chainId?: EVMUniverseChainId) {
   switch (chainId) {
     case UniverseChainId.Mainnet:
       return '0x19C97dc2a25845C7f9d1d519c8C2d4809c58b43f'
@@ -36,26 +36,22 @@ function getFeeOnTransferAddress(chainId?: UniverseChainId) {
 }
 
 function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTransferDetector | null {
-  const account = useAccount()
-  const contract = useContract<FeeOnTransferDetector>({
-    address: getFeeOnTransferAddress(chainId),
-    ABI: FOT_DETECTOR_ABI,
-    withSignerIfPossible: true,
-    chainId,
-  })
-
-  useEffect(() => {
-    if (contract && account.address) {
-      sendAnalyticsEvent(InterfaceEventName.WalletProviderUsed, {
-        source: 'useFeeOnTransferDetectorContract',
-        contract: {
-          name: 'FeeOnTransferDetector',
-          address: getFeeOnTransferAddress(chainId),
-        },
-      })
+  return useMemo(() => {
+    if (!chainId || !isEVMChain(chainId)) {
+      return null
     }
-  }, [account.address, chainId, contract])
-  return contract
+    const address = getFeeOnTransferAddress(chainId)
+    const provider = getInterfaceProvider(chainId)
+    if (!address || !provider) {
+      return null
+    }
+    try {
+      return getContract({ address, ABI: FOT_DETECTOR_ABI, provider }) as FeeOnTransferDetector
+    } catch (error) {
+      logger.warn('useSwapTaxes', 'useFeeOnTransferDetectorContract', 'Failed to construct FOT detector', { error })
+      return null
+    }
+  }, [chainId])
 }
 
 const AMOUNT_TO_BORROW = 10000 // smallest amount that has full precision over bps

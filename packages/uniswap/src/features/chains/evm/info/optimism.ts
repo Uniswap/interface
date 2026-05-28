@@ -1,4 +1,5 @@
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import { ETH_LOGO, OPTIMISM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { CHAIN_ID_TO_URL_PARAM } from 'uniswap/src/features/chains/chainUrlParam'
@@ -19,7 +20,6 @@ import {
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
-import { isWebApp } from 'utilities/src/platform'
 import { optimism } from 'wagmi/chains'
 
 const tokens = buildChainTokens({
@@ -48,7 +48,6 @@ export const OPTIMISM_CHAIN_INFO = {
   explorer: {
     name: 'OP Etherscan',
     url: 'https://optimistic.etherscan.io/',
-    apiURL: 'https://api-optimistic.etherscan.io',
   },
   openseaName: 'optimism',
   interfaceName: 'optimism',
@@ -75,6 +74,7 @@ export const OPTIMISM_CHAIN_INFO = {
   },
   tokens,
   statusPage: 'https://optimism.io/status',
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: true,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Optimism],

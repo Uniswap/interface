@@ -5,6 +5,11 @@ import type { ColorTokens, GetProps, Sheet, SpaceTokens, View } from 'ui/src'
 import type { HandleBarProps } from 'uniswap/src/components/modals/HandleBar'
 import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
+export type BaseModalProps = {
+  isOpen: boolean
+  onClose: () => void
+}
+
 export type ModalProps = PropsWithChildren<{
   animatedPosition?: SharedValue<number>
   hideHandlebar?: boolean

@@ -63,6 +63,7 @@ export type SwapParams = {
 /**
  * Helper function to handle approval transaction execution
  */
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* executeApprovalStep(params: {
   preSignedTransaction: PreSignedSwapTransaction
   factory: TransactionParamsFactory
@@ -100,6 +101,7 @@ function* executeApprovalStep(params: {
 /**
  * Helper function to handle permit transaction execution
  */
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* executePermitStep(params: {
   preSignedTransaction: PreSignedSwapTransaction
   factory: TransactionParamsFactory
@@ -132,6 +134,7 @@ function* executePermitStep(params: {
 /**
  * Helper function to execute a transaction step with sync/async fallback behavior
  */
+// oxlint-disable-next-line typescript/explicit-function-return-type
 function* executeTransactionStep(params: {
   executor: TransactionExecutor
   step: TransactionStep

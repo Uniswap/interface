@@ -10,51 +10,59 @@ interface OAuthReturnResult {
 
 const INITIAL_STATE: OAuthReturnResult = { provider: null, providerEmail: undefined, pending: false }
 
-/**
- * Detects an OAuth return after a Privy redirect.
- * Reads the given sessionStorage key and waits for Privy to authenticate,
- * then returns the detected provider and email. Clears sessionStorage once detected.
- */
+// Privy reports `ready: true` before the OAuth code exchange completes, so abandonment
+// must come from a timer rather than `ready && !authenticated`.
+const ABANDON_TIMEOUT_MS = 10_000
+
 export function useOAuthResult(sessionStorageKey: string): OAuthReturnResult {
   useAssertOAuthRedirectRouter()
 
   const { ready, authenticated, user } = usePrivy()
-  const [result, setResult] = useState<OAuthReturnResult>(() => {
-    const pending = !!sessionStorage.getItem(sessionStorageKey)
-    return pending ? { provider: null, providerEmail: undefined, pending: true } : INITIAL_STATE
+
+  // Capture once at mount from sessionStorage AND the `privy_oauth_provider` URL param.
+  // The URL fallback covers flows without `useOAuthRedirectRouter` and the case where
+  // `useLoginWithOAuth.onError` clears sessionStorage mid-mount.
+  const [initialPendingProvider] = useState<'google' | 'apple' | null>(() => {
+    const stored = sessionStorage.getItem(sessionStorageKey) as 'google' | 'apple' | null
+    const fromUrl = new URLSearchParams(window.location.search).get('privy_oauth_provider') as 'google' | 'apple' | null
+    return stored ?? fromUrl
   })
 
+  const [result, setResult] = useState<OAuthReturnResult>(() =>
+    initialPendingProvider ? { provider: null, providerEmail: undefined, pending: true } : INITIAL_STATE,
+  )
+
   useEffect(() => {
-    const pendingProvider = sessionStorage.getItem(sessionStorageKey) as 'google' | 'apple' | null
-    if (!pendingProvider) {
+    if (!initialPendingProvider || !ready || !authenticated || !user) {
       return
     }
 
-    if (!ready) {
-      return
-    }
-
-    // ready && !authenticated means OAuth was abandoned (denied consent, closed popup, etc.)
-    // Reset to INITIAL_STATE so consumers see pending: false and can show an appropriate UI.
-    if (!authenticated || !user) {
-      sessionStorage.removeItem(sessionStorageKey)
-      setResult(INITIAL_STATE)
-      return
-    }
-
-    // Verify the OAuth account was actually linked — not just that the user has an existing session.
-    // Without this check, hitting "back" during the OAuth redirect would still advance the flow.
-    const linkedAccount = pendingProvider === 'google' ? user.google : user.apple
+    const linkedAccount = initialPendingProvider === 'google' ? user.google : user.apple
     if (!linkedAccount) {
-      sessionStorage.removeItem(sessionStorageKey)
-      setResult(INITIAL_STATE)
       return
     }
 
     const providerEmail = linkedAccount.email
     sessionStorage.removeItem(sessionStorageKey)
-    setResult({ provider: pendingProvider, providerEmail, pending: false })
-  }, [sessionStorageKey, ready, authenticated, user])
+    setResult({ provider: initialPendingProvider, providerEmail, pending: false })
+  }, [sessionStorageKey, initialPendingProvider, ready, authenticated, user])
+
+  // Falls through to abandonment if success never arrives. The success effect clears
+  // sessionStorage so the timer's existence check short-circuits on success.
+  useEffect(() => {
+    if (!initialPendingProvider) {
+      return undefined
+    }
+
+    const timer = setTimeout(() => {
+      if (sessionStorage.getItem(sessionStorageKey)) {
+        sessionStorage.removeItem(sessionStorageKey)
+        setResult(INITIAL_STATE)
+      }
+    }, ABANDON_TIMEOUT_MS)
+
+    return () => clearTimeout(timer)
+  }, [sessionStorageKey, initialPendingProvider])
 
   return result
 }

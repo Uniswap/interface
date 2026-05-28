@@ -15,12 +15,28 @@ function normalizeProtocolName(name: string): string {
   return name
 }
 
+/**
+ * Unifies Uniswap icons from different protocol versions.
+ */
+function normalizeProtocolIcon(name: string, icon?: string): string | undefined {
+  if (
+    name === 'Uniswap V4' ||
+    name === 'Uniswap V3' ||
+    name === 'Uniswap V2' ||
+    name === 'Uniswap' ||
+    name === 'Uniswap CCA'
+  ) {
+    return 'https://protocol-icons.s3.amazonaws.com/icons/uniswap-v4.jpg'
+  }
+  return icon
+}
+
 export function toProtocolInfo(dappInfo: DappInfoTransactionDetails | undefined): ActivityProtocolInfo | null {
   if (!dappInfo?.name) {
     return null
   }
   return {
     name: normalizeProtocolName(dappInfo.name),
-    logoUrl: dappInfo.icon,
+    logoUrl: normalizeProtocolIcon(dappInfo.name, dappInfo.icon),
   }
 }

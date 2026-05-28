@@ -1,12 +1,10 @@
 import { WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
 import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Session'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useAccountsStoreContext } from '~/features/accounts/store/provider'
-import { mocked } from '~/test-utils/mocked'
 import { renderHook } from '~/test-utils/render'
 
 // Mock wagmi hooks
@@ -91,14 +89,6 @@ describe('Web Accounts Store Provider', () => {
     mockUseWagmiChainId.mockReturnValue(1)
     mockUsePendingConnectorId.mockReturnValue(null)
     mockUseSolanaWallet.mockReturnValue(createMockSolanaWalletContext())
-
-    // Enable Solana feature flag by default
-    mocked(useFeatureFlag).mockImplementation((flag) => {
-      if (flag === FeatureFlags.Solana) {
-        return true
-      }
-      return false
-    })
   })
 
   describe('Given a connected MetaMask wallet on EVM', () => {
@@ -160,8 +150,6 @@ describe('Web Accounts Store Provider', () => {
         wallet: solanaWallet,
         wallets: [solanaWallet],
       })
-
-      // Ensure Solana feature flag is enabled for this test (already set in beforeEach)
 
       // When
       const { result } = renderWithProvider()

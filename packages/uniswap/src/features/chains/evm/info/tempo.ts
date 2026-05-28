@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
 import { TEMPO_LOGO } from 'ui/src/assets'
 import {
@@ -34,7 +34,7 @@ export const TEMPO_CHAIN_INFO = {
     // Virtual USD must never be indexed as a portfolio balance
     nativeTokenBackendAddress: undefined,
   },
-  bridge: undefined,
+  bridge: 'https://www.bungee.exchange/',
   docs: 'https://docs.tempo.xyz/',
   label: 'Tempo',
   logo: TEMPO_LOGO,
@@ -56,6 +56,7 @@ export const TEMPO_CHAIN_INFO = {
   blockTimeMs: 500,
   pendingTransactionsRetryOptions: undefined,
   statusPage: undefined,
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: false,
   urlParam: 'tempo',

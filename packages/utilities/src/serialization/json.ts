@@ -1,4 +1,15 @@
 /* oxlint-disable typescript/no-unsafe-return */
+
+/**
+ * Returns true if the trimmed string starts with `{` or `[`, indicating it
+ * *might* be a JSON object or array.  This is a fast, structural heuristic —
+ * it does not validate the JSON.
+ */
+export function looksLikeJson(value: string): boolean {
+  const ch = value.trimStart().charAt(0)
+  return ch === '{' || ch === '['
+}
+
 /**
  * BigInt serialization utilities for JSON
  *

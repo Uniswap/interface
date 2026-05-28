@@ -80,10 +80,8 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V3,
           TradingApi.ProtocolItems.V4,
         ]
-        // oxlint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
-        // oxlint-disable-next-line max-nested-callbacks
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
             selectedProtocols,
@@ -110,10 +108,8 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V3,
           TradingApi.ProtocolItems.V4,
         ]
-        // oxlint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols) // Original protocols without V4
 
-        // oxlint-disable-next-line max-nested-callbacks
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
             selectedProtocols,
@@ -140,10 +136,8 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V3,
           TradingApi.ProtocolItems.V4,
         ]
-        // oxlint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
-        // oxlint-disable-next-line max-nested-callbacks
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
             selectedProtocols,
@@ -165,10 +159,8 @@ describe('useQuoteRoutingParams', () => {
           TradingApi.ProtocolItems.V2,
           TradingApi.ProtocolItems.V3,
         ]
-        // oxlint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
-        // oxlint-disable-next-line max-nested-callbacks
         const { result } = renderHook(() =>
           useQuoteRoutingParams({
             selectedProtocols,

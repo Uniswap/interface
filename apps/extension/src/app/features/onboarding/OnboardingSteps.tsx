@@ -42,7 +42,7 @@ type MaybeOnboardingProps = OnboardingScreenProps | null
 let currentOnboardingScreen: MaybeOnboardingProps = null
 const onboardingScreenListen = new Set<(step: Step, val: MaybeOnboardingProps) => void>()
 
-let clearScreenTimeout: NodeJS.Timeout
+let clearScreenTimeout: ReturnType<typeof setTimeout>
 
 export function OnboardingStepsProvider({
   steps,
@@ -58,7 +58,6 @@ export function OnboardingStepsProvider({
   const isOnboarded = useSelector(isOnboardedSelector)
   const wasAlreadyOnboardedWhenPageLoaded = useRef(isOnboarded)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- we also want to run this effect if isOnboarded changes
   useEffect(() => {
     if (!isResetting && wasAlreadyOnboardedWhenPageLoaded.current && !disableRedirect) {
       // Redirect to the intro screen screen if user is already onboarded.
@@ -116,7 +115,6 @@ export function OnboardingStepsProvider({
     setState((prev) => ({ ...prev, step: nextStep }))
   }, [])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- onboardingScreenKey is a helper function defined below that doesn't need to be a dependency
   const setOnboardingScreen = useCallback((next: OnboardingScreenProps) => {
     clearTimeout(clearScreenTimeout)
     setState((prev) => {
@@ -135,7 +133,6 @@ export function OnboardingStepsProvider({
     currentOnboardingScreen = next
   }, [])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- onboardingScreenKey is a helper function defined below that doesn't need to be a dependency
   const clearOnboardingScreen = useCallback((next: OnboardingScreenProps) => {
     // delay clear so the next screen can beat clearing the old one to avoid flickering
     clearScreenTimeout = setTimeout(() => {

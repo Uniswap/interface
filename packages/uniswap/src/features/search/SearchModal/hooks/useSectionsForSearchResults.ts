@@ -1,4 +1,5 @@
 import { GqlResult } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import {
   DynamicConfigs,
   FeatureFlags,
@@ -21,7 +22,6 @@ import { NUMBER_OF_RESULTS_ALL_TAB } from 'uniswap/src/features/search/SearchMod
 import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { isWebApp } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 
 export function useSectionsForSearchResults({
@@ -162,13 +162,12 @@ export function useSectionsForSearchResults({
     return [...tokenAndPoolSections, ...(walletSearchResultsSection ?? [])]
   }, [tokenAndPoolSections, walletSearchResultsSection, shouldPrioritizeWallets, shouldShowWallets])
 
-  // oxlint-disable-next-line complexity
   return useMemo((): GqlResult<OnchainItemSection<SearchModalOption>[]> => {
     switch (activeTab) {
       case SearchTab.All:
         return {
           data: !searchTokensLoading ? allSections : [],
-          loading: searchTokensLoading,
+          loading: searchTokensLoading || walletSearchResultsLoading,
           error: (!tokenOptions.length && searchTokensError) || undefined,
           refetch: refetchAll,
         }

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { PortfolioBalanceSettingsContent } from 'uniswap/src/features/settings/balances/PortfolioBalanceSettingsContent'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
 
-export default function PortfolioBalanceMenu({ onClose }: { onClose: () => void }) {
+export function PortfolioBalanceMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
 
   return (

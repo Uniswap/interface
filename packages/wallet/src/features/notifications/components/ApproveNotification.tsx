@@ -9,7 +9,7 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 import { formApproveNotificationTitle } from 'wallet/src/features/notifications/utils'
 
 export function ApproveNotification({
-  notification: { address, chainId, tokenAddress, spender, txStatus, txType, hideDelay },
+  notification: { address, chainId, tokenAddress, spender, txStatus, txType, hideDelay, tokenSymbol },
 }: {
   notification: ApproveTxNotification
 }): JSX.Element {
@@ -22,6 +22,7 @@ export function ApproveNotification({
     currency: currencyInfo?.currency,
     tokenAddress,
     spender,
+    tokenSymbol,
   })
 
   const icon = (

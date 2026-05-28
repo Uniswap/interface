@@ -22,6 +22,16 @@
         "--autoConnect",
         "--channel=beta"
       ]
+    },
+    "argent": {
+      "type": "stdio",
+      "command": "argent",
+      "args": [
+        "mcp"
+      ],
+      "env": {
+        "ARGENT_MCP_LOG": "~/.argent/mcp-calls.log"
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 import { FlashList } from '@shopify/flash-list'
+import { isAndroid } from '@universe/environment'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
@@ -13,7 +14,6 @@ import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
-import { isAndroid } from 'utilities/src/platform'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export const NftsTab = memo(
@@ -40,6 +40,13 @@ export const NftsTab = memo(
       containerProps?.contentContainerStyle,
     )
 
+    // `useAccounts()` returns a new object reference on every Redux dispatch even when
+    // the address set is unchanged. Memoizing on the joined keys keeps `walletAddresses`
+    // referentially stable so `renderNFTItem` doesn't churn the FlashList every render.
+    const accountsKey = Object.keys(accounts).sort().join(',')
+    // oxlint-disable-next-line react/exhaustive-deps -- intentionally keying on accountsKey to skip identity-only changes to accounts
+    const walletAddresses = useMemo(() => Object.keys(accounts).sort(), [accountsKey])
+
     const renderNFTItem = useCallback(
       (item: NFTItem, index: number) => {
         const onPressNft = async (): Promise<void> => {
@@ -63,13 +70,13 @@ export const NftsTab = memo(
               index={index}
               item={item}
               owner={owner}
-              walletAddresses={Object.keys(accounts)}
+              walletAddresses={walletAddresses}
               onPress={onPressNft}
             />
           </Flex>
         )
       },
-      [owner, accounts, defaultChainId, navigateToNftExplorerLink],
+      [owner, walletAddresses, defaultChainId, navigateToNftExplorerLink],
     )
 
     const refreshControl = useMemo(() => {

@@ -65,6 +65,7 @@ export function useEmbeddedWalletState() {
     setWalletId: (walletId: string | null) => setState({ walletId }),
     setChainId: (chainId: number | null) => setState({ chainId }),
     setIsConnected: (isConnected: boolean) => setState({ isConnected }),
+    setEmbeddedWalletState: (updates: Partial<EmbeddedWalletState>) => setState(updates),
   }
 }
 

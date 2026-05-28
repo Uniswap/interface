@@ -1,4 +1,3 @@
-import { ApolloError } from '@apollo/client'
 import { ConnectError } from '@connectrpc/connect'
 import { UseQueryResult } from '@tanstack/react-query'
 import { TokenRankingsResponse, TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'

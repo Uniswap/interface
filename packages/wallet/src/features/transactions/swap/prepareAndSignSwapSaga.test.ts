@@ -1,6 +1,7 @@
 import { call, select } from '@redux-saga/core/effects'
 import { MaxUint256, TradeType } from '@uniswap/sdk-core'
 import { TradingApi, type UnwrapQuoteResponse, type WrapQuoteResponse } from '@universe/api'
+import { ensure0xHex } from '@universe/encoding'
 import JSBI from 'jsbi'
 import { expectSaga } from 'redux-saga-test-plan'
 import type { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
@@ -10,7 +11,6 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapT
 import { type UniswapXTrade, UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
-import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {

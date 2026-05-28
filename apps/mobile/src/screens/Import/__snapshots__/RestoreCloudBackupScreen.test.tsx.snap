@@ -197,7 +197,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       >
         <RCTScrollView
           collapsable={false}
-          handlerTag={1}
+          handlerTag={-1}
           handlerType="NativeViewGestureHandler"
           onGestureHandlerEvent={[Function]}
           onGestureHandlerStateChange={[Function]}
@@ -341,7 +341,9 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                         "borderTopRightRadius": 999999,
                         "borderTopWidth": 0,
                         "flexDirection": "column",
+                        "height": 36,
                         "position": "relative",
+                        "width": 36,
                       }
                     }
                     testID="account-icon"
@@ -349,6 +351,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                     <View
                       style={
                         {
+                          "flex": 1,
                           "flexDirection": "column",
                         }
                       }
@@ -657,7 +660,9 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                         "borderTopRightRadius": 999999,
                         "borderTopWidth": 0,
                         "flexDirection": "column",
+                        "height": 36,
                         "position": "relative",
+                        "width": 36,
                       }
                     }
                     testID="account-icon"
@@ -665,6 +670,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                     <View
                       style={
                         {
+                          "flex": 1,
                           "flexDirection": "column",
                         }
                       }

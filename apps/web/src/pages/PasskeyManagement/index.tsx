@@ -10,7 +10,7 @@ import { useAccount } from '~/hooks/useAccount'
 import { useDisconnect } from '~/hooks/useDisconnect'
 import { useModalState } from '~/hooks/useModalState'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
-import Swap from '~/pages/Swap'
+import { SwapPage } from '~/pages/Swap'
 
 type PasskeyManagementEffectDependencies = {
   account: {
@@ -151,5 +151,5 @@ export default function PasskeyManagement() {
     handlePasskeyEffect()
   }, [handlePasskeyEffect])
 
-  return <Swap />
+  return <SwapPage />
 }

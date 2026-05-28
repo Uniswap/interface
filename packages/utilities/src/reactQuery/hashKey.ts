@@ -22,6 +22,7 @@ export function hashKey(queryKey: QueryKey | MutationKey): string {
  * Recursively normalize arrays in the queryKey structure
  */
 export function normalizeArrays<T>(value: T): T {
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   if (value === null || value === undefined) {
     return value
   }

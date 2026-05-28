@@ -1,5 +1,5 @@
 import { useReducer } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text } from 'ui/src'
 import { ChevronsIn } from 'ui/src/components/icons/ChevronsIn'
 import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
@@ -25,7 +25,7 @@ export function StandardWalletModal(): JSX.Element {
       <Separator />
       <Flex row alignItems="center" mx={18}>
         <Text variant="body3" color="$neutral2" whiteSpace="nowrap">
-          <Trans i18nKey="wallet.other" />
+          {t('wallet.other')}
         </Text>
         {expandMoreWallets ? <ChevronsIn size={20} color="$neutral3" /> : <ChevronsOut size={20} color="$neutral3" />}
       </Flex>

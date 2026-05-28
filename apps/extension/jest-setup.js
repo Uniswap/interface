@@ -1,3 +1,4 @@
+import '@universe/environment/jest-package-mocks'
 import 'utilities/jest-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'wallet/jest-package-mocks'
@@ -5,8 +6,6 @@ import 'config/jest-presets/ui/ui-package-mocks'
 import 'react-native-gesture-handler/jestSetup'
 import { chrome } from 'jest-chrome'
 import { AppearanceSettingType } from 'uniswap/src/features/appearance/slice'
-
-process.env.IS_UNISWAP_EXTENSION = true
 
 const ignoreLogs = {
   error: [

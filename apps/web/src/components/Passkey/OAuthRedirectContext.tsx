@@ -1,3 +1,4 @@
+import { isDevEnv } from '@universe/environment'
 import { createContext, useContext } from 'react'
 
 const OAuthRedirectContext = createContext(false)
@@ -6,7 +7,7 @@ export const OAuthRedirectProvider = OAuthRedirectContext.Provider
 
 export function useAssertOAuthRedirectRouter(): void {
   const mounted = useContext(OAuthRedirectContext)
-  if (!mounted && process.env.NODE_ENV === 'development') {
+  if (!mounted && isDevEnv()) {
     throw new Error('useOAuthResult requires OAuthRedirectProvider (useOAuthRedirectRouter) to be mounted above it')
   }
 }

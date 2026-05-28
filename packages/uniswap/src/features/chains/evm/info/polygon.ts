@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
 import { POLYGON_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
@@ -43,7 +43,6 @@ export const POLYGON_CHAIN_INFO = {
   explorer: {
     name: 'PolygonScan',
     url: 'https://polygonscan.com/',
-    apiURL: 'https://api.polygonscan.com',
   },
   openseaName: 'matic',
   interfaceName: 'polygon',
@@ -70,6 +69,7 @@ export const POLYGON_CHAIN_INFO = {
   },
   tokens,
   statusPage: undefined,
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: true,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Polygon],

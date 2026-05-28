@@ -1,6 +1,13 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, Row, RowData, Table as TanstackTable } from '@tanstack/react-table'
 
+/** Optional metadata on column definitions (read in TableRow, sizing helpers, etc.). */
+export interface TableColumnMeta {
+  flexGrow?: number
+  /** When true, the cell container uses overflow visible (e.g. popovers that extend past the cell). */
+  overflowVisible?: boolean
+}
+
 export type TableBodyProps<T extends RowData = unknown> = {
   table: TanstackTable<T>
   loading?: boolean
@@ -13,6 +20,7 @@ export type TableBodyProps<T extends RowData = unknown> = {
   subRowHeight?: number
   hasPinnedColumns?: boolean
   dimmed?: boolean
+  virtualized?: boolean
 }
 
 export type TableProps<T extends RowData = unknown> = {
@@ -25,7 +33,7 @@ export type TableProps<T extends RowData = unknown> = {
   maxHeight?: number
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
-  v2: boolean
+  v2?: boolean
   hideHeader?: boolean
   externalScrollSync?: boolean
   scrollGroup?: string
@@ -46,4 +54,8 @@ export type TableProps<T extends RowData = unknown> = {
   hiddenRows?: T[]
   showHiddenRowsLabel?: string
   hideHiddenRowsLabel?: string
+  /** When true, shows native browser scrollbar instead of hiding it */
+  showScrollbar?: boolean
+  /** When true, only visible rows are rendered using window-based virtualization */
+  virtualized?: boolean
 }

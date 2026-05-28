@@ -1,4 +1,5 @@
 import { TradingApi } from '@universe/api'
+import { isWebPlatform } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { FlexProps, TextProps } from 'ui/src'
@@ -20,7 +21,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useIsQueuedTransaction } from 'uniswap/src/features/transactions/hooks/useIsQueuedTransaction'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const LOADING_SPINNER_SIZE = 20

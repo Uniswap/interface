@@ -1,6 +1,6 @@
+import { isAndroid } from '@universe/environment'
 import SpInAppUpdates, { IAUUpdateKind, StartUpdateOptions } from 'sp-react-native-in-app-updates'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 
 /**
  * Checks for available updates and starts the update flow if one is available.

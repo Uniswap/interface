@@ -22,6 +22,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
           </span>
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _pb-t-space-pad1331704925"
+            data-testid="passkey-loading-row"
           >
             <style>
               
@@ -102,6 +103,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
           </div>
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _pb-t-space-pad1331704925"
+            data-testid="passkey-loading-row"
           >
             <style>
               
@@ -182,6 +184,7 @@ exports[`PasskeyMenu > shows 3 skeleton rows while loading 1`] = `
           </div>
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _pb-t-space-pad1331704925"
+            data-testid="passkey-loading-row"
           >
             <style>
               
@@ -326,23 +329,9 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
             <div
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-40px _width-40px _background-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _alignItems-center _justifyContent-center"
             >
-              <svg
-                data-testid="apple-logo"
-                fill="#131313"
-                height="20"
-                viewBox="0 0 14 16"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M11.6662 8.50891C11.6741 7.89565 11.837 7.29436 12.1397 6.76098C12.4424 6.22759 12.8752 5.77945 13.3976 5.45824C13.0657 4.98422 12.6279 4.59412 12.1188 4.31892C11.6098 4.04372 11.0436 3.89101 10.4652 3.87292C9.23139 3.74341 8.03528 4.6112 7.40655 4.6112C6.76567 4.6112 5.79765 3.88578 4.75526 3.90722C4.08101 3.92901 3.4239 4.12507 2.84796 4.47632C2.27202 4.82757 1.79688 5.32201 1.46884 5.91149C0.0478641 8.37169 1.10779 11.9874 2.46897 13.976C3.14999 14.9498 3.94592 16.0375 4.98737 15.999C6.00649 15.9567 6.38712 15.3491 7.61728 15.3491C8.83603 15.3491 9.19314 15.999 10.2557 15.9744C11.3493 15.9567 12.0383 14.9963 12.6954 14.0133C13.1847 13.3195 13.5613 12.5526 13.8111 11.7411C13.1757 11.4724 12.6336 11.0226 12.2521 10.4479C11.8707 9.87307 11.6669 9.19873 11.6662 8.50891Z"
-                  fill="#131313"
-                />
-                <path
-                  d="M9.65929 2.56468C10.2555 1.8489 10.5493 0.928877 10.4782 0C9.56722 0.0956776 8.72575 0.531052 8.12144 1.21937C7.82597 1.55564 7.59968 1.94684 7.45549 2.37061C7.3113 2.79438 7.25205 3.24242 7.28112 3.68911C7.73676 3.6938 8.18752 3.59504 8.59946 3.40027C9.0114 3.2055 9.37377 2.9198 9.65929 2.56468Z"
-                  fill="#131313"
-                />
-              </svg>
+              <span
+                data-testid="icloud-password-logo"
+              />
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -366,35 +355,24 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
               <div
                 aria-expanded="false"
                 aria-haspopup="dialog"
-                class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                class="is_TouchableArea  t_group_true"
+                data-state="closed"
+                data-testid="delete-passkey"
+                role="button"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                tabindex="0"
               >
-                <div
-                  aria-expanded="false"
-                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                  data-state="closed"
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
                 >
-                  <div>
-                    <div
-                      class="is_TouchableArea  t_group_true"
-                      data-testid="delete-passkey"
-                      role="button"
-                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
-                      tabindex="0"
-                    >
-                      <svg
-                        fill="none"
-                        stroke-width="8"
-                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                  <path
+                    d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </div>
             </div>
           </div>
@@ -405,108 +383,42 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-40px _width-40px _background-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _alignItems-center _justifyContent-center"
             >
               <svg
+                fill="none"
                 stroke-width="8"
-                style="width: 20px; height: 20px; color: rgb(255, 255, 255);"
-                viewBox="0 0 48 48"
+                style="width: 20px; height: 20px; color: currentColor;"
+                viewBox="0 0 20 20"
               >
+                <g
+                  clip-path="url(#clip0_10955_6746)"
+                >
+                  <path
+                    d="M18.8 10.2083C18.8 9.55834 18.7417 8.93334 18.6333 8.33334H10V11.8833H14.9333C14.7167 13.025 14.0667 13.9917 13.0917 14.6417V16.95H16.0667C17.8 15.35 18.8 13 18.8 10.2083Z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M10.0002 19.1667C12.4752 19.1667 14.5502 18.35 16.0669 16.95L13.0919 14.6417C12.2752 15.1917 11.2336 15.525 10.0002 15.525C7.6169 15.525 5.5919 13.9167 4.86689 11.75H1.81689V14.1167C3.32523 17.1083 6.41689 19.1667 10.0002 19.1667Z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M4.86683 11.7417C4.6835 11.1917 4.57516 10.6083 4.57516 10C4.57516 9.39166 4.6835 8.80833 4.86683 8.25833V5.89166H1.81683C1.19183 7.125 0.833496 8.51666 0.833496 10C0.833496 11.4833 1.19183 12.875 1.81683 14.1083L4.19183 12.2583L4.86683 11.7417Z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M10.0002 4.48334C11.3502 4.48334 12.5502 4.95001 13.5086 5.85001L16.1336 3.22501C14.5419 1.74168 12.4752 0.833344 10.0002 0.833344C6.41689 0.833344 3.32523 2.89168 1.81689 5.89168L4.86689 8.25834C5.59189 6.09168 7.61689 4.48334 10.0002 4.48334Z"
+                    fill="#EA4335"
+                  />
+                </g>
                 <defs>
-                  <lineargradient
-                    gradientUnits="userSpaceOnUse"
-                    id="a"
-                    x1="3.2173"
-                    x2="44.7812"
-                    y1="15"
-                    y2="15"
+                  <clippath
+                    id="clip0_10955_6746"
                   >
-                    <stop
-                      offset="0"
-                      stop-color="#d93025"
+                    <rect
+                      fill="white"
+                      height="20"
+                      width="20"
                     />
-                    <stop
-                      offset="1"
-                      stop-color="#ea4335"
-                    />
-                  </lineargradient>
-                  <lineargradient
-                    gradientUnits="userSpaceOnUse"
-                    id="b"
-                    x1="20.7219"
-                    x2="41.5039"
-                    y1="47.6791"
-                    y2="11.6837"
-                  >
-                    <stop
-                      offset="0"
-                      stop-color="#fcc934"
-                    />
-                    <stop
-                      offset="1"
-                      stop-color="#fbbc04"
-                    />
-                  </lineargradient>
-                  <lineargradient
-                    gradientUnits="userSpaceOnUse"
-                    id="c"
-                    x1="26.5981"
-                    x2="5.8161"
-                    y1="46.5015"
-                    y2="10.506"
-                  >
-                    <stop
-                      offset="0"
-                      stop-color="#1e8e3e"
-                    />
-                    <stop
-                      offset="1"
-                      stop-color="#34a853"
-                    />
-                  </lineargradient>
-                  <lineargradient
-                    gradientUnits="userSpaceOnUse"
-                    id="d"
-                    x1="24"
-                    x2="24"
-                    y1="24"
-                    y2="24"
-                  >
-                    <stop
-                      offset="0"
-                      stop-color="#1a73e8"
-                    />
-                    <stop
-                      offset="1"
-                      stop-color="#1a73e8"
-                    />
-                  </lineargradient>
+                  </clippath>
                 </defs>
-                <circle
-                  cx="24"
-                  cy="23.9947"
-                  fill="currentColor"
-                  r="12"
-                />
-                <path
-                  d="M3.2154,36A24,24,0,1,0,12,3.2154,24,24,0,0,0,3.2154,36ZM34.3923,18A12,12,0,1,1,18,13.6077,12,12,0,0,1,34.3923,18Z"
-                  fill="none"
-                />
-                <path
-                  d="M24,12H44.7812a23.9939,23.9939,0,0,0-41.5639.0029L13.6079,30l.0093-.0024A11.9852,11.9852,0,0,1,24,12Z"
-                  fill="url(#a)"
-                />
-                <circle
-                  cx="24"
-                  cy="24"
-                  fill="url(#d)"
-                  r="9.5"
-                />
-                <path
-                  d="M34.3913,30.0029,24.0007,48A23.994,23.994,0,0,0,44.78,12.0031H23.9989l-.0025.0093A11.985,11.985,0,0,1,34.3913,30.0029Z"
-                  fill="url(#b)"
-                />
-                <path
-                  d="M13.6086,30.0031,3.218,12.006A23.994,23.994,0,0,0,24.0025,48L34.3931,30.0029l-.0067-.0068a11.9852,11.9852,0,0,1-20.7778.007Z"
-                  fill="url(#c)"
-                />
               </svg>
             </div>
             <div
@@ -531,35 +443,24 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
               <div
                 aria-expanded="false"
                 aria-haspopup="dialog"
-                class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                class="is_TouchableArea  t_group_true"
+                data-state="closed"
+                data-testid="delete-passkey"
+                role="button"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+                tabindex="0"
               >
-                <div
-                  aria-expanded="false"
-                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                  data-state="closed"
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
                 >
-                  <div>
-                    <div
-                      class="is_TouchableArea  t_group_true"
-                      data-testid="delete-passkey"
-                      role="button"
-                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
-                      tabindex="0"
-                    >
-                      <svg
-                        fill="none"
-                        stroke-width="8"
-                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                  <path
+                    d="M4.02002 14C2.91602 14 2.01501 13.104 2.01501 12C2.01501 10.896 2.90501 10 4.01001 10H4.02002C5.12402 10 6.02002 10.896 6.02002 12C6.02002 13.104 5.12502 14 4.02002 14ZM14.02 12C14.02 10.896 13.124 10 12.02 10H12.01C10.906 10 10.015 10.896 10.015 12C10.015 13.104 10.915 14 12.02 14C13.125 14 14.02 13.104 14.02 12ZM22.02 12C22.02 10.896 21.124 10 20.02 10H20.01C18.906 10 18.015 10.896 18.015 12C18.015 13.104 18.915 14 20.02 14C21.125 14 22.02 13.104 22.02 12Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </div>
             </div>
           </div>
@@ -620,5 +521,7 @@ exports[`PasskeyMenu > shows authenticators and Add passkey button after loading
       />
     </span>
   </div>
+  <reach-portal />
+  <reach-portal />
 </body>
 `;

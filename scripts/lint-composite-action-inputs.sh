@@ -7,9 +7,9 @@ warnings_found=0
 while IFS= read -r file; do
     # Check if the file contains an 'inputs:' section
     if grep -q "inputs:" "$file"; then
-        # Check if the file contains a step that uses the validate-action-inputs.js script
-        if ! grep -q "./scripts/validate-action-inputs.js" "$file"; then
-            echo "Warning: $file contains inputs but doesn't use the validate-action-inputs.js script. Please add it and make sure bun install has been run before calling it!"
+        # Check if the file contains a step that uses the validate-action-inputs.cjs script
+        if ! grep -q "./scripts/validate-action-inputs.cjs" "$file"; then
+            echo "Warning: $file contains inputs but doesn't use the validate-action-inputs.cjs script. Please add it and make sure bun install has been run before calling it!"
             warnings_found=1
         fi
     fi

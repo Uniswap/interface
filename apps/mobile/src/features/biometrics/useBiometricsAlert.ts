@@ -1,8 +1,8 @@
+import { isIOS } from '@universe/environment'
 import type { TFunction } from 'i18next'
 import { Alert } from 'react-native'
 import { openSettings } from 'react-native-permissions'
 import { enroll } from 'src/features/biometrics/biometrics-utils'
-import { isIOS } from 'utilities/src/platform'
 
 type ShowBiometricsAlert = (biometricsMethod: string) => void
 

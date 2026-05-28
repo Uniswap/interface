@@ -28,6 +28,7 @@ import { type DatadogAppNameTag } from 'src/app/datadog'
 import { onHashcashSolveCompleted, sessionInitAnalytics } from 'src/app/features/sessions/analytics'
 import { useOnCrashAppStateResetter } from 'src/store/appStateResetter'
 import { getReduxStore } from 'src/store/store'
+import { createHashcashWorker } from 'src/workers/hashcashWorker'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
@@ -61,11 +62,14 @@ const provideSessionInitializationService = (): SessionInitializationService => 
         performanceTracker,
         getWorkerChannel: () =>
           createHashcashWorkerChannel({
-            getWorker: () =>
-              new Worker(
-                new URL('@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts', import.meta.url),
-                { type: 'module' },
-              ),
+            getWorker: createHashcashWorker,
+            // Log worker boot failures (e.g. `importScripts` NetworkError from
+            // a broken Vite chunk path)
+            // to Datadog so a regression is visible before users report it.
+            onWorkerError: (error) =>
+              getLogger().error(error, {
+                tags: { file: 'BaseAppContainer.tsx', function: 'createHashcashWorkerChannel' },
+              }),
           }),
         onSolveCompleted: onHashcashSolveCompleted,
         getLogger,

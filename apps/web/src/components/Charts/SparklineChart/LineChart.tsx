@@ -17,7 +17,7 @@ interface LineChartProps<T> {
   height: number
 }
 
-function LineChart<T>({
+function LineChartInner<T>({
   data,
   getX,
   getY,
@@ -39,4 +39,4 @@ function LineChart<T>({
   )
 }
 
-export default React.memo(LineChart) as typeof LineChart
+export const LineChart = React.memo(LineChartInner) as typeof LineChartInner

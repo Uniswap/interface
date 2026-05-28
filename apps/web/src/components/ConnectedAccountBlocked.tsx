@@ -8,7 +8,7 @@ import { ModalState } from '~/hooks/useModalState'
 import { CopyHelper } from '~/theme/components/CopyHelper'
 import { ExternalLink } from '~/theme/components/Links'
 
-export default function ConnectedAccountBlocked({ isOpen, closeModal }: ModalState) {
+export function ConnectedAccountBlocked({ isOpen, closeModal }: ModalState) {
   const blockedAddress = useModalInitialState(ModalName.BlockedAccount)?.blockedAddress
   const { t } = useTranslation()
   return (
@@ -47,3 +47,5 @@ export default function ConnectedAccountBlocked({ isOpen, closeModal }: ModalSta
     </Modal>
   )
 }
+
+export default ConnectedAccountBlocked

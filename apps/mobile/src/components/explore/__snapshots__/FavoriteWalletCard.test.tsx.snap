@@ -169,7 +169,9 @@ exports[`FavoriteWalletCard renders without error 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
+              "height": 20,
               "position": "relative",
+              "width": 20,
             }
           }
           testID="account-icon"
@@ -177,6 +179,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
           <View
             style={
               {
+                "flex": 1,
                 "flexDirection": "column",
               }
             }

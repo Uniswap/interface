@@ -46,7 +46,7 @@ class ChromeMessageChannel {
     if (this.port) {
       this.port.onMessage.addListener((message, senderPort) => mainListener(message, senderPort.sender))
     } else {
-      // oxlint-disable-next-line no-restricted-syntax
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       chrome.runtime.onMessage.addListener(mainListener)
     }
 
@@ -62,14 +62,14 @@ class ChromeMessageChannel {
     if (this.port) {
       this.port.postMessage({ [this.channelName]: message })
     } else {
-      // oxlint-disable-next-line no-restricted-syntax
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       chrome.runtime.sendMessage({ [this.channelName]: message }).catch(() => {})
     }
   }
 
   // oxlint-disable-next-line typescript/no-explicit-any -- biome-parity: oxlint is stricter here
   async sendMessageToTab(tabId: number, message: any): Promise<void> {
-    // oxlint-disable-next-line no-restricted-syntax
+    // oxlint-disable-next-line eslint-js/no-restricted-syntax
     await chrome.tabs.sendMessage(tabId, { [this.channelName]: message })
   }
 
@@ -81,7 +81,7 @@ class ChromeMessageChannel {
       tabs.forEach((tab) => {
         if (tab.id) {
           promises.push(
-            // oxlint-disable-next-line no-restricted-syntax
+            // oxlint-disable-next-line eslint-js/no-restricted-syntax
             chrome.tabs.sendMessage(tab.id, { [this.channelName]: message }).catch(() => {
               // Not logging error here because it is expected that inactive tabs will not be able to receive the message
             }),
@@ -173,7 +173,6 @@ abstract class TypedMessageChannel<
     }
 
     const messageParser = this.messageParsers[type]
-    // oxlint-disable-next-line typescript/no-unnecessary-condition
     if (!messageParser) {
       throw new Error(`No message parser found for type ${type}`)
     }

@@ -1,4 +1,5 @@
 import { WalletKitTypes } from '@reown/walletkit'
+import { hexToNumber } from '@universe/encoding'
 import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes, Verify } from '@walletconnect/types'
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
@@ -13,7 +14,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, DappRequestType } from 'uniswap/src/types/walletConnect'
-import { hexToNumber } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
 import {
@@ -329,7 +329,7 @@ export function decodeMessage(value: string): string {
  * `signTypedData` params are ordered as [account, message]
  * See https://docs.walletconnect.com/2.0/advanced/rpc-reference/ethereum-rpc#personal_sign
  */
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 function getAddressAndMessageToSign(
   ethMethod: EthSignMethod,
   params: WalletKitTypes.SessionRequest['params']['request']['params'],

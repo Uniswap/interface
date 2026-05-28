@@ -19,6 +19,10 @@ RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, NSString, MnemonicConfirmationView);
 RCT_EXPORT_SWIFTUI_PROPERTY(shouldShowSmallText, BOOL, MnemonicConfirmationView);
 RCT_EXPORT_SWIFTUI_CALLBACK(onConfirmComplete, RCTDirectEventBlock, MnemonicConfirmationView);
 RCT_EXPORT_SWIFTUI_PROPERTY(selectedWordPlaceholder, NSString, MnemonicConfirmationView);
+RCT_EXPORT_SWIFTUI_PROPERTY(pageStart, NSInteger, MnemonicConfirmationView);
+RCT_EXPORT_SWIFTUI_PROPERTY(pageSize, NSInteger, MnemonicConfirmationView);
+RCT_EXPORT_SWIFTUI_PROPERTY(currentPage, NSInteger, MnemonicConfirmationView);
+RCT_EXPORT_SWIFTUI_PROPERTY(totalPages, NSInteger, MnemonicConfirmationView);
 
 - (UIView *)view
 {

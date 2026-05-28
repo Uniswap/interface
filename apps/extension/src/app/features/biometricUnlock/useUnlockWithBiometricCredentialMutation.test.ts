@@ -28,7 +28,6 @@ const mockBiometricUnlockStorage = BiometricUnlockStorage as jest.Mocked<typeof 
 
 // Mock AuthenticatorAssertionResponse
 class MockAuthenticatorAssertionResponse {
-  // oxlint-disable-next-line max-params
   constructor(
     public userHandle: ArrayBuffer | null,
     public authenticatorData: ArrayBuffer = new ArrayBuffer(0),

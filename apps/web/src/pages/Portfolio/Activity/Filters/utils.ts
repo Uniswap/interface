@@ -27,6 +27,7 @@ export enum ActivityFilterType {
   RemoveLiquidity = 'remove-liquidity',
   Mints = 'mints',
   ClaimFees = 'claim-fees',
+  Withdrawals = 'withdrawals',
 }
 
 /**
@@ -73,6 +74,10 @@ export function getTransactionTypeFilterOptions(t: AppTFunction): Record<string,
     [ActivityFilterType.Wraps]: {
       label: t('portfolio.activity.filters.transactionType.wraps'),
       icon: Box,
+    },
+    [ActivityFilterType.Withdrawals]: {
+      label: t('portfolio.activity.filters.transactionType.withdrawals'),
+      icon: MoneyHand,
     },
     [ActivityFilterType.Approvals]: {
       label: t('portfolio.activity.filters.transactionType.approvals'),
@@ -126,6 +131,8 @@ export function getTransactionTypesForFilter(filterType: string): TransactionTyp
       return [TransactionType.NFTMint]
     case ActivityFilterType.ClaimFees:
       return [TransactionType.CollectFees, TransactionType.LPIncentivesClaimRewards, TransactionType.ClaimUni]
+    case ActivityFilterType.Withdrawals:
+      return [TransactionType.Withdraw]
     case ActivityFilterType.All:
     default:
       return 'all'
@@ -149,6 +156,7 @@ export const SERVER_FILTER_MAP: Record<ActivityFilterType, TransactionTypeFilter
   [ActivityFilterType.RemoveLiquidity]: [TransactionTypeFilter.DECREASE_LIQUIDITY],
   [ActivityFilterType.Mints]: [TransactionTypeFilter.MINT],
   [ActivityFilterType.ClaimFees]: [TransactionTypeFilter.CLAIM],
+  [ActivityFilterType.Withdrawals]: [TransactionTypeFilter.WITHDRAW],
 }
 
 export enum TimePeriod {

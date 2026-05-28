@@ -1,6 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import type { ClassicQuoteResponse, GasFeeResult } from '@universe/api'
 import { FeeType, TradingApi } from '@universe/api'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import type { providers } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
@@ -20,6 +21,15 @@ import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/tra
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
+
+// Mock the gating layer so we can drive the GasFeeOverrides flag per test
+vi.mock('@universe/gating', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('@universe/gating')>()
+  return {
+    ...mod,
+    getFeatureFlag: vi.fn(),
+  }
+})
 
 const mockPermitData = { fakePermitField: 'hi' } as unknown as TradingApi.NullablePermit
 
@@ -65,8 +75,8 @@ describe('processWrapResponse (smart contract unwrap fallback)', () => {
     vi.resetModules()
 
     // Mock the platform module before importing
-    vi.doMock('utilities/src/platform', async () => {
-      const actual = await vi.importActual<typeof import('utilities/src/platform')>('utilities/src/platform')
+    vi.doMock('@universe/environment', async () => {
+      const actual = await vi.importActual<typeof import('@universe/environment')>('@universe/environment')
       return {
         ...actual,
         isWebApp: true,
@@ -107,33 +117,38 @@ describe('processWrapResponse (smart contract unwrap fallback)', () => {
 
     // Clean up by resetting mocks
     vi.resetModules()
-    vi.doUnmock('utilities/src/platform')
+    vi.doUnmock('@universe/environment')
   })
 })
 
 describe('createPrepareSwapRequestParams', () => {
-  it('should prepare swap request params for classic quote', () => {
+  const swapQuoteResponse = {
+    quote: {} as TradingApi.ClassicQuote,
+    routing: TradingApi.Routing.CLASSIC,
+    requestId: '123',
+    permitData: mockPermitData,
+  } satisfies ClassicQuoteResponse
+  const signature = '0x123'
+  const transactionSettings: TransactionSettingsState = {
+    customDeadline: 1800,
+    selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
+    slippageWarningModalSeen: false,
+    isV4HookPoolsEnabled: false,
+    isSlippageDirty: false,
+  }
+  const alreadyApproved = true
+
+  beforeEach(() => {
+    vi.mocked(getFeatureFlag).mockReset()
+  })
+
+  it('should prepare swap request params for classic quote with gasStrategies when flag is OFF', () => {
     // Given
+    vi.mocked(getFeatureFlag).mockReturnValue(false)
     const gasStrategy = DEFAULT_GAS_STRATEGY
     const prepareParams = createPrepareSwapRequestParams({
       gasStrategy,
     })
-
-    const swapQuoteResponse = {
-      quote: {} as TradingApi.ClassicQuote,
-      routing: TradingApi.Routing.CLASSIC,
-      requestId: '123',
-      permitData: mockPermitData,
-    } satisfies ClassicQuoteResponse
-    const signature = '0x123'
-    const transactionSettings: TransactionSettingsState = {
-      customDeadline: 1800,
-      selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
-      slippageWarningModalSeen: false,
-      isV4HookPoolsEnabled: false,
-      isSlippageDirty: false,
-    }
-    const alreadyApproved = true
 
     // When
     const result = prepareParams({
@@ -144,7 +159,6 @@ describe('createPrepareSwapRequestParams', () => {
     })
 
     // Then
-    // Note: urgency is 'normal' in web environment (jsdom), undefined in mobile
     expect(result).toEqual({
       quote: swapQuoteResponse.quote,
       permitData: swapQuoteResponse.permitData,
@@ -153,7 +167,62 @@ describe('createPrepareSwapRequestParams', () => {
       deadline: expect.any(Number),
       refreshGasPrice: true,
       gasStrategies: [DEFAULT_GAS_STRATEGY],
-      urgency: 'normal',
+      urgency: 'urgent',
+    })
+    expect(getFeatureFlag).toHaveBeenCalledWith(FeatureFlags.GasFeeOverrides)
+  })
+
+  it('sends only urgency (string form) when flag is ON and no overrides', () => {
+    // Given
+    vi.mocked(getFeatureFlag).mockReturnValue(true)
+    const gasStrategy = DEFAULT_GAS_STRATEGY
+    const prepareParams = createPrepareSwapRequestParams({
+      gasStrategy,
+    })
+
+    // When
+    const result = prepareParams({
+      swapQuoteResponse,
+      signature,
+      transactionSettings,
+      alreadyApproved,
+    })
+
+    // Then — no `gasStrategies` and urgency is the bare string
+    expect(result).toEqual({
+      quote: swapQuoteResponse.quote,
+      permitData: swapQuoteResponse.permitData,
+      signature,
+      simulateTransaction: true,
+      deadline: expect.any(Number),
+      refreshGasPrice: true,
+      urgency: 'urgent',
+    })
+    expect((result as { gasStrategies?: unknown }).gasStrategies).toBeUndefined()
+  })
+
+  it('sends urgency object form when flag is ON and overrides exist', () => {
+    // Given
+    vi.mocked(getFeatureFlag).mockReturnValue(true)
+    const gasStrategy = DEFAULT_GAS_STRATEGY
+    const prepareParams = createPrepareSwapRequestParams({
+      gasStrategy,
+      gasOverrides: { maxFeePerGas: '12000000000', gasLimit: '500000' },
+    })
+
+    // When
+    const result = prepareParams({
+      swapQuoteResponse,
+      signature,
+      transactionSettings,
+      alreadyApproved,
+    })
+
+    // Then
+    expect((result as { gasStrategies?: unknown }).gasStrategies).toBeUndefined()
+    expect(result.urgency).toEqual({
+      level: 'urgent',
+      overrides: { maxFeePerGas: '12000000000', gasLimit: '500000' },
     })
   })
 })
@@ -380,5 +449,49 @@ describe('createProcessSwapResponse', () => {
 
     // Then
     expect(result.gasFeeResult.error).toBeInstanceOf(UnknownSimulationError)
+  })
+
+  // The `hasOverrides` branch determines whether `displayValue` backs out the
+  // gas-limit safety buffer. With overrides, the backend skipped that buffer
+  // so we display the raw `gasFee`; without, we deflate by
+  // `limitInflationFactor / displayLimitInflationFactor`.
+  describe('hasOverrides', () => {
+    const strategy = {
+      ...DEFAULT_GAS_STRATEGY,
+      limitInflationFactor: 1.15,
+      displayLimitInflationFactor: 1,
+    }
+    const swapQuote = { gasFee: '1150', route: [] } as TradingApi.ClassicQuote
+
+    it('deflates displayValue by limit inflation when hasOverrides is false', () => {
+      const process = createProcessSwapResponse({ gasStrategy: strategy, hasOverrides: false })
+      const result = process({
+        response: undefined,
+        error: null,
+        swapQuote,
+        isSwapLoading: false,
+        permitData: undefined,
+        swapRequestParams: undefined,
+        isRevokeNeeded: false,
+      })
+      expect(result.gasFeeResult.value).toBe('1150')
+      // 1150 * 1 / 1.15 = 1000
+      expect(result.gasFeeResult.displayValue).toBe('1000')
+    })
+
+    it('returns raw gasFee as displayValue when hasOverrides is true', () => {
+      const process = createProcessSwapResponse({ gasStrategy: strategy, hasOverrides: true })
+      const result = process({
+        response: undefined,
+        error: null,
+        swapQuote,
+        isSwapLoading: false,
+        permitData: undefined,
+        swapRequestParams: undefined,
+        isRevokeNeeded: false,
+      })
+      expect(result.gasFeeResult.value).toBe('1150')
+      expect(result.gasFeeResult.displayValue).toBe('1150')
+    })
   })
 })

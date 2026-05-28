@@ -1,3 +1,5 @@
+import { generateRandomBytes } from '@universe/cryptography'
+import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 import { logger } from 'utilities/src/logger/logger'
 // Module self-reference to enable mocking of internal function calls in tests.
 // TODO: figure out how to rewrite `Keyring.test.ts` to avoid doing this.
@@ -29,13 +31,13 @@ export type SecretPayload = {
   hash: string
 }
 export function generateNewSalt(): BufferSource {
-  return crypto.getRandomValues(new Uint8Array(16))
+  return generateRandomBytes(16)
 }
 export function generateNewIV(): BufferSource {
-  return crypto.getRandomValues(new Uint8Array(12))
+  return generateRandomBytes(12)
 }
 export function generateNew256BitRandomBuffer(): BufferSource {
-  return crypto.getRandomValues(new Uint8Array(32))
+  return generateRandomBytes(32)
 }
 
 interface EncryptParams {
@@ -49,7 +51,7 @@ export async function encrypt({ plaintext, encryptionKey, iv, additionalData }: 
   const encoder = new TextEncoder()
   const ciphertext = await crypto.subtle.encrypt(
     {
-      iv,
+      iv: iv as BufferSource,
       ...AES_GCM_PARAMS,
       additionalData: encoder.encode(additionalData),
     },
@@ -79,12 +81,12 @@ export async function decrypt({
     // if this is successful, the password is correct. Otherwise it will throw an error
     const result = await crypto.subtle.decrypt(
       {
-        iv,
+        iv: iv as BufferSource,
         ...AES_GCM_PARAMS,
         additionalData: encoder.encode(additionalData),
       },
       encryptionKey,
-      ciphertext,
+      ciphertext as BufferSource,
     )
     return decoder.decode(result)
   } catch (_error) {
@@ -95,10 +97,7 @@ export async function decrypt({
 
 export async function exportKey(key: CryptoKey): Promise<string> {
   const rawKey = await window.crypto.subtle.exportKey('raw', key)
-  const keyArray = new Uint8Array(rawKey)
-  const binaryString = String.fromCharCode.apply(null, [...keyArray])
-  const keyBase64 = btoa(binaryString)
-  return keyBase64
+  return uint8ToBase64(new Uint8Array(rawKey))
 }
 
 export async function convertBytesToCryptoKey(bytes: BufferSource): Promise<CryptoKey> {
@@ -106,8 +105,7 @@ export async function convertBytesToCryptoKey(bytes: BufferSource): Promise<Cryp
 }
 
 export async function convertBase64SeedToCryptoKey(keyBase64: string): Promise<CryptoKey> {
-  const bytes = Uint8Array.from(window.atob(keyBase64), (c) => c.charCodeAt(0))
-  return convertBytesToCryptoKey(bytes)
+  return convertBytesToCryptoKey(base64ToUint8(keyBase64))
 }
 
 export async function getEncryptionKeyFromBuffer({

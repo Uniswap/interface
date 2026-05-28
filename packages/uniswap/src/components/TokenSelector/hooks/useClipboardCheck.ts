@@ -1,6 +1,6 @@
+import { isWebApp } from '@universe/environment'
 import { hasStringAsync } from 'expo-clipboard'
 import { useEffect, useState } from 'react'
-import { isWebApp } from 'utilities/src/platform'
 
 export function useClipboardCheck(): boolean {
   const [hasClipboardString, setHasClipboardString] = useState(false)

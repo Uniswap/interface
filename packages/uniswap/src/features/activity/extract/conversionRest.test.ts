@@ -1283,4 +1283,80 @@ describe(extractRestOnChainTransactionDetails, () => {
     expect(txns).toHaveLength(1)
     expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Unknown)
   })
+
+  describe('EXECUTE label (batched transactions)', () => {
+    const MOCK_EXECUTE_SWAP_AND_APPROVE: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.EXECUTE,
+      transfers: [
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: { ...ERC20_TOKEN_MOCK, address: WRAPPED_NATIVE_ADDRESS, symbol: 'WETH' } },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: SAMPLE_SEED_ADDRESS_3,
+          to: FROM_ADDRESS,
+        },
+        {
+          direction: Direction.SEND,
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: FROM_ADDRESS,
+          to: SAMPLE_SEED_ADDRESS_3,
+        },
+      ],
+      approvals: [
+        {
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+        },
+      ],
+      protocol: { name: 'Permit2', logoUrl: 'https://permit2.logo' },
+    } as OnChainTransaction
+
+    it('EXECUTE with swap + approval returns single swap entry, approval is dropped', () => {
+      const txns = extractRestOnChainTransactionDetails(MOCK_EXECUTE_SWAP_AND_APPROVE)
+      expect(txns).toHaveLength(1)
+      expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Swap)
+      // Approval intentionally not surfaced for batched swap+approve.
+      expect(txns[0]?.typeInfo).not.toHaveProperty('bundledApproval')
+    })
+
+    it('EXECUTE with only approval (no transfers) returns single approve entry', () => {
+      const approvalOnly: OnChainTransaction = {
+        ...TRANSACTION_BASE,
+        label: OnChainTransactionLabel.EXECUTE,
+        transfers: [],
+        approvals: [
+          {
+            asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+            amount: { amount: 1, raw: '1000000000000000000' },
+          },
+        ],
+        protocol: { name: 'Permit2', logoUrl: 'https://permit2.logo' },
+      } as unknown as OnChainTransaction
+      const txns = extractRestOnChainTransactionDetails(approvalOnly)
+      expect(txns).toHaveLength(1)
+      expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Approve)
+    })
+
+    it('EXECUTE with only swap (no approvals) returns single swap entry', () => {
+      const swapOnly: OnChainTransaction = {
+        ...MOCK_EXECUTE_SWAP_AND_APPROVE,
+        approvals: [],
+      } as unknown as OnChainTransaction
+      const txns = extractRestOnChainTransactionDetails(swapOnly)
+      expect(txns).toHaveLength(1)
+      expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Swap)
+    })
+
+    it('EXECUTE with neither transfers nor approvals falls through to unknown', () => {
+      const empty: OnChainTransaction = {
+        ...TRANSACTION_BASE,
+        label: OnChainTransactionLabel.EXECUTE,
+      } as OnChainTransaction
+      const txns = extractRestOnChainTransactionDetails(empty)
+      expect(txns).toHaveLength(1)
+      expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Unknown)
+    })
+  })
 })

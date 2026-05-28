@@ -1,5 +1,5 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
 import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
@@ -19,6 +19,7 @@ import {
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isMultichainProjectTokens } from 'uniswap/src/features/dataApi/tokenProjects/utils/isMultichainProjectTokens'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import {
   TokenMenuActionType,
@@ -37,7 +38,7 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const token = useTokenBasicInfoPartsFragment({ currencyId }).data
   const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
-  const isMultichainToken = multichainTokenUxEnabled && (project?.tokens?.length ?? 0) > 1
+  const isMultichainToken = multichainTokenUxEnabled && isMultichainProjectTokens(project?.tokens)
 
   const logo = project?.logoUrl ?? undefined
   const symbol = token.symbol
@@ -66,9 +67,18 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
 const EXCLUDED_ACTIONS = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
 
 export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Element {
-  const { currencyId, currencyInfo, openContractAddressExplainerModal, copyAddressToClipboard } =
-    useTokenDetailsContext()
+  const {
+    currencyId,
+    currencyInfo,
+    openContractAddressExplainerModal,
+    openMultichainAddressSheet,
+    copyAddressToClipboard,
+  } = useTokenDetailsContext()
   const currentChainBalance = useTokenDetailsCurrentChainBalance()
+
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const project = useTokenBasicProjectPartsFragment({ currencyId }).data.project
+  const isMultichainToken = multichainTokenUxEnabled && (project?.tokens?.length ?? 0) > 1
 
   const openReportTokenModal = useEvent(() => {
     setTimeout(() => {
@@ -76,6 +86,7 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
         source: 'token-details',
         currency: currencyInfo?.currency,
         isMarkedSpam: currencyInfo?.isSpam,
+        isMultichainAsset: isMultichainToken,
       })
     }, MODAL_OPEN_WAIT_TIME)
   })
@@ -87,16 +98,30 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
   })
 
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
+
+  const onPressCopyAddressOverride = useMemo(() => {
+    if (!isMultichainToken) {
+      return undefined
+    }
+    return (): void => {
+      closeMenu()
+      openMultichainAddressSheet()
+    }
+  }, [isMultichainToken, closeMenu, openMultichainAddressSheet])
+
   const menuActions = useTokenContextMenuOptions({
     excludedActions: EXCLUDED_ACTIONS,
     currencyId,
     isBlocked: currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked,
     tokenSymbolForNotification: currencyInfo?.currency.symbol,
     portfolioBalance: currentChainBalance,
+    isMultichainAsset: isMultichainToken,
     openContractAddressExplainerModal,
     openReportDataIssueModal,
     openReportTokenModal,
     copyAddressToClipboard,
+    onPressCopyAddressOverride,
+    // No-op: only Swap/Send handlers use closeMenu, and both are in EXCLUDED_ACTIONS
     closeMenu: () => {},
   })
 

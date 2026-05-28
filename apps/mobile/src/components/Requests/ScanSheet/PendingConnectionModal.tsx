@@ -31,7 +31,7 @@ import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/uti
 import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
 import { useDappConnectionConfirmation } from 'wallet/src/features/dappRequests/hooks/useDappConnectionConfirmation'
 import { DappConnectionInfo, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
-import { mergeVerificationStatuses } from 'wallet/src/features/dappRequests/verification'
+import { applyFirstPartyOverride, mergeVerificationStatuses } from 'wallet/src/features/dappRequests/verification'
 import {
   useActiveAccountWithThrow,
   useHasSmartWalletConsent,
@@ -59,7 +59,12 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
   // Merge WalletConnect verification with Blockaid verification
   const { verificationStatus: blockaidStatus } = useBlockaidVerification(pendingSession.dappRequestInfo.url)
-  const finalVerificationStatus = mergeVerificationStatuses(pendingSession.verifyStatus, blockaidStatus)
+  // Only apply the first-party override against the WC Verify trusted origin — never the
+  // dapp-supplied metadata URL, which a malicious dapp could spoof to claim a Uniswap hostname.
+  const finalVerificationStatus = applyFirstPartyOverride(
+    mergeVerificationStatuses(pendingSession.verifyStatus, blockaidStatus),
+    pendingSession.trustedOriginUrl,
+  )
 
   const { confirmedWarning, setConfirmedWarning, disableConfirm } = useDappConnectionConfirmation({
     verificationStatus: finalVerificationStatus,

@@ -1,3 +1,4 @@
+import { ensure0xHex } from '@universe/encoding'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Account } from 'uniswap/src/features/accounts/store/types/Account'
@@ -10,7 +11,6 @@ import { DEFAULT_EVM_METHODS, EVM_NAMESPACE_IDENTIFIER } from 'uniswap/src/featu
 import { CAIP25Session } from 'uniswap/src/features/capabilities/caip25/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { isNonEmptyArray, NonEmptyArray } from 'utilities/src/primitives/array'
 import { createAccountsStoreGetters } from 'wallet/src/features/accounts/store/getters'
 import {

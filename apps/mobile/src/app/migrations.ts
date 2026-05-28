@@ -72,6 +72,7 @@ import {
 import {
   addActivityVisibility,
   addDismissedBridgedAndCompatibleWarnings,
+  addEnableCustomGasFeeEntry,
   migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
@@ -202,6 +203,7 @@ export const migrations = {
   95: addActivityVisibility,
   96: migrateDismissedTokenWarnings,
   97: setWalletDeviceLanguage,
+  98: addEnableCustomGasFeeEntry,
 }
 
-export const MOBILE_STATE_VERSION = 97
+export const MOBILE_STATE_VERSION = 98

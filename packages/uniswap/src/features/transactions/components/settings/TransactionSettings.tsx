@@ -1,3 +1,4 @@
+import { isMobileApp, isWebApp } from '@universe/environment'
 import type { ColorTokens, FlexProps, GeneratedIcon } from 'ui/src'
 import { Flex, Popover, TouchableArea } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
@@ -17,7 +18,6 @@ import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnly
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export interface TransactionSettingsProps {

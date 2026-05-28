@@ -52,7 +52,7 @@ export function PasskeyGenerationModal({
           <Flex position="relative" height={48} width={80} alignItems="center" justifyContent="center">
             <Flex
               position="absolute"
-              backgroundColor="$surface3Solid"
+              backgroundColor="$surface2"
               p="$spacing12"
               borderRadius="$rounded16"
               transform={[{ rotate: '-15deg' }, { translateY: -5 }]}
@@ -78,7 +78,7 @@ export function PasskeyGenerationModal({
         onClose={onClose}
         goBack={goBack}
       >
-        <Flex px="$spacing32" mb="$spacing32" width="100%">
+        <Flex width="100%">
           <Trace logPress element={ElementName.CreatePasskey}>
             <Button
               testID={TestID.CreatePasskey}

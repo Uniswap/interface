@@ -178,6 +178,7 @@ async function getDenominatedValue({
     tokenIn: tokenAddress,
     tokenOut: stablecoinCurrency.address,
     swapper: accountAddress,
+    autoSlippage: TradingApi.AutoSlippage.DEFAULT,
   })
 
   const amountOut =

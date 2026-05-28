@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { isWebPlatform } from '@universe/environment'
 import React, { ReactNode } from 'react'
 import {
   TokenContextMenuAction,
@@ -8,7 +9,6 @@ import {
 import { ContextMenu, ContextMenuProps } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export { TokenContextMenuAction } from 'uniswap/src/components/lists/items/tokens/useSearchTokenMenuItems'
 

@@ -16,12 +16,13 @@ import type { UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ALL_NETWORKS_LABEL } from 'uniswap/src/features/telemetry/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { ChainLogo } from '~/components/Logo/ChainLogo'
 import { useFilteredChainIds } from '~/components/NetworkFilter/useFilteredChains'
-import { ExploreTab } from '~/pages/Explore/constants'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
+import { ExploreTab } from '~/types/explore'
 
 const NetworkLabel = styled(Flex, {
   flexDirection: 'row',
@@ -96,6 +97,9 @@ export function NetworkFilter({
   networks,
   customTrigger,
   isTriggerStyled = true,
+  tracePage,
+  tab,
+  forceFlipUp,
 }: {
   showMultichainOption?: boolean
   showDisplayName?: boolean
@@ -107,6 +111,9 @@ export function NetworkFilter({
   networks?: UniverseChainId[]
   customTrigger?: JSX.Element | string
   isTriggerStyled?: boolean
+  tracePage?: InterfacePageName
+  tab?: ExploreTab
+  forceFlipUp?: boolean
 }) {
   const { t } = useTranslation()
   const [isMenuOpen, toggleMenu] = useState(false)
@@ -120,6 +127,7 @@ export function NetworkFilter({
       if (!isSupportedChainCallback(chainId)) {
         return null
       }
+      // oxlint-disable-next-line no-shadow
       const chainInfo = getChainInfo(chainId)
       const supported = isBackendSupportedChainId(chainId)
 
@@ -127,14 +135,16 @@ export function NetworkFilter({
         <TableNetworkItem
           key={chainId}
           chainInfo={chainInfo}
+          tab={tab}
           toggleMenu={toggleMenu}
+          tracePage={tracePage}
           unsupported={!supported}
           onPress={onPress}
           currentChainId={currentChainId}
         />
       )
     },
-    [isSupportedChainCallback, onPress, currentChainId],
+    [isSupportedChainCallback, onPress, currentChainId, tab, tracePage],
   )
 
   return (
@@ -169,14 +179,17 @@ export function NetworkFilter({
           dropdownStyle={StyledDropdown}
           adaptToSheet
           allowFlip
+          forceFlipUp={forceFlipUp}
           alignRight={position === 'right'}
         >
           <ScrollView>
-            <Flex p="$spacing8" pr="$none">
+            <Flex p="$spacing8">
               {showMultichainOption && (
                 <TableNetworkItem
                   chainInfo={null}
+                  tab={tab}
                   toggleMenu={toggleMenu}
+                  tracePage={tracePage}
                   onPress={onPress}
                   currentChainId={currentChainId}
                 />
@@ -192,16 +205,18 @@ export function NetworkFilter({
 
 const TableNetworkItem = memo(function TableNetworkItem({
   chainInfo,
-  toggleMenu,
   tab,
+  toggleMenu,
+  tracePage,
   unsupported,
   onPress,
   currentChainId,
 }: {
   chainInfo: UniverseChainInfo | null
-  toggleMenu: Dispatch<SetStateAction<boolean>>
-  onPress: (chainId: UniverseChainId | undefined) => void
   tab?: ExploreTab
+  toggleMenu: Dispatch<SetStateAction<boolean>>
+  tracePage?: InterfacePageName
+  onPress: (chainId: UniverseChainId | undefined) => void
   unsupported?: boolean
   currentChainId?: UniverseChainId | undefined
 }) {
@@ -227,13 +242,17 @@ const TableNetworkItem = memo(function TableNetworkItem({
   return (
     <Trace
       logPress
-      page={InterfacePageName.ExplorePage}
+      {...(tracePage !== undefined ? { page: tracePage } : {})}
       properties={{
-        tab,
+        ...(tab !== undefined ? { tab } : {}),
         chain: chainName.toString(),
-        previousConnectedChain: currentChainInfo?.id
+        chain_id: chainId ?? ALL_NETWORKS_LABEL,
+        chain_name: isAllNetworks ? ALL_NETWORKS_LABEL : chainInfo.label,
+        previous_connected_chain: currentChainInfo?.id
           ? toGraphQLChain(currentChainInfo.id)
           : t('transaction.network.all'),
+        previous_chain_id: currentChainInfo?.id ?? ALL_NETWORKS_LABEL,
+        previous_chain_name: currentChainInfo ? currentChainInfo.label : ALL_NETWORKS_LABEL,
       }}
     >
       <InternalMenuItem

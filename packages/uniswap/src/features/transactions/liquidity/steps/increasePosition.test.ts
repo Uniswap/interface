@@ -20,9 +20,6 @@ vi.mock('uniswap/src/data/apiClients/liquidityService/LiquidityServiceClient', (
   V2LiquidityServiceClient: {
     increasePosition: vi.fn(),
   },
-  V1LiquidityServiceClient: {
-    increaseLpPosition: vi.fn(),
-  },
 }))
 
 describe('createIncreasePositionAsyncStep', () => {

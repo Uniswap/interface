@@ -8,7 +8,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import type { Mock } from 'vitest'
 
 // Mock all dependencies
-vi.mock('utilities/src/platform', () => ({
+vi.mock('@universe/environment', () => ({
   isWebPlatform: true,
   isMobileApp: false,
 }))

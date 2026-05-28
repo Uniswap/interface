@@ -9,6 +9,7 @@ import { ChevronsOut } from 'ui/src/components/icons/ChevronsOut'
 import { Flex, styled } from 'ui/src/index'
 import { zIndexes } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTableBottomFade } from '~/components/Table/hooks/useTableBottomFade'
 import { useTableExpandedState } from '~/components/Table/hooks/useTableExpandedState'
 import { getCommonPinningStyles } from '~/components/Table/PinnedColumns/getCommonPinningStyles'
 import { usePinnedColumns } from '~/components/Table/PinnedColumns/usePinnedColumns'
@@ -16,11 +17,12 @@ import { CellContainer, TableRowBase } from '~/components/Table/styled'
 import { TableBody } from '~/components/Table/TableBody'
 import { TableLoadMoreIndicator } from '~/components/Table/TableLoadMore/TableLoadMoreIndicator'
 import { useTableLoadMore } from '~/components/Table/TableLoadMore/useTableLoadMore'
-import { TableScrollMask } from '~/components/Table/TableScrollMask'
+import { TableBottomFade, TableScrollMask } from '~/components/Table/TableScrollMask'
 import { TableSideScrollButtons } from '~/components/Table/TableSideScrollButtons/TableSideScrollButtons'
 import { useTableSideScrollButtons } from '~/components/Table/TableSideScrollButtons/useTableSideScrollButtons'
 import { TableSizeProvider } from '~/components/Table/TableSizeProvider'
 import { TableProps } from '~/components/Table/types'
+import { computeBodyMaxHeight } from '~/components/Table/utils/computeBodyMaxHeight'
 import { useAppHeaderHeight } from '~/hooks/useAppHeaderHeight'
 
 const TableContainer = styled(Flex, {
@@ -124,7 +126,11 @@ const TableSeparatorRow = styled(Flex, {
 })
 
 const TableHead = (
-  props: PropsWithChildren<{ $isSticky: boolean; $top: number; mb?: FlexProps['mb'] }>,
+  props: PropsWithChildren<{
+    $isSticky: boolean
+    $top: number
+    mb?: FlexProps['mb']
+  }>,
 ): JSX.Element => (
   <Flex
     width="100%"
@@ -176,6 +182,7 @@ const HeaderRow = styled(TableRowBase, {
   } as const,
 })
 
+// oxlint-disable-next-line complexity
 export function Table<T extends RowData>({
   columns,
   data,
@@ -203,6 +210,8 @@ export function Table<T extends RowData>({
   hiddenRows,
   showHiddenRowsLabel,
   hideHiddenRowsLabel,
+  showScrollbar,
+  virtualized = false,
 }: TableProps<T>) {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -220,6 +229,7 @@ export function Table<T extends RowData>({
   })
   const { expanded, onExpandedChange } = useTableExpandedState(singleExpandedRow)
   const tableBodyRef = useRef<HTMLDivElement>(null)
+  const showBottomFade = useTableBottomFade(tableBodyRef, !!maxHeight)
 
   const isSticky = useMemo(() => !maxHeight, [maxHeight])
 
@@ -277,10 +287,15 @@ export function Table<T extends RowData>({
   })
 
   const tableSize = useMemo(() => ({ width, height, top, left }), [width, height, top, left])
-  const computedBodyMaxHeight = useMemo(
-    () => (maxHeight ? (hideHeader ? maxHeight : maxHeight - headerHeight) : 'unset'),
-    [maxHeight, hideHeader, headerHeight],
-  )
+  const computedBodyMaxHeight = useMemo(() => {
+    if (!maxHeight) {
+      return 'unset' as const
+    }
+    const bodyHeight = hideHeader ? maxHeight : maxHeight - headerHeight
+    const itemHeight = rowHeight ?? compactRowHeight
+
+    return computeBodyMaxHeight({ bodyHeight, itemHeight, hasPinnedColumns })
+  }, [maxHeight, hideHeader, headerHeight, rowHeight, compactRowHeight, hasPinnedColumns])
 
   const content = (
     <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
@@ -296,7 +311,12 @@ export function Table<T extends RowData>({
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer
                     key={header.id}
-                    style={getCommonPinningStyles({ column: header.column, colors, v2, isHeader: true })}
+                    style={getCommonPinningStyles({
+                      column: header.column,
+                      colors,
+                      v2,
+                      isHeader: true,
+                    })}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </CellContainer>
@@ -318,6 +338,7 @@ export function Table<T extends RowData>({
           maxHeight={computedBodyMaxHeight}
           v2={v2}
           hasHiddenRows={hasHiddenRows && !loading && !error}
+          {...(showScrollbar && { scrollbarWidth: 'thin' as const })}
         >
           <TableBody
             loading={loading}
@@ -329,12 +350,14 @@ export function Table<T extends RowData>({
             compactRowHeight={compactRowHeight}
             subRowHeight={subRowHeight}
             hasPinnedColumns={hasPinnedColumns}
+            virtualized={virtualized}
             // @ts-ignore
             table={table}
             ref={tableBodyRef}
           />
         </TableBodyContainer>
       </ScrollSyncPane>
+      {showBottomFade && <TableBottomFade />}
       {hasHiddenRows && !loading && !error && (
         <>
           {/* Separator with expand/collapse control */}

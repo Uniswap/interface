@@ -1,3 +1,4 @@
+// oxlint-disable eslint-js/no-restricted-syntax -- allow process.env access here
 /* oxlint-disable max-params */
 /**
  * Structured JSON Logger Implementation

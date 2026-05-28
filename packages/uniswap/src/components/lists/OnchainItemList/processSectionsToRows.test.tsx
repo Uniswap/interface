@@ -37,7 +37,6 @@ describe('processSectionsToRows', () => {
     sectionKey: OnchainItemSectionName,
     data: OnchainItemSection<TokenOption>['data'] = [mockTokenOption],
     name?: string,
-    // oxlint-disable-next-line max-params
   ): OnchainItemSection<TokenOption> => ({
     sectionKey,
     data,
@@ -141,6 +140,22 @@ describe('processSectionsToRows', () => {
     expect(header.data.section.rightElement).toBe(rightElement)
     expect(header.data.section.endElement).toBe(endElement)
     expect(header.data.section.sectionKey).toBe(OnchainItemSectionName.YourTokens)
+  })
+
+  it('preserves custom section header height metadata in processed headers', () => {
+    const section: OnchainItemSection<TokenOption> = {
+      sectionKey: OnchainItemSectionName.YourTokens,
+      data: [mockTokenOption],
+      sectionHeaderHeight: 104,
+    }
+
+    const [header] = processSectionsToRows([section])
+
+    if (!header || !isHeaderRow(header)) {
+      throw new Error('Expected header to be defined and of type Header')
+    }
+
+    expect(header.data.section.sectionHeaderHeight).toBe(104)
   })
 
   it('correctly sets token item indices within sections', () => {

@@ -1,9 +1,10 @@
+import { isExtensionApp } from '@universe/environment'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
-import { Bank } from 'ui/src/components/icons/Bank'
+import { Buy } from 'ui/src/components/icons/Buy'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import type { ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { ActionCard } from 'uniswap/src/components/misc/ActionCard'
@@ -12,11 +13,11 @@ import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexT
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isExtensionApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
+import { useCexTransferProviderPress } from '~/components/ReceiveCryptoModal/useCexTransferProviderPress'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { ReceiveModalState } from '~/types/receiveCryptoModal'
 
 const ICON_SIZE = 28
 const ICON_SHIFT = 18
@@ -94,8 +95,19 @@ export const EmptyWalletCards = (
   const handleReceiveCryptoClick = useOpenReceiveCryptoModal({
     modalState: ReceiveModalState.DEFAULT,
   })
-  const handleCEXTransferClick = useOpenReceiveCryptoModal({
+  const openCexTransferProviderList = useOpenReceiveCryptoModal({
     modalState: ReceiveModalState.CEX_TRANSFER,
+  })
+  const singleCexProvider = providers.length === 1 ? providers[0] : undefined
+  const { onPress: onPressSingleCexProvider } = useCexTransferProviderPress(singleCexProvider, {
+    onWidgetError: openCexTransferProviderList,
+  })
+  const handleCEXTransferClick = useEvent(() => {
+    if (singleCexProvider) {
+      onPressSingleCexProvider()
+    } else {
+      openCexTransferProviderList()
+    }
   })
 
   const options: ActionCardItem[] = useMemo(
@@ -104,7 +116,7 @@ export const EmptyWalletCards = (
         title: t('home.tokens.empty.action.buy.title'),
         blurb: t('home.tokens.empty.action.buy.description'),
         elementName: buyElementName,
-        icon: <Bank color="$accent1" size="$icon.28" />,
+        icon: <Buy color="$accent1" size="$icon.28" />,
         onPress: handleBuyCryptoClick,
         testId: TestID.EmptyStateBuy,
       },

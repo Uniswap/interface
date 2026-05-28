@@ -10,6 +10,7 @@ import { logger } from 'utilities/src/logger/logger'
 export interface FavoritesState {
   tokens: CurrencyId[]
   watchedAddresses: Address[]
+  hasMigratedToMultichain?: boolean
 }
 
 // Default currency ids, need to be normalized to match slice add and remove behavior
@@ -72,6 +73,9 @@ export const slice = createSlice({
       state.watchedAddresses = addresses
     },
     resetFavorites: () => initialFavoritesState,
+    setHasMigratedToMultichain: (state, { payload }: PayloadAction<boolean>) => {
+      state.hasMigratedToMultichain = payload
+    },
   },
 })
 
@@ -83,5 +87,6 @@ export const {
   removeWatchedAddress,
   setFavoriteWallets,
   resetFavorites,
+  setHasMigratedToMultichain,
 } = slice.actions
 export const { reducer: favoritesReducer } = slice

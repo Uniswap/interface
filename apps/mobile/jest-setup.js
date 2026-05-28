@@ -2,6 +2,7 @@
 import 'react-native-gesture-handler/jestSetup'
 // Other
 import 'core-js' // necessary so setImmediate works in tests
+import '@universe/environment/jest-package-mocks'
 import 'utilities/jest-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'wallet/jest-package-mocks'
@@ -18,6 +19,64 @@ jest.mock('react-native/Libraries/Animated/NativeAnimatedModule')
 jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
 
 jest.mock('@walletconnect/react-native-compat', () => ({}))
+
+// Mock NativeEventEmitter to delegate to RCTDeviceEventEmitter so that subscriptions
+// returned from `addListener` have a working `.remove()`. RN 0.81 removed the
+// __mocks__/NativeEventEmitter.js shim that previously did this, so addListener
+// now returns undefined under jest auto-mocking.
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
+  const RCTDeviceEventEmitter =
+    require('react-native/Libraries/EventEmitter/RCTDeviceEventEmitter').default ||
+    require('react-native/Libraries/EventEmitter/RCTDeviceEventEmitter')
+  class NativeEventEmitter {
+    addListener(eventType, listener, context) {
+      return RCTDeviceEventEmitter.addListener(eventType, listener, context)
+    }
+    emit(eventType, ...args) {
+      RCTDeviceEventEmitter.emit(eventType, ...args)
+    }
+    removeAllListeners(eventType) {
+      RCTDeviceEventEmitter.removeAllListeners(eventType)
+    }
+    listenerCount(eventType) {
+      return RCTDeviceEventEmitter.listenerCount(eventType)
+    }
+  }
+  return { __esModule: true, default: NativeEventEmitter }
+})
+
+// Mock react-native-mmkv to avoid loading native nitro-modules in tests.
+// Mirrors the createMockMMKV behavior from the library.
+jest.mock('react-native-mmkv', () => {
+  const createMMKV = (config = { id: 'mmkv.default' }) => {
+    const storage = new Map()
+    return {
+      id: config.id,
+      get size() {
+        return storage.size
+      },
+      isReadOnly: false,
+      clearAll: () => storage.clear(),
+      remove: (key) => storage.delete(key),
+      set: (key, value) => {
+        storage.set(key, value)
+      },
+      getString: (key) => storage.get(key),
+      getNumber: (key) => storage.get(key),
+      getBoolean: (key) => storage.get(key),
+      getBuffer: (key) => storage.get(key),
+      contains: (key) => storage.has(key),
+      getAllKeys: () => Array.from(storage.keys()),
+      addOnValueChangedListener: () => ({ remove: () => undefined }),
+      trim: () => undefined,
+    }
+  }
+  return {
+    createMMKV,
+    existsMMKV: () => false,
+    deleteMMKV: () => undefined,
+  }
+})
 
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {

@@ -123,9 +123,12 @@ const slice = createSlice({
         tx.networkFee = networkFee
       }
 
-      // Update hash for successful UniswapX orders
-      if (isUniswapX(transaction) && status === TransactionStatus.Success) {
-        assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)
+      // Update hash for successful UniswapX or userOp orders
+      if ((isUniswapX(transaction) || transaction.userOpHash) && status === TransactionStatus.Success) {
+        assert(
+          hash,
+          `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash or userOp hash`,
+        )
         state[from]![chainId]![id]!.hash = hash
       }
     },

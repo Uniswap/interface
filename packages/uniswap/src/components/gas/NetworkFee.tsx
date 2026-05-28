@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { GasFeeResult } from '@universe/api'
+import { isWebApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, UniswapXText } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
@@ -15,7 +16,6 @@ import {
 } from 'uniswap/src/features/gas/hooks'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isZero } from 'uniswap/src/utils/number'
-import { isWebApp } from 'utilities/src/platform'
 
 export function NetworkFee({
   chainId,

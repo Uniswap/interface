@@ -53,7 +53,15 @@ interface SwapLeg {
   token: GraphQLApi.Token
 }
 
-export function TransactionsTable({ chainId, referenceToken }: { chainId: UniverseChainId; referenceToken: Token }) {
+export function TransactionsTable({
+  chainId,
+  referenceToken,
+  isMultichainView,
+}: {
+  chainId: UniverseChainId
+  referenceToken: Token
+  isMultichainView: boolean
+}) {
   const { t } = useTranslation()
   const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
   const activeLocalCurrency = useAppFiatCurrency()
@@ -65,7 +73,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
     address: referenceToken.address,
     chainId,
     filter,
-    multichain: multichainTokenUxEnabled,
+    multichain: isMultichainView,
   })
 
   // Only show full error state when ALL versions fail
@@ -247,7 +255,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
                   type: NumberType.TokenQuantityStats,
                 })}
               </EllipsisText>
-              <TokenLinkCell token={nonReferenceSwapLeg.token} showMainnetNetworkLogo={multichainTokenUxEnabled} />
+              <TokenLinkCell token={nonReferenceSwapLeg.token} />
             </Flex>
           )
         },
@@ -317,7 +325,6 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
     chainId,
     filterModalIsOpen,
     filter,
-    multichainTokenUxEnabled,
     referenceToken.address,
     unwrappedReferenceToken.symbol,
     formatNumberOrString,

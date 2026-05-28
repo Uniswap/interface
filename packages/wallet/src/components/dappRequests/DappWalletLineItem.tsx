@@ -1,8 +1,8 @@
+import { isExtensionApp, isMobileApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 
 /**
  * Displays the active account address in dapp request footers.

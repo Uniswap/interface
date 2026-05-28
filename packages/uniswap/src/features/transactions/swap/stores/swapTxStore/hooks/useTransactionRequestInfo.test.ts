@@ -19,11 +19,17 @@ import type { Mock } from 'vitest'
 vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery')
 vi.mock('uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/usePermit2Signature')
 vi.mock('uniswap/src/features/gas/hooks')
+vi.mock('uniswap/src/features/gas/hooks/useTradingApiGasOverrides', () => ({
+  useTradingApiGasOverrides: vi.fn(() => undefined),
+}))
 vi.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled')
 vi.mock(
   'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore',
   () => ({
     useAllTransactionSettings: vi.fn(),
+    useTransactionSettingsStore: vi.fn((selector: (s: { gasOverrides: undefined }) => unknown) =>
+      selector({ gasOverrides: undefined }),
+    ),
   }),
 )
 vi.mock('@universe/gating', async (importOriginal) => {

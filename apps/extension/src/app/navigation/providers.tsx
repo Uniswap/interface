@@ -4,6 +4,7 @@ import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import {
+  focusOrCreateEarnVaultTab,
   focusOrCreateTokensExploreTab,
   focusOrCreateUniswapInterfaceTab,
   SidebarLocationState,
@@ -24,6 +25,7 @@ import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboar
 import {
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
+  NavigateToEarnVaultArgs,
   NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToSendFlowArgs,
@@ -85,6 +87,7 @@ function SharedExtensionNavigationProvider({
   }, [])
   const navigateToPoolDetails = useNavigateToPoolDetails()
   const navigateToAdvancedSettings = useNavigateToAdvancedSettings()
+  const navigateToEarnVault = useNavigateToEarnVault()
 
   return (
     <WalletNavigationProvider
@@ -92,6 +95,7 @@ function SharedExtensionNavigationProvider({
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToEarnVault={navigateToEarnVault}
       navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftDetails={navigateToNftDetails}
@@ -227,5 +231,11 @@ function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
 function useNavigateToAdvancedSettings(): () => void {
   return useCallback((): void => {
     navigate(`/${AppRoutes.Settings}`, { state: { openAdvancedSettings: true } })
+  }, [])
+}
+
+function useNavigateToEarnVault(): (args: NavigateToEarnVaultArgs) => void {
+  return useCallback(async ({ vault }: NavigateToEarnVaultArgs): Promise<void> => {
+    await focusOrCreateEarnVaultTab({ vault })
   }, [])
 }

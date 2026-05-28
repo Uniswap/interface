@@ -1,4 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { isMobileApp } from '@universe/environment'
 import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
 import { extractDomain } from 'uniswap/src/components/lists/items/wallets/utils'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -7,9 +8,7 @@ import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/teleme
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NavBarSearchTypes } from 'uniswap/src/features/telemetry/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp } from 'utilities/src/platform'
 
-// oxlint-disable-next-line complexity
 export function sendSearchOptionItemClickedAnalytics({
   item,
   section,

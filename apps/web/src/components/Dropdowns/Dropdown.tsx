@@ -53,6 +53,7 @@ export function Dropdown({
 }: DropdownProps) {
   const Trigger = useMemo(
     () => (
+      // @ts-expect-error -- Tamagui Text styled() prop widening regression with React 19.1 + RN 0.81 types
       <TriggerButton
         outlined={isTriggerStyled}
         onPress={() => toggleOpen(!isOpen)}

@@ -21,7 +21,6 @@ export const Easing = {
     (t: number) =>
       t,
   bounce: ((t: number) => t) as EasingFn,
-  // oxlint-disable-next-line max-params -- matches react-native-reanimated API
   bezier:
     // oxlint-disable-next-line max-params -- biome-parity: oxlint is stricter here
     (_x1: number, _y1: number, _x2: number, _y2: number): EasingFn =>

@@ -63,6 +63,8 @@ describe('useTransactionGasEstimation', () => {
         tx: { ...mockBaseTx, chainId: mockChainId },
         skip: false,
         refetchInterval: PollingInterval.LightningMcQueen,
+        urgency: undefined,
+        gasLimitOverride: undefined,
       })
       expect(mockLogger.error).not.toHaveBeenCalled()
     })
@@ -93,6 +95,8 @@ describe('useTransactionGasEstimation', () => {
         tx: { ...mockBaseTx, chainId: mockChainId },
         skip: false,
         refetchInterval: PollingInterval.LightningMcQueen,
+        urgency: undefined,
+        gasLimitOverride: undefined,
         smartContractDelegationAddress: mockSmartContractDelegationAddress,
       })
     })
@@ -219,6 +223,8 @@ describe('useTransactionGasEstimation', () => {
         tx: { ...mockBaseTx, chainId: mockChainId },
         skip: true,
         refetchInterval: PollingInterval.LightningMcQueen,
+        urgency: undefined,
+        gasLimitOverride: undefined,
       })
     })
   })

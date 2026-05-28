@@ -1,3 +1,4 @@
+import { isTouchable, isWebApp } from '@universe/environment'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
@@ -10,7 +11,6 @@ import { useNetworkFilterSearch } from 'uniswap/src/components/network/NetworkFi
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isTouchable, isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const DESKTOP_DROPDOWN_MAX_HEIGHT = 320

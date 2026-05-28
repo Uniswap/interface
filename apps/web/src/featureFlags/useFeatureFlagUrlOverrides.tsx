@@ -1,7 +1,7 @@
+import { isProdEnv } from '@universe/environment'
 import { getOverrideAdapter, useStatsigClientStatus } from '@universe/gating'
 import { useEffect } from 'react'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { isProdEnv } from 'utilities/src/environment/env'
 
 export function useFeatureFlagUrlOverrides() {
   const { useParsedQueryString } = useUrlContext()

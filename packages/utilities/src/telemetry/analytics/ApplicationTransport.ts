@@ -1,5 +1,10 @@
 import { BaseTransport } from '@amplitude/analytics-core'
 import { Payload, Response, Transport } from '@amplitude/analytics-types'
+import { logger } from 'utilities/src/logger/logger'
+import {
+  AnalyticsDebugBridge,
+  captureAmplitudeTransportPayload,
+} from 'utilities/src/telemetry/analytics/analyticsDebugCapture'
 
 interface TransportConfig {
   serverUrl: string
@@ -7,6 +12,7 @@ interface TransportConfig {
   originOverride?: string
   appBuild?: string
   reportOriginCountry?: (country: string) => void
+  debugBridge?: AnalyticsDebugBridge
 }
 
 /**
@@ -21,6 +27,7 @@ export class ApplicationTransport extends BaseTransport implements Transport {
   private originOverride?: string
   private appBuild?: string
   private reportOriginCountry?: (country: string) => void
+  private debugBridge?: AnalyticsDebugBridge
 
   private shouldReportOriginCountry = true
 
@@ -33,6 +40,7 @@ export class ApplicationTransport extends BaseTransport implements Transport {
     this.originOverride = config.originOverride
     this.appBuild = config.appBuild
     this.reportOriginCountry = config.reportOriginCountry
+    this.debugBridge = config.debugBridge
 
     /* istanbul ignore if */
     if (typeof fetch === 'undefined') {
@@ -60,6 +68,12 @@ export class ApplicationTransport extends BaseTransport implements Transport {
       keepalive: true, // allow the request to outlive the page
       body: JSON.stringify(payload),
       method: 'POST',
+    }
+
+    if ('events' in payload) {
+      captureAmplitudeTransportPayload({ bridge: this.debugBridge, events: payload.events })
+    } else {
+      logger.debug('ApplicationTransport', 'send', 'Amplitude payload missing events')
     }
 
     const response = await fetch(this.serverUrl, request)
