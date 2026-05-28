@@ -9021,6 +9021,48 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@orbs-network/spot-react@npm:1.1.25":
+  version: 1.1.25
+  resolution: "@orbs-network/spot-react@npm:1.1.25"
+  dependencies:
+    "@orbs-network/spot-ui": 1.0.12
+  peerDependencies:
+    "@tanstack/react-query": ^5.90.12
+    bignumber.js: ^9.3.1
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+    react-error-boundary: ^6.0.0
+    zustand: ^5.0.9
+  checksum: 9bb0e0ec720fd50def578e666bd68e65a6f1d6353ab5820c19b721923974a57156fd14f252783ef8b54047e841c5e2ec5e3bb488351f2f1a3889d1e9f7acf79e
+  languageName: node
+  linkType: hard
+
+"@orbs-network/spot-ui@npm:1.0.12":
+  version: 1.0.12
+  resolution: "@orbs-network/spot-ui@npm:1.0.12"
+  dependencies:
+    "@orbs-network/spot": ^2.5.3
+    "@orbs-network/twap": ^2.7.28
+  peerDependencies:
+    bignumber.js: ^9.0.0
+  checksum: 6f8f345ce21f21b1b3cbca85f10b3c7d5b199689bf328572ce1f70ddc97d6a3081897f04a34c30d388d0f058854f70b0105cf1c45715f8a67eda959c92de5d68
+  languageName: node
+  linkType: hard
+
+"@orbs-network/spot@npm:^2.5.3":
+  version: 2.6.0
+  resolution: "@orbs-network/spot@npm:2.6.0"
+  checksum: f1684ad2c41e285c88f963bb2abf9ed9bc993fb205c4547ffb2b63d7ebadbce5aea1414a0356d8dce004669faf75c732990fd3e9b77d32152c9127c5bbc8c8ca
+  languageName: node
+  linkType: hard
+
+"@orbs-network/twap@npm:^2.7.28":
+  version: 2.7.29
+  resolution: "@orbs-network/twap@npm:2.7.29"
+  checksum: 6e9cb547ef32032796036cf64fd513b1c74c3efa785cb51330cb55b186abbc237f8040f530eed5b7239b5503d2dbfa18f11c15b00bf3cfc88f34ed1d12bbf9a8
+  languageName: node
+  linkType: hard
+
 "@oxc-project/runtime@npm:0.69.0":
   version: 0.69.0
   resolution: "@oxc-project/runtime@npm:0.69.0"
@@ -16931,6 +16973,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": 3.3.7
     "@graphql-codegen/typescript-resolvers": 3.2.1
     "@juggle/resize-observer": 3.4.0
+    "@orbs-network/spot-react": 1.1.25
     "@playwright/test": 1.49.1
     "@popperjs/core": 2.11.8
     "@reach/dialog": 0.10.5
@@ -17016,6 +17059,7 @@ __metadata:
     array.prototype.flatmap: 1.3.2
     babel-jest: 29.7.0
     babel-plugin-react-compiler: 19.1.0-rc.2
+    bignumber.js: 11.1.1
     browser-cache-mock: 0.1.7
     buffer: 6.0.3
     cids: 1.1.6
@@ -17071,6 +17115,7 @@ __metadata:
     react: 18.3.1
     react-compiler-runtime: rc
     react-dom: 18.3.1
+    react-error-boundary: 6.1.2
     react-feather: 2.0.10
     react-helmet-async: 2.0.4
     react-i18next: 14.1.0
@@ -17130,6 +17175,7 @@ __metadata:
     xml2js: 0.6.2
     yarn-deduplicate: 6.0.0
     zone.js: 0.12.0
+    zustand: 5.0.13
   languageName: unknown
   linkType: soft
 
@@ -20356,6 +20402,13 @@ __metadata:
   version: 5.2.2
   resolution: "big.js@npm:5.2.2"
   checksum: b89b6e8419b097a8fb4ed2399a1931a68c612bce3cfd5ca8c214b2d017531191070f990598de2fc6f3f993d91c0f08aa82697717f6b3b8732c9731866d233c9e
+  languageName: node
+  linkType: hard
+
+"bignumber.js@npm:11.1.1":
+  version: 11.1.1
+  resolution: "bignumber.js@npm:11.1.1"
+  checksum: a699c6ab32b78226eff83bbf19fd385bffa2459c138199c8824dd42eaa51d2c9bab5449375edea218de166418e99bbb564f209d845de0bd189006aeb45dd2aa5
   languageName: node
   linkType: hard
 
@@ -39950,6 +40003,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-error-boundary@npm:6.1.2":
+  version: 6.1.2
+  resolution: "react-error-boundary@npm:6.1.2"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+  checksum: fe2597913b49daaeb980721daa021cfc9aaa462c55feac6cffc36abc8f3186a79b6e6d1365a4548a981e1bed5683cd29a5eec29dfc5bfb6badeb0005d148d1c1
+  languageName: node
+  linkType: hard
+
 "react-error-boundary@npm:^3.1.0":
   version: 3.1.4
   resolution: "react-error-boundary@npm:3.1.4"
@@ -49391,6 +49453,27 @@ __metadata:
     react:
       optional: true
   checksum: 80acd0fbf633782996642802c8692bbb80ae5c80a8dff4c501b88250acd5ccd468fbc6398bdce198475a25e3839c91385b81da921274f33ffb5c2d08c3eab400
+  languageName: node
+  linkType: hard
+
+"zustand@npm:5.0.13":
+  version: 5.0.13
+  resolution: "zustand@npm:5.0.13"
+  peerDependencies:
+    "@types/react": ">=18.0.0"
+    immer: ">=9.0.6"
+    react: ">=18.0.0"
+    use-sync-external-store: ">=1.2.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    immer:
+      optional: true
+    react:
+      optional: true
+    use-sync-external-store:
+      optional: true
+  checksum: 37f9c1eb888fc6c570f80a182a54844752ffe05dca75356273038effad642892df3a839f16733636a2dd4a49f68c02be27a37b9ba767af03515ef1f8d97468de
   languageName: node
   linkType: hard
 

@@ -194,6 +194,7 @@ const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
   '/stock': SwapTab.Stock,
   '/send': SwapTab.Send,
   '/limit': SwapTab.Limit,
+  '/limit-order': SwapTab.Limit,
   '/buy': SwapTab.Buy,
   '/sell': SwapTab.Sell,
 }
@@ -255,7 +256,7 @@ function UniversalSwapFlow({
     (tab: SwapTab) => {
       sendAnalyticsEvent(InterfaceEventNameLocal.SwapTabClicked, { tab })
       if (syncTabToUrl) {
-        navigate(`/${tab}`, { replace: true })
+        navigate(tab === SwapTab.Limit ? '/limit-order' : `/${tab}`, { replace: true })
       } else {
         setCurrentTab(tab)
       }
@@ -275,7 +276,7 @@ function UniversalSwapFlow({
       }
 
       if (tab === SwapTab.Limit) {
-        return false
+        return true
       }
       if (tab === SwapTab.Buy) {
         return false

@@ -23,6 +23,7 @@ export const paths = [
   '/stock',
   '/buy',
   '/limit',
+  '/limit-order',
   '/limits',
   '/buy',
   '/wrap',

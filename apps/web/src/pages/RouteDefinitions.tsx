@@ -47,6 +47,7 @@ const PrivacyPolicy = lazy(() => import('pages/PrivacyPolicy'))
 const ExtensionPasskeyAuthPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
 const PasskeyManagement = lazy(() => import('pages/PasskeyManagement'))
 const Referral = lazy(() => import('pages/Referral'))
+const LimitOrder = lazy(() => import('pages/LimitOrder'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -236,6 +237,11 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/limit',
     getElement: () => <Swap />,
+    getTitle: () => i18n.t('title.placeLimit'),
+  }),
+  createRouteDefinition({
+    path: '/limit-order',
+    getElement: () => <LimitOrder />,
     getTitle: () => i18n.t('title.placeLimit'),
   }),
   createRouteDefinition({

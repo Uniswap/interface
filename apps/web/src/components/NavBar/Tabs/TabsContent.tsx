@@ -32,12 +32,15 @@ export const useTabsContent = (): TabsSection[] => {
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const isSellEnabled = useFeatureFlag(FeatureFlags.ShowSell)
   const isBuyEnabled = useFeatureFlag(FeatureFlags.ShowBuy)
-  const isLimitEnabled = useFeatureFlag(FeatureFlags.ShowLimit)
   return [
     {
       title: t('common.trade'),
       href: '/swap',
-      isActive: pathname.startsWith('/swap') || pathname.startsWith('/limit') || pathname.startsWith('/send'),
+      isActive:
+        pathname.startsWith('/swap') ||
+        pathname.startsWith('/limit') ||
+        pathname.startsWith('/limit-order') ||
+        pathname.startsWith('/send'),
       items: [
         {
           label: t('common.swap'),
@@ -45,16 +48,12 @@ export const useTabsContent = (): TabsSection[] => {
           href: '/swap',
           internal: true,
         },
-        ...(isLimitEnabled
-          ? [
-              {
-                label: t('swap.limit'),
-                icon: <Limit fill={theme.neutral2} />,
-                href: '/limit',
-                internal: true,
-              },
-            ]
-          : []),
+        {
+          label: 'Limit Order',
+          icon: <Limit fill={theme.neutral2} />,
+          href: '/limit-order',
+          internal: true,
+        },
         ...(isSellEnabled || isFiatOffRampEnabled
           ? []
           : [
