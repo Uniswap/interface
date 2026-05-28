@@ -1,5 +1,4 @@
 import { Signer } from '@ethersproject/abstract-signer'
-import { HexString } from 'utilities/src/addresses/hex'
 import { sleep } from 'utilities/src/time/timing'
 import { z } from 'zod'
 
@@ -8,7 +7,6 @@ export const FLASHBOTS_RPC_URL = 'https://rpc.flashbots.net/fast?originId=uniswa
 export const FLASHBOTS_DEFAULT_REFUND_PERCENT = 50 // Default for fast mode
 export const FLASHBOTS_SIGNATURE_HEADER = 'X-Flashbots-Signature'
 export const DEFAULT_FLASHBOTS_ENABLED = true
-export const DEFAULT_FLASHBOTS_BLOCK_RANGE = 10
 
 // Polling constants
 export const POLL_INTERVAL_MS = 4000
@@ -25,10 +23,10 @@ export const FlashbotsReceiptSchema = z.object({
   transaction: z.object({
     from: z.string(),
     to: z.string(),
-    gasLimit: z.union([z.string(), z.number()]).transform((val) => String(val)),
+    gasLimit: z.string(),
     maxFeePerGas: z.string(),
     maxPriorityFeePerGas: z.string(),
-    nonce: z.union([z.string(), z.number()]).transform((val) => String(val)),
+    nonce: z.string(),
     value: z.string(),
   }),
   fastMode: z.boolean(),
@@ -43,27 +41,11 @@ export type SignerInfo = {
   signer: Signer
   address: string
 }
-/**
- * Builds a Flashbots URL with the appropriate parameters
- */
-export function buildFlashbotsUrl({
-  baseUrl = FLASHBOTS_RPC_URL,
-  address,
-  refundPercent,
-}: {
-  baseUrl?: string
-  address?: HexString | string | undefined
-  refundPercent?: number
-}): string {
-  const refundParam = getRefundString(address, refundPercent)
-  const blockRangeParam = `&blockRange=${DEFAULT_FLASHBOTS_BLOCK_RANGE}`
-  return `${baseUrl}${refundParam}${blockRangeParam}`
-}
 
 /**
  * Helper function to create the refund string for Flashbots URL
  */
-function getRefundString(address?: string, refundPercent?: number): string {
+export function getRefundString(address?: string, refundPercent?: number): string {
   if (!address || !refundPercent || refundPercent < 0 || refundPercent > 100) {
     return ''
   }

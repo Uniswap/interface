@@ -3,27 +3,28 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
-import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { setClipboard } from 'utilities/src/clipboard/clipboard'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
-import { noop } from 'utilities/src/react/noop'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+
+const MODAL_CLOSE_WAIT_TIME = 300
 
 type AccountCardItemProps = {
   address: Address
@@ -81,10 +82,8 @@ export function AccountCardItem({
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
-  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId }).name
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: address ? { address } : undefined,
-  })
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
+  const { unitag } = useUnitagByAddress(address)
 
   const addressToAccount = useAccounts()
   const selectedAccount = addressToAccount[address]
@@ -129,7 +128,7 @@ export function AccountCardItem({
       navigate(ModalName.ConnectionsDappListModal, {
         address,
       })
-    }, MODAL_OPEN_WAIT_TIME)
+    }, MODAL_CLOSE_WAIT_TIME)
   }, [address, onClose])
 
   const onPressRemoveWallet = useCallback(() => {
@@ -210,7 +209,7 @@ export function AccountCardItem({
         pb="$spacing12"
         pt="$spacing8"
         px="$spacing24"
-        onLongPress={noop}
+        onLongPress={disableOnPress}
         onPress={(): void => onPress(address)}
       >
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>

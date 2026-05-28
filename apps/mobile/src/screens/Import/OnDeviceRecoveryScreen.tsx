@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { DynamicConfigs, OnDeviceRecoveryConfigKey, useDynamicConfigValue } from '@universe/gating'
 import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,13 +17,14 @@ import { Flex, Image, Text, TouchableArea } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -32,8 +32,8 @@ import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.OnDeviceRecovery>
 
@@ -48,11 +48,11 @@ export function OnDeviceRecoveryScreen({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const { setRecoveredImportedAccounts } = useOnboardingContext()
-  const recoveryLoadingTimeoutMs = useDynamicConfigValue({
-    config: DynamicConfigs.OnDeviceRecovery,
-    key: OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
-    defaultValue: FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
-  })
+  const recoveryLoadingTimeoutMs = useDynamicConfigValue(
+    DynamicConfigs.OnDeviceRecovery,
+    OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
+    FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
+  )
   const hideSplashScreen = useHideSplashScreen()
 
   const [selectedMnemonicId, setSelectedMnemonicId] = useState<string>()
@@ -85,15 +85,7 @@ export function OnDeviceRecoveryScreen({
     const storedAddresses = await Keyring.getAddressesForStoredPrivateKeys()
     await Promise.all(
       storedAddresses.map((address) => {
-        if (
-          !selectedRecoveryWalletInfos.find((walletInfo) =>
-            // TODO(WALL-7065): Update to support solana
-            areAddressesEqual({
-              addressInput1: { address: walletInfo.address, platform: Platform.EVM },
-              addressInput2: { address, platform: Platform.EVM },
-            }),
-          )
-        ) {
+        if (!selectedRecoveryWalletInfos.find((walletInfo) => areAddressesEqual(walletInfo.address, address))) {
           return Keyring.removePrivateKey(address)
         }
         return Promise.resolve()

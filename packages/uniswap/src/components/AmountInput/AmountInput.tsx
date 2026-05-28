@@ -1,8 +1,6 @@
-import { forwardRef, useCallback, useEffect, useMemo } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { getNumberFormatSettings } from 'react-native-localize'
 import { Input, Text } from 'ui/src'
-import { fonts } from 'ui/src/theme'
-import { useTextWidth } from 'uniswap/src/components/AmountInput/useTextWidth'
 import { numericInputEnforcer } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { parseValue } from 'uniswap/src/components/AmountInput/utils/parseValue'
 import { replaceSeparators } from 'uniswap/src/components/AmountInput/utils/replaceSeparators'
@@ -11,11 +9,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useOnMobileAppState } from 'utilities/src/device/appState'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isMobileApp } from 'utilities/src/platform'
-import { noop } from 'utilities/src/react/noop'
-
-// Default font size when not explicitly provided (matches heading2)
-const DEFAULT_FONT_SIZE = fonts.heading2.fontSize
+import noop from 'utilities/src/react/noop'
 
 type Props = {
   adjustWidthToContent?: boolean
@@ -82,18 +76,7 @@ export const AmountInput = forwardRef<Input, Props>(function _AmountInput(
     decimalOverride: decimalSeparator,
   })
 
-  // Estimate width to prevent overflown input on web
-  const fontSize = typeof rest.fontSize === 'number' ? rest.fontSize : DEFAULT_FONT_SIZE
-  const measurementText = formattedValue || rest.placeholder || ''
-  const maxWidth = typeof rest.maxWidth === 'number' ? rest.maxWidth : undefined
-  const { width, onLayout } = useTextWidth({
-    text: measurementText,
-    maxWidth,
-    enabled: adjustWidthToContent,
-    // on mobile, use onLayout to prevent performance stutters
-    useLayoutOnly: isMobileApp,
-  })
-
+  const [width, setWidth] = useState(0)
   const textInputProps: TextInputProps = useMemo(
     () => ({
       ref,
@@ -102,12 +85,9 @@ export const AmountInput = forwardRef<Input, Props>(function _AmountInput(
       value: formattedValue,
       onChangeText: handleChange,
       ...rest,
-      // Override fontSize to ensure TextInput and hidden Text use the same numeric value.
-      ...(adjustWidthToContent ? { fontSize } : {}),
-      ...(width !== undefined ? { width } : {}),
+      ...(adjustWidthToContent ? { width } : {}),
     }),
-    // biome-ignore lint/correctness/useExhaustiveDependencies: TODO https://linear.app/uniswap/issue/INFRA-1031/optimize-memoization-in
-    [ref, value, dimTextColor, formattedValue, handleChange, rest, width, adjustWidthToContent, fontSize],
+    [ref, value, dimTextColor, formattedValue, handleChange, rest, width, adjustWidthToContent],
   )
 
   // Dismiss keyboard when mobile app is foregrounded (showSoftInputOnFocus doesn't work when the app activates from the background)
@@ -127,19 +107,25 @@ export const AmountInput = forwardRef<Input, Props>(function _AmountInput(
     return (
       <>
         <Text
-          // Hidden element measures actual text width.
-          // On web, width is estimated instantly, then refined when onLayout fires.
-          // On mobile, width comes only from onLayout measurement.
+          // Hidden element measures text width to keep input width consistent when a currency symbol is present,
+          // preventing it from using all horizontal space.
           fontFamily="$heading"
-          fontSize={fontSize}
+          fontSize={textInputProps.fontSize}
           fontWeight="500"
           height={0}
           numberOfLines={1}
           overflow="hidden"
           position="absolute"
-          onLayout={onLayout}
+          onLayout={(e) =>
+            setWidth(
+              Math.min(
+                e.nativeEvent.layout.width,
+                typeof textInputProps.maxWidth === 'number' ? textInputProps.maxWidth : +Infinity,
+              ),
+            )
+          }
         >
-          {measurementText}
+          {value || textInputProps.placeholder}
         </Text>
         {textInputElement}
       </>

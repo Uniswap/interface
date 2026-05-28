@@ -1,12 +1,13 @@
-import { To, useLocation } from 'react-router'
-import { UnitagClaimRoutes } from 'src/app/navigation/constants'
+import { To, useLocation } from 'react-router-dom'
+import { TopLevelRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
+import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
+import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { getTokenUrl } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
-import { useEvent } from 'utilities/src/react/hooks'
+import { getTokenUrl } from 'wallet/src/utils/linking'
 
 export type SidebarLocationState =
   | {
@@ -19,13 +20,46 @@ export const useExtensionNavigation = (): {
   navigateBack: () => void
   locationState: SidebarLocationState
 } => {
-  const navigateTo = useEvent((path: To): void => navigate(path))
-  const navigateBack = useEvent((): void => {
-    navigate(-1)
-  })
+  const navigateTo = (path: To): void => navigate(path)
+  const navigateBack = (): void => navigate(-1)
   const locationState = useLocation().state as SidebarLocationState
 
   return { navigateTo, navigateBack, locationState }
+}
+
+export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
+  const extension = await chrome.management.getSelf()
+
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/onboarding.html*` })
+  const tab = tabs[0]
+
+  const url = 'onboarding.html#/' + (page ? page : TopLevelRoutes.Onboarding)
+
+  if (!tab?.id) {
+    await chrome.tabs.create({ url })
+    return
+  }
+
+  await chrome.tabs.update(tab.id, {
+    active: true,
+    highlighted: true,
+    // We only want to update the URL if we're navigating to a specific page.
+    // Otherwise, just focus the existing tab without overriding the current URL.
+    url: page ? url : undefined,
+  })
+
+  if (page) {
+    // When navigating to a specific page, we need to reload the tab to ensure that the app state is reset and the store synchronization is properly initialized.
+    // This is necessary to handle the edge case where the user leaves a completed onboarding tab open (with synchronization paused)
+    // and then clicks on the "forgot password" link.
+    await chrome.tabs.reload(tab.id)
+  }
+
+  await chrome.windows.update(tab.windowId, { focused: true })
+
+  await onboardingMessageChannel.sendMessage({
+    type: OnboardingMessageType.HighlightOnboardingTab,
+  })
 }
 
 export async function focusOrCreateUnitagTab(address: Address, page: UnitagClaimRoutes): Promise<void> {
@@ -53,7 +87,7 @@ export async function focusOrCreateUnitagTab(address: Address, page: UnitagClaim
 export async function focusOrCreateDappRequestWindow(tabId: number | undefined, windowId: number): Promise<void> {
   const extension = await chrome.management.getSelf()
 
-  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/fallback-popup.html*` })
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/popup.html*` })
   const tab = tabs[0]
 
   const height = 410
@@ -61,7 +95,7 @@ export async function focusOrCreateDappRequestWindow(tabId: number | undefined, 
 
   const { left, top } = await calculatePopupWindowPosition({ width, height })
 
-  let url = `fallback-popup.html?windowId=${windowId}`
+  let url = `popup.html?windowId=${windowId}`
   if (tabId) {
     url += `&tabId=${tabId}`
   }
@@ -107,7 +141,7 @@ export async function focusOrCreateUniswapInterfaceTab({
   const isInNewTabPage = activeTabUrl === 'chrome://newtab/'
 
   const shouldReuseActiveTab = reuseActiveTabIfItMatches
-    ? activeTabUrl && reuseActiveTabIfItMatches.test(activeTabUrl)
+    ? activeTabUrl && reuseActiveTabIfItMatches?.test(activeTabUrl)
     : false
 
   if (activeTab?.id && (shouldReuseActiveTab || isInNewTabPage)) {

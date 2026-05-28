@@ -1,25 +1,25 @@
-import { providers } from 'ethers'
-import { call, select } from 'typed-redux-saga'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { cancelRemoteUniswapXOrder } from 'uniswap/src/features/transactions/slice'
-import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { permit2Address } from '@uniswap/permit2-sdk'
 import {
-  TransactionDetails,
-  TransactionOriginType,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+  CosignedPriorityOrder,
+  CosignedV2DutchOrder,
+  CosignedV3DutchOrder,
+  DutchOrder,
+  getCancelSingleParams,
+} from '@uniswap/uniswapx-sdk'
+import { BigNumber, Contract, providers } from 'ethers'
+import { call, select } from 'typed-redux-saga'
+import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
+import { Permit2 } from 'uniswap/src/abis/types'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { TransactionDetails, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  ExecuteTransactionParams,
-  executeTransaction,
-} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
+import { getOrders } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
+import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-
-type CancelRemoteUniswapXOrderAction = ReturnType<typeof cancelRemoteUniswapXOrder>
-type SubmitPermit2CancelTransactionParams = CancelRemoteUniswapXOrderAction['payload']
-
 // Note, transaction cancellation on Ethereum is inherently flaky
 // The best we can do is replace the transaction and hope the original isn't mined first
 // Inspiration: https://github.com/MetaMask/metamask-extension/blob/develop/app/scripts/controllers/transactions/index.js#L744
@@ -28,75 +28,89 @@ export function* attemptCancelTransaction(
   cancelRequest: providers.TransactionRequest,
 ) {
   if (isClassic(transaction) || isBridge(transaction)) {
-    yield* call(attemptReplaceTransaction, { transaction, newTxRequest: cancelRequest, isCancellation: true })
+    yield* call(attemptReplaceTransaction, transaction, cancelRequest, true)
   } else if (isUniswapX(transaction)) {
     yield* call(cancelOrder, transaction, cancelRequest)
   }
 }
 
-function* cancelOrder(order: UniswapXOrderDetails, cancelRequest: providers.TransactionRequest) {
-  yield* call(submitPermit2CancelTransaction, {
-    chainId: order.chainId,
-    address: order.from,
-    orderHash: order.orderHash ?? '',
-    cancelRequest,
-  })
+function getPermit2Contract(chainId: number): Permit2 {
+  const PERMIT2_ADDRESS = permit2Address(chainId)
+  return new Contract(PERMIT2_ADDRESS, PERMIT2_ABI) as Permit2
 }
 
-/**
- * Submits a Permit2 nonce invalidation transaction to cancel a UniswapX order.
- * Used by both the local order cancel flow (via cancelOrder) and the remote order cancel flow
- * (via cancelRemoteUniswapXOrder action) for orders that only exist in the GraphQL activity feed.
- */
-function* submitPermit2CancelTransaction(params: SubmitPermit2CancelTransactionParams) {
-  const { chainId, address, orderHash, cancelRequest } = params
+const ROUTING_TO_ORDER_CLASS = {
+  [Routing.DUTCH_V2]: CosignedV2DutchOrder,
+  [Routing.DUTCH_V3]: CosignedV3DutchOrder,
+  [Routing.PRIORITY]: CosignedPriorityOrder,
+  [Routing.DUTCH_LIMIT]: DutchOrder,
+} as const
 
+function getPermit2NonceForOrder({
+  encodedOrder,
+  chainId,
+  routing,
+}: {
+  encodedOrder: string
+  chainId: number
+  routing: UniswapXOrderDetails['routing']
+}): BigNumber {
+  return ROUTING_TO_ORDER_CLASS[routing].parse(encodedOrder, chainId).info.nonce
+}
+
+export async function getCancelOrderTxRequest(
+  tx: UniswapXOrderDetails,
+): Promise<providers.TransactionRequest | undefined> {
+  const { orderHash, chainId, from, routing } = tx
+  if (!orderHash) {
+    return undefined
+  } else {
+    const { encodedOrder } = (await getOrders([orderHash])).orders[0] ?? {}
+    if (!encodedOrder) {
+      return undefined
+    }
+
+    const nonce = getPermit2NonceForOrder({ encodedOrder, chainId, routing })
+    const cancelParams = getCancelSingleParams(nonce)
+
+    const permit2 = getPermit2Contract(chainId)
+    const cancelTx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams.word, cancelParams.mask)
+    return { ...cancelTx, from, chainId }
+  }
+}
+
+function* cancelOrder(order: UniswapXOrderDetails, cancelRequest: providers.TransactionRequest) {
+  const { orderHash, chainId } = order
   if (!orderHash) {
     return
   }
 
   try {
     const accounts = yield* select(selectAccounts)
-    const checksummedAddress = getValidAddress({
-      address,
-      chainId,
-      withEVMChecksum: true,
-      log: false,
-    })
+    const checksummedAddress = getValidAddress(order.from, true, false)
     if (!checksummedAddress) {
       throw new Error(`Cannot cancel order, address is invalid: ${checksummedAddress}`)
     }
     const account = accounts[checksummedAddress]
-    if (!account || account.type !== AccountType.SignerMnemonic) {
+    if (!account) {
       throw new Error(`Cannot cancel order, account missing: ${orderHash}`)
     }
-
-    const executeTransactionParams: ExecuteTransactionParams = {
-      chainId,
-      account,
-      options: {
-        request: cancelRequest,
-      },
-      transactionOriginType: TransactionOriginType.Internal,
-    }
+    const signerManager = yield* call(getSignerManager)
+    const provider = yield* call(getProvider, chainId)
 
     // UniswapX Orders are cancelled via submitting a transaction to invalidate the nonce of the permit2 signature used to fill the order.
     // If the permit2 tx is mined before a filler attempts to fill the order, the order is prevented; the cancellation is successful.
     // If the permit2 tx is mined after a filler successfully fills the order, the tx will succeed but have no effect; the cancellation is unsuccessful.
-    yield* call(executeTransaction, executeTransactionParams)
+    yield* call(signAndSubmitTransaction, cancelRequest, account, provider, signerManager)
+
+    // At this point, there is no need to track the above transaction in state, as it will be mined regardless of whether the order is filled or not.
+    // Instead, the transactionWatcherSaga will either receive 'cancelled' or 'success' from the backend, updating the original tx's UI accordingly.
+
+    // Activity history UI will pick the above transaction up as a generic "Permit2" tx.
   } catch (error) {
     logger.error(error, {
-      tags: { file: 'cancelTransactionSaga', function: 'submitPermit2CancelTransaction' },
+      tags: { file: 'cancelTransactionSaga', function: 'cancelOrder' },
       extra: { orderHash },
     })
   }
-}
-
-/**
- * Saga handler for cancelling UniswapX orders that only exist in the remote activity feed
- * (not in local Redux state). This bypasses the cancelTransaction reducer + watcher pipeline
- * and directly submits the Permit2 nonce invalidation transaction.
- */
-export function* attemptCancelRemoteUniswapXOrder({ payload }: CancelRemoteUniswapXOrderAction) {
-  yield* call(submitPermit2CancelTransaction, payload)
 }

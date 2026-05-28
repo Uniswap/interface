@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import 'polyfill-object.fromentries'
 
 import { ResizeObserver } from '@juggle/resize-observer'

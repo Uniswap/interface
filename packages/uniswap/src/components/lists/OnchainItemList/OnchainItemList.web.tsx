@@ -7,14 +7,14 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { Flex, useWindowDimensions } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
-import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
+import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import {
   ItemRowInfo,
   OnchainItemListProps,
   SectionRowInfo,
 } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 
@@ -67,7 +67,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
           let listIndex = 0
           for (let i = 0; i < sectionIndex; i++) {
             const section = sections[i]
-            listIndex += section?.data.length ?? 0
+            listIndex += section?.data?.length ?? 0
           }
           listIndex += itemIndex
 
@@ -86,7 +86,6 @@ export function OnchainItemList<T extends OnchainItemListOption>({
             sectionKey: section.sectionKey,
             rightElement: section.rightElement,
             endElement: section.endElement,
-            sectionHeader: section.sectionHeader,
           },
           key: section.sectionKey,
           renderSectionHeader,
@@ -117,7 +116,6 @@ export function OnchainItemList<T extends OnchainItemListOption>({
 
   // Used for rendering the sticky header
   const activeSessionIndex = useMemo(() => {
-    // eslint-disable-next-line max-params
     return items.slice(0, firstVisibleIndex + 1).reduceRight((acc, item, index) => {
       return acc === -1 && isSectionHeader(item) ? index : acc
     }, -1)
@@ -246,9 +244,6 @@ export function OnchainItemList<T extends OnchainItemListOption>({
           if (!sections.length) {
             return <Fragment />
           }
-
-          // Prevent overfitting the list, resulting in showing double scroll bar
-          const correctedHeight = height - 1
           return (
             <Flex position="relative">
               <Flex position="absolute" top={0} width="100%" zIndex={zIndexes.sticky}>
@@ -259,7 +254,7 @@ export function OnchainItemList<T extends OnchainItemListOption>({
               <List
                 ref={ref}
                 outerRef={listOuterRef}
-                height={correctedHeight}
+                height={height}
                 itemCount={items.length}
                 itemData={items}
                 itemSize={getRowHeight}
@@ -329,6 +324,10 @@ function _Row<T extends OnchainItemListOption>({ index, itemData, style, updateR
   )
 
   const item = useMemo((): JSX.Element | null => {
+    if (!itemData) {
+      return null
+    }
+
     if (isSectionHeader(itemData)) {
       return itemData.renderSectionHeader?.(itemData) ?? null
     }
@@ -337,7 +336,7 @@ function _Row<T extends OnchainItemListOption>({ index, itemData, style, updateR
   }, [itemData])
 
   return (
-    <Flex key={itemData.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
+    <Flex key={itemData?.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
       <Flex ref={rowRef} width="100%" onLayout={handleLayout}>
         {item}
       </Flex>

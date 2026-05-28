@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { Suspense, lazy } from 'react'
 import { Flex } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Modal } from 'uniswap/src/components/modals/Modal'

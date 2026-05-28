@@ -10,5 +10,3 @@ export enum PollingInterval {
 }
 
 export const BIPS_BASE = 10_000
-
-export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'

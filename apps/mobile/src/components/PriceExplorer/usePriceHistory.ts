@@ -1,18 +1,21 @@
-import { type GqlResult, GraphQLApi, isError, isNonPollingRequestInFlight } from '@universe/api'
 import maxBy from 'lodash/maxBy'
-import { type Dispatch, type SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
-import { type SharedValue, useDerivedValue } from 'react-native-reanimated'
-import { type TLineChartData } from 'react-native-wagmi-charts'
+import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
+import { SharedValue, useDerivedValue } from 'react-native-reanimated'
+import { TLineChartData } from 'react-native-wagmi-charts'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import {
+  HistoryDuration,
+  TimestampedAmount,
+  useTokenPriceHistoryQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GqlResult } from 'uniswap/src/data/types'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 
 export type TokenSpotData = {
   value: SharedValue<number>
-  relativeChange: SharedValue<number | undefined>
+  relativeChange: SharedValue<number>
 }
 
 export type PriceNumberOfDigits = {
@@ -23,23 +26,19 @@ export type PriceNumberOfDigits = {
 /**
  * @returns Token price history for requested duration
  */
-export function useTokenPriceHistory({
-  currencyId,
-  initialDuration = GraphQLApi.HistoryDuration.Day,
-  skip = false,
-}: {
-  currencyId: string
-  initialDuration?: GraphQLApi.HistoryDuration
-  skip?: boolean
-}): Omit<
+export function useTokenPriceHistory(
+  currencyId: string,
+  initialDuration: HistoryDuration = HistoryDuration.Day,
+  skip: boolean = false,
+): Omit<
   GqlResult<{
     priceHistory?: TLineChartData
     spot?: TokenSpotData
   }>,
   'error'
 > & {
-  setDuration: Dispatch<SetStateAction<GraphQLApi.HistoryDuration>>
-  selectedDuration: GraphQLApi.HistoryDuration
+  setDuration: Dispatch<SetStateAction<HistoryDuration>>
+  selectedDuration: HistoryDuration
   error: boolean
   numberOfDigits: PriceNumberOfDigits
 } {
@@ -55,7 +54,7 @@ export function useTokenPriceHistory({
     data: priceData,
     refetch,
     networkStatus,
-  } = GraphQLApi.useTokenPriceHistoryQuery({
+  } = useTokenPriceHistoryQuery({
     variables: {
       contract: currencyIdToContractInput(currencyId),
       duration,
@@ -66,48 +65,18 @@ export function useTokenPriceHistory({
     skip,
   })
 
-  // Data source strategy for multi-chain tokens:
-  // - Use PER-CHAIN data (token.market) for price and price history to show the correct chain-specific view
-  // - Fallback to AGGREGATED data (project.markets) when per-chain history is unavailable
-  // - Continue using aggregated 24hr change for consistency across platforms
-  // Note: TokenProjectMarket is aggregated across chains, TokenMarket is per-chain
   const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
+  const onChainData = priceData?.tokenProjects?.[0]?.tokens?.[0]?.market
 
-  // We need to find the specific token for the chain we're viewing
-  const currentChain = toGraphQLChain(currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet)
-  const currentChainToken = priceData?.tokenProjects?.[0]?.tokens.find((token) => token.chain === currentChain)
-  const onChainData = currentChainToken?.market
-
-  // Use per-chain price to ensure correct price on each chain (e.g., USDC on Ethereum vs Polygon)
-  const price = onChainData?.price?.value ?? offChainData?.price?.value ?? lastPrice.current
+  const price = offChainData?.price?.value ?? onChainData?.price?.value ?? lastPrice.current
   lastPrice.current = price
-
-  // Prefer per-chain price history so multi-chain tokens render the correct chart for the selected chain
-  const priceHistory = onChainData?.priceHistory ?? offChainData?.priceHistory
-
+  const priceHistory = offChainData?.priceHistory ?? onChainData?.priceHistory
   const pricePercentChange24h =
     offChainData?.pricePercentChange24h?.value ?? onChainData?.pricePercentChange24h?.value ?? 0
 
-  // Calculate percentage change from price history for the selected duration
-  const calculatedPriceChange = useMemo(() => {
-    if (!priceHistory || priceHistory.length === 0) {
-      return undefined
-    }
-    const openPrice = priceHistory[0]?.value
-    const closePrice = priceHistory[priceHistory.length - 1]?.value
-    if (openPrice === undefined || closePrice === undefined || openPrice === 0) {
-      return undefined
-    }
-    return ((closePrice - openPrice) / openPrice) * 100
-  }, [priceHistory])
-
-  // Use API's 24hr change for 1d, calculated change for other durations
-  const priceChange = duration === GraphQLApi.HistoryDuration.Day ? pricePercentChange24h : calculatedPriceChange
-
   const spotValue = useDerivedValue(() => price ?? 0)
-  const spotRelativeChange = useDerivedValue(() => priceChange)
+  const spotRelativeChange = useDerivedValue(() => pricePercentChange24h)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ensure spot updates when price changes
   const spot = useMemo(
     () =>
       price !== undefined
@@ -116,12 +85,12 @@ export function useTokenPriceHistory({
             relativeChange: spotRelativeChange,
           }
         : undefined,
-    [price, priceChange, spotValue, spotRelativeChange],
+    [price, spotValue, spotRelativeChange],
   )
 
   const formattedPriceHistory = useMemo(() => {
     const formatted = priceHistory
-      ?.filter((x): x is GraphQLApi.TimestampedAmount => Boolean(x))
+      ?.filter((x): x is TimestampedAmount => Boolean(x))
       .map((x) => ({ timestamp: x.timestamp * 1000, value: x.value }))
 
     return formatted

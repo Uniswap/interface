@@ -8,15 +8,11 @@ export enum AuthMethod {
   // alphabetize additional values.
 }
 
-export function getAuthMethod({
-  isSettingEnabled,
-  isTouchIdSupported,
-  isFaceIdSupported,
-}: {
-  isSettingEnabled: boolean
-  isTouchIdSupported: boolean
-  isFaceIdSupported: boolean
-}): AuthMethod {
+export function getAuthMethod(
+  isSettingEnabled: boolean,
+  isTouchIdSupported: boolean,
+  isFaceIdSupported: boolean,
+): AuthMethod {
   if (isSettingEnabled) {
     // both cannot be true since no iOS device supports both
     if (isFaceIdSupported) {

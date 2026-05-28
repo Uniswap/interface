@@ -1,9 +1,9 @@
-// biome-ignore assist/source/organizeImports: we want to keep the import order
+// Disable sorting imports with Prettier for this file so that it doesn't change the order
+// organize-imports-ignore
 import './wdyr'
-// biome-ignore assist/source/organizeImports: we want to keep the import order
-import { isNonTestDev } from 'utilities/src/environment/constants'
+import { isNonJestDev } from 'utilities/src/environment/constants'
 
-if (isNonTestDev) {
+if (isNonJestDev) {
   require('./ReactotronConfig')
 }
 
@@ -12,8 +12,7 @@ import 'react-native-gesture-handler'
 import 'react-native-reanimated'
 import 'src/logbox'
 import 'src/polyfills'
-// biome-ignore assist/source/organizeImports: we want to keep the import order
 import App from 'src/app/App'
-import AppConfig from './app.config'
+import { name as appName } from './app.json'
 
-AppRegistry.registerComponent(AppConfig.name, () => App)
+AppRegistry.registerComponent(appName, () => App)

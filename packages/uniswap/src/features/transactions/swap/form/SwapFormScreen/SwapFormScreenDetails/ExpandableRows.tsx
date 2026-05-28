@@ -1,46 +1,33 @@
-import { TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
-import {
-  useTransactionSettingsAutoSlippageToleranceStore,
-  useTransactionSettingsStore,
-} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
-import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo/RoutingInfo'
-import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/components/SwapRateRatio'
-import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
-import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isMultiChainGasQuote, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
+import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
+import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/AcrossRoutingInfo'
+import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/shared-components/MaxSlippageRow/MaxSlippageRow'
+import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/shared-components/PriceImpactRow/PriceImpactRow'
+import { RoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/RoutingInfo'
+import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/shared-components/SwapRateRatio'
+import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export function ExpandableRows(): JSX.Element | null {
+export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | null {
   const { t } = useTranslation()
-  const { gasFee, gasFeeBreakdown } = useSwapTxStore((s) => {
-    if (isUniswapX(s)) {
-      return {
-        gasFee: s.gasFee,
-        gasFeeBreakdown: s.gasFeeBreakdown,
-      }
-    }
+  const swapTxContext = useSwapTxContext()
 
-    return {
-      gasFee: s.gasFee,
-      gasFeeBreakdown: undefined,
-    }
-  })
+  const { gasFee } = swapTxContext
+  const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
 
-  const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
+  const { derivedSwapInfo } = useSwapFormContext()
 
   const { priceImpactWarning } = useParsedSwapWarnings()
   const showPriceImpactWarning = Boolean(priceImpactWarning)
 
-  const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
-  const autoSlippageTolerance = useTransactionSettingsAutoSlippageToleranceStore((s) => s.autoSlippageTolerance)
-
+  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
   const { chainId, trade } = derivedSwapInfo
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
@@ -54,8 +41,8 @@ export function ExpandableRows(): JSX.Element | null {
     <Accordion.HeightAnimator animation="fast" mt="$spacing8">
       <Accordion.Content animation="fast" p="$none" exitStyle={{ opacity: 0 }}>
         <TransactionDetails
+          isSwap
           showExpandedChildren
-          routingType={trade.trade.routing}
           chainId={trade.trade.inputAmount.currency.chainId}
           gasFee={gasFee}
           swapFee={trade.trade.swapFee}
@@ -64,32 +51,31 @@ export function ExpandableRows(): JSX.Element | null {
           feeOnTransferProps={feeOnTransferProps}
           showGasFeeError={false}
           showSeparatorToggle={false}
-          showNetworkLogo={!isMultiChainGasQuote(trade.trade.quote)}
           outputCurrency={trade.trade.outputAmount.currency}
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-          uniswapXGasBreakdown={gasFeeBreakdown}
+          uniswapXGasBreakdown={uniswapXGasBreakdown}
+          RoutingInfo={isBridge ? <AcrossRoutingInfo /> : <RoutingInfo gasFee={gasFee} chainId={chainId} />}
           RateInfo={
-            showPriceImpactWarning ? (
+            showPriceImpactWarning && trade.trade ? (
               <Flex row alignItems="center" justifyContent="space-between">
                 <Text color="$neutral2" variant="body3">
                   {t('swap.details.rate')}
                 </Text>
                 <Flex row shrink justifyContent="flex-end">
-                  <SwapRateRatio trade={trade.trade} derivedSwapInfo={derivedSwapInfo} />
+                  <SwapRateRatio trade={trade.trade} />
                 </Flex>
               </Flex>
             ) : undefined
           }
         >
-          {trade.trade.routing !== TradingApi.Routing.BRIDGE && (
+          {/* Price impact row is hidden if a price impact warning is already being shown in the expando toggle row. */}
+          <PriceImpactRow derivedSwapInfo={derivedSwapInfo} hide={showPriceImpactWarning} />
+          {!isBridge && (
             <MaxSlippageRow
               acceptedDerivedSwapInfo={derivedSwapInfo}
               autoSlippageTolerance={autoSlippageTolerance}
               customSlippageTolerance={customSlippageTolerance}
             />
-          )}
-          {trade.trade.routing !== TradingApi.Routing.BRIDGE && (
-            <RoutingInfo trade={trade.trade} gasFee={gasFee} chainId={chainId} />
           )}
         </TransactionDetails>
       </Accordion.Content>

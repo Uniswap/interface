@@ -1,29 +1,23 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ButtonVariant } from 'ui/src'
 import { AnimatePresence, Button, Flex, useIsShortMobileDevice } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
-import type { AppTFunction } from 'ui/src/i18n/types'
-import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import type { PasskeyAuthStatus } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { FlashblocksConfirmButton } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/FlashblocksConfirmButton'
-import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
-import { useActivePlanStatus } from 'uniswap/src/features/transactions/swap/review/hooks/useActivePlanStatus'
-import { DelayedSubmissionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/DelayedSubmissionText'
-import { PendingSwapButton } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/PendingSwapButton'
+import { AppTFunction } from 'ui/src/i18n/types'
+import { Warning, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+  PasskeyAuthStatus,
+  useTransactionModalContext,
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { PermitMethod, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWebApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
+const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
 
 interface SubmitSwapButtonProps {
   disabled: boolean
@@ -36,31 +30,20 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
   const { t } = useTranslation()
   const { renderBiometricsIcon, passkeyAuthStatus } = useTransactionModalContext()
 
-  const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
-  const isConfirmed = useSwapFormStore((s) => s.isConfirmed)
-  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
-  const isFlashblocksEnabled = useIsUnichainFlashblocksEnabled(chainId)
+  const { isSubmitting, derivedSwapInfo } = useSwapFormContext()
   const {
     wrapType,
     trade: { trade, indicativeTrade },
-  } = useSwapFormStoreDerivedSwapInfo((s) => ({
-    wrapType: s.wrapType,
-    trade: s.trade,
-  }))
+  } = derivedSwapInfo
   const indicative = Boolean(!trade && indicativeTrade)
-  const isChainedTrade = trade?.routing && isChained({ routing: trade.routing })
 
-  const { hasActivePlan, lastStepFailed } = useActivePlanStatus()
-
-  const swapTxContext = useSwapTxStore((s) => s)
+  const swapTxContext = useSwapTxContext()
   const actionText = getActionText({
     t,
     wrapType,
     swapTxContext,
     warning,
     isAuthenticated: Boolean(passkeyAuthStatus?.isSessionAuthenticated),
-    hasActivePlan,
-    lastStepFailed,
   })
 
   const isShortMobileDevice = useIsShortMobileDevice()
@@ -69,18 +52,11 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
   const icon = useMemo(() => {
     if (renderBiometricsIcon) {
       return renderBiometricsIcon({})
-    } else if (passkeyAuthStatus?.isSignedInWithPasskey && !passkeyAuthStatus.isSessionAuthenticated) {
+    } else if (passkeyAuthStatus?.isSignedInWithPasskey && !passkeyAuthStatus?.isSessionAuthenticated) {
       return <Passkey size="$icon.24" />
     }
     return undefined
   }, [renderBiometricsIcon, passkeyAuthStatus?.isSignedInWithPasskey, passkeyAuthStatus?.isSessionAuthenticated])
-
-  const warningVariant: ButtonVariant | undefined =
-    warning?.severity === WarningSeverity.High
-      ? 'critical'
-      : warning?.severity === WarningSeverity.Medium
-        ? 'warning'
-        : undefined
 
   switch (true) {
     case indicative: {
@@ -91,30 +67,23 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
       )
     }
     case showPendingUI: {
-      if (isChainedTrade && !isWebApp) {
-        return <PendingSwapButton disabled={disabled} onSubmit={onSubmit} />
-      }
       return (
         <Button loading variant="branded" emphasis="primary" size={size}>
           <DelayedSubmissionText />
         </Button>
       )
     }
-    case isConfirmed && isFlashblocksEnabled && !isChainedTrade: {
-      // this has side effects for the balance logic as well
-      return <FlashblocksConfirmButton size={size} />
-    }
-    case isWebApp && isSubmitting: {
+    case isInterface && isSubmitting: {
       return (
         <Button loading shouldAnimateBetweenLoadingStates={false} size={size}>
           <ConfirmInWalletText passkeyAuthStatus={passkeyAuthStatus} />
         </Button>
       )
     }
-    case Boolean(warningVariant): {
+    case warning?.severity === WarningSeverity.High: {
       return (
         <Button
-          variant={warningVariant}
+          variant="critical"
           emphasis="primary"
           isDisabled={disabled}
           icon={icon}
@@ -151,29 +120,61 @@ export enum SwapAction {
   SwapAnyway = 'SWAP_ANYWAY',
   ApproveAndSwap = 'APPROVE_AND_SWAP',
   SignAndSwap = 'SIGN_AND_SWAP',
-  RetryPlan = 'RETRY_PLAN',
-  ContinuePlan = 'CONTINUE_PLAN',
 }
 
-// TODO: Refactor this to not need the entire `swapTxContext` from the store
+const getSwapAction = ({
+  wrapType,
+  swapTxContext,
+  warning,
+}: {
+  wrapType: WrapType
+  swapTxContext?: SwapTxAndGasInfo
+  warning?: Warning
+}): SwapAction => {
+  if (wrapType === WrapType.Wrap) {
+    return SwapAction.Wrap
+  }
+  if (wrapType === WrapType.Unwrap) {
+    return SwapAction.Unwrap
+  }
+  if (wrapType === WrapType.FewWrap) {
+    return SwapAction.Wrap
+  }
+  if (wrapType === WrapType.FewUnwrap) {
+    return SwapAction.Unwrap
+  }
+
+  const hasPermitTx =
+    swapTxContext && isClassic(swapTxContext) ? swapTxContext?.permit?.method === PermitMethod.Transaction : false
+  const hasApproveTx = Boolean(swapTxContext?.approveTxRequest)
+
+  if (isInterface && (hasPermitTx || hasApproveTx)) {
+    return SwapAction.ApproveAndSwap
+  }
+  if (isInterface && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
+    return SwapAction.SignAndSwap
+  }
+  if (warning?.severity === WarningSeverity.High) {
+    return SwapAction.SwapAnyway
+  }
+
+  return SwapAction.Swap
+}
+
 export const getActionText = ({
   t,
   wrapType,
   swapTxContext,
   warning,
   isAuthenticated,
-  hasActivePlan,
-  lastStepFailed,
 }: {
   t: AppTFunction
   wrapType: WrapType
   swapTxContext?: SwapTxAndGasInfo
   warning?: Warning
   isAuthenticated?: boolean
-  hasActivePlan?: boolean
-  lastStepFailed?: boolean
 }): string => {
-  const action = getSwapAction({ wrapType, swapTxContext, warning, hasActivePlan, lastStepFailed })
+  const action = getSwapAction({ wrapType, swapTxContext, warning })
 
   const textMap: Record<SwapAction, { default: string; authenticated: string }> = {
     [SwapAction.Wrap]: {
@@ -200,17 +201,32 @@ export const getActionText = ({
       default: t('swap.button.swap'),
       authenticated: t('swap.confirmSwap'),
     },
-    [SwapAction.RetryPlan]: {
-      default: t('common.button.retry'),
-      authenticated: t('common.button.retry'),
-    },
-    [SwapAction.ContinuePlan]: {
-      default: t('common.button.continue'),
-      authenticated: t('common.button.continue'),
-    },
   }
 
   return isAuthenticated ? textMap[action].authenticated : textMap[action].default
+}
+
+function DelayedSubmissionText(): JSX.Element {
+  const { t } = useTranslation()
+  const [showKeepOpenMessage, setShowKeepOpenMessage] = useState(false)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowKeepOpenMessage(true), KEEP_OPEN_MSG_DELAY)
+    return () => clearTimeout(timeout)
+  }, [])
+
+  // Use different key to re-trigger animation when message changes
+  const key = showKeepOpenMessage ? 'submitting-text-msg1' : 'submitting-text-msg2'
+
+  return (
+    <AnimatePresence key={key}>
+      <Flex animateEnterExit="fadeInDownOutDown" animation="quicker">
+        <Button.Text>
+          {showKeepOpenMessage ? t('swap.button.submitting.keep.open') : t('swap.button.submitting')}
+        </Button.Text>
+      </Flex>
+    </AnimatePresence>
+  )
 }
 
 function ConfirmInWalletText({ passkeyAuthStatus }: { passkeyAuthStatus?: PasskeyAuthStatus }): JSX.Element {
@@ -230,48 +246,4 @@ function ConfirmInWalletText({ passkeyAuthStatus }: { passkeyAuthStatus?: Passke
       </Flex>
     </AnimatePresence>
   )
-}
-
-const getSwapAction = ({
-  wrapType,
-  swapTxContext,
-  warning,
-  hasActivePlan,
-  lastStepFailed,
-}: {
-  wrapType: WrapType
-  swapTxContext?: SwapTxAndGasInfo
-  warning?: Warning
-  hasActivePlan?: boolean
-  lastStepFailed?: boolean
-}): SwapAction => {
-  if (wrapType === WrapType.Wrap) {
-    return SwapAction.Wrap
-  }
-  if (wrapType === WrapType.Unwrap) {
-    return SwapAction.Unwrap
-  }
-
-  const hasPermitTx =
-    swapTxContext && isClassic(swapTxContext) ? swapTxContext.permit?.method === PermitMethod.Transaction : false
-  const hasApproveTx = Boolean(swapTxContext?.approveTxRequest)
-
-  if (isWebApp && (hasPermitTx || hasApproveTx)) {
-    return SwapAction.ApproveAndSwap
-  }
-  if (isWebApp && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
-    return SwapAction.SignAndSwap
-  }
-  if (hasActivePlan) {
-    if (lastStepFailed) {
-      return SwapAction.RetryPlan
-    }
-    return SwapAction.ContinuePlan
-  }
-
-  if (warning?.severity === WarningSeverity.High || warning?.severity === WarningSeverity.Medium) {
-    return SwapAction.SwapAnyway
-  }
-
-  return SwapAction.Swap
 }

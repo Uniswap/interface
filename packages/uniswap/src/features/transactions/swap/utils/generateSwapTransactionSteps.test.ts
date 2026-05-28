@@ -1,5 +1,5 @@
-import { TradingApi } from '@universe/api'
 import { USDC, WBTC } from 'uniswap/src/constants/tokens'
+import { Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import {
   SwapTxAndGasInfo,
@@ -14,18 +14,10 @@ import {
   createMockUniswapXTrade,
 } from 'uniswap/src/test/fixtures/transactions/swap'
 
-// Use vi.hoisted to create a mutable mock state that can be changed between tests
-const mockPlatformState = vi.hoisted(() => ({ isWebApp: false }))
-
-vi.mock('utilities/src/platform', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('utilities/src/platform')>()
-  return {
-    ...actual,
-    get isWebApp(): boolean {
-      return mockPlatformState.isWebApp
-    },
-  }
-})
+const UserAgentMock = jest.requireMock('utilities/src/platform')
+jest.mock('utilities/src/platform', () => ({
+  ...jest.requireActual('utilities/src/platform'),
+}))
 
 const mockTxRequest = {
   chainId: 1,
@@ -56,12 +48,12 @@ describe('Swap', () => {
     approveTxRequest: undefined,
     revocationTxRequest: undefined,
     gasFee: { error: null, isLoading: false, value: '1000000000000000000' },
-    gasFeeEstimation: { swapEstimate: undefined, approvalEstimate: undefined },
+    gasFeeEstimation: { swapEstimates: undefined, approvalEstimates: undefined },
     permit: undefined,
-    routing: TradingApi.Routing.CLASSIC,
+    routing: Routing.CLASSIC,
     swapRequestArgs: {
       permitData: undefined,
-      quote: { tradeType: TradingApi.TradeType.EXACT_INPUT },
+      quote: { tradeType: TradeType.EXACT_INPUT },
       refreshGasPrice: true,
       signature: undefined,
       simulateTransaction: true,
@@ -72,7 +64,7 @@ describe('Swap', () => {
     includesDelegation: false,
   } as const satisfies SwapTxAndGasInfo
 
-  describe(TradingApi.Routing.CLASSIC, () => {
+  describe(Routing.CLASSIC, () => {
     it('should return steps for classic trade with txRequest', () => {
       expect(generateSwapTransactionSteps(baseSwapTxContext)).toEqual([
         {
@@ -94,16 +86,14 @@ describe('Swap', () => {
           amount: '0',
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.revocationTxRequest,
-          chainId: USDC.chainId,
-          tokenAddress: USDC.address,
+          token: USDC,
           type: TransactionStepType.TokenRevocationTransaction,
         },
         {
           amount: mockTrade.trade?.inputAmount.quotient.toString(),
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
-          chainId: USDC.chainId,
-          tokenAddress: USDC.address,
+          token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {
@@ -124,8 +114,7 @@ describe('Swap', () => {
           amount: mockTrade.trade?.inputAmount.quotient.toString(),
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
-          chainId: USDC.chainId,
-          tokenAddress: USDC.address,
+          token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {
@@ -137,7 +126,7 @@ describe('Swap', () => {
 
     it('should return steps for classic trade with approval and permit required', () => {
       // We only expect `SwapTransactionAsync` step when on interface swap (unsigned w/o a wallet interaction)
-      mockPlatformState.isWebApp = true
+      UserAgentMock.isInterface = true
 
       const swapTxContext = {
         ...baseSwapTxContext,
@@ -151,12 +140,12 @@ describe('Swap', () => {
           amount: mockTrade.trade?.inputAmount.quotient.toString(),
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
-          chainId: USDC.chainId,
-          tokenAddress: USDC.address,
+          token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {
           ...swapTxContext.permit.typedData,
+          token: USDC,
           type: TransactionStepType.Permit2Signature,
         },
         {
@@ -167,12 +156,12 @@ describe('Swap', () => {
     })
   })
 
-  describe(TradingApi.Routing.DUTCH_V2, () => {
+  describe(Routing.DUTCH_V2, () => {
     it('should return steps for uniswapx trade', () => {
       const swapTxContext: UniswapXSwapTxAndGasInfo = {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: Routing.DUTCH_V2,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
           classicGasUseEstimateUSD: '1000000000000000000',
@@ -195,7 +184,7 @@ describe('Swap', () => {
       const swapTxContext: UniswapXSwapTxAndGasInfo = {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: Routing.DUTCH_V2,
         approveTxRequest: mockApproveRequest,
         revocationTxRequest: mockRevokeRequest,
         gasFeeBreakdown: {
@@ -211,16 +200,14 @@ describe('Swap', () => {
           amount: '0',
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.revocationTxRequest,
-          chainId: USDC.chainId,
-          tokenAddress: USDC.address,
+          token: USDC,
           type: TransactionStepType.TokenRevocationTransaction,
         },
         {
           amount: mockUniswapXTrade.inputAmount.quotient.toString(),
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
-          chainId: USDC.chainId,
-          tokenAddress: USDC.address,
+          token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {
@@ -236,7 +223,7 @@ describe('Swap', () => {
       const swapTxContext: UniswapXSwapTxAndGasInfo = {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: Routing.DUTCH_V2,
         approveTxRequest: mockApproveRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
@@ -251,8 +238,7 @@ describe('Swap', () => {
           amount: mockUniswapXTrade.inputAmount.quotient.toString(),
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
-          chainId: USDC.chainId,
-          tokenAddress: USDC.address,
+          token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {

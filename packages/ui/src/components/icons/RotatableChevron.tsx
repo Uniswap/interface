@@ -1,47 +1,54 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { I18nManager } from 'react-native'
 import { ColorTokens } from 'tamagui'
 import { IconProps } from 'ui/src/components/factories/createIcon'
 import { Chevron } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'
-import { IconSizeTokens } from 'ui/src/theme/tokens'
 
 type Props = {
-  size?: IconSizeTokens
+  width?: string | number
+  height?: string | number
   direction?: 'up' | 'right' | 'down' | 'left' | 'start' | 'end'
   color?: ColorTokens
-} & Omit<FlexProps, 'direction' | '$group-item-hover' | 'width' | 'height'> &
+} & Omit<FlexProps, 'direction' | '$group-item-hover'> &
   Pick<IconProps, '$group-item-hover'>
 
 function _RotatableChevron({
   color,
-  size = '$icon.24',
+  width = 24,
+  height = 24,
   direction = 'start',
   animation = 'fast',
   '$group-item-hover': $groupItemHover,
   ...rest
 }: Props): JSX.Element {
-  const degree = useMemo(() => {
-    switch (direction) {
-      case 'start':
-        return I18nManager.isRTL ? '180deg' : '0deg'
-      case 'end':
-        return I18nManager.isRTL ? '0deg' : '180deg'
-      case 'up':
-        return '90deg'
-      case 'right':
-        return '180deg'
-      case 'down':
-        return '270deg'
-      case 'left':
-      default:
-        return '0deg'
-    }
-  }, [direction])
+  let degree: string
+  switch (direction) {
+    case 'start':
+      degree = I18nManager.isRTL ? '180deg' : '0deg'
+      break
+    case 'end':
+      degree = I18nManager.isRTL ? '0deg' : '180deg'
+      break
+    case 'up':
+      degree = '90deg'
+      break
+    case 'right':
+      degree = '180deg'
+      break
+    case 'down':
+      degree = '270deg'
+      break
+    case 'left':
+    default:
+      degree = '0deg'
+      break
+  }
 
   return (
     <Flex centered borderRadius="$roundedFull" rotate={degree} animation={animation} {...rest}>
-      <Chevron $group-item-hover={$groupItemHover} color={color} size={size} />
+      {/* @ts-expect-error TODO(MOB-1570) this works but we should migrate to size prop */}
+      <Chevron $group-item-hover={$groupItemHover} color={color} height={height} width={width} />
     </Flex>
   )
 }

@@ -1,13 +1,9 @@
 import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
-import {
-  Analytics,
-  AnalyticsInitConfig,
-  TestnetModeConfig,
-  UserPropertyValue,
-  // biome-ignore lint/style/noRestrictedImports: needed here
-} from 'utilities/src/telemetry/analytics/analytics'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { Analytics, TestnetModeConfig, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
+import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import {
   ALLOW_ANALYTICS_ATOM_KEY,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
@@ -64,7 +60,12 @@ try {
 }
 
 export const analytics: Analytics = {
-  async init({ transportProvider, allowed, initHash, userIdGetter }: AnalyticsInitConfig): Promise<void> {
+  async init(
+    transportProvider: ApplicationTransport,
+    allowed: boolean,
+    initHash?: string,
+    userIdGetter?: () => Promise<string>,
+  ): Promise<void> {
     // Set properties
     commitHash = initHash
     await setAnalyticsAtomDirect(allowed)
@@ -135,7 +136,6 @@ export const analytics: Analytics = {
     loggers.flushEvents()
     flush()
   },
-  // eslint-disable-next-line max-params
   async setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): Promise<void> {
     if (!(await getAnalyticsAtomDirect())) {
       return

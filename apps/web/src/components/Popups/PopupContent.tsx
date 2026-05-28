@@ -1,33 +1,28 @@
 import { useQuery } from '@tanstack/react-query'
+import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
+import {
+  getSignatureToActivityQueryOptions,
+  getTransactionToActivityQueryOptions,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import { LoaderV3 } from 'components/Icons/LoadingSpinner'
+import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
+import { POPUP_MAX_WIDTH } from 'components/Popups/constants'
 import { useTranslation } from 'react-i18next'
+import { useOrder } from 'state/signatures/hooks'
+import { useTransaction } from 'state/transactions/hooks'
+import { isPendingTx } from 'state/transactions/utils'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
-import { CrossChainIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { isNonInstantFlashblockTransactionType } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { noop } from 'utilities/src/react/noop'
-import { useOpenOffchainActivityModal } from '~/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import {
-  getFORTransactionToActivityQueryOptions,
-  getTransactionToActivityQueryOptions,
-} from '~/components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
-import { Activity } from '~/components/AccountDrawer/MiniPortfolio/Activity/types'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import AlertTriangleFilled from '~/components/Icons/AlertTriangleFilled'
-import { LoaderV3 } from '~/components/Icons/LoadingSpinner'
-import { POPUP_MAX_WIDTH } from '~/components/Popups/constants'
-import { ToastRegularSimple } from '~/components/Popups/ToastRegularSimple'
-import { useIsRecentFlashblocksNotification } from '~/hooks/useIsRecentFlashblocksNotification'
-import { usePlanTransactions, useTransaction, useUniswapXOrderByOrderHash } from '~/state/transactions/hooks'
-import { isPendingTx } from '~/state/transactions/utils'
-import { EllipsisTamaguiStyle } from '~/theme/components/styles'
+import { useFormatter } from 'utils/formatNumbers'
 
 export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: UniverseChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
@@ -44,10 +39,10 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
       icon={<AlertTriangleFilled color="$yellow" size="32px" />}
       text={
         <Flex gap="$gap4" flexWrap="wrap" flex={1}>
-          <Text variant="body4" color="$neutral1">
+          <Text variant="body2" color="$neutral1">
             {t('common.failedSwitchNetwork')}
           </Text>
-          <Text variant="body4" color="$neutral2" flexWrap="wrap">
+          <Text variant="body3" color="$neutral2" flexWrap="wrap">
             {t('settings.switchNetwork.warning', { label: chainInfo.label })}
           </Text>
         </Flex>
@@ -57,15 +52,14 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
 }
 
 type ActivityPopupContentProps = { activity: Activity; onClick?: () => void; onClose: () => void }
-
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
-  const success = activity.status === TransactionStatus.Success
-  const pending = activity.status === TransactionStatus.Pending || activity.status === TransactionStatus.AwaitingAction
+  const success = activity.status === TransactionStatus.Confirmed && !activity.cancelled
+  const pending = activity.status === TransactionStatus.Pending
 
   const showPortfolioLogo = success || pending || !!activity.offchainOrderDetails
   const colors = useSporeColors()
 
-  const isCrossChainActivity = activity.outputChainId && activity.chainId !== activity.outputChainId
+  const isBridgeActivity = activity.outputChainId && activity.chainId && activity.chainId !== activity.outputChainId
   return (
     <Flex
       row
@@ -83,7 +77,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
         width: '100%',
       }}
     >
-      <TouchableArea onPress={onClick} flex={1}>
+      <TouchableArea onPress={onClick}>
         <Flex row gap="$gap12" height={68} py="$spacing12" px="$spacing16">
           {showPortfolioLogo ? (
             <Flex>
@@ -91,7 +85,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
                 chainId={activity.chainId}
                 currencies={activity.currencies}
                 accountAddress={activity.otherAccount}
-                customIcon={isCrossChainActivity ? <CrossChainIcon status={activity.status} /> : undefined}
+                customIcon={isBridgeActivity ? BridgeIcon : undefined}
               />
             </Flex>
           ) : (
@@ -99,11 +93,11 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
               <AlertTriangleFilled color="$neutral2" size="32px" />
             </Flex>
           )}
-          <Flex justifyContent="center" gap="$gap4" fill>
+          <Flex justifyContent="center" gap="$gap4">
             <Text variant="body2" color="$neutral1">
               {activity.title}
             </Text>
-            <Text variant="body3" color="$neutral2" {...EllipsisTamaguiStyle}>
+            <Text variant="body3" color="$neutral2">
               {activity.descriptor}
             </Text>
           </Flex>
@@ -114,7 +108,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
           <LoaderV3 color={colors.accent1.variable} size="20px" />
         </Flex>
       ) : (
-        <Flex position="absolute" right="$spacing16" top="$spacing16" data-testid={TestID.ActivityPopupCloseIcon}>
+        <Flex position="absolute" right="$spacing16" top="$spacing16">
           <TouchableArea onPress={onClose}>
             <X color="$neutral2" size={16} />
           </TouchableArea>
@@ -124,104 +118,50 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
   )
 }
 
-export function TransactionPopupContent({ hash, onClose }: { hash: string; onClose: () => void }) {
+export function TransactionPopupContent({
+  chainId,
+  hash,
+  onClose,
+}: {
+  chainId: UniverseChainId
+  hash: string
+  onClose: () => void
+}) {
   const transaction = useTransaction(hash)
-  const { formatNumberOrString } = useLocalizationContext()
-
-  const { data: activity } = useQuery(
-    getTransactionToActivityQueryOptions({
-      transaction,
-      formatNumber: formatNumberOrString,
-    }),
-  )
-
-  const isFlashblockNotification = useIsRecentFlashblocksNotification({ transaction, activity })
+  const { formatNumber } = useFormatter()
+  const { data: activity } = useQuery(getTransactionToActivityQueryOptions(transaction, chainId, formatNumber))
 
   if (!transaction || !activity) {
     return null
   }
 
-  if (
-    isFlashblockNotification &&
-    !isNonInstantFlashblockTransactionType(transaction) &&
-    activity.status === TransactionStatus.Success
-  ) {
-    return null
-  }
-
-  const onClick = () => {
-    if (!activity.hash) {
-      return
-    }
-    window.open(
-      getExplorerLink({ chainId: activity.chainId, data: activity.hash, type: ExplorerDataType.TRANSACTION }),
-      '_blank',
-    )
-  }
+  const onClick = () =>
+    window.open(getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION), '_blank')
 
   const explorerUrlUnavailable = isPendingTx(transaction) && transaction.batchInfo
 
   return (
     <ActivityPopupContent
       activity={activity}
-      onClick={explorerUrlUnavailable || !activity.hash ? undefined : onClick}
+      onClick={explorerUrlUnavailable ? undefined : onClick}
       onClose={onClose}
     />
   )
 }
 
-export function PlanPopupContent({ planId, onClose }: { planId: string; onClose: () => void }) {
-  const plan = usePlanTransactions([planId])
-  const { formatNumberOrString } = useLocalizationContext()
-  const { data: activity } = useQuery(
-    getTransactionToActivityQueryOptions({ transaction: plan[0], formatNumber: formatNumberOrString }),
-  )
-
-  if (!activity || !plan[0]) {
-    return null
-  }
-
-  return <ActivityPopupContent activity={activity} onClose={onClose} onClick={noop} />
-}
-
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
-  const order = useUniswapXOrderByOrderHash(orderHash)
+  const order = useOrder(orderHash)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
-  const { formatNumberOrString } = useLocalizationContext()
-
-  const { data: activity } = useQuery(
-    getTransactionToActivityQueryOptions({ transaction: order, formatNumber: formatNumberOrString }),
-  )
+  const { formatNumber } = useFormatter()
+  const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumber))
 
   if (!activity || !order) {
     return null
   }
 
-  const onClick = () => openOffchainActivityModal(order)
+  const onClick = () =>
+    openOffchainActivityModal(order, { inputLogo: activity?.logos?.[0], outputLogo: activity?.logos?.[1] })
 
   return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
-}
-
-export function FORTransactionPopupContent({
-  transaction,
-  onClose,
-}: {
-  transaction: FORTransaction
-  onClose: () => void
-}) {
-  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
-  const { data: activity } = useQuery(
-    getFORTransactionToActivityQueryOptions({
-      transaction,
-      formatNumber: formatNumberOrString,
-      formatFiatPrice: convertFiatAmountFormatted,
-    }),
-  )
-
-  if (!activity) {
-    return null
-  }
-
-  return <ActivityPopupContent activity={activity} onClose={onClose} onClick={noop} />
 }

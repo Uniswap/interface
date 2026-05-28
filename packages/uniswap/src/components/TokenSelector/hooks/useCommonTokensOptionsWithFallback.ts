@@ -1,25 +1,21 @@
-import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
-import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { useCommonTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptions'
 import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
 import {
   currencyInfosToTokenOptions,
   useCurrencyInfosToTokenOptions,
 } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
+import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
-export function useCommonTokensOptionsWithFallback({
-  addresses,
-  chainFilter,
-}: {
-  addresses: AddressGroup
-  chainFilter: UniverseChainId | null
-}): GqlResult<TokenOption[] | undefined> {
-  const { data, error, refetch, loading } = useCommonTokensOptions({ addresses, chainFilter })
+export function useCommonTokensOptionsWithFallback(
+  address: Address | undefined,
+  chainFilter: UniverseChainId | null,
+): GqlResult<TokenOption[] | undefined> {
+  const { data, error, refetch, loading } = useCommonTokensOptions(address, chainFilter)
   const commonBases = chainFilter ? currencyInfosToTokenOptions(COMMON_BASES[chainFilter]) : undefined
   const commonBasesCurrencyIds = useMemo(
     () => commonBases?.map((token) => currencyId(token.currencyInfo.currency)).filter(Boolean) ?? [],

@@ -1,6 +1,0 @@
-export {devPortalLatencyMonitors} from './latency';
-export {devPortalErrorMonitors} from './errors';
-export {devPortalAvailabilityMonitors} from './availability';
-export {devPortalAuthMonitors} from './auth';
-export {devPortalGatewayMonitors} from './gateway';
-export {devPortalLogMonitors} from './logs';

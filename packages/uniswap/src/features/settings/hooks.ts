@@ -1,9 +1,8 @@
 import { useSelector } from 'react-redux'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
-  // biome-ignore lint/style/noRestrictedImports: expected usage here
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   selectIsTestnetModeEnabled,
-  selectWalletHideReportedActivitySetting,
   selectWalletHideSmallBalancesSetting,
   selectWalletHideSpamTokensSetting,
 } from 'uniswap/src/features/settings/selectors'
@@ -19,13 +18,10 @@ export function useHideSpamTokensSetting(): boolean {
   return useSelector(selectWalletHideSpamTokensSetting)
 }
 
-export function useHideReportedActivitySetting(): boolean {
-  return useSelector(selectWalletHideReportedActivitySetting)
-}
-
 export const TESTNET_MODE_BANNER_HEIGHT = 44
 
-function useIsTestnetModeEnabled(): boolean {
+/** Whether testnet mode is enabled (settings toggle). Prefer over importing `selectIsTestnetModeEnabled` directly. */
+export function useIsTestnetModeEnabled(): boolean {
   return useSelector(selectIsTestnetModeEnabled)
 }
 

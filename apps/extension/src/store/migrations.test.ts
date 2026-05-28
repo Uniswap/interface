@@ -4,23 +4,12 @@ import { toIncludeSameMembers } from 'jest-extended'
 import {
   testMigratePendingDappRequestsToRecord,
   testMigrateUnknownBackupAccountsToMaybeManualBackup,
-  testRemoveDappInfoToChromeLocalStorage,
-  testSetLanguageToNavigatorLanguage,
 } from 'src/store/extensionMigrationsTests'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
 import {
   getSchema,
   initialSchema,
   v0Schema,
-  v1Schema,
-  v2Schema,
-  v3Schema,
-  v4Schema,
-  v5Schema,
-  v6Schema,
-  v7Schema,
-  v8Schema,
-  v9Schema,
   v10Schema,
   v11Schema,
   v12Schema,
@@ -31,37 +20,32 @@ import {
   v17Schema,
   v18Schema,
   v19Schema,
+  v1Schema,
   v20Schema,
   v21Schema,
   v22Schema,
-  v23Schema,
-  v24Schema,
-  v25Schema,
-  v26Schema,
-  v27Schema,
-  v29Schema,
-  v30Schema,
+  v2Schema,
+  v3Schema,
+  v4Schema,
+  v5Schema,
+  v6Schema,
+  v7Schema,
+  v8Schema,
+  v9Schema,
 } from 'src/store/schema'
-import { USDC } from 'uniswap/src/constants/tokens'
-import { initialAppearanceSettingsState } from 'uniswap/src/features/appearance/slice'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { initialNotificationsState } from 'uniswap/src/features/notifications/slice/slice'
+import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
-import { initialTokensState } from 'uniswap/src/features/tokens/warnings/slice/slice'
+import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
-import {
-  testAddActivityVisibility,
-  testMigrateDismissedTokenWarnings,
-  testMigrateSearchHistory,
-  testRemoveTHBFromCurrency,
-} from 'uniswap/src/state/uniswapMigrationTests'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
+import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
@@ -73,13 +57,11 @@ import {
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
-  testMigrateLiquidityTransactionInfoRename,
+  testMoveTokenAndNFTVisibility,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
   testMovedTokenWarnings,
   testMovedUserSettings,
-  testMoveHapticsToUserSettings,
-  testMoveTokenAndNFTVisibility,
   testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
   testUnchecksumDismissedTokenWarningKeys,
@@ -247,7 +229,9 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v3 to v4', async () => {
-    testRemoveDappInfoToChromeLocalStorage(migrations[4], v3Schema)
+    const v3Stub = { ...v3Schema }
+    const v4 = await migrations[4](v3Stub)
+    expect(v4.dapp).toBe(undefined)
   })
 
   it('migrates from v4 to v5', async () => {
@@ -335,49 +319,5 @@ describe('Redux state migrations', () => {
 
   it('migrates from v22 to v23', () => {
     testMigrateUnknownBackupAccountsToMaybeManualBackup(migrations[23], v22Schema)
-  })
-
-  it('migrates from v23 to v24', () => {
-    testMoveHapticsToUserSettings(migrations[24], v23Schema)
-  })
-
-  it('migrates from v24 to v25', () => {
-    const v24Stub = { ...v24Schema, userSettings: { ...v24Schema.userSettings, currentCurrency: 'THB' } }
-    testRemoveTHBFromCurrency(migrations[25], v24Stub)
-
-    const v24Stub2 = { ...v24Schema, userSettings: { ...v24Schema.userSettings, currentCurrency: 'JPY' } }
-    testRemoveTHBFromCurrency(migrations[25], v24Stub2)
-  })
-
-  it('migrates from v25 to v26', () => {
-    testMigrateLiquidityTransactionInfoRename(migrations[26], v25Schema)
-  })
-
-  it('migrates from v26 to v27', () => {
-    testMigrateSearchHistory(migrations[27], v26Schema)
-  })
-
-  it('migrates from v27 to v29', () => {
-    testAddActivityVisibility(migrations[29], v27Schema)
-  })
-
-  it('migrates from v29 to v30', () => {
-    testMigrateDismissedTokenWarnings(migrations[30], {
-      ...v29Schema,
-      tokens: {
-        dismissedTokenWarnings: {
-          [UniverseChainId.Mainnet]: {
-            [USDC.address]: {
-              chainId: UniverseChainId.Mainnet,
-              address: USDC.address,
-            },
-          },
-        },
-      },
-    })
-  })
-
-  it('migrates from v30 to v31', () => {
-    testSetLanguageToNavigatorLanguage(migrations[31], v30Schema)
   })
 })

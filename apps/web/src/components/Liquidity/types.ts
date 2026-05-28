@@ -1,12 +1,13 @@
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Pair as FewPair } from '@ring-protocol/few-v2-sdk'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
-import { ReactNode } from 'react'
-import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeeData } from '~/components/Liquidity/Create/types'
-import { PositionField } from '~/types/position'
+import { FeeData } from 'pages/Pool/Positions/create/types'
+import { Dispatch, ReactNode, SetStateAction } from 'react'
+import { PositionField } from 'types/position'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export interface PriceOrdering {
   priceLower?: Price<Currency, Currency>
@@ -22,12 +23,18 @@ export interface DepositState {
   }
 }
 
+export type DepositContextType = {
+  reset: () => void
+  depositState: DepositState
+  setDepositState: Dispatch<SetStateAction<DepositState>>
+  derivedDepositInfo: DepositInfo
+}
+
 export interface DepositInfo {
   formattedAmounts?: { [field in PositionField]?: string }
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
-  currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
-  currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
-  currencyMaxAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
+  currencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  currencyAmountsUSDValue?: { [field in PositionField]?: CurrencyAmount<Currency> }
   error?: ReactNode
 }
 
@@ -36,11 +43,13 @@ interface BasePositionInfo {
   version: ProtocolVersion
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
-  chainId: EVMUniverseChainId
+  fewToken0Amount?: CurrencyAmount<Currency>
+  fewToken1Amount?: CurrencyAmount<Currency>
+  chainId: UniverseChainId
   poolId: string // Refers to pool contract address for v2 & v3, and poolId for v4
   tokenId?: string
-  tickLower?: number
-  tickUpper?: number
+  tickLower?: string
+  tickUpper?: string
   tickSpacing?: number
   liquidity?: string
   liquidityToken?: Token
@@ -48,15 +57,22 @@ interface BasePositionInfo {
   liquidityAmount?: CurrencyAmount<Currency>
   token0UncollectedFees?: string
   token1UncollectedFees?: string
-  fee0Amount?: CurrencyAmount<Currency>
-  fee1Amount?: CurrencyAmount<Currency>
   apr?: number
   isHidden?: boolean
 }
 
-export type V2PairInfo = BasePositionInfo & {
+type FewV2PairInfo = BasePositionInfo & {
+  version: ProtocolVersion.Fewv2
+  pair?: FewPair
+  liquidityToken: Token
+  feeTier: undefined
+  v4hook: undefined
+  owner: undefined
+}
+
+type V2PairInfo = BasePositionInfo & {
   version: ProtocolVersion.V2
-  poolOrPair?: Pair
+  pair?: Pair
   liquidityToken: Token
   feeTier: undefined
   v4hook: undefined
@@ -66,8 +82,8 @@ export type V2PairInfo = BasePositionInfo & {
 export type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
-  poolOrPair?: V3Pool
-  feeTier?: FeeData
+  pool?: V3Pool
+  feeTier?: FeeAmount
   position?: V3Position
   v4hook: undefined
   owner: string
@@ -76,17 +92,56 @@ export type V3PositionInfo = BasePositionInfo & {
 type V4PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V4
   tokenId: string
-  poolOrPair?: V4Pool
+  pool?: V4Pool
   position?: V4Position
-  feeTier?: FeeData
+  feeTier?: string
   v4hook?: string
   owner: string
   totalApr?: number
   unclaimedRewardsAmountUni?: string
   boostedApr?: number
+  token0Address?: string
+  token1Address?: string
 }
 
-export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo
+export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo | FewV2PairInfo
+
+export type BasePositionDerivedInfo = {
+  fiatFeeValue0?: CurrencyAmount<Currency>
+  fiatFeeValue1?: CurrencyAmount<Currency>
+  fiatValue0?: CurrencyAmount<Currency>
+  fiatValue1?: CurrencyAmount<Currency>
+  priceOrdering: PriceOrdering
+  feeValue0?: CurrencyAmount<Currency>
+  feeValue1?: CurrencyAmount<Currency>
+  apr?: number
+  token0CurrentPrice?: Price<Currency, Currency>
+  token1CurrentPrice?: Price<Currency, Currency>
+}
+
+export type FewV2PositionDerivedInfo = BasePositionDerivedInfo & {
+  version: ProtocolVersion.Fewv2
+  token0CurrentPrice?: undefined
+  token1CurrentPrice?: undefined
+}
+
+export type V2PositionDerivedInfo = BasePositionDerivedInfo & {
+  version: ProtocolVersion.V2
+  token0CurrentPrice?: undefined
+  token1CurrentPrice?: undefined
+}
+
+export type V3OrV4PositionDerivedInfo = BasePositionDerivedInfo & {
+  version: ProtocolVersion.V3 | ProtocolVersion.V4
+  token0CurrentPrice?: Price<Currency, Currency>
+  token1CurrentPrice?: Price<Currency, Currency>
+}
+
+export type PositionDerivedInfo =
+  | BasePositionDerivedInfo
+  | FewV2PositionDerivedInfo
+  | V2PositionDerivedInfo
+  | V3OrV4PositionDerivedInfo
 
 export type FeeTierData = {
   id?: string

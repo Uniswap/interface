@@ -2,7 +2,6 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { OneSignal } from 'react-native-onesignal'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
-import { setOnboardingTimestamp } from 'src/features/analytics/onboardingTimestamp'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { initNotifsForNewUser } from 'src/features/notifications/slice'
 import { MobileAppsFlyerEvents } from 'uniswap/src/features/telemetry/constants'
@@ -12,7 +11,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { setAndroidCloudBackupEmail, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
+import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 /**
  * Bundles various actions that should be performed to complete onboarding.
@@ -24,12 +23,11 @@ export function useCompleteOnboardingCallback({
   importType,
 }: OnboardingStackBaseParams): () => Promise<void> {
   const dispatch = useDispatch()
-  const { getAllOnboardingAccounts, finishOnboarding, getAndroidBackupEmail } = useOnboardingContext()
+  const { getAllOnboardingAccounts, finishOnboarding } = useOnboardingContext()
   const navigation = useOnboardingStackNavigation()
 
   const onboardingAccounts = getAllOnboardingAccounts()
   const onboardingAddresses = onboardingAccounts.map((account) => account.address)
-  const androidBackupEmail = getAndroidBackupEmail()
 
   return async () => {
     // Run all shared onboarding completion logic
@@ -57,13 +55,8 @@ export function useCompleteOnboardingCallback({
       })
     }
 
-    if (androidBackupEmail) {
-      dispatch(setAndroidCloudBackupEmail({ email: androidBackupEmail }))
-    }
-
     // Exit flow
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
-    setOnboardingTimestamp()
     if (entryPoint === OnboardingEntryPoint.Sidebar) {
       navigation.navigate(MobileScreens.Home)
     }

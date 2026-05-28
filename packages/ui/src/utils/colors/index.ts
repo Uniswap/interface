@@ -1,19 +1,88 @@
-import { useQuery } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import type { ThemeKeys } from 'ui/src/index'
-import { type ColorTokens } from 'ui/src/index'
-import { colorsDark, colorsLight } from 'ui/src/theme'
-import type { ColorStrategy, ExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
-import { getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
-import { SPECIAL_CASE_TOKEN_COLORS } from 'ui/src/utils/colors/specialCaseTokens'
+import { ThemeKeys, type ColorTokens } from 'ui/src/index'
+import { colorsLight } from 'ui/src/theme'
+import { ColorStrategy, ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
 import { isSVGUri } from 'utilities/src/format/urls'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { hex } from 'wcag-contrast'
 
 /** The contrast threshold for token colors is currently lower than the WCAG AA standard of 3.0 because a slightly lower threshold leads to better results right now due to imitations of the color extraction library. */
 const MIN_TOKEN_COLOR_CONTRAST_THRESHOLD = 1.95
+
+export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
+  // old WBTC
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png':
+    '#F09241',
+  // new WBTC
+  'https://assets.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png?1548822744': '#F09241',
+  // DAI
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png':
+    '#FAB01B',
+  // UNI
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png':
+    '#E6358C',
+  // BUSD
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4Fabb145d64652a948d72533023f6E7A623C7C53/logo.png':
+    '#EFBA09',
+  // AI-X
+  'https://s2.coinmarketcap.com/static/img/coins/64x64/26984.png': '#29A1F1',
+  // ETH
+  'https://token-icons.s3.amazonaws.com/eth.png': '#4970D5',
+  // HARRYPOTTERSHIBAINUBITCOIN
+  'https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1684117567': '#DE3110',
+  // PEPE
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6982508145454Ce325dDbE47a25d4ec3d2311933/logo.png':
+    '#3EAE14',
+  // Unibot V2
+  'https://s2.coinmarketcap.com/static/img/coins/64x64/25436.png': '#4A0A4F',
+  // UNIBOT v1
+  'https://assets.coingecko.com/coins/images/30462/small/logonoline_%281%29.png?1687510315': '#4A0A4F',
+  // USDC
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png':
+    '#0066D9',
+  // HEX
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39/logo.png':
+    '#F93F8C',
+  // MONG
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1ce270557C1f68Cfb577b856766310Bf8B47FD9C/logo.png':
+    '#A96DFF',
+  // ARB
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xB50721BCf8d664c30412Cfbc6cf7a15145234ad1/logo.png':
+    '#29A1F1',
+  // PSYOP
+  'https://s2.coinmarketcap.com/static/img/coins/64x64/25422.png': '#E88F00',
+  // MATIC
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0/logo.png':
+    '#A96DFF',
+  // TURBO
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA35923162C49cF95e6BF26623385eb431ad920D3/logo.png':
+    '#BD6E29',
+  // AIDOGE
+  'https://assets.coingecko.com/coins/images/29852/large/photo_2023-04-18_14-25-28.jpg?1681799160': '#29A1F1',
+  // SIMPSON
+  'https://assets.coingecko.com/coins/images/30243/large/1111.png?1683692033': '#E88F00',
+  // MAKER
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png':
+    '#50B197',
+  // OX
+  'https://assets.coingecko.com/coins/images/30604/large/Logo2.png?1685522119': '#2959D9',
+  // ANGLE
+  'https://assets.coingecko.com/coins/images/19060/large/ANGLE_Token-light.png?1666774221': '#FF5555',
+  // APE
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4d224452801ACEd8B2F0aebE155379bb5D594381/logo.png':
+    '#054AA9',
+  // GUSD
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd/logo.png':
+    '#00A4BD',
+  // OGN
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x8207c1FfC5B6804F6024322CcF34F29c3541Ae26/logo.png':
+    '#054AA9',
+  // RPL
+  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xD33526068D116cE69F19A9ee46F0bd304F21A51f/logo.png':
+    '#FF7B4F',
+}
 
 const blackAndWhiteSpecialCase: Set<string> = new Set([
   // QNT
@@ -45,11 +114,7 @@ export function useExtractedColors(
     [imageUrl, options.fallback, options.cache, sporeColors, options.colorStrategy],
   )
 
-  const { data: colors, isLoading: colorsLoading } = useQuery({
-    queryKey: [ReactQueryCacheKey.ExtractedColors, imageUrl],
-    queryFn: getImageColors,
-    enabled: !!imageUrl,
-  })
+  const { data: colors, isLoading: colorsLoading } = useAsyncData(getImageColors)
 
   return { colors, colorsLoading }
 }
@@ -63,7 +128,7 @@ function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean):
     return null
   }
 
-  return SPECIAL_CASE_TOKEN_COLORS[imageUrl]
+  return SPECIAL_CASE_TOKEN_COLORS[imageUrl] ?? null
 }
 /**
  * Picks a contrast-passing color from a given token image URL and background color.
@@ -86,17 +151,12 @@ function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean):
  * @param defaultColor The color that will be returned while the extraction is still loading
  * @returns The extracted color as a hex code string
  */
-export function useExtractedTokenColor({
-  imageUrl,
-  tokenName,
-  backgroundColor,
-  defaultColor,
-}: {
-  imageUrl: Maybe<string>
-  tokenName: Maybe<string>
-  backgroundColor: string
-  defaultColor: string
-}): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
+export function useExtractedTokenColor(
+  imageUrl: Maybe<string>,
+  tokenName: Maybe<string>,
+  backgroundColor: string,
+  defaultColor: string,
+): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
   const sporeColors = useSporeColors()
   const { colors, colorsLoading } = useExtractedColors(imageUrl)
   const [tokenColor, setTokenColor] = useState(defaultColor)
@@ -108,16 +168,10 @@ export function useExtractedTokenColor({
     if (!colorsLoading) {
       setTokenColorLoading(false)
       if (colors !== undefined) {
-        const pickedColor = pickContrastPassingTokenColor({
-          extractedColors: colors,
-          backgroundHex: backgroundColor,
-          isDarkMode,
-        })
-
-        setTokenColor(pickedColor)
+        setTokenColor(pickContrastPassingTokenColor(colors, backgroundColor))
       }
     }
-  }, [backgroundColor, colors, colorsLoading, isDarkMode])
+  }, [backgroundColor, colors, colorsLoading])
 
   const specialCaseTokenColor = useMemo(() => {
     return getSpecialCaseTokenColor(imageUrl, isDarkMode)
@@ -129,8 +183,7 @@ export function useExtractedTokenColor({
 
   if (isSVGUri(imageUrl)) {
     // Fall back to a more neutral color for SVG's since they fail extraction but we can render them elsewhere
-
-    return { tokenColor: sporeColors.neutral1.val, tokenColorLoading: false }
+    return { tokenColor: sporeColors.neutral1?.val, tokenColorLoading: false }
   }
 
   if (!imageUrl) {
@@ -220,7 +273,6 @@ function getLogolessColorIndex(tokenName: string, numOptions: number): number {
 function useLogolessColorScheme(tokenName: string): ColorScheme {
   return useMemo(() => {
     const index = getLogolessColorIndex(tokenName, Object.keys(LOGOLESS_COLORS).length)
-
     return logolessColorSchemes[LOGOLESS_COLORS[Object.keys(LOGOLESS_COLORS)[index] as keyof typeof LOGOLESS_COLORS]]
   }, [tokenName])
 }
@@ -243,15 +295,7 @@ export function useColorSchemeFromSeed(seed: string): {
   return { foreground, background }
 }
 
-export function passesContrast({
-  color,
-  backgroundColor,
-  contrastThreshold,
-}: {
-  color: string
-  backgroundColor: string
-  contrastThreshold: number
-}): boolean {
+export function passesContrast(color: string, backgroundColor: string, contrastThreshold: number): boolean {
   // sometimes the extracted colors come back as black or white, discard those
   if (!color || color === '#000000' || color === '#FFFFFF') {
     return false
@@ -259,48 +303,6 @@ export function passesContrast({
 
   const contrast = hex(color, backgroundColor)
   return contrast >= contrastThreshold
-}
-
-/**
- * Determines if a color is gray (all RGB values are close to each other).
- * @param color The hex or rgb color to check
- * @returns boolean indicating if the color is gray
- */
-export function isGrayColor(color: Maybe<string>): boolean {
-  if (!color) {
-    return false
-  }
-
-  let r: number
-  let g: number
-  let b: number
-
-  if (color.startsWith('#')) {
-    if (color.length < 7) {
-      return false
-    }
-
-    r = parseInt(color.slice(1, 3), 16)
-    g = parseInt(color.slice(3, 5), 16)
-    b = parseInt(color.slice(5, 7), 16)
-  } else if (color.startsWith('rgb')) {
-    const rgbMatch = color.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i)
-    if (!rgbMatch || !rgbMatch[1] || !rgbMatch[2] || !rgbMatch[3]) {
-      return false
-    }
-
-    r = parseInt(rgbMatch[1], 10)
-    g = parseInt(rgbMatch[2], 10)
-    b = parseInt(rgbMatch[3], 10)
-  } else {
-    return false
-  }
-
-  // Calculate the maximum difference between any two RGB components
-  const maxDiff = Math.max(Math.abs(r - g), Math.abs(r - b), Math.abs(g - b))
-
-  // If the max difference is less than this threshold, the color is considered gray
-  return maxDiff < 10
 }
 
 /**
@@ -312,15 +314,7 @@ export function isGrayColor(color: Maybe<string>): boolean {
  * color against
  * @returns a hex code that will pass a contrast check against the background
  */
-function pickContrastPassingTokenColor({
-  extractedColors,
-  backgroundHex,
-  isDarkMode,
-}: {
-  extractedColors: ExtractedColors
-  backgroundHex: string
-  isDarkMode: boolean
-}): string {
+function pickContrastPassingTokenColor(extractedColors: ExtractedColors, backgroundHex: string): string {
   const colorsInOrder = [
     extractedColors.base,
     extractedColors.detail,
@@ -334,23 +328,12 @@ function pickContrastPassingTokenColor({
   // - locally cache the result with the image logo URL as a key
   // - move this logic to the backend
   for (const c of colorsInOrder) {
-    if (
-      !!c &&
-      passesContrast({
-        color: c,
-        backgroundColor: backgroundHex,
-        contrastThreshold: MIN_TOKEN_COLOR_CONTRAST_THRESHOLD,
-      })
-    ) {
-      // If the color passes contrast but is gray, use a stronger color instead
-      if (isGrayColor(c)) {
-        return isDarkMode ? colorsDark.neutral1 : colorsLight.neutral1
-      }
+    if (!!c && passesContrast(c, backgroundHex, MIN_TOKEN_COLOR_CONTRAST_THRESHOLD)) {
       return c
     }
   }
 
-  return isDarkMode ? colorsDark.accent1 : colorsLight.accent1
+  return colorsLight.accent1
 }
 
 export function getHoverCssFilter({

@@ -1,17 +1,17 @@
-import { getOverrides, StatsigContext } from '@universe/gating'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { RowBetween } from 'components/deprecated/Row'
+import { useModalState } from 'hooks/useModalState'
 import { useContext, useState } from 'react'
+import { Flag, Settings } from 'react-feather'
 import { useDispatch } from 'react-redux'
+import { ThemedText } from 'theme/components'
 import { Button, Flex, useShadowPropsShort } from 'ui/src'
-import { Flag } from 'ui/src/components/icons/Flag'
-import { Settings } from 'ui/src/components/icons/Settings'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
+import { StatsigContext } from 'uniswap/src/features/gating/sdk/statsig'
+import { getOverrides } from 'uniswap/src/features/gating/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
-import { RowBetween } from '~/components/deprecated/Row'
-import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
-import { useModalState } from '~/hooks/useModalState'
-import { ThemedText } from '~/theme/components'
 
 const Override = (name: string, value: any) => {
   return (
@@ -28,7 +28,7 @@ export default function DevFlagsBox() {
 
   const overrides = [...gateOverrides, ...configOverrides].map(([name, value]) => Override(name, value))
 
-  const hasOverrides = overrides.length > 0
+  const hasOverrides = overrides.some((g) => g !== null)
 
   const [isOpen, setIsOpen] = useState(false)
   const { toggleModal: toggleFeatureFlagsModal } = useModalState(ModalName.FeatureFlags)
@@ -45,12 +45,12 @@ export default function DevFlagsBox() {
         position: 'fixed',
         ...shadowProps,
       }}
-      $xl={{
+      $sm={{
         bottom: 30,
       }}
-      bottom="$spacing48"
-      left="$spacing20"
-      zIndex="$modal"
+      bottom="$spacing24"
+      left="$spacing24"
+      zIndex={Number.MAX_SAFE_INTEGER}
       padding={10}
       borderWidth={1}
       borderColor="$surface3"
@@ -89,12 +89,12 @@ export default function DevFlagsBox() {
                 toggleFeatureFlagsModal()
               }}
             >
-              <Settings size="$icon.16" />
+              <Settings width={15} height={15} />
             </Flex>
           </MouseoverTooltip>
         </RowBetween>
       ) : (
-        <Flag size="$icon.16" />
+        <Flag />
       )}
 
       {isOpen && (hasOverrides ? overrides : <ThemedText.LabelSmall>No overrides</ThemedText.LabelSmall>)}

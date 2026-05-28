@@ -1,10 +1,11 @@
+import { Percent } from '@uniswap/sdk-core'
+import Row from 'components/deprecated/Row'
+import styled, { css } from 'lib/styled-components'
+import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { X } from 'ui/src/components/icons/X'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import Row from '~/components/deprecated/Row'
-import { css, deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
-import { ClickableStyle } from '~/theme/components/styles'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
+import { useFormatter } from 'utils/formatNumbers'
 
 interface LimitPriceButtonProps {
   priceAdjustmentPercentage: number
@@ -26,7 +27,7 @@ const highlightedBorderCss = css`
   border-right: 0px;
 `
 
-const Container = deprecatedStyled.button<{ $selected?: boolean; $disabled?: boolean; $highlighted: boolean }>`
+const Container = styled.button<{ $selected?: boolean; $disabled?: boolean; $highlighted: boolean }>`
   color: ${({ theme, $selected, $disabled, $highlighted }) => {
     if ($highlighted) {
       return theme.neutral1
@@ -51,7 +52,7 @@ const Container = deprecatedStyled.button<{ $selected?: boolean; $disabled?: boo
   ${({ $disabled }) => !$disabled && ClickableStyle};
 `
 
-const HighlightedContainerXButton = deprecatedStyled.button`
+const HighlightedContainerXButton = styled.button`
   ${ClickableStyle}
   background-color: ${({ theme }) => theme.surface3};
   color: ${({ theme }) => theme.neutral2};
@@ -74,7 +75,7 @@ export function LimitPresetPriceButton({
   disabled,
   onSelect,
 }: LimitPriceButtonProps) {
-  const { formatPercent } = useLocalizationContext()
+  const { formatPercent } = useFormatter()
   const sign = priceAdjustmentPercentage > 0 ? '+' : '-'
   return (
     <Container
@@ -90,7 +91,7 @@ export function LimitPresetPriceButton({
       ) : (
         <ThemedText.BodySecondary fontWeight={535} color="inherit">
           {sign}
-          {formatPercent(Math.abs(priceAdjustmentPercentage))}
+          {formatPercent(new Percent(Math.abs(priceAdjustmentPercentage), 100))}
         </ThemedText.BodySecondary>
       )}
     </Container>
@@ -110,7 +111,7 @@ export function LimitCustomMarketPriceButton({
   customAdjustmentPercentage?: number
 }) {
   const onSetAdjustmentPercentage = () => !disabled && onSelect(0)
-  const { formatPercent } = useLocalizationContext()
+  const { formatPercent } = useFormatter()
   return (
     <Row width="unset" gap="1px">
       <Container
@@ -126,13 +127,13 @@ export function LimitCustomMarketPriceButton({
         ) : (
           <ThemedText.BodySecondary color="inherit" fontWeight={535}>
             {customAdjustmentPercentage > 0 ? '+' : ''}
-            {formatPercent(customAdjustmentPercentage)}
+            {formatPercent(new Percent(customAdjustmentPercentage, 100))}
           </ThemedText.BodySecondary>
         )}
       </Container>
       {customAdjustmentPercentage && (
         <HighlightedContainerXButton onClick={onSetAdjustmentPercentage}>
-          <X size="$icon.16" />
+          <X size={16} />
         </HighlightedContainerXButton>
       )}
     </Row>

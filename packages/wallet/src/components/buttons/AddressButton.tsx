@@ -1,4 +1,4 @@
-import { iconSizes, TextVariantTokens } from 'ui/src/theme'
+import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -20,10 +20,10 @@ export function AddressButton({ address, chainId, ...rest }: AddressButtonProps)
   return (
     <LinkButton
       iconColor="$neutral3"
-      label={name || shortenAddress({ address })}
+      label={name || shortenAddress(address)}
       size={iconSizes.icon16}
       textVariant="body3"
-      url={getExplorerLink({ chainId: supportedChainId, data: address, type: ExplorerDataType.ADDRESS })}
+      url={getExplorerLink(supportedChainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
     />
   )

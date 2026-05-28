@@ -7,21 +7,17 @@ import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/Remo
 import { RemoveWalletStep, useModalContent } from 'src/components/RemoveWallet/useModalContent'
 import { determineRemoveWalletConditions } from 'src/components/RemoveWallet/utils/determineRemoveWalletConditions'
 import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/utils/navigateToOnboardingImportMethod'
-import { clearOnboardingTimestamp } from 'src/features/analytics/onboardingTimestamp'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { Button, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { spacing } from 'ui/src/theme'
 import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useAccounts, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 type RemoveWalletContentProps = {
@@ -38,8 +34,6 @@ export const RemoveWalletContent = ({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
-  const { fullHeight } = useDeviceDimensions()
-  const insets = useAppInsets()
 
   const signerAccounts = useSignerAccounts()
   const accountsMap = useAccounts()
@@ -61,7 +55,6 @@ export const RemoveWalletContent = ({
     handleOnClose()
     if (!hasAccountsLeftAfterRemoval) {
       // user has no accounts left, so we bring onboarding back
-      clearOnboardingTimestamp()
       dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       navigateToOnboardingImportMethod()
     } else if (replaceMnemonic) {
@@ -144,15 +137,11 @@ export const RemoveWalletContent = ({
     if (inProgress) {
       return
     }
-
-    switch (currentStep) {
-      case RemoveWalletStep.Warning:
-        setCurrentStep(RemoveWalletStep.Final)
-        break
-      case RemoveWalletStep.Final:
-        setInProgress(true)
-        await onRemoveWalletPress()
-        break
+    if (currentStep === RemoveWalletStep.Warning) {
+      setCurrentStep(RemoveWalletStep.Final)
+    } else if (currentStep === RemoveWalletStep.Final) {
+      setInProgress(true)
+      await onRemoveWalletPress()
     }
   }
 
@@ -173,10 +162,8 @@ export const RemoveWalletContent = ({
   const labelColor: ThemeKeys = iconColorLabel
   const backgroundColor: ThemeKeys = iconBackgroundColor
 
-  const maxContentHeight = fullHeight - insets.top - insets.bottom - spacing.spacing48
-
   return (
-    <Flex gap="$spacing24" px="$spacing24" py="$spacing24" maxHeight={maxContentHeight}>
+    <Flex gap="$spacing24" px="$spacing24" py="$spacing24">
       <Flex centered gap="$spacing16">
         <Flex
           centered
@@ -197,7 +184,7 @@ export const RemoveWalletContent = ({
           </Text>
         </Flex>
       </Flex>
-      <Flex centered gap="$spacing16" flexShrink={1}>
+      <Flex centered gap="$spacing16">
         {currentStep === RemoveWalletStep.Final && shouldRemoveMnemonic ? (
           <>
             <AssociatedAccountsList accounts={signerAccounts} />

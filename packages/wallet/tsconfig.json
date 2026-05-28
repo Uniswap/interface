@@ -1,18 +1,14 @@
 {
   "extends": "../../config/tsconfig/app.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "env.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.json"
+  ],
   "references": [
     {
       "path": "../ui"
-    },
-    {
-      "path": "../sessions"
-    },
-    {
-      "path": "../gating"
-    },
-    {
-      "path": "../api"
     },
     {
       "path": "../uniswap"
@@ -22,6 +18,14 @@
     }
   ],
   "compilerOptions": {
-    "types": ["chrome", "jest"]
+    "paths": {
+      "ui/src/*": ["../../dist/out-tsc/packages/ui/src/*"],
+      "utilities/src/*": ["../../dist/out-tsc/packages/utilities/src/*"],
+      "uniswap/src/*": ["../../dist/out-tsc/packages/uniswap/src/*"]
+    },
+    "types": [
+      "chrome",
+      "jest"
+    ]
   }
 }

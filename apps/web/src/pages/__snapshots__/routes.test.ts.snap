@@ -1,6 +1,6 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Routes > router definition should match snapshot 1`] = `
+exports[`Routes router definition should match snapshot 1`] = `
 [
   {
     "enabled": [Function],
@@ -21,14 +21,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
       ":tab/:chainName",
     ],
     "path": "/explore",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/explore/tokens/solana/So11111111111111111111111111111111111111112",
   },
   {
     "enabled": [Function],
@@ -69,22 +61,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/explore/pools/:chainName/:poolAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/explore/auctions/:chainName/:auctionAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/liquidity/launch-auction",
   },
   {
     "enabled": [Function],
@@ -206,14 +182,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/migrate/v2/:chainName/:pairAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
     "path": "/migrate/v3/:chainName/:tokenId",
   },
   {
@@ -318,6 +286,22 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
+    "path": "/migrate/v2",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
+    "path": "/migrate/v2/:address",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
     "path": "/auth/passkey/extension",
   },
   {
@@ -327,40 +311,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/manage/passkey/:walletAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [
-      "tokens",
-      "defi",
-      "nfts",
-      "activity",
-      ":walletAddress",
-      ":walletAddress/tokens",
-      ":walletAddress/defi",
-      ":walletAddress/nfts",
-      ":walletAddress/activity",
-    ],
-    "path": "/portfolio",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/extension/uninstall",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/wrapped",
   },
   {
     "enabled": [Function],

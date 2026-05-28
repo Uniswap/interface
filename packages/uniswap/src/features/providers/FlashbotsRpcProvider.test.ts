@@ -1,69 +1,53 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { ConnectionInfo, fetchJson } from '@ethersproject/web'
+import { ConnectionInfo } from '@ethersproject/web'
 import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
-import type { Mock, Mocked } from 'vitest'
 
-vi.mock('@ethersproject/web', () => ({
-  fetchJson: vi.fn(),
-}))
-
-// Mock resolveProperties to properly resolve nested promises like the real implementation
-vi.mock('@ethersproject/properties', () => ({
-  resolveProperties: vi.fn().mockImplementation(async (input: Record<string, unknown>) => {
-    const result: Record<string, unknown> = {}
-    for (const [key, value] of Object.entries(input)) {
-      result[key] = await value
-    }
-    return result
-  }),
-}))
-
-const mockFetchJson = fetchJson as Mock
+jest.mock('@ethersproject/web')
 const testAddress = '0xF570F45f598fD48AF83FABD692629a2caFe899ec'
 
 describe('FlashbotsRpcProvider', () => {
-  let mockSigner: Mocked<Signer>
+  let mockSigner: jest.Mocked<Signer>
   let provider: FlashbotsRpcProvider
-  let superGetTransactionCountSpy: any = null
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.mock('@ethersproject/properties', () => ({
+      resolveProperties: jest.fn().mockImplementation((input) => Promise.resolve(input)),
+    }))
     mockSigner = {
-      getAddress: vi.fn().mockResolvedValue(testAddress),
-      signMessage: vi.fn().mockResolvedValue('0xsignature'),
-    } as unknown as Mocked<Signer>
-    provider = new FlashbotsRpcProvider({ signerInfo: { signer: mockSigner, address: testAddress } })
+      getAddress: jest.fn().mockResolvedValue(testAddress),
+      signMessage: jest.fn().mockResolvedValue('0xsignature'),
+    } as unknown as jest.Mocked<Signer>
+    provider = new FlashbotsRpcProvider({ signer: mockSigner, address: testAddress })
   })
 
   afterEach(() => {
-    // Restore any spies we created
-    superGetTransactionCountSpy?.mockRestore()
-    superGetTransactionCountSpy = null
+    jest.clearAllMocks()
   })
 
   describe('getTransactionCount', () => {
     it('should use super.getTransactionCount for non-pending blocks', async () => {
-      superGetTransactionCountSpy = vi.spyOn(JsonRpcProvider.prototype, 'getTransactionCount')
-      superGetTransactionCountSpy.mockResolvedValue(5)
+      const superGetTransactionCount = jest.spyOn(JsonRpcProvider.prototype, 'getTransactionCount')
+      superGetTransactionCount.mockResolvedValue(5)
 
       const result = await provider.getTransactionCount(testAddress, 'latest')
 
       expect(result).toBe(5)
-      expect(superGetTransactionCountSpy).toHaveBeenCalled()
+      expect(superGetTransactionCount).toHaveBeenCalledWith(testAddress, 'latest')
     })
 
     it('should use super.getTransactionCount for other addresses', async () => {
-      superGetTransactionCountSpy = vi.spyOn(JsonRpcProvider.prototype, 'getTransactionCount')
-      superGetTransactionCountSpy.mockResolvedValue(11)
+      const superGetTransactionCount = jest.spyOn(JsonRpcProvider.prototype, 'getTransactionCount')
+      superGetTransactionCount.mockResolvedValue(11)
 
       const result = await provider.getTransactionCount('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 'latest')
 
       expect(result).toBe(11)
-      expect(superGetTransactionCountSpy).toHaveBeenCalled()
+      expect(superGetTransactionCount).toHaveBeenCalledWith('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 'latest')
     })
 
     it('should use authenticated request for pending blocks', async () => {
+      const mockFetchJson = require('@ethersproject/web').fetchJson
       mockFetchJson.mockImplementation((connection: ConnectionInfo, request: string) => {
         const parsedRequest = JSON.parse(request)
         if (parsedRequest.method === 'eth_chainId') {
@@ -82,6 +66,7 @@ describe('FlashbotsRpcProvider', () => {
     })
 
     it('should throw an error if the response contains an error', async () => {
+      const mockFetchJson = require('@ethersproject/web').fetchJson
       mockFetchJson.mockResolvedValue({ error: { message: 'Test error', code: 123 } })
 
       await expect(provider.getTransactionCount(testAddress, 'pending')).rejects.toThrow('Test error')

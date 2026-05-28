@@ -7,19 +7,16 @@ export function useWarningService(): WarningService {
   const skipBridgingWarningRef = useRef(false)
   const skipMaxTransferWarningRef = useRef(false)
   const skipTokenProtectionWarningRef = useRef(false)
-  const skipBridgedAssetWarningRef = useRef(false)
 
   const reset = useEvent(() => {
     skipBridgingWarningRef.current = false
     skipMaxTransferWarningRef.current = false
     skipTokenProtectionWarningRef.current = false
-    skipBridgedAssetWarningRef.current = false
   })
 
   const getSkipBridgingWarning = useEvent(() => skipBridgingWarningRef.current)
   const getSkipMaxTransferWarning = useEvent(() => skipMaxTransferWarningRef.current)
   const getSkipTokenProtectionWarning = useEvent(() => skipTokenProtectionWarningRef.current)
-  const getSkipBridgedAssetWarning = useEvent(() => skipBridgedAssetWarningRef.current)
 
   const setSkipBridgingWarning = useEvent((value: boolean) => {
     skipBridgingWarningRef.current = value
@@ -30,9 +27,6 @@ export function useWarningService(): WarningService {
   const setSkipTokenProtectionWarning = useEvent((value: boolean) => {
     skipTokenProtectionWarningRef.current = value
   })
-  const setSkipBridgedAssetWarning = useEvent((value: boolean) => {
-    skipBridgedAssetWarningRef.current = value
-  })
 
   return {
     getSkipBridgingWarning,
@@ -41,8 +35,6 @@ export function useWarningService(): WarningService {
     setSkipBridgingWarning,
     setSkipMaxTransferWarning,
     setSkipTokenProtectionWarning,
-    getSkipBridgedAssetWarning,
-    setSkipBridgedAssetWarning,
     reset,
   }
 }

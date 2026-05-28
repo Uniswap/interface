@@ -1,6 +1,5 @@
 import { CommonActions } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -16,13 +15,15 @@ import { Button, Flex, GeneratedIcon, IconButton, Spacer, Text } from 'ui/src'
 import { Eye, Key, Laptop } from 'ui/src/components/icons'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { HiddenWordView } from 'ui/src/components/placeholders/HiddenWordView'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { setHasCopiedPrivateKeys } from 'wallet/src/features/behaviorHistory/slice'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -90,22 +91,18 @@ export function ViewPrivateKeysScreen({ navigation, route }: Props): JSX.Element
           <BulletRow Icon={Laptop} description={t('privateKeys.export.modal.speedbump.bullet3')} />
         </Flex>
         <Flex row py="$spacing24" gap="$gap8">
-          <Trace logPress element={ElementName.Cancel}>
-            <Button variant="default" emphasis="secondary" size="medium" onPress={navigation.goBack}>
-              {t('common.button.close')}
-            </Button>
-          </Trace>
-          <Trace logPress element={ElementName.Continue}>
-            <Button
-              variant="branded"
-              emphasis="primary"
-              size="medium"
-              testID={TestID.Continue}
-              onPress={onBiometricContinue}
-            >
-              {t('common.button.continue')}
-            </Button>
-          </Trace>
+          <Button variant="default" emphasis="secondary" size="medium" onPress={navigation.goBack}>
+            {t('common.button.close')}
+          </Button>
+          <Button
+            variant="branded"
+            emphasis="primary"
+            size="medium"
+            testID={TestID.Continue}
+            onPress={onBiometricContinue}
+          >
+            {t('common.button.continue')}
+          </Button>
         </Flex>
       </Flex>
     )
@@ -180,9 +177,7 @@ export function ViewPrivateKeysScreen({ navigation, route }: Props): JSX.Element
               testID={TestID.ViewNativePrivateKeysOnCopied}
               onPress={onFinished}
             >
-              {addresses.length === 1
-                ? t('privateKeys.view.button.continue.single')
-                : t('privateKeys.view.button.continue')}
+              {t('privateKeys.view.button.continue')}
             </Button>
           </Trace>
         </Flex>

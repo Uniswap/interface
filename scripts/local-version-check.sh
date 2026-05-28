@@ -7,31 +7,26 @@ check() {
   fi
 }
 
-# Check bun version
-localBunVersion="$(bun --version)"
-expectedBunVersion="$(cat "$(dirname "$0")/../.bun-version" | tr -d '\n')"
-check "bun" $localBunVersion "$expectedBunVersion"
+# Check yarn version
+localYarnVersion="$(yarn -v)"
+check "yarn" $localYarnVersion "3.2.3"
 
 # Check Xcode version
 localXcodeOutput="$(/usr/bin/xcodebuild -version)"
 localXcodeVersion=$(echo "$localXcodeOutput" | awk '/Xcode/ {print $2}')
-expectedXcodeVersion="$(cat "$(dirname "$0")/../.xcode-version" | tr -d '\n')"
-check "Xcode" $localXcodeVersion "$expectedXcodeVersion"
+check "Xcode" $localXcodeVersion "16.3"
 
 # Check node version
 localNodeVersion="$(node --version)"
-expectedNodeVersion="$(cat "$(dirname "$0")/../.nvmrc" | tr -d '\n' | cut -d'.' -f1)"
-check "node" $localNodeVersion "$expectedNodeVersion"
+check "node" $localNodeVersion "v22"
 
 # Check ruby version
 localRubyOutput="$(ruby --version)"
 localRubyVersion=$(echo "$localRubyOutput" | awk '/ruby/ {print $2}')
-expectedRubyVersion="$(cat "$(dirname "$0")/../.ruby-version" | tr -d '\n')"
-check "ruby" $localRubyVersion "$expectedRubyVersion"
+check "ruby" $localRubyVersion "3.2.2"
 
 # Check cocoapods version
-localPodVersion="$(cd "$(dirname "$0")/../apps/mobile" && bundle exec pod --version)"
-expectedPodVersion="$(grep "gem 'cocoapods'" "$(dirname "$0")/../apps/mobile/Gemfile" | sed -E "s/.*'([0-9.]+)'.*/\1/")"
-check "pod" $localPodVersion "$expectedPodVersion"
+localPodVersion="$(cd apps/mobile && bundle exec pod --version cd ../..)"
+check "pod" $localPodVersion "1.14.3"
 
 echo "All versions match!"

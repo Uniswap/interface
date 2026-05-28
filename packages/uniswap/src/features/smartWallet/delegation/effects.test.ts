@@ -4,12 +4,11 @@ import {
   getHandleOnUpdateDelegatedState,
 } from 'uniswap/src/features/smartWallet/delegation/effects'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
-import type { Mock } from 'vitest'
 
 describe('effects', () => {
   describe('getHandleOnUpdateDelegatedState', () => {
-    const mockOnDelegationDetected = vi.fn()
-    const mockOnNewDelegateState = vi.fn()
+    const mockOnDelegationDetected = jest.fn()
+    const mockOnNewDelegateState = jest.fn()
 
     const defaultOriginalState = {
       delegation: {
@@ -21,13 +20,13 @@ describe('effects', () => {
       } satisfies DelegatedState,
     }
 
-    let getOriginalState: Mock
-    let getState: Mock
+    let getOriginalState: jest.Mock
+    let getState: jest.Mock
 
     beforeEach(() => {
-      vi.clearAllMocks()
-      getOriginalState = vi.fn().mockReturnValue(defaultOriginalState)
-      getState = vi.fn()
+      jest.clearAllMocks()
+      getOriginalState = jest.fn().mockReturnValue(defaultOriginalState)
+      getState = jest.fn()
     })
 
     test.each([
@@ -124,7 +123,7 @@ describe('effects', () => {
   })
 
   describe('getHandleOnSetActiveChainId', () => {
-    const mockOnDelegationDetected = vi.fn()
+    const mockOnDelegationDetected = jest.fn()
 
     const defaultState = {
       delegation: {
@@ -136,11 +135,11 @@ describe('effects', () => {
       } satisfies DelegatedState,
     }
 
-    let getState: Mock
+    let getState: jest.Mock
 
     beforeEach(() => {
-      vi.clearAllMocks()
-      getState = vi.fn().mockReturnValue(defaultState)
+      jest.clearAllMocks()
+      getState = jest.fn().mockReturnValue(defaultState)
     })
 
     test.each([

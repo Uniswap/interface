@@ -1,19 +1,19 @@
-import { fireEvent, renderHook } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown.web'
-import { type Mock, type MockInstance, vi } from 'vitest'
 
 describe('useKeyDown', () => {
-  let callback: Mock
-  let addEventListenerSpy: MockInstance
+  let callback: jest.Mock
+  let addEventListenerSpy: jest.SpyInstance
 
   beforeEach(() => {
-    callback = vi.fn()
-    addEventListenerSpy = vi.spyOn(document, 'addEventListener')
+    callback = jest.fn()
+    addEventListenerSpy = jest.spyOn(document, 'addEventListener')
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('should not add event listener when disabled', () => {

@@ -1,15 +1,25 @@
-import type { ViewStyle } from 'react-native'
+import { useCallback } from 'react'
+import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 
-export interface ShakeAnimation {
-  shakeStyle: ViewStyle
+export const useShakeAnimation = (): {
+  shakeStyle: ReturnType<typeof useAnimatedStyle>
   triggerShakeAnimation: () => void
-}
+} => {
+  const shakeValue = useSharedValue(0)
+  const shakeStyle = useAnimatedStyle(
+    () => ({
+      transform: [{ translateX: shakeValue.value }],
+    }),
+    [shakeValue.value],
+  )
 
-/**
- * Platform-specific implementations:
- * - Web: Uses CSS animations (useShakeAnimation.web.ts)
- * - Native: Uses react-native-reanimated (useShakeAnimation.native.ts)
- */
-export const useShakeAnimation = (): ShakeAnimation => {
-  throw new Error('useShakeAnimation: Implemented in `.native.ts` and `.web.ts` files')
+  const triggerShakeAnimation = useCallback(() => {
+    shakeValue.value = errorShakeAnimation(shakeValue)
+  }, [shakeValue])
+
+  return {
+    shakeStyle,
+    triggerShakeAnimation,
+  }
 }

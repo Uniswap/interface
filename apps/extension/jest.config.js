@@ -38,19 +38,10 @@ module.exports = {
   ],
   resolver: "<rootDir>/src/test/jest-resolver.js",
   displayName: 'Extension Wallet',
-  testMatch: [
-    '<rootDir>/src/**/*.(spec|test).[jt]s?(x)',
-    '<rootDir>/config/**/*.(spec|test).[jt]s?(x)',
-  ],
-  testPathIgnorePatterns: [
-    ...preset.testPathIgnorePatterns,
-    '<rootDir>/e2e/',
-  ],
   collectCoverageFrom: [
     'src/app/**/*.{js,ts,tsx}',
     'src/background/**/*.{js,ts,tsx}',
     'src/contentScript/**/*.{js,ts,tsx}',
-    'config/**/*.{js,ts,tsx}',
     '!src/**/*.stories.**',
     '!**/node_modules/**',
   ],
@@ -62,5 +53,6 @@ module.exports = {
   setupFiles: [
     '../../config/jest-presets/jest/setup.js',
     './jest-setup.js',
+    '../../node_modules/react-native-gesture-handler/jestSetup.js',
   ],
 }

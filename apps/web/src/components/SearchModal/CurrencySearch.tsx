@@ -1,45 +1,43 @@
+import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
+import useSelectChain from 'hooks/useSelectChain'
+import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
 import { useCallback, useEffect } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex } from 'ui/src'
 import { TokenSelectorContent, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePrevious } from 'utilities/src/react/hooks'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import useSelectChain from '~/hooks/useSelectChain'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
-import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
 
 interface CurrencySearchProps {
   currencyField: CurrencyField
-  switchNetworkAction: SwitchNetworkAction
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
   chainIds?: UniverseChainId[]
-  variation?: TokenSelectorVariation
+  includeAllNetworks?: boolean
 }
 
 export function CurrencySearch({
   currencyField,
-  switchNetworkAction,
   onCurrencySelect,
   onDismiss,
   chainIds,
-  variation,
+  includeAllNetworks = true,
 }: CurrencySearchProps) {
-  const addresses = useActiveAddresses()
-
+  const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
     useMultichainContext()
   const { currentTab } = useSwapAndLimitContext()
   const prevChainId = usePrevious(chainId)
+  const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
   const selectChain = useSelectChain()
   const { chains } = useEnabledChains()
@@ -66,15 +64,18 @@ export function CurrencySearch({
       return
     }
 
-    showSwitchNetworkNotification({ chainId, prevChainId, action: switchNetworkAction })
-  }, [currentTab, chainId, prevChainId, isMultichainContext, switchNetworkAction])
+    showSwapNetworkNotification({ chainId, prevChainId })
+  }, [currentTab, chainId, prevChainId, isMultichainContext, showSwapNetworkNotification])
 
   return (
-    <Trace logImpression eventOnTrigger={InterfaceEventName.TokenSelectorOpened} modal={ModalName.TokenSelectorWeb}>
+    <Trace
+      logImpression
+      eventOnTrigger={InterfaceEventName.TOKEN_SELECTOR_OPENED}
+      modal={InterfaceModalName.TOKEN_SELECTOR}
+    >
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
-          renderedInModal={false}
-          addresses={addresses}
+          activeAccountAddress={account.address!}
           isLimits={currentTab === SwapTab.Limit}
           chainId={!isMultichainContext || isUserSelectedToken ? chainId : undefined}
           chainIds={chainIds ?? chains}
@@ -82,12 +83,10 @@ export function CurrencySearch({
           flow={TokenSelectorFlow.Swap}
           isSurfaceReady={true}
           variation={
-            variation ??
-            (currencyField === CurrencyField.INPUT
-              ? TokenSelectorVariation.SwapInput
-              : TokenSelectorVariation.SwapOutput)
+            currencyField === CurrencyField.INPUT ? TokenSelectorVariation.SwapInput : TokenSelectorVariation.SwapOutput
           }
           onClose={onDismiss}
+          includeAllNetworks={includeAllNetworks}
           onSelectCurrency={handleCurrencySelectTokenSelectorCallback}
         />
       </Flex>

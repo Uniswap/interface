@@ -1,43 +1,27 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Signer } from 'ethers/lib/ethers'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
-import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
-import { DisplayName } from 'uniswap/src/features/accounts/types'
-import { WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent } from 'utilities/src/react/hooks'
-
-export type NavigateToNftItemArgs = {
-  owner?: Address
-  contractAddress: Address
-  tokenId: string
-  chainId: UniverseChainId
-}
-
-export type NavigateToSwapFlowArgs = {
-  inputCurrencyId?: string
-  outputCurrencyId?: string
-  exactCurrencyField?: CurrencyField
-  exactAmountToken?: string
-}
+import { Connector } from 'wagmi'
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContextValue {
+  account?: AccountMeta
+  connector?: Connector
   navigateToBuyOrReceiveWithEmptyWallet?: () => void
   navigateToFiatOnRamp: (args: { prefilledCurrency?: FiatOnRampCurrency }) => void
-  navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
-  navigateToSendFlow: (args: { chainId: UniverseChainId; currencyAddress?: Address; recipient?: Address }) => void
+  navigateToSwapFlow: (args: { inputCurrencyId?: string; outputCurrencyId?: string }) => void
+  navigateToSendFlow: (args: { chainId: UniverseChainId; currencyAddress?: Address }) => void
   navigateToReceive: () => void
   navigateToTokenDetails: (currencyId: string) => void
   navigateToExternalProfile: (args: { address: Address }) => void
-  navigateToNftDetails: (args: NavigateToNftItemArgs) => void
-  navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void
+  navigateToNftCollection: (args: { collectionAddress: Address; chainId: UniverseChainId }) => void
   handleShareToken: (args: { currencyId: string }) => void
-  navigateToAdvancedSettings: () => void
   onSwapChainsChanged: (args: {
     chainId: UniverseChainId
     prevChainId?: UniverseChainId
@@ -48,9 +32,8 @@ interface UniswapContextValue {
   swapOutputChainId?: UniverseChainId
   signer: Signer | undefined
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
-  useWalletDisplayName: (address: Maybe<Address>, options?: WalletDisplayNameOptions) => DisplayName | undefined
   // Used for triggering wallet connection on web
-  onConnectWallet?: (platform?: Platform) => void
+  onConnectWallet?: () => void
   // Used for web to open the token selector from a banner not in the swap flow
   isSwapTokenSelectorOpen: boolean
   setIsSwapTokenSelectorOpen: (open: boolean) => void
@@ -60,15 +43,18 @@ interface UniswapContextValue {
   handleOnPressUniswapXUnsupported?: () => void
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
-  useAccountsStoreContextHook: () => AccountsStore
-  // Function to check if current wallet can pay gas fees in any token
-  getCanPayGasInAnyToken?: () => boolean
+  searchLocalTokenSelectorResults?: (args: {
+    chainFilter: UniverseChainId | null
+    searchFilter: string | null
+  }) => CurrencyInfo[] | undefined
 }
 
 export const UniswapContext = createContext<UniswapContextValue | null>(null)
 
 export function UniswapProvider({
   children,
+  account,
+  connector,
   navigateToBuyOrReceiveWithEmptyWallet,
   navigateToFiatOnRamp,
   navigateToSwapFlow,
@@ -76,22 +62,18 @@ export function UniswapProvider({
   navigateToReceive,
   navigateToTokenDetails,
   navigateToExternalProfile,
-  navigateToNftDetails,
-  navigateToPoolDetails,
+  navigateToNftCollection,
   handleShareToken,
-  navigateToAdvancedSettings,
   onSwapChainsChanged,
   signer,
   useProviderHook,
-  useWalletDisplayName,
   onConnectWallet,
   getCanSignPermits,
   getIsUniswapXSupported,
   handleOnPressUniswapXUnsupported,
   getCanBatchTransactions,
   getSwapDelegationInfo,
-  useAccountsStoreContextHook,
-  getCanPayGasInAnyToken,
+  searchLocalTokenSelectorResults,
 }: PropsWithChildren<
   Omit<UniswapContextValue, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
 >): JSX.Element {
@@ -101,6 +83,8 @@ export function UniswapProvider({
 
   const value: UniswapContextValue = useMemo(
     () => ({
+      account,
+      connector,
       navigateToBuyOrReceiveWithEmptyWallet,
       navigateToFiatOnRamp,
       navigateToSwapFlow,
@@ -108,10 +92,8 @@ export function UniswapProvider({
       navigateToReceive,
       navigateToTokenDetails,
       navigateToExternalProfile,
-      navigateToNftDetails,
-      navigateToPoolDetails,
+      navigateToNftCollection,
       handleShareToken,
-      navigateToAdvancedSettings,
       onSwapChainsChanged: ({
         chainId,
         prevChainId,
@@ -127,7 +109,6 @@ export function UniswapProvider({
       },
       signer,
       useProviderHook,
-      useWalletDisplayName,
       onConnectWallet,
       swapInputChainId,
       swapOutputChainId,
@@ -139,10 +120,11 @@ export function UniswapProvider({
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
       getSwapDelegationInfo,
-      useAccountsStoreContextHook,
-      getCanPayGasInAnyToken,
+      searchLocalTokenSelectorResults,
     }),
     [
+      account,
+      connector,
       navigateToBuyOrReceiveWithEmptyWallet,
       navigateToFiatOnRamp,
       navigateToSwapFlow,
@@ -150,25 +132,22 @@ export function UniswapProvider({
       navigateToReceive,
       navigateToTokenDetails,
       navigateToExternalProfile,
-      navigateToNftDetails,
-      navigateToPoolDetails,
+      navigateToNftCollection,
       handleShareToken,
-      navigateToAdvancedSettings,
       signer,
       useProviderHook,
-      useWalletDisplayName,
       onConnectWallet,
       swapInputChainId,
       swapOutputChainId,
       isSwapTokenSelectorOpen,
+      setIsSwapTokenSelectorOpen,
       getCanSignPermits,
+      onSwapChainsChanged,
       getIsUniswapXSupported,
       handleOnPressUniswapXUnsupported,
       getCanBatchTransactions,
       getSwapDelegationInfo,
-      onSwapChainsChanged,
-      useAccountsStoreContextHook,
-      getCanPayGasInAnyToken,
+      searchLocalTokenSelectorResults,
     ],
   )
 
@@ -189,6 +168,16 @@ export function useUniswapContextSelector<T>(selector: (ctx: UniswapContextValue
   const stableSelector = useEvent(selector)
   const context = useContext(UniswapContext)
   return context ? stableSelector(context) : undefined
+}
+
+/** Cross-platform util for getting metadata for the active account/wallet, regardless of platform/environment. */
+export function useAccountMeta(): AccountMeta | undefined {
+  return useUniswapContext().account
+}
+
+/** Cross-platform util for getting connector for the active account/wallet, only applicable to web, other platforms are undefined. */
+export function useConnector(): Connector | undefined {
+  return useUniswapContext().connector
 }
 
 /** Cross-platform util for getting an RPC provider for the given `chainId`, regardless of platform/environment. */

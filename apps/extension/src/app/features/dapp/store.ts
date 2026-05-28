@@ -41,12 +41,11 @@ async function init(): Promise<void> {
 }
 
 async function initInternal(): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   state = (await chrome.storage.local.get([STATE_STORAGE_KEY]))?.[STATE_STORAGE_KEY] || initialDappState
 
   chrome.storage.local.onChanged.addListener((changes) => {
-    if (changes['dappState']) {
-      state = changes['dappState'].newValue
+    if (changes.dappState) {
+      state = changes.dappState.newValue
       dappStoreEventEmitter.emit(DappStoreEvent.DappStateUpdated, state)
     }
   })
@@ -116,16 +115,8 @@ function updateDappConnectedAddress(address: Address): void {
  * @param property - key of dapp property to update
  * @param value - new value for the property
  */
-function updateDappProperty<T extends keyof DappInfo>({
-  dappUrl,
-  property,
-  value,
-}: {
-  dappUrl: string
-  property: T
-  value?: DappInfo[T]
-}): void {
-  const info = state[dappUrl]
+function updateDappProperty<T extends keyof DappInfo>(dappUrl: string, property: T, value?: DappInfo[T]): void {
+  const info = state?.[dappUrl]
 
   if (!info) {
     return
@@ -149,7 +140,7 @@ function updateDappProperty<T extends keyof DappInfo>({
  * @param newDisplayName - new display name for dapp
  */
 function updateDappDisplayName(dappUrl: string, newDisplayName?: string): void {
-  updateDappProperty({ dappUrl, property: 'displayName', value: newDisplayName })
+  updateDappProperty(dappUrl, 'displayName', newDisplayName)
 }
 
 /**
@@ -158,7 +149,7 @@ function updateDappDisplayName(dappUrl: string, newDisplayName?: string): void {
  * @param newIconUrl - new icon URL for dapp
  */
 function updateDappIconUrl(dappUrl: string, newIconUrl?: string): void {
-  updateDappProperty({ dappUrl, property: 'iconUrl', value: newIconUrl })
+  updateDappProperty(dappUrl, 'iconUrl', newIconUrl)
 }
 
 // TODO(WALL-4643): if we migrate to immer, let's avoid iterating over the the object here
@@ -175,15 +166,7 @@ function updateDappLatestChainId(dappUrl: string, chainId: UniverseChainId): voi
   queueDappStateSync()
 }
 
-function saveDappActiveAccount({
-  dappUrl,
-  account,
-  initialProperties,
-}: {
-  dappUrl: string
-  account: Account
-  initialProperties?: Partial<DappInfo>
-}): void {
+function saveDappActiveAccount(dappUrl: string, account: Account, initialProperties?: Partial<DappInfo>): void {
   // Never directly mutate state, as some of its fields could have `writable: false`
   state = {
     ...state,
@@ -215,7 +198,7 @@ function saveDappActiveAccount({
  */
 function removeDappConnection(dappUrl: string, account?: Account): void {
   // Never directly mutate state, as some of its fields could have `writable: false`
-  state = removeDappConnectionHelper({ initialState: state, dappUrl, account })
+  state = removeDappConnectionHelper(state, dappUrl, account)
   queueDappStateSync()
 }
 
@@ -227,7 +210,7 @@ function removeAccountDappConnections(account: Account): void {
   let updatedState = { ...state }
 
   for (const dappUrl of getDappUrls()) {
-    updatedState = removeDappConnectionHelper({ initialState: updatedState, dappUrl, account })
+    updatedState = removeDappConnectionHelper(updatedState, dappUrl, account)
   }
 
   state = updatedState
@@ -241,15 +224,7 @@ function removeAccountDappConnections(account: Account): void {
  * @param account - the account to remove from the target dapp; if undefined, all accounts will be removed
  * @returns the updated state
  */
-function removeDappConnectionHelper({
-  initialState,
-  dappUrl,
-  account,
-}: {
-  initialState: DappState
-  dappUrl: string
-  account?: Account
-}): DappState {
+function removeDappConnectionHelper(initialState: DappState, dappUrl: string, account?: Account): DappState {
   const newState = cloneDeep(initialState)
   const dappInfo = newState[dappUrl]
 

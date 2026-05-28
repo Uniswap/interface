@@ -9,12 +9,10 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DappRequestInfo, DappRequestType, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
@@ -44,7 +42,7 @@ type SignTransactionParams = {
   sessionId: string
   requestInternalId: string
   transaction: providers.TransactionRequest
-  account: SignerMnemonicAccountMeta
+  account: Account
   method: EthMethod.EthSendTransaction | EthMethod.WalletSendCalls
   dappRequestInfo: DappRequestInfo
   chainId: UniverseChainId
@@ -53,18 +51,12 @@ type SignTransactionParams = {
 
 function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { sessionId, requestInternalId, account, method, chainId } = params
-  const { defaultChainId } = yield* getEnabledChainIdsSaga(Platform.EVM)
+  const { defaultChainId } = yield* getEnabledChainIdsSaga()
   try {
     const signerManager = yield* call(getSignerManager)
     let result: string | SendCallsResult = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
-      // For personal_sign, pass signAsString=true to keep the message as a string for proper EIP-191 hashing
-      result = yield* call(signMessage, {
-        message: params.message,
-        account,
-        signerManager,
-        signAsString: method === EthMethod.PersonalSign,
-      })
+      result = yield* call(signMessage, params.message, account, signerManager)
 
       // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
       if (
@@ -79,7 +71,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         )
       }
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
-      result = yield* call(signTypedDataMessage, { message: params.message, account, signerManager })
+      result = yield* call(signTypedDataMessage, params.message, account, signerManager)
     } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
       const txParams: ExecuteTransactionParams = {
         chainId: params.transaction.chainId || defaultChainId,
@@ -96,8 +88,8 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         transactionOriginType: TransactionOriginType.External,
       }
-      const { transactionHash } = yield* call(executeTransaction, txParams)
-      result = transactionHash
+      const { transactionResponse } = yield* call(executeTransaction, txParams)
+      result = transactionResponse.hash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: ExecuteTransactionParams = {
         chainId: params.transaction.chainId || defaultChainId,
@@ -111,8 +103,8 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         transactionOriginType: TransactionOriginType.External,
       }
-      const { transactionHash } = yield* call(executeTransaction, txParams)
-      result = transactionHash
+      const { transactionResponse } = yield* call(executeTransaction, txParams)
+      result = transactionResponse.hash
 
       // Trigger a pending transaction notification after we send the transaction to chain
       yield* put(
@@ -121,7 +113,6 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           chainId: txParams.chainId,
         }),
       )
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (method === EthMethod.WalletSendCalls && params.request.type === EthMethod.WalletSendCalls) {
       const txParams: ExecuteTransactionParams = {
         chainId: params.request.chainId,
@@ -136,22 +127,14 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         transactionOriginType: TransactionOriginType.External,
       }
 
-      const { transactionHash } = yield* call(executeTransaction, txParams)
-      result = {
-        id: params.request.id,
-        capabilities: {
-          caip345: {
-            caip2: `eip155:${params.request.chainId}`,
-            transactionHashes: [transactionHash],
-          },
-        },
-      }
+      const { transactionResponse } = yield* call(executeTransaction, txParams)
+      result = { id: params.request.id, capabilities: {} }
 
       // Store the batch transaction in Redux
       yield* put(
         addBatchedTransaction({
           batchId: params.request.id,
-          txHashes: [transactionHash],
+          txHashes: [transactionResponse.hash],
           requestId: params.request.encodedRequestId,
           chainId: params.request.chainId,
         }),
@@ -195,7 +178,6 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           result,
         },
       })
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (params.dappRequestInfo.requestType === DappRequestType.UwULink && params.dappRequestInfo.webhook) {
       fetch(params.dappRequestInfo.webhook, {
         method: 'POST',

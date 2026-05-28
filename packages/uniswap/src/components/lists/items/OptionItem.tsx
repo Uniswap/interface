@@ -1,11 +1,11 @@
 import { memo, useCallback } from 'react'
-import { Flex, FlexProps, Text, TextProps, TouchableArea } from 'ui/src'
+import { Flex, FlexProps, Text, TextProps, TouchableArea, isWeb } from 'ui/src'
+import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
-import { useIsKeyboardOpen } from 'utilities/src/device/keyboard/useIsKeyboardOpen'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
-import { isWebApp, isWebPlatform } from 'utilities/src/platform'
-import { noop } from 'utilities/src/react/noop'
+import { isInterface } from 'utilities/src/platform'
+import noop from 'utilities/src/react/noop'
 
 // Props for manually managing the focused row index of a list
 // i.e. via keyboard ArrowUp/ArrowDown navigation
@@ -61,7 +61,7 @@ function _OptionItem({
     if (modalShouldShow && modal) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
-      if (isKeyboardOpen && isWebApp) {
+      if (isKeyboardOpen && isInterface) {
         const activeElement = document.activeElement as HTMLElement | null
         activeElement?.blur()
         setTimeout(handleShowModal, 700)
@@ -76,7 +76,7 @@ function _OptionItem({
 
   // Custom keyboard list nav behavior using arrow + enter keys
   const { focusedRowIndex, rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
-  const keyboardNavEnabled = isWebPlatform && focusedRowControl && setFocusedRowIndex
+  const keyboardNavEnabled = isWeb && focusedRowControl && setFocusedRowIndex
   const isFocused = focusedRowIndex !== undefined && focusedRowIndex === rowIndex
   useKeyDown({
     keys: ['Enter'],
@@ -89,10 +89,10 @@ function _OptionItem({
     ? {
         backgroundColor: isFocused ? '$surface1Hovered' : undefined,
         onMouseEnter: (): void => {
-          setFocusedRowIndex(rowIndex)
+          setFocusedRowIndex?.(rowIndex)
         },
         onMouseLeave: (): void => {
-          setFocusedRowIndex(undefined)
+          setFocusedRowIndex?.(undefined)
         },
       }
     : { hoverStyle: { backgroundColor: '$surface1Hovered' } }

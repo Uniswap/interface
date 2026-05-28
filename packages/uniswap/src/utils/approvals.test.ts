@@ -1,5 +1,16 @@
 import { MaxUint256 } from '@uniswap/sdk-core'
-import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
+import { encodeERC20ApproveCalldata, parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
+
+describe(encodeERC20ApproveCalldata, () => {
+  it('encodes approve calldata that parseERC20ApproveCalldata can round-trip', () => {
+    const spender = '0x000000000022d473030f116ddee9f6b43ac78ba3'
+    const amount = BigInt(MaxUint256.toString())
+    const calldata = encodeERC20ApproveCalldata(spender, amount)
+    const parsed = parseERC20ApproveCalldata(calldata)
+    expect(parsed.spender.toLowerCase()).toBe(spender.toLowerCase())
+    expect(parsed.amount.toString()).toBe(amount.toString())
+  })
+})
 
 describe(parseERC20ApproveCalldata, () => {
   it('Returns proper address and amount for max spend', () => {

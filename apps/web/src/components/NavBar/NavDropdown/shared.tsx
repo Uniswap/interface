@@ -5,6 +5,8 @@ export const NavDropdownDefaultWrapper = styled(Flex, {
   width: '100%',
   alignItems: 'center',
   gap: '$spacing2',
+  maxHeight: 'inherit',
+  '$platform-web': { overflowY: 'auto' },
 
   $sm: {
     width: '100%',

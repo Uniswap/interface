@@ -51,7 +51,7 @@ export function FooterSettings(): JSX.Element {
           setShowSignature(true)
         }}
       >
-        {t('settings.version', { appVersion: getFullAppVersion({ includeBuildNumber: true }) })}
+        {t('settings.version', { appVersion: getFullAppVersion() })}
       </Text>
     </Flex>
   )

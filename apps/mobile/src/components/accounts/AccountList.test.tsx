@@ -1,7 +1,7 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { amounts, ON_PRESS_EVENT_PAYLOAD, portfolio } from 'uniswap/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD, amounts, portfolio } from 'uniswap/src/test/fixtures'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
@@ -20,15 +20,6 @@ const defaultProps = {
   onPress: jest.fn(),
   onClose: jest.fn(),
 }
-
-// Skip entering animation of AccountIcon
-jest.mock('react-native-reanimated', () => {
-  const Reanimated = require('react-native-reanimated/mock')
-
-  Reanimated.Layout = { duration: (): object => ({}) }
-
-  return Reanimated
-})
 
 describe(AccountList, () => {
   it('renders without error', async () => {
@@ -77,7 +68,7 @@ describe(AccountList, () => {
       })
 
       signerAccounts.forEach((account) => {
-        const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
+        const address = sanitizeAddressText(shortenAddress(account.address))
         if (address) {
           expect(screen.queryByText(address)).toBeTruthy()
         }
@@ -105,7 +96,7 @@ describe(AccountList, () => {
       expect(screen.queryByText('View-only wallets')).toBeTruthy()
 
       viewOnlyAccounts.forEach((account) => {
-        const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
+        const address = sanitizeAddressText(shortenAddress(account.address))
         if (address) {
           expect(screen.queryByText(address)).toBeTruthy()
         }

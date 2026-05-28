@@ -4,10 +4,8 @@ export const zIndexes = {
   background: 0,
   default: 1,
   mask: 10,
-  dropdown: 970,
+  dropdown: 1000,
   header: 980,
-  sidebar: 990,
-  // Note: tamagui dialog portal defaults to 1000. any z-index >= 1000 will appear above this portal
   sticky: 1020,
   fixed: 1030,
   modalBackdrop: 1040,
@@ -18,7 +16,5 @@ export const zIndexes = {
   tooltip: 1080,
   // Custom value needed to properly display components
   // above modals (e.g. in the extension app)
-  overlay: 100010,
-  // Toast notifications should appear above all other content
-  toast: 100020,
+  overlay: 100001,
 }

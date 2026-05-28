@@ -2,22 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
-import {
-  DAI,
-  DAI_ARBITRUM_ONE,
-  nativeOnChain,
-  USDC_ARBITRUM,
-  USDC_MAINNET,
-  USDT,
-  WBTC,
-} from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
-import { benignSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
-import { LimitsExpiry } from 'uniswap/src/types/limits'
-import { UseAccountReturnType, type Register as WagmiRegister } from 'wagmi'
-import { expiryToDeadlineSeconds } from '~/state/limit/expiryToDeadlineSeconds'
+import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
 import {
   ClassicTrade,
   DutchOrderTrade,
@@ -25,7 +10,22 @@ import {
   PreviewTrade,
   QuoteMethod,
   V2DutchOrderTrade,
-} from '~/state/routing/types'
+} from 'state/routing/types'
+import {
+  DAI,
+  DAI_ARBITRUM_ONE,
+  USDC_ARBITRUM,
+  USDC_MAINNET,
+  USDT,
+  WBTC,
+  nativeOnChain,
+} from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
+import { LimitsExpiry } from 'uniswap/src/types/limits'
+import { UseAccountReturnType } from 'wagmi'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_1_INFO: CurrencyInfo = {
@@ -35,7 +35,6 @@ export const TEST_TOKEN_1_INFO: CurrencyInfo = {
   currencyId: 'ABC',
   safetyInfo: benignSafetyInfo,
 }
-
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
 export const TEST_TOKEN_2_INFO: CurrencyInfo = {
   currency: TEST_TOKEN_2,
@@ -76,6 +75,7 @@ export const toCurrencyAmount = (token: Token, amount: number) =>
   CurrencyAmount.fromRawAmount(token, JSBI.BigInt(amount))
 
 export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
+  fewV2Routes: [],
   v3Routes: [
     {
       routev3: new Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
@@ -91,6 +91,7 @@ export const TEST_TRADE_EXACT_INPUT = new ClassicTrade({
 })
 
 export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
+  fewV2Routes: [],
   v3Routes: [
     {
       routev3: new Route([TEST_POOL_12], TEST_TOKEN_1, TEST_TOKEN_2),
@@ -106,6 +107,7 @@ export const TEST_TRADE_EXACT_INPUT_API = new ClassicTrade({
 })
 
 export const TEST_TRADE_EXACT_OUTPUT = new ClassicTrade({
+  fewV2Routes: [],
   v3Routes: [
     {
       routev3: new Route([TEST_POOL_13], TEST_TOKEN_1, TEST_TOKEN_3),
@@ -213,6 +215,7 @@ const TEST_POOL_FOT_1 = new Pool(
   -69633,
 )
 export const TEST_TRADE_FEE_ON_SELL = new ClassicTrade({
+  fewV2Routes: [],
   v3Routes: [
     {
       routev3: new Route([TEST_POOL_FOT_1], SELL_FEE_TOKEN, TEST_TOKEN_2),
@@ -246,6 +249,7 @@ const TEST_POOL_FOT_2 = new Pool(
   -69633,
 )
 export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
+  fewV2Routes: [],
   v3Routes: [
     {
       routev3: new Route([TEST_POOL_FOT_2], TEST_TOKEN_1, BUY_FEE_TOKEN),
@@ -342,7 +346,7 @@ export const USDC_ARBITRUM_INFO: CurrencyInfo = {
 export const USE_DISCONNECTED_ACCOUNT = {
   address: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
   chainId: 1,
-} as unknown as UseAccountReturnType<WagmiRegister['config']>
+} as unknown as UseAccountReturnType
 
 // Fiat On Ramp countries
 

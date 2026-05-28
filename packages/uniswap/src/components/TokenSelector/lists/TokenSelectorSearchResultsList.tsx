@@ -1,36 +1,35 @@
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
 import { useTokenSectionsForSearchResults } from 'uniswap/src/components/TokenSelector/hooks/useTokenSectionsForSearchResults'
-import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function _TokenSelectorSearchResultsList({
   onSelectCurrency: parentOnSelectCurrency,
-  addresses,
+  activeAccountAddress,
   chainFilter,
   parsedChainFilter,
   searchFilter,
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
+  isKeyboardOpen,
   input,
-  renderedInModal,
 }: {
   onSelectCurrency: OnSelectCurrency
-  addresses: AddressGroup
+  activeAccountAddress?: string
   chainFilter: UniverseChainId | null
   parsedChainFilter: UniverseChainId | null
   searchFilter: string
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
   isBalancesOnlySearch: boolean
+  isKeyboardOpen?: boolean
   input: TradeableAsset | undefined
-  renderedInModal: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { registerSearchTokenCurrencyInfo } = useAddToSearchHistory()
@@ -39,15 +38,14 @@ function _TokenSelectorSearchResultsList({
     loading,
     error,
     refetch,
-  } = useTokenSectionsForSearchResults({
-    addresses,
-    chainFilter: chainFilter ?? parsedChainFilter,
-    searchFilter: debouncedParsedSearchFilter ?? debouncedSearchFilter,
+  } = useTokenSectionsForSearchResults(
+    activeAccountAddress,
+    chainFilter ?? parsedChainFilter,
+    debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,
     input,
-  })
+  )
 
-  // eslint-disable-next-line max-params
   const onSelectCurrency: OnSelectCurrency = (currencyInfo, section, index) => {
     parentOnSelectCurrency(currencyInfo, section, index)
     registerSearchTokenCurrencyInfo(currencyInfo)
@@ -66,11 +64,11 @@ function _TokenSelectorSearchResultsList({
       emptyElement={emptyElement}
       errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
+      isKeyboardOpen={isKeyboardOpen}
       loading={userIsTyping || loading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
-      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )

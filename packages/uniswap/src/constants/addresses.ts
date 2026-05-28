@@ -1,3 +1,4 @@
+// import { ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -35,9 +36,30 @@ export function getWrappedNativeAddress(chainId: UniverseChainId): string {
   return getChainInfo(chainId).wrappedNativeCurrency.address
 }
 
+export function getFewETHWrapperAddress(chainId: UniverseChainId): string {
+  const addresses: Partial<Record<UniverseChainId | number, string>> = {
+    [UniverseChainId.Sepolia]: '0xC8D2bBBfDf6CED270d82aEa5961fE28608490F9f',
+    // [UniswapSDKChainId.BLAST_SEPOLIA]: '0xCd31E6C1AD4c9E0E7F6A1f44583C038eaAaCf53F',
+    [UniverseChainId.Blast]: '0xF272a4b0d949011f9347134088126277abeB065F',
+    [UniverseChainId.Mainnet]: '0xAda6059b4F6244Acd8934095Ed0162C5Df6B5ebB',
+    // [UniswapSDKChainId.ARBITRUM_SEPOLIA]: '0x295D7CF11f6667C359563A7FFAC54106DD6f114b',
+    [UniverseChainId.Base]: '0x20E6B1260d12910C0Ab13c1AbEBCFe24AE9c4fe7',
+    [UniverseChainId.ArbitrumOne]: '0xEeE400Eabfba8F60f4e6B351D8577394BeB972CD',
+    // [UniswapSDKChainId.STORY_ODYSSEY]: '0xd7413358bFE4Aa5D707CcF8Ae7B4FF58E79e149A',
+    // [UniswapSDKChainId.STORY_MAINNET]: '0xc43a3Dd1b16168e00297315d679840e30A89df42',
+    [UniverseChainId.Unichain]: '0xc43a3Dd1b16168e00297315d679840e30A89df42',
+    [UniverseChainId.Bnb]: '0xf9d7ff2f6A0c3631A807199276a493Af8097916F',
+    // [UniswapSDKChainId.HYPER_MAINNET]: '0x068B60ECbC934b0a0dde20FdFf0dE925b97B971F',
+    [UniverseChainId.MEGAETHMainnet]: '0xb0Bd0CD58551b71079F36B198276832242D02C0F',
+  }
+
+  const address = addresses[chainId]
+  if (address) {
+    return address
+  }
+
+  throw new Error(`FewETHWrapper address not found for chainId: ${chainId}`)
+}
+
 // TODO: Load this from config or backend once we have it (WALL-6592)
 export const UNISWAP_DELEGATION_ADDRESS: Address = '0x227380efd3392EC33cf148Ade5e0a89D33121814'
-
-// The ERC20 ETH contract address — this is the spender that wallets grant `nativeAllowance` to.
-// https://github.com/Uniswap/ERC20-eth
-export const ERC20_ETH_ADDRESS = '0x00000000e20E49e6dCeE6e8283A0C090578F0fb9'

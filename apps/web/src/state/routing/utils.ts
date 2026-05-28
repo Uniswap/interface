@@ -1,7 +1,7 @@
-/* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
+import { Pair as FewV2Pair, Route as FewV2Route } from '@ring-protocol/few-v2-sdk'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import {
   DutchOrderInfo,
   DutchOrderInfoJSON,
@@ -17,25 +17,22 @@ import {
 } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { getApproveInfo } from '~/state/routing/gas'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { getApproveInfo, getWrapInfo } from 'state/routing/gas'
 import {
   ClassicQuoteData,
   ClassicTrade,
   DutchOrderTrade,
+  FewV2PoolInRoute,
   GetQuickQuoteArgs,
   GetQuoteArgs,
   InterfaceTrade,
-  isClassicQuoteResponse,
   LimitOrderTrade,
   OffchainOrderType,
   PoolType,
   PreviewTrade,
   PriorityOrderTrade,
+  QuickRouteResponse,
   QuoteMethod,
   QuoteState,
   RouterPreference,
@@ -45,23 +42,28 @@ import {
   TokenInRoute,
   TradeFillType,
   TradeResult,
-  URADutchOrderQuoteData,
-  URADutchOrderV2QuoteData,
-  URADutchOrderV3QuoteData,
-  URAPriorityOrderQuoteData,
+  // URADutchOrderQuoteData,
+  // URADutchOrderV2QuoteData,
+  // URADutchOrderV3QuoteData,
+  // URAPriorityOrderQuoteData,
   URAQuoteResponse,
   URAQuoteType,
   V2DutchOrderTrade,
   V2PoolInRoute,
   V3DutchOrderTrade,
   V3PoolInRoute,
-  WrapInfo,
-} from '~/state/routing/types'
-import { toSlippagePercent } from '~/utils/slippage'
+  V4PoolInRoute,
+  isClassicQuoteResponse,
+} from 'state/routing/types'
+// import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { logger } from 'utilities/src/logger/logger'
+import { toSlippagePercent } from 'utils/slippage'
 
 interface RouteResult {
   routev3: V3Route<Currency, Currency> | null
   routev2: V2Route<Currency, Currency> | null
+  fewV2Route: FewV2Route<Currency, Currency> | null
   mixedRoute: MixedRouteSDK<Currency, Currency> | null
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
@@ -75,7 +77,7 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
   if (routes.length === 0) {
     return []
   }
-  const [currencyIn, currencyOut] = getTradeCurrencies({ args, isUniswapXTrade: false, routes })
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, false, routes)
 
   try {
     return routes.map((route) => {
@@ -89,14 +91,16 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
-      const isOnlyV2 = isVersionedRoute<V2PoolInRoute>(PoolType.V2Pool, route)
-      const isOnlyV3 = isVersionedRoute<V3PoolInRoute>(PoolType.V3Pool, route)
+      const isOnlyV2 = isPureV2Route(route)
+      const isOnlyFewV2 = isPureFewV2Route(route)
+      const isOnlyV3 = isV3Route(route)
 
       return {
         routev3: isOnlyV3 ? new V3Route(route.map(parsePool), currencyIn, currencyOut) : null,
         routev2: isOnlyV2 ? new V2Route(route.map(parsePair), currencyIn, currencyOut) : null,
+        fewV2Route: isOnlyFewV2 ? new FewV2Route(route.map(parseFewPair), currencyIn, currencyOut) : null,
         mixedRoute:
-          !isOnlyV3 && !isOnlyV2 ? new MixedRouteSDK(route.map(parsePoolOrPair), currencyIn, currencyOut) : null,
+          !isOnlyV3 && !isOnlyFewV2 ? new MixedRouteSDK(route.map(parsePoolOrPair), currencyIn, currencyOut) : null,
         inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
         outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
       }
@@ -107,15 +111,35 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
   }
 }
 
-const parsePoolOrPair = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
-  return pool.type === PoolType.V3Pool ? parsePool(pool) : parsePair(pool)
+const parsePoolOrPair = (
+  pool: V3PoolInRoute | V2PoolInRoute | FewV2PoolInRoute | V4PoolInRoute,
+): Pool | V4Pool | Pair | FewV2Pair => {
+  if (pool.type === PoolType.V4Pool) {
+    return parseV4Pool(pool)
+  }
+  return pool.type === PoolType.V3Pool
+    ? parsePool(pool)
+    : pool.type === PoolType.FewV2Pool
+      ? parseFewPair(pool)
+      : parsePair(pool)
 }
 
-function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
-  type: T['type'],
-  route: (V3PoolInRoute | V2PoolInRoute)[],
-): route is T[] {
-  return route.every((pool) => pool.type === type)
+function isV3Route(
+  route: (V3PoolInRoute | V2PoolInRoute | FewV2PoolInRoute | V4PoolInRoute)[],
+): route is V3PoolInRoute[] {
+  return route.every((pool) => pool.type === PoolType.V3Pool)
+}
+
+function isPureV2Route(
+  route: (V3PoolInRoute | V2PoolInRoute | FewV2PoolInRoute | V4PoolInRoute)[],
+): route is V2PoolInRoute[] {
+  return route.every((pool) => pool.type === PoolType.V2Pool)
+}
+
+function isPureFewV2Route(
+  route: (V3PoolInRoute | V2PoolInRoute | FewV2PoolInRoute | V4PoolInRoute)[],
+): route is FewV2PoolInRoute[] {
+  return route.every((pool) => pool.type === PoolType.FewV2Pool)
 }
 
 function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
@@ -207,15 +231,13 @@ function toUnsignedPriorityOrderInfo(orderInfoJSON: UnsignedPriorityOrderInfoJSO
 }
 
 // Prepares the currencies used for the actual Swap (either UniswapX or Universal Router)
-function getTradeCurrencies({
-  args,
-  isUniswapXTrade,
-  routes,
-}: {
-  args: GetQuoteArgs | GetQuickQuoteArgs
-  isUniswapXTrade: boolean
-  routes?: ClassicQuoteData['route']
-}): [Currency, Currency] {
+// May not match `currencyIn` that the user selected because for ETH inputs in UniswapX, the actual
+// swap will use WETH.
+function getTradeCurrencies(
+  args: GetQuoteArgs | GetQuickQuoteArgs,
+  isUniswapXTrade: boolean,
+  routes?: ClassicQuoteData['route'],
+): [Currency, Currency] {
   const {
     tokenInAddress,
     tokenInChainId,
@@ -254,28 +276,16 @@ function getTradeCurrencies({
         sellFeeBps: serializedTokenOut?.sellFeeBps,
       })
 
-  return [currencyIn, currencyOut]
+  if (!isUniswapXTrade) {
+    return [currencyIn, currencyOut]
+  }
+
+  return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
 }
 
-function getSwapFee(
-  data:
-    | ClassicQuoteData
-    | URADutchOrderQuoteData
-    | URADutchOrderV2QuoteData
-    | URADutchOrderV3QuoteData
-    | URAPriorityOrderQuoteData,
-): SwapFeeInfo | undefined {
-  const { portionAmount, portionBips, portionRecipient } = data
-
-  if (!portionAmount || !portionBips || !portionRecipient) {
-    return undefined
-  }
-
-  return {
-    recipient: portionRecipient,
-    percent: new Percent(portionBips, BIPS_BASE),
-    amount: portionAmount,
-  }
+function getSwapFee(): SwapFeeInfo | undefined {
+  // Frontend fees are disabled - always return undefined
+  return undefined
 }
 
 function getClassicTradeDetails(
@@ -300,8 +310,19 @@ function getClassicTradeDetails(
     gasUseEstimateUSD: classicQuote.gasUseEstimateUSD ? parseFloat(classicQuote.gasUseEstimateUSD) : undefined,
     blockNumber: classicQuote.blockNumber,
     routes: computeRoutes(args, classicQuote.route),
-    swapFee: getSwapFee(classicQuote),
+    swapFee: undefined,
   }
+}
+
+export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickRouteResponse): PreviewTrade {
+  const { amount, tradeType } = args
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
+  const [rawAmountIn, rawAmountOut] =
+    data.tradeType === 'EXACT_IN' ? [amount, data.quote.amount] : [data.quote.amount, amount]
+  const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn)
+  const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut)
+
+  return new PreviewTrade({ inputAmount, outputAmount, tradeType })
 }
 
 export function getUSDCostPerGas(gasUseEstimateUSD?: number, gasUseEstimate?: number): number | undefined {
@@ -312,16 +333,12 @@ export function getUSDCostPerGas(gasUseEstimateUSD?: number, gasUseEstimate?: nu
   return gasUseEstimateUSD / gasUseEstimate
 }
 
-export async function transformQuoteToTrade({
-  args,
-  data,
-  quoteMethod,
-}: {
-  args: GetQuoteArgs
-  data: URAQuoteResponse
-  quoteMethod: QuoteMethod
-}): Promise<TradeResult> {
-  const { tradeType, routerPreference, account, amount, routingType } = args
+export async function transformQuoteToTrade(
+  args: GetQuoteArgs,
+  data: URAQuoteResponse,
+  quoteMethod: QuoteMethod,
+): Promise<TradeResult> {
+  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount, routingType } = args
 
   const showUniswapXTrade =
     (routingType === URAQuoteType.DUTCH_V2 ||
@@ -329,24 +346,25 @@ export async function transformQuoteToTrade({
       routingType === URAQuoteType.PRIORITY) &&
     routerPreference === RouterPreference.X
 
-  const [currencyIn, currencyOut] = getTradeCurrencies({ args, isUniswapXTrade: showUniswapXTrade })
-
-  if (!isEVMChain(currencyIn.chainId)) {
-    throw new Error('chainId must be EVM for routing api paths')
-  }
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
 
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(args, data)
 
   const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
 
-  const approveInfo = await getApproveInfo({
-    account,
-    currency: currencyIn,
-    amount,
-    usdCostPerGas,
-  })
+  const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
 
   const classicTrade = new ClassicTrade({
+    fewV2Routes:
+      routes
+        ?.filter(
+          (r): r is RouteResult & { fewV2Route: NonNullable<RouteResult['fewV2Route']> } => r.fewV2Route !== null,
+        )
+        .map(({ fewV2Route, inputAmount, outputAmount }) => ({
+          fewRouteV2: fewV2Route,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
     v2Routes:
       routes
         ?.filter((r): r is RouteResult & { routev2: NonNullable<RouteResult['routev2']> } => r.routev2 !== null)
@@ -391,9 +409,8 @@ export async function transformQuoteToTrade({
     data.routing === URAQuoteType.DUTCH_V3 ||
     data.routing === URAQuoteType.PRIORITY
   if (isUniswapXBetter) {
-    const swapFee = getSwapFee(data.quote)
-    // UniswapX no longer requires wrapping native ETH to WETH
-    const wrapInfo: WrapInfo = { needsWrap: false }
+    const swapFee = getSwapFee()
+    const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
     if (data.routing === URAQuoteType.DUTCH_V3) {
       const orderInfo = toUnsignedV3DutchOrderInfo(data.quote.orderInfo)
@@ -460,7 +477,6 @@ export async function transformQuoteToTrade({
         state: QuoteState.SUCCESS,
         trade: uniswapXTrade,
       }
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     } else if (data.routing === URAQuoteType.PRIORITY) {
       const orderInfo = toUnsignedPriorityOrderInfo(data.quote.orderInfo)
       const priorityOrderTrade = new PriorityOrderTrade({
@@ -512,6 +528,34 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient),
   )
 
+const parseFewPair = ({ reserve0, reserve1 }: FewV2PoolInRoute): FewV2Pair =>
+  new FewV2Pair(
+    CurrencyAmount.fromRawAmount(parseToken(reserve0.token), reserve0.quotient),
+    CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient),
+  )
+
+function parseV4Pool({
+  fee,
+  tickSpacing,
+  hooks,
+  sqrtRatioX96,
+  liquidity,
+  tickCurrent,
+  tokenIn,
+  tokenOut,
+}: V4PoolInRoute): V4Pool {
+  return new V4Pool(
+    parseToken(tokenIn),
+    parseToken(tokenOut),
+    parseInt(fee),
+    parseInt(tickSpacing),
+    hooks,
+    sqrtRatioX96,
+    liquidity,
+    parseInt(tickCurrent),
+  )
+}
+
 // TODO(WEB-2050): Convert other instances of tradeType comparison to use this utility function
 export function isExactInput(tradeType: TradeType): boolean {
   return tradeType === TradeType.EXACT_INPUT
@@ -519,13 +563,13 @@ export function isExactInput(tradeType: TradeType): boolean {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    if (currency.chainId === UniverseChainId.Polygon) {
+    if (isPolygon(currency.chainId)) {
       return SwapRouterNativeAssets.MATIC
     }
-    if (currency.chainId === UniverseChainId.Bnb) {
+    if (isBsc(currency.chainId)) {
       return SwapRouterNativeAssets.BNB
     }
-    if (currency.chainId === UniverseChainId.Avalanche) {
+    if (isAvalanche(currency.chainId)) {
       return SwapRouterNativeAssets.AVAX
     }
     return SwapRouterNativeAssets.ETH
@@ -569,13 +613,13 @@ export function isUniswapXSwapTrade(
 ): trade is DutchOrderTrade | V2DutchOrderTrade | V3DutchOrderTrade | PriorityOrderTrade {
   return (
     isUniswapXTrade(trade) &&
-    (trade.offchainOrderType === OffchainOrderType.DUTCH_AUCTION ||
-      trade.offchainOrderType === OffchainOrderType.DUTCH_V2_AUCTION ||
-      trade.offchainOrderType === OffchainOrderType.DUTCH_V3_AUCTION ||
-      trade.offchainOrderType === OffchainOrderType.PRIORITY_ORDER)
+    (trade?.offchainOrderType === OffchainOrderType.DUTCH_AUCTION ||
+      trade?.offchainOrderType === OffchainOrderType.DUTCH_V2_AUCTION ||
+      trade?.offchainOrderType === OffchainOrderType.DUTCH_V3_AUCTION ||
+      trade?.offchainOrderType === OffchainOrderType.PRIORITY_ORDER)
   )
 }
 
 export function isLimitTrade(trade?: InterfaceTrade): trade is LimitOrderTrade {
-  return isUniswapXTrade(trade) && trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER
+  return isUniswapXTrade(trade) && trade?.offchainOrderType === OffchainOrderType.LIMIT_ORDER
 }

@@ -3,16 +3,16 @@ import { ComponentProps, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -27,7 +27,7 @@ export function useInsufficientNativeTokenWarning({
   gasFee,
   warnings,
 }: ComponentProps<typeof InsufficientNativeTokenWarning>): {
-  gasAmount: CurrencyAmount<Currency> | null | undefined
+  gasAmount: CurrencyAmount<NativeCurrency> | null | undefined
   gasAmountFiatFormatted: string
   nativeCurrency: Currency
   nativeCurrencyInfo: CurrencyInfo
@@ -63,7 +63,7 @@ export function useInsufficientNativeTokenWarning({
       getCurrencyAmount({
         value: gasFee.value,
         valueType: ValueType.Raw,
-        currency: nativeCurrency?.chainId ? nativeOnChain(nativeCurrency.chainId) : undefined,
+        currency: nativeCurrency?.chainId ? NativeCurrency.onChain(nativeCurrency.chainId) : undefined,
       }),
     [gasFee.value, nativeCurrency?.chainId],
   )
@@ -100,25 +100,25 @@ export function useInsufficientNativeTokenWarning({
   const networkName = getChainLabel(supportedChainId)
 
   const getModalOrTooltipMainMessage = (): JSX.Element => {
-    // When the user doesn't have enough funds to cover the transaction's network cost.
-    const warningComponents = {
-      // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
-      // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
-      // which causes the value `<$0.01` to be incorrectly escaped.
-      fiatTokenAmount: (
-        <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
-          {gasAmountFiatFormatted}
-        </Text>
-      ),
-    }
-
-    const warningValues = {
-      networkName,
-      tokenSymbol: nativeCurrency.symbol,
-      tokenAmount: gasAmount ? gasAmount.toSignificant(2) : '',
-    }
-
     if (warning.type === WarningLabel.InsufficientGasFunds) {
+      // When the user doesn't have enough funds to cover the transaction's network cost.
+      const warningComponents = {
+        // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
+        // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
+        // which causes the value `<$0.01` to be incorrectly escaped.
+        fiatTokenAmount: (
+          <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
+            {gasAmountFiatFormatted}
+          </Text>
+        ),
+      }
+
+      const warningValues = {
+        networkName,
+        tokenSymbol: nativeCurrency.symbol,
+        tokenAmount: gasAmount?.toSignificant(2),
+      }
+
       if (isTestnetModeEnabled) {
         return (
           <Trans
@@ -152,11 +152,7 @@ export function useInsufficientNativeTokenWarning({
         )
       } else {
         return (
-          <Trans
-            components={warningComponents}
-            i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount"
-            values={warningValues}
-          />
+          <Trans i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount" values={values} />
         )
       }
     }

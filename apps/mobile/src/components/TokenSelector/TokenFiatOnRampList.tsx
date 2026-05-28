@@ -7,11 +7,10 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { FiatOnRampCurrency, FORCurrencyOrBalance } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORCurrencyOrBalance, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getUnsupportedFORTokensWithBalance, isSupportedFORCurrency } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { ListSeparatorToggle } from 'uniswap/src/features/transactions/TransactionDetails/ListSeparatorToggle'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -51,9 +50,8 @@ function TokenOptionItemWrapper({
         : null,
     [currencyInfo, balanceUSD, quantity, isUnsupported],
   )
-  const onPress = useCallback(() => onSelectCurrency(currency), [currency, onSelectCurrency])
-  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo?.currency, tokenProtectionWarning)
+  const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo?.currency)
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   if (!option) {
@@ -102,7 +100,7 @@ function _TokenFiatOnRampList({
         return false
       }
 
-      const quantity = balancesById?.[c.currencyInfo.currencyId]?.quantity ?? 0
+      const quantity = balancesById?.[c.currencyInfo?.currencyId]?.quantity ?? 0
       return quantity > 0
     })
     .sort((a, b) => {
@@ -114,7 +112,9 @@ function _TokenFiatOnRampList({
       const bQuantity = balancesById?.[b.currencyInfo.currencyId]?.balanceUSD ?? 0
       return bQuantity - aQuantity
     })
-  const supportedAssetsWithoutBalance = list.filter((c) => c.currencyInfo && !balancesById?.[c.currencyInfo.currencyId])
+  const supportedAssetsWithoutBalance = list.filter(
+    (c) => c.currencyInfo && !balancesById?.[c.currencyInfo?.currencyId],
+  )
   const unsupportedAssetsWithBalance = getUnsupportedFORTokensWithBalance(list, balancesById)
 
   const tokenList = isOffRamp

@@ -1,7 +1,6 @@
-import { useQuery } from '@tanstack/react-query'
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { logger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 const VIEWBOX_REGEX = /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
 const FALLBACK_ASPECT_RATIO = 1
@@ -12,15 +11,7 @@ export type SvgData = {
   aspectRatio: number
 }
 
-export async function fetchSVG({
-  uri,
-  autoplay,
-  signal,
-}: {
-  uri: string
-  autoplay: boolean
-  signal?: AbortSignal
-}): Promise<SvgData> {
+export async function fetchSVG(uri: string, autoplay: boolean, signal?: AbortSignal): Promise<SvgData> {
   const res = await fetch(uri, { signal })
   const text = await res.text()
 
@@ -52,35 +43,25 @@ function freezeSvgAnimations(svg: string): string {
   return svg.replace(/<animate /g, '<group ')
 }
 
-function isAbortError(error: unknown): boolean {
-  return (
-    (error instanceof DOMException && error.name === 'AbortError') ||
-    (error instanceof Error && (error.name === 'AbortError' || error.message.includes('aborted')))
-  )
-}
-
 export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
-  const fetchSvgData = useCallback(
-    async (signal?: AbortSignal): Promise<SvgData | undefined> => {
-      try {
-        return await fetchSVG({ uri, autoplay, signal })
-      } catch (error) {
-        // AbortErrors are expected when components unmount or queries are cancelled - don't alert
-        if (isAbortError(error)) {
-          logger.debug('UniversalImage/utils', 'useSvgData', 'SVG fetch aborted', { uri })
-          return undefined
-        }
-        logger.warn('UniversalImage/utils', 'useSvgData', 'Failed to fetch SVG', { error, uri })
+  const controllerRef = useRef(new AbortController())
+
+  const fetchSvgData = useCallback(async (): Promise<SvgData | undefined> => {
+    try {
+      return await fetchSVG(uri, autoplay, controllerRef.current.signal)
+    } catch (error) {
+      // AbortError is expected when the request is cancelled (e.g. component unmount or uri change)
+      if (error instanceof Error && error.name === 'AbortError') {
         return undefined
       }
-    },
-    [autoplay, uri],
-  )
+      logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
+      return undefined
+    }
+  }, [autoplay, uri])
 
-  const { data } = useQuery({
-    queryKey: [ReactQueryCacheKey.UniversalImageSvg, uri],
-    queryFn: ({ signal }) => fetchSvgData(signal),
-  })
-
-  return data
+  return useAsyncData(fetchSvgData, () => {
+    controllerRef.current.abort()
+    // Create a new AbortController for the next request
+    controllerRef.current = new AbortController()
+  }).data
 }

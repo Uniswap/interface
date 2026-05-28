@@ -1,9 +1,10 @@
 import { Flex, LinearGradient, TouchableArea, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, opacify, spacing, zIndexes } from 'ui/src/theme'
-import { isExtensionApp } from 'utilities/src/platform'
+import { isExtension } from 'utilities/src/platform'
 
 export const ScrollArrow = ({ onPress, side }: { onPress: () => void; side: 'left' | 'right' }): JSX.Element => {
+  const colors = useSporeColors()
   const iconSize = iconSizes.icon24
 
   return (
@@ -24,7 +25,7 @@ export const ScrollArrow = ({ onPress, side }: { onPress: () => void; side: 'lef
       justifyContent="center"
     >
       <TouchableArea onPress={onPress}>
-        <RotatableChevron color="$neutral2" direction={side} size="$icon.24" />
+        <RotatableChevron color={colors.neutral2.val} direction={side} height={iconSize} width={iconSize} />
       </TouchableArea>
     </Flex>
   )
@@ -45,7 +46,7 @@ export const GradientOverlay = ({
     return null
   }
 
-  if (isExtensionApp) {
+  if (isExtension) {
     // For extension, use CSS gradient
     return (
       <Flex

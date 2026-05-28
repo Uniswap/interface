@@ -3,24 +3,14 @@ ignores: [
     "ethers",
     "@typechain/ethers-v5",
     "jest-presets",
-    "depcheck",
-    "typescript",
-    "@typescript/native-preview",
-    "get-graphql-schema",
-    "typechain",
-    "tamagui",
-    "@shopify/react-native-skia",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     "uniswap",
     "utilities",
     "src",
     "tsconfig",
-    "config",
     ## GraphQL
     "@graphql-codegen/*",
     # i18n
     "i18next-resources-for-ts",
-    # zustand store dev tooling
-    "@redux-devtools/extension",
   ]

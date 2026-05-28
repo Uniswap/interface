@@ -1,6 +1,6 @@
 import { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { logger } from 'utilities/src/logger/logger'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 export function sendAnalyticsEvent<EventName extends keyof UniverseEventProperties>(

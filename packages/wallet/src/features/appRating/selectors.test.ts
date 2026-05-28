@@ -6,10 +6,10 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
-  appRatingStateSelector,
-  hasConsecutiveRecentSwapsSelector,
   MIN_FEEDBACK_REMINDER_MS,
   MIN_PROMPT_REMINDER_MS,
+  appRatingStateSelector,
+  hasConsecutiveRecentSwapsSelector,
 } from 'wallet/src/features/appRating/selectors'
 import { WalletState } from 'wallet/src/state/walletReducer'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'

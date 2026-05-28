@@ -1,91 +1,36 @@
-import { type GasFeeResult } from '@universe/api'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
-import { usePrepareAndSignSendCallsTransaction } from 'src/app/features/dappRequests/hooks/usePrepareAndSignSendCallsTransaction'
 import { SwapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapRequestContent'
-import { type DappRequestStoreItemForSendCallsTxn } from 'src/app/features/dappRequests/slice'
+import { DappRequestStoreItemForSendCallsTxn } from 'src/app/features/dappRequests/slice'
 import {
   EthSendTransactionRPCActions,
+  ParsedCall,
+  SendCallsRequest,
   isBatchedSwapRequest,
-  type ParsedCall,
-  type SendCallsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { type UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType, type TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
+import { PollingInterval } from 'uniswap/src/constants/misc'
+import { useWalletEncode7702Query } from 'uniswap/src/data/apiClients/tradingApi/useWalletEncode7702Query'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
-import { DappSendCallsScanningContent } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
-import { type TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
-import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
+import { transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface SendCallsRequestContentProps {
   dappRequest: SendCallsRequest
   transactionGasFeeResult: GasFeeResult
-  showSmartWalletActivation?: boolean
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
   onCancel: () => Promise<void>
 }
 
-/**
- * Implementation with Blockaid scanning
- */
-function SendCallsRequestContentWithScanning({
-  dappRequest,
-  chainId,
-  transactionGasFeeResult,
-  showSmartWalletActivation,
-  onConfirm,
-  onCancel,
-}: SendCallsRequestContentProps & { chainId: UniverseChainId }): JSX.Element {
-  const { t } = useTranslation()
-  const { dappUrl, currentAccount } = useDappRequestQueueContext()
-  const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
-  // Initialize with null to indicate scan hasn't completed yet
-  const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
-
-  const disableConfirm = shouldDisableConfirm({
-    riskLevel,
-    confirmedRisk,
-    hasGasFee: !!transactionGasFeeResult.value,
-  })
-
-  return (
-    <DappRequestContent
-      chainId={chainId}
-      confirmText={t('common.button.confirm')}
-      title={t('dapp.request.base.title')}
-      transactionGasFeeResult={transactionGasFeeResult}
-      disableConfirm={disableConfirm}
-      onCancel={onCancel}
-      onConfirm={() => onConfirm()}
-      showAddressFooter={false}
-    >
-      <DappSendCallsScanningContent
-        chainId={chainId}
-        account={currentAccount.address}
-        calls={dappRequest.calls}
-        dappUrl={dappUrl}
-        gasFee={transactionGasFeeResult}
-        requestMethod={dappRequest.type}
-        showSmartWalletActivation={showSmartWalletActivation}
-        confirmedRisk={confirmedRisk}
-        onConfirmRisk={setConfirmedRisk}
-        onRiskLevelChange={setRiskLevel}
-      />
-    </DappRequestContent>
-  )
-}
-
-/**
- * Fallback for when chainId is not available (required for Blockaid scanning)
- */
-function SendCallsRequestContentFallback({
+function SendCallsRequestContent({
   dappRequest,
   transactionGasFeeResult,
-  showSmartWalletActivation,
   onConfirm,
   onCancel,
 }: SendCallsRequestContentProps): JSX.Element {
@@ -104,7 +49,6 @@ function SendCallsRequestContentFallback({
       onCancel={onCancel}
       onConfirm={() => onConfirm()}
       contentHorizontalPadding="$none"
-      showSmartWalletActivation={showSmartWalletActivation}
     >
       <BatchedRequestDetailsContent calls={dappRequest.calls} chainId={chainId} />
     </DappRequestContent>
@@ -112,8 +56,10 @@ function SendCallsRequestContentFallback({
 }
 
 export function SendCallsRequestHandler({ request }: { request: DappRequestStoreItemForSendCallsTxn }): JSX.Element {
-  const { dappUrl, currentAccount, onConfirm, onCancel } = useDappRequestQueueContext()
-  const chainId = useDappLastChainId(dappUrl) ?? request.dappInfo?.lastChainId
+  const { dappUrl, onConfirm, onCancel } = useDappRequestQueueContext()
+  const chainId = useDappLastChainId(dappUrl)
+
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const { dappRequest } = request
 
@@ -125,63 +71,61 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
       : undefined
   }, [dappRequest])
 
-  const { gasFeeResult, encodedTransactionRequest, encodedRequestId, showSmartWalletActivation, preSignedTransaction } =
-    usePrepareAndSignSendCallsTransaction({
-      request,
-      account: currentAccount,
+  const { data: encoded7702data } = useWalletEncode7702Query({
+    enabled: !!chainId,
+    params: {
+      calls: chainId ? transformCallsToTransactionRequests(dappRequest.calls, chainId, activeAccountAddress) : [],
+      smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
+      // @ts-ignore - walletAddress is needed for the API but not in the type yet
+      // TODO: remove this once the API is updated
+      // https://linear.app/uniswap/issue/API-1050/add-missing-walletaddress-field-to-api-endpoint-types-json
+      walletAddress: activeAccountAddress,
+    },
+  })
+
+  const encodedTransaction = encoded7702data?.encoded
+  const encodedRequestId = encoded7702data?.requestId
+
+  const formattedTxnForGasQuery = useMemo(
+    () => ({
       chainId,
-    })
+      ...encodedTransaction,
+    }),
+    [chainId, encodedTransaction],
+  )
+
+  const transactionGasFeeResult = useTransactionGasFee(
+    formattedTxnForGasQuery,
+    /*skip=*/ !formattedTxnForGasQuery.to,
+    /*pollingInterval=*/ PollingInterval.LightningMcQueen,
+  )
 
   const onConfirmRequest = useCallback(async () => {
     const transactionTypeInfo: TransactionTypeInfo = {
       type: TransactionType.SendCalls,
-      encodedTransaction: encodedTransactionRequest,
+      encodedTransaction,
       encodedRequestId,
     }
-
-    await onConfirm({
-      request,
-      transactionTypeInfo,
-      preSignedTransaction,
-    })
-  }, [encodedTransactionRequest, encodedRequestId, onConfirm, preSignedTransaction, request])
+    await onConfirm(request, transactionTypeInfo)
+  }, [encodedTransaction, encodedRequestId, onConfirm, request])
 
   const onCancelRequest = useCallback(async () => {
     await onCancel(request)
   }, [onCancel, request])
 
-  if (chainId) {
-    return (
-      <SendCallsRequestContentWithScanning
-        dappRequest={dappRequest}
-        chainId={chainId}
-        transactionGasFeeResult={gasFeeResult}
-        showSmartWalletActivation={showSmartWalletActivation}
-        onCancel={onCancelRequest}
-        onConfirm={onConfirmRequest}
-      />
-    )
-  }
-
-  if (parsedSwapCalldata) {
-    return (
-      <SwapRequestContent
-        parsedCalldata={parsedSwapCalldata}
-        transactionGasFeeResult={gasFeeResult}
-        showSmartWalletActivation={showSmartWalletActivation}
-        onCancel={onCancelRequest}
-        onConfirm={onConfirmRequest}
-      />
-    )
-  }
-
-  return (
-    <SendCallsRequestContentFallback
-      dappRequest={dappRequest}
-      transactionGasFeeResult={gasFeeResult}
-      showSmartWalletActivation={showSmartWalletActivation}
-      onConfirm={onConfirmRequest}
+  return parsedSwapCalldata ? (
+    <SwapRequestContent
+      parsedCalldata={parsedSwapCalldata}
+      transactionGasFeeResult={transactionGasFeeResult}
       onCancel={onCancelRequest}
+      onConfirm={onConfirmRequest}
+    />
+  ) : (
+    <SendCallsRequestContent
+      dappRequest={dappRequest}
+      transactionGasFeeResult={transactionGasFeeResult}
+      onCancel={onCancelRequest}
+      onConfirm={onConfirmRequest}
     />
   )
 }

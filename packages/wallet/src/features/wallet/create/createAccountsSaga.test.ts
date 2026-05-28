@@ -6,20 +6,16 @@ import { CreateAccountsParams, createAccounts } from 'wallet/src/features/wallet
 import { walletRootReducer } from 'wallet/src/state/walletReducer'
 import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
 
-async function createNativeAccounts({
-  payload,
+const createNativeAccounts = async (
+  payload: CreateAccountsParams,
   initialAccounts = {},
   timeout = 250,
-}: {
-  payload: CreateAccountsParams
-  initialAccounts?: { [key: string]: Account }
-  timeout?: number
-}): Promise<{
+): Promise<{
   wallet: {
     accounts: Account
     activeAccountAddress: string
   }
-}> {
+}> => {
   const { storeState } = await expectSaga(createAccounts, payload)
     .withReducer(walletRootReducer)
     .withState({
@@ -36,7 +32,7 @@ describe(createAccounts, () => {
   jest.setTimeout(10000)
 
   it('Imports one account', async () => {
-    const state = await createNativeAccounts({ payload: { accounts: [ACCOUNT] } })
+    const state = await createNativeAccounts({ accounts: [ACCOUNT] })
     const wallets = state.wallet.accounts
     const accounts = Object.values(wallets)
     const { activeAccountAddress } = state.wallet
@@ -51,7 +47,7 @@ describe(createAccounts, () => {
 
   it('Imports couple wallets and activates the first one', async () => {
     const state = await createNativeAccounts({
-      payload: { accounts: [ACCOUNT, ACCOUNT2, ACCOUNT3] },
+      accounts: [ACCOUNT, ACCOUNT2, ACCOUNT3],
     })
 
     const wallets = state.wallet.accounts
@@ -67,18 +63,17 @@ describe(createAccounts, () => {
   })
 
   it('Imports two new wallet on top of existing watch only wallet', async () => {
-    const state = await createNativeAccounts({
-      payload: { accounts: [ACCOUNT, ACCOUNT2] },
-      initialAccounts: {
+    const state = await createNativeAccounts(
+      { accounts: [ACCOUNT, ACCOUNT2] },
+      {
         '0xaddress1': {
           type: AccountType.Readonly,
           address: '0xaddress1',
           name: 'READONLY ACCOUNT',
           timeImportedMs: dayjs().valueOf(),
-          pushNotificationsEnabled: false,
         },
       },
-    })
+    )
 
     const wallets = state.wallet.accounts
     const accounts = Object.values(wallets)
@@ -93,18 +88,17 @@ describe(createAccounts, () => {
   })
 
   it('Imports two new wallet on top of existing watch only wallet and activate first', async () => {
-    const state = await createNativeAccounts({
-      payload: { accounts: [ACCOUNT2, ACCOUNT] },
-      initialAccounts: {
+    const state = await createNativeAccounts(
+      { accounts: [ACCOUNT2, ACCOUNT] },
+      {
         '0xaddress1': {
           type: AccountType.Readonly,
           address: '0xaddress1',
           name: 'READONLY ACCOUNT',
           timeImportedMs: dayjs().valueOf(),
-          pushNotificationsEnabled: false,
         },
       },
-    })
+    )
 
     const wallets = state.wallet.accounts
     const accounts = Object.values(wallets)
@@ -119,12 +113,12 @@ describe(createAccounts, () => {
   })
 
   it('Imports two new wallet on top of existing signer mnemonic account', async () => {
-    const state = await createNativeAccounts({
-      payload: { accounts: [ACCOUNT2, ACCOUNT] },
-      initialAccounts: {
+    const state = await createNativeAccounts(
+      { accounts: [ACCOUNT2, ACCOUNT] },
+      {
         [ACCOUNT3.address]: ACCOUNT3,
       },
-    })
+    )
 
     const wallets = state.wallet.accounts
     const accounts = Object.values(wallets)
@@ -138,12 +132,12 @@ describe(createAccounts, () => {
   })
 
   it('Imports two new wallet on top of existing signer mnemonic account and activate the first one', async () => {
-    const state = await createNativeAccounts({
-      payload: { accounts: [ACCOUNT2, ACCOUNT] },
-      initialAccounts: {
+    const state = await createNativeAccounts(
+      { accounts: [ACCOUNT2, ACCOUNT] },
+      {
         [ACCOUNT3.address]: ACCOUNT3,
       },
-    })
+    )
 
     const wallets = state.wallet.accounts
     const accounts = Object.values(wallets)

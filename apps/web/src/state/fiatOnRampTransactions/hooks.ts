@@ -1,8 +1,8 @@
+import { useAccount } from 'hooks/useAccount'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import { useAccount } from '~/hooks/useAccount'
-import { addFiatOnRampTransaction, FiatOnRampTransactionDetails } from '~/state/fiatOnRampTransactions/reducer'
-import { useAppSelector } from '~/state/hooks'
+import { FiatOnRampTransactionDetails, addFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
+import { useAppSelector } from 'state/hooks'
 
 export function useAddFiatOnRampTransaction() {
   const dispatch = useDispatch()
@@ -14,7 +14,6 @@ export function useFiatOnRampTransactions() {
   const fiatOnRampTransactions = useAppSelector((state) => state.fiatOnRampTransactions)
   return useMemo(() => {
     // Only compute the transactions if there's a valid account address
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!account.address || !fiatOnRampTransactions[account.address]) {
       return {}
     }

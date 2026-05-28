@@ -1,13 +1,12 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
-import { GraphQLApi } from '@universe/api'
+import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
 import { fetchOnChainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import type { Mock, MockedFunction } from 'vitest'
 
-vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery', () => ({
-  fetchTradingApiIndicativeQuote: vi.fn().mockResolvedValue({
+jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery', () => ({
+  fetchTradingApiIndicativeQuote: jest.fn().mockResolvedValue({
     output: {
       token: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
       chainId: 8453,
@@ -16,11 +15,11 @@ vi.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuer
   }),
 }))
 
-vi.mock('uniswap/src/features/portfolio/api', () => ({
-  fetchOnChainCurrencyBalance: vi.fn(),
+jest.mock('uniswap/src/features/portfolio/api', () => ({
+  getOnChainBalancesFetch: jest.fn(),
 }))
 
-const mockGetOnChainBalancesFetch = fetchOnChainCurrencyBalance as MockedFunction<typeof fetchOnChainCurrencyBalance>
+const mockGetOnChainBalancesFetch = getOnChainBalancesFetch as jest.MockedFunction<typeof getOnChainBalancesFetch>
 
 const TEST_ACCOUNT = '0x1234567890123456789012345678901234567890'
 const TEST_TOKEN_ADDRESS = '0xabcdef0123456789abcdef0123456789abcdef01'
@@ -42,11 +41,11 @@ const mockToken = {
 
 describe(fetchOnChainBalances, () => {
   const mockApolloCache = {
-    readQuery: vi.fn(),
+    readQuery: jest.fn(),
   } as unknown as ApolloCache<NormalizedCacheObject>
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('fetches on-chain balances for valid currency IDs', async () => {
@@ -56,7 +55,7 @@ describe(fetchOnChainBalances, () => {
     mockGetOnChainBalancesFetch.mockResolvedValueOnce({
       balance: mockBalance,
     })
-    ;(mockApolloCache.readQuery as Mock).mockReturnValueOnce({
+    ;(mockApolloCache.readQuery as jest.Mock).mockReturnValueOnce({
       token: mockToken,
     })
 
@@ -78,7 +77,7 @@ describe(fetchOnChainBalances, () => {
     })
 
     expect(mockApolloCache.readQuery).toHaveBeenCalledWith({
-      query: GraphQLApi.TokenDocument,
+      query: TokenDocument,
       variables: {
         chain: 'ETHEREUM',
         address: TEST_TOKEN_ADDRESS,
@@ -99,7 +98,7 @@ describe(fetchOnChainBalances, () => {
     mockGetOnChainBalancesFetch.mockResolvedValueOnce({
       balance: mockBalance,
     })
-    ;(mockApolloCache.readQuery as Mock).mockReturnValueOnce({
+    ;(mockApolloCache.readQuery as jest.Mock).mockReturnValueOnce({
       token: {
         ...mockToken,
         address: nativeCurrencyAddress,
@@ -135,7 +134,7 @@ describe(fetchOnChainBalances, () => {
     mockGetOnChainBalancesFetch.mockResolvedValueOnce({
       balance: '1000000000000000000',
     })
-    ;(mockApolloCache.readQuery as Mock).mockReturnValueOnce({
+    ;(mockApolloCache.readQuery as jest.Mock).mockReturnValueOnce({
       token: null,
     })
 
@@ -177,7 +176,7 @@ describe(fetchOnChainBalances, () => {
     mockGetOnChainBalancesFetch
       .mockResolvedValueOnce({ balance: '1000000000000000000' })
       .mockResolvedValueOnce({ balance: '2000000000000000000' })
-    ;(mockApolloCache.readQuery as Mock).mockReturnValueOnce({ token: mockToken }).mockReturnValueOnce({
+    ;(mockApolloCache.readQuery as jest.Mock).mockReturnValueOnce({ token: mockToken }).mockReturnValueOnce({
       token: { ...mockToken, address: '0x2222222222222222222222222222222222222222' },
     })
 

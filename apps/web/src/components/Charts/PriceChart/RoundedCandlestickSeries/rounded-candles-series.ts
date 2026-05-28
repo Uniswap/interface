@@ -1,20 +1,19 @@
 /**
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/rounded-candle-series/rounded-candle-series.ts
  */
-
+import { RoundedCandleSeriesRenderer } from 'components/Charts/PriceChart/RoundedCandlestickSeries/renderer'
 import {
   CandlestickData,
   CandlestickSeriesOptions,
   CustomSeriesOptions,
   CustomSeriesPricePlotValues,
-  customSeriesDefaultOptions,
   ICustomSeriesPaneView,
   PaneRendererCustomData,
   Time,
   UTCTimestamp,
   WhitespaceData,
+  customSeriesDefaultOptions,
 } from 'lightweight-charts'
-import { RoundedCandleSeriesRenderer } from '~/components/Charts/PriceChart/RoundedCandlestickSeries/renderer'
 
 export interface RoundedCandleSeriesOptions
   extends CustomSeriesOptions,

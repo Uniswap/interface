@@ -1,6 +1,5 @@
 import { utils } from 'ethers'
 import {
-  convertCapabilitiesToScopedProperties,
   decodeMessage,
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
@@ -110,13 +109,9 @@ describe(parseGetCapabilitiesRequest, () => {
   }
 
   it('handles request with address only', () => {
-    const result = parseGetCapabilitiesRequest({
-      method: EthMethod.WalletGetCapabilities,
-      topic: mockTopic,
-      internalId: mockInternalId,
-      dapp: mockDapp,
-      requestParams: [TEST_ADDRESS],
-    })
+    const result = parseGetCapabilitiesRequest(EthMethod.WalletGetCapabilities, mockTopic, mockInternalId, mockDapp, [
+      TEST_ADDRESS,
+    ])
 
     expect(result).toEqual({
       type: EthMethod.WalletGetCapabilities,
@@ -136,13 +131,10 @@ describe(parseGetCapabilitiesRequest, () => {
 
   it('handles request with address and chain IDs', () => {
     const chainIds = [UniverseChainId.Mainnet, UniverseChainId.Polygon]
-    const result = parseGetCapabilitiesRequest({
-      method: EthMethod.WalletGetCapabilities,
-      topic: mockTopic,
-      internalId: mockInternalId,
-      dapp: mockDapp,
-      requestParams: [TEST_ADDRESS, chainIds.map((c) => `0x${c.toString(16)}`)],
-    })
+    const result = parseGetCapabilitiesRequest(EthMethod.WalletGetCapabilities, mockTopic, mockInternalId, mockDapp, [
+      TEST_ADDRESS,
+      chainIds.map((c) => `0x${c.toString(16)}`),
+    ])
 
     expect(result).toEqual({
       type: EthMethod.WalletGetCapabilities,
@@ -172,18 +164,11 @@ describe(parseSignRequest, () => {
     icons: ['https://test.com/icon.png'],
   }
 
-  it('parses personal_sign request correctly (standard hex-encoded message)', () => {
+  it('parses personal_sign request correctly', () => {
     const message = '0x48656c6c6f20576f726c64' // "Hello World" in hex
     const params = [message, TEST_ADDRESS]
 
-    const result = parseSignRequest({
-      method: EthMethod.PersonalSign,
-      topic: mockTopic,
-      internalId: mockInternalId,
-      chainId: mockChainId,
-      dapp: mockDapp,
-      requestParams: params,
-    })
+    const result = parseSignRequest(EthMethod.PersonalSign, mockTopic, mockInternalId, mockChainId, mockDapp, params)
 
     expect(result).toEqual({
       type: EthMethod.PersonalSign,
@@ -207,14 +192,7 @@ describe(parseSignRequest, () => {
     const message = '0x48656c6c6f20576f726c64' // "Hello World" in hex
     const params = [TEST_ADDRESS, message]
 
-    const result = parseSignRequest({
-      method: EthMethod.EthSign,
-      topic: mockTopic,
-      internalId: mockInternalId,
-      chainId: mockChainId,
-      dapp: mockDapp,
-      requestParams: params,
-    })
+    const result = parseSignRequest(EthMethod.EthSign, mockTopic, mockInternalId, mockChainId, mockDapp, params)
 
     expect(result).toEqual({
       type: EthMethod.EthSign,
@@ -238,14 +216,7 @@ describe(parseSignRequest, () => {
     const typedData = '{"types":{"EIP712Domain":[]},"domain":{},"primaryType":"Mail","message":{}}'
     const params = [TEST_ADDRESS, typedData]
 
-    const result = parseSignRequest({
-      method: EthMethod.SignTypedData,
-      topic: mockTopic,
-      internalId: mockInternalId,
-      chainId: mockChainId,
-      dapp: mockDapp,
-      requestParams: params,
-    })
+    const result = parseSignRequest(EthMethod.SignTypedData, mockTopic, mockInternalId, mockChainId, mockDapp, params)
 
     expect(result).toEqual({
       type: EthMethod.SignTypedData,
@@ -288,14 +259,14 @@ describe(parseTransactionRequest, () => {
       nonce: '0x1', // This should be omitted in the result
     }
 
-    const result = parseTransactionRequest({
-      method: EthMethod.EthSendTransaction,
-      topic: mockTopic,
-      internalId: mockInternalId,
-      chainId: mockChainId,
-      dapp: mockDapp,
-      requestParams: [txParams],
-    })
+    const result = parseTransactionRequest(
+      EthMethod.EthSendTransaction,
+      mockTopic,
+      mockInternalId,
+      mockChainId,
+      mockDapp,
+      [txParams],
+    )
 
     expect(result).toEqual({
       type: EthMethod.EthSendTransaction,
@@ -353,14 +324,14 @@ describe(parseSendCallsRequest, () => {
       },
     }
 
-    const result = parseSendCallsRequest({
-      topic: mockTopic,
-      internalId: mockInternalId,
-      chainId: mockChainId,
-      dapp: mockDapp,
-      requestParams: [sendCallsParams],
-      account: 'fallback-address',
-    })
+    const result = parseSendCallsRequest(
+      mockTopic,
+      mockInternalId,
+      mockChainId,
+      mockDapp,
+      [sendCallsParams],
+      'fallback-address',
+    )
 
     expect(result).toEqual({
       type: EthMethod.WalletSendCalls,
@@ -396,66 +367,17 @@ describe(parseSendCallsRequest, () => {
     }
 
     const fallbackAddress = '0xfallbackaddress'
-    const result = parseSendCallsRequest({
-      topic: mockTopic,
-      internalId: mockInternalId,
-      chainId: mockChainId,
-      dapp: mockDapp,
-      requestParams: [sendCallsParams],
-      account: fallbackAddress,
-    })
+    const result = parseSendCallsRequest(
+      mockTopic,
+      mockInternalId,
+      mockChainId,
+      mockDapp,
+      [sendCallsParams],
+      fallbackAddress,
+    )
 
     expect(result.account).toBe(fallbackAddress)
     expect(result.id).toBeTruthy() // Should generate a mock ID
-  })
-})
-
-describe('personal_sign signAsString flag behavior', () => {
-  it('should handle hex-encoded UTF-8 messages for personal_sign', () => {
-    const hexEncodedMessage = '0x48656c6c6f20576f726c64' // "Hello World"
-    const params = [hexEncodedMessage, TEST_ADDRESS]
-
-    const result = parseSignRequest({
-      method: EthMethod.PersonalSign,
-      topic: 'test-topic',
-      internalId: 123,
-      chainId: UniverseChainId.Mainnet,
-      dapp: {
-        name: 'Test Dapp',
-        description: 'Test Description',
-        url: 'https://test.com',
-        icons: ['https://test.com/icon.png'],
-      },
-      requestParams: params,
-    })
-
-    // rawMessage stays as hex for signing
-    expect(result.rawMessage).toBe(hexEncodedMessage)
-    // message is decoded for UI display
-    expect(result.message).toBe('Hello World')
-  })
-
-  it('should handle plain text messages for personal_sign', () => {
-    const plainText = 'Sign this message to authenticate'
-    const params = [plainText, TEST_ADDRESS]
-
-    const result = parseSignRequest({
-      method: EthMethod.PersonalSign,
-      topic: 'test-topic',
-      internalId: 123,
-      chainId: UniverseChainId.Mainnet,
-      dapp: {
-        name: 'Test Dapp',
-        description: 'Test Description',
-        url: 'https://test.com',
-        icons: ['https://test.com/icon.png'],
-      },
-      requestParams: params,
-    })
-
-    // Plain text stays unchanged in both fields
-    expect(result.rawMessage).toBe(plainText)
-    expect(result.message).toBe(plainText)
   })
 })
 
@@ -474,14 +396,7 @@ describe(parseGetCallsStatusRequest, () => {
     const requestId = 'test-batch-id'
     const account = TEST_ADDRESS
 
-    const result = parseGetCallsStatusRequest({
-      topic: mockTopic,
-      internalId: mockInternalId,
-      chainId: mockChainId,
-      dapp: mockDapp,
-      requestParams: [requestId],
-      account,
-    })
+    const result = parseGetCallsStatusRequest(mockTopic, mockInternalId, mockChainId, mockDapp, [requestId], account)
 
     expect(result).toEqual({
       type: EthMethod.WalletGetCallsStatus,
@@ -497,90 +412,6 @@ describe(parseGetCallsStatusRequest, () => {
         icon: mockDapp.icons[0],
         requestType: DappRequestType.WalletConnectSessionRequest,
       },
-    })
-  })
-})
-
-describe(convertCapabilitiesToScopedProperties, () => {
-  it('converts single chain capability to CAIP-2 format', () => {
-    const capabilities = {
-      '0xa': {
-        atomic: { status: 'supported' },
-      },
-    }
-
-    const result = convertCapabilitiesToScopedProperties(capabilities)
-
-    expect(result).toEqual({
-      'eip155:10': {
-        atomic: { status: 'supported' },
-      },
-    })
-  })
-
-  it('converts multiple chain capabilities to CAIP-2 format', () => {
-    const capabilities = {
-      '0x1': {
-        atomic: { status: 'supported' },
-      },
-      '0x89': {
-        atomic: { status: 'unsupported' },
-      },
-      '0xa': {
-        atomic: { status: 'supported' },
-        paymasterService: { supported: true },
-      },
-    }
-
-    const result = convertCapabilitiesToScopedProperties(capabilities)
-
-    expect(result).toEqual({
-      'eip155:1': {
-        atomic: { status: 'supported' },
-      },
-      'eip155:137': {
-        atomic: { status: 'unsupported' },
-      },
-      'eip155:10': {
-        atomic: { status: 'supported' },
-        paymasterService: { supported: true },
-      },
-    })
-  })
-
-  it('returns empty object when given empty capabilities', () => {
-    const capabilities = {}
-
-    const result = convertCapabilitiesToScopedProperties(capabilities)
-
-    expect(result).toEqual({})
-  })
-
-  it('handles invalid hex chain IDs that cause errors', () => {
-    const capabilities = {
-      '0x1': {
-        atomic: { status: 'supported' },
-      },
-      'invalid-hex': {
-        atomic: { status: 'unsupported' },
-      },
-      '0x89': {
-        atomic: { status: 'supported' },
-      },
-    }
-
-    const result = convertCapabilitiesToScopedProperties(capabilities)
-
-    // hexToNumber returns NaN for invalid hex, which should be excluded
-    // The function continues execution despite the invalid chain ID
-    expect(result).toHaveProperty('eip155:1')
-    expect(result).toHaveProperty('eip155:137')
-    expect(result).not.toHaveProperty('eip155:NaN')
-    expect(result['eip155:1']).toEqual({
-      atomic: { status: 'supported' },
-    })
-    expect(result['eip155:137']).toEqual({
-      atomic: { status: 'supported' },
     })
   })
 })

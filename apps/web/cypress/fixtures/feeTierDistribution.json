@@ -1,0 +1,30 @@
+{
+  "data": {
+    "v3PoolsForTokenPair": [
+      {
+        "feeTier": 3000.0,
+        "token0Supply": 3084.78636993,
+        "token1Supply": 76658.86823272712,
+        "__typename": "V3Pool"
+      },
+      {
+        "feeTier": 500.0,
+        "token0Supply": 917.54087138,
+        "token1Supply": 22788.333363067817,
+        "__typename": "V3Pool"
+      },
+      {
+        "feeTier": 10000.0,
+        "token0Supply": 14.67505995,
+        "token1Supply": 276.9691974507059,
+        "__typename": "V3Pool"
+      },
+      {
+        "feeTier": 100.0,
+        "token0Supply": 0.04782301,
+        "token1Supply": 1.677630863841559,
+        "__typename": "V3Pool"
+      }
+    ]
+  }
+}

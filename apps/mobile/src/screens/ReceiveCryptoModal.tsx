@@ -7,15 +7,14 @@ import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransfe
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { setClipboard } from 'utilities/src/clipboard/clipboard'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const ACCOUNT_IMAGE_SIZE = 52
@@ -46,7 +45,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   }
 
   return (
-    <TouchableArea testID={TestID.WalletReceiveCrypto} onPress={onPressShowWalletQr}>
+    <TouchableArea onPress={onPressShowWalletQr}>
       <Flex row alignItems="flex-start" gap="$spacing12" px="$spacing8">
         <Flex
           fill
@@ -116,7 +115,7 @@ export function ReceiveCryptoModal({ route }: AppStackScreenProp<typeof ModalNam
             {t('home.upsell.receive.title')}
           </Text>
           <Text color="$neutral2" mt="$spacing2" textAlign="center" variant="body3">
-            {t('fiatOnRamp.receiveCrypto.transferFunds')}
+            {t('home.upsell.receive.description')}
           </Text>
         </Flex>
         <AccountCardItem onClose={onClose} />
@@ -127,7 +126,7 @@ export function ReceiveCryptoModal({ route }: AppStackScreenProp<typeof ModalNam
           </Text>
           <Separator />
         </Flex>
-        <ServiceProviderSelector serviceProviders={serviceProviders} onClose={onClose} />
+        <ServiceProviderSelector serviceProviders={serviceProviders || []} onClose={onClose} />
       </Flex>
     </Modal>
   )

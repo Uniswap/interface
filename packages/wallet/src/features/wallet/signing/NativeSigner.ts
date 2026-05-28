@@ -1,8 +1,6 @@
-/* eslint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
-import { Bytes, providers, Signer } from 'ethers'
+import { Bytes, Signer, providers } from 'ethers'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
-import { HexString } from 'utilities/src/addresses/hex'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /**
@@ -42,7 +40,7 @@ export class NativeSigner extends Signer implements SignsTypedData {
     throw new PlatformSplitStubError('_signTypedData')
   }
 
-  async signTransaction(_transaction: providers.TransactionRequest): Promise<HexString> {
+  async signTransaction(_transaction: providers.TransactionRequest): Promise<string> {
     throw new PlatformSplitStubError('signTransaction')
   }
 

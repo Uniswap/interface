@@ -1,8 +1,8 @@
 import { rpcErrors, serializeError } from '@metamask/rpc-errors'
 import EventEmitter from 'eventemitter3'
 import { addWindowMessageListener, removeWindowMessageListener } from 'src/background/messagePassing/messageUtils'
-import { ExtensionResponse, isValidExtensionResponse } from 'src/contentScript/types'
 import { BaseEthereumRequest, BaseEthereumRequestSchema } from 'src/contentScript/WindowEthereumRequestTypes'
+import { ExtensionResponse, isValidExtensionResponse } from 'src/contentScript/types'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuidv4 } from 'uuid'
 import { ZodError } from 'zod'
@@ -96,14 +96,11 @@ export class WindowEthereumProxy extends EventEmitter {
         // Generate a unique ID for this request and store the promise callbacks
         const requestId = uuidv4()
         this.pendingRequests[requestId] = { resolve, reject }
-        const responseListener = addWindowMessageListener<ExtensionResponse>({
-          validator: isValidExtensionResponse,
-          handler: (response) => {
-            if (response.requestId === requestId) {
-              this.handleResponse(response)
-              removeWindowMessageListener(responseListener)
-            }
-          },
+        const responseListener = addWindowMessageListener<ExtensionResponse>(isValidExtensionResponse, (response) => {
+          if (response.requestId === requestId) {
+            this.handleResponse(response)
+            removeWindowMessageListener(responseListener)
+          }
         })
         window.postMessage({
           ...ethereumRequest,

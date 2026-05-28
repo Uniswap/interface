@@ -1,26 +1,22 @@
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import {
+  NFTCollectionOption,
   OnchainItemListOptionType,
   TokenOption,
   UnitagOption,
   WalletOption,
 } from 'uniswap/src/components/lists/items/types'
-import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { InterfaceEventName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { Mock } from 'vitest'
 
-// Use vi.hoisted to create a mutable mock value that can be changed between tests
-const mockPlatformState = vi.hoisted(() => ({ isMobileApp: false }))
-
-vi.mock('uniswap/src/features/telemetry/send')
-vi.mock('utilities/src/platform', () => ({
-  get isMobileApp(): boolean {
-    return mockPlatformState.isMobileApp
-  },
+jest.mock('uniswap/src/features/telemetry/send')
+jest.mock('utilities/src/platform', () => ({
+  isMobileApp: false,
 }))
 
 const MOCK_TOKEN1: TokenOption = {
@@ -55,20 +51,29 @@ const MOCK_TOKEN2: TokenOption = {
   balanceUSD: undefined,
 }
 
+const MOCK_NFT: NFTCollectionOption = {
+  type: OnchainItemListOptionType.NFTCollection,
+  chainId: 1,
+  address: '0x789',
+  name: 'Test Collection',
+  imageUrl: 'https://example.com/nft.png',
+  isVerified: true,
+}
+
 describe('sendSearchOptionItemClickedAnalytics', () => {
-  const mockSendAnalyticsEvent = sendAnalyticsEvent as Mock
+  const mockSendAnalyticsEvent = sendAnalyticsEvent as jest.Mock
+  const platformModule = require('utilities/src/platform')
 
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockPlatformState.isMobileApp = false
+    jest.clearAllMocks()
   })
 
   it('sends token analytics event on mobile', () => {
-    mockPlatformState.isMobileApp = true
+    platformModule.isMobileApp = true
 
     const mockSection: OnchainItemSection<TokenOption> = {
       sectionKey: OnchainItemSectionName.TrendingTokens,
-      data: [MOCK_TOKEN1, MOCK_TOKEN1, MOCK_TOKEN2],
+      data: [MOCK_TOKEN1, MOCK_TOKEN2],
     }
     const mockSearchFilters: SearchFilterContext = {
       query: 'test',
@@ -79,17 +84,15 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
     sendSearchOptionItemClickedAnalytics({
       item: MOCK_TOKEN2,
       section: mockSection,
-      rowIndex: 3,
-      sectionIndex: 2,
+      rowIndex: 1,
       searchFilters: mockSearchFilters,
     })
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
       category: OnchainItemSectionName.TrendingTokens,
       isHistory: false,
-      position: 3,
-      sectionPosition: 3,
-      suggestionCount: 3,
+      position: 1,
+      suggestionCount: 2,
       query: 'test',
       name: 'Test Token 2',
       chain: 130,
@@ -101,7 +104,7 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
   })
 
   it('sends token analytics event on web', () => {
-    mockPlatformState.isMobileApp = false
+    platformModule.isMobileApp = false
 
     const mockSection: OnchainItemSection<TokenOption> = {
       sectionKey: OnchainItemSectionName.Tokens,
@@ -116,16 +119,14 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
     sendSearchOptionItemClickedAnalytics({
       item: MOCK_TOKEN1,
       section: mockSection,
-      rowIndex: 1,
-      sectionIndex: 0,
+      rowIndex: 0,
       searchFilters: mockSearchFilters,
     })
 
-    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NavbarResultSelected, {
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.NAVBAR_RESULT_SELECTED, {
       category: OnchainItemSectionName.Tokens,
       isHistory: false,
-      position: 1,
-      sectionPosition: 1,
+      position: 0,
       suggestionCount: 2,
       query: 'test',
       chainId: 1,
@@ -140,7 +141,7 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
   })
 
   it('sends wallet address analytics event', () => {
-    mockPlatformState.isMobileApp = true
+    platformModule.isMobileApp = true
     const mockWallet: UnitagOption = {
       type: OnchainItemListOptionType.Unitag,
       address: '0x456',
@@ -159,16 +160,14 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
     sendSearchOptionItemClickedAnalytics({
       item: mockWallet,
       section: mockSection,
-      rowIndex: 1,
-      sectionIndex: 0,
+      rowIndex: 0,
       searchFilters: mockSearchFilters,
     })
 
     expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
       category: OnchainItemSectionName.Wallets,
       isHistory: false,
-      position: 1,
-      sectionPosition: 1,
+      position: 0,
       suggestionCount: 1,
       query: 'test',
       address: '0x456',
@@ -177,6 +176,40 @@ describe('sendSearchOptionItemClickedAnalytics', () => {
       name: 'test-unitag.uni.eth',
       domain: '.uni.eth',
       searchTabFilter: SearchTab.Wallets,
+    })
+  })
+
+  it('sends nft analytics event', () => {
+    platformModule.isMobileApp = true
+    const mockSection: OnchainItemSection<NFTCollectionOption> = {
+      sectionKey: OnchainItemSectionName.NFTCollections,
+      data: [MOCK_NFT],
+    }
+    const mockSearchFilters: SearchFilterContext = {
+      query: 'test',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.NFTCollections,
+    }
+
+    sendSearchOptionItemClickedAnalytics({
+      item: MOCK_NFT,
+      section: mockSection,
+      rowIndex: 0,
+      searchFilters: mockSearchFilters,
+    })
+
+    expect(mockSendAnalyticsEvent).toHaveBeenCalledWith(MobileEventName.ExploreSearchResultClicked, {
+      category: OnchainItemSectionName.NFTCollections,
+      isHistory: false,
+      position: 0,
+      suggestionCount: 1,
+      query: 'test',
+      name: 'Test Collection',
+      chain: 1,
+      address: '0x789',
+      type: 'collection',
+      searchChainFilter: null,
+      searchTabFilter: SearchTab.NFTCollections,
     })
   })
 })

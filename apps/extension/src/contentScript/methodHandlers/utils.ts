@@ -47,15 +47,7 @@ export function isUnsupportedMethod(method: string): boolean {
   return Object.keys(UnsupportedEthMethods).includes(method)
 }
 
-export function postDeprecatedMethodError({
-  source,
-  requestId,
-  method,
-}: {
-  source: MessageEventSource | null
-  requestId: string
-  method: string
-}): void {
+export function postDeprecatedMethodError(source: MessageEventSource | null, requestId: string, method: string): void {
   source?.postMessage({
     requestId,
     error: serializeError(
@@ -64,15 +56,7 @@ export function postDeprecatedMethodError({
   })
 }
 
-export function postUnknownMethodError({
-  source,
-  requestId,
-  method,
-}: {
-  source: MessageEventSource | null
-  requestId: string
-  method: string
-}): void {
+export function postUnknownMethodError(source: MessageEventSource | null, requestId: string, method: string): void {
   source?.postMessage({
     requestId,
     error: serializeError(providerErrors.unsupportedMethod(`Uniswap Wallet does not support ${method}`)),
@@ -86,15 +70,7 @@ export function postUnauthorizedError(source: MessageEventSource | null, request
   })
 }
 
-export function postParsingError({
-  source,
-  requestId,
-  method,
-}: {
-  source: MessageEventSource | null
-  requestId: string
-  method: string
-}): void {
+export function postParsingError(source: MessageEventSource | null, requestId: string, method: string): void {
   source?.postMessage({
     requestId,
     error: serializeError(
@@ -113,25 +89,21 @@ export function rejectSelfCallWithData(requestId: string, source: MessageEventSo
   })
 }
 
-export function getPendingResponseInfo({
-  requestIdToSourceMap,
-  requestId,
-  type,
-}: {
-  requestIdToSourceMap: Map<string, PendingResponseInfo>
-  requestId: string
-  type: DappResponseType
-}): PendingResponseInfo | undefined {
+export function getPendingResponseInfo(
+  requestIdToSourceMap: Map<string, PendingResponseInfo>,
+  requestId: string,
+  type: DappResponseType,
+): PendingResponseInfo | undefined {
   const pendingResponseInfo = requestIdToSourceMap.get(requestId)
   if (pendingResponseInfo) {
     requestIdToSourceMap.delete(requestId)
 
     if (type !== DappResponseType.ErrorResponse && type !== pendingResponseInfo.type) {
-      logContentScriptError({
-        errorMessage: `Response type doesn't match expected type, expected: ${pendingResponseInfo.type}, actual: ${type}`,
-        fileName: 'methodHandlers/utils.ts',
-        functionName: 'validateResponse',
-      })
+      logContentScriptError(
+        `Response type doesn't match expected type, expected: ${pendingResponseInfo.type}, actual: ${type}`,
+        'methodHandlers/utils.ts',
+        'validateResponse',
+      )
     }
     return pendingResponseInfo
   }

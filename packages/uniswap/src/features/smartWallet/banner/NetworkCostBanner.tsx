@@ -5,7 +5,7 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { SmartWallet } from 'ui/src/components/icons/SmartWallet'
 import { openUri } from 'uniswap/src/utils/linking'
 
-const onPressLearnMore = (uri: string): Promise<void> => openUri({ uri })
+const onPressLearnMore = (url: string): Promise<void> => openUri(url)
 
 type NetworkCostBannerProps = {
   bannerText: string
@@ -17,22 +17,24 @@ export function NetworkCostBanner({ bannerText, url }: NetworkCostBannerProps): 
 
   return (
     <TouchableArea
+      row
+      centered
       borderWidth="$spacing1"
       borderColor="$surface3"
       borderRadius="$rounded12"
       p="$padding16"
-      alignSelf="stretch"
+      gap="$gap12"
       onPress={handleOnPress}
     >
-      <Flex row alignItems="center" justifyContent="space-between" gap="$spacing12">
+      <Flex row>
         <SmartWallet color="$accent1" size="$icon.24" />
-        <Flex shrink>
-          <Text variant="body3" color="$neutral2">
-            <Trans i18nKey={bannerText} />
-          </Text>
-        </Flex>
-        <ExternalLink color="$neutral3" size="$icon.16" />
       </Flex>
+      <Flex grow flexBasis={0}>
+        <Text variant="body3" color="$neutral2">
+          <Trans i18nKey={bannerText} />
+        </Text>
+      </Flex>
+      <ExternalLink color="$neutral3" size="$icon.16" />
     </TouchableArea>
   )
 }

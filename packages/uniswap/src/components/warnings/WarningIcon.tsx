@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { ColorTokens, Flex, IconProps } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import {
@@ -6,11 +5,12 @@ import {
   getWarningIconColors,
   safetyLevelToWarningSeverity,
 } from 'uniswap/src/components/warnings/utils'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 interface Props {
-  // TODO (WALL-4626): remove GraphQLApi.SafetyLevel entirely
+  // TODO (WALL-4626): remove SafetyLevel entirely
   /** @deprecated use severity instead */
-  safetyLevel?: Maybe<GraphQLApi.SafetyLevel>
+  safetyLevel?: Maybe<SafetyLevel>
   severity?: WarningSeverity
   // To override the normally associated safetyLevel<->color mapping
   strokeColorOverride?: ColorTokens

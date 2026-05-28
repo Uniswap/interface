@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { css, deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
+import styled, { css, keyframes } from 'lib/styled-components'
 
 type RiseInProps = {
   delay?: number
@@ -27,12 +27,12 @@ const RiseInStyles = css<{ count?: number; delay?: number }>`
   animation-delay: ${(props) => 1000 * (props.delay ?? 0)}ms;
 `
 
-export const RiseInText = deprecatedStyled.span<{ delay?: number }>`
+export const RiseInText = styled.span<{ delay?: number }>`
   display: inline-flex;
   ${RiseInStyles}
 `
 
-export const RiseIn = deprecatedStyled.span<{ delay?: number }>`
+export const RiseIn = styled.span<{ delay?: number }>`
   display: flex;
   width: 100%;
   flex: none;

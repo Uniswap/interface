@@ -1,16 +1,17 @@
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
+import { useAccount } from 'hooks/useAccount'
+import { useDisconnect } from 'hooks/useDisconnect'
+import { useModalState } from 'hooks/useModalState'
+import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
+import { useAtom } from 'jotai'
+import Swap from 'pages/Swap'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
-import { useAccount } from '~/hooks/useAccount'
-import { useDisconnect } from '~/hooks/useDisconnect'
-import { useModalState } from '~/hooks/useModalState'
-import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
-import Swap from '~/pages/Swap'
 
 type PasskeyManagementEffectDependencies = {
   account: {
@@ -93,15 +94,15 @@ export function handleRouteToPasskeyManagement({
   }
 }
 
-// A user should only reach this page from a deeplink to passkey management from the Uniswap Wallet
+// A user should only reach this page from a deeplink to passkey management from the Ring Wallet
 // This pages falls back to the swap page in the case that a user unintentionally navigates to this page or tries to connect a wallet other than the embedded wallet
 export default function PasskeyManagement() {
   const account = useAccount()
   const { walletAddress: embeddedWalletAddress } = useParams()
-  const disconnect = useDisconnect()
+  const { disconnect } = useDisconnect()
   const accountDrawer = useAccountDrawer()
   const dispatch = useDispatch()
-  const setMenu = useSetMenu()
+  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
   const accountDrawerHasBeenOpenedRef = useRef<boolean>(accountDrawer.isOpen)
   const passkeyConnectionAttemptedRef = useRef<boolean>(false)
   const navigate = useNavigate()
@@ -109,7 +110,7 @@ export default function PasskeyManagement() {
 
   const navigateToPasskeyManagement = useEvent(() => {
     setTimeout(() => {
-      setMenu({ variant: MenuStateVariant.PASSKEYS })
+      setMenu(MenuState.PASSKEYS)
       accountDrawer.open()
       accountDrawerHasBeenOpenedRef.current = true
     }, 125)

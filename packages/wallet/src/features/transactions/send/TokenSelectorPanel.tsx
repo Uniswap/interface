@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Maybe } from 'graphql/jsutils/Maybe'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
@@ -12,7 +13,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { useActiveAddresses } from 'wallet/src/features/accounts/store/hooks'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TokenSelectorPanelProps {
   currencyInfo: Maybe<CurrencyInfo>
@@ -22,11 +23,11 @@ interface TokenSelectorPanelProps {
   onSelectCurrency: ({
     currency,
     field,
-    allowCrossChainPair,
+    forceIsBridgePair,
   }: {
     currency: Currency
     field: CurrencyField
-    allowCrossChainPair: boolean
+    forceIsBridgePair: boolean
   }) => void
   onHideTokenSelector: () => void
   onShowTokenSelector: () => void
@@ -44,7 +45,7 @@ export function TokenSelectorPanel({
   showTokenSelector,
 }: TokenSelectorPanelProps): JSX.Element {
   const { t } = useTranslation()
-  const addresses = useActiveAddresses()
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const showMaxButton = currencyBalance && !currencyBalance.equalTo(0)
@@ -57,7 +58,7 @@ export function TokenSelectorPanel({
     <>
       <Flex fill overflow="hidden">
         <TokenSelectorModal
-          addresses={addresses}
+          activeAccountAddress={activeAccountAddress}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           isModalOpen={showTokenSelector}
@@ -86,9 +87,8 @@ export function TokenSelectorPanel({
             </Flex>
           </Flex>
           <Flex row gap="$spacing12">
-            {showMaxButton && (
+            {showMaxButton && onSetMax && (
               <PresetAmountButton
-                percentage="max"
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}
                 currencyField={CurrencyField.INPUT}
@@ -96,7 +96,7 @@ export function TokenSelectorPanel({
                 onSetPresetValue={onSetMax}
               />
             )}
-            <RotatableChevron color="$neutral3" direction="down" size="$icon.20" />
+            <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
           </Flex>
         </Flex>
       </TouchableArea>

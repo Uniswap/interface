@@ -2,22 +2,15 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
-import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
-import { useSwapReviewWarningStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/useSwapReviewWarningStore'
+import { useSwapReviewCallbacks } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewCallbacksContext'
+import { useSwapReviewTransactionState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewTransactionContext'
+import { useSwapWarningState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContext'
 
 export const SwapReviewWarningModal = memo(function SwapReviewWarningModal(): JSX.Element | null {
   const { t } = useTranslation()
-  const { reviewScreenWarning, blockingWarning } = useSwapReviewTransactionStore((s) => ({
-    reviewScreenWarning: s.reviewScreenWarning,
-    blockingWarning: s.blockingWarning,
-  }))
-  const showWarningModal = useSwapReviewWarningStore((s) => s.showWarningModal)
-  const { onCloseWarning, onConfirmWarning, onCancelWarning } = useSwapReviewCallbacksStore((s) => ({
-    onCloseWarning: s.onCloseWarning,
-    onConfirmWarning: s.onConfirmWarning,
-    onCancelWarning: s.onCancelWarning,
-  }))
+  const { reviewScreenWarning, blockingWarning } = useSwapReviewTransactionState()
+  const { showWarningModal } = useSwapWarningState()
+  const { onCloseWarning, onConfirmWarning, onCancelWarning } = useSwapReviewCallbacks()
 
   if (!reviewScreenWarning?.warning.title) {
     return null

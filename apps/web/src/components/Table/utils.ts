@@ -1,6 +1,8 @@
 import { Column, RowData } from '@tanstack/react-table'
 import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { padding, zIndexes } from 'ui/src/theme'
 
 /**
  * Displays the time as a human-readable string.
@@ -32,20 +34,24 @@ export function useAbbreviatedTimeString(timestamp: number) {
   }
 }
 
-/**
- * Returns sizing styles for table columns (width and flexGrow).
- */
-export function getColumnSizingStyles<Data extends RowData>(column: Column<Data, unknown>): CSSProperties {
-  const metaFlexGrow = (column.columnDef.meta as { flexGrow?: number } | undefined)?.flexGrow
+export function getCommonPinningStyles<Data extends RowData>(
+  column: Column<Data, unknown>,
+  colors: ReturnType<typeof useSporeColors>,
+): CSSProperties {
+  const isPinned = column.getIsPinned()
+  const isLastPinnedColumn = column.getIsLastColumn('left')
 
-  const styles: CSSProperties = {
+  return {
+    left: isPinned === 'left' ? `${column.getStart('left')}px` : 0,
+    position: isPinned ? 'sticky' : 'relative',
+    zIndex: isPinned ? zIndexes.default : zIndexes.background,
+    background: isPinned ? `${colors.surface2.val}F2` : 'transparent', // F2 = 95% opacity
     width: column.getSize(),
+    borderRight: isLastPinnedColumn ? `1px solid ${colors.surface3.val}` : undefined,
+    paddingLeft: column.getIsFirstColumn() ? `${padding.padding8}px` : 0,
+    paddingRight: column.getIsLastColumn() || isLastPinnedColumn ? `${padding.padding8}px` : 0,
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
   }
-
-  // Only override flexGrow if explicitly set in meta
-  if (metaFlexGrow !== undefined) {
-    styles.flexGrow = metaFlexGrow
-  }
-
-  return styles
 }

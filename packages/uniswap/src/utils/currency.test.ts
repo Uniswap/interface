@@ -8,20 +8,18 @@ const mockFormatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
 describe(getFormattedCurrencyAmount, () => {
   it('formats valid amount', () => {
-    expect(
-      getFormattedCurrencyAmount({ currency: DAI, amount: '1000000000000000000', formatter: mockFormatter }),
-    ).toEqual('1.00 ')
+    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000', mockFormatter)).toEqual('1.00 ')
   })
 
   it('handles invalid Currency', () => {
-    expect(getFormattedCurrencyAmount({ currency: undefined, amount: '1', formatter: mockFormatter })).toEqual('')
-    expect(getFormattedCurrencyAmount({ currency: null, amount: '1', formatter: mockFormatter })).toEqual('')
+    expect(getFormattedCurrencyAmount(undefined, '1', mockFormatter)).toEqual('')
+    expect(getFormattedCurrencyAmount(null, '1', mockFormatter)).toEqual('')
   })
 
   it('handles error', () => {
     // invalid raw amount will throw error
-    vi.spyOn(console, 'error').mockImplementation(noOpFunction)
-    expect(getFormattedCurrencyAmount({ currency: USDC, amount: '0.1', formatter: mockFormatter })).toEqual('')
+    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
+    expect(getFormattedCurrencyAmount(USDC, '0.1', mockFormatter)).toEqual('')
   })
 })
 

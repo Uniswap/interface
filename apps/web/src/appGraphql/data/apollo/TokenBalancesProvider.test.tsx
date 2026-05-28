@@ -1,49 +1,38 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { PrefetchBalancesWrapper, useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
+import { mocked } from 'test-utils/mocked'
+import { render, renderHook } from 'test-utils/render'
 import { Flex } from 'ui/src'
-import { PrefetchBalancesWrapper, useTokenBalancesQuery } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { useAccount } from '~/hooks/useAccount'
-import { mocked } from '~/test-utils/mocked'
-import { render, renderHook } from '~/test-utils/render'
 
 // TODO(WEB-5370): Remove this delay + waitFor once we've integrated wallet's refetch logic
-setTimeout(() => {}, 10000)
+jest.setTimeout(10000)
+const mockLazyFetch = jest.fn()
+const mockBalanceQueryResponse = [
+  mockLazyFetch,
+  {
+    data: undefined,
+    loading: true,
+  },
+]
 
-const { mockLazyFetch, mockBalanceQueryResponse } = vi.hoisted(() => {
-  const mockLazyFetch = vi.fn()
-  const mockBalanceQueryResponse = [
-    mockLazyFetch,
-    {
-      data: undefined,
-      loading: true,
-    },
-  ]
-  return { mockLazyFetch, mockBalanceQueryResponse }
-})
+jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts', () => ({
+  ...jest.requireActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts'),
+  usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
+}))
 
-vi.mock('@universe/api', async () => {
-  const actual = await vi.importActual('@universe/api')
-  return {
-    ...actual,
-    GraphQLApi: {
-      ...(actual.GraphQLApi || {}),
-      usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
-    },
-  }
-})
-
-vi.mock('~/hooks/useAccount', async () => {
-  const actual = await vi.importActual('~/hooks/useAccount')
-  return {
-    ...actual,
-    useAccount: vi.fn(),
-  }
-})
+jest.mock('hooks/useAccount', () => ({
+  useAccount: jest.fn(),
+}))
 
 describe('TokenBalancesProvider', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    mockLazyFetch.mockClear()
     mocked(useAccount).mockReturnValue({ address: '0xaddress1', chainId: 1 } as any)
+  })
+
+  it('TokenBalancesProvider should not fetch balances without calls to useOnAssetActivitySubscription', async () => {
+    render(<Flex />)
+    await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(0), { timeout: 3500 })
   })
 
   describe('useTokenBalancesQuery', () => {

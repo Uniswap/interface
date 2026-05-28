@@ -1,19 +1,19 @@
-import { GraphQLApi } from '@universe/api'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { InteractiveToken } from 'pages/Landing/assets/approvedTokens'
 import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
-import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
+import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useFormatter } from 'utils/formatNumbers'
 
 export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }) {
-  const { formatPercent } = useLocalizationContext()
+  const { formatDelta } = useFormatter()
 
   const { color, size, floatingElementPosition, itemData } = itemPoint
   const { address, chain, symbol } = itemData
 
-  const tokenPromoQuery = GraphQLApi.useTokenPromoQuery({
+  const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: address !== NATIVE_CHAIN_ID ? address : undefined,
       chain,
@@ -21,7 +21,8 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
   })
 
   const pricePercentChange = useMemo(() => {
-    return tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
+    const value = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
+    return value ?? 0
   }, [tokenPromoQuery.data?.token?.market?.pricePercentChange?.value])
 
   return (
@@ -29,9 +30,9 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
       position="absolute"
       flex={1}
       row
+      animation="100ms"
       opacity={0}
       x={0}
-      transition="all 0.1s ease-in-out"
       gap={20}
       $group-item-hover={{
         opacity: 1,
@@ -49,8 +50,8 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
           {symbol}
         </Text>
         <Flex row alignItems="center">
-          <DeltaArrow delta={pricePercentChange} formattedDelta={formatPercent(Math.abs(pricePercentChange))} />
-          <Text variant="body2">{formatPercent(Math.abs(pricePercentChange))}</Text>
+          <DeltaArrow delta={pricePercentChange} formattedDelta={formatDelta(pricePercentChange)} />
+          <Text variant="body2">{formatDelta(pricePercentChange)}</Text>
         </Flex>
       </Flex>
     </Flex>

@@ -1,19 +1,18 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, GetProps, ScrollView, Text } from 'ui/src'
-import { Person } from 'ui/src/components/icons/Person'
+import { UserSquare } from 'ui/src/components/icons'
 import { fonts, imageSizes } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useENSName } from 'uniswap/src/features/ens/api'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isMobileApp } from 'utilities/src/platform'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type NewAddressWarningModalProps = {
@@ -51,16 +50,16 @@ const LeftRightText = ({ leftText, rightChild }: { leftText: string; rightChild:
 export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewAddressWarningModalProps): JSX.Element {
   const { t } = useTranslation()
 
-  // TODO(WALL-7065): Update to support Solana validation
-  const validated = getValidAddress({ address, platform: Platform.EVM })
+  const validated = getValidAddress(address)
   const displayName = useDisplayName(address, { includeUnitagSuffix: true })
   const ensDisplayName = useENSName(validated ?? undefined)
+  const { data: ensAvatar } = useENSAvatar(validated)
 
   return (
     <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
       <Flex px={isMobileApp ? '$spacing24' : undefined} py={isMobileApp ? '$spacing12' : undefined}>
         <GenericHeader
-          Icon={Person}
+          Icon={UserSquare}
           iconSize="$icon.24"
           title={t('send.warning.newAddress.title')}
           subtitle={t('send.warning.newAddress.message')}
@@ -89,6 +88,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
                   lineHeight={fonts.body3.lineHeight}
                   size={16}
                   variant="body3"
+                  disableForcedWidth={true}
                 />
               }
             />
@@ -98,7 +98,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
               leftText={t('send.warning.newAddress.details.ENS')}
               rightChild={
                 <Flex shrink row alignItems="center" gap="$spacing4">
-                  <AccountIcon address={address} size={imageSizes.image16} />
+                  <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
                   <Text
                     adjustsFontSizeToFit
                     allowFontScaling
@@ -125,7 +125,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
                 variant="body3"
                 whiteSpace="initial"
               >
-                {shortenAddress({ address, chars: 6 })}
+                {shortenAddress(address, 6)}
               </Text>
             }
           />

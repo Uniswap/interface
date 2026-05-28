@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -12,6 +11,8 @@ import { Flex } from 'ui/src'
 import { PUSH_NOTIFICATIONS_CARD_BANNER } from 'ui/src/assets'
 import { Buy } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
@@ -32,12 +33,10 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 type OnboardingIntroCardStackProps = {
   isLoading?: boolean
   showEmptyWalletState: boolean
-  onCardsChange?: (hasCards: boolean) => void
 }
 export function OnboardingIntroCardStack({
   showEmptyWalletState,
   isLoading = false,
-  onCardsChange,
 }: OnboardingIntroCardStackProps): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -137,13 +136,8 @@ export function OnboardingIntroCardStack({
         },
       })
     }
-
     return output
-  }, [showEmptyWalletState, isSignerAccount, sharedCards, t, dispatch, showEnableNotificationsCard])
-
-  useEffect(() => {
-    onCardsChange?.(cards.length > 0)
-  }, [cards.length, onCardsChange])
+  }, [showEmptyWalletState, isSignerAccount, sharedCards, t, showEnableNotificationsCard, dispatch])
 
   const handleSwiped = useCallback(
     (_card: IntroCardProps, index: number) => {
@@ -157,13 +151,13 @@ export function OnboardingIntroCardStack({
     [cards],
   )
 
-  if (!cards.length) {
-    return null
+  if (cards.length) {
+    return (
+      <Flex pt="$spacing12">
+        {isLoading ? <Flex height={INTRO_CARD_MIN_HEIGHT} /> : <IntroCardStack cards={cards} onSwiped={handleSwiped} />}
+      </Flex>
+    )
   }
 
-  return (
-    <Flex pt="$spacing12" px="$spacing12">
-      {isLoading ? <Flex height={INTRO_CARD_MIN_HEIGHT} /> : <IntroCardStack cards={cards} onSwiped={handleSwiped} />}
-    </Flex>
-  )
+  return null
 }

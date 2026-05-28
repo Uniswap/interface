@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -9,33 +9,32 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { NFTTransfer } from 'uniswap/src/components/nfts/NFTTransfer'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
-  DecimalPadCalculatedSpaceId,
   DecimalPadCalculateSpace,
+  DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
+import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/body/SwapArrowButton'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
+import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
-import { EmptyGasFeeRow, GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
+import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
-import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
@@ -124,17 +123,15 @@ export function SendTokenForm(): JSX.Element {
 
   // Decimal pad logic
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
-  const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : (currencyIn?.decimals ?? 0)
-  const selectionRef = useRef<TextInputProps['selection']>(undefined)
+  const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : currencyIn?.decimals ?? 0
+  const selectionRef = useRef<TextInputProps['selection']>()
 
   const onInputSelectionChange = useCallback(
     (start: number, end: number) => {
       selectionRef.current = { start, end }
       decimalPadRef.current?.updateDisabledKeys()
-      exactAmountTokenRef.current = exactAmountToken
-      exactAmountFiatRef.current = exactAmountFiat
     },
-    [exactAmountFiat, exactAmountToken],
+    [selectionRef],
   )
 
   const resetSelection = useCallback(
@@ -148,7 +145,7 @@ export function SendTokenForm(): JSX.Element {
 
       if (inputFieldRef) {
         setTimeout(() => {
-          inputFieldRef.current?.setNativeProps({ selection: { start, end } })
+          inputFieldRef?.current?.setNativeProps?.({ selection: { start, end } })
         }, 0)
       }
     },
@@ -231,13 +228,16 @@ export function SendTokenForm(): JSX.Element {
     [isFiatInput, maxDecimals, updateSendForm],
   )
 
-  const fiatOrTokenGreaterThanZero = useMemo((): boolean => {
-    return isAmountGreaterThanZero({
-      exactAmountToken,
-      exactAmountFiat,
-      currency: currencyIn,
-    })
-  }, [exactAmountToken, exactAmountFiat, currencyIn])
+  const [stableWarnings, setStableWarnings] = useState(warnings.warnings)
+  const [stableGasFee, setStableGasFee] = useState(gasFee)
+
+  // Prevent modal from immediately closing by stabilizing this data
+  useEffect(() => {
+    if (warnings.warnings.length > 0 || (gasFee && gasFee.displayValue)) {
+      setStableWarnings(warnings.warnings)
+      setStableGasFee(gasFee)
+    }
+  }, [warnings.warnings, gasFee])
 
   return (
     <>
@@ -295,7 +295,7 @@ export function SendTokenForm(): JSX.Element {
               style={StyleSheet.absoluteFill}
             >
               <Flex alignItems="center" bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2} position="absolute">
-                <SwapArrowButton disabled opacity={1} />
+                <SwapArrowButton disabled backgroundColor="$surface1" />
               </Flex>
             </Flex>
           </Flex>
@@ -333,10 +333,8 @@ export function SendTokenForm(): JSX.Element {
               ) : null}
             </Flex>
             <Flex py="$spacing12">
-              {!transferWarning && currencyIn?.chainId && !isBlocked && fiatOrTokenGreaterThanZero ? (
-                <GasFeeRow chainId={currencyIn.chainId} gasFee={gasFee} />
-              ) : (
-                <EmptyGasFeeRow />
+              {gasFee && !transferWarning && currencyIn?.chainId && !isBlocked && (
+                <GasFeeRow chainId={currencyIn?.chainId} gasFee={gasFee} />
               )}
             </Flex>
             {transferWarning && !isBlocked && !isInsufficientGasFundsWarning ? (
@@ -360,7 +358,7 @@ export function SendTokenForm(): JSX.Element {
                 </Flex>
               </TouchableArea>
             ) : null}
-            <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
+            <InsufficientNativeTokenWarning flow="send" gasFee={stableGasFee} warnings={stableWarnings} />
           </Flex>
         </Flex>
 
@@ -369,7 +367,7 @@ export function SendTokenForm(): JSX.Element {
             <DecimalPadCalculateSpace
               id={DecimalPadCalculatedSpaceId.Send}
               decimalPadRef={decimalPadRef}
-              isDecimalPadReady={decimalPadReady}
+              additionalElementsHeight={0}
             />
 
             <Flex

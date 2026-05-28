@@ -1,15 +1,9 @@
-import { memo, useEffect, useState } from 'react'
-import {
-  useTransactionSettingsAutoSlippageToleranceStore,
-  useTransactionSettingsStore,
-} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { memo } from 'react'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails/SwapDetails'
-import { useSwapReviewCallbacksStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewCallbacksStore/useSwapReviewCallbacksStore'
-import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewTransactionStore/useSwapReviewTransactionStore'
-import {
-  useSwapReviewWarningStateActions,
-  useSwapReviewWarningStore,
-} from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/useSwapReviewWarningStore'
+import { useSwapReviewCallbacks } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewCallbacksContext'
+import { useSwapReviewTransactionState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewTransactionContext'
+import { useSwapWarningState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContext'
 
 export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.Element | null {
   const {
@@ -23,37 +17,12 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
     reviewScreenWarning,
     txSimulationErrors,
     swapTxContext,
-    onAcceptTrade,
-  } = useSwapReviewTransactionStore((s) => ({
-    acceptedDerivedSwapInfo: s.acceptedDerivedSwapInfo,
-    derivedSwapInfo: s.derivedSwapInfo,
-    feeOnTransferProps: s.feeOnTransferProps,
-    tokenWarningProps: s.tokenWarningProps,
-    gasFee: s.gasFee,
-    newTradeRequiresAcceptance: s.newTradeRequiresAcceptance,
-    uniswapXGasBreakdown: s.uniswapXGasBreakdown,
-    reviewScreenWarning: s.reviewScreenWarning,
-    txSimulationErrors: s.txSimulationErrors,
-    swapTxContext: s.swapTxContext,
-    onAcceptTrade: s.onAcceptTrade,
-  }))
-  const tokenWarningChecked = useSwapReviewWarningStore((s) => s.tokenWarningChecked)
-  const { setTokenWarningChecked } = useSwapReviewWarningStateActions()
-  const onShowWarning = useSwapReviewCallbacksStore((s) => s.onShowWarning)
-  const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
-  const autoSlippageTolerance = useTransactionSettingsAutoSlippageToleranceStore((s) => s.autoSlippageTolerance)
+  } = useSwapReviewTransactionState()
+  const { tokenWarningChecked, setTokenWarningChecked } = useSwapWarningState()
+  const { onAcceptTrade, onShowWarning } = useSwapReviewCallbacks()
+  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
 
-  const [stableIncludesDelegation, setStableIncludesDelegation] = useState<boolean | undefined>(
-    swapTxContext.includesDelegation,
-  )
-
-  useEffect(() => {
-    if (swapTxContext.includesDelegation !== undefined) {
-      setStableIncludesDelegation(swapTxContext.includesDelegation)
-    }
-  }, [swapTxContext.includesDelegation])
-
-  if (!acceptedDerivedSwapInfo) {
+  if (!derivedSwapInfo || !acceptedDerivedSwapInfo) {
     return null
   }
 
@@ -72,7 +41,7 @@ export const SwapReviewSwapDetails = memo(function SwapReviewSwapDetails(): JSX.
       uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={reviewScreenWarning?.warning}
       txSimulationErrors={txSimulationErrors}
-      includesDelegation={stableIncludesDelegation}
+      includesDelegation={swapTxContext?.includesDelegation}
       onAcceptTrade={onAcceptTrade}
       onShowWarning={onShowWarning}
     />

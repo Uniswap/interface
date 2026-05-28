@@ -1,11 +1,13 @@
 import { ExploreStatsResponse, ProtocolStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { ALL_NETWORKS_ARG } from '@universe/api'
+import { useRingExploreStatsQuery } from 'appGraphql/data/ring/useRingExploreStats'
+import { useRingProtocolStatsQuery } from 'appGraphql/data/ring/useRingProtocolStats'
 import { createContext, useMemo } from 'react'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useProtocolStatsQuery } from 'uniswap/src/data/rest/protocolStats'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useExploreBackendSortingEnabled } from '~/state/explore/useExploreBackendSortingEnabled'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 interface QueryResult<T> {
   data?: T
@@ -21,6 +23,8 @@ interface QueryResult<T> {
 interface ExploreContextType {
   exploreStats: QueryResult<ExploreStatsResponse>
   protocolStats: QueryResult<ProtocolStatsResponse>
+  ringExploreStats: QueryResult<any>
+  ringProtocolStats: QueryResult<any>
 }
 
 export const giveExploreStatDefaultValue = (value: number | undefined, defaultValue = 0): number => {
@@ -38,6 +42,16 @@ export const ExploreContext = createContext<ExploreContextType>({
     isLoading: false,
     error: false,
   },
+  ringExploreStats: {
+    data: undefined,
+    isLoading: false,
+    error: false,
+  },
+  ringProtocolStats: {
+    data: undefined,
+    isLoading: false,
+    error: false,
+  },
 })
 
 export const TABLE_PAGE_SIZE = 20
@@ -50,23 +64,32 @@ export function ExploreContextProvider({
   children: React.ReactNode
 }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
-  const isExploreBackendSortingEnabled = useExploreBackendSortingEnabled()
+  const chain = isSupportedChain ? toGraphQLChain(chainId) : Chain.Ethereum
 
-  // Skip exploreStats query when backend sorting is enabled (tokens/pools tables use new endpoints)
+  const {
+    data: ringExploreStatsData,
+    loading: ringExploreStatsLoading,
+    error: ringExploreStatsError,
+  } = useRingExploreStatsQuery(chain)
+  const {
+    data: ringProtocolStatsData,
+    loading: ringProtocolStatsLoading,
+    error: ringProtocolStatsError,
+  } = useRingProtocolStatsQuery(chain)
+
   const {
     data: exploreStatsData,
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
-  } = useExploreStatsQuery<ExploreStatsResponse>({
-    input: { chainId: isSupportedChain ? chainId.toString() : ALL_NETWORKS_ARG },
-    enabled: !isExploreBackendSortingEnabled,
+  } = useExploreStatsQuery({
+    chainId: isSupportedChain ? chainId?.toString() : UniverseChainId.Mainnet.toString(),
   })
   const {
     data: protocolStatsData,
     isLoading: protocolStatsLoading,
     error: protocolStatsError,
   } = useProtocolStatsQuery({
-    chainId: isSupportedChain ? chainId.toString() : ALL_NETWORKS_ARG,
+    chainId: isSupportedChain ? chainId?.toString() : UniverseChainId.Mainnet.toString(),
   })
 
   const exploreContext = useMemo(() => {
@@ -81,6 +104,16 @@ export function ExploreContextProvider({
         isLoading: protocolStatsLoading,
         error: !!protocolStatsError,
       },
+      ringExploreStats: {
+        data: ringExploreStatsData, // top pools data
+        isLoading: ringExploreStatsLoading,
+        error: !!ringExploreStatsError,
+      },
+      ringProtocolStats: {
+        data: ringProtocolStatsData,
+        isLoading: ringProtocolStatsLoading,
+        error: !!ringProtocolStatsError,
+      },
     }
   }, [
     exploreStatsData,
@@ -89,6 +122,12 @@ export function ExploreContextProvider({
     protocolStatsData,
     protocolStatsError,
     protocolStatsLoading,
+    ringExploreStatsData,
+    ringExploreStatsError,
+    ringExploreStatsLoading,
+    ringProtocolStatsData,
+    ringProtocolStatsError,
+    ringProtocolStatsLoading,
   ])
   return <ExploreContext.Provider value={exploreContext}>{children}</ExploreContext.Provider>
 }

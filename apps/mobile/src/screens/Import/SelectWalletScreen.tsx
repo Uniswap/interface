@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { ComponentProps, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
@@ -11,15 +10,18 @@ import { Button, Flex, Loader, Text, TouchableArea, useLayoutAnimationOnChange }
 import { WalletFilled } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { useAnyAccountEligibleForDelegation } from 'wallet/src/features/smartWallet/hooks/useAnyAccountEligibleForDelegation'
 
 const ANIMATION_DURATION = 300
 
@@ -48,7 +50,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
     navigation.navigate({
       name:
-        params.importType === ImportType.Restore || params.importType === ImportType.Passkey
+        params?.importType === ImportType.Restore || params?.importType === ImportType.Passkey
           ? OnboardingScreens.Notifications
           : OnboardingScreens.Backup,
       params,
@@ -66,9 +68,13 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
   const highlightComponent = <CustomHighlightText />
 
-  const isContinueButtonDisabled = isLoading || !!showError || selectedAddresses.length === 0
+  const { eligible: isAnyAccountEligibleForDelegation, loading: isDelegationChecksLoading } =
+    useAnyAccountEligibleForDelegation(importableAccounts)
 
-  const showSmartWalletDisclaimer = smartWalletEnabled && !isContinueButtonDisabled
+  const isContinueButtonDisabled =
+    isLoading || !!showError || selectedAddresses.length === 0 || (isDelegationChecksLoading && smartWalletEnabled)
+
+  const showSmartWalletDisclaimer = smartWalletEnabled && !isContinueButtonDisabled && isAnyAccountEligibleForDelegation
 
   const opacityStyle = useAnimatedStyle(
     () => ({
@@ -92,7 +98,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             title={t('account.wallet.select.error')}
             onRetry={refetchAccounts}
           />
-        ) : isLoading ? (
+        ) : isLoading || isDelegationChecksLoading ? (
           <Flex grow justifyContent="space-between" px="$spacing16">
             <Loader.Wallets repeat={5} />
           </Flex>
@@ -108,8 +114,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
                   return null
                 }
                 return (
-                  <Flex key={i} px="$spacing16">
+                  <Flex key={address} px="$spacing16">
                     <WalletPreviewCard
+                      key={address}
                       address={address}
                       balance={balance}
                       hideSelectionCircle={isOnlyOneAccount}
@@ -137,14 +144,12 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             <TouchableArea
               flexDirection="row"
               gap="$gap8"
-              pt="$padding8"
               onPress={(): void => {
                 navigate(ModalName.SmartWalletInfoModal)
               }}
             >
               <Text color="$neutral2" variant="body4" textAlign="center" flexGrow={1}>
                 <Trans
-                  key="smartWalletDisclaimer"
                   components={{ highlight: highlightComponent }}
                   i18nKey="account.wallet.select.smartWalletDisclaimer"
                 />
@@ -155,7 +160,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         <Flex opacity={showError ? 0 : 1} px="$spacing16">
           <Flex row>
             <Button
-              isDisabled={isContinueButtonDisabled}
+              isDisabled={isLoading || !!showError || selectedAddresses.length === 0}
               variant="branded"
               size="large"
               testID={TestID.Continue}

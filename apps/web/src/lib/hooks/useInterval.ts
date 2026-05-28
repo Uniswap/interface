@@ -8,7 +8,6 @@ import { useEffect } from 'react'
  * @param leading by default, the callback will be invoked immediately (on the leading edge);
  *                if false, the callback will not be invoked until a first delay
  */
-// eslint-disable-next-line max-params
 export default function useInterval(callback: () => void | Promise<void>, delay: null | number, leading = true) {
   useEffect(() => {
     if (delay === null) {
@@ -18,7 +17,6 @@ export default function useInterval(callback: () => void | Promise<void>, delay:
     let timeout: ReturnType<typeof setTimeout>
     tick(delay, /* skip= */ !leading)
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (timeout) {
         clearInterval(timeout)
       }

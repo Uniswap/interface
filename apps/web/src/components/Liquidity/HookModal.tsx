@@ -1,25 +1,20 @@
+import { FlagWarning, getFlagWarning, getFlagsFromContractAddress } from 'components/Liquidity/utils'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CopyHelper } from 'theme/components/CopyHelper'
 import { Button, Checkbox, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { Page } from 'ui/src/components/icons/Page'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
-import {
-  type FlagWarning,
-  getFlagsFromContractAddress,
-  getFlagWarning,
-} from '~/components/Liquidity/utils/getFlagWarnings'
-import { CopyHelper } from '~/theme/components/CopyHelper'
 
 function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDangerous: boolean }) {
   const { t } = useTranslation()
@@ -45,7 +40,7 @@ function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDanger
               {expandedProperties ? t('position.addingHook.hideProperties') : t('position.addingHook.viewProperties')}
             </Text>
           </Flex>
-          <RotatableChevron direction={expandedProperties ? 'up' : 'down'} color="$neutral2" size="$icon.16" />
+          <RotatableChevron direction={expandedProperties ? 'up' : 'down'} color="$neutral2" width={16} height={16} />
         </Flex>
       </TouchableArea>
       {expandedProperties && (
@@ -124,7 +119,7 @@ export function HookModal({
     }
   }, [address, t])
 
-  const canContinue = !hasDangerous || disclaimerChecked
+  const canContinue = !hasDangerous || (hasDangerous && disclaimerChecked)
   const handleContinue = () => {
     if (canContinue) {
       onContinue()
@@ -144,7 +139,7 @@ export function HookModal({
       isModalOpen={isOpen}
       analyticsProperties={{ hook_address: address, hasDangerous }}
     >
-      <HeightAnimator>
+      <HeightAnimator animation="fast">
         <Flex gap="$spacing24">
           <GetHelpHeader closeModal={onClose} />
           <Flex>
@@ -180,7 +175,7 @@ export function HookModal({
               </Flex>
               <CopyHelper toCopy={address} iconSize={16} iconPosition="right" color="$neutral2">
                 <Text variant="body3" color="$neutral2">
-                  {shortenAddress({ address })}
+                  {shortenAddress(address)}
                 </Text>
               </CopyHelper>
             </Flex>
@@ -203,13 +198,7 @@ export function HookModal({
               </Button>
             </Trace>
             <Trace logPress element={ElementName.Continue}>
-              <Button
-                isDisabled={!canContinue}
-                size="small"
-                variant="branded"
-                onPress={handleContinue}
-                data-testid={TestID.HookModalContinueButton}
-              >
+              <Button isDisabled={!canContinue} size="small" variant="branded" onPress={handleContinue}>
                 {t('common.button.continue')}
               </Button>
             </Trace>

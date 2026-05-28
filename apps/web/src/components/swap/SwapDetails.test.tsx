@@ -1,31 +1,63 @@
-import { SwapDetails } from '~/components/swap/SwapDetails'
-import { SlippageTooltipContent } from '~/components/swap/SwapLineItem'
+import { Percent } from '@uniswap/sdk-core'
+import { SwapDetails } from 'components/swap/SwapDetails'
+import { SlippageTooltipContent } from 'components/swap/SwapLineItem'
 import {
   LIMIT_ORDER_TRADE,
   PREVIEW_EXACT_IN_TRADE,
   TEST_ALLOWED_SLIPPAGE,
   TEST_TRADE_EXACT_INPUT,
-} from '~/test-utils/constants'
-import { render, screen, within } from '~/test-utils/render'
+} from 'test-utils/constants'
+import { render, renderHook, screen, within } from 'test-utils/render'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 describe('SwapDetails.tsx', () => {
-  beforeEach(() => {
-    vi.spyOn(console, 'info').mockImplementation(() => {})
-  })
+  it('matches base snapshot, test trade exact input', () => {
+    const { formatCurrencyAmount } = renderHook(() => useFormatter()).result.current
+    const { asFragment } = render(
+      <SwapDetails
+        isLoading={false}
+        trade={TEST_TRADE_EXACT_INPUT}
+        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
+        swapResult={undefined}
+        onConfirm={jest.fn()}
+        swapErrorMessage={undefined}
+        disabledConfirm={false}
+        priceImpact={new Percent(5, 100)}
+        fiatValueInput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        fiatValueOutput={{
+          data: undefined,
+          isLoading: false,
+        }}
+        showAcceptChanges={false}
+        onAcceptChanges={jest.fn()}
+      />,
+    )
+    expect(asFragment()).toMatchSnapshot()
 
-  afterEach(() => {
-    vi.restoreAllMocks()
+    const tradeMinAmount = TEST_TRADE_EXACT_INPUT.minimumAmountOut(TEST_ALLOWED_SLIPPAGE ?? new Percent(0))
+    const formattedAmount = formatCurrencyAmount({ amount: tradeMinAmount, type: NumberType.SwapDetailsAmount })
+
+    expect(
+      screen.getByText(
+        `If the price moves so that you will receive less than ${formattedAmount} ${tradeMinAmount.currency.symbol}, your transaction will revert.`,
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
+    expect(screen.getByText('The maximum price movement before your transaction will revert.')).toBeInTheDocument()
   })
 
   it('shows accept changes section when available', () => {
-    const mockAcceptChanges = vi.fn()
+    const mockAcceptChanges = jest.fn()
     render(
       <SwapDetails
         isLoading={false}
         trade={TEST_TRADE_EXACT_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
-        onConfirm={vi.fn()}
+        onConfirm={jest.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
         fiatValueInput={{
@@ -53,7 +85,7 @@ describe('SwapDetails.tsx', () => {
         trade={PREVIEW_EXACT_IN_TRADE}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
-        onConfirm={vi.fn()}
+        onConfirm={jest.fn()}
         swapErrorMessage={undefined}
         disabledConfirm
         fiatValueInput={{
@@ -65,7 +97,7 @@ describe('SwapDetails.tsx', () => {
           isLoading: false,
         }}
         showAcceptChanges={false}
-        onAcceptChanges={vi.fn()}
+        onAcceptChanges={jest.fn()}
       />,
     )
     expect(asFragment()).toMatchSnapshot()
@@ -79,7 +111,7 @@ describe('SwapDetails.tsx', () => {
         trade={LIMIT_ORDER_TRADE}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
         swapResult={undefined}
-        onConfirm={vi.fn()}
+        onConfirm={jest.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
         fiatValueInput={{
@@ -91,7 +123,7 @@ describe('SwapDetails.tsx', () => {
           isLoading: false,
         }}
         showAcceptChanges={false}
-        onAcceptChanges={vi.fn()}
+        onAcceptChanges={jest.fn()}
       />,
     )
     expect(screen.getByText('Limit price')).toBeInTheDocument()

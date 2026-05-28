@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion'
+import styled, { keyframes, useTheme } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { deprecatedStyled, keyframes } from '~/lib/deprecated-styled'
 
-const Mask = motion(deprecatedStyled.div`
+const Mask = motion(styled.div`
   position: relative;
   display: flex;
   flex: 0;
@@ -20,7 +19,7 @@ const Mask = motion(deprecatedStyled.div`
   }
 `)
 
-const Char = motion(deprecatedStyled.div<{ color: string }>`
+const Char = motion(styled.div<{ color: string }>`
   font-variant-numeric: lining-nums tabular-nums;
   font-family: Basel;
   font-size: 52px;
@@ -45,7 +44,7 @@ const Char = motion(deprecatedStyled.div<{ color: string }>`
     line-height: 22px;
   }
 `)
-const Container = deprecatedStyled.div<{ live?: boolean }>`
+const Container = styled.div<{ live?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -73,7 +72,7 @@ const Container = deprecatedStyled.div<{ live?: boolean }>`
   background-size: 12px 12px;
   background-position: -8.5px -8.5px;
 `
-const SpriteContainer = motion(deprecatedStyled.div`
+const SpriteContainer = motion(styled.div`
   pointer-events: none;
   diplay: flex;
   flex-direction: column;
@@ -88,12 +87,14 @@ const pulsate = (color: string) => keyframes`
     box-shadow: 0 0 0 4px ${opacify(24, color)};
   }
 `
-export const LiveIcon = deprecatedStyled.div<{ display: string }>`
+const LiveIcon = styled.div<{ display: string }>`
   display: ${({ display }) => display};
   width: 6px;
   height: 6px;
+
   border-radius: 50%;
   background: ${({ theme }) => theme.success};
+
   animation-name: ${({ theme }) => pulsate(theme.success)};
   animation-fill-mode: forwards;
   animation-direction: alternate;
@@ -101,8 +102,7 @@ export const LiveIcon = deprecatedStyled.div<{ display: string }>`
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 `
-
-const Title = deprecatedStyled.h3<{ color: string }>`
+const Title = styled.h3<{ color: string }>`
   padding: 0;
   margin: 0;
   font-family: Basel;
@@ -140,12 +140,12 @@ const suffixes = [' ', 'K', 'M', 'B', 'T']
 const delineators = [',', '.']
 
 export function StatCard(props: StatCardProps) {
-  const colors = useSporeColors()
-
+  const theme = useTheme()
   return (
     <Container live={props.live}>
       <Flex row alignItems="center" gap="$gap4">
-        <Title color={props.live ? colors.statusSuccess.val : colors.neutral2.val}>{props.title}</Title>
+        <LiveIcon display={props.live ? 'block' : 'none'} />
+        <Title color={props.live ? theme.success : theme.neutral2}>{props.title}</Title>
       </Flex>
       <StringInterpolationWithMotion
         prefix={props.prefix}
@@ -161,18 +161,7 @@ export function StatCard(props: StatCardProps) {
 
 function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<StatCardProps, 'title'>) {
   const chars = value.split('')
-  const colors = useSporeColors()
-  const locale = useCurrentLocale()
-
-  // For Arabic locales, use simple Text component instead of animated sprites
-  const isArabic = locale.startsWith('ar')
-  if (isArabic) {
-    return (
-      <Text variant="heading2" color={live ? colors.statusSuccess.val : colors.neutral1.val} allowFontScaling={false}>
-        {value}
-      </Text>
-    )
-  }
+  const theme = useTheme()
 
   return (
     <Mask
@@ -190,14 +179,7 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
               ? currency
               : suffixes
 
-        return (
-          <NumberSprite
-            char={char}
-            key={index}
-            charset={charset}
-            color={live ? colors.statusSuccess.val : colors.neutral1.val}
-          />
-        )
+        return <NumberSprite char={char} key={index} charset={charset} color={live ? theme.success : theme.neutral1} />
       })}
     </Mask>
   )

@@ -1,18 +1,12 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
+import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
+import TradePrice from 'components/swap/TradePrice'
 import { Trans } from 'react-i18next'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import {
-  FORMAT_DATE_TIME_SHORT,
-  useFormattedDateTime,
-  useLocalizedDayjs,
-} from 'uniswap/src/features/language/localizedDayjs'
-import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { UniswapXOrderDetails } from 'state/signatures/types'
+import { ExternalLink } from 'theme/components/Links'
 import { ellipseMiddle } from 'utilities/src/addresses'
-import { NumberType } from 'utilities/src/format/types'
-import { DetailLineItem, LineItemData } from '~/components/swap/DetailLineItem'
-import TradePrice from '~/components/swap/TradePrice'
-import { ExternalLink } from '~/theme/components/Links'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export enum OffchainOrderLineItemType {
   EXCHANGE_RATE = 'EXCHANGE_RATE',
@@ -43,51 +37,44 @@ export type OffchainOrderLineItemProps =
     }
 
 function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefined {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-  const localizedDayjs = useLocalizedDayjs()
-  const expiry =
-    details.type === OffchainOrderLineItemType.EXPIRY && details.order.expiry ? details.order.expiry * 1000 : 0
-  const formattedExpiry = useFormattedDateTime(localizedDayjs(expiry), FORMAT_DATE_TIME_SHORT)
-
-  return useMemo(() => {
-    switch (details.type) {
-      case OffchainOrderLineItemType.EXCHANGE_RATE:
-        return {
-          Label: () => <Trans i18nKey="common.rate">Rate</Trans>,
-          Value: () => (
-            <TradePrice
-              price={
-                new Price(
-                  details.amounts.inputAmount.currency,
-                  details.amounts.outputAmount.currency,
-                  details.amounts.inputAmount.quotient,
-                  details.amounts.outputAmount.quotient,
-                )
-              }
-            />
-          ),
-        }
-      case OffchainOrderLineItemType.EXPIRY:
-        return {
-          Label: () => <Trans i18nKey="common.expiry" />,
-          Value: () => <span>{details.order.expiry ? formattedExpiry : undefined}</span>,
-        }
-      case OffchainOrderLineItemType.NETWORK_COST:
-        return {
-          Label: () => <Trans i18nKey="common.networkCost" />,
-          Value: () => <span>{convertFiatAmountFormatted(0, NumberType.FiatGasPrice)}</span>,
-        }
-      case OffchainOrderLineItemType.TRANSACTION_ID:
-        return {
-          Label: () => <Trans i18nKey="common.transactionId" />,
-          Value: () => (
-            <ExternalLink href={details.explorerLink}>{ellipseMiddle({ str: details.order.hash ?? '' })}</ExternalLink>
-          ),
-        }
-      default:
-        return undefined
-    }
-  }, [details, convertFiatAmountFormatted, formattedExpiry])
+  const { formatNumber } = useFormatter()
+  switch (details.type) {
+    case OffchainOrderLineItemType.EXCHANGE_RATE:
+      return {
+        Label: () => <Trans i18nKey="common.rate">Rate</Trans>,
+        Value: () => (
+          <TradePrice
+            price={
+              new Price(
+                details.amounts?.inputAmount.currency,
+                details.amounts?.outputAmount.currency,
+                details.amounts?.inputAmount.quotient,
+                details.amounts?.outputAmount.quotient,
+              )
+            }
+          />
+        ),
+      }
+    case OffchainOrderLineItemType.EXPIRY:
+      return {
+        Label: () => <Trans i18nKey="common.expiry" />,
+        Value: () => <span>{details.order.expiry && formatTimestamp(details.order.expiry * 1000)}</span>,
+      }
+    case OffchainOrderLineItemType.NETWORK_COST:
+      return {
+        Label: () => <Trans i18nKey="common.networkCost" />,
+        Value: () => <span>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</span>,
+      }
+    case OffchainOrderLineItemType.TRANSACTION_ID:
+      return {
+        Label: () => <Trans i18nKey="common.transactionId" />,
+        Value: () => (
+          <ExternalLink href={details.explorerLink}>{ellipseMiddle(details.order.txHash ?? '')}</ExternalLink>
+        ),
+      }
+    default:
+      return undefined
+  }
 }
 
 export function OffchainOrderLineItem(props: OffchainOrderLineItemProps) {

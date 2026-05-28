@@ -1,11 +1,10 @@
 /* eslint-disable max-lines */
-import { type Provider } from '@ethersproject/providers'
+import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
-import { createSearchParams } from 'react-router'
+import { createSearchParams } from 'react-router-dom'
 import { changeChain } from 'src/app/features/dapp/changeChain'
-import { type DappInfo, dappStore } from 'src/app/features/dapp/store'
-import { getActiveSignerConnectedAccount } from 'src/app/features/dapp/utils'
+import { DappInfo, dappStore } from 'src/app/features/dapp/store'
+import { getActiveConnectedAccount } from 'src/app/features/dapp/utils'
 import {
   addRequest,
   confirmRequest,
@@ -20,22 +19,23 @@ import type {
 } from 'src/app/features/dappRequests/shared'
 import { dappRequestActions, selectIsRequestConfirming } from 'src/app/features/dappRequests/slice'
 import {
-  type BaseSendTransactionRequest,
-  type ChangeChainRequest,
-  type ErrorResponse,
-  type GetCallsStatusRequest,
-  type GetCallsStatusResponse,
-  type GetCapabilitiesRequest,
-  type ParsedCall,
-  type SendCallsRequest,
-  type SendCallsResponse,
-  type SendTransactionResponse,
-  type SignMessageRequest,
-  type SignMessageResponse,
-  type SignTypedDataRequest,
-  type SignTypedDataResponse,
-  type UniswapOpenSidebarRequest,
-  type UniswapOpenSidebarResponse,
+  BaseSendTransactionRequest,
+  ChangeChainRequest,
+  ErrorResponse,
+  GetCallsStatusRequest,
+  GetCallsStatusResponse,
+  GetCapabilitiesRequest,
+  GetCapabilitiesResponse,
+  ParsedCall,
+  SendCallsRequest,
+  SendCallsResponse,
+  SendTransactionResponse,
+  SignMessageRequest,
+  SignMessageResponse,
+  SignTypedDataRequest,
+  SignTypedDataResponse,
+  UniswapOpenSidebarRequest,
+  UniswapOpenSidebarResponse,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { isWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
@@ -44,30 +44,31 @@ import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfoFromTransaction'
 import { call, put, select, take } from 'typed-redux-saga'
+import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
-import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   TransactionOriginType,
   TransactionType,
-  type TransactionTypeInfo,
+  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { hexToNumber } from 'uniswap/src/utils/hex'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
 import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
-import { generateBatchId, getCapabilitiesResponse } from 'wallet/src/features/batchedTransactions/utils'
-import { type Call } from 'wallet/src/features/dappRequests/types'
+import { generateBatchId, getCapabilitiesForDelegationStatus } from 'wallet/src/features/batchedTransactions/utils'
+import { Call } from 'wallet/src/features/dappRequests/types'
 import {
-  type ExecuteTransactionParams,
+  ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
-import { type SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -112,7 +113,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     requestParams.dappRequest.type === DappRequestType.GetCallsStatus ||
     requestParams.dappRequest.type === DappRequestType.GetCapabilities
   ) {
-    const eip5792MethodsEnabled = getFeatureFlag(FeatureFlags.Eip5792Methods)
+    const eip5792MethodsEnabled = getFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
     if (!eip5792MethodsEnabled) {
       const response: DappRequestRejectParams = {
         errorResponse: {
@@ -150,14 +151,13 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
   const dappUrl = extractBaseUrl(requestParams.senderTabInfo.url)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
 
-  const isConnectedToDapp = dappInfo && dappInfo.connectedAccounts.length > 0
-  const isAccountRequestRequest = ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type)
+  const isConnectedToDapp = dappInfo && dappInfo.connectedAccounts?.length > 0
 
   if (!isConnectedToDapp) {
     if (requestParams.dappRequest.type === DappRequestType.GetChainId) {
       // Allows for eth_chainId for unconnected dapps to advance connection steps
       yield* put(confirmRequestNoDappInfo(requestParams))
-    } else if (!isAccountRequestRequest) {
+    } else if (!ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type)) {
       // Otherwise, only allows for accounts requests to be handled until connection is confirmed
       // TODO(EXT-359): show a warning when the active account is different.
       const response: DappRequestRejectParams = {
@@ -260,7 +260,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
 
       const parsedCalls = requestParams.dappRequest.calls.map((call): Call | ParsedCall => ({
         ...call,
-        ...(call.data ? getCalldataInfoFromTransaction({ data: call.data, to: call.to, chainId }) : {}),
+        ...(call.data ? getCalldataInfoFromTransaction(call.data, call.to, chainId) : {}),
       }))
 
       const parsedRequestParams = {
@@ -297,31 +297,16 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     }
   }
 
-  // Track connection requests when they arrive, before approval
-  const connectRequestAnalyticsProperties = {
-    dappUrl,
-    chainId: dappInfo?.lastChainId,
-    activeConnectedAddress: dappInfo?.activeConnectedAddress,
-    connectedAddresses: dappInfo?.connectedAccounts.map((account) => account.address) ?? [],
-  }
-  if (isAccountRequestRequest) {
-    sendAnalyticsEvent(ExtensionEventName.DappConnectRequest, connectRequestAnalyticsProperties)
-  }
-
   const shouldAutoConfirmRequest =
     dappInfo &&
     isConnectedToDapp &&
-    (isAccountRequestRequest ||
+    (ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type) ||
       ACCOUNT_INFO_TYPES.includes(requestParams.dappRequest.type) ||
       requestParams.dappRequest.type === DappRequestType.RevokePermissions ||
       requestParams.dappRequest.type === DappRequestType.GetCallsStatus ||
       requestParams.dappRequest.type === DappRequestType.GetCapabilities)
 
   if (shouldAutoConfirmRequest) {
-    if (isAccountRequestRequest) {
-      // Track that a connection was established, even if it's auto-approved
-      sendAnalyticsEvent(ExtensionEventName.DappConnect, connectRequestAnalyticsProperties)
-    }
     yield* call(handleConfirmRequestWithDappInfo, { ...requestParams, dappInfo })
   } else {
     yield* put(
@@ -333,22 +318,15 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
   }
 }
 
-export function* handleSendTransaction({
-  request,
-  senderTabInfo: { id },
-  dappInfo,
-  transactionTypeInfo,
-  preSignedTransaction,
-}: {
-  request: BaseSendTransactionRequest
-  senderTabInfo: SenderTabInfo
-  dappInfo: DappInfo
-  transactionTypeInfo?: TransactionTypeInfo
-  preSignedTransaction?: SignedTransactionRequest
-}) {
+export function* handleSendTransaction(
+  request: BaseSendTransactionRequest,
+  { id }: SenderTabInfo,
+  dappInfo: DappInfo,
+  transactionTypeInfo?: TransactionTypeInfo,
+) {
   const transactionRequest = request.transaction
   const { lastChainId, activeConnectedAddress, connectedAccounts } = dappInfo
-  const account = getActiveSignerConnectedAccount(connectedAccounts, activeConnectedAddress)
+  const account = getActiveConnectedAccount(connectedAccounts, activeConnectedAddress)
   const chainId = toSupportedChainId(request.transaction.chainId)
   if (request.transaction.chainId && chainId) {
     if (lastChainId !== chainId) {
@@ -371,10 +349,9 @@ export function* handleSendTransaction({
       },
     },
     transactionOriginType: TransactionOriginType.External,
-    preSignedTransaction,
   }
 
-  const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+  const { transactionResponse } = yield* call(executeTransaction, sendTransactionParams)
 
   // Trigger a pending transaction notification after we send the transaction to chain
   yield* put(
@@ -386,20 +363,20 @@ export function* handleSendTransaction({
 
   // do not block on this function call since it should happen in parallel
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  onTransactionSentToChain(transactionHash, provider)
+  onTransactionSentToChain(transactionResponse, provider)
 
   const response: SendTransactionResponse = {
     type: DappResponseType.SendTransactionResponse,
-    transactionHash,
+    transactionResponse,
     requestId: request.requestId,
   }
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
 
 // TODO(EXT-976): Fix chrome notifications to work when the sidepanel is asleep.
-async function onTransactionSentToChain(transactionHash: string, provider: Provider): Promise<void> {
+async function onTransactionSentToChain(transactionResponse: TransactionResponse, provider: Provider): Promise<void> {
   // Listen for transaction receipt
-  const receipt = await provider.waitForTransaction(transactionHash, 1)
+  const receipt = await provider.waitForTransaction(transactionResponse.hash, 1)
 
   if (receipt.status === 100) {
     // Send chrome notification that transaction was successful
@@ -407,7 +384,7 @@ async function onTransactionSentToChain(transactionHash: string, provider: Provi
       type: 'basic',
       iconUrl: '',
       title: 'Transaction successful',
-      message: `Transaction ${transactionHash} was successful`,
+      message: `Transaction ${transactionResponse.hash} was successful`,
     })
   }
 }
@@ -427,23 +404,15 @@ export function* changeChainSaga(request: ChangeChainRequest, { id, url }: Sende
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
 
-export function* handleSignMessage({
-  request,
-  senderTabInfo: { id },
-  dappInfo,
-}: {
-  request: SignMessageRequest
-  senderTabInfo: SenderTabInfo
-  dappInfo: DappInfo
-}) {
+export function* handleSignMessage(request: SignMessageRequest, { id }: SenderTabInfo, dappInfo: DappInfo) {
   const { requestId, messageHex } = request
   const { connectedAccounts, activeConnectedAddress } = dappInfo
-  const currentAccount = getActiveSignerConnectedAccount(connectedAccounts, activeConnectedAddress)
+  const currentAccount = getActiveConnectedAccount(connectedAccounts, activeConnectedAddress)
 
   const signerManager = yield* call(getSignerManager)
   const provider = yield* call(getProvider, dappInfo.lastChainId)
 
-  const signature = yield* call(signMessage, { message: messageHex, account: currentAccount, signerManager, provider })
+  const signature = yield* call(signMessage, messageHex, currentAccount, signerManager, provider)
 
   const response: SignMessageResponse = {
     type: DappResponseType.SignMessageResponse,
@@ -454,15 +423,11 @@ export function* handleSignMessage({
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
 
-export function* handleSignTypedData({
-  dappRequest,
-  senderTabInfo,
-  dappInfo,
-}: {
-  dappRequest: SignTypedDataRequest
-  senderTabInfo: SenderTabInfo
-  dappInfo: DappInfo
-}) {
+export function* handleSignTypedData(
+  dappRequest: SignTypedDataRequest,
+  senderTabInfo: SenderTabInfo,
+  dappInfo: DappInfo,
+) {
   try {
     const requestId = dappRequest.requestId
     const typedData = dappRequest.typedData
@@ -481,16 +446,11 @@ export function* handleSignTypedData({
       throw new Error(`Mismatched chainId - expected active chain: ${lastChainId}, received: ${chainId}`)
     }
 
-    const currentAccount = getActiveSignerConnectedAccount(connectedAccounts, activeConnectedAddress)
+    const currentAccount = getActiveConnectedAccount(connectedAccounts, activeConnectedAddress)
     const signerManager = yield* call(getSignerManager)
     const provider = yield* call(getProvider, lastChainId)
 
-    const signature = yield* call(signTypedDataMessage, {
-      message: typedData,
-      account: currentAccount,
-      signerManager,
-      provider,
-    })
+    const signature = yield* call(signTypedDataMessage, typedData, currentAccount, signerManager, provider)
 
     const response: SignTypedDataResponse = {
       type: DappResponseType.SignTypedDataResponse,
@@ -544,16 +504,35 @@ export function* handleUniswapOpenSidebarRequest(request: UniswapOpenSidebarRequ
  * This method returns the capabilities supported by the wallet for specific chains
  */
 export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTabInfo: SenderTabInfo) {
-  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
+  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga)
+
+  const chainIds = request.chainIds?.map(hexToNumber) ?? enabledChains.map((chain) => chain.valueOf())
+
+  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
+
+  try {
+    delegationStatusResponse = yield* call(checkWalletDelegation, {
+      walletAddresses: [request.address],
+      chainIds,
+    })
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'dappRequestSaga', function: 'handleGetCapabilities' },
+      extra: { request },
+    })
+  }
+
   const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, request.address)
-  const chainIds = request.chainIds?.map(hexadecimalStringToInt) ?? enabledChains.map((chain) => chain.valueOf())
-
-  const response = yield* call(getCapabilitiesResponse, {
-    request,
-    chainIds,
+  const capabilities = getCapabilitiesForDelegationStatus(
+    delegationStatusResponse?.delegationDetails[request.address],
     hasSmartWalletConsent,
-  })
+  )
 
+  const response: GetCapabilitiesResponse = {
+    type: DappResponseType.GetCapabilitiesResponse,
+    requestId: request.requestId,
+    response: capabilities,
+  }
   yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
 }
 
@@ -561,21 +540,14 @@ export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTa
  * Handle wallet_sendCalls request
  * This method allows dapps to send a batch of calls to the wallet
  */
-export function* handleSendCalls({
-  request,
-  senderTabInfo: { id },
-  dappInfo,
-  transactionTypeInfo,
-  preSignedTransaction,
-}: {
-  request: SendCallsRequest
-  senderTabInfo: SenderTabInfo
-  dappInfo: DappInfo
-  transactionTypeInfo?: TransactionTypeInfo
-  preSignedTransaction?: SignedTransactionRequest
-}) {
+export function* handleSendCalls(
+  request: SendCallsRequest,
+  { id }: SenderTabInfo,
+  dappInfo: DappInfo,
+  transactionTypeInfo?: TransactionTypeInfo,
+) {
   const isSendCallTransaction = transactionTypeInfo?.type === TransactionType.SendCalls
-  if (!isSendCallTransaction || !transactionTypeInfo.encodedTransaction || !transactionTypeInfo.encodedRequestId) {
+  if (!isSendCallTransaction || !transactionTypeInfo?.encodedTransaction || !transactionTypeInfo?.encodedRequestId) {
     const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
       error: serializeError(rpcErrors.invalidInput()),
@@ -597,7 +569,16 @@ export function* handleSendCalls({
       return
     }
 
-    const activeAccount = getActiveSignerConnectedAccount(dappInfo.connectedAccounts, dappInfo.activeConnectedAddress)
+    const activeAccount = yield* select(selectActiveAccount)
+    if (!activeAccount) {
+      const errorResponse: ErrorResponse = {
+        type: DappResponseType.ErrorResponse,
+        error: serializeError(rpcErrors.internal('No active account found')),
+        requestId: request.requestId,
+      }
+      yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+      return
+    }
 
     // Generate or use provided batch ID
     const batchId = request.id || generateBatchId()
@@ -620,15 +601,14 @@ export function* handleSendCalls({
         request: encodedTransaction,
       },
       transactionOriginType: TransactionOriginType.External,
-      preSignedTransaction,
     }
 
-    const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+    const { transactionResponse } = yield* call(executeTransaction, sendTransactionParams)
 
     yield* put(
       addBatchedTransaction({
         batchId,
-        txHashes: [transactionHash], // Assuming single tx for now, might need update if batching changes
+        txHashes: [transactionResponse.hash], // Assuming single tx for now, might need update if batching changes
         requestId: encodedRequestId,
         chainId,
       }),
@@ -663,14 +643,7 @@ export function* handleSendCalls({
  * Handle wallet_getCallsStatus request
  * This method returns the status of a call batch that was sent via wallet_sendCalls
  */
-export function* handleGetCallsStatus({
-  request,
-  senderTabInfo: { id },
-}: {
-  request: GetCallsStatusRequest
-  senderTabInfo: SenderTabInfo
-  dappInfo: DappInfo
-}) {
+export function* handleGetCallsStatus(request: GetCallsStatusRequest, { id }: SenderTabInfo, _dappInfo: DappInfo) {
   const activeAccount = yield* select(selectActiveAccount)
   if (!activeAccount) {
     const errorResponse: ErrorResponse = {

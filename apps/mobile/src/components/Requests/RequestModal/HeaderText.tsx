@@ -4,7 +4,7 @@ import { Trans } from 'react-i18next'
 import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Text } from 'ui/src'
 import { EthMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { UwULinkMethod } from 'uniswap/src/types/walletConnect'
 
 export function HeaderText({
@@ -26,27 +26,27 @@ export function HeaderText({
     })?.toExact()
 
     return readablePermitAmount ? (
-      <Text variant="heading3">
+      <Text textAlign="center" variant="heading3">
         <Trans
           // `variant` prop must be first
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withAmount"
           values={{
             dappName: dappRequestInfo.name,
-            currencySymbol: permitCurrency.symbol,
+            currencySymbol: permitCurrency?.symbol,
             amount: readablePermitAmount,
           }}
         />
       </Text>
     ) : (
-      <Text variant="heading3">
+      <Text textAlign="center" variant="heading3">
         <Trans
           // `variant` prop must be first
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withoutAmount"
           values={{
             dappName: dappRequestInfo.name,
-            currencySymbol: permitCurrency.symbol,
+            currencySymbol: permitCurrency?.symbol,
           }}
         />
       </Text>
@@ -70,5 +70,9 @@ export function HeaderText({
     return <Trans i18nKey="qrScanner.request.method.default" values={{ dappNameOrUrl }} />
   }
 
-  return <Text variant="subheading1">{getReadableMethodName(method, dappRequestInfo.name || dappRequestInfo.url)}</Text>
+  return (
+    <Text textAlign="center" variant="subheading1">
+      {getReadableMethodName(method, dappRequestInfo.name || dappRequestInfo.url)}
+    </Text>
+  )
 }

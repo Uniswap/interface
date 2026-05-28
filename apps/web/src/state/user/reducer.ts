@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { DEFAULT_DEADLINE_FROM_NOW } from '~/constants/misc'
-import { RouterPreference } from '~/state/routing/types'
-import { SerializedPair, SlippageTolerance } from '~/state/user/types'
+import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
+import { RouterPreference } from 'state/routing/types'
+import { SerializedPair, SlippageTolerance } from 'state/user/types'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -31,6 +31,13 @@ export interface UserState {
     }
   }
 
+  fewPairs: {
+    [chainId: number]: {
+      // keyed by token0Address:token1Address
+      [key: string]: SerializedPair
+    }
+  }
+
   timestamp: number
 
   // undefined means has not gone through A/B split yet
@@ -52,6 +59,7 @@ export const initialState: UserState = {
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   pairs: {},
+  fewPairs: {},
   timestamp: currentTimestamp(),
   showSurveyPopup: undefined,
   originCountry: undefined,
@@ -85,27 +93,38 @@ const userSlice = createSlice({
         serializedPair.token0.address !== serializedPair.token1.address
       ) {
         const chainId = serializedPair.token0.chainId
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         state.pairs[chainId] = state.pairs[chainId] || {}
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
+      }
+      state.timestamp = currentTimestamp()
+    },
+    addSerializedFewPair(state, { payload: { serializedPair } }) {
+      if (
+        serializedPair?.token0 &&
+        serializedPair?.token1 &&
+        serializedPair.token0.chainId === serializedPair.token1.chainId &&
+        serializedPair.token0.address !== serializedPair.token1.address
+      ) {
+        const chainId = serializedPair.token0.chainId
+        state.fewPairs[chainId] = state.fewPairs[chainId] || {}
+        state.fewPairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
       }
       state.timestamp = currentTimestamp()
     },
     setOriginCountry(state, { payload: country }) {
       state.originCountry = country
     },
-    resetUser: () => initialState,
   },
 })
 
 export const {
   addSerializedPair,
+  addSerializedFewPair,
   setOriginCountry,
   updateHideClosedPositions,
   updateUserRouterPreference,
   updateUserDeadline,
   updateUserSlippageTolerance,
   updateIsEmbeddedWalletBackedUp,
-  resetUser,
 } = userSlice.actions
 export default userSlice.reducer

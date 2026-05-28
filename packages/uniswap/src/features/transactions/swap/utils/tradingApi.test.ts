@@ -1,38 +1,29 @@
-import { TradingApi } from '@universe/api'
-import { useFeatureFlag } from '@universe/gating'
+import { HooksOptions, ProtocolItems, RoutingPreference } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { FrontendSupportedProtocol, useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { useQuoteRoutingParams } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { renderHook } from 'uniswap/src/test/test-utils'
-import type { Mock } from 'vitest'
 
-vi.mock('@universe/gating', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@universe/gating')>()
-  return {
-    ...actual,
-    useFeatureFlag: vi.fn(),
-  }
-})
-vi.mock('uniswap/src/features/transactions/swap/utils/protocols', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('uniswap/src/features/transactions/swap/utils/protocols')>()
-  return {
-    ...actual,
-    useProtocolsForChain: vi.fn((protocols) => protocols),
-  }
-})
+jest.mock('uniswap/src/features/gating/hooks', () => ({
+  useFeatureFlag: jest.fn(),
+}))
+jest.mock('uniswap/src/features/transactions/swap/utils/protocols', () => ({
+  useProtocolsForChain: jest.fn((protocols) => protocols),
+  DEFAULT_PROTOCOL_OPTIONS: jest.requireActual('uniswap/src/features/transactions/swap/utils/protocols')
+    .DEFAULT_PROTOCOL_OPTIONS,
+  FrontendSupportedProtocol: jest.requireActual('uniswap/src/features/transactions/swap/utils/protocols')
+    .FrontendSupportedProtocol,
+}))
 
-const mockUseFeatureFlag = useFeatureFlag as Mock
-const mockUseProtocolsForChain = useProtocolsForChain as Mock
+const mockUseFeatureFlag = useFeatureFlag as jest.Mock
+const mockUseProtocolsForChain = useProtocolsForChain as jest.Mock
 
 describe('useQuoteRoutingParams', () => {
   const tokenInChainId = UniverseChainId.Mainnet
   const tokenOutChainId = UniverseChainId.Mainnet
-  const defaultProtocols: FrontendSupportedProtocol[] = [
-    TradingApi.ProtocolItems.V2,
-    TradingApi.ProtocolItems.V3,
-    TradingApi.ProtocolItems.V4,
-  ]
+  const defaultProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
 
   beforeEach(() => {
     // Reset mocks before each test
@@ -51,7 +42,7 @@ describe('useQuoteRoutingParams', () => {
       }),
     )
     expect(result.current).toEqual({
-      protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V4],
+      protocols: [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4],
     })
   })
 
@@ -65,21 +56,71 @@ describe('useQuoteRoutingParams', () => {
       }),
     )
     expect(result.current).toEqual({
-      hooksOptions: TradingApi.HooksOptions.V4_HOOKS_INCLUSIVE,
-      protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V4],
+      routingPreference: RoutingPreference.BEST_PRICE,
     })
   })
 
-  describe('when V4 Hooks are enabled', () => {
+  describe('when SwapSettingsV4HooksToggle FF is OFF', () => {
+    beforeEach(() => {
+      mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => {
+        if (flag === FeatureFlags.SwapSettingsV4HooksToggle) {
+          return false
+        }
+        return false // Default mock value for other flags
+      })
+    })
+
+    it('should return the protocols returned by useProtocolsForChain', () => {
+      const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3]
+      mockUseProtocolsForChain.mockImplementation(() => selectedProtocols) // Mock specific return value
+
+      const { result } = renderHook(() =>
+        useQuoteRoutingParams({
+          selectedProtocols,
+          tokenInChainId,
+          tokenOutChainId,
+          isV4HookPoolsEnabled: true,
+        }),
+      )
+
+      expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+      expect(result.current).toEqual({
+        protocols: selectedProtocols,
+      })
+    })
+
+    it('should handle empty selectedProtocols', () => {
+      const selectedProtocols: FrontendSupportedProtocol[] = []
+      mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
+
+      const { result } = renderHook(() =>
+        useQuoteRoutingParams({
+          selectedProtocols,
+          tokenInChainId,
+          tokenOutChainId,
+          isV4HookPoolsEnabled: true,
+        }),
+      )
+
+      expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
+      expect(result.current).toEqual({
+        protocols: selectedProtocols,
+      })
+    })
+  })
+
+  describe('when SwapSettingsV4HooksToggle FF is ON', () => {
+    beforeEach(() => {
+      mockUseFeatureFlag.mockImplementation((flag: FeatureFlags) => {
+        return flag === FeatureFlags.SwapSettingsV4HooksToggle
+      })
+    })
+
     describe('and isV4HookPoolsEnabled is true', () => {
       const isV4HookPoolsEnabled = true
 
       it('should return V4_HOOKS_INCLUSIVE for hooksOptions if V4 is already in protocols', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [
-          TradingApi.ProtocolItems.V2,
-          TradingApi.ProtocolItems.V3,
-          TradingApi.ProtocolItems.V4,
-        ]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
@@ -96,20 +137,13 @@ describe('useQuoteRoutingParams', () => {
         expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
         expect(result.current).toEqual({
           protocols: selectedProtocols,
-          hooksOptions: TradingApi.HooksOptions.V4_HOOKS_INCLUSIVE,
+          hooksOptions: HooksOptions.V4_HOOKS_INCLUSIVE,
         })
       })
 
       it('should add V4 to protocols and return V4_HOOKS_ONLY for hooksOptions if V4 is not in protocols', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [
-          TradingApi.ProtocolItems.V2,
-          TradingApi.ProtocolItems.V3,
-        ]
-        const expectedProtocols = [
-          TradingApi.ProtocolItems.V2,
-          TradingApi.ProtocolItems.V3,
-          TradingApi.ProtocolItems.V4,
-        ]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3]
+        const expectedProtocols = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols) // Original protocols without V4
 
@@ -126,7 +160,7 @@ describe('useQuoteRoutingParams', () => {
         expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
         expect(result.current).toEqual({
           protocols: expectedProtocols, // V4 is added
-          hooksOptions: TradingApi.HooksOptions.V4_HOOKS_ONLY,
+          hooksOptions: HooksOptions.V4_HOOKS_ONLY,
         })
       })
     })
@@ -135,11 +169,7 @@ describe('useQuoteRoutingParams', () => {
       const isV4HookPoolsEnabled = false
 
       it('should return the original protocols and V4_NO_HOOKS for hooksOptions', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [
-          TradingApi.ProtocolItems.V2,
-          TradingApi.ProtocolItems.V3,
-          TradingApi.ProtocolItems.V4,
-        ]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
@@ -156,15 +186,12 @@ describe('useQuoteRoutingParams', () => {
         expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
         expect(result.current).toEqual({
           protocols: selectedProtocols,
-          hooksOptions: TradingApi.HooksOptions.V4_NO_HOOKS,
+          hooksOptions: HooksOptions.V4_NO_HOOKS,
         })
       })
 
       it('should return the original protocols (without V4) and V4_NO_HOOKS for hooksOptions', () => {
-        const selectedProtocols: FrontendSupportedProtocol[] = [
-          TradingApi.ProtocolItems.V2,
-          TradingApi.ProtocolItems.V3,
-        ]
+        const selectedProtocols: FrontendSupportedProtocol[] = [ProtocolItems.V2, ProtocolItems.V3]
         // eslint-disable-next-line max-nested-callbacks
         mockUseProtocolsForChain.mockImplementation(() => selectedProtocols)
 
@@ -181,7 +208,7 @@ describe('useQuoteRoutingParams', () => {
         expect(mockUseProtocolsForChain).toHaveBeenCalledWith(selectedProtocols, tokenInChainId)
         expect(result.current).toEqual({
           protocols: selectedProtocols,
-          hooksOptions: TradingApi.HooksOptions.V4_NO_HOOKS,
+          hooksOptions: HooksOptions.V4_NO_HOOKS,
         })
       })
     })

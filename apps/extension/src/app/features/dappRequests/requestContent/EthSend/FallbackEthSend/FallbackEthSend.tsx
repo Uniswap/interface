@@ -1,4 +1,3 @@
-import { GasFeeResult } from '@universe/api'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
@@ -8,11 +7,12 @@ import { isNonZeroBigNumber } from 'src/app/features/dappRequests/requestContent
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedCopySheets, ExternalLink } from 'ui/src/components/icons'
-import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
-import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
+import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,
   SpendingEthDetails,
@@ -42,8 +42,7 @@ export function FallbackEthSendRequestContent({
 
   const { value: sending, to: toAddress, chainId: transactionChainId } = dappRequest.transaction
   const chainId = transactionChainId || activeChain
-  const recipientLink =
-    chainId && toAddress ? getExplorerLink({ chainId, data: toAddress, type: ExplorerDataType.ADDRESS }) : ''
+  const recipientLink = chainId && toAddress ? getExplorerLink(chainId, toAddress, ExplorerDataType.ADDRESS) : ''
   const contractFunction = dappRequest.transaction.type
   const calldata = dappRequest.transaction.data ?? ''
 
@@ -80,7 +79,7 @@ export function FallbackEthSendRequestContent({
         width="100%"
       >
         {showSpendingEthDetails && <SpendingEthDetails chainId={chainId} value={sending} />}
-        {transactionCurrencies.map((currencyInfo, i) => (
+        {transactionCurrencies?.map((currencyInfo, i) => (
           <SpendingDetails
             key={currencyInfo.currencyId}
             currencyInfo={currencyInfo}
@@ -93,7 +92,7 @@ export function FallbackEthSendRequestContent({
             <Anchor href={recipientLink} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
               <Flex row alignItems="center" gap="$spacing8">
                 <Text color="$neutral1" variant="body4">
-                  {shortenAddress({ address: toAddress })}
+                  {shortenAddress(toAddress)}
                 </Text>
                 <ExternalLink color="$neutral3" size="$icon.16" />
               </Flex>
@@ -124,7 +123,7 @@ export function FallbackEthSendRequestContent({
               onPress={copyCalldata}
             >
               <Text color="$neutral1" variant="body4">
-                {calldata.length > MIN_CALLDATA_LENGTH ? ellipseMiddle({ str: calldata }) : calldata}
+                {calldata.length > MIN_CALLDATA_LENGTH ? ellipseMiddle(calldata) : calldata}
               </Text>
               <AnimatedCopySheets color="$neutral3" size="$icon.16" />
             </TouchableArea>

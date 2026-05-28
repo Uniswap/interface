@@ -1,18 +1,25 @@
-import { type Currency, CurrencyAmount, type Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
-import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
+import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import {
+  DutchOrderInfoV2,
+  DutchOutput,
+  DutchQuoteV2,
+  NullablePermit,
+  Routing,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import {
   ApprovalAction,
   ClassicTrade,
-  type TokenApprovalInfo,
-  type TradeWithStatus,
+  TokenApprovalInfo,
+  TradeWithStatus,
   UniswapXV2Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
-import { createGasEstimate } from 'uniswap/src/test/fixtures/tradingApi'
+import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const TWENTY_MINUTES_FROM_NOW = Math.floor(Date.now() / 1000) + 60 * 20 // 20 minutes from now
@@ -23,100 +30,89 @@ export const createMockCurrencyAmount = (token: Token, amount: string): Currency
 export const createMockTradeWithStatus = (
   inputAmount: CurrencyAmount<Token>,
   outputAmount: CurrencyAmount<Token>,
-): TradeWithStatus =>
-  createEmptyTradeWithStatus({
-    trade: new ClassicTrade({
-      quote: { quote: {} } as ClassicQuoteResponse,
-      tradeType: TradeType.EXACT_INPUT,
-      deadline: TWENTY_MINUTES_FROM_NOW,
-      v2Routes: [],
-      v3Routes: [
-        {
-          routev3: new Route<Currency, Currency>(
-            [
-              new Pool(
-                inputAmount.currency,
-                outputAmount.currency,
-                FeeAmount.HIGH,
-                '2437312313659959819381354528',
-                '10272714736694327408',
-                -69633,
-              ),
-            ],
-            inputAmount.currency,
-            outputAmount.currency,
-          ),
-          inputAmount,
-          outputAmount,
-        },
-      ],
-      v4Routes: [],
-      mixedRoutes: [],
-    }),
-    indicativeTrade: undefined,
-    isIndicativeLoading: false,
-    isLoading: false,
-    error: null,
-    gasEstimate: createGasEstimate(),
-    quoteHash: '',
-  })
-
-export function createMockDerivedSwapInfo({
-  inputCurrency,
-  outputCurrency,
-  inputAmount,
-  outputAmount,
-  overrides = {},
-}: {
-  inputCurrency: Token
-  outputCurrency: Token
-  inputAmount: string
-  outputAmount: string
-  overrides?: Partial<DerivedSwapInfo>
-}): DerivedSwapInfo {
-  return {
-    chainId: UniverseChainId.Mainnet,
-
-    currencies: {
-      [CurrencyField.INPUT]: {
-        currency: inputCurrency,
-        currencyId: inputCurrency.symbol ?? '',
-        safetyInfo: benignSafetyInfo,
-        logoUrl: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+): TradeWithStatus => ({
+  trade: new ClassicTrade({
+    quote: { quote: {} } as ClassicQuoteResponse,
+    tradeType: TradeType.EXACT_INPUT,
+    deadline: TWENTY_MINUTES_FROM_NOW,
+    v2Routes: [],
+    v3Routes: [
+      {
+        routev3: new Route<Currency, Currency>(
+          [
+            new Pool(
+              inputAmount.currency,
+              outputAmount.currency,
+              FeeAmount.HIGH,
+              '2437312313659959819381354528',
+              '10272714736694327408',
+              -69633,
+            ),
+          ],
+          inputAmount.currency,
+          outputAmount.currency,
+        ),
+        inputAmount,
+        outputAmount,
       },
-      [CurrencyField.OUTPUT]: {
-        currency: outputCurrency,
-        currencyId: outputCurrency.symbol ?? '',
-        safetyInfo: benignSafetyInfo,
-        logoUrl: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
-      },
-    },
-    currencyAmounts: {
-      [CurrencyField.INPUT]: createMockCurrencyAmount(inputCurrency, inputAmount),
-      [CurrencyField.OUTPUT]: createMockCurrencyAmount(outputCurrency, outputAmount),
-    },
-    currencyAmountsUSDValue: {
-      [CurrencyField.INPUT]: createMockCurrencyAmount(inputCurrency, '1000000000000000000'),
-      [CurrencyField.OUTPUT]: createMockCurrencyAmount(outputCurrency, '1000000000000000000'),
-    },
-    currencyBalances: {
-      [CurrencyField.INPUT]: createMockCurrencyAmount(inputCurrency, '10000000000000000000'),
-      [CurrencyField.OUTPUT]: createMockCurrencyAmount(outputCurrency, '10000000000000000000'),
-    },
-    focusOnCurrencyField: CurrencyField.INPUT,
-    trade: createMockTradeWithStatus(
-      createMockCurrencyAmount(inputCurrency, inputAmount),
-      createMockCurrencyAmount(outputCurrency, outputAmount),
-    ),
-    outputAmountUserWillReceive: createMockCurrencyAmount(outputCurrency, outputAmount),
-    wrapType: WrapType.NotApplicable,
-    exactAmountToken: CurrencyField.INPUT,
-    exactCurrencyField: CurrencyField.INPUT,
-    ...overrides,
-  }
-}
+    ],
+    v4Routes: [],
+    mixedRoutes: [],
+  }),
+  indicativeTrade: undefined,
+  isIndicativeLoading: false,
+  isLoading: false,
+  error: null,
+  gasEstimates: createGasFeeEstimates(),
+})
 
-const createMockUniswapXOrder = (inputToken: string, outputToken: string): TradingApi.DutchOrderInfoV2 => ({
+export const createMockDerivedSwapInfo = (
+  inputCurrency: Token,
+  outputCurrency: Token,
+  inputAmount: string,
+  outputAmount: string,
+  overrides: Partial<DerivedSwapInfo> = {},
+): DerivedSwapInfo => ({
+  chainId: UniverseChainId.Mainnet,
+  currencies: {
+    [CurrencyField.INPUT]: {
+      currency: inputCurrency,
+      currencyId: inputCurrency.symbol ?? '',
+      safetyInfo: benignSafetyInfo,
+      logoUrl: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+    },
+    [CurrencyField.OUTPUT]: {
+      currency: outputCurrency,
+      currencyId: outputCurrency.symbol ?? '',
+      safetyInfo: benignSafetyInfo,
+      logoUrl: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
+    },
+  },
+  currencyAmounts: {
+    [CurrencyField.INPUT]: createMockCurrencyAmount(inputCurrency, inputAmount),
+    [CurrencyField.OUTPUT]: createMockCurrencyAmount(outputCurrency, outputAmount),
+  },
+  currencyAmountsUSDValue: {
+    [CurrencyField.INPUT]: createMockCurrencyAmount(inputCurrency, '1000000000000000000'),
+    [CurrencyField.OUTPUT]: createMockCurrencyAmount(outputCurrency, '1000000000000000000'),
+  },
+  currencyBalances: {
+    [CurrencyField.INPUT]: createMockCurrencyAmount(inputCurrency, '10000000000000000000'),
+    [CurrencyField.OUTPUT]: createMockCurrencyAmount(outputCurrency, '10000000000000000000'),
+  },
+  focusOnCurrencyField: CurrencyField.INPUT,
+  trade: createMockTradeWithStatus(
+    createMockCurrencyAmount(inputCurrency, inputAmount),
+    createMockCurrencyAmount(outputCurrency, outputAmount),
+  ),
+  outputAmountUserWillReceive: createMockCurrencyAmount(outputCurrency, outputAmount),
+  wrapType: WrapType.NotApplicable,
+  exactAmountToken: CurrencyField.INPUT,
+  exactCurrencyField: CurrencyField.INPUT,
+  ...overrides,
+})
+
+const createMockUniswapXOrder = (token: string): DutchOrderInfoV2 => ({
   chainId: 1,
   reactor: '0x00000011F84B9aa48e5f8aA8B9897600006289Be',
   swapper: '0x123',
@@ -125,48 +121,39 @@ const createMockUniswapXOrder = (inputToken: string, outputToken: string): Tradi
   additionalValidationContract: '0x0000000000000000000000000000000000000000',
   additionalValidationData: '0x',
   input: {
-    token: inputToken,
+    token: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     startAmount: '44000',
     endAmount: '49000',
   },
   outputs: [
-    createMockDutchOutput({ token: outputToken, startAmount: '100000000', endAmount: '100000000', recipient: '0x123' }),
-    createMockDutchOutput({ token: outputToken, startAmount: '250000', endAmount: '250000', recipient: '0x321' }),
+    createMockDutchOutput(token, '100000000', '100000000', '0x123'),
+    createMockDutchOutput(token, '250000', '250000', token),
   ],
   cosigner: '0x4449Cd34d1eb1FEDCF02A1Be3834FfDe8E6A6180',
 })
-export const createMockUniswapXQuote = (inputToken: string, outputToken: string): TradingApi.DutchQuoteV2 => ({
+export const createMockUniswapXQuote = (token: string): DutchQuoteV2 => ({
   encodedOrder: '0x000',
   orderId: '0xbbb',
-  orderInfo: createMockUniswapXOrder(inputToken, outputToken),
+  orderInfo: createMockUniswapXOrder(token),
   slippageTolerance: 0.5,
   quoteId: '123',
   classicGasUseEstimateUSD: '10',
   portionAmount: '250000',
   portionBips: 25,
-  portionRecipient: inputToken,
+  portionRecipient: token,
 })
-
-function createMockDutchOutput({
+const createMockDutchOutput = (
+  token: string,
+  startAmount: string,
+  endAmount: string,
+  recipient: string,
+): DutchOutput => ({
   token,
   startAmount,
   endAmount,
   recipient,
-}: {
-  token: string
-  startAmount: string
-  endAmount: string
-  recipient: string
-}): TradingApi.DutchOutput {
-  return {
-    token,
-    startAmount,
-    endAmount,
-    recipient,
-  }
-}
-
-export const createMockPermitData = (token: string): TradingApi.NullablePermit => ({
+})
+const createMockPermitData = (token: string): NullablePermit => ({
   domain: {
     name: 'Permit2',
     chainId: 1,
@@ -229,8 +216,8 @@ export const createMockPermitData = (token: string): TradingApi.NullablePermit =
       baseInputStartAmount: '44062551907157610',
       baseInputEndAmount: '49036238629986919',
       baseOutputs: [
-        createMockDutchOutput({ token, startAmount: '100000000', endAmount: '100000000', recipient: '0x18d' }),
-        createMockDutchOutput({ token, startAmount: '100000000', endAmount: '100000000', recipient: '0x18d' }),
+        createMockDutchOutput(token, '100000000', '100000000', '0x18d'),
+        createMockDutchOutput(token, '100000000', '100000000', '0x18d'),
       ],
     },
   },
@@ -243,8 +230,8 @@ export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: To
     tradeType: TradeType.EXACT_INPUT,
     quote: {
       requestId: '1',
-      routing: TradingApi.Routing.DUTCH_V2,
-      quote: createMockUniswapXQuote(inputCurrency.address, outputCurrency.address),
+      routing: Routing.DUTCH_V2,
+      quote: createMockUniswapXQuote(inputCurrency.address),
       permitData: createMockPermitData(inputCurrency.address),
     },
   })
@@ -254,16 +241,5 @@ export const createMockTokenApprovalInfo = (overrides = {}): TokenApprovalInfo =
   action: ApprovalAction.None,
   txRequest: null,
   cancelTxRequest: null,
-  ...overrides,
-})
-
-export const createEmptyTradeWithStatus = (overrides = {}): TradeWithStatus => ({
-  trade: null,
-  indicativeTrade: undefined,
-  isIndicativeLoading: false,
-  isLoading: false,
-  error: null,
-  gasEstimate: undefined,
-  quoteHash: '',
   ...overrides,
 })

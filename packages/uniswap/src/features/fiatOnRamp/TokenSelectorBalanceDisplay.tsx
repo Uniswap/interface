@@ -5,7 +5,7 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
-import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface TokenSelectorBalanceDisplayProps {
@@ -28,7 +28,7 @@ export function TokenSelectorBalanceDisplay({
   portfolioBalance,
 }: TokenSelectorBalanceDisplayProps): JSX.Element {
   const balanceQuantity = portfolioBalance?.quantity.toString() || '0'
-  const formattedAmount = useFormatExactCurrencyAmount(balanceQuantity, selectedCurrencyInfo.currency) || '-'
+  const formattedAmount = useFormatExactCurrencyAmount(balanceQuantity, selectedCurrencyInfo?.currency) || '-'
   const isDarkMode = useIsDarkMode()
 
   return (
@@ -57,7 +57,7 @@ export function TokenSelectorBalanceDisplay({
           />
         )}
         <Flex grow>
-          <Text color="$neutral1" variant="body2" testID={TestID.ForFormTokenSelected}>
+          <Text color="$neutral1" variant="body2">
             {selectedCurrencyInfo.currency.name}
           </Text>
           <Text color="$neutral2" variant="body3">
@@ -65,7 +65,7 @@ export function TokenSelectorBalanceDisplay({
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
         </Flex>
-        <RotatableChevron color="$neutral3" direction={chevronDirection} size="$icon.24" />
+        <RotatableChevron color="$neutral3" direction={chevronDirection} height={iconSizes.icon24} />
       </Flex>
     </TouchableArea>
   )

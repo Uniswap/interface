@@ -51,8 +51,6 @@ const IconButtonFrame = styled(CustomButtonFrame, {
   } as const,
 })
 
-IconButtonFrame.displayName = 'IconButtonFrame'
-
 export const IconButton = forwardRef<TamaguiElement, IconButtonProps>(function IconButton(
   {
     icon,

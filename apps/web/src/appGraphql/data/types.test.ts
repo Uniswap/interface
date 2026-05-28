@@ -1,45 +1,50 @@
-import { GraphQLApi } from '@universe/api'
-import { DAI, nativeOnChain, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { DAI, USDC_MAINNET, nativeOnChain } from 'uniswap/src/constants/tokens'
+import {
+  Chain,
+  ProtectionResult,
+  SafetyLevel,
+  Token,
+  TokenStandard,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
-import { removeSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
-import { currencyId } from 'uniswap/src/utils/currencyId'
-import { gqlTokenToCurrencyInfo } from '~/appGraphql/data/types'
-import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import { removeSafetyInfo } from 'uniswap/src/test/fixtures'
 
 const MAINNET_NATIVE_GQL_TOKEN = {
   __typename: 'Token',
-  chain: GraphQLApi.Chain.Ethereum,
+  chain: Chain.Ethereum,
   decimals: 18,
   id: NATIVE_CHAIN_ID,
   address: NATIVE_CHAIN_ID,
   name: 'Ethereum',
-  standard: GraphQLApi.TokenStandard.Native,
+  standard: TokenStandard.Native,
   symbol: 'ETH',
   project: {
     __typename: 'TokenProject',
     id: '0x',
     tokens: [],
     isSpam: false,
-    safetyLevel: GraphQLApi.SafetyLevel.Verified,
+    safetyLevel: SafetyLevel.Verified,
     logo: {
       id: '0x',
       url: 'eth_url',
     },
   },
   protectionInfo: {
-    result: GraphQLApi.ProtectionResult.Benign,
+    result: ProtectionResult.Benign,
   },
-} as GraphQLApi.Token
+} as Token
 
 const MAINNET_NATIVE_CURRENCY_INFO = {
   currency: nativeOnChain(UniverseChainId.Mainnet),
-  currencyId: currencyId(nativeOnChain(UniverseChainId.Mainnet)),
+  currencyId: 'ETH',
   isSpam: false,
   logoUrl: 'eth_url',
   safetyInfo: {
     tokenList: TokenList.Default,
-    protectionResult: GraphQLApi.ProtectionResult.Benign,
+    protectionResult: ProtectionResult.Benign,
     attackType: undefined,
     blockaidFees: undefined,
   },
@@ -50,7 +55,7 @@ describe('gqlTokenToCurrencyInfo', () => {
     const result = gqlTokenToCurrencyInfo({
       __typename: 'Token',
       id: '0x',
-      chain: 'invalid_chain' as GraphQLApi.Chain,
+      chain: 'invalid_chain' as Chain,
     })
     expect(result).toBeUndefined()
   })
@@ -59,13 +64,13 @@ describe('gqlTokenToCurrencyInfo', () => {
     const result = gqlTokenToCurrencyInfo({
       __typename: 'Token',
       id: '0x',
-      chain: GraphQLApi.Chain.Ethereum,
+      chain: Chain.Ethereum,
     })
     expect(result).toEqual({
       ...MAINNET_NATIVE_CURRENCY_INFO,
       logoUrl: undefined,
       safetyInfo: {
-        protectionResult: GraphQLApi.ProtectionResult.Unknown,
+        protectionResult: ProtectionResult.Unknown,
         tokenList: TokenList.NonDefault,
         attackType: undefined,
         blockaidFees: undefined,
@@ -102,19 +107,19 @@ describe('gqlTokenToCurrencyInfo', () => {
     expect(() =>
       gqlTokenToCurrencyInfo({
         __typename: 'Token',
-        chain: GraphQLApi.Chain.Ethereum,
+        chain: Chain.Ethereum,
         decimals: 18,
         id: '0x',
         address: '0x',
         name: 'test token',
-        standard: 'invalid_standard' as GraphQLApi.TokenStandard,
+        standard: 'invalid_standard' as TokenStandard,
         symbol: 'TKN',
         project: {
           __typename: 'TokenProject',
           id: '0x',
           tokens: [],
           isSpam: false,
-          safetyLevel: GraphQLApi.SafetyLevel.Verified,
+          safetyLevel: SafetyLevel.Verified,
           logo: {
             id: '0x',
             url: 'dai_url',
@@ -127,19 +132,19 @@ describe('gqlTokenToCurrencyInfo', () => {
   it('should return a non-native CurrencyInfo', () => {
     const result = gqlTokenToCurrencyInfo({
       __typename: 'Token',
-      chain: GraphQLApi.Chain.Ethereum,
+      chain: Chain.Ethereum,
       decimals: DAI.decimals,
       id: DAI.address,
       address: DAI.address,
       name: DAI.name,
-      standard: GraphQLApi.TokenStandard.Erc20,
+      standard: TokenStandard.Erc20,
       symbol: DAI.symbol,
       project: {
         __typename: 'TokenProject',
         id: DAI.address,
         tokens: [],
         isSpam: false,
-        safetyLevel: GraphQLApi.SafetyLevel.Verified,
+        safetyLevel: SafetyLevel.Verified,
         logo: {
           id: DAI.address,
           url: 'dai_url',
@@ -148,7 +153,7 @@ describe('gqlTokenToCurrencyInfo', () => {
     })
     expect(removeSafetyInfo(result)).toEqual({
       currency: DAI,
-      currencyId: currencyId(DAI),
+      currencyId: DAI.address,
       isSpam: false,
       logoUrl: 'dai_url',
     })
@@ -158,7 +163,7 @@ describe('gqlTokenToCurrencyInfo', () => {
     const result = gqlTokenToCurrencyInfo({
       id: USDC_MAINNET.address,
       address: USDC_MAINNET.address,
-      chain: GraphQLApi.Chain.Ethereum,
+      chain: Chain.Ethereum,
     })
     expect(removeSafetyInfo(result)).toEqual({
       currency: {
@@ -167,7 +172,7 @@ describe('gqlTokenToCurrencyInfo', () => {
         name: undefined, // default since it's missing
         symbol: undefined, // default since it's missing
       },
-      currencyId: currencyId(USDC_MAINNET),
+      currencyId: USDC_MAINNET.address,
       isSpam: false,
       logoUrl: undefined,
     })

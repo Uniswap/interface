@@ -12,10 +12,7 @@ try {
   const passedInputsKeys = Object.keys(passedInputs)
 
   // Check for missing required inputs and unexpected inputs
-  for (const [name, config] of Object.entries(definedInputs)) {
-    if (config.required === false) {
-      continue
-    }
+  for (const [name, _] of Object.entries(definedInputs)) {
     const validName = passedInputsKeys.includes(name.trim())
     const validValue = passedInputs[name] && passedInputs[name] !== '' ? true : false
     if (!validName || !validValue) {

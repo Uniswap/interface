@@ -1,14 +1,11 @@
-import { GraphQLApi } from '@universe/api'
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
-import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
-import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyIdToChain, currencyIdToGraphQLAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -24,20 +21,14 @@ const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
  * @param controlsColor When opening in an in-app browser, determines the controls color
  * @param throwOnError whether to throw errors instead of just logging them
  **/
-export async function openUri({
-  uri,
+export async function openUri(
+  uri: string,
   openExternalBrowser = false,
   isSafeUri = false,
+  // NOTE: okay to use colors object directly as we want the same color for light/dark modes
   controlsColor = colorsLight.accent1,
   throwOnError = false,
-}: {
-  uri: string
-  openExternalBrowser?: boolean
-  isSafeUri?: boolean
-  // NOTE: okay to use colors object directly as we want the same color for light/dark modes
-  controlsColor?: string
-  throwOnError?: boolean
-}): Promise<void> {
+): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     const error = new Error('User attempted to open potentially unsafe url')
@@ -108,29 +99,9 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink({
-  chainId,
-  data,
-  type,
-}: {
-  chainId: UniverseChainId
-  data?: string
-  type: ExplorerDataType
-}): string {
-  const chainInfo = getChainInfo(chainId)
-
-  // Handle unsupported chain IDs gracefully
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- chainInfo can be undefined in edge cases (SDK mismatch)
-  if (!chainInfo) {
-    return ''
-  }
-
-  const { explorer, nativeCurrency } = chainInfo
+export function getExplorerLink(chainId: UniverseChainId, data: string, type: ExplorerDataType): string {
+  const { explorer, nativeCurrency } = getChainInfo(chainId)
   const prefix = explorer.url
-
-  if (!data) {
-    return prefix
-  }
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
@@ -138,7 +109,7 @@ export function getExplorerLink({
 
     case ExplorerDataType.TOKEN:
       if (data === nativeCurrency.address && nativeCurrency.explorerLink) {
-        return nativeCurrency.explorerLink
+        return nativeCurrency.explorerLink ?? `${prefix}token/${data}`
       }
       return `${prefix}token/${data}`
 
@@ -163,42 +134,8 @@ export function getExplorerLink({
       return `${prefix}nft/${data}`
 
     default:
-      return prefix
+      return `${prefix}`
   }
-}
-
-export function getNftExplorerLink({
-  chainId,
-  contractAddress,
-  tokenId,
-}: {
-  chainId: UniverseChainId
-  contractAddress: string
-  tokenId: string
-}): string {
-  return getExplorerLink({
-    chainId,
-    data: `${contractAddress}/${tokenId}`,
-    type: ExplorerDataType.NFT,
-  })
-}
-
-export function getOpenseaLink({
-  chainId,
-  contractAddress,
-  tokenId,
-}: {
-  chainId: UniverseChainId
-  contractAddress: string
-  tokenId: string
-}): string | null {
-  const chainInfo = getChainInfo(chainId)
-
-  if (!chainInfo.openseaName) {
-    return null
-  }
-
-  return `https://opensea.io/item/${chainInfo.openseaName}/${contractAddress}/${tokenId}`
 }
 
 /**
@@ -225,69 +162,13 @@ export function getTokenDetailsURL({
   const chainInfo = toGraphQLChain(chain)
 
   const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
-  const adjustedInputAddress = isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
 
-  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
-  const inputAddressSuffix = adjustedInputAddress ? `?inputCurrency=${adjustedInputAddress}` : ''
+  const chainName = chainUrlParam || String(chainInfo)?.toLowerCase() || Chain.Ethereum.toLowerCase()
+  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
   return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
-}
-
-export function getFiatOnRampURL(chainId?: UniverseChainId): string {
-  const chainParam = chainId ? `?chain=${getChainInfo(chainId).urlParam}` : ''
-  return `/buy${chainParam}`
 }
 
 export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {
   const chainName = getChainInfo(chain).urlParam
   return `/explore/pools/${chainName}/${address}`
-}
-
-export async function openTransactionLink(hash: string | undefined, chainId: UniverseChainId): Promise<void> {
-  if (!hash) {
-    return undefined
-  }
-  const explorerUrl = getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })
-  return openUri({ uri: explorerUrl })
-}
-
-export async function openUniswapHelpLink(): Promise<void> {
-  return openUri({ uri: uniswapUrls.helpRequestUrl })
-}
-
-export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
-  return openUri({ uri: serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl })
-}
-
-export async function openOfframpPendingSupportLink(): Promise<void> {
-  return openUri({ uri: uniswapUrls.helpArticleUrls.fiatOffRampHelp })
-}
-
-export function getPortfolioUrl(walletAddress: string): string {
-  return `${uniswapUrls.webInterfacePortfolioUrl}/${walletAddress}`
-}
-
-const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
-
-export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
-  const chainId = currencyIdToChain(currencyId)
-  if (!chainId) {
-    return undefined
-  }
-  const network = toUniswapWebAppLink(chainId)
-  try {
-    let tokenAddress = currencyIdToGraphQLAddress(currencyId)
-    // in case it's a native token
-    if (tokenAddress === null) {
-      // this is how web app handles native tokens
-      tokenAddress = BACKEND_NATIVE_CHAIN_ADDRESS_STRING
-    }
-    const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
-    return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
-  } catch {
-    return undefined
-  }
-}
-
-export function getTwitterLink(twitterName: string): string {
-  return `https://twitter.com/${twitterName}`
 }

@@ -1,10 +1,8 @@
 import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
   ARB,
-  AUSD_MONAD,
   BUSD_BSC,
   DAI,
   DAI_ARBITRUM_ONE,
@@ -13,7 +11,6 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH_BSC,
-  nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
   UNI,
@@ -23,39 +20,41 @@ import {
   USDC_BSC,
   USDC_CELO,
   USDC_MAINNET,
-  USDC_MONAD,
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
-  USDC_SOLANA,
   USDC_SONEIUM,
   USDC_UNICHAIN,
   USDC_WORLD_CHAIN,
-  USDC_XLAYER,
+  USDC_XLAYER_MAINNET,
   USDC_ZKSYNC,
   USDC_ZORA,
+  USDM_MEGAETH_MAINNET,
+  USDR,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
   USDT_BSC,
+  USDT_MONAD_TESTNET,
   USDT_OPTIMISM,
   USDT_POLYGON,
-  USDT0_XLAYER,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
   WETH_AVALANCHE,
   WETH_POLYGON,
+  WETH_XLAYER,
   WRAPPED_NATIVE_CURRENCY,
+  isCelo,
+  nativeOnChain,
 } from 'uniswap/src/constants/tokens'
+import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+import { isSameAddress } from 'utilities/src/addresses'
 
 type ChainCurrencyList = {
   readonly [chainId: number]: CurrencyInfo[]
@@ -71,6 +70,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(UniverseChainId.Mainnet),
     DAI,
     USDC_MAINNET,
+    USDR,
     USDT,
     WBTC,
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token,
@@ -111,11 +111,10 @@ export const COMMON_BASES: ChainCurrencyList = {
 
   [UniverseChainId.Celo]: [nativeOnChain(UniverseChainId.Celo), USDC_CELO].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Monad]: [
-    nativeOnChain(UniverseChainId.Monad),
-    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Monad] as Token,
-    USDC_MONAD,
-    AUSD_MONAD,
+  [UniverseChainId.MonadTestnet]: [
+    nativeOnChain(UniverseChainId.MonadTestnet),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.MonadTestnet] as Token,
+    USDT_MONAD_TESTNET,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Optimism]: [
@@ -150,15 +149,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_SONEIUM,
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.XLayer]: [
-    nativeOnChain(UniverseChainId.XLayer),
-    WRAPPED_NATIVE_CURRENCY[UniverseChainId.XLayer] as Token,
-    USDC_XLAYER,
-    USDT0_XLAYER,
-  ].map(buildPartialCurrencyInfo),
-
-  [UniverseChainId.Solana]: [nativeOnChain(UniverseChainId.Solana), USDC_SOLANA].map(buildPartialCurrencyInfo),
-
   [UniverseChainId.Unichain]: [
     nativeOnChain(UniverseChainId.Unichain),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Unichain] as Token,
@@ -184,6 +174,19 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_ZKSYNC,
   ].map(buildPartialCurrencyInfo),
 
+  [UniverseChainId.XLayer]: [
+    nativeOnChain(UniverseChainId.XLayer),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.XLayer] as Token,
+    USDC_XLAYER_MAINNET,
+    WETH_XLAYER,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.MEGAETHMainnet]: [
+    nativeOnChain(UniverseChainId.MEGAETHMainnet),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.MEGAETHMainnet] as Token,
+    USDM_MEGAETH_MAINNET,
+  ].map(buildPartialCurrencyInfo),
+
   [UniverseChainId.Zora]: [
     nativeOnChain(UniverseChainId.Zora),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zora] as Token,
@@ -191,20 +194,13 @@ export const COMMON_BASES: ChainCurrencyList = {
   ].map(buildPartialCurrencyInfo),
 }
 
-export function getCommonBase(chainId?: number, address?: string): CurrencyInfo | undefined {
+export function getCommonBase(chainId?: number, isNative?: boolean, address?: string): CurrencyInfo | undefined {
   if (!address || !chainId) {
     return undefined
   }
-
-  const isNative = isNativeCurrencyAddress(chainId, address)
   return COMMON_BASES[chainId]?.find(
     (base) =>
-      (base.currency.isNative && isNative) ||
-      (base.currency.isToken &&
-        areAddressesEqual({
-          addressInput1: { address: base.currency.address, chainId: base.currency.chainId },
-          addressInput2: { address, chainId },
-        })),
+      (base.currency.isNative && isNative) || (base.currency.isToken && isSameAddress(base.currency.address, address)),
   )
 }
 
@@ -213,30 +209,21 @@ function getNativeLogoURI(chainId: UniverseChainId = UniverseChainId.Mainnet): I
     return ETH_LOGO as ImageSourcePropType
   }
 
-  return getChainInfo(chainId).nativeCurrency.logo
+  return getChainInfo(chainId).nativeCurrency.logo ?? (ETH_LOGO as ImageSourcePropType)
 }
 
 function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSourcePropType | string | undefined {
   const chainInfo = getChainInfo(chainId)
-  const networkName = chainInfo.assetRepoNetworkName
+  const networkName = chainInfo?.assetRepoNetworkName
 
-  if (
-    chainId === UniverseChainId.Celo &&
-    areAddressesEqual({
-      addressInput1: { address, platform: Platform.EVM },
-      addressInput2: { address: nativeOnChain(chainId).wrapped.address, platform: Platform.EVM },
-    })
-  ) {
+  if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
     return CELO_LOGO as ImageSourcePropType
   }
-  if (
-    chainId === UniverseChainId.Celo &&
-    areAddressesEqual({
-      addressInput1: { address, platform: Platform.EVM },
-      addressInput2: { address: PORTAL_ETH_CELO.address, platform: Platform.EVM },
-    })
-  ) {
+  if (isCelo(chainId) && isSameAddress(address, PORTAL_ETH_CELO.address)) {
     return ETH_LOGO as ImageSourcePropType
+  }
+  if (chainId === UniverseChainId.Mainnet && isSameAddress(address, USDR.address)) {
+    return 'https://assets.coingecko.com/coins/images/69350/standard/logo_USDR_color_512x512.png?1758260860'
   }
 
   return networkName
@@ -254,7 +241,7 @@ export function buildPartialCurrencyInfo(commonBase: Currency): CurrencyInfo {
     logoUrl,
     safetyInfo: {
       tokenList: TokenList.Default,
-      protectionResult: GraphQLApi.ProtectionResult.Benign,
+      protectionResult: ProtectionResult.Benign,
     },
     isSpam: false,
   } as CurrencyInfo)

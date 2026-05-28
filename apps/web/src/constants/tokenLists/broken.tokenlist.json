@@ -8,7 +8,10 @@
   },
   "tags": {},
   "logoURI": "ipfs://QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir",
-  "keywords": ["uniswap", "broken"],
+  "keywords": [
+    "Ring",
+    "broken"
+  ],
   "tokens": [
     {
       "name": "UNI HODL",

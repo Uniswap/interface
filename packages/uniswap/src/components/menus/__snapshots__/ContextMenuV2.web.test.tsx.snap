@@ -1,0 +1,414 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContextMenu renders without error 1`] = `
+[
+  <View
+    aria-expanded={true}
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    minPressDuration={0}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+  >
+    <div
+      onContextMenu={[Function]}
+    >
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        Trigger
+      </View>
+    </div>
+  </View>,
+  <View
+    pointerEvents="box-none"
+    style={
+      {
+        "bottom": 0,
+        "flexDirection": "column",
+        "left": 0,
+        "maxWidth": "100%",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "zIndex": 5001,
+      }
+    }
+  >
+    <View
+      cancelable={true}
+      disabled={false}
+      focusable={true}
+      minPressDuration={0}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onPress={[Function]}
+      onPressIn={[Function]}
+      onPressOut={[Function]}
+      style={
+        {
+          "bottom": 0,
+          "flexDirection": "column",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+    <View
+      pointerEvents="auto"
+    >
+      <View
+        style={
+          {
+            "left": 0,
+            "opacity": 0,
+            "position": "absolute",
+            "top": 0,
+            "transform": [
+              {
+                "translateY": 0,
+              },
+              {
+                "translateX": 0,
+              },
+            ],
+          }
+        }
+      >
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          id=":r3:"
+          jestAnimatedStyle={
+            {
+              "value": {
+                "backgroundColor": "transparent",
+                "borderBottomLeftRadius": 0,
+                "borderBottomRightRadius": 0,
+                "borderTopLeftRadius": 0,
+                "borderTopRightRadius": 0,
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 0.98,
+                  },
+                  {
+                    "translateY": -4,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 0,
+              "borderBottomRightRadius": 0,
+              "borderTopLeftRadius": 0,
+              "borderTopRightRadius": 0,
+              "flexDirection": "column",
+              "opacity": 0,
+              "paddingBottom": 8,
+              "paddingLeft": 8,
+              "paddingRight": 8,
+              "paddingTop": 8,
+              "transform": [
+                {
+                  "scale": 0.98,
+                },
+                {
+                  "translateY": -4,
+                },
+              ],
+            }
+          }
+        >
+          <div
+            onContextMenu={[Function]}
+            style={
+              {
+                "backgroundColor": "#131313",
+                "borderBottomColor": "rgba(255,255,255,0.12)",
+                "borderBottomLeftRadius": 20,
+                "borderBottomRightRadius": 20,
+                "borderBottomWidth": 1,
+                "borderLeftColor": "rgba(255,255,255,0.12)",
+                "borderLeftWidth": 1,
+                "borderRightColor": "rgba(255,255,255,0.12)",
+                "borderRightWidth": 1,
+                "borderStyle": "solid",
+                "borderTopColor": "rgba(255,255,255,0.12)",
+                "borderTopLeftRadius": 20,
+                "borderTopRightRadius": 20,
+                "borderTopWidth": 1,
+                "flexDirection": "column",
+                "gap": 4,
+                "minWidth": 200,
+                "paddingBottom": 8,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 8,
+              }
+            }
+          >
+            <View
+              cancelable={true}
+              collapsable={false}
+              disabled={false}
+              focusVisibleStyle={{}}
+              focusable={true}
+              forwardedRef={[Function]}
+              jestAnimatedStyle={
+                {
+                  "value": {},
+                }
+              }
+              minPressDuration={0}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onLayout={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onPress={[Function]}
+              onPressIn={[Function]}
+              onPressOut={[Function]}
+              role="button"
+              selectable={false}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#131313",
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "gap": 8,
+                  "justifyContent": "space-between",
+                  "maxWidth": 250,
+                  "opacity": 1,
+                  "paddingBottom": 8,
+                  "paddingLeft": 8,
+                  "paddingRight": 8,
+                  "paddingTop": 8,
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                  "width": "100%",
+                }
+              }
+            >
+              <View
+                onBlur={[Function]}
+                onFocus={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "color": "#FFFFFF",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  ellipsizeMode="tail"
+                  maxFontSizeMultiplier={1.2}
+                  numberOfLines={1}
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "flexShrink": 1,
+                      "fontFamily": "Basel Grotesk",
+                      "fontSize": 17,
+                      "fontWeight": "500",
+                      "lineHeight": 19.549999999999997,
+                      "opacity": 1,
+                    }
+                  }
+                  suppressHighlighting={true}
+                >
+                  Option 1
+                </Text>
+              </View>
+              <View
+                onBlur={[Function]}
+                onFocus={[Function]}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexDirection": "column",
+                    "flexShrink": 0,
+                  }
+                }
+              >
+                <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  pointerEvents="none"
+                  style={
+                    {
+                      "height": 20,
+                      "minHeight": 20,
+                      "minWidth": 20,
+                      "width": 20,
+                    }
+                  }
+                />
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "borderBottomColor": "rgba(255,255,255,0.12)",
+                  "borderBottomWidth": 1,
+                  "borderLeftColor": "rgba(255,255,255,0.12)",
+                  "borderLeftWidth": 0,
+                  "borderRightColor": "rgba(255,255,255,0.12)",
+                  "borderRightWidth": 0,
+                  "borderStyle": "solid",
+                  "borderTopColor": "rgba(255,255,255,0.12)",
+                  "borderTopWidth": 0,
+                  "flex": 1,
+                  "flexShrink": 0,
+                  "height": 0,
+                  "marginBottom": 6,
+                  "marginTop": 6,
+                  "maxHeight": 0,
+                }
+              }
+            />
+            <View
+              cancelable={true}
+              collapsable={false}
+              disabled={false}
+              focusVisibleStyle={{}}
+              focusable={true}
+              forwardedRef={[Function]}
+              jestAnimatedStyle={
+                {
+                  "value": {},
+                }
+              }
+              minPressDuration={0}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onLayout={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onPress={[Function]}
+              onPressIn={[Function]}
+              onPressOut={[Function]}
+              role="button"
+              selectable={false}
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#131313",
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
+                  "flexDirection": "row",
+                  "flexGrow": 1,
+                  "gap": 8,
+                  "justifyContent": "space-between",
+                  "maxWidth": 250,
+                  "opacity": 1,
+                  "paddingBottom": 8,
+                  "paddingLeft": 8,
+                  "paddingRight": 8,
+                  "paddingTop": 8,
+                  "transform": [
+                    {
+                      "scale": 1,
+                    },
+                  ],
+                  "width": "100%",
+                }
+              }
+            >
+              <View
+                onBlur={[Function]}
+                onFocus={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "color": "#FFFFFF",
+                    "flexDirection": "row",
+                    "flexShrink": 1,
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  ellipsizeMode="tail"
+                  maxFontSizeMultiplier={1.2}
+                  numberOfLines={1}
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "flexShrink": 1,
+                      "fontFamily": "Basel Grotesk",
+                      "fontSize": 17,
+                      "fontWeight": "500",
+                      "lineHeight": 19.549999999999997,
+                      "opacity": 1,
+                    }
+                  }
+                  suppressHighlighting={true}
+                >
+                  Option 2
+                </Text>
+              </View>
+              <View
+                onBlur={[Function]}
+                onFocus={[Function]}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "flexDirection": "column",
+                    "flexShrink": 0,
+                  }
+                }
+              >
+                <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  pointerEvents="none"
+                  style={
+                    {
+                      "height": 20,
+                      "minHeight": 20,
+                      "minWidth": 20,
+                      "width": 20,
+                    }
+                  }
+                />
+              </View>
+            </View>
+          </div>
+        </View>
+      </View>
+    </View>
+  </View>,
+]
+`;

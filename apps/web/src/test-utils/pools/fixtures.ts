@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
-import { GraphQLApi } from '@universe/api'
-import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
+import { PoolData } from 'appGraphql/data/pools/usePoolData'
+import { PoolStat } from 'state/explore/types'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { PoolData } from '~/appGraphql/data/pools/usePoolData'
-import { PoolStat } from '~/state/explore/types'
 
 export const validParams = { poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }
 
@@ -29,7 +28,7 @@ const validPoolToken0 = {
   },
 }
 
-export const validBEPoolToken0 = validPoolToken0 as GraphQLApi.Token
+export const validBEPoolToken0 = validPoolToken0 as Token
 export const validRestPoolToken0 = validPoolToken0 as unknown as PoolStat['token0']
 
 export const validUSDCCurrency = {
@@ -66,10 +65,10 @@ const validPoolToken1 = {
   },
 }
 
-export const validBEPoolToken1 = validPoolToken1 as GraphQLApi.Token
+export const validBEPoolToken1 = validPoolToken1 as Token
 export const validRestPoolToken1 = validPoolToken1 as unknown as PoolStat['token0']
 
-const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
+export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
 const pool = new Pool(
   USDC_MAINNET,
@@ -120,11 +119,7 @@ export const usdcWethPoolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'
 
 export const validPoolDataResponse = {
   data: {
-    feeTier: {
-      feeAmount: 500,
-      tickSpacing: DEFAULT_TICK_SPACING,
-      isDynamic: false,
-    },
+    feeTier: 500,
     token0: validBEPoolToken0,
     token1: validBEPoolToken1,
     token0Price: 1605.481,

@@ -4,10 +4,14 @@ ignores: [
     '@tamagui/font-inter',
     '@tamagui/theme-base',
     'jest-presets',
-    'typescript',
-    '@typescript/native-preview',
     ## Internal packages / workspaces
     'ui',
+    'utilities',
+    'tsconfig',
+    'utilities',
     # used in package.json
     'esbuild-register',
+    'prettier',
+    # Dependencies that depcheck thinks are missing but are actually present or never used
+    '@types/cypress',
   ]

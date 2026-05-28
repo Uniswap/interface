@@ -1,9 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/monitoredSagas'
+import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
+import { passwordLockoutReducer } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { appStateReducer } from 'src/features/appState/appStateSlice'
 import { biometricsReducer } from 'src/features/biometrics/biometricsSlice'
 import { biometricSettingsReducer } from 'src/features/biometricsSettings/slice'
-import { passwordLockoutReducer } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { lockScreenReducer } from 'src/features/lockScreen/lockScreenSlice'
 import { modalsReducer } from 'src/features/modals/modalSlice'
 import { pushNotificationsReducer } from 'src/features/notifications/slice'
@@ -16,6 +17,7 @@ const mobileReducers = {
   ...walletReducers,
   biometrics: biometricsReducer,
   biometricSettings: biometricSettingsReducer,
+  cloudBackup: cloudBackupReducer,
   modals: modalsReducer,
   passwordLockout: passwordLockoutReducer,
   pushNotifications: pushNotificationsReducer,
@@ -34,6 +36,7 @@ export const mobilePersistedStateList: Array<keyof typeof mobileReducers> = [
   'biometricSettings',
   'passwordLockout',
   'tweaks',
+  'cloudBackup',
   'pushNotifications',
 ]
 

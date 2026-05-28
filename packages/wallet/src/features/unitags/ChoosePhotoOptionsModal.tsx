@@ -4,9 +4,9 @@ import { Button, Flex, useSporeColors } from 'ui/src'
 import { Camera, PhotoStacked, Share, Trash } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isExtensionApp } from 'utilities/src/platform'
+import { isExtension } from 'utilities/src/platform'
+import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/AvatarSelection'
 import { ChooseNftModal, ChooseNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
-import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/photoSelection'
 
 export type ChoosePhotoOptionsProps = {
   address: Maybe<Address>
@@ -120,10 +120,8 @@ const ChoosePhotoOption = ({
   } => {
     if (type === PhotoAction.BrowseCameraRoll) {
       return {
-        buttonText: isExtensionApp
-          ? t('unitags.choosePhoto.option.computer')
-          : t('unitags.choosePhoto.option.cameraRoll'),
-        icon: isExtensionApp ? <Share /> : <Camera />,
+        buttonText: isExtension ? t('unitags.choosePhoto.option.computer') : t('unitags.choosePhoto.option.cameraRoll'),
+        icon: isExtension ? <Share /> : <Camera />,
       }
     }
 

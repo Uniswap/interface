@@ -1,26 +1,21 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import { TFunction } from 'i18next'
 import JSBI from 'jsbi'
 import ms from 'ms'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { RewardsCampaign } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
-import { NumberType } from 'utilities/src/format/types'
-import { LP_INCENTIVES_REWARD_TOKEN } from '~/components/LpIncentives/constants'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-function formatDateRange({
-  startTimestamp,
-  endTimestamp,
-  locale,
-}: {
-  startTimestamp?: number
-  endTimestamp?: number
-  locale: ReturnType<typeof useCurrentLanguage>
-}): string {
+const formatDateRange = (
+  startTimestamp: number | undefined,
+  endTimestamp: number | undefined,
+  locale: ReturnType<typeof useCurrentLanguage>,
+): string => {
   if (!startTimestamp || !endTimestamp) {
     return ''
   }
@@ -72,9 +67,9 @@ const BarChartSide = ({ percent, color, isLeft }: BarChartSideProps) => {
 export const LpIncentivesPoolDetailsRewardsDistribution = ({
   rewardsCampaign,
 }: {
-  rewardsCampaign?: GraphQLApi.RewardsCampaign
+  rewardsCampaign?: RewardsCampaign
 }) => {
-  const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatCurrencyAmount } = useFormatter()
   const { price: uniPrice } = useUSDCPrice(LP_INCENTIVES_REWARD_TOKEN)
   const { t } = useTranslation()
   const currentLanguage = useCurrentLanguage()
@@ -140,27 +135,28 @@ export const LpIncentivesPoolDetailsRewardsDistribution = ({
   const totalRewardAllocationFiat = uniPrice?.quote(totalRewardAllocationAmount)
 
   const formattedDistributedToken = formatCurrencyAmount({
-    value: distributedRewardsAmount,
+    amount: distributedRewardsAmount,
     type: NumberType.TokenQuantityStats,
   })
   const formattedTotalToken = formatCurrencyAmount({
-    value: totalRewardAllocationAmount,
+    amount: totalRewardAllocationAmount,
     type: NumberType.TokenQuantityStats,
   })
 
-  const formattedDistributedFiat = convertFiatAmountFormatted(
-    distributedRewardsFiat?.toExact(),
-    NumberType.FiatTokenStats,
-  )
+  const formattedDistributedFiat = formatCurrencyAmount({
+    amount: distributedRewardsFiat,
+    type: NumberType.FiatTokenStats,
+    placeholder: '--',
+  })
 
-  const formattedTotalFiat = convertFiatAmountFormatted(totalRewardAllocationFiat?.toExact(), NumberType.FiatTokenStats)
+  const formattedTotalFiat = formatCurrencyAmount({
+    amount: totalRewardAllocationFiat,
+    type: NumberType.FiatTokenStats,
+    placeholder: '--',
+  })
 
   const daysRemaining = getDaysRemaining(rewardsCampaign.endTimestamp, t)
-  const dateRange = formatDateRange({
-    startTimestamp: rewardsCampaign.startTimestamp,
-    endTimestamp: rewardsCampaign.endTimestamp,
-    locale: currentLanguage,
-  })
+  const dateRange = formatDateRange(rewardsCampaign.startTimestamp, rewardsCampaign.endTimestamp, currentLanguage)
 
   return (
     <Flex

@@ -13,6 +13,13 @@ import {
   AmountInParam,
   AmountOutMinParam,
   AmountOutParam,
+  Param,
+  UniversalRouterCall,
+  UniversalRouterCommand,
+  V4SwapExactInParamSchema,
+  V4SwapExactInSingleParamSchema,
+  V4SwapExactOutParamSchema,
+  V4SwapExactOutSingleParamSchema,
   isAmountInMaxParam,
   isAmountInParam,
   isAmountMinParam,
@@ -22,15 +29,8 @@ import {
   isURCommandASwap,
   isUrCommandSweep,
   isUrCommandUnwrapWeth,
-  Param,
-  UniversalRouterCall,
-  UniversalRouterCommand,
-  V4SwapExactInParamSchema,
-  V4SwapExactInSingleParamSchema,
-  V4SwapExactOutParamSchema,
-  V4SwapExactOutSingleParamSchema,
 } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
-import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 // Like ethers.formatUnits except it parses specific constants
@@ -221,7 +221,6 @@ function getTokenDetailsFromV4SwapCommands(command: UniversalRouterCommand): {
           }
 
           for (const p of parsed.data.value) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (p.name === 'swap') {
               const swap = p.value
 
@@ -246,7 +245,6 @@ function getTokenDetailsFromV4SwapCommands(command: UniversalRouterCommand): {
           }
 
           for (const p of parsed.data.value) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (p.name === 'swap') {
               const swap = p.value
 
@@ -271,7 +269,6 @@ function getTokenDetailsFromV4SwapCommands(command: UniversalRouterCommand): {
           }
 
           for (const p of parsed.data.value) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (p.name === 'swap') {
               const swap = p.value
 
@@ -298,7 +295,6 @@ function getTokenDetailsFromV4SwapCommands(command: UniversalRouterCommand): {
           }
 
           for (const p of parsed.data.value) {
-            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (p.name === 'swap') {
               const swap = p.value
 

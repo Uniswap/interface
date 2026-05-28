@@ -7,10 +7,10 @@ import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { Flex, Text } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import {
-  getPasswordStrengthTextAndColor,
   PASSWORD_VALIDATION_DEBOUNCE_MS,
   PasswordErrors,
   PasswordStrength,
+  getPasswordStrengthTextAndColor,
 } from 'wallet/src/utils/password'
 
 export function CloudPasswordInput(): JSX.Element {

@@ -25,15 +25,11 @@ export const getFirestoreUidRef = (
     .collection(address.toLowerCase())
     .doc('firebase')
 
-export const getFirestoreMetadataRef = ({
-  firebaseApp,
-  address,
-  pushId,
-}: {
-  firebaseApp: ReactNativeFirebase.FirebaseApp
-  address: Address
-  pushId: string
-}): FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData> =>
+export const getFirestoreMetadataRef = (
+  firebaseApp: ReactNativeFirebase.FirebaseApp,
+  address: Address,
+  pushId: string,
+): FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData> =>
   firestore(firebaseApp)
     .collection(getAddressDataCollectionFromBundleId())
     .doc('metadata')

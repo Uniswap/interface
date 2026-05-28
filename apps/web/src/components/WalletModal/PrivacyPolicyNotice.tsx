@@ -1,21 +1,21 @@
+import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { Text } from 'ui/src'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ExternalLink } from '~/theme/components/Links'
 
-const StyledLink = deprecatedStyled(ExternalLink)`
+const StyledLink = styled(Link)`
   font-weight: 535;
-  color: ${({ theme }) => theme.neutral3};
+  color: ${({ theme }) => theme.neutral2};
 `
 
 export default function PrivacyPolicyNotice() {
   return (
-    <Text variant="body4" color="$neutral3" textAlign="center">
+    <Text variant="body3" color="neutral2" textAlign="center">
       <Trans
         i18nKey="wallet.connectingAgreement"
         components={{
-          termsLink: <StyledLink href="https://uniswap.org/terms-of-service/" />,
-          privacyLink: <StyledLink href="https://uniswap.org/privacy-policy" />,
+          termsLink: <StyledLink to="/terms-of-service" />,
+          privacyLink: <StyledLink to="/privacy-policy" />,
         }}
       />
     </Text>

@@ -15,16 +15,17 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { pulseAnimation } from 'src/components/buttons/utils'
+import { openModal } from 'src/features/modals/modalSlice'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, FlexProps, LinearGradient, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts, opacify } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
-import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
+import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -57,7 +58,6 @@ export function NavBar(): JSX.Element {
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to ignore isNarrow because of unknown reason
   useEffect(() => {
     if (isNarrow || !exploreButtonLayout?.width || !swapButtonLayout?.width) {
       return
@@ -66,6 +66,7 @@ export function NavBar(): JSX.Element {
     // When the 2 buttons overflow, we set `isNarrow` to true and adjust the design accordingly.
     // To test this, you can use an iPhone Mini set to Spanish.
     setIsNarrow(exploreButtonLayout.width + swapButtonLayout.width + NAV_BAR_GAP + NAV_BAR_MARGIN_SIDES > screenWidth)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exploreButtonLayout?.width, swapButtonLayout?.width, screenWidth])
 
   const onExploreLayout = useCallback((e: LayoutChangeEvent) => setExploreButtonLayout(e.nativeEvent.layout), [])
@@ -123,30 +124,32 @@ type SwapTabBarButtonProps = {
 
 const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
   const { hapticFeedback } = useHapticFeedback()
-  const { navigate } = useAppStackNavigation()
 
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId({
-    evmAddress: activeAccountAddress,
-    chainId: persistedFilteredChainIds?.[CurrencyField.INPUT],
-  })
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId(
+    activeAccountAddress,
+    persistedFilteredChainIds?.[CurrencyField.INPUT],
+  )
 
   const onPress = useCallback(async () => {
-    navigate(
-      ModalName.Swap,
-      prepareSwapFormState({
-        inputCurrencyId,
-        defaultChainId,
-        filteredChainIdsOverride: persistedFilteredChainIds,
+    dispatch(
+      openModal({
+        name: ModalName.Swap,
+        initialState: prepareSwapFormState({
+          inputCurrencyId,
+          defaultChainId,
+          filteredChainIdsOverride: persistedFilteredChainIds,
+        }),
       }),
     )
 
     await hapticFeedback.light()
-  }, [inputCurrencyId, defaultChainId, hapticFeedback, persistedFilteredChainIds, navigate])
+  }, [dispatch, inputCurrencyId, defaultChainId, hapticFeedback, persistedFilteredChainIds])
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])

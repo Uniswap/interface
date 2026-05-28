@@ -3,6 +3,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
@@ -11,10 +12,10 @@ import { DownloadAlt, RotatableChevron, Unitag } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { FORMAT_DATE_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { useEvent } from 'utilities/src/react/hooks'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
@@ -22,15 +23,16 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
 
-  const sortedBackups = params.backups.slice().sort((a, b) => b.createdAt - a.createdAt)
+  const backups = useCloudBackups()
+  const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 
-  const onPressRestoreBackup = useEvent((backup: CloudStorageMnemonicBackup): void => {
+  const onPressRestoreBackup = async (backup: CloudStorageMnemonicBackup): Promise<void> => {
     navigation.navigate({
       name: OnboardingScreens.RestoreCloudBackupPassword,
       params: { ...params, mnemonicId: backup.mnemonicId },
       merge: true,
     })
-  })
+  }
 
   useNavigationHeader(navigation)
 
@@ -56,12 +58,13 @@ const BackupListItem = ({
   onPressRestoreBackup,
 }: {
   backup: CloudStorageMnemonicBackup
-  onPressRestoreBackup: (backup: CloudStorageMnemonicBackup) => void
+  onPressRestoreBackup: (backup: CloudStorageMnemonicBackup) => Promise<void>
 }): JSX.Element => {
   const { mnemonicId, createdAt } = backup
   const isDarkMode = useIsDarkMode()
   const localizedDayjs = useLocalizedDayjs()
   const displayName = useDisplayName(mnemonicId)
+  const { avatar } = useAvatar(mnemonicId)
   const isUnitag = displayName?.type === DisplayNameType.Unitag
 
   return (
@@ -73,17 +76,17 @@ const BackupListItem = ({
       p="$spacing16"
       shadowColor="$surface3"
       shadowRadius={!isDarkMode ? '$spacing4' : undefined}
-      onPress={(): void => onPressRestoreBackup(backup)}
+      onPress={(): Promise<void> => onPressRestoreBackup(backup)}
     >
       <Flex row alignItems="center" gap="$spacing12">
-        <AccountIcon address={mnemonicId} size={iconSizes.icon36} />
+        <AccountIcon avatarUri={avatar} address={mnemonicId} size={iconSizes.icon36} />
         <Flex flex={1}>
           <Flex row>
             <Text adjustsFontSizeToFit variant="subheading1">
               {displayName?.name}
             </Text>
             {isUnitag && (
-              <Flex alignSelf="center" pl="$spacing4" pt="$spacing1">
+              <Flex alignSelf="center" pl="$spacing4">
                 <Unitag size="$icon.24" />
               </Flex>
             )}
@@ -93,7 +96,7 @@ const BackupListItem = ({
           </Text>
         </Flex>
         <Flex>
-          <RotatableChevron color="$neutral2" direction="end" size="$icon.20" />
+          <RotatableChevron color="$neutral2" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
         </Flex>
       </Flex>
     </TouchableArea>

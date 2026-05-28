@@ -1,16 +1,12 @@
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useMemo } from 'react'
+import { ArrowUpRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import {
-  AnimatePresence,
-  ElementAfterText,
-  Flex,
-  Text,
-  TouchableArea,
-  TouchableAreaEvent,
-  useIsDarkMode,
-  useSporeColors,
-} from 'ui/src'
-import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { ExternalLink } from 'theme/components/Links'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { opacify } from 'ui/src/theme'
 import { CardImage } from 'uniswap/src/components/cards/image'
@@ -20,13 +16,6 @@ import { useIsBridgingChain } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useIsShowingWebFORNudge } from 'uniswap/src/features/providers/webForNudgeProvider'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { EmptyWalletCards } from '~/components/emptyWallet/EmptyWalletCards'
-import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { ExternalLink } from '~/theme/components/Links'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export function SwapBottomCard() {
   const { chainId: oldFlowChainId } = useMultichainContext()
@@ -39,26 +28,12 @@ export function SwapBottomCard() {
 
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)
-  const shouldShowWebFORNudge = useIsShowingWebFORNudge() && isSwapPage
 
-  const hideCard = !isSupportedChain || !(isSwapPage || isSendPage || shouldShowWebFORNudge)
+  const hideCard = !isSupportedChain || !(isSwapPage || isSendPage)
 
   const card = useMemo(() => {
     if (hideCard) {
       return null
-    }
-
-    if (shouldShowWebFORNudge) {
-      return (
-        <AnimatePresence>
-          <EmptyWalletCards
-            horizontalLayout
-            buyElementName={ElementName.ForEmptyStateBuy}
-            receiveElementName={ElementName.ForEmptyStateReceive}
-            cexTransferElementName={ElementName.ForEmptyStateCEXTransfer}
-          />
-        </AnimatePresence>
-      )
     }
 
     if (!isBridgingSupportedChain) {
@@ -66,7 +41,7 @@ export function SwapBottomCard() {
     } else {
       return null
     }
-  }, [chainId, hideCard, isBridgingSupportedChain, shouldShowWebFORNudge])
+  }, [chainId, hideCard, isBridgingSupportedChain])
 
   return <>{card}</>
 }
@@ -119,16 +94,17 @@ const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
   [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.16)', textColor: 'rgba(17, 20, 12, 1)' },
   [UniverseChainId.Bnb]: { bgColor: '#EAB20033', textColor: '#EAB200' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5233', textColor: '#FCFF52' },
-  [UniverseChainId.Monad]: { bgColor: 'rgba(115, 91, 248, 0.08)', textColor: '#735BF8' },
+  [UniverseChainId.HyperMainnet]: { bgColor: '#097A7333', textColor: '#97fce4' },
+  [UniverseChainId.MonadTestnet]: { bgColor: '#200052', textColor: '#836EF9' },
   [UniverseChainId.Optimism]: { bgColor: '#FF042033', textColor: '#FF0420' },
   [UniverseChainId.Polygon]: { bgColor: '#9558FF33', textColor: '#9558FF' },
   [UniverseChainId.Sepolia]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
-  [UniverseChainId.Solana]: { bgColor: '#9945FF33', textColor: '#000000' },
   [UniverseChainId.Soneium]: { bgColor: '#FFFFFF', textColor: '#000000' },
-  [UniverseChainId.XLayer]: { bgColor: '#A7A7A724', textColor: '#FFFFFF' },
   [UniverseChainId.Unichain]: { bgColor: '#F50DB433', textColor: '#F50DB4' },
   [UniverseChainId.UnichainSepolia]: { bgColor: '#F50DB433', textColor: '#F50DB4' },
   [UniverseChainId.WorldChain]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
+  [UniverseChainId.XLayer]: { bgColor: '#EAB20033', textColor: '#EAB200' },
+  [UniverseChainId.MEGAETHMainnet]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
   [UniverseChainId.Zksync]: { bgColor: 'rgba(54, 103, 246, 0.12)', textColor: '#3667F6' },
   [UniverseChainId.Zora]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
 }
@@ -137,9 +113,7 @@ const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
   ...CHAIN_THEME_LIGHT,
   [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.12)', textColor: 'rgba(252, 252, 3, 1) ' },
   [UniverseChainId.Celo]: { bgColor: '#FCFF5299', textColor: '#655947' },
-  [UniverseChainId.Monad]: { bgColor: 'rgba(131, 110, 249, 0.14)', textColor: '#836EF9' },
   [UniverseChainId.Soneium]: { bgColor: '#000000', textColor: '#FFFFFF' },
-  [UniverseChainId.XLayer]: { bgColor: '#A7A7A747', textColor: '#121212' },
   [UniverseChainId.WorldChain]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
   [UniverseChainId.Zksync]: { bgColor: 'rgba(97, 137, 255, 0.12)', textColor: '#6189FF' },
   [UniverseChainId.Zora]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
@@ -147,7 +121,7 @@ const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
 
 function useChainTheme(chainId: UniverseChainId): ChainTheme {
   const isDarkMode = useIsDarkMode()
-  return isDarkMode ? CHAIN_THEME_DARK[chainId] : CHAIN_THEME_LIGHT[chainId]
+  return isDarkMode ? CHAIN_THEME_LIGHT[chainId] : CHAIN_THEME_DARK[chainId]
 }
 
 function MaybeExternalBridgeCard({ chainId }: { chainId: UniverseChainId }) {
@@ -171,7 +145,7 @@ function MaybeExternalBridgeCard({ chainId }: { chainId: UniverseChainId }) {
 }
 
 const ICON_SIZE = 20
-const ICON_SIZE_TOKEN = `$icon.20`
+const ICON_SIZE_PX = `${ICON_SIZE}px`
 
 function CardInner({
   image,
@@ -232,11 +206,11 @@ function CardInner({
               onDismiss()
             }}
           >
-            <X color="$neutral3" size={ICON_SIZE_TOKEN} />
+            <X color="$neutral3" size={ICON_SIZE} />
           </TouchableArea>
         ) : (
           <TouchableArea alignSelf="flex-start" $md={{ alignSelf: 'center' }}>
-            <ArrowUpRight size="$icon.20" color={textColor} strokeWidth={0} />
+            <ArrowUpRight width={ICON_SIZE_PX} height={ICON_SIZE_PX} color={textColor} />
           </TouchableArea>
         )}
       </Flex>

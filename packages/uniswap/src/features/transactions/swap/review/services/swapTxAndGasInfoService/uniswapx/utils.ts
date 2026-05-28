@@ -1,22 +1,22 @@
-import { TradingApi } from '@universe/api'
-import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
-import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
+import { NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
+import { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprovalInfo'
 import {
+  TransactionRequestInfo,
   createApprovalFields,
   createGasFields,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import type {
+import {
+  PermitMethod,
   UniswapXGasBreakdown,
   UniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import type { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { validatePermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export function processUniswapXResponse({
   permitData,
 }: {
-  permitData: TradingApi.NullablePermit | undefined
+  permitData: NullablePermit | undefined
 }): TransactionRequestInfo {
   return {
     gasFeeResult: { value: '0', displayValue: '0', error: null, isLoading: false }, // There is no gas fee for UniswapX swap
@@ -39,9 +39,9 @@ function createUniswapXGasBreakdown({
   const { approvalGasFeeResult } = approvalTxInfo
   const gasFeeBreakdown = {
     classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
-    approvalCost: approvalGasFeeResult.displayValue,
+    approvalCost: approvalGasFeeResult?.displayValue,
     wrapCost: swapTxInfo.gasFeeResult.displayValue,
-    inputTokenSymbol: trade.inputAmount.currency.symbol,
+    inputTokenSymbol: trade.inputAmount.currency.wrapped.symbol,
   }
 
   return { gasFeeBreakdown }

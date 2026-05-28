@@ -1,24 +1,23 @@
 import { datadogLogs } from '@datadog/browser-logs'
-import { datadogRum, RumEvent, RumEventDomainContext, RumFetchResourceEventDomainContext } from '@datadog/browser-rum'
+import { RumEvent, RumEventDomainContext, RumFetchResourceEventDomainContext, datadogRum } from '@datadog/browser-rum'
+import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
   DatadogIgnoredErrorsValType,
   DatadogSessionSampleRateKey,
   DatadogSessionSampleRateValType,
   DynamicConfigs,
-  Experiments,
-  getDynamicConfigValue,
-  getStatsigClient,
-  WALLET_FEATURE_FLAG_NAMES,
-  WEB_FEATURE_FLAG_NAMES,
-} from '@universe/gating'
-import { config } from 'uniswap/src/config'
-import { getUniqueId } from 'utilities/src/device/uniqueId'
+} from 'uniswap/src/features/gating/configs'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
+import { WALLET_FEATURE_FLAG_NAMES, WEB_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { isBetaEnv } from 'utilities/src/environment/env'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 // In case Statsig is not available
 const EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
@@ -35,15 +34,9 @@ function beforeSend(event: RumEvent, context: RumEventDomainContext): boolean {
       DynamicConfigs.DatadogIgnoredErrors,
       DatadogIgnoredErrorsConfigKey,
       DatadogIgnoredErrorsValType
-    >({
-      config: DynamicConfigs.DatadogIgnoredErrors,
-      key: DatadogIgnoredErrorsConfigKey.Errors,
-      defaultValue: [],
-    })
+    >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
 
-    const ignoredError = ignoredErrors.find(({ messageContains }: { messageContains: string }) =>
-      event.error.message.includes(messageContains),
-    )
+    const ignoredError = ignoredErrors.find(({ messageContains }) => event.error?.message.includes(messageContains))
     if (ignoredError && Math.random() > ignoredError.sampleRate) {
       return false
     }
@@ -77,24 +70,22 @@ export async function initializeDatadog(appName: string): Promise<void> {
     DynamicConfigs.DatadogSessionSampleRate,
     DatadogSessionSampleRateKey,
     DatadogSessionSampleRateValType
-  >({
-    config: DynamicConfigs.DatadogSessionSampleRate,
-    key: DatadogSessionSampleRateKey.Rate,
-    defaultValue: isExtensionApp
-      ? EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE
-      : INTERFACE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
-  })
+  >(
+    DynamicConfigs.DatadogSessionSampleRate,
+    DatadogSessionSampleRateKey.Rate,
+    isExtension ? EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE : INTERFACE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
+  )
 
   const sharedDatadogConfig = {
     clientToken: config.datadogClientToken,
-    service: isWebApp ? `web-${getDatadogEnvironment()}` : `extension-${getDatadogEnvironment()}`,
+    service: isInterface ? `web-${getDatadogEnvironment()}` : `extension-${getDatadogEnvironment()}`,
     env: getDatadogEnvironment(),
-    version: isExtensionApp ? process.env.VERSION : process.env.REACT_APP_VERSION_TAG,
+    // Web uses the git commit hash to indicate release version.
+    version: isExtension ? process.env.VERSION : process.env.REACT_APP_GIT_COMMIT_HASH,
     trackingConsent: undefined,
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const shouldUseFullSampleRate = localDevDatadogEnabled || (isWebApp && isBetaEnv())
+  const shouldUseFullSampleRate = localDevDatadogEnabled || (isInterface && isBetaEnv())
 
   datadogRum.init({
     ...sharedDatadogConfig,
@@ -137,7 +128,6 @@ export async function initializeDatadog(appName: string): Promise<void> {
   }
 
   datadogRum.setGlobalContextProperty('app', appName)
-  datadogRum.setGlobalContextProperty('buildType', process.env.REACT_APP_WEB_BUILD_TYPE)
 
   for (const [_, flagKey] of [...WEB_FEATURE_FLAG_NAMES.entries(), ...WALLET_FEATURE_FLAG_NAMES.entries()]) {
     datadogRum.addFeatureFlagEvaluation(

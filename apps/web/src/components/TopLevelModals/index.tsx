@@ -1,47 +1,25 @@
+import { ModalRenderer } from 'components/TopLevelModals/modalRegistry'
+import { useAccount } from 'hooks/useAccount'
+import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
+import { PageType, useIsPage } from 'hooks/useIsPage'
+import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useAtomValue } from 'jotai/utils'
-import { useTranslation } from 'react-i18next'
-import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
-import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
-import { useEvent } from 'utilities/src/react/hooks'
-import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
-import { ModalRenderer } from '~/components/TopLevelModals/modalRegistry'
-import useAccountRiskCheck from '~/hooks/useAccountRiskCheck'
-import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { PasskeysHelpModalTypeAtom } from '~/hooks/usePasskeyAuthWithHelpModal'
 
 export default function TopLevelModals() {
-  const { t } = useTranslation()
   const isLandingPage = useIsPage(PageType.LANDING)
-  const { evmAddress, svmAddress } = useActiveAddresses()
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: evmAddress ? { address: evmAddress } : undefined,
-  })
-  const evmAccountName = unitag?.username
+  const account = useAccount()
+  const { unitag } = useUnitagByAddress(account.address)
+  const accountName = unitag?.username
     ? unitag.username + '.uni.eth'
-    : evmAddress
-      ? shortenAddress({ address: evmAddress })
+    : account.address
+      ? shortenAddress(account.address)
       : undefined
-  const blockedAddress = useAccountRiskCheck({ evmAddress, svmAddress })
+  useAccountRiskCheck(account.address)
   const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
-  const bridgedAssetModalProps = useAtomValue(BridgedAssetModalAtom)
-  const wormholeModalProps = useAtomValue(WormholeModalAtom)
-
-  const reportTokenIssueProps = useAtomValue(ReportTokenIssueModalPropsAtom)
-  const onReportSuccess = useEvent(() => {
-    popupRegistry.addPopup(
-      { type: PopupType.Success, message: t('common.reported') },
-      'report-token-success',
-      POPUP_MEDIUM_DISMISS_MS,
-    )
-  })
 
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
 
@@ -59,10 +37,7 @@ export default function TopLevelModals() {
         <ModalRenderer modalName={ModalName.UniWalletConnect} />
         <ModalRenderer modalName={ModalName.BlockedAccount} />
         {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
-        <ModalRenderer modalName={ModalName.Help} />
         <ModalRenderer modalName={ModalName.OffchainActivity} />
-        <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
-        <ModalRenderer modalName={ModalName.PendingWalletConnection} />
       </>
     )
   }
@@ -70,7 +45,7 @@ export default function TopLevelModals() {
   return (
     <>
       <ModalRenderer modalName={ModalName.AddressClaim} />
-      <ModalRenderer modalName={ModalName.BlockedAccount} componentProps={{ blockedAddress }} />
+      <ModalRenderer modalName={ModalName.BlockedAccount} />
       <ModalRenderer modalName={ModalName.UniWalletConnect} />
       <ModalRenderer modalName={ModalName.Banners} />
       <ModalRenderer modalName={ModalName.OffchainActivity} />
@@ -81,26 +56,12 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.PrivacyPolicy} />
       <ModalRenderer modalName={ModalName.PrivacyChoices} />
       <ModalRenderer modalName={ModalName.FeatureFlags} />
-      <ModalRenderer modalName={ModalName.SolanaPromo} />
       {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
       <ModalRenderer modalName={ModalName.AddLiquidity} />
       <ModalRenderer modalName={ModalName.RemoveLiquidity} />
       <ModalRenderer modalName={ModalName.ClaimFee} />
-      <ModalRenderer
-        modalName={ModalName.PasskeysHelp}
-        componentProps={{ type: passkeysHelpModalType, accountName: evmAccountName }}
-      />
-      <ModalRenderer modalName={ModalName.Help} />
+      <ModalRenderer modalName={ModalName.PasskeysHelp} componentProps={{ type: passkeysHelpModalType, accountName }} />
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
-      <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
-      <ModalRenderer modalName={ModalName.Send} />
-      <ModalRenderer modalName={ModalName.BridgedAsset} componentProps={bridgedAssetModalProps} />
-      <ModalRenderer modalName={ModalName.Wormhole} componentProps={wormholeModalProps} />
-      <ModalRenderer modalName={ModalName.PendingWalletConnection} />
-      <ModalRenderer
-        modalName={ModalName.ReportTokenIssue}
-        componentProps={{ ...reportTokenIssueProps, onReportSuccess }}
-      />
     </>
   )
 }

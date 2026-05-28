@@ -1,12 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
-import { zIndexes } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
 export function AddressFooter({
   connectedAccountAddress,
@@ -19,17 +17,11 @@ export function AddressFooter({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const variant = isMobileApp || isExtensionApp ? 'body3' : 'body4'
+  const variant = isMobileApp ? 'body3' : 'body4'
 
   const currentAccountAddress = connectedAccountAddress || activeAccountAddress
 
-  const showWarning =
-    connectedAccountAddress &&
-    // TODO(WALL-7065): Update to support solana
-    !areAddressesEqual({
-      addressInput1: { address: connectedAccountAddress, platform: Platform.EVM },
-      addressInput2: { address: activeAccountAddress, platform: Platform.EVM },
-    })
+  const showWarning = connectedAccountAddress && !areAddressesEqual(connectedAccountAddress, activeAccountAddress)
 
   return (
     <Flex grow px={px}>
@@ -44,6 +36,7 @@ export function AddressFooter({
         }
       >
         <AddressDisplay
+          disableForcedWidth
           hideAddressInSubtitle
           address={currentAccountAddress}
           horizontalGap="$spacing4"
@@ -63,7 +56,7 @@ const TooltipWarning = (): JSX.Element => {
       <Tooltip.Trigger>
         <AlertTriangleFilled color="$neutral3" size="$icon.16" />
       </Tooltip.Trigger>
-      <Tooltip.Content ml="$spacing12" px="$none" py="$none" zIndex={zIndexes.overlay}>
+      <Tooltip.Content ml="$spacing12" px="$none" py="$none">
         <Flex
           backgroundColor="$surface3"
           borderColor="$surface3"

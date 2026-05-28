@@ -1,10 +1,10 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react'
+import { PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import {
-  getPasswordStrength,
-  isPasswordStrongEnough,
   PasswordErrors,
   PasswordStrength,
+  getPasswordStrength,
+  isPasswordStrongEnough,
 } from 'wallet/src/utils/password'
 
 type CloudBackupPasswordFormContextType = {

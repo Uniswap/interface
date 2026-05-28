@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ComponentProps, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { SelectWalletsSkeleton } from 'src/app/components/loading/SelectWalletSkeleton'
@@ -8,18 +6,19 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { Flex, ScrollView, SpinningLoader, Square, Text, Tooltip, TouchableArea } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { openUri } from 'uniswap/src/utils/linking'
-import { useEvent } from 'utilities/src/react/hooks'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
+import { useAsyncData, useEvent } from 'utilities/src/react/hooks'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { useAnyAccountEligibleForDelegation } from 'wallet/src/features/smartWallet/hooks/useAnyAccountEligibleForDelegation'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.Element {
@@ -29,17 +28,19 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { generateAccountsAndImportAddresses, getGeneratedAddresses } = useOnboardingContext()
 
-  const { data: generatedAddresses } = useQuery(
-    queryWithoutCache({ queryFn: getGeneratedAddresses, queryKey: [ReactQueryCacheKey.GeneratedAddresses] }),
-  )
+  const { data: generatedAddresses } = useAsyncData(getGeneratedAddresses)
 
   const { importableAccounts, isLoading, showError, refetch } = useImportableAccounts(generatedAddresses)
+
+  const { eligible: isAnyAccountEligibleForDelegation, loading: isDelegationChecksLoading } =
+    useAnyAccountEligibleForDelegation(importableAccounts)
 
   const { selectedAddresses, toggleAddressSelection } = useSelectAccounts(importableAccounts)
 
   const smartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
 
-  const enableSubmit = showError || (selectedAddresses.length > 0 && !isLoading)
+  const enableSubmit =
+    (showError || (selectedAddresses.length > 0 && !isLoading)) && !(isDelegationChecksLoading && smartWalletEnabled)
 
   const onSubmit = useEvent(async () => {
     if (!enableSubmit) {
@@ -61,8 +62,8 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
   useSubmitOnEnter(showError ? refetch : onSubmit)
 
   const belowFrameContent = useMemo(
-    () => (smartWalletEnabled ? <SmartWalletTooltip /> : undefined),
-    [smartWalletEnabled],
+    () => (smartWalletEnabled && isAnyAccountEligibleForDelegation ? <SmartWalletTooltip /> : undefined),
+    [smartWalletEnabled, isAnyAccountEligibleForDelegation],
   )
 
   return (
@@ -95,7 +96,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
               <Text color="$statusCritical" textAlign="center" variant="buttonLabel2">
                 {t('onboarding.selectWallets.error')}
               </Text>
-            ) : isLoading ? (
+            ) : isDelegationChecksLoading ? (
               <Flex>
                 <SelectWalletsSkeleton repeat={3} />
               </Flex>
@@ -120,7 +121,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
   )
 }
 
-const onPressLearnMore = (uri: string): Promise<void> => openUri({ uri })
+const onPressLearnMore = (url: string): Promise<void> => openUri(url)
 
 function SmartWalletTooltip(): JSX.Element | undefined {
   const { t } = useTranslation()
@@ -132,7 +133,7 @@ function SmartWalletTooltip(): JSX.Element | undefined {
           <Trans components={{ highlight: triggerComponent }} i18nKey="account.wallet.select.smartWalletDisclaimer" />
         </Text>
       </Flex>
-      <Tooltip.Content animationDirection="top" pointerEvents="auto" zIndex={zIndexes.overlay}>
+      <Tooltip.Content animationDirection="top" pointerEvents="auto">
         <Tooltip.Arrow />
         <Flex>
           <Text variant="body4" color="$neutral2">

@@ -1,9 +1,8 @@
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { ExplorerAbiFetcher, Parser, ProxyAbiFetcher, Transaction, TransactionDescription } from 'no-yolo-signatures'
 import { useEffect, useMemo, useState } from 'react'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
-import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -25,19 +24,15 @@ export function useNoYoloParser(
 
     const explorerAbiFetcher = new ExplorerAbiFetcher(apiURL)
 
-    const rpcUrl = rpcUrls.default.http[0] || rpcUrls[RPCType.Public]?.http[0] || rpcUrls[RPCType.PublicAlt]?.http[0]
-    const provider = new InstrumentedJsonRpcProvider({
-      url: rpcUrl,
-      chainIdOrNetwork: chainId,
-      observer: getRpcObserver(),
-    })
+    const rpcUrl =
+      rpcUrls?.default?.http[0] || rpcUrls?.[RPCType.Public]?.http[0] || rpcUrls?.[RPCType.PublicAlt]?.http[0]
+    const provider = new JsonRpcProvider(rpcUrl)
 
     const proxyAbiFetcher = new ProxyAbiFetcher(provider, [explorerAbiFetcher])
 
     return new Parser({ abiFetchers: [proxyAbiFetcher, explorerAbiFetcher] })
   }, [chainId])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +value
   useEffect(() => {
     const parseResult = async (): Promise<TransactionDescription | undefined> => {
       // no-yolo-parser library expects these fields to be defined

@@ -1,7 +1,7 @@
 import { ComponentProps, ComponentType } from 'react'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
-type ModalComponent = ComponentType<any>
+type ModalComponent = React.LazyExoticComponent<ComponentType<any>>
 
 interface ModalConfig {
   component: ModalComponent

@@ -1,57 +1,28 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import ms from 'ms'
-import { DAI } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
-import type { Mock } from 'vitest'
-import {
-  getQuickPollingInterval,
   QUICK_POLL_INITIAL_INTERVAL,
   QUICK_POLL_INITIAL_PHASE,
   QUICK_POLL_MAX_INTERVAL,
   QUICK_POLL_MEDIUM_INTERVAL,
   QUICK_POLL_MEDIUM_PHASE,
+  getQuickPollingInterval,
   usePollPendingOrders,
-} from '~/state/activity/polling/orders'
-import * as hooks from '~/state/transactions/hooks'
-import { act, renderHook } from '~/test-utils/render'
+} from 'state/activity/polling/orders'
+import * as hooks from 'state/signatures/hooks'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { TransactionType } from 'state/transactions/types'
+import { act, renderHook } from 'test-utils/render'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 
-vi.mock('~/state/transactions/hooks', async () => {
-  const actual = await vi.importActual('~/state/transactions/hooks')
-  return {
-    ...actual,
-    usePendingUniswapXOrders: vi.fn(),
-  }
-})
+jest.mock('state/signatures/hooks', () => ({
+  ...jest.requireActual('state/signatures/hooks'),
+  usePendingOrders: jest.fn(),
+}))
 
-vi.mock('~/state/hooks', async () => {
-  const actual = await vi.importActual('~/state/hooks')
+jest.mock('hooks/useAccount', () => {
   return {
-    ...actual,
-    useAppDispatch: () => vi.fn(),
-  }
-})
-
-vi.mock('uniswap/src/features/transactions/slice', async () => {
-  const actual = await vi.importActual('uniswap/src/features/transactions/slice')
-  return {
-    ...actual,
-    updateTransaction: vi.fn((tx: any) => ({ type: 'transactions/updateTransaction', payload: tx })),
-  }
-})
-
-vi.mock('~/hooks/useAccount', async () => {
-  const actual = await vi.importActual('~/hooks/useAccount')
-  return {
-    ...actual,
+    ...jest.requireActual('hooks/useAccount'),
     useAccount: () => {
       return {
         address: '0x123',
@@ -64,22 +35,21 @@ vi.mock('~/hooks/useAccount', async () => {
 })
 
 const mockL1Order: UniswapXOrderDetails = {
-  routing: TradingApi.Routing.DUTCH_V2,
+  type: SignatureType.SIGN_UNISWAPX_ORDER,
   orderHash: '0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19',
-  status: TransactionStatus.Pending,
+  status: UniswapXOrderStatus.OPEN,
   id: '1',
   addedTime: 1686339087000, // from createdAt in openStatusResponse
-  chainId: UniverseChainId.Mainnet,
-  from: '0x80becb808bfade4143183e58d18f2080e84e57a1',
-  transactionOriginType: TransactionOriginType.Internal,
-  typeInfo: {
+  chainId: 1,
+  offerer: '0x80becb808bfade4143183e58d18f2080e84e57a1',
+  swapInfo: {
     isUniswapXOrder: true,
-    type: TransactionType.Swap,
+    type: TransactionType.SWAP,
     inputCurrencyAmountRaw: '100000000',
     expectedOutputCurrencyAmountRaw: '91371770080538616664',
     minimumOutputCurrencyAmountRaw: '90914911230135923580',
-    inputCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'),
-    outputCurrencyId: currencyId(DAI),
+    inputCurrencyId: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    outputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
     tradeType: TradeType.EXACT_INPUT,
   },
 }
@@ -91,18 +61,18 @@ const mockL2Order: UniswapXOrderDetails = {
 
 describe('getQuickPollingInterval', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    jest.useFakeTimers()
   })
 
   afterEach(() => {
-    vi.useRealTimers()
+    jest.useRealTimers()
   })
 
   it('returns initial interval (500ms) when order is less than 10s old', () => {
     const now = Date.now()
     const orderStartTime = now - ms('5s') // 5 seconds ago
 
-    vi.setSystemTime(now)
+    jest.setSystemTime(now)
 
     expect(getQuickPollingInterval(orderStartTime)).toBe(QUICK_POLL_INITIAL_INTERVAL)
   })
@@ -111,7 +81,7 @@ describe('getQuickPollingInterval', () => {
     const now = Date.now()
     const orderStartTime = now - ms('100s') // 100 seconds ago
 
-    vi.setSystemTime(now)
+    jest.setSystemTime(now)
 
     expect(getQuickPollingInterval(orderStartTime)).toBe(QUICK_POLL_MEDIUM_INTERVAL)
   })
@@ -120,14 +90,14 @@ describe('getQuickPollingInterval', () => {
     const now = Date.now()
     const orderStartTime = now - ms('300s') // 300 seconds ago
 
-    vi.setSystemTime(now)
+    jest.setSystemTime(now)
 
     expect(getQuickPollingInterval(orderStartTime)).toBe(QUICK_POLL_MAX_INTERVAL)
   })
 
   it('handles edge cases at phase boundaries', () => {
     const now = Date.now()
-    vi.setSystemTime(now)
+    jest.setSystemTime(now)
 
     // Test exactly at 10s (should return medium interval)
     expect(getQuickPollingInterval(now - QUICK_POLL_INITIAL_PHASE)).toBe(QUICK_POLL_MEDIUM_INTERVAL)
@@ -139,33 +109,33 @@ describe('getQuickPollingInterval', () => {
 
 describe('useStandardPolling', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
-    global.fetch = vi.fn() as unknown as typeof fetch
+    jest.useFakeTimers()
+    global.fetch = jest.fn()
   })
 
   afterEach(() => {
-    vi.useRealTimers()
-    vi.clearAllMocks()
+    jest.useRealTimers()
+    jest.clearAllMocks()
   })
 
   it('should not poll when no orders exist', () => {
-    const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
+    const onActivityUpdate = jest.fn()
+    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
     act(() => {
-      vi.advanceTimersByTime(5000)
+      jest.advanceTimersByTime(5000)
     })
 
     expect(global.fetch).not.toHaveBeenCalled()
   })
 
   it('should poll L1 orders with exponential backoff', async () => {
-    const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockL1Order])
-    const mockResponse = { orders: [{ orderHash: mockL1Order.orderHash, orderStatus: TradingApi.OrderStatus.OPEN }] }
-    ;(global.fetch as unknown as Mock).mockImplementation(() =>
+    const onActivityUpdate = jest.fn()
+    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockL1Order])
+    const mockResponse = { orders: [{ ...mockL1Order, orderStatus: UniswapXOrderStatus.OPEN }] }
+    ;(global.fetch as jest.Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockResponse),
       }),
@@ -175,41 +145,41 @@ describe('useStandardPolling', () => {
 
     // First poll at 2s
     await act(async () => {
-      vi.advanceTimersByTime(2000)
+      jest.advanceTimersByTime(2000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(1)
 
     // Second poll at 3s (2s * 1.5)
     await act(async () => {
-      vi.advanceTimersByTime(3000)
+      jest.advanceTimersByTime(3000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(2)
 
     // Third poll at 4.5s (3s * 1.5)
     await act(async () => {
-      vi.advanceTimersByTime(4500)
+      jest.advanceTimersByTime(4500)
     })
     expect(global.fetch).toHaveBeenCalledTimes(3)
 
     // Fourth poll at 6.75s (4.5s * 1.5)
     await act(async () => {
-      vi.advanceTimersByTime(6750)
+      jest.advanceTimersByTime(6750)
     })
     expect(global.fetch).toHaveBeenCalledTimes(4)
   })
 
   it('should stop polling when order is filled', async () => {
-    const onActivityUpdate = vi.fn()
+    const onActivityUpdate = jest.fn()
     const mockOrder = { ...mockL1Order }
 
     // Start with returning the open order
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockOrder])
-    ;(global.fetch as unknown as Mock)
+    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockOrder])
+    ;(global.fetch as jest.Mock)
       .mockImplementationOnce(() =>
         Promise.resolve({
           json: () =>
             Promise.resolve({
-              orders: [{ orderHash: mockOrder.orderHash, orderStatus: TradingApi.OrderStatus.OPEN }],
+              orders: [{ ...mockOrder, orderStatus: UniswapXOrderStatus.OPEN }],
             }),
         }),
       )
@@ -217,9 +187,7 @@ describe('useStandardPolling', () => {
         Promise.resolve({
           json: () =>
             Promise.resolve({
-              orders: [
-                { orderHash: mockOrder.orderHash, orderStatus: TradingApi.OrderStatus.FILLED, txHash: '0xfilled123' },
-              ],
+              orders: [{ ...mockOrder, orderStatus: UniswapXOrderStatus.FILLED }],
             }),
         }),
       )
@@ -228,30 +196,24 @@ describe('useStandardPolling', () => {
 
     // After the second poll returns FILLED, update the mock to return no pending orders
     setTimeout(() => {
-      vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
+      jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
     }, 3500)
-
-    // Mock the updateTransaction to avoid errors
-    vi.mocked(updateTransaction).mockImplementation((tx: any) => ({
-      type: 'transactions/updateTransaction',
-      payload: tx,
-    }))
 
     // First poll - order is open
     await act(async () => {
-      vi.advanceTimersByTime(2000)
+      jest.advanceTimersByTime(2000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(1)
 
     // Second poll - order becomes filled
     await act(async () => {
-      vi.advanceTimersByTime(3000)
+      jest.advanceTimersByTime(3000)
     })
     expect(global.fetch).toHaveBeenCalledTimes(2)
 
     // Verify no more polling occurs
     await act(async () => {
-      vi.advanceTimersByTime(4500)
+      jest.advanceTimersByTime(4500)
     })
     expect(global.fetch).toHaveBeenCalledTimes(2)
   })
@@ -259,42 +221,42 @@ describe('useStandardPolling', () => {
 
 describe('useQuickPolling', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
-    global.fetch = vi.fn() as unknown as typeof fetch
+    jest.useFakeTimers()
+    global.fetch = jest.fn()
   })
 
   afterEach(() => {
-    vi.useRealTimers()
-    vi.clearAllMocks()
+    jest.useRealTimers()
+    jest.clearAllMocks()
   })
 
   it('should not poll when no orders exist', () => {
-    const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
+    const onActivityUpdate = jest.fn()
+    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
     act(() => {
-      vi.advanceTimersByTime(5000)
+      jest.advanceTimersByTime(5000)
     })
 
     expect(global.fetch).not.toHaveBeenCalled()
   })
 
   it('should poll L2 orders with quick polling intervals', async () => {
-    const onActivityUpdate = vi.fn()
+    const onActivityUpdate = jest.fn()
     const now = Date.now()
-    vi.setSystemTime(now)
+    jest.setSystemTime(now)
 
     const recentOrder = {
       ...mockL2Order,
       addedTime: now,
     }
 
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([recentOrder])
-    ;(global.fetch as unknown as Mock).mockImplementation(() =>
+    jest.spyOn(hooks, 'usePendingOrders').mockReturnValue([recentOrder])
+    ;(global.fetch as jest.Mock).mockImplementation(() =>
       Promise.resolve({
-        json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: TradingApi.OrderStatus.OPEN }] }),
+        json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: 'open' }] }),
       }),
     )
 
@@ -303,7 +265,7 @@ describe('useQuickPolling', () => {
     // Poll every 500ms for first 10 seconds
     for (let i = 0; i < 20; i++) {
       await act(async () => {
-        vi.advanceTimersByTime(500)
+        jest.advanceTimersByTime(500)
       })
       expect(global.fetch).toHaveBeenCalledTimes(i + 1)
     }
@@ -311,7 +273,7 @@ describe('useQuickPolling', () => {
     // After 10 seconds, poll every 2 seconds up to 200 seconds
     for (let i = 0; i < 95; i++) {
       await act(async () => {
-        vi.advanceTimersByTime(2000)
+        jest.advanceTimersByTime(2000)
       })
       expect(global.fetch).toHaveBeenCalledTimes(20 + i + 1)
     }
@@ -319,7 +281,7 @@ describe('useQuickPolling', () => {
     // After 200 seconds, poll every 30 seconds
     for (let i = 0; i < 6; i++) {
       await act(async () => {
-        vi.advanceTimersByTime(30000)
+        jest.advanceTimersByTime(30000)
       })
       expect(global.fetch).toHaveBeenCalledTimes(115 + i + 1)
     }

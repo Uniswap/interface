@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, type FlexProps, Loader, ModalCloseIcon, Text, useMedia } from 'ui/src'
+import { Flex, Loader, ModalCloseIcon, Text, isWeb, useMedia, type FlexProps } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -10,16 +10,17 @@ import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/u
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/utils/getTradeAmounts'
+import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebPlatform } from 'utilities/src/platform'
 
 const SHORT_GAP: FlexProps['$short'] = { gap: '$spacing8' }
 
@@ -40,14 +41,15 @@ export function TransactionAmountsReview({
     trade: { trade, indicativeTrade },
   } = acceptedDerivedSwapInfo
   const displayTrade = trade ?? indicativeTrade
-  const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo)
+  const isBridgeTrade = (trade && isBridge(trade)) ?? false
+
+  const priceUXEnabled = usePriceUXEnabled()
+  const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo, priceUXEnabled)
 
   // This should never happen. It's just to keep TS happy.
   if (!inputCurrencyAmount || !outputCurrencyAmount) {
     throw new Error('Missing required `currencyAmount` to render `TransactionAmountsReview`')
   }
-
-  const isCrossChainSwap = inputCurrencyAmount.currency.chainId !== outputCurrencyAmount.currency.chainId
 
   const formattedTokenAmountIn = useMemo(
     () =>
@@ -118,7 +120,7 @@ export function TransactionAmountsReview({
             {t('swap.review.summary')}
           </Text>
         </Flex>
-        {isWebPlatform && (
+        {isWeb && (
           <Flex row centered gap="$spacing12">
             <ModalCloseIcon size="$icon.20" onClose={onClose} />
           </Flex>
@@ -134,7 +136,7 @@ export function TransactionAmountsReview({
           formattedTokenAmount={formattedTokenAmountIn}
           indicative={isInputIndicative}
           shouldDim={shouldDimInput}
-          isCrossChainSwap={isCrossChainSwap}
+          isBridgeTrade={isBridgeTrade}
         />
       )}
 
@@ -149,7 +151,7 @@ export function TransactionAmountsReview({
           formattedTokenAmount={formattedTokenAmountOut}
           indicative={isOutputIndicative}
           shouldDim={shouldDimOutput}
-          isCrossChainSwap={isCrossChainSwap}
+          isBridgeTrade={isBridgeTrade}
         />
       )}
     </Flex>
@@ -166,14 +168,14 @@ function CurrencyValueWithIcon({
   formattedTokenAmount,
   shouldDim,
   indicative,
-  isCrossChainSwap,
+  isBridgeTrade,
 }: {
   currencyInfo: CurrencyInfo
   formattedFiatAmount: string
   formattedTokenAmount: string
   shouldDim: boolean
   indicative: boolean
-  isCrossChainSwap: boolean
+  isBridgeTrade: boolean
 }): JSX.Element {
   const { defaultChainId } = useEnabledChains()
   const amountColor = indicative ? '$neutral2' : shouldDim ? '$neutral3' : '$neutral1'
@@ -194,7 +196,7 @@ function CurrencyValueWithIcon({
   return (
     <Flex centered grow row>
       <Flex grow gap="$spacing4">
-        {isCrossChainSwap && (
+        {isBridgeTrade && (
           <Flex row mt={media.sm ? '$spacing8' : undefined} gap="$spacing4" alignItems="center">
             <NetworkLogo chainId={currencyInfo.currency.chainId} size={iconSizes.icon16} />
             <Text color={networkColor} variant="buttonLabel3">

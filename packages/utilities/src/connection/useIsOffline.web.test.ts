@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline.web'
 
 describe('useIsOffline web hook', () => {

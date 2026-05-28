@@ -13,35 +13,24 @@ import * as fiatCurrencyHooks from 'uniswap/src/features/fiatCurrency/hooks'
 import * as languageHooks from 'uniswap/src/features/language/hooks'
 import * as userSettingsHooks from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // `any` is the actual type used by `jest.spyOn`
-// eslint-disable-next-line max-params
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mockFn(module: any, func: string, returnValue: any): jest.SpyInstance<any, unknown[]> {
   return jest.spyOn(module, func).mockImplementation(() => returnValue)
 }
 
-jest.mock('@tanstack/react-query', () => ({
-  ...jest.requireActual('@tanstack/react-query'),
-  useQuery: jest.fn().mockReturnValue({ data: undefined }),
-}))
-jest.mock('@universe/api', () => ({
-  ...jest.requireActual('@universe/api'),
-  provideUniswapIdentifierService: {},
-}))
-jest.mock('@universe/sessions', () => ({
-  uniswapIdentifierQuery: jest.fn().mockReturnValue({}),
-}))
 jest.mock('react-native/Libraries/Utilities/useColorScheme')
 jest.mock('wallet/src/features/gating/userPropertyHooks')
 jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
   return {
     Keyring: {
       getMnemonicIds: (): Promise<string[]> => Promise.resolve([]),
-      getAddressesForStoredPrivateKeys: (): Promise<string[]> => Promise.resolve([]),
     },
   }
 })
@@ -160,7 +149,7 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Language, 'English', undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Currency, 'USD', undefined)
 
-    expect(mocked).toHaveBeenCalledTimes(22)
+    expect(mocked).toHaveBeenCalledTimes(21)
   })
 
   it('sets user properties without active account', async () => {
@@ -200,6 +189,6 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppOpenAuthMethod, AuthMethod.None, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TransactionAuthMethod, AuthMethod.None, undefined)
 
-    expect(mocked).toHaveBeenCalledTimes(15)
+    expect(mocked).toHaveBeenCalledTimes(14)
   })
 })

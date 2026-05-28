@@ -1,62 +1,63 @@
 /* eslint-disable max-lines */
-import { type ApolloError } from '@apollo/client'
-import { type PartialMessage } from '@bufbuild/protobuf'
-import { type TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
-import { type SerializedError } from '@reduxjs/toolkit'
-import { type FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { type SharedEventName } from '@uniswap/analytics-events'
-import { type ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ApolloError } from '@apollo/client'
+import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
+import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import {
-  type CreateLPPositionRequest,
-  type IncreaseLPPositionRequest,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
-import { type Currency, type TradeType } from '@uniswap/sdk-core'
-import { type TradingApi, type UnitagClaimContext } from '@universe/api'
-import { type Experiments } from '@universe/gating'
+  AppDownloadPlatform,
+  FeePoolSelectAction,
+  InterfaceEventName,
+  InterfacePageName,
+  LiquidityEventName,
+  MoonpayEventName,
+  NFTEventName,
+  NFTFilterTypes,
+  NavBarSearchTypes,
+  SharedEventName,
+  SwapEventName,
+  SwapPriceImpactUserResponse,
+  SwapPriceUpdateUserResponse,
+  WalletConnectionResult,
+} from '@uniswap/analytics-events'
+import { Protocol } from '@uniswap/router-sdk'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { type OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { type UniverseChainId } from 'uniswap/src/features/chains/types'
-import { type EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { type FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { type Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
-  type AuctionEventName,
-  type ExtensionEventName,
-  type FiatOffRampEventName,
-  type FiatOnRampEventName,
-  type InterfaceEventName,
-  type InterfacePageName,
-  type LiquidityEventName,
-  type MobileAppsFlyerEvents,
-  type MobileEventName,
-  type SessionsEventName,
-  type SwapBlockedCategory,
-  type SwapEventName,
-  type UniswapEventName,
-  type UnitagEventName,
-  type WalletEventName,
+  CreateLPPositionRequest,
+  IncreaseLPPositionRequest,
+  TransactionFailureReason,
+} from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import {
+  ExtensionEventName,
+  FiatOffRampEventName,
+  FiatOnRampEventName,
+  InstitutionTransferEventName,
+  InterfaceEventNameLocal,
+  MobileAppsFlyerEvents,
+  MobileEventName,
+  UniswapEventName,
+  UnitagEventName,
+  WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
-import { type TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
-import { type TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { type WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { type CurrencyField } from 'uniswap/src/types/currency'
-import { type LimitsExpiry } from 'uniswap/src/types/limits'
-import { type ImportType } from 'uniswap/src/types/onboarding'
-import { type RenderPassReport } from 'uniswap/src/types/RenderPassReport'
-import { type ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
-import { type SwapTab } from 'uniswap/src/types/screens/interface'
-import { type OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { type ShareableEntity } from 'uniswap/src/types/sharing'
-import { type UwULinkMethod, type WCEventType, type WCRequestOutcome } from 'uniswap/src/types/walletConnect'
-import { type WidgetEvent, type WidgetType } from 'uniswap/src/types/widgets'
-import { type ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
-
-export enum ExtensionUninstallFeedbackOptions {
-  SwitchingWallet = 'switching-wallet',
-  MissingFeatures = 'missing-features',
-  NotUsingCrypto = 'not-using-crypto',
-  Other = 'other',
-}
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
+import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { LimitsExpiry } from 'uniswap/src/types/limits'
+import { ImportType } from 'uniswap/src/types/onboarding'
+import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { ShareableEntity } from 'uniswap/src/types/sharing'
+import { UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
+import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export type GasEstimateAccuracyProperties = {
   tx_hash?: string
@@ -134,7 +135,6 @@ type OnboardingCompletedProps = {
 }
 
 export type SwapRouting =
-  | 'jupiter'
   | 'classic'
   | 'uniswap_x'
   | 'uniswap_x_v2'
@@ -187,7 +187,7 @@ export type SwapTradeBaseProperties = {
   // Legacy props only used on web. We might be able to delete these after we delete the old swap flow.
   method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
   offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority' | 'Dutch_V3'
-  simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
+  simulation_failure_reasons?: TransactionFailureReason[]
   tokenWarnings?: {
     input: TokenProtectionWarning
     output: TokenProtectionWarning
@@ -195,13 +195,6 @@ export type SwapTradeBaseProperties = {
   is_batch?: boolean
   batch_id?: string
   included_permit_transaction_step?: boolean
-  includes_delegation?: boolean
-  is_smart_wallet_transaction?: boolean
-  // Chained actions context
-  plan_id?: string
-  step_index?: number
-  is_final_step?: boolean
-  swap_start_timestamp?: number
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -213,7 +206,6 @@ type BaseSwapTransactionResultProperties = {
   chain_id: number
   chain_id_in?: number
   chain_id_out?: number
-  id: string
   hash: string
   batch_id?: string
   added_time?: number
@@ -228,23 +220,9 @@ type BaseSwapTransactionResultProperties = {
   route?: string
   quoteId?: string
   submitViaPrivateRpc?: boolean
-  /** For Uniswap data sources, this should be of type Protocol from @uniswap/router-sdk. For other sources like Jupiter, this could be unknown values from their orderResponse.router field.*/
-  protocol?: string
+  protocol?: Protocol
   transactedUSDValue?: number
-  simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
-  includes_delegation?: SwapTradeBaseProperties['includes_delegation']
-  is_smart_wallet_transaction?: SwapTradeBaseProperties['is_smart_wallet_transaction']
-  is_final_step?: boolean
-  swap_start_timestamp?: number
-
-  // Chained action analytics properties
-  plan_id?: string
-  step_index?: number
-  /** Total number of steps in the plan, including error steps that were later retried and a new step was added to the plan */
-  total_steps?: number
-  /** Total number of non-error steps in the plan, excluding error/retry steps*/
-  total_non_error_steps?: number
-  step_type?: string
+  simulation_failure_reasons?: TransactionFailureReason[]
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -259,15 +237,11 @@ type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultPropert
 
 type FailedClassicSwapResultProperties = Omit<ClassicSwapTransactionResultProperties, 'hash'> & {
   hash: string | undefined
-  error_message?: string
-  error_code?: number
 }
 
 type FailedBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {
   hash: string | undefined
 }
-
-type CancelledUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
 type CancelledClassicSwapResultProperties = ClassicSwapTransactionResultProperties & {
   replaced_transaction_hash: string | undefined
@@ -285,27 +259,6 @@ type TransferProperties = {
   amountUSD?: number
 }
 
-/** Known navbar search result types */
-export enum NavBarSearchTypes {
-  CollectionSuggestion = 'collection-suggestion',
-  CollectionTrending = 'collection-trending',
-  RecentSearch = 'recent',
-  TokenSuggestion = 'token-suggestion',
-  TokenTrending = 'token-trending',
-  PoolSuggestion = 'pool-suggestion',
-  PoolTrending = 'pool-trending',
-}
-
-export enum WalletConnectionResult {
-  Failed = 'Failed',
-  Succeeded = 'Succeeded',
-}
-
-export enum AppDownloadPlatform {
-  Android = 'android',
-  Ios = 'ios',
-}
-
 export type WindowEthereumRequestProperties = {
   method: string
   dappUrl: string
@@ -317,16 +270,6 @@ export type DappContextProperties = {
   chainId?: UniverseChainId
   activeConnectedAddress?: Address
   connectedAddresses: Address[]
-}
-
-export enum SwapPriceImpactUserResponse {
-  ACCEPTED = 'Accepted',
-  REJECTED = 'Rejected',
-}
-
-export enum SwapPriceUpdateUserResponse {
-  ACCEPTED = 'Accepted',
-  REJECTED = 'Rejected',
 }
 
 export type SwapPriceUpdateActionProperties = {
@@ -341,20 +284,14 @@ export type SwapPriceImpactActionProperties = {
   response: SwapPriceImpactUserResponse
 }
 
-type InterfaceSearchResultSelectionProperties = {
+export type InterfaceSearchResultSelectionProperties = {
   suggestion_type: NavBarSearchTypes
   query_text: string
   position?: number
-  sectionPosition?: number
   selected_search_result_name?: string
   selected_search_result_address?: string
   total_suggestions?: number
   chainId?: UniverseChainId
-
-  // Pool specific properties
-  protocol_version?: string
-  fee_tier?: number
-  hook_address?: string
 } & ITraceContext
 
 type WrapProperties = {
@@ -370,16 +307,14 @@ type WrapProperties = {
   transaction_hash?: string
 }
 
-export enum LiquiditySource {
-  Sushiswap = 'Sushiswap',
-  V2 = 'V2',
-  V3 = 'V3',
+type NFTBagProperties = {
+  collection_addresses: (string | undefined)[]
+  token_ids: (string | undefined)[]
 }
 
-export enum FeePoolSelectAction {
-  Manual = 'Manual',
-  Recommended = 'Recommended',
-  Search = 'Search',
+type InterfaceTokenSelectedProperties = {
+  is_imported_by_user: boolean
+  token_balance_usd?: number | string
 }
 
 export enum DappRequestAction {
@@ -387,20 +322,21 @@ export enum DappRequestAction {
   Reject = 'Reject',
 }
 
-export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName
+export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName
 
 export enum OnboardingCardLoggingName {
   FundWallet = 'fund_wallet',
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
   EnablePushNotifications = 'enable_push_notifications',
-  NoAppFeesAnnouncement = 'no_app_fees_announcement',
-
-  Unknown = 'unknown',
 }
 
 export enum DappRequestCardLoggingName {
   BridgingBanner = 'dapp_request_bridging_banner',
+}
+
+export enum ConnectionCardLoggingName {
+  ConnectionBanner = 'connections_removed_banner',
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
@@ -453,26 +389,6 @@ export type FORWidgetOpenedProperties = ITraceContext & {
   chainId?: number
   currencyAmount?: number
   amountUSD?: number
-  paymentMethodFilter?: string
-}
-
-export type FORPaymentMethodFilterSelectedProperties = ITraceContext & {
-  paymentMethodFilter: string
-}
-
-export type WalletConnectedProperties = {
-  result: WalletConnectionResult
-  wallet_name?: string // evm
-  wallet_type?: string // evm
-  wallet_name_svm?: string
-  wallet_type_svm?: string
-  wallet_address?: string // evm
-  wallet_address_svm?: string
-  is_reconnect?: boolean
-  peer_wallet_agent?: string
-  page?: InterfacePageName
-  error?: string
-  connected_VM?: 'EVM' | 'SVM' | 'EVM+SVM' | undefined
 }
 
 type DappRequestCardEventProperties = ITraceContext & {
@@ -487,12 +403,7 @@ type OnboardingCardEventProperties = ITraceContext & {
 export type LiquidityAnalyticsProperties = ITraceContext & {
   label: string
   type: string
-  protocol_version: ProtocolVersion
   fee_tier: number
-  tick_spacing: number | undefined
-  tick_lower: number | undefined
-  tick_upper: number | undefined
-  hook: string | undefined
   pool_address?: string // represents pool contract address for v2&v3, and poolId for v4
   chain_id?: UniverseChainId
   baseCurrencyId: string
@@ -505,100 +416,10 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   currencyInfo1Decimals: number
 }
 
-export type AuctionWithdrawAnalyticsProperties = ITraceContext & {
-  transaction_hash: string
-  chain_id: number
-  auction_contract_address: string
-
-  // Auction tokens claimed (what user receives)
-  auction_token_address?: string
-  auction_token_symbol?: string
-  auction_token_amount_raw?: string
-  auction_token_amount_usd?: number
-
-  // Bid tokens refunded (original bid returned)
-  bid_token_address?: string
-  bid_token_symbol?: string
-  bid_token_amount_raw?: string
-  bid_token_amount_usd?: number
-
-  // Original bid budget (full initial budget amount)
-  budget_token_amount_raw?: string
-  budget_token_amount_usd?: number
-
-  // Max FDV from original bid
-  max_fdv_usd?: number
-
-  // Expected output
-  expected_receive_amount?: number
-
-  // Auction status
-  is_graduated: boolean
-  is_auction_completed: boolean
-}
-
-export type AuctionBidAnalyticsProperties = ITraceContext & {
-  transaction_hash: string
-  chain_id: number
-  auction_contract_address: string
-
-  // Bid parameters
-  bid_token_address: string
-  bid_token_amount_raw: string
-  bid_token_amount_usd?: number
-  max_price_q96: string
-  max_fdv_usd?: number
-  price_per_token?: number
-
-  // Expected output
-  min_expected_receive_amount?: number
-  max_receivable_amount?: number
-
-  // Token info
-  token_symbol?: string
-  token_name?: string
-}
-
-export type AuctionBidInputtedAnalyticsProperties = ITraceContext & {
-  chain_id: number
-  auction_contract_address: string
-  bid_token_address: string
-
-  // Budget (max amount user will spend)
-  bid_token_amount_raw: string
-  bid_token_amount_usd?: number
-
-  // Max Valuation (FDV limit)
-  max_price_q96: string
-  max_fdv_usd?: number
-  price_per_token?: number
-
-  // Expected Output (what user expects to receive)
-  expected_receive_amount?: number
-  min_expected_receive_amount?: number
-  max_receivable_amount?: number
-
-  // Token info
-  token_symbol?: string
-}
-
-export type NotificationToggleLoggingType = 'settings_general_updates_enabled' | 'wallet_activity'
-
-type TokenReportProperties = {
-  is_marked_spam?: Maybe<boolean>
-  token_name?: string
-  token_contract_address?: string
-  chain_id: UniverseChainId
-  text?: string
-}
-
-type PoolReportProperties = {
-  pool_id: string
-  version: ProtocolVersion
-  chain_id: UniverseChainId
-  token0: string
-  token1: string
-}
+export type NotificationToggleLoggingType =
+  | 'settings_general_updates_enabled'
+  | 'settings_price_alerts_enabled'
+  | 'wallet_activity'
 
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
@@ -624,7 +445,6 @@ export type UniverseEventProperties = {
     previousChainId?: number
     newChainId: number
   }
-  [ExtensionEventName.SidebarConnect]: Pick<DappContextProperties, 'dappUrl'>
   [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
   [FiatOffRampEventName.FORBuySellToggled]: ITraceContext & {
@@ -635,52 +455,44 @@ export type UniverseEventProperties = {
   [FiatOffRampEventName.FiatOffRampUnsupportedTokenBack]: FORUnsupportedTokenSelectedProperties
   [FiatOffRampEventName.FiatOffRampUnsupportedTokenSwap]: FORUnsupportedTokenSelectedProperties
   [FiatOffRampEventName.FiatOffRampWidgetOpened]: FORWidgetOpenedProperties
-  [FiatOffRampEventName.FiatOffRampPaymentMethodFilterSelected]: FORPaymentMethodFilterSelectedProperties
   [FiatOffRampEventName.FiatOffRampWidgetCompleted]: OfframpSendTransactionProperties
   [FiatOffRampEventName.FiatOffRampFundsSent]: OfframpSendTransactionProperties
   [FiatOnRampEventName.FiatOnRampAmountEntered]: FORAmountEnteredProperties
   [FiatOnRampEventName.FiatOnRampTokenSelected]: FORTokenSelectedProperties
   [FiatOnRampEventName.FiatOnRampTransactionUpdated]: FORTransactionUpdatedProperties
   [FiatOnRampEventName.FiatOnRampWidgetOpened]: FORWidgetOpenedProperties
-  [FiatOnRampEventName.FiatOnRampPaymentMethodFilterSelected]: FORPaymentMethodFilterSelectedProperties
-  [FiatOnRampEventName.FiatOnRampTransferWidgetOpened]: ITraceContext & {
+  [InstitutionTransferEventName.InstitutionTransferTransactionUpdated]: {
+    status: string
     externalTransactionId: string
     serviceProvider: string
   }
-  [InterfaceEventName.WalletConnected]: WalletConnectedProperties
-  [InterfaceEventName.ApproveTokenTxnSubmitted]: {
+  [InstitutionTransferEventName.InstitutionTransferWidgetOpened]: ITraceContext & {
+    externalTransactionId: string
+    serviceProvider: string
+  }
+  [InterfaceEventName.WALLET_CONNECTED]: {
+    result: WalletConnectionResult
+    wallet_name: string
+    wallet_type: string
+    wallet_address?: string
+    is_reconnect?: boolean
+    peer_wallet_agent?: string
+    page?: InterfacePageName
+    error?: string
+  }
+  [InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED]: {
     chain_id: number
     token_address: string
     token_symbol?: string
   }
-  [InterfaceEventName.FiatOnrampWidgetOpened]: undefined
-  [InterfaceEventName.UniswapWalletConnectModalOpened]: undefined
-  [InterfaceEventName.ExternalLinkClicked]: {
+  [InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED]: undefined
+  [InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED]: undefined
+  [InterfaceEventName.EXTERNAL_LINK_CLICK]: {
     label: string
   }
-  [InterfaceEventName.NavbarResultSelected]: InterfaceSearchResultSelectionProperties
-  [InterfaceEventName.NotificationDismissed]: {
-    notification_id: string
-    notification_type: string
-  }
-  [InterfaceEventName.NotificationInteracted]: {
-    notification_id: string
-    notification_type: string
-    action: string
-  }
-  [InterfaceEventName.NotificationReceived]: {
-    notification_id: string
-    notification_type: string
-    source: string
-    timestamp: number
-  }
-  [InterfaceEventName.NotificationShown]: {
-    notification_id: string
-    notification_type: string
-    timestamp: number
-  }
-  [InterfaceEventName.AccountDropdownButtonClicked]: undefined
-  [InterfaceEventName.WalletProviderUsed]: {
+  [InterfaceEventName.NAVBAR_RESULT_SELECTED]: InterfaceSearchResultSelectionProperties
+  [InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED]: undefined
+  [InterfaceEventName.WALLET_PROVIDER_USED]: {
     source: string
     contract: {
       name: string
@@ -689,99 +501,82 @@ export type UniverseEventProperties = {
       chainId?: number
     }
   }
-  [InterfaceEventName.WrapTokenTxnInvalidated]: WrapProperties
-  [InterfaceEventName.WrapTokenTxnSubmitted]: WrapProperties
-  [InterfaceEventName.UniswapWalletMicrositeOpened]: ITraceContext
-  [InterfaceEventName.UniswapWalletAppDownloadOpened]: ITraceContext & {
+  [InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED]: WrapProperties
+  [InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED]: WrapProperties
+  [InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED]: ITraceContext
+  [InterfaceEventName.UNISWAP_WALLET_APP_DOWNLOAD_OPENED]: ITraceContext & {
     appPlatform?: AppDownloadPlatform
   }
-  [InterfaceEventName.MiniPortfolioToggled]: {
+  [InterfaceEventName.MINI_PORTFOLIO_TOGGLED]: {
     type: 'open' | 'close'
   }
-  [InterfaceEventName.ConnectWalletButtonClicked]: {
+  [InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED]: {
     received_swap_quote?: boolean
   }
-  [InterfaceEventName.WalletSelected]: {
+  [InterfaceEventName.WALLET_SELECTED]: {
     wallet_name: string
     wallet_type: string
   }
-  [InterfaceEventName.PortfolioMenuOpened]: { name: string } | { name: string; platform: Platform }
-  [InterfaceEventName.UniswapXOrderDetailsSheetOpened]: {
+  [InterfaceEventNameLocal.PortfolioMenuOpened]: { name: string }
+  [InterfaceEventNameLocal.UniswapXOrderDetailsSheetOpened]: {
     order: string
   }
-  [InterfaceEventName.UniswapXOrderCancelInitiated]: {
+  [InterfaceEventNameLocal.UniswapXOrderCancelInitiated]: {
     orders: string[]
   }
-  [InterfaceEventName.LimitPresetRateSelected]: {
+  [InterfaceEventNameLocal.LimitPresetRateSelected]: {
     value: number
   }
-  [InterfaceEventName.LimitPriceReversed]: undefined
-  [InterfaceEventName.LimitExpirySelected]: {
+  [InterfaceEventNameLocal.LimitPriceReversed]: undefined
+  [InterfaceEventNameLocal.LimitExpirySelected]: {
     value: LimitsExpiry
   }
-  [InterfaceEventName.SwapConfirmedOnClient]: {
-    /** @deprecated Use `success` instead. This property name is misleading as the event fires for all transaction types. */
-    swap_success: boolean
-    /** Whether the transaction succeeded on-chain */
-    success: boolean
-    time: number
-    chainId?: number
-    txHash: string
-    transactionType?: TransactionType
-    routing?: SwapRouting
-  }
-  [InterfaceEventName.SwapTabClicked]: {
+  [InterfaceEventNameLocal.SwapTabClicked]: {
     tab: SwapTab
   }
-  [InterfaceEventName.LocalCurrencySelected]: {
+  [InterfaceEventNameLocal.LocalCurrencySelected]: {
     previous_local_currency: FiatCurrency
     new_local_currency: FiatCurrency
   }
-  [InterfaceEventName.NoQuoteReceivedFromQuickrouteAPI]: {
+  [InterfaceEventNameLocal.NoQuoteReceivedFromQuickrouteAPI]: {
     requestBody: unknown
     response: unknown
   }
-  [InterfaceEventName.NoQuoteReceivedFromRoutingAPI]: {
+  [InterfaceEventNameLocal.NoQuoteReceivedFromRoutingAPI]: {
     requestBody: unknown
     response: unknown
     routerPreference: 'price' | 'uniswapx' | 'api'
   }
-  [InterfaceEventName.UniswapXSignatureDeadlineExpired]: {
+  [InterfaceEventNameLocal.UniswapXSignatureDeadlineExpired]: {
     deadline: number
     resultTime: number
   }
-  [InterfaceEventName.UniswapXSignatureRequested]: Record<string, unknown> // TODO specific type
-  [InterfaceEventName.UniswapXOrderPostError]: Record<string, unknown> // TODO specific type
-  [InterfaceEventName.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
-  [InterfaceEventName.CreatePositionFailed]: {
+  [InterfaceEventNameLocal.UniswapXSignatureRequested]: Record<string, unknown> // TODO specific type
+  [InterfaceEventNameLocal.UniswapXOrderPostError]: Record<string, unknown> // TODO specific type
+  [InterfaceEventNameLocal.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
+  [InterfaceEventNameLocal.CreatePositionFailed]: {
     message: string
-  } & PartialMessage<CreateLPPositionRequest>
-  [InterfaceEventName.IncreaseLiquidityFailed]: {
+  } & CreateLPPositionRequest
+  [InterfaceEventNameLocal.IncreaseLiquidityFailed]: {
     message: string
-  } & PartialMessage<IncreaseLPPositionRequest>
-  [InterfaceEventName.DecreaseLiquidityFailed]: {
-    message: string
-  }
-  [InterfaceEventName.MigrateLiquidityFailed]: {
+  } & IncreaseLPPositionRequest
+  [InterfaceEventNameLocal.DecreaseLiquidityFailed]: {
     message: string
   }
-  [InterfaceEventName.CollectLiquidityFailed]: {
+  [InterfaceEventNameLocal.MigrateLiquidityFailed]: {
     message: string
   }
-  [InterfaceEventName.OnChainAddLiquidityFailed]: {
+  [InterfaceEventNameLocal.CollectLiquidityFailed]: {
     message: string
-  } & (PartialMessage<CreateLPPositionRequest> | PartialMessage<IncreaseLPPositionRequest>)
-  [InterfaceEventName.EmbeddedWalletCreated]: undefined
-  [InterfaceEventName.ExtensionUninstallFeedback]: {
-    reason: ExtensionUninstallFeedbackOptions
   }
-  [InterfaceEventName.NavbarSearchExited]: {
+  [InterfaceEventNameLocal.EmbeddedWalletCreated]: undefined
+  [InterfaceEventName.NAVBAR_SEARCH_EXITED]: {
     navbar_search_input_text: string
     hasInput: boolean
   } & ITraceContext
-  [InterfaceEventName.ChainChanged]:
+  [InterfaceEventName.CHAIN_CHANGED]:
     | {
-        result: WalletConnectionResult.Succeeded
+        result: WalletConnectionResult.SUCCEEDED
         wallet_address?: string
         wallet_type: string
         chain_id?: number
@@ -790,78 +585,59 @@ export type UniverseEventProperties = {
       }
     | {
         chain: string
-        page: InterfacePageName.ExplorePage
+        page: InterfacePageName.EXPLORE_PAGE
       }
-  [InterfaceEventName.ExploreSearchSelected]: undefined
-  [InterfaceEventName.ExploreQueryLatency]: {
-    query_type: 'tokens' | 'pools'
-    is_backend_sorting_enabled: boolean
-    latency_ms: number
-    chain_id?: number
-    result_count?: number
-  }
-  [InterfaceEventName.LanguageSelected]: {
+  [InterfaceEventName.EXPLORE_SEARCH_SELECTED]: undefined
+  [InterfaceEventName.LANGUAGE_SELECTED]: {
     previous_language: string
     new_language: string
   }
-  [InterfaceEventName.NavbarSearchSelected]: ITraceContext
-  [InterfaceEventName.SendInitiated]: {
+  [InterfaceEventName.NAVBAR_SEARCH_SELECTED]: ITraceContext
+  [InterfaceEventName.SEND_INITIATED]: {
     currencyId: string
     amount: string
     recipient: string
   }
-  [InterfaceEventName.TokenSelectorOpened]: undefined
-  [InterfaceEventName.LimitedWalletSupportToastDismissed]: {
+  [InterfaceEventName.TOKEN_SELECTOR_OPENED]: undefined
+  [InterfaceEventNameLocal.LimitedWalletSupportToastDismissed]: {
     chainId?: number
   }
-  [InterfaceEventName.LimitedWalletSupportToastShown]: {
+  [InterfaceEventNameLocal.LimitedWalletSupportToastShown]: {
     chainId?: number
   }
-  [InterfaceEventName.LimitedWalletSupportToastLearnMoreButtonClicked]: {
+  [InterfaceEventNameLocal.LimitedWalletSupportToastLearnMoreButtonClicked]: {
     chainId?: number
   }
-  [InterfaceEventName.WalletCapabilitiesDetected]: {
+  [InterfaceEventNameLocal.WalletCapabilitiesDetected]: {
     chainId: number
     capabilities: {
       [capability: string]: string | boolean
     }
   }
-  [LiquidityEventName.CollectLiquiditySubmitted]: LiquidityAnalyticsProperties
-  [LiquidityEventName.SelectLiquidityPoolFeeTier]: {
+  [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: LiquidityAnalyticsProperties
+  [LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER]: {
     action: FeePoolSelectAction
     fee_tier: number
     is_new_fee_tier?: boolean
   } & ITraceContext
-  [LiquidityEventName.MigrateLiquiditySubmitted]: {
+  [LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED]: {
     action: string
   } & LiquidityAnalyticsProperties
-  [LiquidityEventName.AddLiquiditySubmitted]: {
+  [LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]: {
     createPool?: boolean
     createPosition?: boolean
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
-    price_discrepancy?: string
   } & LiquidityAnalyticsProperties
-  [LiquidityEventName.RemoveLiquiditySubmitted]: {
+  [LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]: {
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
     closePosition?: boolean
   } & LiquidityAnalyticsProperties
-  [LiquidityEventName.TransactionModifiedInWallet]: {
+  [LiquidityEventName.TRANSACTION_MODIFIED_IN_WALLET]: {
     expected?: string
     actual: string
   } & LiquidityAnalyticsProperties
-  [LiquidityEventName.PriceDiscrepancyChecked]: {
-    event_name: LiquidityEventName
-    status: number
-    price_discrepancy: string
-    absolute_price_discrepancy: number
-    sqrt_ratio_x96_before: string
-    sqrt_ratio_x96_after: string
-  } & LiquidityAnalyticsProperties
-  [AuctionEventName.AuctionWithdrawSubmitted]: AuctionWithdrawAnalyticsProperties
-  [AuctionEventName.AuctionBidSubmitted]: AuctionBidAnalyticsProperties
-  [AuctionEventName.AuctionBidInputted]: AuctionBidInputtedAnalyticsProperties
   [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
     showNotificationScreen: boolean
     showBiometricsScreen: boolean
@@ -917,15 +693,10 @@ export type UniverseEventProperties = {
     import_type?: string
     screen: OnboardingScreens
     is_restoring_mnemonic: boolean
-    restore_type?: string
   }
-  [MobileEventName.SeedPhraseInputSubmitError]: undefined
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity
     url: string
-  }
-  [MobileEventName.SwapLongPress]: {
-    element: 'buy' | 'sell' | 'send' | 'receive'
   }
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: ITraceContext
   [MobileEventName.TokenDetailsContextMenuAction]: ITraceContext & { action: string }
@@ -944,6 +715,79 @@ export type UniverseEventProperties = {
     widget_type: WidgetType
     url: string
   }
+  [SharedEventName.PAGE_VIEWED]: ITraceContext
+  [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
+    enabled: boolean
+  }
+  [SharedEventName.HEARTBEAT]: undefined
+  [MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED]: {
+    success: boolean
+    networkError: boolean
+  } & ITraceContext
+  [NFTEventName.NFT_ACTIVITY_SELECTED]: undefined
+  [NFTEventName.NFT_TRENDING_ROW_SELECTED]: {
+    collection_address?: string
+    chain_id?: number
+  }
+  [NFTEventName.NFT_PROFILE_PAGE_START_SELL]: {
+    list_quantity: number
+  } & NFTBagProperties
+  [NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED]: undefined
+  [NFTEventName.NFT_BUY_TOKEN_SELECTED]: {
+    token_address: string
+    token_symbol?: string
+  }
+  [NFTEventName.NFT_FILTER_SELECTED]: {
+    filter_type: NFTFilterTypes
+  }
+  [NFTEventName.NFT_BUY_ADDED]: {
+    collection_address: string
+    token_id: string
+    token_type?: NftStandard
+  } & ITraceContext
+  [NFTEventName.NFT_SELL_ITEM_ADDED]: {
+    collection_address?: string
+    token_id?: string
+  } & ITraceContext
+  [NFTEventName.NFT_SELL_START_LISTING]: {
+    marketplaces: string[]
+    list_quantity: number
+    usd_value: string
+  } & NFTBagProperties &
+    ITraceContext
+  [NFTEventName.NFT_LISTING_COMPLETED]: {
+    signatures_approved: unknown[]
+    list_quantity: number
+    usd_value: string
+  } & ITraceContext
+  [NFTEventName.NFT_BUY_BAG_CHANGED]: {
+    usd_value: number
+    bag_quantity: number
+    token_types: (NftStandard | undefined)[]
+  } & NFTBagProperties
+  [NFTEventName.NFT_BUY_BAG_SIGNED]: {
+    transaction_hash: string
+  }
+  [NFTEventName.NFT_BUY_BAG_PAY]: {
+    usd_value?: string
+    using_erc20: boolean
+  }
+  [NFTEventName.NFT_BUY_BAG_SUCCEEDED]: {
+    buy_quantity: number
+    usd_value: number
+    transaction_hash: string
+    using_erc20: boolean
+  }
+  [NFTEventName.NFT_BUY_BAG_REFUNDED]: {
+    buy_quantity: number
+    fail_quantity: number
+    refund_amount_usd: number
+    transaction_hash?: string
+  }
+  [NFTEventName.NFT_FILTER_OPENED]: {
+    collection_address: string
+    chain_id?: number
+  }
   [SharedEventName.APP_LOADED]:
     | undefined
     | {
@@ -951,11 +795,10 @@ export type UniverseEventProperties = {
         cache: string
       }
   [SharedEventName.ELEMENT_CLICKED]: ITraceContext & {
-    // Covering ElementName.PortfolioNftItem
+    // Covering InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM
     collection_name?: string
     collection_address?: string
     token_id?: string
-    link_type?: string
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext
   [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
@@ -967,73 +810,30 @@ export type UniverseEventProperties = {
     address: string
   }
   [SharedEventName.NAVBAR_CLICKED]: undefined
-  // Sessions events
-  [SessionsEventName.SessionInitStarted]: undefined
-  [SessionsEventName.SessionInitCompleted]: {
-    need_challenge: boolean
-    duration_ms: number
-  }
-  [SessionsEventName.ChallengeReceived]: {
-    challenge_type: string
-    challenge_id: string
-  }
-  [SessionsEventName.VerifyCompleted]: {
-    success: boolean
-    attempt_number: number
-    total_duration_ms: number
-  }
-  [SessionsEventName.TurnstileSolveCompleted]: {
-    duration_ms: number
-    success: boolean
-    error_type?: string
-    error_message?: string
-  }
-  [SessionsEventName.HashcashSolveCompleted]: {
-    duration_ms: number
-    success: boolean
-    error_type?: string
-    error_message?: string
-    difficulty: number
-    iteration_count?: number
-    used_worker: boolean
-  }
-  [SwapEventName.SwapPresetTokenAmountSelected]: {
+  [SwapEventName.SWAP_PRESET_TOKEN_AMOUNT_SELECTED]: {
     percentage: number
   }
-  [SwapEventName.SwapPreselectAssetSelected]: {
+  [SwapEventName.SWAP_PRESELECT_ASSET_SELECTED]: {
     chain_id: UniverseChainId
     token_symbol: string | undefined
   }
-  [SwapEventName.SwapPriceImpactAcknowledged]: SwapPriceImpactActionProperties
-  [SwapEventName.SwapPriceUpdateAcknowledged]: SwapPriceUpdateActionProperties
-  [SwapEventName.SwapTransactionCompleted]:
+  [SwapEventName.SWAP_PRICE_IMPACT_ACKNOWLEDGED]: SwapPriceImpactActionProperties
+  [SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED]: SwapPriceUpdateActionProperties
+  [SwapEventName.SWAP_TRANSACTION_COMPLETED]:
     | ClassicSwapTransactionResultProperties
     | UniswapXTransactionResultProperties
     | BridgeSwapTransactionResultProperties
-  [SwapEventName.SwapTransactionFailed]:
+  [SwapEventName.SWAP_TRANSACTION_FAILED]:
     | FailedClassicSwapResultProperties
     | FailedUniswapXOrderResultProperties
     | FailedBridgeSwapResultProperties
-  [WalletEventName.SwapTransactionCancelled]:
-    | CancelledClassicSwapResultProperties
-    | CancelledUniswapXOrderResultProperties
-    | CancelledBridgeSwapResultProperties
-  [SwapEventName.SwapDetailsExpanded]: ITraceContext | undefined
-  [SwapEventName.SwapAutorouterVisualizationExpanded]: ITraceContext
-  [SwapEventName.SwapQuoteFailed]: {
-    error_message?: string
-  } & SwapTradeBaseProperties
-  [SwapEventName.SwapQuoteReceived]: {
+  [WalletEventName.SwapTransactionCancelled]: CancelledClassicSwapResultProperties | CancelledBridgeSwapResultProperties
+  [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
+  [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
+  [SwapEventName.SWAP_QUOTE_RECEIVED]: {
     quote_latency_milliseconds?: number
   } & SwapTradeBaseProperties
-  [SwapEventName.SwapBlocked]: {
-    category?: SwapBlockedCategory
-    error_code?: number
-    error_message?: string
-    protocol?: string
-    simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
-  } & SwapTradeBaseProperties
-  [SwapEventName.SwapSubmittedButtonClicked]: {
+  [SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED]: {
     estimated_network_fee_wei?: string
     gas_limit?: string
     transaction_deadline_seconds?: number
@@ -1047,51 +847,42 @@ export type UniverseEventProperties = {
     is_batch?: boolean
     included_permit_transaction_step?: boolean
   } & SwapTradeBaseProperties
-  [SwapEventName.SwapEstimateGasCallFailed]: {
+  [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
     error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string
     txRequest?: EthersTransactionRequest
     client_block_number?: number
     isAutoSlippage?: boolean
-    simulationFailureReasons?: TradingApi.TransactionFailureReason[]
+    simulationFailureReasons?: TransactionFailureReason[]
   } & SwapTradeBaseProperties
-  [SwapEventName.SwapFirstAction]: {
+  [SwapEventName.SWAP_FIRST_ACTION]: {
     time_to_first_swap_action?: number
   } & ITraceContext
-  [SwapEventName.SwapQuoteFetch]: {
+  [SwapEventName.SWAP_QUOTE_FETCH]: {
     chainId: number
     isQuickRoute: boolean
-    isUSDQuote?: boolean
-    quoteSource?: string
-    pollInterval?: number
     time_to_first_quote_request?: number
     time_to_first_quote_request_since_first_input?: number
   }
-  [SwapEventName.SwapSigned]: SwapTradeBaseProperties & {
-    transaction_hash?: string
-    time_to_sign_since_request_ms?: number
-    time_signed?: number
-  }
-  [SwapEventName.SwapModifiedInWallet]: {
+  [SwapEventName.SWAP_SIGNED]: Record<string, unknown> // TODO
+  [SwapEventName.SWAP_MODIFIED_IN_WALLET]: {
     expected: string
     actual: string
     txHash: string
   } & ITraceContext
-  [SwapEventName.SwapError]: {
+  [SwapEventName.SWAP_ERROR]: {
     wrapType?: WrapType
     input?: Currency
     output?: Currency
   }
-  [SwapEventName.SwapTokensReversed]: undefined
+  [SwapEventName.SWAP_TOKENS_REVERSED]: undefined
   [UniswapEventName.TooltipOpened]: ITraceContext & {
     tooltip_name: string
+    is_price_ux_enabled: boolean
   }
   [UniswapEventName.DelegationDetected]: {
     chainId: number
     delegationAddress: string
     isActiveChain?: boolean
-  }
-  [UniswapEventName.ExperimentQualifyingEvent]: {
-    experiment: Experiments
   }
   [UniswapEventName.BalancesReport]: {
     total_balances_usd: number
@@ -1109,27 +900,6 @@ export type UniverseEventProperties = {
     eventName: string
     platformIdType: string
   }
-  [UniswapEventName.DataReportSubmitted]:
-    | (TokenReportProperties & {
-        type: 'data'
-        price?: boolean
-        volume?: boolean
-        price_chart?: boolean
-        token_details?: boolean
-        something_else?: boolean
-      })
-    | (TokenReportProperties & {
-        type: 'token_warning'
-      })
-    | (PoolReportProperties & {
-        type: 'pool'
-        price: boolean
-        price_chart: boolean
-        volume: boolean
-        liquidity: boolean
-        something_else: boolean
-        text?: string
-      })
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
         AssetDetailsBaseProperties &
@@ -1138,7 +908,7 @@ export type UniverseEventProperties = {
           preselect_asset: boolean
           tokenSection?: OnchainItemSectionName
         })
-    | { token_balance_usd?: number | string }
+    | InterfaceTokenSelectedProperties
   [UniswapEventName.BlockaidFeesMismatch]: {
     symbol: string
     address: string
@@ -1150,12 +920,6 @@ export type UniverseEventProperties = {
     attackType?: string
     protectionResult?: string
   }
-  [UniswapEventName.ContextMenuClosed]: ITraceContext
-  [UniswapEventName.ContextMenuItemClicked]: ITraceContext & {
-    menu_item: string
-    menu_item_index: number
-  }
-  [UniswapEventName.ContextMenuOpened]: ITraceContext
   [UniswapEventName.LowNetworkTokenInfoModalOpened]: {
     location: 'send' | 'swap'
   }
@@ -1164,42 +928,10 @@ export type UniverseEventProperties = {
   [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
   [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
-  [UniswapEventName.AuctionFilterSelected]: {
-    filter: 'all' | 'verified' | 'unverified' | 'active' | 'complete'
-  }
-  [UniswapEventName.NetworkFilterSelected]: ITraceContext & {
-    chain: UniverseChainId | 'All'
-  }
   [UniswapEventName.SmartWalletMismatchDetected]: {
     chainId: string
     delegatedAddress: string
   }
-  [UniswapEventName.SpamReportSubmitted]:
-    | (TokenReportProperties & {
-        type: 'token'
-        source: 'portfolio' | 'token-details'
-        spam_token: boolean
-        imposter_token: boolean
-        hidden_fees: boolean
-        something_else: boolean
-      })
-    | {
-        type: 'nft'
-        chain_id?: UniverseChainId
-        contract_address?: Address
-        token_id?: string
-      }
-    | {
-        type: 'activity'
-        address?: Address
-        transaction_id: string
-        chain_id: UniverseChainId
-        hash?: string
-        transaction_type: TransactionType
-      }
-    | (PoolReportProperties & {
-        type: 'pool'
-      })
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -1218,6 +950,7 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.DismissSmartWalletUpgradeModal]: undefined
   [WalletEventName.AppRating]: {
     type: 'store-review' | 'feedback-form' | 'remind' | 'close'
     appRatingPromptedMs?: number
@@ -1250,6 +983,9 @@ export type UniverseEventProperties = {
     query: string
   }
   [WalletEventName.ModalClosed]: ITraceContext & Record<string, unknown>
+  [WalletEventName.NetworkFilterSelected]: ITraceContext & {
+    chain: UniverseChainId | 'All'
+  }
   [WalletEventName.NFTVisibilityChanged]: {
     tokenId?: string
     chainId?: UniverseChainId
@@ -1280,9 +1016,6 @@ export type UniverseEventProperties = {
   [WalletEventName.ShareButtonClicked]: {
     entity: ShareableEntity
     url: string
-  }
-  [WalletEventName.SilentPushReceived]: {
-    template_id: string
   }
   [WalletEventName.SwapSubmitted]: (
     | {

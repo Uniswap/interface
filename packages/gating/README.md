@@ -1,3 +1,0 @@
-# @universe/gating
-
-// TODO

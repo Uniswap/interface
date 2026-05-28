@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useWalletGetCapabilitiesMutation } from 'state/walletCapabilities/hooks/useWalletGetCapabilitiesMutation'
+import { handleResetWalletCapabilitiesState, selectNeedsToCheckCapabilities } from 'state/walletCapabilities/reducer'
 import { useEvent } from 'utilities/src/react/hooks'
-import { useAccountEffect } from 'wagmi'
-import { useAccount } from '~/hooks/useAccount'
-import { useAppDispatch, useAppSelector } from '~/state/hooks'
-import { useWalletGetCapabilitiesMutation } from '~/state/walletCapabilities/hooks/useWalletGetCapabilitiesMutation'
-import { handleResetWalletCapabilitiesState, selectNeedsToCheckCapabilities } from '~/state/walletCapabilities/reducer'
+import { useAccount, useAccountEffect } from 'wagmi'
 
 /**
  * [public] useWalletCapabilitiesStateEffect -- handles the effect of getting wallet metadata (eg capabilities) for the

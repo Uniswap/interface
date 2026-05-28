@@ -1,11 +1,8 @@
-import { TradingApi } from '@universe/api'
-import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
+import { ChainDelegationMap } from 'uniswap/src/data/tradingApi/__generated__'
+import { TransactionRequest } from 'uniswap/src/data/tradingApi/__generated__/models/TransactionRequest'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
-import { numberToHex } from 'utilities/src/addresses/hex'
-import { logger } from 'utilities/src/logger/logger'
+import { numberToHex } from 'uniswap/src/utils/hex'
 import { Capability } from 'wallet/src/features/dappRequests/types'
-import { isFreshDelegation } from 'wallet/src/features/smartWallet/delegation/utils'
 
 /**
  * Generates a random batch ID in the format of 0x followed by 64 hex characters
@@ -23,17 +20,13 @@ export function generateBatchId(): string {
  * Transforms an array of EIP-1193 calls into TransactionRequest format for the Trading API.
  * Filters out any calls missing required fields.
  */
-export function transformCallsToTransactionRequests({
-  calls,
-  chainId,
-  accountAddress,
-}: {
-  calls: EthTransaction[]
-  chainId: number
-  accountAddress: Address
-}): TradingApi.TransactionRequest[] {
+export function transformCallsToTransactionRequests(
+  calls: EthTransaction[],
+  chainId: number,
+  accountAddress: Address,
+): TransactionRequest[] {
   return calls
-    .map((call): TradingApi.TransactionRequest | undefined => {
+    .map((call): TransactionRequest | undefined => {
       if (call.to === undefined || call.data === undefined || !chainId) {
         return undefined
       }
@@ -45,11 +38,11 @@ export function transformCallsToTransactionRequests({
         chainId: chainId.valueOf(),
       }
     })
-    .filter((call): call is TradingApi.TransactionRequest => !!call)
+    .filter((call): call is TransactionRequest => !!call)
 }
 
 export function getCapabilitiesForDelegationStatus(
-  delegationStatus: TradingApi.ChainDelegationMap | undefined,
+  delegationStatus: ChainDelegationMap | undefined,
   hasSmartWalletConsent: boolean,
 ): Record<string, Capability> {
   if (!delegationStatus) {
@@ -61,77 +54,17 @@ export function getCapabilitiesForDelegationStatus(
 
     // If the user has consented to smart wallets, we can use the delegation status to determine the capabilities
     if (hasSmartWalletConsent) {
-      // If the wallet is delegated to Uniswap, it's supported, even if the delegation address is outdated
+      // If the wallet is delegated to Ring, it's supported, even if the delegation address is outdated
       if (delegationStatusForChain.isWalletDelegatedToUniswap) {
         status = 'supported'
-      } else if (isFreshDelegation(delegationStatusForChain)) {
-        status = 'ready'
       }
+
+      // TODO (WALL-6861): Bring back 'ready' status for fresh delegations once we have a way to bundle delegations on external transactions
     }
 
     capabilities[numberToHex(parseInt(chainId, 10))] = {
       atomic: { status },
     }
   }
-  return capabilities
-}
-
-/**
- * Shared core logic for handling getCapabilities requests
- * Used by both the background script and saga implementations
- */
-export async function getCapabilitiesResponse({
-  request,
-  chainIds,
-  hasSmartWalletConsent,
-}: {
-  request: { requestId: string; address: string; chainIds?: string[] }
-  chainIds: number[]
-  hasSmartWalletConsent: boolean
-}): Promise<{
-  type: DappResponseType.GetCapabilitiesResponse
-  requestId: string
-  response: Record<string, Capability>
-}> {
-  const capabilities = await getCapabilitiesCore({ address: request.address, chainIds, hasSmartWalletConsent })
-
-  return {
-    type: DappResponseType.GetCapabilitiesResponse,
-    requestId: request.requestId,
-    response: capabilities,
-  }
-}
-/**
- * Shared core logic for handling getCapabilities requests
- * Used by both the background script and saga implementations
- */
-export async function getCapabilitiesCore({
-  address,
-  chainIds,
-  hasSmartWalletConsent,
-}: {
-  address: string
-  chainIds: number[]
-  hasSmartWalletConsent: boolean
-}): Promise<Record<string, Capability>> {
-  let delegationStatusResponse: TradingApi.WalletCheckDelegationResponseBody | undefined
-
-  try {
-    delegationStatusResponse = await checkWalletDelegation({
-      walletAddresses: [address],
-      chainIds,
-    })
-  } catch (error) {
-    logger.error(error, {
-      tags: { file: 'batchedTransactions/utils.ts', function: 'getCapabilitiesCore' },
-      extra: { address, chainIds, hasSmartWalletConsent },
-    })
-  }
-
-  const capabilities = getCapabilitiesForDelegationStatus(
-    delegationStatusResponse?.delegationDetails[address],
-    hasSmartWalletConsent,
-  )
-
   return capabilities
 }

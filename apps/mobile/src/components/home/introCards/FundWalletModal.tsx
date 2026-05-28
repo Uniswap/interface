@@ -1,23 +1,25 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { type PropsWithChildren, useCallback, useMemo } from 'react'
+import React, { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList } from 'react-native'
+import { FlatList, ImageBackground } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, UniversalImage, useShadowPropsShort } from 'ui/src'
+import { Flex, useIsDarkMode, useShadowPropsShort } from 'ui/src'
+import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { ArrowDownCircle, Buy } from 'ui/src/components/icons'
-import { UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
-import { ActionCard, type ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
+import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { usePortfolioEmptyStateBackground } from 'wallet/src/components/portfolio/empty'
+import { ImageUri } from 'wallet/src/features/images/ImageUri'
 
 export function FundWalletModal(): JSX.Element {
+  const isDarkMode = useIsDarkMode()
   const shadowProps = useShadowPropsShort()
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -28,7 +30,19 @@ export function FundWalletModal(): JSX.Element {
 
   const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
-  const backgroundImageWrapperCallback = usePortfolioEmptyStateBackground()
+  const BackgroundImageWrapperCallback = useCallback(
+    ({ children }: { children: React.ReactNode }) => {
+      return (
+        <ImageBackground
+          borderRadius={borderRadii.rounded24}
+          source={isDarkMode ? CRYPTO_PURCHASE_BACKGROUND_DARK : CRYPTO_PURCHASE_BACKGROUND_LIGHT}
+        >
+          {children}
+        </ImageBackground>
+      )
+    },
+    [isDarkMode],
+  )
 
   const onPressBuy = useCallback(() => {
     onClose()
@@ -60,7 +74,7 @@ export function FundWalletModal(): JSX.Element {
             </Flex>
           ),
           onPress: onPressBuy,
-          backgroundImageWrapperCallback,
+          BackgroundImageWrapperCallback,
         },
         {
           title: t('home.tokens.empty.action.receive.title'),
@@ -69,10 +83,8 @@ export function FundWalletModal(): JSX.Element {
           icon:
             cexTransferProviders.length > 0 ? (
               <OverlappingLogos
-                logos={[
-                  <ReceiveCryptoIcon key="receive-icon" />,
-                  ...cexTransferProviders.map((provider) => provider.logos?.lightLogo ?? ''),
-                ]}
+                // eslint-disable-next-line react/jsx-key
+                logos={[<ReceiveCryptoIcon />, ...cexTransferProviders.map((provider) => provider.logos.lightLogo)]}
               />
             ) : (
               <ArrowDownCircle color="$accent1" size="$icon.24" />
@@ -80,7 +92,7 @@ export function FundWalletModal(): JSX.Element {
           onPress: onPressReceive,
         },
       ] satisfies ActionCardItem[],
-    [backgroundImageWrapperCallback, cexTransferProviders, onPressBuy, onPressReceive, t],
+    [BackgroundImageWrapperCallback, cexTransferProviders, onPressBuy, onPressReceive, t],
   )
   return (
     <Modal name={ModalName.FundWallet} onClose={onClose}>
@@ -152,14 +164,14 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       borderWidth="$spacing2"
       overflow="hidden"
     >
-      <UniversalImage
-        uri={uri}
-        size={{
+      <ImageUri
+        imageStyle={{
+          borderRadius: borderRadii.rounded8,
           height: iconSizes.icon24,
           width: iconSizes.icon24,
-          resizeMode: UniversalImageResizeMode.Cover,
         }}
-        style={{ image: { borderRadius: borderRadii.rounded8 } }}
+        resizeMode="cover"
+        uri={uri}
       />
     </Flex>
   )

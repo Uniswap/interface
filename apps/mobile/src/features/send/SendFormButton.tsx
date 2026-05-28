@@ -3,12 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Button, Flex } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -20,12 +19,10 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 export function SendFormButton({
   setShowViewOnlyModal,
   setShowMaxTransferModal,
-  setShowCompatibleAddressModal,
   goToReviewScreen,
 }: {
   setShowViewOnlyModal: Dispatch<SetStateAction<boolean>>
   setShowMaxTransferModal: Dispatch<SetStateAction<boolean>>
-  setShowCompatibleAddressModal: Dispatch<SetStateAction<boolean>>
   goToReviewScreen: () => void
 }): JSX.Element {
   const { t } = useTranslation()
@@ -43,11 +40,7 @@ export function SendFormButton({
   } = useSendContext()
   const { walletNeedsRestore } = useTransactionModalContext()
   const hasValueGreaterThanZero = useMemo(() => {
-    return isAmountGreaterThanZero({
-      exactAmountToken,
-      exactAmountFiat,
-      currency: currencyInInfo?.currency,
-    })
+    return isAmountGreaterThanZero(exactAmountToken, exactAmountFiat, currencyInInfo?.currency)
   }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
 
   const isViewOnlyWallet = account.type === AccountType.Readonly
@@ -56,10 +49,6 @@ export function SendFormButton({
   const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
   const isBlocked = isActiveBlocked || isRecipientBlocked
   const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
-  const { tokenWarningDismissed: isCompatibleAddressDismissed } = useDismissedCompatibleAddressWarnings(
-    currencyInInfo?.currency,
-  )
-  const isUnichainBridgedAsset = Boolean(currencyInInfo?.isBridged) && !isCompatibleAddressDismissed
 
   const insufficientGasFunds = warnings.warnings.some((warning) => warning.type === WarningLabel.InsufficientGasFunds)
 
@@ -78,25 +67,18 @@ export function SendFormButton({
       return
     }
 
-    if (isUnichainBridgedAsset) {
-      setShowCompatibleAddressModal(true)
-      return
-    }
-
     goToReviewScreen()
   }, [
     isViewOnlyWallet,
-    hasDismissedLowNetworkTokenWarning,
-    isMax,
-    currencyInInfo?.currency.isNative,
-    isUnichainBridgedAsset,
     goToReviewScreen,
     setShowViewOnlyModal,
+    isMax,
+    hasDismissedLowNetworkTokenWarning,
     setShowMaxTransferModal,
-    setShowCompatibleAddressModal,
+    currencyInInfo,
   ])
 
-  const nativeCurrencySymbol = nativeOnChain(chainId).symbol ?? ''
+  const nativeCurrencySymbol = NativeCurrency.onChain(chainId).symbol
 
   const buttonText = insufficientGasFunds
     ? t('send.warning.insufficientFunds.title', {

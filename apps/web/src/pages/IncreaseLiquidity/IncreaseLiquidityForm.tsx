@@ -1,18 +1,20 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { ErrorCallout } from 'components/ErrorCallout'
+import {
+  IncreaseLiquidityStep,
+  useIncreaseLiquidityContext,
+} from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
+import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
+import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
+import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
+import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
+import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { PositionField } from 'types/position'
 import { Button, Flex, Switch, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { ErrorCallout } from '~/components/ErrorCallout'
-import { DepositInputForm } from '~/components/Liquidity/DepositInputForm'
-import { useUpdatedAmountsFromDependentAmount } from '~/components/Liquidity/hooks/useDependentAmountFallback'
-import { LiquidityModalDetailRows } from '~/components/Liquidity/LiquidityModalDetailRows'
-import { LiquidityPositionInfo } from '~/components/Liquidity/LiquidityPositionInfo'
-import { canUnwrapCurrency } from '~/components/Liquidity/utils/currency'
-import { getFieldsDisabled } from '~/components/Liquidity/utils/priceRangeInfo'
-import { IncreaseLiquidityStep, useIncreaseLiquidityContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
-import { useIncreaseLiquidityTxContext } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
-import { PositionField } from '~/types/position'
 
 export function IncreaseLiquidityForm() {
   const { t } = useTranslation()
@@ -25,8 +27,15 @@ export function IncreaseLiquidityForm() {
     unwrapNativeCurrency,
     setUnwrapNativeCurrency,
   } = useIncreaseLiquidityContext()
-  const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances, currencies, error } =
-    derivedIncreaseLiquidityInfo
+  const {
+    formattedAmounts,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    currencyBalances,
+    deposit0Disabled,
+    deposit1Disabled,
+    error,
+  } = derivedIncreaseLiquidityInfo
   const { position, exactField } = increaseLiquidityState
 
   const {
@@ -47,25 +56,41 @@ export function IncreaseLiquidityForm() {
   const canUnwrap0 = canUnwrapCurrency(initialCurrency0Amount.currency, position.version)
   const canUnwrap1 = canUnwrapCurrency(initialCurrency1Amount.currency, position.version)
 
+  const token0 = getCurrencyWithOptionalUnwrap({
+    currency: initialCurrency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && canUnwrap0,
+  })
+  const token1 = getCurrencyWithOptionalUnwrap({
+    currency: initialCurrency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && canUnwrap1,
+  })
   const nativeCurrency = nativeOnChain(position.chainId)
 
-  const { tickLower, tickUpper } = position
-  const { TOKEN0: deposit0Disabled, TOKEN1: deposit1Disabled } = getFieldsDisabled({
-    ticks: [tickLower, tickUpper],
-    poolOrPair: position.version === ProtocolVersion.V2 ? undefined : position.poolOrPair,
+  const currency0Amount = useMemo(() => {
+    if (unwrapNativeCurrency && canUnwrap0) {
+      return CurrencyAmount.fromRawAmount(token0, initialCurrency0Amount.quotient)
+    }
+    return initialCurrency0Amount
+  }, [unwrapNativeCurrency, canUnwrap0, token0, initialCurrency0Amount])
+
+  const currency1Amount = useMemo(() => {
+    if (unwrapNativeCurrency && canUnwrap1) {
+      return CurrencyAmount.fromRawAmount(token1, initialCurrency1Amount.quotient)
+    }
+    return initialCurrency1Amount
+  }, [unwrapNativeCurrency, canUnwrap1, token1, initialCurrency1Amount])
+
+  const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
+    token0,
+    token1,
+    dependentAmount,
+    exactField,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    formattedAmounts,
+    deposit0Disabled: deposit0Disabled || false,
+    deposit1Disabled: deposit1Disabled || false,
   })
-  const { updatedFormattedAmounts, updatedUSDAmounts, updatedDeposit0Disabled, updatedDeposit1Disabled } =
-    useUpdatedAmountsFromDependentAmount({
-      token0: currencies?.TOKEN0,
-      token1: currencies?.TOKEN1,
-      dependentAmount,
-      exactField,
-      currencyAmounts,
-      currencyAmountsUSDValue,
-      formattedAmounts,
-      deposit0Disabled,
-      deposit1Disabled,
-    })
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setIncreaseLiquidityState((prev) => ({
@@ -119,16 +144,16 @@ export function IncreaseLiquidityForm() {
       <Flex gap="$gap24">
         <LiquidityPositionInfo positionInfo={position} />
         <DepositInputForm
-          token0={currencies?.TOKEN0}
-          token1={currencies?.TOKEN1}
+          token0={token0}
+          token1={token1}
           formattedAmounts={updatedFormattedAmounts}
           currencyAmounts={currencyAmounts}
           currencyAmountsUSDValue={updatedUSDAmounts}
           currencyBalances={currencyBalances}
           onUserInput={handleUserInput}
           onSetMax={handleOnSetMax}
-          deposit0Disabled={updatedDeposit0Disabled}
-          deposit1Disabled={updatedDeposit1Disabled}
+          deposit0Disabled={deposit0Disabled}
+          deposit1Disabled={deposit1Disabled}
           amount0Loading={requestLoading && exactField === PositionField.TOKEN1} // check isRefetching instead
           amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
           token0UnderCardComponent={canUnwrap0 ? UnwrapNativeCurrencyToggle : undefined}
@@ -136,8 +161,8 @@ export function IncreaseLiquidityForm() {
         />
       </Flex>
       <LiquidityModalDetailRows
-        currency0Amount={initialCurrency0Amount}
-        currency1Amount={initialCurrency1Amount}
+        currency0Amount={currency0Amount}
+        currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
       {fotErrorToken && (
@@ -157,7 +182,7 @@ export function IncreaseLiquidityForm() {
           key="LoaderButton-animation-IncreaseLiquidity-continue"
           size="large"
         >
-          {error || t('swap.button.review')}
+          {error || t('common.add.label')}
         </Button>
       </Flex>
     </Flex>

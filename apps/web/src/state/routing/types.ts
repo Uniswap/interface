@@ -1,6 +1,6 @@
-/* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
+import { Route as FewV2Route } from '@ring-protocol/few-v2-sdk'
 import { PermitTransferFromData } from '@uniswap/permit2-sdk'
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
@@ -20,8 +20,8 @@ import {
 } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
+import { ZERO_PERCENT } from 'constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ZERO_PERCENT } from '~/constants/misc'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -69,6 +69,7 @@ export interface GetQuoteArgs {
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   protocolPreferences?: Protocol[]
   tradeType: TradeType
+  needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
   sendPortionEnabled: boolean
   routingType: URAQuoteType
@@ -129,6 +130,37 @@ export type V2PoolInRoute = {
   address?: string
 }
 
+// FewV2 pools mirror V2 pools, but carry fee-on-transfer metadata
+export type FewV2PoolInRoute = {
+  type: 'fewv2-pool'
+  tokenIn: TokenInRoute
+  tokenOut: TokenInRoute
+  reserve0: V2Reserve
+  reserve1: V2Reserve
+  amountIn?: string
+  amountOut?: string
+
+  // not used in the interface
+  // avoid returning it from the client-side smart-order-router
+  address?: string
+}
+
+export type V4PoolInRoute = {
+  type: 'v4-pool'
+  tokenIn: TokenInRoute
+  tokenOut: TokenInRoute
+  sqrtRatioX96: string
+  liquidity: string
+  tickCurrent: string
+  fee: string
+  tickSpacing: string
+  hooks: string
+  amountIn?: string
+  amountOut?: string
+
+  address?: string
+}
+
 // From `ClassicQuoteDataJSON` in https://github.com/Uniswap/unified-routing-api/blob/main/lib/entities/quote/ClassicQuote.ts
 export interface ClassicQuoteData {
   requestId?: string
@@ -146,7 +178,7 @@ export interface ClassicQuoteData {
   quoteDecimals: string
   quoteGasAdjusted: string
   quoteGasAdjustedDecimals: string
-  route: Array<(V3PoolInRoute | V2PoolInRoute)[]>
+  route: Array<(V3PoolInRoute | V2PoolInRoute | FewV2PoolInRoute | V4PoolInRoute)[]>
   routeString: string
   portionBips?: number
   portionRecipient?: string
@@ -157,6 +189,7 @@ export interface ClassicQuoteData {
 }
 
 // From `DutchQuoteDataJSON` https://github.com/Uniswap/unified-routing-api/blob/main/lib/entities/quote/DutchQuote.ts
+// eslint-disable-next-line import/no-unused-modules
 export type URADutchOrderQuoteData = {
   orderInfo: DutchOrderInfoJSON
   quoteId?: string
@@ -174,6 +207,7 @@ export type URADutchOrderQuoteData = {
 }
 
 // From `DutchV2QuoteDataJSON` in https://github.com/Uniswap/unified-routing-api/blob/main/lib/entities/quote/DutchV2Quote.ts
+// eslint-disable-next-line import/no-unused-modules
 export type URADutchOrderV2QuoteData = {
   orderInfo: UnsignedV2DutchOrderInfoJSON
   quoteId?: string
@@ -188,6 +222,7 @@ export type URADutchOrderV2QuoteData = {
   portionRecipient?: string
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export type URADutchOrderV3QuoteData = {
   orderInfo: UnsignedV3DutchOrderInfoJSON
   encodedOrder: string
@@ -203,6 +238,7 @@ export type URADutchOrderV3QuoteData = {
 }
 
 // from `PriorityQuoteDataJSON` in https://github.com/Uniswap/backend/blob/main/packages/services/unified-routing-api/lib/entities/quote/PriorityQuote.ts
+// eslint-disable-next-line import/no-unused-modules
 export type URAPriorityOrderQuoteData = {
   orderInfo: UnsignedPriorityOrderInfoJSON
   startTimeBufferSecs: number // ignore for priority order
@@ -252,12 +288,32 @@ export type URAQuoteResponse =
   | URADutchOrderV3QuoteResponse
   | URAPriorityOrderQuoteResponse
 
+export type QuickRouteResponse = {
+  tokenIn: {
+    address: string
+    decimals: number
+    symbol: string
+    name: string
+  }
+  tokenOut: {
+    address: string
+    decimals: number
+    symbol: string
+    name: string
+  }
+  tradeType: 'EXACT_IN' | 'EXACT_OUT'
+  quote: {
+    amount: string
+    path: string
+  }
+}
+
 export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClassicQuoteResponse {
   return data.routing === URAQuoteType.CLASSIC
 }
 
 export enum TradeFillType {
-  Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
+  Classic = 'classic', // Ring V1, V2, and V3 trades with on-chain routes
   UniswapX = 'uniswap_x', // off-chain trades, no routes
   UniswapXv2 = 'uniswap_x_v2',
   UniswapXv3 = 'uniswap_x_v3',
@@ -297,6 +353,11 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     quoteMethod: QuoteMethod
     approveInfo: ApproveInfo
     swapFee?: SwapFeeInfo
+    fewV2Routes: {
+      fewRouteV2: FewV2Route<Currency, Currency>
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
+    }[]
     v2Routes: {
       routev2: V2Route<Currency, Currency>
       inputAmount: CurrencyAmount<Currency>
@@ -862,13 +923,13 @@ export class LimitOrderTrade {
         additionalValidationContract: AddressZero,
         additionalValidationData: '0x',
         nonce: options?.nonce ?? BigNumber.from(0),
-        // decay timings don't matter at all
+        // decay timings dont matter at all
         decayStartTime: nowSecs,
         decayEndTime: nowSecs,
         exclusiveFiller: AddressZero,
         exclusivityOverrideBps: BigNumber.from(0),
         input: {
-          token: this.amountIn.currency.address,
+          token: this.amountIn.currency.isNative ? AddressZero : this.amountIn.currency.address,
           startAmount: BigNumber.from(this.amountIn.quotient.toString()),
           endAmount: BigNumber.from(this.amountIn.quotient.toString()),
         },
@@ -944,15 +1005,31 @@ export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND
       trade?: undefined
+      latencyMs?: number
     }
   | {
       state: QuoteState.SUCCESS
       trade: SubmittableTrade
+      latencyMs?: number
+    }
+
+export type PreviewTradeResult =
+  | {
+      state: QuoteState.NOT_FOUND
+      trade?: undefined
+      latencyMs?: number
+    }
+  | {
+      state: QuoteState.SUCCESS
+      trade: PreviewTrade
+      latencyMs?: number
     }
 
 export enum PoolType {
   V2Pool = 'v2-pool',
   V3Pool = 'v3-pool',
+  V4Pool = 'v4-pool',
+  FewV2Pool = 'fewv2-pool',
 }
 
 // swap router API special cases these strings to represent native currencies

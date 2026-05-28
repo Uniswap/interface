@@ -1,15 +1,16 @@
-import { type ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import {
-  type CreateLPPositionRequest,
-  type IncreaseLPPositionRequest,
-  type MigrateV3ToV4LPPositionRequest,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
-import { type Currency, type CurrencyAmount, type Token } from '@uniswap/sdk-core'
+  CreateLPPositionRequest,
+  IncreaseLPPositionRequest,
+  MigrateLPPositionRequest,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import {
-  type PermitTransaction,
-  type PermitTypedData,
+  PermitMethod,
+  PermitTransaction,
+  PermitTypedData,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { type ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export enum LiquidityTransactionType {
   Create = 'create',
@@ -30,13 +31,13 @@ export type LiquidityTxAndGasInfo =
   | IncreasePositionTxAndGasInfo
   | DecreasePositionTxAndGasInfo
   | CreatePositionTxAndGasInfo
-  | MigratePositionTxAndGasInfo
+  | MigrateV3PositionTxAndGasInfo
   | CollectFeesTxAndGasInfo
 export type ValidatedLiquidityTxContext =
   | ValidatedIncreasePositionTxAndGasInfo
   | ValidatedDecreasePositionTxAndGasInfo
   | ValidatedCreatePositionTxAndGasInfo
-  | ValidatedMigratePositionTxAndGasInfo
+  | ValidatedMigrateV3PositionTxAndGasInfo
   | ValidatedCollectFeesTxAndGasInfo
 
 export function isValidLiquidityTxContext(
@@ -47,8 +48,7 @@ export function isValidLiquidityTxContext(
 }
 
 interface BaseLiquidityTxAndGasInfo {
-  canBatchTransactions: boolean
-  delegatedAddress: string | null
+  protocolVersion: ProtocolVersion
   action: LiquidityAction
   approveToken0Request: ValidatedTransactionRequest | undefined
   approveToken1Request: ValidatedTransactionRequest | undefined
@@ -66,24 +66,21 @@ export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo 
   type: LiquidityTransactionType.Increase
   unsigned: boolean
   increasePositionRequestArgs: IncreaseLPPositionRequest | undefined
-  sqrtRatioX96: string | undefined
 }
 
 export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Decrease
-  sqrtRatioX96: string | undefined
 }
 
 export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Create
   unsigned: boolean
   createPositionRequestArgs: CreateLPPositionRequest | undefined
-  sqrtRatioX96: string | undefined
 }
 
-export interface MigratePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
+export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Migrate
-  migratePositionRequestArgs: MigrateV3ToV4LPPositionRequest | undefined
+  migratePositionRequestArgs: MigrateLPPositionRequest | undefined
 }
 
 export interface CollectFeesTxAndGasInfo {
@@ -104,7 +101,6 @@ export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxA
         unsigned: false
         permit: PermitTransaction | undefined
         txRequest: ValidatedTransactionRequest
-        sqrtRatioX96: string | undefined
       }
   )
 
@@ -123,11 +119,10 @@ export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGa
         unsigned: false
         permit: PermitTransaction | undefined
         txRequest: ValidatedTransactionRequest
-        sqrtRatioX96: string | undefined
       }
   )
 
-export type ValidatedMigratePositionTxAndGasInfo = Required<MigratePositionTxAndGasInfo> &
+export type ValidatedMigrateV3PositionTxAndGasInfo = Required<MigrateV3PositionTxAndGasInfo> &
   (
     | {
         unsigned: true
@@ -143,8 +138,6 @@ export type ValidatedMigratePositionTxAndGasInfo = Required<MigratePositionTxAnd
 
 export type ValidatedCollectFeesTxAndGasInfo = CollectFeesTxAndGasInfo & {
   txRequest: ValidatedTransactionRequest
-  canBatchTransactions?: undefined
-  delegatedAddress?: undefined
 }
 
 function validateLiquidityTxContext(
@@ -162,26 +155,28 @@ function validateLiquidityTxContext(
     return undefined
   }
 
-  const { action, txRequest, permit } = liquidityTxContext
-  const unsigned =
-    (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
-  if (unsigned) {
-    if (!permit) {
-      return undefined
+  if (liquidityTxContext.action) {
+    const { action, txRequest, permit } = liquidityTxContext
+    const unsigned =
+      (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
+    if (unsigned) {
+      if (!permit || permit.method !== PermitMethod.TypedData) {
+        return undefined
+      }
+      return { ...liquidityTxContext, action, unsigned, txRequest: undefined, permit }
+    } else if (txRequest) {
+      return { ...liquidityTxContext, action, unsigned, txRequest, permit: undefined }
     }
-    return { ...liquidityTxContext, action, unsigned, txRequest: undefined, permit }
-  } else if (txRequest) {
-    // Type-safe handling: Decrease type doesn't have 'unsigned' property
-    if (liquidityTxContext.type === LiquidityTransactionType.Decrease) {
-      return { ...liquidityTxContext, action, txRequest, permit: undefined }
-    }
-    // For Increase/Create/Migrate types with txRequest
-    return { ...liquidityTxContext, action, unsigned, txRequest, permit: undefined }
   }
 
   return undefined
 }
 
 function isLiquidityTx(liquidityTxContext: unknown): liquidityTxContext is LiquidityTxAndGasInfo {
-  return typeof liquidityTxContext === 'object' && liquidityTxContext !== null && 'action' in liquidityTxContext
+  return (
+    typeof liquidityTxContext === 'object' &&
+    liquidityTxContext !== null &&
+    'action' in liquidityTxContext &&
+    'protocolVersion' in liquidityTxContext
+  )
 }

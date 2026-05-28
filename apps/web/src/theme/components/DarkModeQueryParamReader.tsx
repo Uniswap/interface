@@ -1,12 +1,11 @@
 import { parse } from 'qs'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router'
-import { AppearanceSettingType, setSelectedAppearanceSettings } from 'uniswap/src/features/appearance/slice'
+import { useLocation } from 'react-router-dom'
+import { ThemeMode, useDarkModeManager } from 'theme/components/ThemeToggle'
 
 export default function DarkModeQueryParamReader(): null {
   const { search } = useLocation()
-  const dispatch = useDispatch()
+  const [, updateMode] = useDarkModeManager()
 
   useEffect(() => {
     if (!search) {
@@ -28,11 +27,11 @@ export default function DarkModeQueryParamReader(): null {
     }
 
     if (theme.toLowerCase() === 'light') {
-      dispatch(setSelectedAppearanceSettings(AppearanceSettingType.Light))
+      updateMode(ThemeMode.LIGHT)
     } else if (theme.toLowerCase() === 'dark') {
-      dispatch(setSelectedAppearanceSettings(AppearanceSettingType.Dark))
+      updateMode(ThemeMode.DARK)
     }
-  }, [search, dispatch])
+  }, [search, updateMode])
 
   return null
 }

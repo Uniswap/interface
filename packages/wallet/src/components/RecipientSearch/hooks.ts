@@ -2,14 +2,13 @@ import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { selectRecipientsByRecency } from 'uniswap/src/features/transactions/selectors'
+import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -49,41 +48,18 @@ function useValidatedSearchedAddress(
     autocompleteDomain: false,
   })
 
-  const { data: unitag, isLoading: unitagLoading } = useUnitagsUsernameQuery({
-    params: searchTerm ? { username: searchTerm } : undefined,
-  })
+  const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
 
   const getRecipients = useCallback((): SearchableRecipient[] => {
     if (!searchTerm) {
       return []
     }
 
-    // TODO(WALL-7065): Update to support Solana validation
     // Check for a valid unitag, ENS address, or literal address
-    const unitagValidatedAddress = getValidAddress({
-      address: unitag?.address?.address,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-      log: false,
-    })
-    const dotEthValidatedAddress = getValidAddress({
-      address: dotEthAddress,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-      log: false,
-    })
-    const ensValidatedAddress = getValidAddress({
-      address: ensAddress,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-      log: false,
-    })
-    const literalValidatedAddress = getValidAddress({
-      address: searchTerm,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-      log: false,
-    })
+    const unitagValidatedAddress = getValidAddress(unitag?.address?.address, true, false)
+    const dotEthValidatedAddress = getValidAddress(dotEthAddress, true, false)
+    const ensValidatedAddress = getValidAddress(ensAddress, true, false)
+    const literalValidatedAddress = getValidAddress(searchTerm, true, false)
 
     const recipients = []
 
@@ -191,35 +167,35 @@ export function useRecipients(
 
     if (validatedAddressRecipients.length && !isPatternEmpty) {
       sectionsArr.push({
-        title: t('send.recipient.section.search') as string,
+        title: t('send.recipient.section.search'),
         data: validatedAddressRecipients,
       })
     }
 
     if (recentRecipients.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.recent') as string,
+        title: t('send.recipient.section.recent'),
         data: recentRecipients,
       })
     }
 
     if (importedWallets.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.yours') as string,
+        title: t('send.recipient.section.yours'),
         data: importedWallets,
       })
     }
 
     if (viewOnlyWallets.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.viewOnly') as string,
+        title: t('send.recipient.section.viewOnly'),
         data: viewOnlyWallets,
       })
     }
 
     if (watchedWallets.size) {
       sectionsArr.push({
-        title: t('send.recipient.section.favorite') as string,
+        title: t('send.recipient.section.favorite'),
         data: Array.from(watchedWallets).map(
           (address) =>
             <SearchableRecipient>{
@@ -274,7 +250,7 @@ export function useFilteredRecipientSections(
     const filteredAddresses = filterRecipientByNameAndAddress(debouncedPattern, searchableRecipientOptions).map(
       (item) => item.data.address,
     )
-    return filterSections({ sections, filteredAddresses })
+    return filterSections(sections, filteredAddresses)
   }, [debouncedPattern, searchableRecipientOptions, sections])
 
   const getFilteredRecipientList = useCallback(

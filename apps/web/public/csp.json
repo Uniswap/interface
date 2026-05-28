@@ -1,6 +1,12 @@
 {
-  "defaultSrc": ["'self'"],
-  "scriptSrc": ["'self'", "'wasm-unsafe-eval'", "https://challenges.cloudflare.com"],
+  "defaultSrc": [
+    "'self'"
+  ],
+  "scriptSrc": [
+    "'self'",
+    "data:",
+    "'wasm-unsafe-eval'"
+  ],
   "styleSrc": [
     "'self'",
     "'unsafe-inline'",
@@ -14,18 +20,30 @@
     "https://fonts.gstatic.com",
     "https://fonts.gstatic.com/s/inter/v18/*"
   ],
-  "imgSrc": ["*", "blob:", "data:"],
+  "imgSrc": [
+    "*",
+    "blob:",
+    "data:"
+  ],
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
-    "https://challenges.cloudflare.com",
     "https://verify.walletconnect.com/",
-    "https://verify.walletconnect.org/",
-    "https://id.porto.sh",
-    "https://wrapped.uniswap.org"
+    "https://verify.walletconnect.org/"
   ],
-  "mediaSrc": ["self", "*"],
-  "formAction": ["'none'"],
+  "mediaSrc": [
+    "'self'",
+    "*"
+  ],
+  "formAction": [
+    "'none'"
+  ],
+  "baseUri": [
+    "'self'"
+  ],
+  "frameAncestors": [
+    "'none'"
+  ],
   "connectSrc": [
     "'self'",
     "blob:",
@@ -43,22 +61,26 @@
     "https://*.nodereal.io",
     "https://*.optimism.io",
     "https://*.quiknode.pro",
+    "https://*.railway.app",
     "https://*.twnodes.com",
-    "https://*.uniswap.org",
+    "https://*.ring.exchange",
     "https://*.walletconnect.com",
     "https://*.walletconnect.org",
     "https://*.zerion.io",
     "https://alfajores-forno.celo-testnet.org",
     "https://api.avax.network/ext/bc/C/rpc",
     "https://api.moonpay.com/",
+    "https://api.morpho.org",
     "https://api.opensea.io",
     "https://bsc-dataseed1.binance.org/",
     "https://bsc-dataseed1.bnbchain.org",
     "https://buy.moonpay.com/",
     "https://cdn.center.app/",
+    "https://cdn.morpho.org",
     "https://celo-org.github.io",
     "https://cloudflare-eth.com",
     "https://erasld2vrf.execute-api.us-east-2.amazonaws.com",
+    "https://kkt5z5xhw3.execute-api.us-east-1.amazonaws.com",
     "https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com",
     "https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com",
     "https://embedded-wallet.app-907329d19a06.enclave.evervault.com",
@@ -83,7 +105,6 @@
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mumbai.maticvigil.com",
     "https://rpc.ankr.com",
-    "https://eth-mainnet.public.blastapi.io",
     "https://rpc.blast.io/",
     "https://rpc.degen.tips",
     "https://rpc.goerli.mudit.blog/",
@@ -91,18 +112,14 @@
     "https://rpc.scroll.io/",
     "https://rpc.sepolia.org/",
     "https://rpc.soneium.org",
-    "https://sepolia.gateway.tenderly.co",
-    "https://ethereum-sepolia-rpc.publicnode.com",
     "https://rpc.zora.energy/",
     "https://sockjs-us3.pusher.com/",
     "https://sparrow.cloudflare.com/",
     "https://statsigapi.net",
     "https://trustwallet.com",
-    "https://uniswap.org",
+    "https://ring.exchange",
     "https://us-central1-uniswap-mobile.cloudfunctions.net/",
     "https://valid.rpki.cloudflare.com",
-    "https://vercel.com",
-    "https://vercel.live/",
     "https://wallet.crypto.com",
     "https://web3.1inch.io",
     "https://x6ahx1oagk.execute-api.us-east-2.amazonaws.com",
@@ -119,12 +136,17 @@
     "https://prodregistryv2.org",
     "https://cloudflare-dns.com",
     "https://beyondwickedmapping.org",
-    "wss://*.uniswap.org",
+    "https://testring.org",
+    "https://*.testring.org",
+    "wss://*.ring.exchange",
+    "wss://*.testring.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",
     "wss://ws-us3.pusher.com/",
-    "wss://www.walletlink.org",
-    "wss://nbstream.binance.com"
+    "wss://www.walletlink.org"
   ],
-  "workerSrc": ["'self'", "blob:"]
+  "workerSrc": [
+    "'self'",
+    "blob:"
+  ]
 }

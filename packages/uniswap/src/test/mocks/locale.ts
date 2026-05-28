@@ -1,8 +1,9 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode } from 'react'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { Locale } from 'uniswap/src/features/language/constants'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
+import { Locale } from 'uniswap/src/features/language/constants'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
   addFiatSymbolToNumber,
   formatCurrencyAmount,
@@ -26,7 +27,7 @@ export function mockLocalizedFormatter(locale: Locale): LocalizationContextState
       })
     },
     formatPercent(value): string {
-      return formatPercent({ rawPercentage: value, locale })
+      return formatPercent(value, locale)
     },
     addFiatSymbolToNumber(input): string {
       return addFiatSymbolToNumber({
@@ -53,9 +54,8 @@ export function mockFiatConverter({
   return {
     conversionRate: 1,
     convertFiatAmount(amount): { amount: number; currency: FiatCurrency } {
-      return { amount, currency }
+      return { amount: amount ?? 1, currency }
     },
-    // eslint-disable-next-line max-params
     convertFiatAmountFormatted(fromAmount, numberType, placeholder): string {
       return mockLocalizedFormatter(locale).formatNumberOrString({
         value: fromAmount,

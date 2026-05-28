@@ -8,10 +8,7 @@ interface MismatchCtx {
   logger?: Logger
 }
 
-type ChainMismatchResults = Record<string, boolean>
-export type HasMismatchInput = { address: Address; chainIds: number[] }
-export type HasMismatchResult = Promise<ChainMismatchResults>
-export type HasMismatchUtil = (input: HasMismatchInput) => HasMismatchResult
+export type HasMismatchUtil = (input: { address: Address; chainId: number }) => Promise<boolean>
 
 export function createHasMismatchUtil(ctx: MismatchCtx): HasMismatchUtil {
   const withPerformanceLogger = createWithPerformanceLogger({
@@ -23,35 +20,25 @@ export function createHasMismatchUtil(ctx: MismatchCtx): HasMismatchUtil {
    * Returns true if the connected wallet thinks the account is not a smart account (EIP-7702),
    * but there is a deployed contract at the address.
    */
-  return withPerformanceLogger(async function hasMismatch(input: HasMismatchInput): HasMismatchResult {
-    const [delegationResults, batchingSupportResults] = await Promise.all([
-      ctx.delegationService.getAddressDelegations(input),
-      Promise.all(
-        input.chainIds.map((chainId) =>
-          ctx.getIsAtomicBatchingSupported({ chainId }).then((supported) => ({ chainId, supported })),
-        ),
-      ),
+  return withPerformanceLogger(async function hasMismatch(input: {
+    address: Address
+    chainId: number
+  }): Promise<boolean> {
+    const [delegatedResult, isAtomicBatchingSupported] = await Promise.all([
+      ctx.delegationService.getIsAddressDelegated(input),
+      ctx.getIsAtomicBatchingSupported({
+        chainId: input.chainId,
+      }),
     ])
-    const batchingSupportMap: Record<string, boolean> = {}
-    for (const { chainId, supported } of batchingSupportResults) {
-      batchingSupportMap[String(chainId)] = supported
+    const isMismatch = !isAtomicBatchingSupported && delegatedResult.isDelegated
+    if (isMismatch && delegatedResult.delegatedAddress) {
+      ctx.onMismatchDetected?.({
+        chainId: input.chainId,
+        isDelegated: delegatedResult.isDelegated,
+        delegatedAddress: delegatedResult.delegatedAddress,
+      })
     }
-    const results: ChainMismatchResults = {}
-    for (const chainId of input.chainIds) {
-      const chainIdString = String(chainId)
-      const delegated = delegationResults[chainIdString]
-      const atomicSupported = batchingSupportMap[chainIdString] ?? false
-      const isMismatch = !atomicSupported && (delegated?.isDelegated ?? false)
-      if (isMismatch && delegated?.delegatedAddress) {
-        ctx.onMismatchDetected?.({
-          chainId,
-          isDelegated: true,
-          delegatedAddress: delegated.delegatedAddress,
-        })
-      }
-      results[chainIdString] = isMismatch
-    }
-    return results
+    return isMismatch
   })
 }
 
@@ -86,24 +73,24 @@ function createWithPerformanceLogger(ctx?: {
       }
 
       const start = performance.now()
-      const result = await fn(...args)
-      const end = performance.now()
-      ctx.logger.debug(ctx.filename, ctx.name, `${ctx.name} took ${end - start}ms`)
-      return result
-      // TODO: re-enable performance logger when WALL-7050 is fixed
-      // } catch (error) {
-      //   const end = performance.now()
-      //   ctx.logger.error(error, {
-      //     tags: {
-      //       file: ctx.filename,
-      //       function: ctx.name,
-      //     },
-      //     extra: {
-      //       duration: end - start,
-      //     },
-      //   })
-      //   throw error
-      // }
+      try {
+        const result = await fn(...args)
+        const end = performance.now()
+        ctx.logger.info(ctx.filename, ctx.name, `${ctx.name} took ${end - start}ms`)
+        return result
+      } catch (error) {
+        const end = performance.now()
+        ctx.logger.error(error, {
+          tags: {
+            file: ctx.filename,
+            function: ctx.name,
+          },
+          extra: {
+            duration: end - start,
+          },
+        })
+        throw error
+      }
     }
   }
 }

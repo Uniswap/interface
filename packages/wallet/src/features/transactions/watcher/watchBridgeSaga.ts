@@ -1,6 +1,6 @@
-import { TradingApi } from '@universe/api'
-import { call, delay, SagaGenerator, select } from 'typed-redux-saga'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { SagaGenerator, call, delay, select } from 'typed-redux-saga'
+import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { makeSelectTransaction } from 'uniswap/src/features/transactions/selectors'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
@@ -10,7 +10,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import {
-  FINALIZED_SWAP_STATUS,
+  FINALIZED_BRIDGE_SWAP_STATUS,
   MIN_BRIDGE_WAIT_TIME,
   SWAP_STATUS_TO_TX_STATUS,
 } from 'wallet/src/features/transactions/watcher/transactionSagaUtils'
@@ -29,7 +29,7 @@ export function* waitForBridgingStatus(transaction: TransactionDetails): SagaGen
     return TransactionStatus.Unknown
   }
 
-  let swapStatus: TradingApi.SwapStatus | undefined
+  let swapStatus: SwapStatus | undefined
   const initialPollIntervalMs = 500
   const maxRetries = 10 // 500 ms, 1 second, 2 seconds...
   const backoffFactor = 2 // Each retry will double the wait time
@@ -44,14 +44,14 @@ export function* waitForBridgingStatus(transaction: TransactionDetails): SagaGen
     })
     yield* delay(currentPollInterval)
 
-    const data = yield* call(TradingApiClient.fetchSwaps, {
+    const data = yield* call(fetchSwaps, {
       txHashes: [txHash],
       chainId,
     })
 
     const currentSwapStatus = data.swaps?.[0]?.status
     logger.debug('watchBridgeSaga', `[${txHash}] waitForBridgingStatus`, 'currentSwapStatus:', currentSwapStatus)
-    if (currentSwapStatus && FINALIZED_SWAP_STATUS.includes(currentSwapStatus)) {
+    if (currentSwapStatus && FINALIZED_BRIDGE_SWAP_STATUS.includes(currentSwapStatus)) {
       swapStatus = currentSwapStatus
       break
     }
@@ -75,7 +75,7 @@ export function* waitForBridgingStatus(transaction: TransactionDetails): SagaGen
         'Local update found: ',
         updatedTransaction.status,
       )
-      return updatedTransaction.status
+      return updatedTransaction?.status
     }
 
     pollIndex++

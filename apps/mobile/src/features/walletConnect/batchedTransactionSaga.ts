@@ -1,14 +1,14 @@
-import { TradingApi } from '@universe/api'
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { getInternalError, getSdkError } from '@walletconnect/utils'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
-import { addRequest, WalletSendCallsRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletSendCallsRequest, addRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, select } from 'typed-redux-saga'
 import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
-import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { checkWalletDelegation, fetchWalletEncoding7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -26,7 +26,7 @@ import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selector
  * @returns Boolean indicating if EIP-5792 methods are enabled
  */
 function isEip5792MethodsEnabled(): boolean {
-  return getFeatureFlag(FeatureFlags.Eip5792Methods)
+  return getFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
 }
 
 /**
@@ -35,15 +35,7 @@ function isEip5792MethodsEnabled(): boolean {
  * @param requestId ID of the request to respond to
  * @param error Error object containing message and code
  */
-function* respondWithError({
-  topic,
-  requestId,
-  error,
-}: {
-  topic: string
-  requestId: number
-  error: { message: string; code: number }
-}) {
+function* respondWithError(topic: string, requestId: number, error: { message: string; code: number }) {
   yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
     topic,
     response: {
@@ -61,28 +53,18 @@ function* respondWithError({
  * @param batchId ID of the batch to check status for
  * @param accountAddress Address of the account making the request
  */
-export function* handleGetCallsStatus({
-  topic,
-  requestId,
-  batchId,
-  accountAddress,
-}: {
-  topic: string
-  requestId: number
-  batchId: string
-  accountAddress: string
-}) {
+export function* handleGetCallsStatus(topic: string, requestId: number, batchId: string, accountAddress: string) {
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
   if (!eip5792MethodsEnabled) {
-    yield* respondWithError({ topic, requestId, error: getSdkError('WC_METHOD_UNSUPPORTED') })
+    yield* respondWithError(topic, requestId, getSdkError('WC_METHOD_UNSUPPORTED'))
     return
   }
 
   const { data, error } = yield* call(getCallsStatusHelper, batchId, accountAddress)
 
   if (error || !data) {
-    yield* respondWithError({ topic, requestId, error: getInternalError('MISSING_OR_INVALID', error) })
+    yield* respondWithError(topic, requestId, getInternalError('MISSING_OR_INVALID', error))
     return
   }
 
@@ -102,35 +84,20 @@ export function* handleGetCallsStatus({
  * @param requestId ID of the request
  * @param request The WalletSendCallsRequest object containing call data
  */
-export function* handleSendCalls({
-  topic,
-  requestId,
-  request,
-}: {
-  topic: string
-  requestId: number
-  request: WalletSendCallsRequest
-}) {
+export function* handleSendCalls(topic: string, requestId: number, request: WalletSendCallsRequest) {
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
   if (!eip5792MethodsEnabled) {
-    yield* respondWithError({ topic, requestId, error: getSdkError('WC_METHOD_UNSUPPORTED') })
+    yield* respondWithError(topic, requestId, getSdkError('WC_METHOD_UNSUPPORTED'))
     return
   }
 
   try {
-    const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(
-      TradingApiClient.fetchWalletEncoding7702,
-      {
-        calls: transformCallsToTransactionRequests({
-          calls: request.calls,
-          chainId: request.chainId,
-          accountAddress: request.account,
-        }),
-        smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
-        walletAddress: request.account,
-      },
-    )
+    const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(fetchWalletEncoding7702, {
+      calls: transformCallsToTransactionRequests(request.calls, request.chainId, request.account),
+      smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
+      walletAddress: request.account,
+    })
 
     const requestWithEncodedTransaction = {
       ...request,
@@ -143,7 +110,7 @@ export function* handleSendCalls({
     logger.error(error, {
       tags: { file: 'batchTransactionSaga', function: 'handleSendCalls' },
     })
-    yield* respondWithError({ topic, requestId, error: getSdkError('USER_REJECTED') })
+    yield* respondWithError(topic, requestId, getSdkError('USER_REJECTED'))
   }
 }
 
@@ -179,23 +146,23 @@ export function* handleGetCapabilities({
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
   if (!eip5792MethodsEnabled) {
-    yield* respondWithError({ topic, requestId, error: getSdkError('WC_METHOD_UNSUPPORTED') })
+    yield* respondWithError(topic, requestId, getSdkError('WC_METHOD_UNSUPPORTED'))
     return
   }
 
   if (requestedAccount.toLowerCase() !== accountAddress.toLowerCase()) {
-    yield* respondWithError({ topic, requestId, error: getSdkError('UNAUTHORIZED_METHOD') })
+    yield* respondWithError(topic, requestId, getSdkError('UNAUTHORIZED_METHOD'))
     return
   }
 
   const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, accountAddress)
   const hasShownNudge = yield* select(selectHasShownEip5792Nudge, accountAddress, dappUrl)
 
-  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
+  const { chains: enabledChains } = yield* call(getEnabledChainIdsSaga)
 
   const chainIds = (chainIdsFromRequest ?? enabledChains).map((chainId) => chainId.valueOf())
 
-  let delegationStatusResponse: TradingApi.WalletCheckDelegationResponseBody | undefined
+  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
 
   let hasNoExistingDelegations = true
 
@@ -208,9 +175,7 @@ export function* handleGetCapabilities({
     const detailsMap = delegationStatusResponse.delegationDetails[accountAddress]
 
     if (detailsMap) {
-      const hasAtLeastOneDelegation = Object.values(detailsMap).some(
-        (details) => !!details.currentDelegationAddress && !details.isWalletDelegatedToUniswap,
-      )
+      const hasAtLeastOneDelegation = Object.values(detailsMap).some((details) => !!details.currentDelegationAddress)
 
       hasNoExistingDelegations = !hasAtLeastOneDelegation
     }
@@ -222,6 +187,12 @@ export function* handleGetCapabilities({
   }
 
   if (!hasSmartWalletConsent && !hasShownNudge && hasNoExistingDelegations) {
+    const onEnableSmartWallet = () => {
+      navigate(ModalName.SmartWalletEnabledModal, {
+        showReconnectDappPrompt: true,
+      })
+    }
+
     // Update the state to mark that we've shown the nudge
     yield* put(
       setHasShown5792Nudge({
@@ -230,7 +201,8 @@ export function* handleGetCapabilities({
       }),
     )
 
-    yield* call(navigate, ModalName.SmartWalletNudge, {
+    yield* call(navigate, ModalName.PostSwapSmartWalletNudge, {
+      onEnableSmartWallet,
       dappInfo: {
         icon: dappIconUrl,
         name: dappName,
@@ -238,8 +210,7 @@ export function* handleGetCapabilities({
     })
   }
 
-  const capabilities = yield* call(
-    getCapabilitiesForDelegationStatus,
+  const capabilities = getCapabilitiesForDelegationStatus(
     delegationStatusResponse?.delegationDetails[accountAddress],
     hasSmartWalletConsent,
   )

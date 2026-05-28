@@ -3,6 +3,8 @@
  * Modifications are called out with comments.
  */
 
+import { StackedAreaData } from 'components/Charts/StackedLineChart/stacked-area-series/data'
+import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   ICustomSeriesPaneRenderer,
@@ -11,8 +13,6 @@ import {
   Range,
   Time,
 } from 'lightweight-charts'
-import { StackedAreaData } from '~/components/Charts/StackedLineChart/stacked-area-series/data'
-import { StackedAreaSeriesOptions } from '~/components/Charts/StackedLineChart/stacked-area-series/options'
 
 interface Position {
   x: number
@@ -74,14 +74,14 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     const zeroY = priceToCoordinate(0) ?? 0
     const colorsCount = options.colors.length
     const isV4DataEnabled = options.colors.length === 3
-    const { linesMeshed, hoverInfo } = this._createLinePaths({
+    const { linesMeshed, hoverInfo } = this._createLinePaths(
       bars,
-      visibleRange: this._data.visibleRange,
+      this._data.visibleRange,
       renderingScope,
-      zeroY: zeroY * renderingScope.verticalPixelRatio,
-      hoveredIndex: options.hoveredLogicalIndex,
+      zeroY * renderingScope.verticalPixelRatio,
+      options.hoveredLogicalIndex,
       isV4DataEnabled,
-    })
+    )
 
     const fullLinesMeshed = linesMeshed.slice(0, colorsCount + 1)
     const highlightLinesMeshed = options.hoveredLogicalIndex ? linesMeshed.slice(colorsCount + 1) : []
@@ -154,6 +154,10 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     })
 
     highlightLinesMeshed.toReversed().forEach((linePath, index) => {
+      if (!linePath) {
+        ctx.globalAlpha = 1
+        return
+      }
       const color = options.colors[colorsCount - (index + 1)]
       ctx.strokeStyle = color
       ctx.fillStyle = color
@@ -166,21 +170,14 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
   }
 
   /** Builds canvas line paths based on input data  */
-  _createLinePaths({
-    bars,
-    visibleRange,
-    renderingScope,
-    zeroY,
-    hoveredIndex,
-    isV4DataEnabled,
-  }: {
-    bars: StackedAreaBarItem[]
-    visibleRange: Range<number>
-    renderingScope: BitmapCoordinatesRenderingScope
-    zeroY: number
-    hoveredIndex?: number | null
-    isV4DataEnabled?: boolean
-  }) {
+  _createLinePaths(
+    bars: StackedAreaBarItem[],
+    visibleRange: Range<number>,
+    renderingScope: BitmapCoordinatesRenderingScope,
+    zeroY: number,
+    hoveredIndex?: number | null,
+    isV4DataEnabled?: boolean,
+  ) {
     const { horizontalPixelRatio, verticalPixelRatio } = renderingScope
     const v2Lines: LinePathData[] = []
     const v3Lines: LinePathData[] = []
@@ -192,7 +189,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     let firstBar = true
 
     // Modification: tracks and returns coordinates of where a glyph should be rendered for each line when a crosshair is drawn
-    const hoverInfo = { points: [] as number[], x: 0 }
+    const hoverInfo = { points: new Array<number>(), x: 0 }
 
     const numLines = isV4DataEnabled ? 3 : 2
     // Modification: updated loop to include one point above and below the visible range to ensure the line is drawn to edges of chart

@@ -1,20 +1,19 @@
+import { GenericPasskeyMenuModal, PasskeyMenuModalState } from 'components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
+import { useAccount } from 'hooks/useAccount'
+import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Loader, Text, TouchableArea } from 'ui/src'
 import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Cloud } from 'ui/src/components/icons/Cloud'
 import { Mobile } from 'ui/src/components/icons/Mobile'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { colors } from 'ui/src/theme'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import type { AuthenticatorAttachment } from 'uniswap/src/features/passkey/embeddedWallet'
-import { getPrivyEnums, registerNewAuthenticator } from 'uniswap/src/features/passkey/embeddedWallet'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { AuthenticatorAttachment, registerNewAuthenticator } from 'uniswap/src/features/passkey/embeddedWallet'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { GenericPasskeyMenuModal, PasskeyMenuModalState } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
-import { useAccount } from '~/hooks/useAccount'
-import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 export function AddPasskeyMenu({
   show,
@@ -31,9 +30,7 @@ export function AddPasskeyMenu({
 }) {
   const { t } = useTranslation()
   const account = useAccount()
-  const { data: unitag, isLoading: unitagLoading } = useUnitagsAddressQuery({
-    params: account.address ? { address: account.address } : undefined,
-  })
+  const { unitag, loading: unitagLoading } = useUnitagByAddress(account.address)
   const newPasskeyUsername = unitag?.username ? `${unitag.username} (${numAuthenticators + 1})` : undefined
 
   const { mutate: registerAuthenticator } = usePasskeyAuthWithHelpModal(
@@ -75,10 +72,7 @@ export function AddPasskeyMenu({
         </Flex>
         <Trace logPress element={ElementName.AddPasskeyPlatform}>
           <TouchableArea
-            onPress={async () => {
-              const { AuthenticatorAttachment } = await getPrivyEnums()
-              registerAuthenticator(AuthenticatorAttachment.PLATFORM)
-            }}
+            onPress={() => registerAuthenticator(AuthenticatorAttachment.PLATFORM)}
             width="100%"
             disabled={unitagLoading}
           >
@@ -109,10 +103,7 @@ export function AddPasskeyMenu({
         </Trace>
         <Trace logPress element={ElementName.AddPasskeyCrossPlatform}>
           <TouchableArea
-            onPress={async () => {
-              const { AuthenticatorAttachment } = await getPrivyEnums()
-              registerAuthenticator(AuthenticatorAttachment.CROSS_PLATFORM)
-            }}
+            onPress={() => registerAuthenticator(AuthenticatorAttachment.CROSS_PLATFORM)}
             width="100%"
             disabled={unitagLoading}
           >

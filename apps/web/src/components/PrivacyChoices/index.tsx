@@ -1,3 +1,6 @@
+import { InterfaceElementName } from '@uniswap/analytics-events'
+import { PRIVACY_SHARING_OPT_OUT_STORAGE_KEY } from 'components/PrivacyChoices/constants'
+import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
@@ -6,10 +9,8 @@ import { Anchor, Button, Checkbox, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { PRIVACY_SHARING_OPT_OUT_STORAGE_KEY } from '~/components/PrivacyChoices/constants'
-import { useModalState } from '~/hooks/useModalState'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function PrivacyChoicesModal() {
   const { isOpen, closeModal } = useModalState(ModalName.PrivacyChoices)
@@ -22,7 +23,7 @@ export function PrivacyChoicesModal() {
     // Reset the checkbox if a user doesn't save
     setIsOptOutChecked(privacySharingOptOut)
     closeModal()
-  }, [privacySharingOptOut, closeModal])
+  }, [privacySharingOptOut, closeModal, setIsOptOutChecked])
 
   const handleSave = useCallback(() => {
     setPrivacySharingOptOut(isOptOutChecked)
@@ -34,7 +35,7 @@ export function PrivacyChoicesModal() {
       <Flex fill>
         <Flex py="$spacing20" px="$spacing24" gap="$spacing24">
           <Flex row justifyContent="flex-end">
-            <Trace logPress element={ElementName.CloseButton}>
+            <Trace logPress element={InterfaceElementName.CLOSE_BUTTON}>
               <ModalCloseIcon onClose={closeAndResetModal} />
             </Trace>
           </Flex>

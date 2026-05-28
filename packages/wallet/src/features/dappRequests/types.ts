@@ -1,14 +1,6 @@
-import { DappVerificationStatus } from '@universe/api'
-import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { z } from 'zod'
 
 export const CapabilitySchema = z.record(z.string(), z.unknown())
-
-// CAIP-345 response enrichment schema for wallet_sendCalls
-export const Caip345Schema = z.object({
-  caip2: z.string(), // Chain identifier in CAIP-2 format (e.g., "eip155:1")
-  transactionHashes: z.array(z.string()), // Array of transaction hashes
-})
 
 export const CallSchema = z.object({
   to: z.string().optional(),
@@ -33,11 +25,7 @@ export const SendCallsParamsSchema = z.object({
 
 export const SendCallsResultSchema = z.object({
   id: z.string(),
-  capabilities: z
-    .looseObject({
-      caip345: Caip345Schema.optional(),
-    }) // Allow other capability fields for future extensibility
-    .optional(),
+  capabilities: z.record(z.string(), CapabilitySchema).optional(),
 })
 
 export const GetCallsStatusParamsSchema = BatchIdSchema
@@ -68,7 +56,6 @@ export const GetCallsStatusResultSchema = z.object({
 
 // Export types for use in other files
 export type Capability = z.infer<typeof CapabilitySchema>
-export type Caip345 = z.infer<typeof Caip345Schema>
 export type Call = z.infer<typeof CallSchema>
 export type SendCallsParams = z.infer<typeof SendCallsParamsSchema>
 export type SendCallsResult = z.infer<typeof SendCallsResultSchema>
@@ -76,73 +63,3 @@ export type GetCallsStatusTransactionReceiptLog = z.infer<typeof GetCallsStatusT
 export type GetCallsStatusTransactionReceipt = z.infer<typeof GetCallsStatusTransactionReceiptSchema>
 export type GetCallsStatusParams = z.infer<typeof GetCallsStatusParamsSchema>
 export type GetCallsStatusResult = z.infer<typeof GetCallsStatusResultSchema>
-
-export { DappVerificationStatus }
-
-export interface DappConnectionInfo {
-  name: string
-  url: string
-  icon: string | null
-  frameUrl?: string
-}
-
-/**
- * Risk level derived from Blockaid validation classification
- */
-export enum TransactionRiskLevel {
-  /** No risk detected - benign transaction */
-  None = 'none',
-  /** Warning level - potentially risky but not malicious */
-  Warning = 'warning',
-  /** Critical/Malicious - high risk transaction */
-  Critical = 'critical',
-}
-
-/**
- * Asset information to display in transaction sections
- */
-export interface TransactionAsset {
-  /** Asset type (ERC20, NATIVE, NFT, etc.) */
-  type: string
-  /** Contract address */
-  address: string
-  /** Chain ID */
-  chainId: UniverseChainId
-  /** Token/NFT symbol or name */
-  symbol?: string
-  /** Token/NFT name */
-  name?: string
-  /** Amount as formatted string */
-  amount?: string
-  /** USD value as formatted string */
-  usdValue?: string
-  /** Logo/image URL */
-  logoUrl?: string
-  /** Spender address (for approvals) */
-  spenderAddress?: string
-}
-
-/**
- * Transaction section types that can be displayed in the transaction preview
- */
-export enum TransactionSectionType {
-  Sending = 'sending',
-  Receiving = 'receiving',
-  Approving = 'approving',
-}
-
-/**
- * A transaction section to display (e.g., "Sending", "Receiving", "Approving")
- */
-export interface TransactionSection {
-  type: TransactionSectionType
-  assets: TransactionAsset[]
-}
-
-/**
- * Parsed transaction data for UI display
- */
-export interface ParsedTransactionData {
-  sections: TransactionSection[]
-  riskLevel: TransactionRiskLevel
-}

@@ -1,16 +1,33 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-
-import { Percent } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair as FewPair } from '@ring-protocol/few-v2-sdk'
+import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Pair, computePairAddress } from '@uniswap/v2-sdk'
+import { gqlToCurrency } from 'appGraphql/data/util'
+import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'
+import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
+import { NETWORKS_WITHOUT_FEWTOKEN } from 'pages/LegacyPool/redirects'
 import { useCallback, useMemo } from 'react'
-import { useGetPositionsForPairs } from 'uniswap/src/data/rest/getPositions'
-import { serializeToken } from 'uniswap/src/utils/currency'
-import { useAccount } from '~/hooks/useAccount'
-import { useAppDispatch, useAppSelector } from '~/state/hooks'
-import { RouterPreference } from '~/state/routing/types'
-import { addSerializedPair, updateUserRouterPreference, updateUserSlippageTolerance } from '~/state/user/reducer'
-import { SerializedPair, SlippageTolerance } from '~/state/user/types'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { RouterPreference } from 'state/routing/types'
+import {
+  addSerializedFewPair,
+  addSerializedPair,
+  updateUserDeadline,
+  updateUserRouterPreference,
+  updateUserSlippageTolerance,
+} from 'state/user/reducer'
+import { SerializedPair, SlippageTolerance } from 'state/user/types'
+import {
+  TokenSortableField,
+  useTopTokensQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useGetPositionsForFewPairs, useGetPositionsForPairs } from 'uniswap/src/data/rest/getPositions'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isL2ChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()
@@ -55,7 +72,7 @@ export function useUserSlippageTolerance(): [
           userSlippageTolerance === SlippageTolerance.Auto
             ? SlippageTolerance.Auto
             : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
-      } catch {
+      } catch (error) {
         value = SlippageTolerance.Auto
       }
       dispatch(
@@ -70,7 +87,33 @@ export function useUserSlippageTolerance(): [
   return [userSlippageTolerance, setUserSlippageTolerance]
 }
 
-function serializePair(pair: Pair): SerializedPair {
+/**
+ *Returns user slippage tolerance, replacing the auto with a default value
+ * @param defaultSlippageTolerance the value to replace auto with
+ */
+export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
+  const [allowedSlippage] = useUserSlippageTolerance()
+  return allowedSlippage === SlippageTolerance.Auto ? defaultSlippageTolerance : allowedSlippage
+}
+
+export function useUserTransactionTTL(): [number, (slippage: number) => void] {
+  const { chainId } = useAccount()
+  const dispatch = useAppDispatch()
+  const userDeadline = useAppSelector((state) => state.user.userDeadline)
+  const onL2 = isL2ChainId(chainId)
+  const deadline = onL2 ? L2_DEADLINE_FROM_NOW : userDeadline
+
+  const setUserDeadline = useCallback(
+    (userDeadline: number) => {
+      dispatch(updateUserDeadline({ userDeadline }))
+    },
+    [dispatch],
+  )
+
+  return [deadline, setUserDeadline]
+}
+
+function serializePair(pair: Pair | FewPair): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
     token1: serializeToken(pair.token1),
@@ -88,8 +131,199 @@ export function usePairAdder(): (pair: Pair) => void {
   )
 }
 
+// eslint-disable-next-line import/no-unused-modules
+export function useFewPairAdder(): (pair: FewPair) => void {
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (pair: FewPair) => {
+      dispatch(addSerializedFewPair({ serializedPair: serializePair(pair) }))
+    },
+    [dispatch],
+  )
+}
+
+/**
+ * Given two tokens return the liquidity token that represents its liquidity shares
+ * @param tokenA one of the two tokens
+ * @param tokenB the other token
+ */
+export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+  if (tokenA.chainId !== tokenB.chainId) {
+    throw new Error('Not matching chain IDs')
+  }
+  if (tokenA.equals(tokenB)) {
+    throw new Error('Tokens cannot be equal')
+  }
+  if (!V2_FACTORY_ADDRESSES[tokenA.chainId]) {
+    throw new Error('No V2 factory address on this chain')
+  }
+
+  return new Token(
+    tokenA.chainId,
+    computePairAddress({ factoryAddress: V2_FACTORY_ADDRESSES[tokenA.chainId], tokenA, tokenB }),
+    18,
+    'UNI-V2',
+    'Uniswap V2',
+  )
+}
+
+/**
+ * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
+ */
+export function useTrackedTokenPairs(): [Token, Token][] {
+  const { chainId } = useAccount()
+  const { defaultChainId } = useEnabledChains()
+  const supportedChainId = useSupportedChainId(chainId)
+
+  // TODO(WEB-4001): use an "all tokens" query for better LP detection
+  const { data: popularTokens } = useTopTokensQuery({
+    variables: {
+      chain: toGraphQLChain(supportedChainId ?? defaultChainId),
+      orderBy: TokenSortableField.Popularity,
+      page: 1,
+      pageSize: 100,
+    },
+  })
+
+  // pinned pairs
+  const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
+
+  // pairs for every token against every base
+  const generatedPairs: [Token, Token][] = useMemo(
+    () =>
+      chainId && popularTokens?.topTokens
+        ? popularTokens.topTokens.flatMap((gqlToken) => {
+            if (!gqlToken || !gqlToken.address) {
+              return []
+            }
+            const token = gqlToCurrency(gqlToken)
+            // for each token on the current chain,
+            return (
+              // loop though all bases on the current chain
+              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+                // to construct pairs of the given token with each base
+                .map((base) => {
+                  if (!token?.isNative && base.address === token?.address) {
+                    return null
+                  } else {
+                    return [base, token]
+                  }
+                })
+                .filter((p): p is [Token, Token] => p !== null)
+            )
+          })
+        : [],
+    [popularTokens, chainId],
+  )
+
+  // pairs saved by users
+  const savedSerializedPairs = useAppSelector(({ user: { pairs } }) => pairs)
+
+  const userPairs: [Token, Token][] = useMemo(() => {
+    if (!chainId || !savedSerializedPairs) {
+      return []
+    }
+    const forChain = savedSerializedPairs[chainId]
+    if (!forChain) {
+      return []
+    }
+
+    return Object.keys(forChain).map((pairId) => {
+      return [deserializeToken(forChain[pairId].token0), deserializeToken(forChain[pairId].token1)]
+    })
+  }, [savedSerializedPairs, chainId])
+
+  const combinedList = useMemo(
+    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
+    [pinnedPairs, userPairs, generatedPairs],
+  )
+
+  return useMemo(() => {
+    // dedupes pairs of tokens in the combined list
+    const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>((memo, [tokenA, tokenB]) => {
+      const sorted = tokenA.sortsBefore(tokenB)
+      const key = sorted ? `${tokenA.address}:${tokenB.address}` : `${tokenB.address}:${tokenA.address}`
+      if (memo[key]) {
+        return memo
+      }
+      memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA]
+      return memo
+    }, {})
+
+    return Object.keys(keyed).map((key) => keyed[key])
+  }, [combinedList])
+}
+
 export function useRequestPositionsForSavedPairs() {
   const savedSerializedPairs = useAppSelector(({ user: { pairs } }) => pairs)
   const account = useAccount()
   return useGetPositionsForPairs(savedSerializedPairs, account.address)
+}
+
+/**
+ * Returns serialized pairs for networks that don't support getPosition API (e.g., X Layer)
+ * This allows the component to fetch pair data directly using useV2Pair
+ */
+// eslint-disable-next-line import/no-unused-modules
+export function useSavedPairsForUnsupportedNetworks(): Array<{
+  chainId: UniverseChainId
+  token0: Token
+  token1: Token
+  serializedPair: SerializedPair
+}> {
+  const savedSerializedPairs = useAppSelector(({ user: { pairs } }) => pairs)
+
+  return useMemo(() => {
+    if (!savedSerializedPairs) {
+      return []
+    }
+
+    const pairs: Array<{
+      chainId: UniverseChainId
+      token0: Token
+      token1: Token
+      serializedPair: SerializedPair
+    }> = []
+
+    // Process each chain's pairs
+    Object.keys(savedSerializedPairs).forEach((chainIdStr) => {
+      const chainId = Number(chainIdStr) as UniverseChainId
+
+      // Only process unsupported networks
+      if (!NETWORKS_WITHOUT_FEWTOKEN.includes(chainId)) {
+        return
+      }
+
+      const pairsForChain = savedSerializedPairs[chainId]
+      if (!pairsForChain) {
+        return
+      }
+
+      Object.keys(pairsForChain).forEach((pairId) => {
+        const serializedPair = pairsForChain[pairId]
+        if (!serializedPair) {
+          return
+        }
+
+        const token0 = deserializeToken(serializedPair.token0)
+        const token1 = deserializeToken(serializedPair.token1)
+
+        pairs.push({
+          chainId,
+          token0,
+          token1,
+          serializedPair,
+        })
+      })
+    })
+
+    return pairs
+  }, [savedSerializedPairs])
+}
+
+export function useRequestPositionsForSavedFewPairs() {
+  const savedSerializedFewPairs = useAppSelector(({ user: { fewPairs } }) => fewPairs)
+  const account = useAccount()
+  return useGetPositionsForFewPairs(savedSerializedFewPairs, account.address)
 }

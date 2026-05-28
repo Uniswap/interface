@@ -1,0 +1,68 @@
+fragment QuickTokenBalanceParts on TokenBalance {
+  id
+  quantity
+  denominatedValue {
+    id
+    value
+    currency
+  }
+  token {
+    id
+    address
+    chain
+    standard
+  }
+}
+
+fragment PortfolioTokenBalanceParts on TokenBalance {
+  id
+  quantity
+  denominatedValue {
+    id
+    currency
+    value
+  }
+  token {
+    ...SimpleTokenDetails
+    id
+    address
+    chain
+    symbol
+    name
+    decimals
+    standard
+    project {
+      id
+      name
+      logo {
+        id
+        url
+      }
+      safetyLevel
+      logoUrl
+      isSpam
+    }
+  }
+  tokenProjectMarket {
+    id
+    pricePercentChange(duration: DAY) {
+      id
+      value
+    }
+    tokenProject {
+      id
+      logoUrl
+      isSpam
+    }
+  }
+}
+
+# Query only returns basic token, quantity, and denominated value.
+query QuickTokenBalancesWeb($ownerAddress: String!, $chains: [Chain!]!) {
+  portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {
+    id
+    tokenBalances {
+      ...QuickTokenBalanceParts
+    }
+  }
+}

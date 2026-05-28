@@ -1,17 +1,17 @@
 import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { computePairAddress, Pair } from '@uniswap/v2-sdk'
+import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
+import { assume0xAddress } from 'utils/wagmi'
 import { useReadContracts } from 'wagmi'
-import { assume0xAddress } from '~/utils/wagmi'
 
-enum PairState {
+export enum PairState {
   LOADING = 0,
   NOT_EXISTS = 1,
   EXISTS = 2,
   INVALID = 3,
 }
 
-function useV2Pairs(currencies: [Maybe<Currency>, Maybe<Currency>][]): [PairState, Pair | null][] {
+export function useV2Pairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
   const chainId = currencies[0]?.[0]?.chainId
   const tokens = useMemo(
     () => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]),
@@ -105,8 +105,7 @@ function useV2Pairs(currencies: [Maybe<Currency>, Maybe<Currency>][]): [PairStat
   }, [data, isLoading, pairAddresses.length, tokens])
 }
 
-export function useV2Pair(tokenA?: Maybe<Currency>, tokenB?: Maybe<Currency>): [PairState, Pair | null] {
-  const inputs: [[Maybe<Currency>, Maybe<Currency>]] = useMemo(() => [[tokenA, tokenB]], [tokenA, tokenB])
-  const v2Pairs = useV2Pairs(inputs)
-  return v2Pairs.length ? v2Pairs[0] : [PairState.NOT_EXISTS, null]
+export function useV2Pair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
+  const inputs: [[Currency | undefined, Currency | undefined]] = useMemo(() => [[tokenA, tokenB]], [tokenA, tokenB])
+  return useV2Pairs(inputs)[0]
 }

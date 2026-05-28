@@ -1,28 +1,28 @@
-import { getSdkError, INTERNAL_ERRORS } from '@walletconnect/utils'
+import { INTERNAL_ERRORS, getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { DappConnectionItem } from 'src/components/Requests/ConnectedDapps/DappConnectionItem'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
+  WalletConnectSession,
   removePendingSession,
   removeSession,
-  WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Scan } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
-import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { DappEllipsisDropdown } from 'wallet/src/components/settings/DappEllipsisDropdown/DappEllipsisDropdown'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -48,7 +48,7 @@ export function ConnectedDappsList({ backButton, sessions, selectedAddress }: Co
   const disconnectSession = useCallback(
     async (session: WalletConnectSession, isNotification = true) => {
       try {
-        dispatch(removeSession({ sessionId: session.id }))
+        dispatch(removeSession({ account: address, sessionId: session.id }))
         try {
           await wcWeb3Wallet.disconnectSession({
             topic: session.id,

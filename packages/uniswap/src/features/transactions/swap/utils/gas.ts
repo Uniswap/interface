@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { GasFeeResult } from '@universe/api'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 
 export function sumGasFees(gasFees: (string | undefined)[]): string | undefined {
   if (gasFees.length === 0) {

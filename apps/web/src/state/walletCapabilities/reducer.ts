@@ -1,15 +1,15 @@
 import { createListenerMiddleware, createSlice } from '@reduxjs/toolkit'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { hexToNumber } from 'utilities/src/addresses/hex'
-import { createOnSetCapabilitiesByChainEffect } from '~/state/walletCapabilities/effects'
+import { createOnSetCapabilitiesByChainEffect } from 'state/walletCapabilities/effects'
 import {
   isAtomicBatchingSupported,
   isAtomicBatchingSupportedByChainId,
-} from '~/state/walletCapabilities/lib/handleGetCapabilities'
-import type { GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
-import { GetCapabilitiesStatus, WalletCapabilitiesState } from '~/state/walletCapabilities/types'
+} from 'state/walletCapabilities/lib/handleGetCapabilities'
+import type { GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
+import { GetCapabilitiesStatus, WalletCapabilitiesState } from 'state/walletCapabilities/types'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants/interface'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { hexToNumber } from 'uniswap/src/utils/hex'
 
 const initialState: WalletCapabilitiesState = {
   getCapabilitiesStatus: GetCapabilitiesStatus.Unknown,
@@ -60,7 +60,12 @@ export const selectIsAtomicBatchingSupportedByChainId = (state: {
       return undefined
     }
     const areCapabilitiesSupported = selectWalletCapabilitiesSupported(state)
-    return areCapabilitiesSupported && isAtomicBatchingSupportedByChainId(state.walletCapabilities.byChain, chainId)
+    if (!areCapabilitiesSupported) {
+      return false
+    }
+    const atomicBatchingSupported = isAtomicBatchingSupportedByChainId(state.walletCapabilities.byChain, chainId)
+    // if undefined, the chain is not supported
+    return atomicBatchingSupported ?? false
   }
 }
 
@@ -85,7 +90,7 @@ function onAtomicSupportedChainIdsDetected(chainIds: number[]) {
 
 function onWalletCapabilitiesDetected(chainCapabilitiesResult: GetCapabilitiesResult) {
   for (const [chainId, capabilities] of Object.entries(chainCapabilitiesResult)) {
-    sendAnalyticsEvent(InterfaceEventName.WalletCapabilitiesDetected, {
+    sendAnalyticsEvent(InterfaceEventNameLocal.WalletCapabilitiesDetected, {
       chainId: hexToNumber(chainId),
       capabilities,
     })

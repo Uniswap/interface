@@ -1,29 +1,25 @@
-import { CommandParser, CommandType, type UniversalRouterCall } from '@uniswap/universal-router-sdk'
-import { Actions, V4BaseActionsParser, type V4RouterCall } from '@uniswap/v4-sdk'
+import { CommandParser, UniversalRouterCall } from '@uniswap/universal-router-sdk'
+import { V4BaseActionsParser, V4RouterCall } from '@uniswap/v4-sdk'
 import { EthSendTransactionRPCActions } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { parseCalldata as parseNfPMCalldata } from 'src/app/features/dappRequests/types/NonfungiblePositionManager'
-import { type NonfungiblePositionManagerCall } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
-import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { NonfungiblePositionManagerCall } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 import methodHashToFunctionSignature from 'utilities/src/calldata/methodHashToFunctionSignature'
-import { noop } from 'utilities/src/react/noop'
+import noop from 'utilities/src/react/noop'
 
 interface GetCalldataInfoFromTransactionReturnValue {
-  functionSignature?: string
+  functionSignature: string | undefined
   contractInteractions: EthSendTransactionRPCActions
-  to?: string
+  to: string | undefined
   parsedCalldata?: V4RouterCall | UniversalRouterCall | NonfungiblePositionManagerCall
 }
 
-export default function getCalldataInfoFromTransaction({
-  data,
-  to,
-  chainId,
-}: {
-  data: string
-  to?: string
-  chainId?: UniverseChainId
-}): GetCalldataInfoFromTransactionReturnValue {
+function getCalldataInfoFromTransaction(
+  data: string,
+  to: string | undefined,
+  chainId: UniverseChainId | undefined,
+): GetCalldataInfoFromTransactionReturnValue {
   const calldataMethodHash = data.substring(2, 10)
   const functionSignature = methodHashToFunctionSignature(calldataMethodHash)
   const contractInteractions = EthSendTransactionRPCActions.ContractInteraction
@@ -42,56 +38,37 @@ export default function getCalldataInfoFromTransaction({
       result.contractInteractions = EthSendTransactionRPCActions.Approve
       return result
     }
-
     try {
       const v4Calldata = V4BaseActionsParser.parseCalldata(data)
 
-      // Validate that the V4 call actually contains swap actions
-      const hasSwapAction = v4Calldata.actions.some(
-        (action) =>
-          action.actionType === Actions.SWAP_EXACT_IN ||
-          action.actionType === Actions.SWAP_EXACT_OUT ||
-          action.actionType === Actions.SWAP_EXACT_IN_SINGLE ||
-          action.actionType === Actions.SWAP_EXACT_OUT_SINGLE,
-      )
-
-      if (hasSwapAction) {
+      if (v4Calldata) {
         result.contractInteractions = EthSendTransactionRPCActions.Swap
         result.parsedCalldata = v4Calldata
         return result
       }
-    } catch {
+    } catch (e) {
       noop()
     }
-
     try {
       const URCalldata = CommandParser.parseCalldata(data)
 
-      // Validate that the UR call actually contains swap commands
-      const hasSwapCommand = URCalldata.commands.some(
-        (command) =>
-          command.commandType === CommandType.V2_SWAP_EXACT_IN ||
-          command.commandType === CommandType.V2_SWAP_EXACT_OUT ||
-          command.commandType === CommandType.V3_SWAP_EXACT_IN ||
-          command.commandType === CommandType.V3_SWAP_EXACT_OUT ||
-          command.commandType === CommandType.V4_SWAP,
-      )
-
-      if (hasSwapCommand) {
+      if (URCalldata) {
         result.contractInteractions = EthSendTransactionRPCActions.Swap
         result.parsedCalldata = URCalldata
         return result
       }
-    } catch {
+    } catch (e) {
       noop()
     }
-
     try {
       const NfPMCalldata = parseNfPMCalldata(data)
-      result.contractInteractions = EthSendTransactionRPCActions.LP
-      result.parsedCalldata = NfPMCalldata
-      return result
-    } catch {
+
+      if (NfPMCalldata) {
+        result.contractInteractions = EthSendTransactionRPCActions.LP
+        result.parsedCalldata = NfPMCalldata
+        return result
+      }
+    } catch (e) {
       noop()
     }
 
@@ -105,3 +82,5 @@ export default function getCalldataInfoFromTransaction({
   }
   return result
 }
+
+export default getCalldataInfoFromTransaction

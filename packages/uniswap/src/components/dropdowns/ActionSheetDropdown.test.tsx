@@ -7,32 +7,28 @@ import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from 'uniswap/src/test/test-utils'
 
-vi.mock('react-native', async (importOriginal) => {
-  const actualReactNative = await importOriginal<typeof import('react-native')>()
+jest.mock('react-native', () => {
+  const actualReactNative = jest.requireActual('react-native')
 
-  // In web environment (react-native-web), View doesn't have prototype.measureInWindow
-  // So we need to handle this safely - only set if prototype exists
+  // Extend the View component to mock measureInWindow
   const MockedView = actualReactNative.View
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (MockedView?.prototype) {
-    MockedView.prototype.measureInWindow = (
-      callback: (x: number, y: number, width: number, height: number) => void,
-    ): void => {
-      // Provide mock measurements
-      const mockX = 0
-      const mockY = 0
-      const mockWidth = 100
-      const mockHeight = 50
-      callback(mockX, mockY, mockWidth, mockHeight)
-    }
+  MockedView.prototype.measureInWindow = (
+    callback: (x: number, y: number, width: number, height: number) => void,
+  ): void => {
+    // Provide mock measurements
+    const mockX = 0
+    const mockY = 0
+    const mockWidth = 100
+    const mockHeight = 50
+    callback(mockX, mockY, mockWidth, mockHeight)
   }
 
   return actualReactNative
 })
 
-vi.mock('tamagui', async (importOriginal) => {
-  const actualTamagui = await importOriginal<typeof import('tamagui')>()
+jest.mock('tamagui', () => {
+  const actualTamagui = jest.requireActual('tamagui')
 
   return {
     ...actualTamagui,
@@ -42,7 +38,7 @@ vi.mock('tamagui', async (importOriginal) => {
 
 const createOption = (key: string, label: string): MenuItemProp => ({
   key,
-  onPress: vi.fn(),
+  onPress: jest.fn(),
   render: () => <Text>{label}</Text>,
 })
 
@@ -68,9 +64,7 @@ describe(ActionSheetDropdown, () => {
     expect(tree).toMatchSnapshot()
   })
 
-  // TODO: Skip tests that require dropdown to open - doesn't work in jsdom/Vitest environment
-  // The dropdown state management and Portal rendering don't function properly in jsdom
-  it.skip('opens the dropdown when the toggle is pressed', async () => {
+  it('opens the dropdown when the toggle is pressed', async () => {
     render(<ActionSheetDropdown options={options} />)
 
     // Should be closed by default
@@ -82,7 +76,7 @@ describe(ActionSheetDropdown, () => {
     options.forEach(({ key }) => expect(screen.queryByTestId(key)).toBeTruthy())
   })
 
-  it.skip('closes the dropdown after pressing on a backdrop', async () => {
+  it('closes the dropdown after pressing on a backdrop', async () => {
     const { getByTestId } = render(<ActionSheetDropdown options={options} />)
     await openDropdown()
 
@@ -94,7 +88,7 @@ describe(ActionSheetDropdown, () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId('dropdown-content'))
   })
 
-  it.skip('closes the dropdown after pressing on an option', async () => {
+  it('closes the dropdown after pressing on an option', async () => {
     const { getByTestId } = render(<ActionSheetDropdown options={options} />)
 
     await openDropdown()
@@ -107,7 +101,7 @@ describe(ActionSheetDropdown, () => {
     await waitForElementToBeRemoved(() => screen.queryByTestId('dropdown-content'))
   })
 
-  it.skip('calls the onPress function of the option after pressing on an option', async () => {
+  it('calls the onPress function of the option after pressing on an option', async () => {
     const { getByTestId } = render(<ActionSheetDropdown options={options} />)
 
     await openDropdown()

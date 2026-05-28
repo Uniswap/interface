@@ -1,0 +1,98 @@
+<!--
+-- UI entrypoint for web.
+--
+-- HTML document used to host any React content (popup, window, iframes, etc.)
+--
+-- Flow:
+--   1. Document is opened with url formatted for <Router />
+--   2. Document inserts index.js into a <script> tag
+--   3. index.js renders <App /> at #root
+--   4. react-router handles proper routing (e.g. onboarding, navigation, notifications, etc.)
+--
+-- ┌────────────────────────────┐
+-- │ content_window.html#/route │
+-- ├────────────────────────────┤
+-- │ <html>                     │
+-- │  <script src=content.js /> │
+-- └────┬───────────────────────┘
+--      │ {route}
+--      ▼
+-- ┌───────────────┐    ┌────────────────────┐
+-- │  content.js   │  ┌►│  <Router route>    │
+-- ├───────────────┤  │ ├────────────────────┤
+-- │ <Redux />     │  │ │ |<Onboarding/>     │
+-- │  <Tamagui />  │  │ │ |<WebNavigation /> │
+-- │   <GraphQl /> │  │ │ |<Notifications /> │
+-- │    <Router />─┼──┘ │ |...               │
+-- └───────────────┘    └────────────────────┘
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preload" href="assets/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="assets/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+
+    <style>
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          /* Avoid flash of white background when opening the extension. */
+          background-color: #131313;
+        }
+      }
+
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /* Explicitly load Basel var from public/ so it does not block LCP's critical path. */
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 500;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Medium';
+        src:
+          url(assets/fonts/Basel-Medium.woff) format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+        font-named-instance: 'Book';
+        src:
+          url(assets/fonts/Basel-Book.woff) format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html {
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+
+    <title>Ring Extension</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="loadSidebar.js" async></script>
+  </body>
+</html>

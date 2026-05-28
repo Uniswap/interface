@@ -1,4 +1,4 @@
-import { TradingApi } from '@universe/api'
+import { TransactionRequest } from 'uniswap/src/data/tradingApi/__generated__/models/TransactionRequest'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { generateBatchId, transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
 
@@ -54,7 +54,7 @@ describe(transformCallsToTransactionRequests, () => {
 
   it('should transform valid calls correctly', () => {
     const calls = [validCall1, validCall2]
-    const expected: TradingApi.TransactionRequest[] = [
+    const expected: TransactionRequest[] = [
       {
         to: validCall1.to!,
         data: validCall1.data!,
@@ -71,17 +71,13 @@ describe(transformCallsToTransactionRequests, () => {
       },
     ]
 
-    const result = transformCallsToTransactionRequests({
-      calls,
-      chainId: mockChainId,
-      accountAddress: mockAccountAddress,
-    })
+    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
     expect(result).toEqual(expected)
   })
 
   it('should filter out invalid calls', () => {
     const calls = [validCall1, invalidCallMissingTo, validCall2, invalidCallMissingData]
-    const expected: TradingApi.TransactionRequest[] = [
+    const expected: TransactionRequest[] = [
       {
         to: validCall1.to!,
         data: validCall1.data!,
@@ -98,31 +94,19 @@ describe(transformCallsToTransactionRequests, () => {
       },
     ]
 
-    const result = transformCallsToTransactionRequests({
-      calls,
-      chainId: mockChainId,
-      accountAddress: mockAccountAddress,
-    })
+    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
     expect(result).toEqual(expected)
   })
 
   it('should return an empty array if all calls are invalid', () => {
     const calls = [invalidCallMissingTo, invalidCallMissingData]
-    const result = transformCallsToTransactionRequests({
-      calls,
-      chainId: mockChainId,
-      accountAddress: mockAccountAddress,
-    })
+    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
     expect(result).toEqual([])
   })
 
   it('should return an empty array if input calls array is empty', () => {
     const calls: EthTransaction[] = []
-    const result = transformCallsToTransactionRequests({
-      calls,
-      chainId: mockChainId,
-      accountAddress: mockAccountAddress,
-    })
+    const result = transformCallsToTransactionRequests(calls, mockChainId, mockAccountAddress)
     expect(result).toEqual([])
   })
 })

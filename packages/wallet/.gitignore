@@ -4,5 +4,4 @@ THUMBS_DB
 tsconfig.tsbuildinfo
 
 # generated trading api files
-src/**/__generated__
-coverage/
+src/**/__generated__/*

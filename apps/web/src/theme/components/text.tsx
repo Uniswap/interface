@@ -2,24 +2,24 @@
  * Preset styles of the Rebass Text component
  */
 
+import styled from 'lib/styled-components'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
 
-const TextWrapper = deprecatedStyled(Text).withConfig({
+const TextWrapper = styled(Text).withConfig({
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color: keyof string }>`
   color: ${({ color, theme }) => (theme as any)[color]};
   letter-spacing: -0.01em;
 `
 
-const HeadingWrapper = deprecatedStyled.h1.withConfig({
+const HeadingWrapper = styled.h1.withConfig({
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color: keyof string; fontSize: string; margin: string }>`
   color: ${({ color, theme }) => (theme as any)[color]};
   font-family: inherit;
   font-weight: 485;
   font-size: ${({ fontSize }) => fontSize};
-  margin: ${({ margin }) => margin};
+  margin: ${({ margin }) => margin ?? 0};
   letter-spacing: -0.02em;
 `
 

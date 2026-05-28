@@ -13,14 +13,13 @@ export function useDappStateUpdated(): boolean {
     return () => {
       dappStore.removeListener(DappStoreEvent.DappStateUpdated, onUpdate)
     }
-  }, [])
+  }, [dispatch])
   return state
 }
 
 export function useDappInfo(dappUrl: string | undefined): DappInfo | undefined {
   const [info, setInfo] = useState<DappInfo>()
   const dappStateUpdated = useDappStateUpdated()
-  // biome-ignore lint/correctness/useExhaustiveDependencies: dappStateUpdated is used to trigger re-render when dapp store changes
   useEffect(() => {
     setInfo(dappStore.getDappInfo(dappUrl))
   }, [dappUrl, dappStateUpdated])
@@ -36,22 +35,18 @@ export function useDappConnectedAccounts(dappUrl: string | undefined): Account[]
 }
 
 /**
- * Hook to retrieve all dapp connection URLs for a specific account.
+ * Pairs well with `getDappInfo`, which returns the dapp info for a given dapp URL.
  *
- * @param address - Optional account address. If not provided, uses the active account.
- * @returns all dapp connection URLs (ie state keys) for the specified account
+ * @returns all dapp connection URLs (ie state keys) for the active account
  */
-export function useAllDappConnectionsForAccount(address?: Address): string[] {
+export function useAllDappConnectionsForActiveAccount(): string[] {
   const [dappUrls, setDappUrls] = useState<string[]>([])
   const dappStateUpdated = useDappStateUpdated()
   const activeAccount = useActiveAccountAddress()
 
-  const accountAddress = address ?? activeAccount
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: dappStateUpdated is used to trigger re-render when dapp store changes
   useEffect(() => {
-    setDappUrls(accountAddress ? dappStore.getConnectedDapps(accountAddress) : [])
-  }, [accountAddress, dappStateUpdated])
+    setDappUrls(activeAccount ? dappStore.getConnectedDapps(activeAccount) : [])
+  }, [activeAccount, dappStateUpdated])
 
   return dappUrls
 }

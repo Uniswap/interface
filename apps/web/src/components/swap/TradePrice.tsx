@@ -1,17 +1,16 @@
 import { Currency, Price } from '@uniswap/sdk-core'
+import { useUSDPrice } from 'hooks/useUSDPrice'
+import styled from 'lib/styled-components'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
-import { NumberType } from 'utilities/src/format/types'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
-import { ThemedText } from '~/theme/components'
+import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
 }
 
-const StyledPriceContainer = deprecatedStyled.button`
+const StyledPriceContainer = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -28,31 +27,26 @@ const StyledPriceContainer = deprecatedStyled.button`
 `
 
 export default function TradePrice({ price }: TradePriceProps) {
-  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatNumber, formatPrice } = useFormatter()
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const { baseCurrency, quoteCurrency } = price
-  const currencyForUsdPrice = showInverted ? baseCurrency : quoteCurrency
-  const currencyAmount = useMemo(() => tryParseCurrencyAmount('1', currencyForUsdPrice), [currencyForUsdPrice])
-  const usdValue = useUSDCValue(currencyAmount)
+  const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
 
   const formattedPrice = useMemo(() => {
     try {
-      return formatNumberOrString({
-        value: (showInverted ? price : price.invert()).toSignificant(),
-        type: NumberType.TokenTx,
-      })
+      return formatPrice({ price: showInverted ? price : price.invert(), type: NumberType.TokenTx })
     } catch {
       return '0'
     }
-  }, [formatNumberOrString, price, showInverted])
+  }, [formatPrice, price, showInverted])
 
-  const label = showInverted ? `${price.quoteCurrency.symbol}` : `${price.baseCurrency.symbol} `
-  const labelInverted = showInverted ? `${price.baseCurrency.symbol} ` : `${price.quoteCurrency.symbol}`
-  const flipPrice = useCallback(() => setShowInverted(!showInverted), [showInverted])
+  const label = showInverted ? `${price.quoteCurrency?.symbol}` : `${price.baseCurrency?.symbol} `
+  const labelInverted = showInverted ? `${price.baseCurrency?.symbol} ` : `${price.quoteCurrency?.symbol}`
+  const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted])
 
-  const text = `${'1 ' + labelInverted + ' = ' + formattedPrice} ${label}`
+  const text = `${'1 ' + labelInverted + ' = ' + (formattedPrice ?? '-')} ${label}`
 
   return (
     <StyledPriceContainer
@@ -63,9 +57,14 @@ export default function TradePrice({ price }: TradePriceProps) {
       title={text}
     >
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
-      {usdValue && (
+      {usdPrice && (
         <ThemedText.BodySmall color="neutral2">
-          ({convertFiatAmountFormatted(usdValue.toExact(), NumberType.FiatTokenPrice)})
+          (
+          {formatNumber({
+            input: usdPrice,
+            type: NumberType.FiatTokenPrice,
+          })}
+          )
         </ThemedText.BodySmall>
       )}
     </StyledPriceContainer>

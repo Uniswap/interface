@@ -2,13 +2,11 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
   FormatterRule,
   StandardCurrency,
-  TwoDecimalsCurrency,
   TYPE_TO_FORMATTER_RULES,
+  TwoDecimalsCurrency,
 } from 'utilities/src/format/localeBasedFormats'
-import { NumberType, PercentNumberDecimals, PercentNumberType } from 'utilities/src/format/types'
+import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-
-const PLACEHOLDER_TEXT = '-'
 
 function getFormatterRule(input: number, type: NumberType): FormatterRule {
   const { rules, defaultFormat } = TYPE_TO_FORMATTER_RULES[type]
@@ -38,7 +36,7 @@ export function formatNumber({
   locale,
   currencyCode = 'USD',
   type = NumberType.TokenNonTx,
-  placeholder = PLACEHOLDER_TEXT,
+  placeholder = '-',
 }: {
   input: number | null | undefined
   locale: string
@@ -84,7 +82,7 @@ export function formatNumberOrString({
   locale,
   currencyCode,
   type,
-  placeholder = PLACEHOLDER_TEXT,
+  placeholder = '-',
 }: {
   price: Maybe<number | string>
   locale: string
@@ -101,42 +99,13 @@ export function formatNumberOrString({
   return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
-export function getPercentNumberType(maxDecimals: PercentNumberDecimals): PercentNumberType {
-  switch (maxDecimals) {
-    case 1:
-      return NumberType.PercentageOneDecimal
-    case 3:
-      return NumberType.PercentageThreeDecimals
-    case 4:
-      return NumberType.PercentageFourDecimals
-    default:
-      return NumberType.Percentage
-  }
-}
-
-export function formatPercent({
-  rawPercentage,
-  locale,
-  maxDecimals = 2,
-}: {
-  rawPercentage: Maybe<number | string>
-  locale: string
-  maxDecimals?: PercentNumberDecimals
-}): string {
+export function formatPercent(rawPercentage: Maybe<number | string>, locale: string): string {
   if (rawPercentage === null || rawPercentage === undefined) {
-    return PLACEHOLDER_TEXT
+    return '-'
   }
-
-  const type = getPercentNumberType(maxDecimals)
   const percentage =
     typeof rawPercentage === 'string' ? parseFloat(rawPercentage) : parseFloat(rawPercentage.toString())
-
-  // Handle NaN cases - return fallback if percentage is invalid
-  if (isNaN(percentage)) {
-    return PLACEHOLDER_TEXT
-  }
-
-  return formatNumber({ input: percentage / 100, type, locale })
+  return formatNumber({ input: percentage / 100, type: NumberType.Percentage, locale })
 }
 
 export function addFiatSymbolToNumber({

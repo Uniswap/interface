@@ -1,9 +1,8 @@
-import { SharedEventName } from '@uniswap/analytics-events'
+import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
-import { SwapEventName } from 'uniswap/src/features/telemetry/constants/features'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
-import type { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
 export enum WalletEventName {
   AppRating = 'App Rating',
@@ -11,6 +10,7 @@ export enum WalletEventName {
   BackupMethodRemoved = 'Backup Method Removed',
   DappRequestCardClosed = 'DappRequestCardClosed',
   DappRequestCardPressed = 'DappRequestCardPressed',
+  DismissSmartWalletUpgradeModal = 'Dismiss Wallet Upgrade Modal',
   ExploreSearchCancel = 'Explore Search Cancel',
   ExternalLinkOpened = 'External Link Opened',
   GasEstimateAccuracy = 'Gas Estimate Accuracy',
@@ -19,6 +19,7 @@ export enum WalletEventName {
   MismatchAccountSignatureRequestBlocked = 'Mismatch Account Signature Request Blocked',
   NFTVisibilityChanged = 'NFT Visibility Changed',
   NFTsLoaded = 'NFTs Loaded',
+  NetworkFilterSelected = 'Network Filter Selected',
   OnboardingIntroCardClosed = 'Onboarding Intro Card Closed',
   OnboardingIntroCardPressed = 'Onboarding Intro Card Pressed',
   OnboardingIntroCardSwiped = 'Onboarding Intro Card Swiped',
@@ -27,7 +28,6 @@ export enum WalletEventName {
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
   SendRecipientSelected = 'Send Recipient Selected',
   ShareButtonClicked = 'Share Button Clicked',
-  SilentPushReceived = 'Silent Push Received',
   SwapSubmitted = 'Swap Submitted to Provider',
   CancelSubmitted = 'Cancel Submitted to Provider',
   SwapTransactionCancelled = 'Swap Transaction Cancelled',
@@ -39,24 +39,23 @@ export enum WalletEventName {
   ViewRecoveryPhrase = 'View Recovery Phrase',
   WalletAdded = 'Wallet Added',
   WalletRemoved = 'Wallet Removed',
-  // alphabetize additional values.
 }
 
 export const WALLET_TESTNET_CONFIG: TestnetModeConfig = {
   allowlistEvents: [
     SharedEventName.PAGE_VIEWED,
     SharedEventName.ELEMENT_CLICKED,
-    UniswapEventName.NetworkFilterSelected,
     UniswapEventName.TokenSelected,
     UniswapEventName.TooltipOpened,
     WalletEventName.ExternalLinkOpened,
+    WalletEventName.NetworkFilterSelected,
     WalletEventName.SwapSubmitted,
     WalletEventName.TransferCompleted,
     WalletEventName.TransferSubmitted,
-    SwapEventName.SwapSubmittedButtonClicked,
-    SwapEventName.SwapTransactionCompleted,
-    SwapEventName.SwapTransactionFailed,
-    SwapEventName.SwapQuoteReceived,
+    SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED,
+    SwapEventName.SWAP_TRANSACTION_COMPLETED,
+    SwapEventName.SWAP_TRANSACTION_FAILED,
+    SwapEventName.SWAP_QUOTE_RECEIVED,
     ExtensionEventName.DappChangeChain,
     ExtensionEventName.DappRequest,
   ],

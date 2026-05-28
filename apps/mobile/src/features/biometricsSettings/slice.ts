@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 export enum BiometricSettingType {
@@ -26,7 +26,6 @@ const slice = createSlice({
     setRequiredForTransactions: (state, action: PayloadAction<boolean>) => {
       state.requiredForTransactions = action.payload
     },
-    resetBiometricSettings: () => initialBiometricsSettingsState,
   },
   extraReducers: (builder) => {
     builder.addCase(setFinishedOnboarding, (state, action) => {
@@ -39,7 +38,7 @@ const slice = createSlice({
   },
 })
 
-export const { setRequiredForAppAccess, setRequiredForTransactions, resetBiometricSettings } = slice.actions
+export const { setRequiredForAppAccess, setRequiredForTransactions } = slice.actions
 
 export const biometricSettingsReducer = slice.reducer
 

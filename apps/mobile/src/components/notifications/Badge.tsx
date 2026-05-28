@@ -1,6 +1,6 @@
 import React, { memo, PropsWithChildren } from 'react'
 import { Flex } from 'ui/src'
-import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
+import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 
 type Props = PropsWithChildren<{
   address: Address

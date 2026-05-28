@@ -1,10 +1,11 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useModalState } from 'hooks/useModalState'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui/src'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { useModalState } from '~/hooks/useModalState'
 
 export function NewUserCTAButton() {
   const { t } = useTranslation()

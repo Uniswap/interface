@@ -36,17 +36,13 @@ export enum HomeQueryParams {
 }
 
 export enum SettingsRoutes {
-  BackupRecoveryPhrase = 'backup-recovery-phrase',
-  BiometricUnlockSetUp = 'biometric-unlock-set-up',
+  ChangePassword = 'change-password',
   DevMenu = 'dev-menu',
-  DeviceAccess = 'device-access',
-  HashcashBenchmark = 'hashcash-benchmark',
-  ManageConnections = 'manage-connections',
-  RemoveRecoveryPhrase = 'remove-recovery-phrase',
-  SessionsDebug = 'sessions-debug',
-  SmartWallet = 'smart-wallet',
-  Storage = 'storage',
   ViewRecoveryPhrase = 'view-recovery-phrase',
+  BackupRecoveryPhrase = 'backup-recovery-phrase',
+  RemoveRecoveryPhrase = 'remove-recovery-phrase',
+  ManageConnections = 'manage-connections',
+  SmartWallet = 'smart-wallet',
 }
 
 export enum RemoveRecoveryPhraseRoutes {

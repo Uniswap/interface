@@ -1,5 +1,4 @@
 import { Flex } from 'ui/src/components/layout'
-
 const pulseKeyframe = `
   @keyframes pulse {
     0% {
@@ -12,7 +11,7 @@ const pulseKeyframe = `
     }
   }
 `
-export function PulseRipple({ rippleColor, size = 24 }: { rippleColor?: string; size?: number }): JSX.Element | null {
+export function PulseRipple({ rippleColor }: { rippleColor?: string }): JSX.Element | null {
   if (!rippleColor) {
     return null
   }
@@ -21,15 +20,15 @@ export function PulseRipple({ rippleColor, size = 24 }: { rippleColor?: string; 
       <style>{pulseKeyframe}</style>
       <Flex data-testid="icon-ripple-animation">
         <Flex
-          borderRadius={size / 2}
+          borderRadius={12}
           borderWidth="$spacing1"
-          height={size}
+          height={24}
           position="absolute"
           style={{
             borderColor: rippleColor,
             animation: 'pulse 1s linear infinite',
           }}
-          width={size}
+          width={24}
         />
       </Flex>
     </>

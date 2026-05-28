@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { forwardRef, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  FlatList,
   LayoutChangeEvent,
   ListRenderItemInfo,
   NativeScrollEvent,
@@ -10,23 +11,23 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { GradientOverlay, ScrollArrow } from 'uniswap/src/components/BatchedTransactions/CarouselControls'
-import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
-import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
-import { trimToLength } from 'utilities/src/primitives/string'
-import { useEvent } from 'utilities/src/react/hooks'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 import { AddressButton } from 'wallet/src/components/buttons/AddressButton'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 import { Call } from 'wallet/src/features/dappRequests/types'
+import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { SpendingEthDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
+
+import { GradientOverlay, ScrollArrow } from 'uniswap/src/components/BatchedTransactions/CarouselControls'
+import { trimToLength } from 'utilities/src/primitives/string'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export const MAX_HIDDEN_CALLS_BY_DEFAULT = 10
 const MAX_MODAL_MESSAGE_HEIGHT = 200
@@ -122,12 +123,12 @@ export function BatchedTransactionDetails({
   const cardGap = spacing.spacing16 // Gap between cards
 
   const arrowSpace =
-    isExtensionApp && hasMultipleCalls ? iconSize * 2 + iconHorizontalPadding * 2 + spacing.spacing12 * 2 : 0
+    isExtension && hasMultipleCalls ? iconSize * 2 + iconHorizontalPadding * 2 + spacing.spacing12 * 2 : 0
 
-  const horizontalShift = isExtensionApp ? arrowSpace : hasMultipleCalls ? spacing.spacing48 : 0
+  const horizontalShift = isExtension ? arrowSpace : hasMultipleCalls ? spacing.spacing48 : 0
 
   const layoutMeasurements = useMemo(() => {
-    const baseHorizontalPadding = isExtensionApp ? spacing.spacing12 * 2 : spacing.spacing24 * 2
+    const baseHorizontalPadding = isExtension ? spacing.spacing12 * 2 : spacing.spacing24 * 2
     const totalPadding = baseHorizontalPadding + horizontalShift
 
     const cardWidth = parentWidth - totalPadding
@@ -155,7 +156,7 @@ export function BatchedTransactionDetails({
             contentWidth: nativeEvent.contentSize.width,
             containerWidth: nativeEvent.layoutMeasurement.width,
           }
-        } else {
+        } else if (evt.currentTarget) {
           // Web event
           const target = evt.currentTarget as HTMLDivElement
           return {
@@ -164,6 +165,7 @@ export function BatchedTransactionDetails({
             containerWidth: target.clientWidth,
           }
         }
+        return null
       }
 
       const metrics = getScrollMetrics(event)
@@ -229,14 +231,15 @@ export function BatchedTransactionDetails({
   return (
     <Flex row alignItems="center" position="relative" pt="$spacing4">
       {/* Left arrow button - visible only on extension with multiple calls */}
-      {isExtensionApp && hasMultipleCalls && currentIndex > 0 && (
+      {isExtension && hasMultipleCalls && currentIndex > 0 && (
         <ScrollArrow side="left" onPress={() => scrollToIndex(currentIndex - 1)} />
       )}
-      {/* Scrollable Content Area for extension */}
-      {isExtensionApp ? (
+
+      {/* Scrollable Content Area */}
+      {isExtension ? (
         <Flex
-          ref={scrollRef as React.RefObject<HTMLDivElement | null>}
-          {...{
+          ref={scrollRef as React.RefObject<HTMLDivElement>}
+          {...(isExtension && {
             overflowX: 'hidden',
             overflowY: 'hidden',
             UNSAFE_style: {
@@ -248,10 +251,10 @@ export function BatchedTransactionDetails({
               },
             },
             onScroll: handleScroll as (event: React.UIEvent<HTMLDivElement>) => void,
-          }}
+          })}
           row
           flex={1}
-          px={spacing.spacing12}
+          px={isExtension ? spacing.spacing12 : spacing.spacing24}
           gap={cardGap}
         >
           {calls.map((call, index) => (
@@ -281,10 +284,12 @@ export function BatchedTransactionDetails({
           onScroll={handleScroll as (event: NativeSyntheticEvent<NativeScrollEvent>) => void}
         />
       )}
+
       {/* Right arrow button - visible only on extension with multiple calls */}
-      {isExtensionApp && hasMultipleCalls && currentIndex < calls.length - 1 && (
+      {isExtension && hasMultipleCalls && currentIndex < calls.length - 1 && (
         <ScrollArrow side="right" onPress={() => scrollToIndex(currentIndex + 1)} />
       )}
+
       {/* Left gradient overlay */}
       {hasMultipleCalls && (
         <GradientOverlay
@@ -294,6 +299,7 @@ export function BatchedTransactionDetails({
           colors={colors}
         />
       )}
+
       {/* Right gradient overlay */}
       {hasMultipleCalls && (
         <GradientOverlay

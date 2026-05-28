@@ -1,13 +1,13 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
+import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
+import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
+import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { TradeFillType } from 'state/routing/types'
+import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from 'state/transactions/hooks'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
-import { useAccount } from '~/hooks/useAccount'
-import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from '~/hooks/usePermitAllowance'
-import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from '~/hooks/useTokenAllowance'
-import useInterval from '~/lib/hooks/useInterval'
-import { TradeFillType } from '~/state/routing/types'
-import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from '~/state/transactions/hooks'
 
 enum ApprovalState {
   PENDING = 0,
@@ -44,23 +44,19 @@ export type Allowance =
     }
   | AllowanceRequired
 
-export default function usePermit2Allowance({
-  amount,
-  spender,
-  tradeFillType,
-}: {
-  amount?: CurrencyAmount<Token>
-  spender?: string
-  tradeFillType?: TradeFillType
-}): Allowance {
+export default function usePermit2Allowance(
+  amount?: CurrencyAmount<Token>,
+  spender?: string,
+  tradeFillType?: TradeFillType,
+): Allowance {
   const account = useAccount()
   const token = amount?.currency
   const permit2AddressForChain = permit2Address(token?.chainId)
-  const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance({
+  const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(
     token,
-    owner: account.address,
-    spender: permit2AddressForChain,
-  })
+    account.address,
+    permit2AddressForChain,
+  )
   const updateTokenAllowance = useUpdateTokenAllowance(amount, permit2AddressForChain)
   const revokeTokenAllowance = useRevokeTokenAllowance(token, permit2AddressForChain)
   const isApproved = useMemo(() => {
@@ -109,21 +105,8 @@ export default function usePermit2Allowance({
     return signature.details.token === token?.address && signature.spender === spender && signature.sigDeadline >= now
   }, [amount, now, signature, spender, token?.address])
 
-  const {
-    permitAllowance,
-    expiration: permitExpiration,
-    nonce,
-  } = usePermitAllowance({
-    token,
-    owner: account.address,
-    spender,
-  })
-  const updatePermitAllowance = useUpdatePermitAllowance({
-    token,
-    spender,
-    nonce,
-    onPermitSignature: setSignature,
-  })
+  const { permitAllowance, expiration: permitExpiration, nonce } = usePermitAllowance(token, account.address, spender)
+  const updatePermitAllowance = useUpdatePermitAllowance(token, spender, nonce, setSignature)
   const isPermitted = useMemo(() => {
     if (!amount || !permitAllowance || !permitExpiration) {
       return false

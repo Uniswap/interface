@@ -19,9 +19,8 @@ export interface TransactionRepository {
   /**
    * Update an existing transaction in the repository
    * @param transaction The updated transaction details
-   * @param skipProcessing Optional flag to update without triggering processing of the transaction by the transaction watcher
    */
-  updateTransaction(input: { transaction: OnChainTransactionDetails; skipProcessing?: boolean }): Promise<void>
+  updateTransaction(input: { transaction: OnChainTransactionDetails }): Promise<void>
 
   /**
    * Mark a transaction as finalized with the given status

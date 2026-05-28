@@ -9,7 +9,7 @@ export function useTokenDetailsCurrentChainBalance(): PortfolioBalance | null {
 
   return (
     useBalances({
-      evmAddress: activeAddress,
+      address: activeAddress,
       currencies: [currencyId],
       // There are already other requests in the TDP that will update the cache,
       // so no need to do additional network requests when using this helper hook.

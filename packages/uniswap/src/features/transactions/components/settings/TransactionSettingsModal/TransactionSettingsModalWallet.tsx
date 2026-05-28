@@ -1,15 +1,14 @@
 import { useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import {
-  TransactionSettingsStoreContext,
-  useGetTransactionSettingsContextValue,
-} from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/TransactionSettingsStoreContext'
 import { TransactionSettingsModalContent } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsModalContent'
-import type { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
-import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
-import { useSwapFormStoreBase } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { isExtensionApp } from 'utilities/src/platform'
+import { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
+import {
+  TransactionSettingsContext,
+  useTransactionSettingsContext,
+} from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { SwapFormContext, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { isExtension } from 'utilities/src/platform'
 
 export function TransactionSettingsModalWallet({
   settings,
@@ -17,29 +16,28 @@ export function TransactionSettingsModalWallet({
   onClose,
   isOpen,
 }: TransactionSettingsModalProps): JSX.Element {
-  const transactionSettingsContext = useGetTransactionSettingsContextValue()
+  const swapFormContext = useSwapFormContext()
+  const transactionSettingsContext = useTransactionSettingsContext()
   const colors = useSporeColors()
-  const swapFormStore = useSwapFormStoreBase()
-
   return (
     <Modal
-      alignment={isExtensionApp ? 'top' : undefined}
+      alignment={isExtension ? 'top' : undefined}
       backgroundColor={colors.surface1.val}
       isModalOpen={isOpen}
       name={ModalName.SwapSettings}
       onClose={onClose}
     >
-      {/* Re-create the TransactionSettingsStoreContext.Provider, since Portal can cause its children to be in a separate component tree. */}
-      <TransactionSettingsStoreContext.Provider value={transactionSettingsContext}>
-        {/* Re-create a new SwapFormStoreContext.Provider, since Portal can cause its children to be in a separate component tree. */}
-        <SwapFormStoreContext.Provider value={swapFormStore}>
+      {/* Re-create the TransactionSettingsContextProvider, since native Modal can cause its children to be in a separate component tree. */}
+      <TransactionSettingsContext.Provider value={transactionSettingsContext}>
+        {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
+        <SwapFormContext.Provider value={swapFormContext}>
           <TransactionSettingsModalContent
             initialSelectedSetting={initialSelectedSetting}
             settings={settings}
             onClose={onClose}
           />
-        </SwapFormStoreContext.Provider>
-      </TransactionSettingsStoreContext.Provider>
+        </SwapFormContext.Provider>
+      </TransactionSettingsContext.Provider>
     </Modal>
   )
 }

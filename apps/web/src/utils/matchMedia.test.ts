@@ -1,13 +1,13 @@
-import { addMediaQueryListener, removeMediaQueryListener } from '~/utils/matchMedia'
+import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
 
 describe('addMediaQueryListener', () => {
   test('adds event listener to media query', () => {
     const mediaQuery = {
-      addEventListener: vi.fn(),
-      addListener: vi.fn(),
+      addEventListener: jest.fn(),
+      addListener: jest.fn(),
     } as unknown as MediaQueryList
 
-    const listener = vi.fn()
+    const listener = jest.fn()
     addMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.addEventListener).toHaveBeenCalledWith('change', listener)
@@ -16,10 +16,10 @@ describe('addMediaQueryListener', () => {
 
   test('falls back to addMediaQueryListener for older browsers', () => {
     const mediaQuery = {
-      addListener: vi.fn(),
+      addListener: jest.fn(),
     } as unknown as MediaQueryList
 
-    const listener = vi.fn()
+    const listener = jest.fn()
     addMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.addListener).toHaveBeenCalledWith(listener)
@@ -29,11 +29,11 @@ describe('addMediaQueryListener', () => {
 describe('removeMediaQueryListener', () => {
   test('removes event listener from media query', () => {
     const mediaQuery = {
-      removeEventListener: vi.fn(),
-      removeListener: vi.fn(),
+      removeEventListener: jest.fn(),
+      removeListener: jest.fn(),
     } as unknown as MediaQueryList
 
-    const listener = vi.fn()
+    const listener = jest.fn()
     removeMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.removeEventListener).toHaveBeenCalledWith('change', listener)
@@ -42,10 +42,10 @@ describe('removeMediaQueryListener', () => {
 
   test('falls back to removeMediaQueryListener for older browsers', () => {
     const mediaQuery = {
-      removeListener: vi.fn(),
+      removeListener: jest.fn(),
     } as unknown as MediaQueryList
 
-    const listener = vi.fn()
+    const listener = jest.fn()
     removeMediaQueryListener(mediaQuery, listener)
 
     expect(mediaQuery.removeListener).toHaveBeenCalledWith(listener)

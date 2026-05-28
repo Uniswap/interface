@@ -1,21 +1,21 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { Flex, styled, Nav as TamaguiNav, useMedia } from 'ui/src'
-import { breakpoints, INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
+import { ChainSelector } from 'components/NavBar/ChainSelector'
+import { CompanyMenu } from 'components/NavBar/CompanyMenu'
+// import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
+import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
+import { useTabsVisible } from 'components/NavBar/ScreenSizes'
+import { SearchBar } from 'components/NavBar/SearchBar'
+import { Tabs } from 'components/NavBar/Tabs/Tabs'
+import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip'
+import Web3Status from 'components/Web3Status'
+import Row from 'components/deprecated/Row'
+import { useAccount } from 'hooks/useAccount'
+import { PageType, useIsPage } from 'hooks/useIsPage'
+import deprecatedStyled, { css } from 'lib/styled-components'
+import { Flex, Nav as TamaguiNav, styled, useMedia } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import Row from '~/components/deprecated/Row'
-import { CompanyMenu } from '~/components/NavBar/CompanyMenu'
-import { NewUserCTAButton } from '~/components/NavBar/DownloadApp/NewUserCTAButton'
-import { PreferenceMenu } from '~/components/NavBar/PreferencesMenu'
-import { useTabsVisible } from '~/components/NavBar/ScreenSizes'
-import { SearchBar } from '~/components/NavBar/SearchBar'
-import { useIsSearchBarVisible } from '~/components/NavBar/SearchBar/useIsSearchBarVisible'
-import { Tabs } from '~/components/NavBar/Tabs/Tabs'
-import TestnetModeTooltip from '~/components/NavBar/TestnetMode/TestnetModeTooltip'
-import { UniswapWrappedEntry } from '~/components/NavBar/UniswapWrappedEntry'
-import Web3Status from '~/components/Web3Status'
-import { PageType, useIsPage } from '~/hooks/useIsPage'
-import { css, deprecatedStyled } from '~/lib/deprecated-styled'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 // Flex is position relative by default, we must unset the position on every Flex
 // between the body and search component
@@ -47,17 +47,53 @@ const Right = deprecatedStyled(Row)`
   ${NavItems}
 `
 
-export default function Navbar() {
+function useShouldHideChainSelector() {
   const isLandingPage = useIsPage(PageType.LANDING)
+  const isSendPage = useIsPage(PageType.SEND)
+  const isSwapPage = useIsPage(PageType.SWAP)
+  const isWrapPage = useIsPage(PageType.WRAP)
+  const isLimitPage = useIsPage(PageType.LIMIT)
+  const isExplorePage = useIsPage(PageType.EXPLORE)
+  const isPositionsPage = useIsPage(PageType.POSITIONS)
+  const isMigrateV3Page = useIsPage(PageType.MIGRATE_V3)
+  const isBuyPage = useIsPage(PageType.BUY)
+  const isSellPage = useIsPage(PageType.SELL)
+  const isReferralPage = useIsPage(PageType.REFERRAL)
+
+  const multichainHiddenPages =
+    isLandingPage ||
+    isSendPage ||
+    isSwapPage ||
+    isWrapPage ||
+    isLimitPage ||
+    isExplorePage ||
+    isPositionsPage ||
+    isMigrateV3Page ||
+    isBuyPage ||
+    isSellPage ||
+    isReferralPage
+
+  return multichainHiddenPages
+}
+
+export default function Navbar() {
+  // const isLandingPage = useIsPage(PageType.LANDING)
 
   const media = useMedia()
   const isSmallScreen = media.md
   const areTabsVisible = useTabsVisible()
-  const isSearchBarVisible = useIsSearchBarVisible()
-  const { isConnected } = useConnectionStatus()
+  const collapseSearchBar = media.xl
+  const account = useAccount()
+  const NAV_SEARCH_MAX_HEIGHT = 'calc(100vh - 30px)'
+
+  const hideChainSelector = useShouldHideChainSelector()
+  const isExplorePage = useIsPage(PageType.EXPLORE)
+  const showNavBarSearch = useFeatureFlag(FeatureFlags.ShowNavBarSearch)
+  // Default behavior: only show on explore page. If flag is enabled, show on all pages.
+  const shouldShowSearchBar = isExplorePage || showNavBarSearch
 
   const { isTestnetModeEnabled } = useEnabledChains()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  // const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   return (
     <Nav>
@@ -67,14 +103,19 @@ export default function Navbar() {
           {areTabsVisible && <Tabs />}
         </Left>
 
-        {isSearchBarVisible && <SearchBar />}
+        {!collapseSearchBar && shouldShowSearchBar && (
+          <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />
+        )}
 
         <Right>
-          <UniswapWrappedEntry />
-          {!isSearchBarVisible && <SearchBar />}
-          {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
-          {!isConnected && <PreferenceMenu />}
+          {collapseSearchBar && shouldShowSearchBar && (
+            <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />
+          )}
+          {/* {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />} */}
+          {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
+          {!hideChainSelector && <ChainSelector />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
+          {/* {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />} */}
           <Web3Status />
         </Right>
       </UnpositionedFlex>

@@ -1,6 +1,6 @@
-import { call, delay } from 'redux-saga/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
+import { call, delay } from 'redux-saga/effects'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions, transactionActions } from 'uniswap/src/features/transactions/slice'
@@ -27,14 +27,7 @@ describe(watchFiatOnRampTransaction, () => {
     return (
       expectSaga(watchFiatOnRampTransaction, txDetailsPending)
         .provide([
-          [
-            call(fetchFORTransaction, {
-              previousTransactionDetails: txDetailsPending,
-              forceFetch: false,
-              activeAccountAddress: null,
-            }),
-            staleTx,
-          ],
+          [call(fetchFORTransaction, txDetailsPending, false, null), staleTx],
           [matchers.call.fn(sendAnalyticsEvent), undefined],
           [matchers.select(selectActiveAccountAddress), null],
         ])
@@ -124,14 +117,7 @@ describe(watchFiatOnRampTransaction, () => {
     const confirmedTx = { ...txDetailsPending, status: TransactionStatus.Success }
     return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
       .provide([
-        [
-          call(fetchFORTransaction, {
-            previousTransactionDetails: txDetailsPending,
-            forceFetch: false,
-            activeAccountAddress: null,
-          }),
-          confirmedTx,
-        ],
+        [call(fetchFORTransaction, txDetailsPending, false, null), confirmedTx],
         [matchers.call.fn(sendAnalyticsEvent), undefined],
         [matchers.select(selectActiveAccountAddress), null],
       ])

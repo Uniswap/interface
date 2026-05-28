@@ -1,11 +1,7 @@
-import { type ComponentType, memo } from 'react'
+import { memo, type ComponentType } from 'react'
 import type { AppStackParamList, AppStackScreenProp } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import type { GetProps } from 'ui/src'
-import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { WormholeModal } from 'uniswap/src/components/BridgedAsset/WormholeModal'
-import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTokenDataModal'
-import { ReportTokenIssueModal } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { PasskeysHelpModal } from 'uniswap/src/features/passkey/PasskeysHelpModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -14,9 +10,12 @@ import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/H
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'
 import { PortfolioBalanceModal } from 'wallet/src/components/settings/portfolioBalance/PortfolioBalanceModal'
-import { SmartWalletAdvancedSettingsModal } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
+import { PostSwapSmartWalletNudge } from 'wallet/src/components/smartWallet/modals/PostSwapSmartWalletNudge'
+import { SmartWalletCreatedModal } from 'wallet/src/components/smartWallet/modals/SmartWalletCreatedModal'
 import { SmartWalletEnabledModal } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
-import { SmartWalletNudge } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
+import { SmartWalletAdvancedSettingsModal } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
+import { SmartWalletConfirmModal } from 'wallet/src/features/smartWallet/modals/SmartWalletConfirmModal'
+import { SmartWalletInsufficientFundsOnNetworkModal } from 'wallet/src/features/smartWallet/modals/SmartWalletInsufficientFundsOnNetworkModal'
 
 // Define names of shared modals we're explicitly supporting on mobile
 type ValidModalNames = keyof Pick<
@@ -26,15 +25,14 @@ type ValidModalNames = keyof Pick<
   | typeof ModalName.PasskeyManagement
   | typeof ModalName.PasskeysHelp
   | typeof ModalName.SmartWalletAdvancedSettingsModal
+  | typeof ModalName.SmartWalletConfirmModal
+  | typeof ModalName.SmartWalletCreatedModal
   | typeof ModalName.SmartWalletEnabledModal
-  | typeof ModalName.SmartWalletNudge
+  | typeof ModalName.SmartWalletInsufficientFundsOnNetworkModal
+  | typeof ModalName.PostSwapSmartWalletNudge
   | typeof ModalName.PermissionsModal
   | typeof ModalName.PortfolioBalanceModal
   | typeof ModalName.LanguageSelector
-  | typeof ModalName.BridgedAsset
-  | typeof ModalName.Wormhole
-  | typeof ModalName.ReportTokenIssue
-  | typeof ModalName.ReportTokenData
 >
 
 type ModalNameWithComponentProps = {
@@ -42,16 +40,15 @@ type ModalNameWithComponentProps = {
   [ModalName.HiddenTokenInfoModal]: GetProps<typeof HiddenTokenInfoModal>
   [ModalName.PasskeyManagement]: GetProps<typeof PasskeyManagementModal>
   [ModalName.PasskeysHelp]: GetProps<typeof PasskeysHelpModal>
-  [ModalName.SmartWalletNudge]: GetProps<typeof SmartWalletNudge>
+  [ModalName.PostSwapSmartWalletNudge]: GetProps<typeof PostSwapSmartWalletNudge>
   [ModalName.SmartWalletAdvancedSettingsModal]: GetProps<typeof SmartWalletAdvancedSettingsModal>
+  [ModalName.SmartWalletConfirmModal]: GetProps<typeof SmartWalletConfirmModal>
+  [ModalName.SmartWalletCreatedModal]: GetProps<typeof SmartWalletCreatedModal>
   [ModalName.SmartWalletEnabledModal]: GetProps<typeof SmartWalletEnabledModal>
+  [ModalName.SmartWalletInsufficientFundsOnNetworkModal]: GetProps<typeof SmartWalletInsufficientFundsOnNetworkModal>
   [ModalName.PermissionsModal]: GetProps<typeof PermissionsModal>
   [ModalName.PortfolioBalanceModal]: GetProps<typeof PortfolioBalanceModal>
   [ModalName.LanguageSelector]: GetProps<typeof SettingsLanguageModal>
-  [ModalName.BridgedAsset]: GetProps<typeof BridgedAssetModal>
-  [ModalName.Wormhole]: GetProps<typeof WormholeModal>
-  [ModalName.ReportTokenIssue]: GetProps<typeof ReportTokenIssueModal>
-  [ModalName.ReportTokenData]: GetProps<typeof ReportTokenDataModal>
 }
 
 type NavigationModalProps<ModalName extends ValidModalNames> = {

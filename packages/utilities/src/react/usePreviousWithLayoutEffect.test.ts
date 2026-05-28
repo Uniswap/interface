@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
 
 describe('usePreviousWithLayoutEffect', () => {

@@ -1,41 +1,63 @@
 /* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
+import { Pair as FewPair, Route as FewV2Route, isFewToken } from '@ring-protocol/few-v2-sdk'
+import { Pair, Route as V2Route } from '@ring-protocol/v2-sdk'
+import { FeeAmount, Pool as V3Pool, Route as V3Route } from '@ring-protocol/v3-sdk'
+import { Pool as V4Pool, Route as V4Route } from '@ring-protocol/v4-sdk'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
-import type { Currency, TradeType } from '@uniswap/sdk-core'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import type { FeeAmount } from '@uniswap/v3-sdk'
-import { Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
-import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
-import { type ClassicQuoteResponse, type DiscriminatedQuoteResponse, TradingApi } from '@universe/api'
-import { DynamicConfigs, getDynamicConfigValue, SwapConfigKey } from '@universe/gating'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import type { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { useMemo } from 'react'
+import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
+  AutoSlippage,
+  BridgeQuote,
+  ClassicQuote,
+  HooksOptions,
+  ProtocolItems,
+  Quote,
+  QuoteRequest,
+  QuoteResponse,
+  Routing,
+  RoutingPreference,
+  ChainId as TradingApiChainId,
+  FewV2PoolInRoute as TradingApiFewV2PoolInRoute,
+  TokenInRoute as TradingApiTokenInRoute,
+  V2PoolInRoute as TradingApiV2PoolInRoute,
+  V3PoolInRoute as TradingApiV3PoolInRoute,
+  V4PoolInRoute as TradingApiV4PoolInRoute,
+  Urgency,
+  V4PoolInRoute,
+} from 'uniswap/src/data/tradingApi/__generated__/index'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import {
+  AggregatorTrade,
   BridgeTrade,
-  ChainedActionTrade,
   ClassicTrade,
   PriorityOrderTrade,
+  Trade,
   UniswapXV2Trade,
   UniswapXV3Trade,
-  UnwrapTrade,
-  WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { DEFAULT_PROTOCOL_OPTIONS, useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
-import type { CurrencyField } from 'uniswap/src/types/currency'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import {
+  DEFAULT_PROTOCOL_OPTIONS,
+  FrontendSupportedProtocol,
+  useProtocolsForChain,
+} from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { areAddressesEqual, rp_areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 export const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
-export const SWAP_GAS_URGENCY_OVERRIDE = isWebApp ? TradingApi.Urgency.NORMAL : undefined // on Interface, use a normal urgency, else use TradingAPI default
+export const SWAP_GAS_URGENCY_OVERRIDE = isInterface ? Urgency.NORMAL : undefined // on Interface, use a normal urgency, else use TradingAPI default
 
 interface TradingApiResponseToTradeArgs {
   currencyIn: Currency
@@ -49,66 +71,59 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
   const { currencyIn, currencyOut, tradeType, deadline, data } = params
 
   switch (data?.routing) {
-    case TradingApi.Routing.CLASSIC: {
-      const routes = computeRoutes({
-        tokenInIsNative: currencyIn.isNative,
-        tokenOutIsNative: currencyOut.isNative,
-        quoteResponse: data,
-      })
+    case Routing.CLASSIC: {
+      const routes = computeRoutes(currencyIn, currencyOut, data)
 
       if (!routes || !deadline) {
         return null
       }
 
-      return new ClassicTrade({
+      const classicTrade = new ClassicTrade({
         quote: data,
         deadline,
-        v2Routes: routes.flatMap((r) => (r.routev2 ? { ...r, routev2: r.routev2 } : [])),
-        v3Routes: routes.flatMap((r) => (r.routev3 ? { ...r, routev3: r.routev3 } : [])),
-        v4Routes: routes.flatMap((r) => (r.routev4 ? { ...r, routev4: r.routev4 } : [])),
-        mixedRoutes: routes.flatMap((r) => (r.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])),
+        v2Routes: routes?.flatMap((r) => (r?.routev2 ? { ...r, routev2: r.routev2 } : [])) ?? [],
+        fewV2Routes: routes?.flatMap((r) => (r?.fewRouteV2 ? { ...r, fewRouteV2: r.fewRouteV2 } : [])) ?? [],
+        v3Routes: routes?.flatMap((r) => (r?.routev3 ? { ...r, routev3: r.routev3 } : [])) ?? [],
+        v4Routes: routes?.flatMap((r) => (r?.routev4 ? { ...r, routev4: r.routev4 } : [])) ?? [],
+        mixedRoutes: routes?.flatMap((r) => (r?.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])) ?? [],
         tradeType,
       })
+
+      return classicTrade
     }
-    case TradingApi.Routing.PRIORITY:
-    case TradingApi.Routing.DUTCH_V3:
-    case TradingApi.Routing.DUTCH_V2: {
+    case Routing.AGGREGATOR: {
+      return new AggregatorTrade({
+        quote: data,
+        currencyIn,
+        currencyOut,
+        tradeType,
+        deadline,
+      })
+    }
+    case Routing.PRIORITY:
+    case Routing.DUTCH_V3:
+    case Routing.DUTCH_V2: {
       const { quote } = data
       // UniswapX backend response does not include decimals; local currencies must be passed to UniswapXTrade rather than tokens parsed from the api response.
       // We validate the token addresses match to ensure the trade is valid.
       if (
-        !areAddressesEqual({
-          addressInput1: { address: getTokenAddressForApi(currencyIn), chainId: currencyIn.chainId },
-          addressInput2: { address: quote.orderInfo.input.token, chainId: currencyIn.chainId },
-        }) ||
-        !areAddressesEqual({
-          addressInput1: { address: getTokenAddressForApi(currencyOut), chainId: currencyOut.chainId },
-          addressInput2: { address: quote.orderInfo.outputs[0]?.token, chainId: currencyOut.chainId },
-        })
+        !areAddressesEqual(currencyIn.wrapped.address, quote.orderInfo.input.token) || // UniswapX quotes should use wrapped native as input, rather than the native token
+        !areAddressesEqual(getTokenAddressForApi(currencyOut), quote.orderInfo.outputs[0]?.token)
       ) {
         return null
       }
 
-      const isPriority = data.routing === TradingApi.Routing.PRIORITY
+      const isPriority = data.routing === Routing.PRIORITY
       if (isPriority) {
         return new PriorityOrderTrade({ quote: data, currencyIn, currencyOut, tradeType })
-      } else if (data.routing === TradingApi.Routing.DUTCH_V2) {
+      } else if (data.routing === Routing.DUTCH_V2) {
         return new UniswapXV2Trade({ quote: data, currencyIn, currencyOut, tradeType })
       } else {
         return new UniswapXV3Trade({ quote: data, currencyIn, currencyOut, tradeType })
       }
     }
-    case TradingApi.Routing.BRIDGE: {
+    case Routing.BRIDGE: {
       return new BridgeTrade({ quote: data, currencyIn, currencyOut, tradeType })
-    }
-    case TradingApi.Routing.WRAP: {
-      return new WrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
-    }
-    case TradingApi.Routing.UNWRAP: {
-      return new UnwrapTrade({ quote: data, currencyIn, currencyOut, tradeType })
-    }
-    case TradingApi.Routing.CHAINED: {
-      return new ChainedActionTrade({ quote: data, currencyIn, currencyOut })
     }
     default: {
       return null
@@ -120,36 +135,40 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
  * Transforms a trading API quote into an array of routes that can be used to
  * create a `Trade`.
  */
-function computeRoutes({
-  tokenInIsNative,
-  tokenOutIsNative,
-  quoteResponse,
-}: {
-  tokenInIsNative: boolean
-  tokenOutIsNative: boolean
-  quoteResponse?: ClassicQuoteResponse
-}):
+export function computeRoutes(
+  currencyIn: Currency,
+  currencyOut: Currency,
+  quoteResponse?: QuoteResponse,
+):
   | {
       routev4: V4Route<Currency, Currency> | null
       routev3: V3Route<Currency, Currency> | null
       routev2: V2Route<Currency, Currency> | null
+      fewRouteV2: FewV2Route<Currency, Currency> | null
       mixedRoute: MixedRouteSDK<Currency, Currency> | null
       inputAmount: CurrencyAmount<Currency>
       outputAmount: CurrencyAmount<Currency>
     }[]
   | undefined {
-  if (!quoteResponse) {
+  // TODO : remove quote type check for Uniswap X integration
+  if (!quoteResponse || !quoteResponse.quote || !isClassicQuote(quoteResponse.quote)) {
     return undefined
   }
 
   const { quote } = quoteResponse
 
-  if (!quote.route || quote.route.length === 0) {
+  if (!quote.route || quote.route?.length === 0) {
     return undefined
   }
 
-  const tokenIn = quote.route[0]?.[0]?.tokenIn
-  const tokenOut = quote.route[0]?.[quote.route[0]?.length - 1]?.tokenOut
+  const route = quote.route.find((r) => r.length > 0)
+
+  if (!route) {
+    return undefined
+  }
+
+  const tokenIn = route[0]?.tokenIn
+  const tokenOut = route[route.length - 1]?.tokenOut
 
   if (!tokenIn || !tokenOut) {
     throw new Error('Expected both tokenIn and tokenOut to be present')
@@ -165,55 +184,63 @@ function computeRoutes({
     throw new Error('Expected all token properties to be present')
   }
 
-  const parsedCurrencyIn = tokenInIsNative ? nativeOnChain(tokenIn.chainId) : parseTokenApi(tokenIn)
+  const tokenInIsNative = currencyIn.isNative
+  const tokenOutIsNative = currencyOut.isNative
 
-  const parsedCurrencyOut = tokenOutIsNative ? nativeOnChain(tokenOut.chainId) : parseTokenApi(tokenOut)
+  const parsedCurrencyIn = tokenInIsNative ? NativeCurrency.onChain(tokenIn.chainId) : parseTokenApi(tokenIn)
+
+  const parsedCurrencyOut = tokenOutIsNative ? NativeCurrency.onChain(tokenOut.chainId) : parseTokenApi(tokenOut)
 
   try {
-    return quote.route.map((route) => {
-      if (route.length === 0) {
+    return quote.route.map((routePath) => {
+      if (routePath.length === 0) {
         throw new Error('Expected route to have at least one pair or pool')
       }
 
+      const rawAmountIn = routePath[0]?.amountIn
+      const rawAmountOut = routePath[routePath.length - 1]?.amountOut
+
       const inputAmount = getCurrencyAmount({
-        value: route[0]?.amountIn,
+        value: routePath[0]?.amountIn,
         valueType: ValueType.Raw,
-        currency: parsedCurrencyIn,
+        currency: currencyIn,
       })
       const outputAmount = getCurrencyAmount({
-        value: route[route.length - 1]?.amountOut,
+        value: routePath[routePath.length - 1]?.amountOut,
         valueType: ValueType.Raw,
-        currency: parsedCurrencyOut,
+        currency: currencyOut,
       })
 
-      if (!inputAmount || !outputAmount) {
+      if (!inputAmount || !outputAmount || !rawAmountIn || !rawAmountOut) {
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
-      const isOnlyV2 = isV2OnlyRouteApi(route)
-      const isOnlyV3 = isV3OnlyRouteApi(route)
-      const isOnlyV4 = isV4OnlyRouteApi(route)
+      const isOnlyV2 = isV2OnlyRouteApi(routePath)
+      const isOnlyV3 = isV3OnlyRouteApi(routePath)
+      const isOnlyV4 = isV4OnlyRouteApi(routePath)
+      const isOnlyFewV2 = isFewV2OnlyRouteApi(routePath)
 
-      const v4Routes = route.filter((r): r is TradingApi.V4PoolInRoute => r.type === 'v4-pool')
+      const v4Routes = routePath.filter((r): r is V4PoolInRoute => r.type === 'v4-pool')
 
       return {
-        routev4: isOnlyV4 ? new V4Route(v4Routes.map(parseV4PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev3: isOnlyV3 ? new V3Route(route.map(parseV3PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev2: isOnlyV2 ? new V2Route(route.map(parseV2PairApi), parsedCurrencyIn, parsedCurrencyOut) : null,
+        routev4: isOnlyV4 ? new V4Route(v4Routes.map(parseV4PoolApi), currencyIn, currencyOut) : null,
+        routev3: isOnlyV3 ? new V3Route(routePath.map(parseV3PoolApi), currencyIn, currencyOut) : null,
+        routev2: isOnlyV2 ? new V2Route(routePath.map(parseV2PairApi), currencyIn, currencyOut) : null,
+        fewRouteV2: isOnlyFewV2 ? new FewV2Route(routePath.map(parseFewV2PairApi), currencyIn, currencyOut) : null,
         mixedRoute:
-          !isOnlyV3 && !isOnlyV2 && !isOnlyV4
-            ? new MixedRouteSDK(route.map(parseMixedRouteApi), parsedCurrencyIn, parsedCurrencyOut)
+          !isOnlyV3 && !isOnlyV2 && !isOnlyV4 && !isOnlyFewV2
+            ? new MixedRouteSDK(routePath.map(parseMixedRouteApi), currencyIn, currencyOut)
             : null,
-        inputAmount,
-        outputAmount,
+        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, rawAmountIn),
+        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, rawAmountOut),
       }
     })
   } catch (e) {
     logger.error(e, {
       tags: { file: 'tradingApi.ts', function: 'computeRoutes' },
       extra: {
-        input: currencyAddress(parsedCurrencyIn),
-        output: currencyAddress(parsedCurrencyOut),
+        input: parsedCurrencyIn.address,
+        output: parsedCurrencyOut.address,
         inputChainId: parsedCurrencyIn.chainId,
         outputChainId: parsedCurrencyOut.chainId,
       },
@@ -222,7 +249,7 @@ function computeRoutes({
   }
 }
 
-function parseTokenApi(token: TradingApi.TokenInRoute): Token {
+function parseTokenApi(token: TradingApiTokenInRoute): Token {
   const { address, chainId, decimals, symbol, buyFeeBps, sellFeeBps } = token
   if (!chainId || !address || !decimals || !symbol) {
     throw new Error('Expected token to have chainId, address, decimals, and symbol')
@@ -253,7 +280,7 @@ function parseV4PoolApi({
   hooks,
   tokenIn,
   tokenOut,
-}: TradingApi.V4PoolInRoute): V4Pool {
+}: TradingApiV4PoolInRoute): V4Pool {
   if (!tokenIn.address || !tokenOut.address || !tokenIn.chainId || !tokenOut.chainId) {
     throw new Error('Expected V4 route to have defined addresses and chainIds')
   }
@@ -262,8 +289,8 @@ function parseV4PoolApi({
   const outputIsNative = tokenOut.address === NATIVE_ADDRESS_FOR_TRADING_API
 
   // Unlike lower protocol versions, v4 routes can involve unwrapped native tokens.
-  const currencyIn = inputIsNative ? nativeOnChain(tokenIn.chainId) : parseTokenApi(tokenIn)
-  const currencyOut = outputIsNative ? nativeOnChain(tokenOut.chainId) : parseTokenApi(tokenOut)
+  const currencyIn = inputIsNative ? NativeCurrency.onChain(tokenIn.chainId) : parseTokenApi(tokenIn)
+  const currencyOut = outputIsNative ? NativeCurrency.onChain(tokenOut.chainId) : parseTokenApi(tokenOut)
 
   return new V4Pool(
     currencyIn,
@@ -284,7 +311,7 @@ function parseV3PoolApi({
   tickCurrent,
   tokenIn,
   tokenOut,
-}: TradingApi.V3PoolInRoute): V3Pool {
+}: TradingApiV3PoolInRoute): V3Pool {
   if (!tokenIn || !tokenOut || !fee || !sqrtRatioX96 || !liquidity || !tickCurrent) {
     throw new Error('Expected pool values to be present')
   }
@@ -299,7 +326,7 @@ function parseV3PoolApi({
   )
 }
 
-function parseV2PairApi({ reserve0, reserve1 }: TradingApi.V2PoolInRoute): Pair {
+function parseV2PairApi({ reserve0, reserve1 }: TradingApiV2PoolInRoute): Pair {
   if (!reserve0?.token || !reserve1?.token || !reserve0.quotient || !reserve1.quotient) {
     throw new Error('Expected pool values to be present')
   }
@@ -309,9 +336,25 @@ function parseV2PairApi({ reserve0, reserve1 }: TradingApi.V2PoolInRoute): Pair 
   )
 }
 
-type ClassicPoolInRoute = TradingApi.V2PoolInRoute | TradingApi.V3PoolInRoute | TradingApi.V4PoolInRoute
-function parseMixedRouteApi(pool: ClassicPoolInRoute): Pair | V3Pool | V4Pool {
-  if (isV2Pool(pool)) {
+function parseFewV2PairApi({ reserve0, reserve1 }: TradingApiFewV2PoolInRoute): FewPair {
+  if (!reserve0?.token || !reserve1?.token || !reserve0.quotient || !reserve1.quotient) {
+    throw new Error('Expected pool values to be present')
+  }
+  return new FewPair(
+    CurrencyAmount.fromRawAmount(parseTokenApi(reserve0.token), reserve0.quotient),
+    CurrencyAmount.fromRawAmount(parseTokenApi(reserve1.token), reserve1.quotient),
+  )
+}
+
+type ClassicPoolInRoute =
+  | TradingApiFewV2PoolInRoute
+  | TradingApiV2PoolInRoute
+  | TradingApiV3PoolInRoute
+  | TradingApiV4PoolInRoute
+function parseMixedRouteApi(pool: ClassicPoolInRoute): Pair | FewPair | V3Pool | V4Pool {
+  if (isFewV2Pool(pool)) {
+    return parseFewV2PairApi(pool)
+  } else if (isV2Pool(pool)) {
     return parseV2PairApi(pool)
   } else if (isV3Pool(pool)) {
     return parseV3PoolApi(pool)
@@ -321,20 +364,28 @@ function parseMixedRouteApi(pool: ClassicPoolInRoute): Pair | V3Pool | V4Pool {
   throw new Error('Invalid pool type')
 }
 
-function isV2Pool(pool: ClassicPoolInRoute): pool is TradingApi.V2PoolInRoute {
+function isV2Pool(pool: ClassicPoolInRoute): pool is TradingApiV2PoolInRoute {
   return pool.type === 'v2-pool'
 }
 
-function isV3Pool(pool: ClassicPoolInRoute): pool is TradingApi.V3PoolInRoute {
+function isV3Pool(pool: ClassicPoolInRoute): pool is TradingApiV3PoolInRoute {
   return pool.type === 'v3-pool'
 }
 
-function isV4Pool(pool: ClassicPoolInRoute): pool is TradingApi.V4PoolInRoute {
+function isV4Pool(pool: ClassicPoolInRoute): pool is TradingApiV4PoolInRoute {
   return pool.type === 'v4-pool'
 }
 
 function isV2OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
   return route.every(isV2Pool)
+}
+
+function isFewV2Pool(pool: ClassicPoolInRoute): pool is TradingApiV2PoolInRoute {
+  return pool.type === 'fewv2-pool'
+}
+
+function isFewV2OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
+  return route.every(isFewV2Pool)
 }
 
 function isV3OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
@@ -360,32 +411,42 @@ export function getTokenAddressForApi(currency: Maybe<Currency>): string | undef
   return currency.isNative ? NATIVE_ADDRESS_FOR_TRADING_API : currency.address
 }
 
-const SUPPORTED_TRADING_API_CHAIN_IDS: number[] = Object.values(TradingApi.ChainId).filter(
+const SUPPORTED_TRADING_API_CHAIN_IDS: number[] = Object.values(TradingApiChainId).filter(
   (value): value is number => typeof value === 'number',
 )
 
 // Parse any chain id to check if its supported by the API ChainId type
-function isTradingApiSupportedChainId(chainId?: number): chainId is TradingApi.ChainId {
+function isTradingApiSupportedChainId(chainId?: number): chainId is TradingApiChainId {
   if (!chainId) {
     return false
   }
   return Object.values(SUPPORTED_TRADING_API_CHAIN_IDS).includes(chainId)
 }
 
-export function toTradingApiSupportedChainId(chainId: Maybe<number>): TradingApi.ChainId | undefined {
+export function toTradingApiSupportedChainId(chainId: Maybe<number>): TradingApiChainId | undefined {
   if (!chainId || !isTradingApiSupportedChainId(chainId)) {
     return undefined
   }
   return chainId
 }
 
-export function getClassicQuoteFromResponse(
-  quote?: ClassicQuoteResponse | { routing: Exclude<TradingApi.Routing, TradingApi.Routing.CLASSIC> },
-): TradingApi.ClassicQuote | undefined {
-  if (quote && isClassic(quote)) {
-    return quote.quote
+// Classic quote is a non-uniswap x quote. Forces the type on api responses.
+// `route` field doesnt exist on uniswap x quote response, so can be used as the custom type gaurd.
+// TODO:tradingapi MOB-2438 https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-forced-types-for-classic-quotes
+export function isClassicQuote(quote?: Quote): quote is ClassicQuote {
+  if (!quote) {
+    return false
   }
-  return undefined
+  return 'route' in quote
+}
+
+// TODO:tradingapi MOB-2438 https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-forced-types-for-classic-quotes
+export function getClassicQuoteFromResponse(quote?: QuoteResponse): ClassicQuote | undefined {
+  return isClassicQuote(quote?.quote) ? quote.quote : undefined
+}
+
+export function getBridgeQuoteFromResponse(quote?: QuoteResponse): BridgeQuote | undefined {
+  return quote?.routing === Routing.BRIDGE ? quote.quote : undefined
 }
 
 /**
@@ -410,19 +471,21 @@ export function validateTrade({
     return null
   }
 
-  const inputsMatch = areAddressesEqual({
-    addressInput1: { address: currencyIn.wrapped.address, chainId: currencyIn.chainId },
-    addressInput2: { address: trade.inputAmount.currency.wrapped.address, chainId: trade.inputAmount.currency.chainId },
-  })
-  const outputsMatch = areAddressesEqual({
-    addressInput1: { address: currencyOut.wrapped.address, chainId: currencyOut.chainId },
-    addressInput2: {
-      address: trade.outputAmount.currency.wrapped.address,
-      chainId: trade.outputAmount.currency.chainId,
-    },
-  })
-
+  let inputsMatch = areAddressesEqual(currencyIn.wrapped.address, trade?.inputAmount.currency.wrapped.address)
+  if (!inputsMatch) {
+    if (trade?.inputAmount.currency instanceof Token && isFewToken(trade?.inputAmount.currency as Token)) {
+      inputsMatch = rp_areAddressesEqual(currencyIn.wrapped.address, trade?.inputAmount.currency.wrapped)
+    }
+  }
+  let outputsMatch = areAddressesEqual(currencyOut.wrapped.address, trade.outputAmount.currency.wrapped.address)
+  if (!outputsMatch) {
+    if (trade?.outputAmount.currency instanceof Token && isFewToken(trade?.outputAmount.currency as Token)) {
+      outputsMatch = rp_areAddressesEqual(currencyOut.wrapped.address, trade.outputAmount.currency.wrapped)
+    }
+  }
   const tokenAddressesMatch = inputsMatch && outputsMatch
+
+  //todo unwrap to compair
   // TODO(WEB-5132): Add validation checking that exact amount from response matches exact amount from user input
   if (!tokenAddressesMatch) {
     logger.error(new Error(`Mismatched address in swap trade`), {
@@ -452,113 +515,105 @@ type UseQuoteRoutingParamsArgs = {
   isV4HookPoolsEnabled?: boolean
 }
 
-export type QuoteRoutingParamsResult = Pick<TradingApi.QuoteRequest, 'routingPreference' | 'protocols' | 'hooksOptions'>
-
 export function useQuoteRoutingParams({
   selectedProtocols,
   tokenInChainId,
   tokenOutChainId,
   isUSDQuote,
   isV4HookPoolsEnabled = true,
-}: UseQuoteRoutingParamsArgs): QuoteRoutingParamsResult {
-  const inputChainProtocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
-  const outputChainProtocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenOutChainId)
+}: UseQuoteRoutingParamsArgs): Pick<QuoteRequest, 'routingPreference' | 'protocols' | 'hooksOptions'> {
+  const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
+  const v4HooksToggleFFEnabled = useFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle)
 
-  const getQuoteRoutingParams = createGetQuoteRoutingParams({
-    getProtocols: () => Array.from(new Set([...inputChainProtocols, ...outputChainProtocols])),
-    getIsV4HookPoolsEnabled: () => isV4HookPoolsEnabled,
-  })
+  return useMemo(() => {
+    // MEGAETH Mainnet: quote V3 plus Ring FewV2 liquidity
+    if (tokenInChainId === UniverseChainId.MEGAETHMainnet) {
+      return { protocols }
+    }
 
-  return getQuoteRoutingParams({ isUSDQuote })
-}
+    // Hyper: only FewV2
+    if (tokenInChainId === UniverseChainId.HyperMainnet) {
+      return { protocols }
+    }
 
-export type GetQuoteRoutingParams = (input: Pick<UseQuoteRoutingParamsArgs, 'isUSDQuote'>) => QuoteRoutingParamsResult
-
-export function createGetQuoteRoutingParams(ctx: {
-  getProtocols: () => ReturnType<typeof useProtocolsForChain>
-  getIsV4HookPoolsEnabled: () => boolean
-}): GetQuoteRoutingParams {
-  return (input) => {
-    const { isUSDQuote } = input
     // for USD quotes, we avoid routing through UniswapX
     // hooksOptions should not be sent for USD quotes
     if (isUSDQuote) {
       return {
-        protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V4],
+        protocols: [ProtocolItems.FEW_V2, ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4],
       }
     }
 
-    const protocols = ctx.getProtocols()
+    // for bridging, we want to only return BEST_PRICE
+    if (tokenInChainId !== tokenOutChainId) {
+      return { routingPreference: RoutingPreference.BEST_PRICE }
+    }
 
-    let finalProtocols = [...protocols]
-    let hooksOptions: TradingApi.HooksOptions
-
-    const isV4HookPoolsEnabled = ctx.getIsV4HookPoolsEnabled()
-
-    if (isV4HookPoolsEnabled) {
-      if (!protocols.includes(TradingApi.ProtocolItems.V4)) {
-        finalProtocols = [...protocols, TradingApi.ProtocolItems.V4] // we need to re-add v4 to protocols if v4 hooks is toggled on
-        hooksOptions = TradingApi.HooksOptions.V4_HOOKS_ONLY
-      } else {
-        hooksOptions = TradingApi.HooksOptions.V4_HOOKS_INCLUSIVE
-      }
+    if (!v4HooksToggleFFEnabled) {
+      return { protocols }
     } else {
-      hooksOptions = TradingApi.HooksOptions.V4_NO_HOOKS
+      let finalProtocols = [...protocols]
+      let hooksOptions: HooksOptions
+
+      if (isV4HookPoolsEnabled) {
+        if (!protocols.includes(ProtocolItems.V4)) {
+          finalProtocols = [...protocols, ProtocolItems.V4] // we need to re-add v4 to protocols if v4 hooks is toggled on
+          hooksOptions = HooksOptions.V4_HOOKS_ONLY
+        } else {
+          hooksOptions = HooksOptions.V4_HOOKS_INCLUSIVE
+        }
+      } else {
+        hooksOptions = HooksOptions.V4_NO_HOOKS
+      }
+
+      return { protocols: finalProtocols, hooksOptions }
     }
-
-    return { protocols: finalProtocols, hooksOptions }
-  }
+  }, [isUSDQuote, tokenInChainId, tokenOutChainId, protocols, isV4HookPoolsEnabled, v4HooksToggleFFEnabled])
 }
 
-// Used if dynamic config value fails to resolve
-const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
-
-export function getMinAutoSlippageToleranceL2(): number {
-  return getDynamicConfigValue({
-    config: DynamicConfigs.Swap,
-    key: SwapConfigKey.MinAutoSlippageToleranceL2,
-    defaultValue: DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
-  })
-}
-
-type GetQuoteSlippageParamsArgs = {
+type UseQuoteSlippageParamsArgs = {
+  customSlippageTolerance: number | undefined
   tokenInChainId: UniverseChainId | undefined
   tokenOutChainId: UniverseChainId | undefined
   isUSDQuote?: boolean
 }
 
-export type QuoteSlippageParamsResult = Pick<TradingApi.QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined
+// Used if dynamic config value fails to resolve
+const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
 
-export type GetQuoteSlippageParams = (input: GetQuoteSlippageParamsArgs) => QuoteSlippageParamsResult
+export function useQuoteSlippageParams({
+  customSlippageTolerance,
+  tokenInChainId,
+  tokenOutChainId,
+  isUSDQuote,
+}: UseQuoteSlippageParamsArgs): Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined {
+  const minAutoSlippageToleranceL2 = useDynamicConfigValue(
+    DynamicConfigs.Swap,
+    SwapConfigKey.MinAutoSlippageToleranceL2,
+    DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
+  )
 
-export function createGetQuoteSlippageParams(ctx: {
-  getMinAutoSlippageToleranceL2: () => number
-  getIsL2ChainId: (chainId?: UniverseChainId) => boolean
-  getCustomSlippageTolerance: () => number | undefined
-}): GetQuoteSlippageParams {
-  return function getQuoteSlippageParams(input: GetQuoteSlippageParamsArgs): QuoteSlippageParamsResult {
-    const { tokenInChainId, tokenOutChainId, isUSDQuote } = input
-    const customSlippageTolerance = ctx.getCustomSlippageTolerance()
+  return useMemo(() => {
     if (customSlippageTolerance) {
       return { slippageTolerance: customSlippageTolerance }
     }
 
-    // For cross-chain swaps, use default as it will be handled by the backend
+    // For bridging or USD quotes, we do not apply any slippage settings
     if (tokenInChainId !== tokenOutChainId || isUSDQuote) {
-      return { autoSlippage: TradingApi.AutoSlippage.DEFAULT }
+      return undefined
     }
 
     // L2 chains should use the minimum slippage tolerance defined in the dynamic config
-    if (ctx.getIsL2ChainId(tokenInChainId)) {
-      return { slippageTolerance: ctx.getMinAutoSlippageToleranceL2() }
+    if (isL2ChainId(tokenInChainId)) {
+      return { slippageTolerance: minAutoSlippageToleranceL2 }
     }
 
     // Otherwise, use an auto slippage tolerance calculated on the backend
-    return { autoSlippage: TradingApi.AutoSlippage.DEFAULT }
-  }
+    return { autoSlippage: AutoSlippage.DEFAULT }
+  }, [customSlippageTolerance, isUSDQuote, minAutoSlippageToleranceL2, tokenInChainId, tokenOutChainId])
 }
 
-export function tradingApiToUniverseChainId(chainId?: TradingApi.ChainId): UniverseChainId | undefined {
+export function tradingApiToUniverseChainId(chainId?: TradingApiChainId): UniverseChainId | undefined {
   if (!chainId) {
     return undefined
   }

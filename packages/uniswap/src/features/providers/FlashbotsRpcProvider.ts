@@ -2,25 +2,24 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { id } from '@ethersproject/hash'
 import { resolveProperties } from '@ethersproject/properties'
-import { BlockTag, Networkish } from '@ethersproject/providers'
+import { BlockTag, JsonRpcProvider } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
 import {
-  buildFlashbotsUrl,
+  FLASHBOTS_RPC_URL,
   FLASHBOTS_SIGNATURE_HEADER,
   SignerInfo,
+  getRefundString,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
-import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 
 /**
  * A provider that uses a signer to authenticate requests.
  */
-class AuthenticatedJsonRpcProvider extends InstrumentedJsonRpcProvider {
+class AuthenticatedJsonRpcProvider extends JsonRpcProvider {
   protected readonly signer?: Signer
 
-  constructor(config: { url: string; signer?: Signer; network?: Networkish }) {
-    super({ url: config.url, chainIdOrNetwork: config.network ?? 1, observer: getRpcObserver() })
-    this.signer = config.signer
+  constructor(url: string, signer?: Signer) {
+    super(url)
+    this.signer = signer
   }
 }
 
@@ -37,20 +36,10 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
    *    @default 50
    *    @see {@link https://docs.flashbots.net/flashbots-protect/settings-guide#refunds}
    */
-  constructor({
-    signerInfo,
-    refundPercent,
-    network,
-  }: {
-    signerInfo?: SignerInfo
-    refundPercent?: number
-    network?: Networkish
-  }) {
-    const url = buildFlashbotsUrl({
-      address: signerInfo?.address,
-      refundPercent,
-    })
-    super({ url, signer: signerInfo?.signer, network })
+  constructor(signerInfo?: SignerInfo, refundPercent?: number) {
+    const refundString = getRefundString(signerInfo?.address, refundPercent)
+    const url = `${FLASHBOTS_RPC_URL}${refundString}`
+    super(url, signerInfo?.signer)
   }
 
   /**
@@ -138,7 +127,7 @@ function getResult(payload: {
   result?: unknown
 }): unknown {
   if (payload.error) {
-    // biome-ignore lint/suspicious/noExplicitAny: legacy code requires any for compatibility
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const error: any = new Error(payload.error.message)
     error.code = payload.error.code
     error.data = payload.error.data

@@ -1,18 +1,20 @@
+import { ColumnCenter } from 'components/deprecated/Column'
+import { useCurrency } from 'hooks/Tokens'
+import { useScroll } from 'hooks/useScroll'
+import { GeometricBackground } from 'pages/Landing/components/GeometricBackground'
+import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
+import { Swap } from 'pages/Swap'
 import { Fragment, useCallback, useMemo } from 'react'
+import { ChevronDown } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
-import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { useNavigate } from 'react-router-dom'
+import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
+import { Flex, Text, useMedia } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { ColumnCenter } from '~/components/deprecated/Column'
-import { useCurrency } from '~/hooks/Tokens'
-import { useScroll } from '~/hooks/useScroll'
-import { Hover, RiseIn, RiseInText } from '~/pages/Landing/components/animations'
-import { TokenCloud } from '~/pages/Landing/components/TokenCloud'
-import { Swap } from '~/pages/Swap'
-import { serializeSwapStateToURLParameters } from '~/state/swap/hooks'
 
 interface HeroProps {
   scrollToRef: () => void
@@ -21,15 +23,12 @@ interface HeroProps {
 
 export function Hero({ scrollToRef, transition }: HeroProps) {
   const media = useMedia()
-  const colors = useSporeColors()
   const { height: scrollPosition } = useScroll({ enabled: !media.sm })
-  const { defaultChainId, chains } = useEnabledChains()
-  const initialInputCurrency = useCurrency({
-    address: 'ETH',
-    chainId: defaultChainId,
-  })
+  const { defaultChainId } = useEnabledChains()
+  const initialInputCurrency = useCurrency('ETH', defaultChainId)
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const showLandingSwap = useFeatureFlag(FeatureFlags.ShowLandingSwap)
   const { translateY, opacityY } = useMemo(
     () => ({
       translateY: !media.sm ? -scrollPosition / 7 : 0,
@@ -74,6 +73,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
     <Flex
       position="relative"
       justifyContent="center"
+      alignItems={showLandingSwap ? 'flex-start' : 'center'}
       y={translateY}
       opacity={opacityY}
       minWidth="100%"
@@ -82,23 +82,26 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       pt={INTERFACE_NAV_HEIGHT}
       pointerEvents="none"
     >
-      {!media.sm && <TokenCloud />}
+      <GeometricBackground />
 
       <Flex
         alignSelf="center"
         maxWidth="85vw"
         pointerEvents="none"
-        pt={48}
-        gap="$gap20"
+        pt={showLandingSwap ? 48 : 0}
+        gap={showLandingSwap ? '$gap20' : '$gap32'}
         transform={`translate(0px, ${translateY}px)`}
         opacity={opacityY}
-        $lg={{ pt: 24 }}
+        $lg={{ pt: showLandingSwap ? 24 : 0 }}
         $sm={{ pt: 8 }}
         $platform-web={{
           transition: transition ? 'shrinkAndFade 1s ease-in-out forwards' : undefined,
         }}
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
       >
-        <Flex maxWidth={920} alignItems="center" pointerEvents="none">
+        <Flex maxWidth={920} alignItems="center" pointerEvents="none" width="100%">
           <Text
             variant="heading1"
             fontSize={64}
@@ -113,40 +116,45 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
           </Text>
         </Flex>
 
-        <RiseIn delay={0.4}>
-          <Flex
-            pointerEvents="auto"
-            width={480}
-            p="$padding8"
-            borderRadius="$rounded24"
-            backgroundColor="$surface1"
-            maxWidth="100%"
-            enterStyle={{ opacity: 0 }}
-          >
-            <Swap
-              hideHeader
-              hideFooter
-              syncTabToUrl={false}
-              initialInputChainId={defaultChainId}
-              initialInputCurrency={initialInputCurrency}
-              swapRedirectCallback={swapRedirectCallback}
-              usePersistedFilteredChainIds
-            />
-          </Flex>
-        </RiseIn>
+        {showLandingSwap && (
+          <RiseIn delay={0.4}>
+            <Flex
+              pointerEvents="auto"
+              width={480}
+              p="$padding8"
+              borderRadius="$rounded24"
+              backgroundColor="$surface1"
+              maxWidth="100%"
+              enterStyle={{ opacity: 0 }}
+            >
+              <Swap
+                hideHeader
+                hideFooter
+                syncTabToUrl={false}
+                chainId={defaultChainId}
+                initialInputCurrency={initialInputCurrency}
+                swapRedirectCallback={swapRedirectCallback}
+                usePersistedFilteredChainIds
+              />
+            </Flex>
+          </RiseIn>
+        )}
 
         <RiseIn delay={0.3}>
-          <Text variant="body1" textAlign="center" maxWidth={430} color="$neutral2" $short={{ variant: 'body2' }}>
-            <Trans
-              i18nKey="hero.subtitle"
-              values={{ amount: chains.length }}
-              components={{ highlight: <Text variant="body1" $short={{ variant: 'body2' }} color="$accent1" /> }}
-            />
+          <Text
+            variant="body1"
+            textAlign="center"
+            maxWidth={showLandingSwap ? 430 : 700}
+            color="$neutral2"
+            $short={{ variant: 'body2' }}
+            width="100%"
+          >
+            <Trans i18nKey="hero.subtitle" />
           </Text>
         </RiseIn>
       </Flex>
 
-      <Flex flex={1} />
+      {showLandingSwap && <Flex flex={1} />}
 
       <Flex
         position="absolute"
@@ -154,14 +162,10 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         centered
         pointerEvents="none"
         bottom={48}
-        style={{
-          transform: `translate(0px, ${translateY}px)`,
-          opacity: scrollPosition > 100 ? 0 : opacityY,
-          transition: 'opacity 0.3s ease-out',
-        }}
-        $lgHeight={{ display: 'none' }}
+        style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
+        $midHeight={{ display: 'none' }}
       >
-        <RiseIn delay={2}>
+        <RiseIn delay={0.3}>
           <Flex
             alignItems="center"
             justifyContent="flex-start"
@@ -171,24 +175,15 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
           >
             <Hover>
               <ColumnCenter>
-                <Text variant="body2">{t('hero.scroll')}</Text>
-                <RotatableChevron direction="down" />
+                <Text variant="body2">
+                  <Trans i18nKey="hero.scroll" />
+                </Text>
+                <ChevronDown />
               </ColumnCenter>
             </Hover>
           </Flex>
         </RiseIn>
       </Flex>
-
-      <Flex
-        position="absolute"
-        bottom={0}
-        width="100%"
-        height={200}
-        pointerEvents="none"
-        style={{
-          background: `linear-gradient(to bottom, transparent 100%, ${colors.surface1.val} 100%)`,
-        }}
-      />
     </Flex>
   )
 }

@@ -9,17 +9,12 @@ function isTypedDataSigner(signer: Signer): signer is Signer & SignsTypedData {
   return '_signTypedData' in signer && typeof signer._signTypedData === 'function'
 }
 
-export async function signTypedData({
-  domain,
-  types,
-  value,
-  signer,
-}: {
-  domain: TypedDataDomain
-  types: Record<string, TypedDataField[]>
-  value: Record<string, unknown>
-  signer: Signer
-}): Promise<string> {
+export async function signTypedData(
+  domain: TypedDataDomain,
+  types: Record<string, TypedDataField[]>,
+  value: Record<string, unknown>,
+  signer: Signer,
+): Promise<string> {
   if (!isTypedDataSigner(signer)) {
     throw new Error('Incompatible account for signing typed data')
   }

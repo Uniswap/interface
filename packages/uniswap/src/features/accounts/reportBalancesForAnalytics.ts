@@ -4,32 +4,10 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 interface ReportBalancesParams {
   balances: number[]
   totalBalancesUsd?: number
-  totalBalancesUsdPerChain?: Record<string, number>
+  totalBalancesUsdPerChain?: Record<string, number> | null | undefined
   wallet?: string
   wallets: string[]
   isViewOnly?: boolean
-}
-
-/**
- * Validates that all required data is present for balance reporting
- */
-export function hasRequiredDataForBalancesReport(params: {
-  totalBalancesUsd?: number
-  totalBalancesUsdPerChain?: Record<string, number>
-  wallets: string[]
-  wallet?: string
-}): params is {
-  totalBalancesUsd: number
-  totalBalancesUsdPerChain: Record<string, number>
-  wallets: string[]
-  wallet: string
-} {
-  return (
-    params.totalBalancesUsd !== undefined &&
-    params.totalBalancesUsdPerChain !== undefined &&
-    params.wallets.length > 0 &&
-    !!params.wallet
-  )
 }
 
 export function reportBalancesForAnalytics({
@@ -40,21 +18,19 @@ export function reportBalancesForAnalytics({
   wallets,
   isViewOnly = false,
 }: ReportBalancesParams): void {
-  // Note: We should still log zero balances, but we should skip if there's no wallet or balance values
-  const requiredData = { totalBalancesUsd, totalBalancesUsdPerChain, wallets, wallet }
-  if (!hasRequiredDataForBalancesReport(requiredData)) {
+  if (!totalBalancesUsd || !totalBalancesUsdPerChain || !wallets.length || !wallet) {
     return
   }
 
   sendAnalyticsEvent(UniswapEventName.BalancesReport, {
-    total_balances_usd: requiredData.totalBalancesUsd,
+    total_balances_usd: totalBalancesUsd,
     wallets,
     balances,
   })
 
   sendAnalyticsEvent(UniswapEventName.BalancesReportPerChain, {
-    total_balances_usd_per_chain: requiredData.totalBalancesUsdPerChain,
-    wallet: requiredData.wallet,
+    total_balances_usd_per_chain: totalBalancesUsdPerChain,
+    wallet,
     view_only: isViewOnly,
   })
 }

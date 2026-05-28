@@ -5,8 +5,8 @@ import { Terms } from 'src/app/features/onboarding/Terms'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Button, Flex, GeneratedIcon, Text } from 'ui/src'
-import { Bolt, Coupon, Person } from 'ui/src/components/icons'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { Bolt, Coupon, UserSquare } from 'ui/src/components/icons'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const CONTAINER_WIDTH = 531
@@ -17,13 +17,11 @@ export function UnitagIntroScreen(): JSX.Element {
   const { goToNextStep } = useOnboardingSteps()
 
   const address = useAccountAddressFromUrlWithThrow()
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: address ? { address } : undefined,
-  })
+  const { unitag } = useUnitagByAddress(address)
 
   useEffect(() => {
     if (unitag?.address) {
-      navigate(`/${UnitagClaimRoutes.EditProfile}`)
+      navigate(UnitagClaimRoutes.EditProfile)
     }
   }, [unitag])
 
@@ -41,7 +39,7 @@ export function UnitagIntroScreen(): JSX.Element {
         <Flex gap="$spacing40" style={{ width: 'fit-content' }}>
           <Flex centered gap="$spacing12">
             <Flex row gap="$spacing12">
-              <UnitagIntroPill text={t('unitags.extension.intro.upsell.customizable')} Icon={Person} />
+              <UnitagIntroPill text={t('unitags.extension.intro.upsell.customizable')} Icon={UserSquare} />
               <UnitagIntroPill text={t('unitags.extension.intro.upsell.free')} Icon={Coupon} />
             </Flex>
             <UnitagIntroPill text={t('unitags.extension.intro.upsell.ens')} Icon={Bolt} />

@@ -1,54 +1,23 @@
-import { GasEstimate, GasFeeResult, TradingApi } from '@universe/api'
-import { ValidatedGasFeeResult, validateGasFeeResult } from 'uniswap/src/features/gas/utils'
-import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
-import {
-  BridgeTrade,
-  ChainedActionTrade,
-  ClassicTrade,
-  UniswapXTrade,
-  UnwrapTrade,
-  WrapTrade,
-} from 'uniswap/src/features/transactions/swap/types/trade'
-import {
-  isBridge,
-  isChained,
-  isClassic,
-  isJupiter,
-  isUniswapX,
-  isWrap,
-} from 'uniswap/src/features/transactions/swap/utils/routing'
-import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
-import {
-  PopulatedTransactionRequestArray,
-  ValidatedTransactionRequest,
-} from 'uniswap/src/features/transactions/types/transactionRequests'
-import { isWebApp } from 'utilities/src/platform'
-import { Prettify } from 'viem'
+import { Routing, CreateSwapRequest } from "uniswap/src/data/tradingApi/__generated__/index"
+import { GasFeeResult, ValidatedGasFeeResult, validateGasFeeResult } from "uniswap/src/features/gas/types"
+import { BridgeTrade, ClassicTrade, UniswapXTrade, AggregatorTrade } from "uniswap/src/features/transactions/swap/types/trade"
+import { isBridge, isClassic, isUniswapX, isAggregator } from "uniswap/src/features/transactions/swap/utils/routing"
+import { ValidatedPermit, ValidatedTransactionRequest } from "uniswap/src/features/transactions/swap/utils/trade"
+import { GasFeeEstimates } from "uniswap/src/features/transactions/types/transactionDetails"
+import { isInterface } from "utilities/src/platform"
 
-export type SwapTxAndGasInfo =
-  | ClassicSwapTxAndGasInfo
-  | UniswapXSwapTxAndGasInfo
-  | BridgeSwapTxAndGasInfo
-  | WrapSwapTxAndGasInfo
-  | SolanaSwapTxAndGasInfo
-  | ChainedSwapTxAndGasInfo
-export type ValidatedSwapTxContext =
-  | ValidatedClassicSwapTxAndGasInfo
-  | ValidatedUniswapXSwapTxAndGasInfo
-  | ValidatedBridgeSwapTxAndGasInfo
-  | ValidatedWrapSwapTxAndGasInfo
-  | ValidatedSolanaSwapTxAndGasInfo
-  | ValidatedChainedSwapTxAndGasInfo
+export type SwapTxAndGasInfo = ClassicSwapTxAndGasInfo | UniswapXSwapTxAndGasInfo | BridgeSwapTxAndGasInfo | AggregatorSwapTxAndGasInfo
+export type ValidatedSwapTxContext = ValidatedClassicSwapTxAndGasInfo | ValidatedUniswapXSwapTxAndGasInfo | ValidatedBridgeSwapTxAndGasInfo | ValidatedAggregatorSwapTxAndGasInfo
 
-export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo): swapTxContext is ValidatedSwapTxContext {
+export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown): swapTxContext is ValidatedSwapTxContext {
   // Validation fn prevents/future-proofs typeguard against illicit casts
   return validateSwapTxContext(swapTxContext) !== undefined
 }
 
 export type SwapGasFeeEstimation = {
-  swapEstimate?: GasEstimate
-  approvalEstimate?: GasEstimate
-  wrapEstimate?: GasEstimate
+  swapEstimates?: GasFeeEstimates
+  approvalEstimates?: GasFeeEstimates
+  wrapEstimates?: GasFeeEstimates
 }
 
 export type UniswapXGasBreakdown = {
@@ -58,8 +27,8 @@ export type UniswapXGasBreakdown = {
 }
 
 export interface BaseSwapTxAndGasInfo {
-  routing: TradingApi.Routing
-  trade?: ClassicTrade | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade | SolanaTrade | ChainedActionTrade
+  routing: Routing
+  trade?: ClassicTrade | UniswapXTrade | BridgeTrade | AggregatorTrade
   approveTxRequest: ValidatedTransactionRequest | undefined
   revocationTxRequest: ValidatedTransactionRequest | undefined
   gasFee: GasFeeResult
@@ -82,167 +51,180 @@ export type PermitTypedData = {
   typedData: ValidatedPermit
 }
 
+export type PopulatedTransactionRequestArray = [ValidatedTransactionRequest, ...ValidatedTransactionRequest[]]
 export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: TradingApi.Routing.CLASSIC
+  routing: Routing.CLASSIC
   trade?: ClassicTrade
   permit: PermitTransaction | PermitTypedData | undefined
-  swapRequestArgs: TradingApi.CreateSwapRequest | undefined
+  swapRequestArgs: CreateSwapRequest | undefined
   /**
    * `unsigned` is true if `txRequest` is undefined due to a permit signature needing to be signed first.
    * This occurs on interface where the user must be prompted to sign a permit before txRequest can be fetched.
-   */
+  */
   unsigned: boolean
   txRequests: PopulatedTransactionRequestArray | undefined
-}
-
-export interface WrapSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: TradingApi.Routing.WRAP | TradingApi.Routing.UNWRAP
-  trade: WrapTrade | UnwrapTrade
-  txRequests: PopulatedTransactionRequestArray | undefined
+  
 }
 
 export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.DUTCH_V3 | TradingApi.Routing.PRIORITY
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
   trade: UniswapXTrade
   permit: PermitTypedData | undefined
   gasFeeBreakdown: UniswapXGasBreakdown
 }
 
 export interface BridgeSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: TradingApi.Routing.BRIDGE
+  routing: Routing.BRIDGE
   trade: BridgeTrade
   txRequests: PopulatedTransactionRequestArray | undefined
 }
 
-export interface SolanaSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: TradingApi.Routing.JUPITER
-  trade: SolanaTrade
-  transactionBase64?: string
-  approveTxRequest: undefined
-  revocationTxRequest: undefined
-  gasFee: GasFeeResult
-  gasFeeEstimation: SwapGasFeeEstimation
-  includesDelegation: false
-}
-
-export interface ChainedSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: TradingApi.Routing.CHAINED
-  planId: string | undefined
-  trade: ChainedActionTrade
+export interface AggregatorSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
+  routing: Routing.AGGREGATOR
+  trade?: AggregatorTrade
+  permit: PermitTransaction | PermitTypedData | undefined
+  swapRequestArgs: CreateSwapRequest | undefined
+  unsigned: boolean
   txRequests: PopulatedTransactionRequestArray | undefined
-  /** Not needed for Chained Actions since it's already included in the steps/txRequests */
-  approveTxRequest: undefined
-  /** Not needed for Chained Actions since it's already included in the steps/txRequests */
-  revocationTxRequest: undefined
-  gasFee: GasFeeResult
-  gasFeeEstimation: SwapGasFeeEstimation
 }
 
 interface BaseRequiredSwapTxContextFields {
   gasFee: ValidatedGasFeeResult
 }
 
-export type ValidatedClassicSwapTxAndGasInfo = Prettify<
-  Required<Omit<ClassicSwapTxAndGasInfo, 'includesDelegation'>> &
-    BaseRequiredSwapTxContextFields &
-    (
-      | {
-          unsigned: true
-          permit: PermitTypedData
-          txRequests: undefined
-        }
-      | {
-          unsigned: false
-          permit: PermitTransaction | undefined
-          txRequests: PopulatedTransactionRequestArray
-        }
-    ) &
-    Pick<ClassicSwapTxAndGasInfo, 'includesDelegation'>
->
+export type ValidatedClassicSwapTxAndGasInfo = Required<ClassicSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields & ({
+  unsigned: true
+  permit: PermitTypedData
+  txRequests: undefined
+} | {
+  unsigned: false
+  permit: PermitTransaction | undefined
+  txRequests: PopulatedTransactionRequestArray
+})
 
-export type ValidatedWrapSwapTxAndGasInfo = Prettify<
-  Required<Omit<WrapSwapTxAndGasInfo, 'includesDelegation'>> &
-    BaseRequiredSwapTxContextFields & {
-      txRequests: PopulatedTransactionRequestArray
-    } & Pick<WrapSwapTxAndGasInfo, 'includesDelegation'>
->
+export type ValidatedBridgeSwapTxAndGasInfo = Required<BridgeSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields & ({
+  txRequests: PopulatedTransactionRequestArray
+})
 
-export type ValidatedBridgeSwapTxAndGasInfo = Prettify<
-  Required<Omit<BridgeSwapTxAndGasInfo, 'includesDelegation'>> &
-    BaseRequiredSwapTxContextFields & {
-      txRequests: PopulatedTransactionRequestArray
-    } & Pick<BridgeSwapTxAndGasInfo, 'includesDelegation'>
->
+export type ValidatedAggregatorSwapTxAndGasInfo = Required<AggregatorSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields & ({
+  unsigned: true
+  permit: PermitTypedData
+  txRequests: undefined
+} | {
+  unsigned: false
+  permit: PermitTransaction | undefined
+  txRequests: PopulatedTransactionRequestArray
+})
 
-export type ValidatedUniswapXSwapTxAndGasInfo = Prettify<
-  Required<Omit<UniswapXSwapTxAndGasInfo, 'includesDelegation'>> &
-    BaseRequiredSwapTxContextFields & {
-      // Permit should always be defined for UniswapX orders
-      permit: PermitTypedData
-    } & Pick<UniswapXSwapTxAndGasInfo, 'includesDelegation'>
->
+export type ValidatedUniswapXSwapTxAndGasInfo = Required<UniswapXSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields & {
+  // Permit should always be defined for UniswapX orders
+  permit: PermitTypedData
+}
 
-export type ValidatedSolanaSwapTxAndGasInfo = Prettify<
-  Required<SolanaSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields
->
+function validateClassicSwapTxContext(
+  swapTxContext: ClassicSwapTxAndGasInfo,
+  gasFee: ValidatedGasFeeResult,
+): ValidatedClassicSwapTxAndGasInfo | undefined {
+  const { trade, unsigned, permit, txRequests, includesDelegation } = swapTxContext
+  if (!trade) {
+    return undefined
+  }
+  const includesDelegationValue = includesDelegation ?? false
 
-export type ValidatedChainedSwapTxAndGasInfo = Prettify<
-  Required<ChainedSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields
->
+  if (unsigned) {
+    if (!isInterface || !permit || permit.method !== PermitMethod.TypedData) {
+      return undefined
+    }
+    return { ...swapTxContext, trade, gasFee, unsigned, txRequests: undefined, permit, includesDelegation: includesDelegationValue }
+  }
 
-/**
- * Validates a SwapTxAndGasInfo object without any casting and returns a ValidatedSwapTxContext object if the object is valid.
- * @param swapTxContext - The SwapTxAndGasInfo object to validate.
- * @returns A ValidatedSwapTxContext object if the object is valid, otherwise undefined.
- */
-function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo): ValidatedSwapTxContext | undefined {
+  if (txRequests) {
+    return { ...swapTxContext, trade, gasFee, unsigned, txRequests, permit: undefined, includesDelegation: includesDelegationValue }
+  }
+
+  return undefined
+}
+
+function validateBridgeSwapTxContext(
+  swapTxContext: BridgeSwapTxAndGasInfo,
+  gasFee: ValidatedGasFeeResult,
+): ValidatedBridgeSwapTxAndGasInfo | undefined {
+  const { trade, txRequests, includesDelegation } = swapTxContext
+  const includesDelegationValue = includesDelegation ?? false
+  if (!txRequests) {
+    return undefined
+  }
+  return { ...swapTxContext, trade, gasFee, txRequests, includesDelegation: includesDelegationValue }
+}
+
+function validateAggregatorSwapTxContext(
+  swapTxContext: AggregatorSwapTxAndGasInfo,
+  gasFee: ValidatedGasFeeResult,
+): ValidatedAggregatorSwapTxAndGasInfo | undefined {
+  const { trade, unsigned, permit, txRequests, includesDelegation } = swapTxContext
+  if (!trade) {
+    return undefined
+  }
+  const includesDelegationValue = includesDelegation ?? false
+
+  if (unsigned) {
+    if (!isInterface || !permit || permit.method !== PermitMethod.TypedData) {
+      return undefined
+    }
+    return { ...swapTxContext, trade, gasFee, unsigned, txRequests: undefined, permit, includesDelegation: includesDelegationValue }
+  }
+
+  if (txRequests) {
+    return { ...swapTxContext, trade, gasFee, unsigned, txRequests, permit: undefined, includesDelegation: includesDelegationValue }
+  }
+
+  return undefined
+}
+
+function validateUniswapXSwapTxContext(
+  swapTxContext: UniswapXSwapTxAndGasInfo,
+  gasFee: ValidatedGasFeeResult,
+): ValidatedUniswapXSwapTxAndGasInfo | undefined {
+  const { trade, permit } = swapTxContext
+  if (!permit) {
+    return undefined
+  }
+  return { ...swapTxContext, trade, gasFee, permit, includesDelegation: false }
+}
+
+function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown): ValidatedSwapTxContext | undefined {
+  if (!isSwapTx(swapTxContext)) {
+    return undefined
+  }
+
   const gasFee = validateGasFeeResult(swapTxContext.gasFee)
-
   if (!gasFee) {
     return undefined
   }
 
-  if (swapTxContext.trade) {
-    if (isClassic(swapTxContext)) {
-      const { trade, unsigned, permit, txRequests, includesDelegation } = swapTxContext
-
-      if (unsigned) {
-        // SwapTxContext should only ever be unsigned / still require a signature on interface.
-        if (!isWebApp || !permit || permit.method !== PermitMethod.TypedData) {
-          return undefined
-        }
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequests: undefined, permit, includesDelegation }
-      } else if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequests, permit: undefined, includesDelegation }
-      } else {
-        return undefined
-      }
-    } else if (isBridge(swapTxContext)) {
-      const { trade, txRequests, includesDelegation } = swapTxContext
-      if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, txRequests, includesDelegation }
-      } else {
-        return undefined
-      }
-    } else if (isUniswapX(swapTxContext) && swapTxContext.permit) {
-      const { trade, permit } = swapTxContext
-      return { ...swapTxContext, trade, gasFee, permit, includesDelegation: false }
-    } else if (isWrap(swapTxContext)) {
-      const { trade, txRequests } = swapTxContext
-      if (txRequests) {
-        return { ...swapTxContext, trade, gasFee, txRequests, includesDelegation: false }
-      } else {
-        return undefined
-      }
-    } else if (isJupiter(swapTxContext) && swapTxContext.transactionBase64) {
-      return { ...swapTxContext, transactionBase64: swapTxContext.transactionBase64, gasFee }
-    } else if (isChained(swapTxContext)) {
-      const { includesDelegation } = swapTxContext
-      return { ...swapTxContext, gasFee, includesDelegation: includesDelegation ?? false }
-    } else {
-      return undefined
-    }
-  } else {
+  if (!swapTxContext.trade) {
     return undefined
   }
+
+  if (isClassic(swapTxContext)) {
+    return validateClassicSwapTxContext(swapTxContext, gasFee)
+  }
+
+  if (isBridge(swapTxContext)) {
+    return validateBridgeSwapTxContext(swapTxContext, gasFee)
+  }
+
+  if (isAggregator(swapTxContext)) {
+    return validateAggregatorSwapTxContext(swapTxContext, gasFee)
+  }
+
+  if (isUniswapX(swapTxContext)) {
+    return validateUniswapXSwapTxContext(swapTxContext, gasFee)
+  }
+
+  return undefined
+}
+
+function isSwapTx(swapTxContext: unknown): swapTxContext is SwapTxAndGasInfo {
+  return typeof swapTxContext === 'object' && swapTxContext !== null && 'trade' in swapTxContext && 'routing' in swapTxContext;
 }

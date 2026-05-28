@@ -1,13 +1,14 @@
+import { getTokenDetailsURL } from 'appGraphql/data/util'
+import { approvedERC20, InteractiveToken } from 'pages/Landing/assets/approvedTokens'
+import { Ticker } from 'pages/Landing/components/TokenCloud/Ticker'
 import { useCallback } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { IconCloud, ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
 import { shuffleArray } from 'uniswap/src/components/IconCloud/utils'
-import { getTokenDetailsURL } from '~/appGraphql/data/util'
-import { approvedERC20, InteractiveToken } from '~/pages/Landing/assets/approvedTokens'
-import { Ticker } from '~/pages/Landing/components/TokenCloud/Ticker'
 
 const tokenList = shuffleArray(approvedERC20) as InteractiveToken[]
 
+// eslint-disable-next-line import/no-unused-modules
 export function TokenCloud() {
   const renderOuterElement = useCallback((item: ItemPoint<InteractiveToken>) => {
     return <Ticker itemPoint={item} />

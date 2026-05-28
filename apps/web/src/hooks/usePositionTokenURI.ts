@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { Erc721 } from 'uniswap/src/abis/types/Erc721'
 import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
-import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from '~/hooks/useContract'
 
 type TokenId = number | JSBI | BigNumber
 
@@ -34,22 +34,18 @@ type UsePositionTokenURIResult =
 
 function useNFTPositionManagerContract(
   version: ProtocolVersion,
-  chainId?: EVMUniverseChainId,
+  chainId?: UniverseChainId,
 ): NonfungiblePositionManager | Erc721 | null {
   const v3Contract = useV3NFTPositionManagerContract(false, chainId)
   const v4Contract = useV4NFTPositionManagerContract(false, chainId)
   return version === ProtocolVersion.V3 ? v3Contract : v4Contract
 }
 
-export function usePositionTokenURI({
-  tokenId,
-  chainId,
-  version,
-}: {
-  tokenId?: TokenId
-  chainId?: EVMUniverseChainId
-  version?: ProtocolVersion
-}): UsePositionTokenURIResult {
+export function usePositionTokenURI(
+  tokenId: TokenId | undefined,
+  chainId?: UniverseChainId,
+  version?: ProtocolVersion,
+): UsePositionTokenURIResult {
   const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)
   const { data, isLoading, error } = useQuery({
     queryKey: [ReactQueryCacheKey.PositionTokenURI, tokenId, chainId, version],
@@ -97,7 +93,7 @@ export function usePositionTokenURI({
         loading: false,
         result: json,
       }
-    } catch {
+    } catch (error) {
       return { valid: false, loading: false }
     }
   }, [error, isLoading, data, tokenId])

@@ -1,15 +1,11 @@
-import {
-  Experiments,
-  FeatureFlags,
-  getExperimentValue,
-  getFeatureFlagName,
-  getStatsigClient,
-  PrivateRpcProperties,
-} from '@universe/gating'
 import { SagaIterator } from 'redux-saga'
 import { call, select } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -39,11 +35,11 @@ export function* tryGetNonce(
   try {
     const isPrivateRpcEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
 
-    const flashbotsEnabled = getExperimentValue({
-      experiment: Experiments.PrivateRpc,
-      param: PrivateRpcProperties.FlashbotsEnabled,
-      defaultValue: DEFAULT_FLASHBOTS_ENABLED,
-    })
+    const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
+      Experiments.PrivateRpc,
+      PrivateRpcProperties.FlashbotsEnabled,
+      DEFAULT_FLASHBOTS_ENABLED,
+    )
 
     const shouldUseFlashbots = isPrivateRpcEnabled && chainId === UniverseChainId.Mainnet && flashbotsEnabled
 
@@ -74,7 +70,7 @@ export function* tryGetNonce(
 
 export function* getPendingPrivateTxCount(address: Address, chainId: number): SagaIterator<number> {
   const selectAddressTransactions = yield* call(makeSelectAddressTransactions)
-  const pendingTransactions = yield* select(selectAddressTransactions, { evmAddress: address, svmAddress: null })
+  const pendingTransactions = yield* select(selectAddressTransactions, address)
   if (!pendingTransactions) {
     return 0
   }

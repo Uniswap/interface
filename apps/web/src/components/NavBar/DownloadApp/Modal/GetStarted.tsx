@@ -1,16 +1,18 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { Page } from 'components/NavBar/DownloadApp/Modal'
+import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
+import { TokenCarousel } from 'components/NavBar/DownloadApp/Modal/TokenCarousel'
+import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Image } from 'ui/src'
-import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
+import { Button, Flex } from 'ui/src'
+// import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
+import { RingswapLogo } from 'ui/src/components/icons/RingswapLogo'
 import { iconSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { Page } from '~/components/NavBar/DownloadApp/Modal'
-import { ModalContent } from '~/components/NavBar/DownloadApp/Modal/Content'
-import { TokenCarousel } from '~/components/NavBar/DownloadApp/Modal/TokenCarousel'
-import { DownloadWalletRow } from '~/components/WalletModal/DownloadWalletRow'
 
 function Header() {
   return (
@@ -32,7 +34,8 @@ function Header() {
           backdropFilter: 'blur(10.799999237060547px)',
         }}
       >
-        <Image source={UNISWAP_MONO_LOGO_LARGE} height={iconSizes.icon48} width={iconSizes.icon48} />
+        {/* <Image source={UNISWAP_MONO_LOGO_LARGE} height={iconSizes.icon48} width={iconSizes.icon48} /> */}
+        <RingswapLogo size={iconSizes.icon48} color="$accent1" />
       </Flex>
     </Flex>
   )

@@ -1,18 +1,43 @@
+import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from 'components/Charts/VolumeChart/utils'
+import { roundRect } from 'components/Charts/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
-import { ICustomSeriesPaneRenderer, PaneRendererCustomData, PriceToCoordinateConverter, Time } from 'lightweight-charts'
 import {
-  LiquidityBarData,
-  LiquidityBarProps,
-  LiquidityBarSeriesOptions,
-} from '~/components/Charts/LiquidityChart/types'
-import { roundRect } from '~/components/Charts/utils'
-import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from '~/components/Charts/VolumeChart/utils'
+  CustomData,
+  CustomSeriesOptions,
+  ICustomSeriesPaneRenderer,
+  PaneRendererCustomData,
+  PriceToCoordinateConverter,
+  Time,
+  UTCTimestamp,
+} from 'lightweight-charts'
+
+export interface LiquidityBarData extends CustomData {
+  time: UTCTimestamp
+  tick: number
+  price0: string
+  price1: string
+  liquidity: number
+  amount0Locked: number
+  amount1Locked: number
+}
 
 interface LiquidityBarItem {
   x: number
   y: number
   column?: ColumnPosition
   tick: number
+}
+
+export interface LiquidityBarProps {
+  tokenAColor: string
+  tokenBColor: string
+  highlightColor: string
+  activeTick?: number
+  activeTickProgress?: number
+}
+
+export interface LiquidityBarSeriesOptions extends CustomSeriesOptions, LiquidityBarProps {
+  hoveredTick?: number
 }
 
 export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implements ICustomSeriesPaneRenderer {
@@ -34,7 +59,12 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
   }
 
   _drawImpl(renderingScope: BitmapCoordinatesRenderingScope, priceToCoordinate: PriceToCoordinateConverter): void {
-    if (this._data === null || this._data.bars.length === 0 || this._data.visibleRange === null) {
+    if (
+      this._data === null ||
+      this._data.bars.length === 0 ||
+      this._data.visibleRange === null ||
+      this._options === null
+    ) {
       return
     }
     const ctx = renderingScope.context
@@ -45,13 +75,13 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
         tick: bar.originalData.tick,
       }
     })
-    calculateColumnPositionsInPlace({
-      items: bars,
-      barSpacingMedia: this._data.barSpacing,
-      horizontalPixelRatio: renderingScope.horizontalPixelRatio,
-      startIndex: this._data.visibleRange.from,
-      endIndex: this._data.visibleRange.to,
-    })
+    calculateColumnPositionsInPlace(
+      bars,
+      this._data.barSpacing,
+      renderingScope.horizontalPixelRatio,
+      this._data.visibleRange.from,
+      this._data.visibleRange.to,
+    )
     const zeroY = priceToCoordinate(0) ?? 0
     ctx.fillStyle = this._options.tokenAColor
 
@@ -72,11 +102,7 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
       // Create margin to make visual bars thin
       const margin = 0.3 * width
       const widthWithMargin = width - margin * 2
-      const totalBox = positionsBox({
-        position1Media: zeroY,
-        position2Media: stack.y,
-        pixelRatio: renderingScope.verticalPixelRatio,
-      })
+      const totalBox = positionsBox(zeroY, stack.y, renderingScope.verticalPixelRatio)
 
       if (isHoveredTick) {
         const highlightOffset = 0.3 * ctx.canvas.height
@@ -84,14 +110,7 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
 
         // Draw background highlight bar
         ctx.fillStyle = this._options.highlightColor
-        roundRect({
-          ctx,
-          x: column.left + margin,
-          y: highlightOffset,
-          w: widthWithMargin,
-          h: highlightLength,
-          radii: 8,
-        })
+        roundRect(ctx, column.left + margin, highlightOffset, widthWithMargin, highlightLength, 8)
 
         ctx.globalAlpha = 1
       } else {
@@ -111,14 +130,7 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
       }
 
       // Draw bar
-      roundRect({
-        ctx,
-        x: column.left + margin,
-        y: totalBox.position,
-        w: widthWithMargin,
-        h: totalBox.length,
-        radii: 8,
-      })
+      roundRect(ctx, column.left + margin, totalBox.position, widthWithMargin, totalBox.length, 8)
 
       // Reset opacity
       ctx.globalAlpha = 1

@@ -1,4 +1,4 @@
-import { GetProps, styled, XStack } from 'tamagui'
+import { GetProps, XStack, styled } from 'tamagui'
 import { FOCUS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { withCommonPressStyle } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/utils'
 import { variantEmphasisHash } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/variantEmphasisHash'
@@ -152,7 +152,8 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
     },
     size: {
       xxsmall: {
-        p: '$spacing6',
+        px: '$spacing6',
+        py: '$spacing4',
         borderRadius: '$rounded12',
         gap: '$spacing4',
       },
@@ -226,8 +227,6 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
     size: 'medium',
   },
 })
-
-CustomButtonFrameWithoutCustomProps.displayName = 'CustomButtonFrameWithoutCustomProps'
 
 type CustomProps = {
   'primary-color'?: string

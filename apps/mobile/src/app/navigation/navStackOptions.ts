@@ -1,7 +1,7 @@
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack'
 import { StackNavigationOptions } from '@react-navigation/stack'
 
-export const navNativeStackOptions = {
+export const navNativeStackOptions: Record<string, NativeStackNavigationOptions> = {
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },
   presentationBottomSheet: {
@@ -16,8 +16,8 @@ export const navNativeStackOptions = {
     headerShown: false,
     animation: 'slide_from_right',
   },
-} as const satisfies Record<string, NativeStackNavigationOptions>
+}
 
-export const navStackOptions = {
+export const navStackOptions: Record<string, StackNavigationOptions> = {
   noHeader: { headerShown: false },
-} as const satisfies Record<string, StackNavigationOptions>
+}

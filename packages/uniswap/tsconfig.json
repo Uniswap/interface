@@ -1,43 +1,34 @@
 {
   "extends": "../../config/tsconfig/app.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.mts", "env.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "src/**/*.mts"
+  ],
   "references": [
-    {
-      "path": "../utilities"
-    },
     {
       "path": "../ui"
     },
     {
-      "path": "../prices"
+      "path": "../utilities"
     },
-    {
-      "path": "../notifications"
-    },
-    {
-      "path": "../gating"
-    },
-    {
-      "path": "../config"
-    },
-    {
-      "path": "../api"
-    },
-    {
-      "path": "../../config/vitest-presets"
-    }
   ],
   "compilerOptions": {
-    "types": ["chrome", "vitest/globals"],
+    "baseUrl": ".",
     "paths": {
-      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb": [
-        "../../node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb",
-        "../api/stubs/privy-service-pb"
-      ],
-      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect": [
-        "../../node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect",
-        "../api/stubs/privy-service-connect"
-      ]
-    }
+      "@ring-protocol/v2-sdk": ["../../node_modules/@ring-protocol/v2-sdk"],
+      "@ring-protocol/v3-sdk": ["../../node_modules/@ring-protocol/v3-sdk"],
+      "@ring-protocol/v4-sdk": ["../../node_modules/@ring-protocol/v4-sdk"],
+      "@ring-protocol/sdk-core": ["../../node_modules/@ring-protocol/sdk-core"],
+      "@ring-protocol/universal-router-sdk": ["../../node_modules/@ring-protocol/universal-router-sdk"],
+      "@ring-protocol/router-sdk": ["../../node_modules/@ring-protocol/router-sdk"],
+      "@uniswap/*": ["../../node_modules/@uniswap/*"]
+    },
+    "types": [
+      "chrome",
+      "jest"
+    ]
   }
 }

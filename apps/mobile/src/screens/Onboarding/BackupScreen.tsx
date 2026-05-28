@@ -13,7 +13,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
-import { Flex, ScrollView, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
+import { Flex, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { Cloud, PenLine, QuestionInCircleFilled, ShieldCheck } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -42,7 +42,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const address = account?.address
 
   const isCreatingNew =
-    params.importType === ImportType.CreateNew || params.entryPoint === OnboardingEntryPoint.BackupCard
+    params?.importType === ImportType.CreateNew || params?.entryPoint === OnboardingEntryPoint.BackupCard
   const screenTitle = isCreatingNew ? t('onboarding.backup.title.new') : t('onboarding.backup.title.existing')
   const fromBackupCard = params.entryPoint === OnboardingEntryPoint.BackupCard
 
@@ -58,7 +58,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   )
 
   useEffect(() => {
-    const shouldOverrideBackButton = params.importType === ImportType.SeedPhrase
+    const shouldOverrideBackButton = params?.importType === ImportType.SeedPhrase
     if (shouldOverrideBackButton) {
       navigation.setOptions({
         headerLeft: renderHeaderLeft,
@@ -110,7 +110,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const showSkipOption =
     hasExternalBackup(account) &&
-    (params.importType === ImportType.SeedPhrase || params.importType === ImportType.Restore)
+    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
   const hasCloudBackup = hasBackup(BackupType.Cloud, account)
   const hasManualBackup = hasBackup(BackupType.Manual, account)
@@ -144,9 +144,6 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     )
   }
 
-  // In case, when RecoveryPhraseTooltip is on the bottom, we lower the height of ScrollView to make space for it
-  const scrollViewHeight = isCreatingNew ? '90%' : '100%'
-
   return (
     <OnboardingScreen
       Icon={ShieldCheck}
@@ -156,13 +153,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     >
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing24">
-          <ScrollView showsVerticalScrollIndicator={false} style={{ height: scrollViewHeight }}>
-            <Flex {...shadowProps} gap="$spacing12">
-              {options}
-            </Flex>
-
-            {!isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
-          </ScrollView>
+          <Flex {...shadowProps} gap="$spacing12">
+            {options}
+          </Flex>
+          {!isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
         </Flex>
 
         <Flex gap="$spacing12" justifyContent="flex-end">
@@ -181,7 +175,7 @@ function RecoveryPhraseTooltip({ onPressEducationButton }: { onPressEducationBut
       alignSelf="center"
       flexDirection="row"
       gap="$spacing8"
-      py="$spacing16"
+      py="$spacing8"
       onPress={onPressEducationButton}
     >
       <QuestionInCircleFilled color="$neutral3" size="$icon.20" />

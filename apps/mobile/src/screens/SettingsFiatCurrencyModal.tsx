@@ -1,7 +1,6 @@
+import { FlashList } from '@shopify/flash-list'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-// TODO(WALL-7189): Explore removing FlatList.  Currently using this to fix a scrolling regression.
-import { FlatList } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -30,17 +29,7 @@ export function SettingsFiatCurrencyModal(): JSX.Element {
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {t('settings.setting.currency.title')}
       </Text>
-      {/* When modifying this component, please test on a physical device that 
-          scrolling the currencies list continues to work correctly. */}
-      <FlatList
-        data={ORDERED_CURRENCIES}
-        keyExtractor={(item: FiatCurrency) => item}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        bounces={true}
-        keyboardShouldPersistTaps="always"
-        keyboardDismissMode="on-drag"
-      />
+      <FlashList data={ORDERED_CURRENCIES} keyExtractor={(item: FiatCurrency) => item} renderItem={renderItem} />
     </Modal>
   )
 }

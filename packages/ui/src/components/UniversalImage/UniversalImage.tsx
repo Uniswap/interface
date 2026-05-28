@@ -1,11 +1,11 @@
 /* eslint-disable complexity */
 import { useEffect, useState } from 'react'
-import { type ColorTokens, Image } from 'tamagui'
-import { Flex } from 'ui/src/components/layout/Flex'
+import { ColorTokens, Image } from 'tamagui'
 import { FastImageWrapper } from 'ui/src/components/UniversalImage/internal/FastImageWrapper'
 import { PlainImage } from 'ui/src/components/UniversalImage/internal/PlainImage'
 import { SvgImage } from 'ui/src/components/UniversalImage/internal/SvgImage'
-import { type UniversalImageProps, type UniversalImageSize } from 'ui/src/components/UniversalImage/types'
+import { UniversalImageProps, UniversalImageSize } from 'ui/src/components/UniversalImage/types'
+import { Flex } from 'ui/src/components/layout/Flex'
 import { Loader } from 'ui/src/loading/Loader'
 import { isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
@@ -22,8 +22,6 @@ export function UniversalImage({
   onLoad,
   allowLocalUri = false,
   autoplay = true,
-  shouldRasterizeIOS = false,
-  allowUndefinedSize = false,
 }: UniversalImageProps): JSX.Element | null {
   // Allow calculation of fields as needed
   const [width, setWidth] = useState(size.width)
@@ -45,7 +43,6 @@ export function UniversalImage({
   }, [size.height, size.width])
 
   // Calculate width/height and check for an error in the image retrieval for fast images
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +width, height
   useEffect(() => {
     // If we know dimension or this isn't a fast image, skip calculating width/height
     if (!uri || sizeKnown || !fastImage || isRequireSource) {
@@ -74,10 +71,9 @@ export function UniversalImage({
   }
 
   // Show a loader while the URI is populating or size is calculating when there's no fallback
-  // Skip this check if allowUndefinedSize is true (for cases where parent container handles sizing)
-  if (!uri || (!sizeKnown && !errored && !allowUndefinedSize)) {
+  if (!uri || (!sizeKnown && !errored)) {
     if (style?.loadingContainer) {
-      return <Flex style={style.loadingContainer}>{LOADING_FALLBACK}</Flex>
+      return <Flex style={style?.loadingContainer}>{LOADING_FALLBACK}</Flex>
     }
     return LOADING_FALLBACK
   }
@@ -101,7 +97,6 @@ export function UniversalImage({
     return (
       <FastImageWrapper
         setError={() => setErrored(true)}
-        shouldRasterizeIOS={shouldRasterizeIOS}
         size={computedSize}
         testID={testID ? `svg-${testID}` : undefined}
         uri={uri}

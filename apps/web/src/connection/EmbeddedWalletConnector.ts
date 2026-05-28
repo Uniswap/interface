@@ -1,16 +1,14 @@
-import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import { HexString } from 'utilities/src/addresses/hex'
+import { EmbeddedWalletProvider, Listener, embeddedWalletProvider } from 'connection/EmbeddedWalletProvider'
+import { getEmbeddedWalletState } from 'state/embeddedWallet/store'
 import {
-  getAddress,
   ProviderConnectInfo,
   ResourceUnavailableRpcError,
   RpcError,
   SwitchChainError,
   UserRejectedRequestError,
+  getAddress,
 } from 'viem'
 import { ChainNotConfiguredError, createConnector } from 'wagmi'
-import { EmbeddedWalletProvider, embeddedWalletProvider, Listener } from '~/connection/EmbeddedWalletProvider'
-import { getEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface EmbeddedWalletParameters {
   onConnect?(): void
@@ -24,12 +22,14 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
   type StorageItem = { 'embeddedUniswapWallet.disconnected': true }
 
   return createConnector<Provider, Properties, StorageItem>((config) => ({
-    id: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-    name: CONNECTION_PROVIDER_NAMES.EMBEDDED_WALLET,
+    id: 'embeddedUniswapWalletConnector',
+    name: 'Ring Embedded Wallet',
     type: 'embeddedUniswapWallet',
     async setup() {
       const provider = await this.getProvider()
-      provider.on('connect', this.onConnect.bind(this) as Listener)
+      if (provider) {
+        provider.on('connect', this.onConnect.bind(this) as Listener)
+      }
     },
     async getProvider() {
       return embeddedWalletProvider
@@ -50,7 +50,7 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
 
       const provider = await this.getProvider()
 
-      let accounts: readonly HexString[] = []
+      let accounts: readonly `0x${string}`[] = []
 
       accounts = await this.getAccounts().catch(() => [])
 
@@ -69,12 +69,12 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
             }
             return { id: currentChainId }
           })
-          currentChainId = chain.id
+          currentChainId = chain?.id ?? currentChainId
         }
 
         await config.storage?.removeItem('embeddedUniswapWallet.disconnected')
 
-        if (accounts.length === 0) {
+        if (!accounts || accounts.length === 0) {
           throw new ResourceUnavailableRpcError(new Error('No accounts available'))
         }
 
@@ -109,7 +109,7 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
     },
     async getChainId() {
       const provider = await this.getProvider()
-      const chainId = provider.getChainId()
+      const chainId = provider.getChainId() || (await provider?.request({ method: 'eth_chainId' }))
       return Number(chainId)
     },
     async isAuthorized() {
@@ -176,10 +176,12 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
       config.emitter.emit('connect', { accounts, chainId })
 
       const provider = await this.getProvider()
-      provider.removeListener('connect', this.onConnect.bind(this))
-      provider.on('accountsChanged', this.onAccountsChanged.bind(this) as any)
-      provider.on('chainChanged', this.onChainChanged as any)
-      provider.on('disconnect', this.onDisconnect.bind(this) as any)
+      if (provider) {
+        provider.removeListener('connect', this.onConnect.bind(this))
+        provider.on('accountsChanged', this.onAccountsChanged.bind(this) as any)
+        provider.on('chainChanged', this.onChainChanged as any)
+        provider.on('disconnect', this.onDisconnect.bind(this) as any)
+      }
     },
     // this can accept an `error` argument if needed.
     async onDisconnect() {

@@ -11,7 +11,7 @@ export function handleReduxAction({
   newState: unknown
   action: Action<unknown>
 }): { isAction: boolean; reduxStateToLog: GenericReduxState | undefined } {
-  const isAction = typeof action !== 'undefined'
+  const isAction = typeof action !== 'undefined' && action !== null
 
   if (shouldLogState) {
     const stateIsObject = typeof newState === 'object' && newState !== null
@@ -31,7 +31,7 @@ export function handleReduxAction({
 }
 
 const ALLOWED_REDUX_FIELDS: string[] = [
-  // Uniswap
+  // Ring
   'searchHistory',
   'transactions',
   'uniswapBehaviorHistory',

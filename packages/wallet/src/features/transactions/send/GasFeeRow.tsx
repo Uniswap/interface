@@ -1,14 +1,13 @@
-import { GasFeeResult } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { Flex, SpinningLoader, Text } from 'ui/src'
+import { Flex, isWeb, SpinningLoader, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
-import { isWebPlatform } from 'utilities/src/platform'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { NetworkFeeWarning } from 'uniswap/src/features/transactions/modals/NetworkFeeWarning'
 
 type GasFeeRowProps = {
   gasFee: GasFeeResult
@@ -28,8 +27,8 @@ export function GasFeeRow({ gasFee, chainId }: GasFeeRowProps): JSX.Element | nu
   }
 
   return (
-    <Flex centered row justifyContent={isWebPlatform ? 'space-between' : 'center'} px="$spacing8">
-      {isWebPlatform && (
+    <Flex centered row justifyContent={isWeb ? 'space-between' : 'center'} px="$spacing8">
+      {isWeb && (
         <Text color="$neutral2" flexShrink={1} variant="body3">
           {t('send.gas.networkCost.title')}
         </Text>
@@ -54,16 +53,6 @@ export function GasFeeRow({ gasFee, chainId }: GasFeeRowProps): JSX.Element | nu
           }
         />
       )}
-    </Flex>
-  )
-}
-
-export function EmptyGasFeeRow(): JSX.Element {
-  return (
-    <Flex centered row px="$spacing8" minHeight={iconSizes.icon16} opacity={0}>
-      <Text color="$neutral2" variant="body3">
-        {' '}
-      </Text>
     </Flex>
   )
 }

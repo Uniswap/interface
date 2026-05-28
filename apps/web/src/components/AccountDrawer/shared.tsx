@@ -1,30 +1,32 @@
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
+import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
-import type { To } from 'react-router'
-import { Link } from 'react-router'
-import { Flex, styled, Text } from 'ui/src'
-import { Check } from 'ui/src/components/icons/Check'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
+import { Check } from 'react-feather'
+import type { To } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
+import { breakpoints } from 'ui/src/theme'
 
-const InternalLinkMenuItem = styled(Link, {
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  py: '$spacing12',
-  justifyContent: 'space-between',
-  color: '$neutral1',
-  ...ClickableTamaguiStyle,
+const InternalLinkMenuItem = styled(Link)`
+  ${ClickableStyle}
 
-  '$platform-web': {
-    textDecoration: 'none',
-  },
-})
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 0;
+  justify-content: space-between;
+  text-decoration: none;
+  color: ${({ theme }) => theme.neutral1};
+`
 
-export const MenuColumn = styled(Flex, {
-  $md: {
-    pb: '$spacing14',
-  },
-})
+export const MenuColumn = styled(Column)`
+  @media screen and (max-width: ${breakpoints.md}px) {
+    padding-bottom: 14px;
+  }
+`
 
 export function MenuItem({
   label,
@@ -41,19 +43,19 @@ export function MenuItem({
   isActive: boolean
   testId?: string
 }) {
+  const theme = useTheme()
+
   if (!to) {
     return null
   }
 
   return (
     <InternalLinkMenuItem onClick={onClick} to={to}>
-      <Flex row centered gap="$gap12">
+      <Row gap="md">
         {logo && logo}
-        <Text data-testid={testId} variant="body3">
-          {label}
-        </Text>
-      </Flex>
-      {isActive && <Check color="$accent1" size="$icon.20" mr="$spacing12" />}
+        <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
+      </Row>
+      {isActive && <Check color={theme.accent1} opacity={1} size={20} style={{ marginRight: '12px' }} />}
     </InternalLinkMenuItem>
   )
 }

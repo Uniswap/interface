@@ -1,10 +1,10 @@
+import styled from 'lib/styled-components'
 import { useRef } from 'react'
 import { Flex, FlexProps } from 'ui/src'
 import { v4 as uuid } from 'uuid'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 // Gradient with a fallback to solid color.
-const Gradient = deprecatedStyled.div`
+const Gradient = styled.div`
   color: #4673fa;
 
   @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
@@ -16,7 +16,7 @@ const Gradient = deprecatedStyled.div`
 
 export { Gradient as UniswapXGradient }
 
-// Uniswap X SVG icon with gradient, copied from Figma.
+// Ring X SVG icon with gradient, copied from Figma.
 // In order for gradient to work, we must give its definition a unique ID that does not collide
 // with other occurences of this component on the page.
 export const UniswapXRouterIcon = ({ testId }: { testId?: string }) => {
@@ -46,7 +46,7 @@ export const UniswapXRouterIcon = ({ testId }: { testId?: string }) => {
   )
 }
 
-type UnswapXRouterLabelProps = FlexProps & {
+export type UnswapXRouterLabelProps = FlexProps & {
   disableTextGradient?: boolean
   testId?: string
 }

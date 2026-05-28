@@ -1,15 +1,14 @@
-import React, { type ErrorInfo, type PropsWithChildren, useCallback, useState } from 'react'
+import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Image } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { type Dispatch } from 'redux'
-import { Button, Flex, Switch, Text } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons'
-import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { Dispatch } from 'redux'
+import { Button, Flex, Text } from 'ui/src'
+import { DEAD_LUNI } from 'ui/src/assets'
+import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { type AppStateResetter } from 'uniswap/src/state/createAppStateResetter'
-import { isProdEnv } from 'utilities/src/environment/env'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restartApp'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -30,7 +29,6 @@ interface ErrorBoundariesOwnProps {
   fallback?: React.ReactNode
   name?: string
   notificationText?: string
-  appStateResetter?: AppStateResetter
 }
 
 // Uncaught errors during renders of subclasses will be caught here
@@ -66,7 +64,7 @@ class InternalErrorBoundary extends React.Component<
 
     this.props.onError?.(error)
 
-    const isNotificationError = !!errorBoundaryError.stack?.includes(NOTIFICATION_ROUTER_COMPONENT_NAME)
+    const isNotificationError = !!errorBoundaryError.stack?.includes?.(NOTIFICATION_ROUTER_COMPONENT_NAME)
     if (isNotificationError) {
       this.props.dispatch(resetNotifications())
     }
@@ -83,10 +81,10 @@ class InternalErrorBoundary extends React.Component<
 
   render(): React.ReactNode {
     const { error } = this.state
-    const { fallback, appStateResetter } = this.props
+    const { fallback } = this.props
 
     if (error !== null) {
-      return fallback === null ? null : fallback || <ErrorScreen error={error} appStateResetter={appStateResetter} />
+      return fallback === null ? null : fallback || <ErrorScreen error={error} />
     }
 
     return this.props.children
@@ -104,7 +102,6 @@ export function ErrorBoundary({
   // We want to temporary disable non global error boundaries until https://linear.app/uniswap/issue/WALL-4461 is done
   const disableLocalErrorBoundaries = true
   // we do not pass `name` to global error boundary
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (disableLocalErrorBoundaries && props.name) {
     return <>{props.children}</>
   }
@@ -112,15 +109,15 @@ export function ErrorBoundary({
   return (
     <InternalErrorBoundary
       dispatch={dispatch}
-      notificationText={showNotification ? (notificationText ?? t('common.error.somethingWrong')) : undefined}
+      notificationText={showNotification ? notificationText ?? t('common.error.somethingWrong') : undefined}
       {...props}
     />
   )
 }
 
-const ICON_SIZE = 30
+const LUNI_SIZE = 150
 
-function ErrorScreen({ error, appStateResetter }: { error: Error; appStateResetter?: AppStateResetter }): JSX.Element {
+function ErrorScreen({ error }: { error: Error }): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const accounts = useAccounts()
@@ -130,73 +127,19 @@ function ErrorScreen({ error, appStateResetter }: { error: Error; appStateResett
     dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
   }
 
-  const [isClearDataEnabled, setIsClearDataEnabled] = useState(false)
-  const [isRestarting, setIsRestarting] = useState(false)
-  const handleRestart = useCallback(async () => {
-    setIsRestarting(true)
-    if (isClearDataEnabled && appStateResetter) {
-      try {
-        await appStateResetter.resetAll()
-      } catch (e) {
-        logger.error(e, {
-          tags: {
-            file: 'ErrorBoundary',
-            function: 'handleRestart',
-          },
-        })
-      }
-    }
-    await restartApp()
-  }, [isClearDataEnabled, appStateResetter])
-
   return (
     <Trace logImpression element={ElementName.AppCrashScreen}>
-      <Flex fill backgroundColor="$surface1" gap="$spacing20" px="$spacing16" py="$spacing48">
-        <Flex centered grow gap="$spacing16">
-          <Flex backgroundColor="$surface3" borderRadius="$rounded16" p="$spacing12">
-            <AlertTriangleFilled color="$neutral1" size={ICON_SIZE} />
-          </Flex>
+      <Flex centered fill backgroundColor="$surface1" gap="$spacing16" px="$spacing16" py="$spacing48">
+        <Flex centered grow gap="$spacing36">
+          <Image resizeMode="contain" source={DEAD_LUNI} height={LUNI_SIZE} width={LUNI_SIZE} />
           <Flex centered gap="$spacing8">
-            <Text textAlign="center" variant="subheading1">
-              {t('errors.crash.title')}
-            </Text>
-            <Text color="$neutral2" textAlign="center" variant="body2">
-              {t('errors.crash.message')}
-            </Text>
+            <Text variant="subheading1">{t('errors.crash.title')}</Text>
+            <Text variant="body2">{t('errors.crash.message')}</Text>
           </Flex>
-          {error.message && !isProdEnv() && (
-            <Text textAlign="center" variant="body3">
-              {error.message}
-            </Text>
-          )}
+          {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
         </Flex>
-
-        {appStateResetter && (
-          <Flex
-            alignSelf="stretch"
-            backgroundColor="$surface2"
-            borderRadius="$rounded16"
-            gap="$spacing8"
-            p="$spacing16"
-          >
-            <Flex row alignItems="center" justifyContent="space-between">
-              <Text variant="subheading2">{t('errors.crash.resetData.title')}</Text>
-              <Switch checked={isClearDataEnabled} variant="default" onCheckedChange={setIsClearDataEnabled} />
-            </Flex>
-            <Text color="$neutral2" variant="body3">
-              {t('errors.crash.resetData.description')}
-            </Text>
-          </Flex>
-        )}
-
         <Flex row alignSelf="stretch">
-          <Button
-            backgroundColor="$neutral1"
-            emphasis="primary"
-            isDisabled={isRestarting}
-            loading={isRestarting}
-            onPress={handleRestart}
-          >
+          <Button emphasis="primary" variant="branded" onPress={restartApp}>
             {t('errors.crash.restart')}
           </Button>
         </Flex>

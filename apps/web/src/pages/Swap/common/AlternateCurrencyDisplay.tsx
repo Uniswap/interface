@@ -1,10 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
+
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text } from 'ui/src'
-import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
-import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export const AlternateCurrencyDisplay = ({
   inputCurrency,
@@ -19,18 +20,18 @@ export const AlternateCurrencyDisplay = ({
   disabled?: boolean
   onToggle: () => void
 }) => {
-  const { formatNumberOrString } = useLocalizationContext()
-  const activeCurrency = useAppFiatCurrency()
+  const { formatNumberOrString, addFiatSymbolToNumber } = useLocalizationContext()
+  const activeCurrency = useAppFiatCurrencyInfo()
 
   const formattedAlternateCurrency = inputInFiat
     ? `${formatNumberOrString({
         value: exactAmountOut || '0',
         type: NumberType.TokenNonTx,
       })} ${inputCurrency?.symbol}`
-    : formatNumberOrString({
+    : addFiatSymbolToNumber({
         value: exactAmountOut || '0',
-        type: NumberType.PortfolioBalance,
-        currencyCode: activeCurrency,
+        currencyCode: activeCurrency.code,
+        currencySymbol: activeCurrency.symbol,
       })
 
   if (!inputCurrency) {
@@ -46,10 +47,10 @@ export const AlternateCurrencyDisplay = ({
       onPress={disabled ? undefined : onToggle}
       {...(!disabled ? ClickableTamaguiStyle : {})}
     >
-      <Text variant="body2" color="$neutral2">
+      <Text variant="body2" color="neutral3">
         {formattedAlternateCurrency}
       </Text>
-      <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
+      <ArrowUpDown color="$neutral3" size="$icon.16" />
     </Flex>
   )
 }

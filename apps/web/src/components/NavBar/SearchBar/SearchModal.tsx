@@ -1,23 +1,29 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
+import { useModalState } from 'hooks/useModalState'
+import { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, type Input, Text, TouchableArea, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+// import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
+import { SearchModalNoQueryList } from 'components/NavBar/SearchBar/SearchModalNoQueryList'
+// import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
+import { SearchModalResultsList } from 'components/NavBar/SearchBar/SearchModalResultsList'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
-import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
-import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
 import { SearchTab, WEB_SEARCH_TABS } from 'uniswap/src/features/search/SearchModal/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
-import { useModalState } from '~/hooks/useModalState'
 
 export const SearchModal = memo(function _SearchModal(): JSX.Element {
+  const poolSearchEnabled = useFeatureFlag(FeatureFlags.PoolSearch)
   const colors = useSporeColors()
   const { t } = useTranslation()
   const media = useMedia()
@@ -25,32 +31,19 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
 
   const { isOpen: isModalOpen, toggleModal: toggleSearchModal } = useModalState(ModalName.Search)
 
-  // Use ref for programmatic focus instead of autoFocus prop
-  // autoFocus doesn't work reliably on first modal open in production
-  const searchInputRef = useRef<Input>(null)
+  const [activeTab, setActiveTab] = useState<SearchTab>(poolSearchEnabled ? SearchTab.All : SearchTab.Tokens)
 
-  useEffect(() => {
-    if (isModalOpen) {
-      // Small delay to ensure modal animation/focus trap is ready
-      const timeoutId = setTimeout(() => {
-        searchInputRef.current?.focus()
-      }, 50)
-      return () => clearTimeout(timeoutId)
-    }
-    return undefined
-  }, [isModalOpen])
-
-  const [activeTab, setActiveTab] = useState<SearchTab>(SearchTab.All)
+  const { chains: enabledChains, defaultChainId } = useEnabledChains()
 
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacks(null, ModalName.Search)
+    useFilterCallbacks(defaultChainId, ModalName.Search)
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
 
-  const trace = useTrace({ section: SectionName.NavbarSearch })
+  const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
   const onClose = useCallback(() => {
     toggleSearchModal()
-    sendAnalyticsEvent(InterfaceEventName.NavbarSearchExited, {
+    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, {
       navbar_search_input_text: debouncedSearchFilter ?? '',
       hasInput: Boolean(debouncedSearchFilter),
       ...trace,
@@ -63,18 +56,12 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
     onClose()
   }, [onChangeText, onClose])
 
-  const onResetFilters = useCallback(() => {
-    onChangeChainFilter(null)
-    setActiveTab(SearchTab.All)
-  }, [onChangeChainFilter])
-
-  const { chains: enabledChains } = useEnabledChains()
-
   // Tamagui Dialog/Sheets should remove background scroll by default but does not work to disable ArrowUp/Down key scrolling
   useUpdateScrollLock({ isModalOpen })
 
   return (
     <Modal
+      extendOnKeyboardVisible
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
@@ -87,13 +74,6 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
       padding="$none"
       height="100vh"
       onClose={onClose}
-      analyticsProperties={{
-        search_tab: activeTab,
-      }}
-      // Use percent mode to avoid Tamagui bug where 'fit' snapped
-      // modals may incorrectly resize on their own when keyboard is visible
-      snapPointsMode="percent"
-      snapPoints={[85]}
     >
       <Flex grow style={scrollbarStyles}>
         <Flex
@@ -104,7 +84,7 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
           borderBottomWidth={1}
         >
           <SearchTextInput
-            ref={searchInputRef}
+            autoFocus
             minHeight={media.sm ? undefined : 24}
             backgroundColor={media.sm ? '$surface2' : '$none'}
             borderColor={!media.sm ? '$none' : undefined}
@@ -115,11 +95,12 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
                   includeAllNetworks
                   chainIds={enabledChains}
                   selectedChain={chainFilter}
+                  onDismiss={dismissNativeKeyboard}
                   onPressChain={onChangeChainFilter}
                 />
               </Flex>
             }
-            placeholder={t('search.input.placeholder.withWallets')}
+            placeholder={poolSearchEnabled ? t('search.input.placeholder') : t('tokens.selector.search.placeholder')}
             px="$spacing16"
             value={searchFilter ?? ''}
             onChangeText={onChangeText}
@@ -133,37 +114,29 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
             }}
           />
         </Flex>
-        <Flex row px="$spacing20" pt="$spacing16" pb="$spacing8" gap="$spacing16">
-          {WEB_SEARCH_TABS.map((tab) => (
-            <Trace element={ElementName.SearchTab} logPress key={tab} properties={{ search_tab: tab }}>
-              <TouchableArea onPress={() => setActiveTab(tab)}>
+        {poolSearchEnabled && (
+          <Flex row px="$spacing20" pt="$spacing16" pb="$spacing8" gap="$spacing16">
+            {WEB_SEARCH_TABS.map((tab) => (
+              <TouchableArea key={tab} onPress={() => setActiveTab(tab)}>
                 <Text color={activeTab === tab ? '$neutral1' : '$neutral2'} variant="buttonLabel2">
                   {tab}
                 </Text>
               </TouchableArea>
-            </Trace>
-          ))}
-        </Flex>
+            ))}
+          </Flex>
+        )}
         <Flex grow>
           {searchFilter && searchFilter.length > 0 ? (
             <SearchModalResultsList
-              chainFilter={chainFilter}
-              parsedChainFilter={parsedChainFilter}
+              chainFilter={chainFilter ?? parsedChainFilter}
               debouncedParsedSearchFilter={debouncedParsedSearchFilter}
               debouncedSearchFilter={debouncedSearchFilter}
               searchFilter={searchFilter}
               activeTab={activeTab}
               onSelect={onSelect}
-              onResetFilters={onResetFilters}
-              renderedInModal={false}
             />
           ) : (
-            <SearchModalNoQueryList
-              chainFilter={chainFilter}
-              activeTab={activeTab}
-              onSelect={onSelect}
-              renderedInModal
-            />
+            <SearchModalNoQueryList chainFilter={chainFilter} activeTab={activeTab} onSelect={onSelect} />
           )}
         </Flex>
       </Flex>

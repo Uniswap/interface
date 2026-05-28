@@ -1,28 +1,28 @@
-import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { getCommonBase } from 'uniswap/src/constants/routing'
+import { useTokenQuery, useTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
-import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/gqlTokenToCurrencyInfo'
+import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import {
   buildNativeCurrencyId,
   buildWrappedNativeCurrencyId,
   currencyIdToAddress,
   currencyIdToChain,
+  isNativeCurrencyAddress,
 } from 'uniswap/src/utils/currencyId'
 
-function useCurrencyInfoQuery(
+export function useCurrencyInfo(
   _currencyId?: string,
   options?: { refetch?: boolean; skip?: boolean },
-): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean; error?: Error } {
-  const queryResult = GraphQLApi.useTokenQuery({
+): Maybe<CurrencyInfo> {
+  const { data } = useTokenQuery({
     variables: currencyIdToContractInput(_currencyId ?? ''),
     skip: !_currencyId || options?.skip,
     fetchPolicy: options?.refetch ? 'cache-and-network' : 'cache-first',
   })
 
-  const currencyInfo = useMemo(() => {
+  return useMemo(() => {
     if (!_currencyId) {
       return undefined
     }
@@ -31,62 +31,33 @@ function useCurrencyInfoQuery(
     let address: Address | undefined
     try {
       address = currencyIdToAddress(_currencyId)
-    } catch (_error) {
+    } catch (error) {
       return undefined
     }
     if (chainId && address) {
-      const commonBase = getCommonBase(chainId, address)
+      const commonBase = getCommonBase(chainId, isNativeCurrencyAddress(chainId, address), address)
       if (commonBase) {
         // Creating new object to avoid error "Cannot assign to read only property"
         const copyCommonBase = { ...commonBase }
         // Related to TODO(WEB-5111)
-        // Some common base images are broken so this'll ensure we read from uniswap images
-        if (queryResult.data?.token?.project?.logoUrl) {
-          copyCommonBase.logoUrl = queryResult.data.token.project.logoUrl
+        // Some common base images are broken so this'll ensure we read from Ring images
+        if (data?.token?.project?.logoUrl) {
+          copyCommonBase.logoUrl = data.token.project.logoUrl
         }
         copyCommonBase.currencyId = _currencyId
-
-        // Local common base object will not have remote project id, so we add it here.
-        copyCommonBase.projectId = queryResult.data?.token?.project?.id
-
         return copyCommonBase
       }
     }
 
-    return queryResult.data?.token && gqlTokenToCurrencyInfo(queryResult.data.token)
-  }, [_currencyId, queryResult.data?.token])
-
-  return {
-    currencyInfo,
-    loading: queryResult.loading,
-    error: queryResult.error,
-  }
-}
-
-export function useCurrencyInfo(
-  _currencyId?: string,
-  options?: { refetch?: boolean; skip?: boolean },
-): Maybe<CurrencyInfo> {
-  const { currencyInfo } = useCurrencyInfoQuery(_currencyId, options)
-  return currencyInfo
-}
-
-export function useCurrencyInfoWithLoading(
-  _currencyId?: string,
-  options?: { refetch?: boolean; skip?: boolean },
-): {
-  currencyInfo: Maybe<CurrencyInfo>
-  loading: boolean
-  error?: Error
-} {
-  return useCurrencyInfoQuery(_currencyId, options)
+    return data?.token && gqlTokenToCurrencyInfo(data.token)
+  }, [_currencyId, data?.token])
 }
 
 export function useCurrencyInfos(
   _currencyIds: string[],
   options?: { refetch?: boolean; skip?: boolean },
 ): Maybe<CurrencyInfo>[] {
-  const { data } = GraphQLApi.useTokensQuery({
+  const { data } = useTokensQuery({
     variables: {
       contracts: _currencyIds.map(currencyIdToContractInput),
     },

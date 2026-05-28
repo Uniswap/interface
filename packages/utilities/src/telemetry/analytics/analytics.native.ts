@@ -1,12 +1,8 @@
-import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-react-native'
+import { Identify, flush, getUserId, identify, init, setDeviceId, track } from '@amplitude/analytics-react-native'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
-import {
-  Analytics,
-  AnalyticsInitConfig,
-  TestnetModeConfig,
-  UserPropertyValue,
-  // biome-ignore lint/style/noRestrictedImports: needed here
-} from 'utilities/src/telemetry/analytics/analytics'
+import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { Analytics, TestnetModeConfig, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import {
   AMPLITUDE_NATIVE_TRACKING_OPTIONS,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
@@ -29,7 +25,12 @@ export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<bool
 }
 
 export const analytics: Analytics = {
-  async init({ transportProvider, allowed, userIdGetter }: AnalyticsInitConfig): Promise<void> {
+  async init(
+    transportProvider: ApplicationTransport,
+    allowed: boolean,
+    _initHash?: string,
+    userIdGetter?: () => Promise<string>,
+  ): Promise<void> {
     try {
       // Ensure events are filtered based on the allowAnalytics setting, but not before init is called
       allowAnalytics = allowed
@@ -104,7 +105,6 @@ export const analytics: Analytics = {
     loggers.flushEvents()
     flush()
   },
-  // eslint-disable-next-line max-params
   setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void {
     if (!allowAnalytics && initCalled) {
       return

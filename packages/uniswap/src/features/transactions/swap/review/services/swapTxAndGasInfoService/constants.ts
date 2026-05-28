@@ -1,16 +1,4 @@
-export class UnknownSimulationError extends Error {
-  constructor() {
-    super('Unknown gas simulation error')
-    this.name = 'UnknownSimulationError'
-  }
-}
-
-export class SlippageTooLowError extends Error {
-  constructor() {
-    super('Slippage too low')
-    this.name = 'SlippageTooLowError'
-  }
-}
+export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
 export const WRAP_FALLBACK_GAS_LIMIT_IN_GWEI = 45_000

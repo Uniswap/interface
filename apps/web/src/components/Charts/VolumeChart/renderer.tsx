@@ -2,24 +2,37 @@
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/stacked-bars-series/renderer.ts
  * Modifications are called out with comments.
  */
-
+import {
+  ColumnPosition,
+  calculateColumnPositionsInPlace,
+  isStackedHistogramData,
+  positionsBox,
+} from 'components/Charts/VolumeChart/utils'
+import { roundRect } from 'components/Charts/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
+  CustomData,
   CustomSeriesOptions,
   ICustomSeriesPaneRenderer,
   PaneRendererCustomData,
   PriceToCoordinateConverter,
   Time,
+  UTCTimestamp,
 } from 'lightweight-charts'
-import { roundRect } from '~/components/Charts/utils'
-import {
-  ColumnPosition,
-  CustomHistogramData,
-  calculateColumnPositionsInPlace,
-  isStackedHistogramData,
-  positionsBox,
-  StackedHistogramData,
-} from '~/components/Charts/VolumeChart/utils'
+import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+
+// Modification: custom implementations of lw-chart's histogram data types
+export interface SingleHistogramData extends CustomData {
+  value: number
+  time: UTCTimestamp
+}
+
+export interface StackedHistogramData extends CustomData {
+  values: Record<PriceSource, number | undefined>
+  time: UTCTimestamp
+}
+
+export type CustomHistogramData = SingleHistogramData | StackedHistogramData
 
 interface BarItem {
   x: number
@@ -68,7 +81,6 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
     this._options = options
   }
 
-  // eslint-disable-next-line max-params
   _drawImpl(
     renderingScope: BitmapCoordinatesRenderingScope,
     priceToCoordinate: PriceToCoordinateConverter,
@@ -93,13 +105,13 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
         ys: cumulativePrice.map((value) => priceToCoordinate(value) ?? 0),
       }
     })
-    calculateColumnPositionsInPlace({
-      items: bars,
-      barSpacingMedia: this._data.barSpacing,
-      horizontalPixelRatio: renderingScope.horizontalPixelRatio,
-      startIndex: this._data.visibleRange.from,
-      endIndex: this._data.visibleRange.to,
-    })
+    calculateColumnPositionsInPlace(
+      bars,
+      this._data.barSpacing,
+      renderingScope.horizontalPixelRatio,
+      this._data.visibleRange.from,
+      this._data.visibleRange.to,
+    )
     const zeroY = priceToCoordinate(0) ?? 0
     for (let i = this._data.visibleRange.from; i < this._data.visibleRange.to; i++) {
       const stack = bars[i]
@@ -117,23 +129,13 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       const margin = width * 0.075
 
       // Modification: draw rounded rect corresponding to total volume
-      const totalBox = positionsBox({
-        position1Media: zeroY,
-        position2Media: stack.ys[stack.ys.length - 1],
-        pixelRatio: renderingScope.verticalPixelRatio,
-      })
+      const totalBox = positionsBox(zeroY, stack.ys[stack.ys.length - 1], renderingScope.verticalPixelRatio)
 
       if (this._background) {
         ctx.fillStyle = this._background
       }
 
-      roundRect({
-        ctx,
-        x: column.left + margin,
-        y: totalBox.position,
-        w: width - margin,
-        h: totalBox.length,
-      })
+      roundRect(ctx, column.left + margin, totalBox.position, width - margin, totalBox.length, 4)
 
       // Modification: draw the stack's boxes atop the total volume bar, resulting in the top and bottom boxes being rounded
       ctx.globalCompositeOperation = 'source-atop'
@@ -147,11 +149,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
         }
 
         const color = this._colors[this._colors.length - 1 - index] // color v2, then v3
-        const stackBoxPositions = positionsBox({
-          position1Media: previousY,
-          position2Media: y,
-          pixelRatio: renderingScope.verticalPixelRatio,
-        })
+        const stackBoxPositions = positionsBox(previousY, y, renderingScope.verticalPixelRatio)
         ctx.fillStyle = color
         ctx.globalAlpha = isStackedHistogram && !isHovered ? 0.24 : 1
         ctx.fillRect(column.left + margin, stackBoxPositions.position, width - margin, stackBoxPositions.length)

@@ -1,31 +1,33 @@
+import { InterfacePageName } from '@uniswap/analytics-events'
+import darkImage from 'assets/images/404-page-dark.png'
+import lightImage from 'assets/images/404-page-light.png'
+import { useIsMobile } from 'hooks/screenSize/useIsMobile'
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
-import { Button, Flex, useIsDarkMode } from 'ui/src'
-import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import { useNavigate } from 'react-router-dom'
+import { ThemedText } from 'theme/components'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { Button, Flex } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import darkImage from '~/assets/images/404-page-dark.png'
-import lightImage from '~/assets/images/404-page-light.png'
-import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ThemedText } from '~/theme/components'
 
-const Image = deprecatedStyled.img`
+const Image = styled.img`
   max-width: 510px;
   width: 100%;
   padding: 0 75px;
 `
 
-const Container = deprecatedStyled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 
-const Header = deprecatedStyled(Container)`
+const Header = styled(Container)`
   gap: 30px;
 `
 
-const PageWrapper = deprecatedStyled(Container)`
+const PageWrapper = styled(Container)`
   flex: 1;
   justify-content: center;
   gap: 50px;
@@ -45,13 +47,14 @@ interface NotFoundProps {
 export default function NotFound({ title, subtitle, actionButton }: NotFoundProps) {
   const isDarkMode = useIsDarkMode()
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
   const Title = isMobile ? ThemedText.LargeHeader : ThemedText.Hero
   const Paragraph = isMobile ? ThemedText.HeadlineMedium : ThemedText.HeadlineLarge
 
   return (
     <PageWrapper>
-      <Trace logImpression page={InterfacePageName.NotFound}>
+      <Trace logImpression page={InterfacePageName.NOT_FOUND}>
         <Header>
           <Container>
             {title ?? <Title>404</Title>}
@@ -65,7 +68,7 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
         </Header>
         {actionButton ?? (
           <Flex row alignSelf="stretch">
-            <Button href="/" tag="a" variant="branded" $platform-web={{ textDecoration: 'none' }}>
+            <Button onPress={() => navigate('/')} variant="branded">
               <Trans i18nKey="notFound.oops" />
             </Button>
           </Flex>

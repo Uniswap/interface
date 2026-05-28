@@ -146,6 +146,7 @@ type NavIconProps = SVGProps<SVGSVGElement> & {
   onClick?: () => void
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export const NavIcon = ({ clickable, onClick }: NavIconProps) => {
   const colors = useSporeColors()
   const showHolidayUni = useMemo(() => {

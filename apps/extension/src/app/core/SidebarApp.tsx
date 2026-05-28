@@ -4,11 +4,9 @@ import 'src/app/Global.css'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { createHashRouter, RouterProvider } from 'react-router'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
-import { AUTO_LOCK_ALARM_NAME } from 'src/app/components/AutoLockProvider'
 import { ErrorElement } from 'src/app/components/ErrorElement'
-import { useTraceSidebarDappUrl } from 'src/app/components/Trace/useTraceSidebarDappUrl'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
@@ -17,18 +15,15 @@ import { addRequest } from 'src/app/features/dappRequests/actions'
 import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
 import { BackupRecoveryPhraseScreen } from 'src/app/features/settings/BackupRecoveryPhrase/BackupRecoveryPhraseScreen'
-import { DeviceAccessScreen } from 'src/app/features/settings/DeviceAccessScreen'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
-import { HashcashBenchmarkScreen } from 'src/app/features/settings/HashcashBenchmarkScreen'
-import { SessionsDebugScreen } from 'src/app/features/settings/SessionsDebugScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
 import { ViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/ViewRecoveryPhraseScreen'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
 import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
-import { SettingsStorageScreen } from 'src/app/features/settings/SettingsStorageScreen'
 import { SmartWalletSettingsScreen } from 'src/app/features/settings/SmartWalletSettingsScreen'
+import { SettingsChangePasswordScreen } from 'src/app/features/settings/password/SettingsChangePasswordScreen'
 import { SwapFlowScreen } from 'src/app/features/swap/SwapFlowScreen'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
@@ -36,9 +31,9 @@ import { MainContent, WebNavigation } from 'src/app/navigation/navigation'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import {
+  DappBackgroundPortChannel,
   backgroundToSidePanelMessageChannel,
   createBackgroundToSidePanelMessagePort,
-  DappBackgroundPortChannel,
 } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
@@ -75,25 +70,15 @@ const router = createHashRouter([
             element: <SettingsScreen />,
           },
           {
-            path: SettingsRoutes.DeviceAccess,
-            element: <DeviceAccessScreen />,
+            path: SettingsRoutes.ChangePassword,
+            element: <SettingsChangePasswordScreen />,
           },
-          ...(isDevEnv()
-            ? [
-                {
-                  path: SettingsRoutes.DevMenu,
-                  element: <DevMenuScreen />,
-                },
-                {
-                  path: SettingsRoutes.SessionsDebug,
-                  element: <SessionsDebugScreen />,
-                },
-                {
-                  path: SettingsRoutes.HashcashBenchmark,
-                  element: <HashcashBenchmarkScreen />,
-                },
-              ]
-            : []),
+          isDevEnv()
+            ? {
+                path: SettingsRoutes.DevMenu,
+                element: <DevMenuScreen />,
+              }
+            : {},
           {
             path: SettingsRoutes.ViewRecoveryPhrase,
             element: <ViewRecoveryPhraseScreen />,
@@ -123,10 +108,6 @@ const router = createHashRouter([
             path: SettingsRoutes.SmartWallet,
             element: <SmartWalletSettingsScreen />,
           },
-          {
-            path: SettingsRoutes.Storage,
-            element: <SettingsStorageScreen />,
-          },
         ],
       },
       {
@@ -151,13 +132,13 @@ function useDappRequestPortListener(): void {
   const [currentPortChannel, setCurrentPortChannel] = useState<DappBackgroundPortChannel | undefined>()
   const [windowId, setWindowId] = useState<string | undefined>()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Only run on component mount for initial setup, disconnect cleanup is managed separately
   useEffect(() => {
     chrome.windows.getCurrent((window) => {
       setWindowId(window.id?.toString())
     })
 
     return () => currentPortChannel?.port.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -206,21 +187,8 @@ function useDappRequestPortListener(): void {
   }, PORT_PING_INTERVAL)
 }
 
-/**
- * Creates a connection so that the background script can detect when the sidebar is closed and schedule an auto-lock alarm.
- */
-function useAutoLockAlarmConnection(): void {
-  useEffect(() => {
-    const port = chrome.runtime.connect({ name: AUTO_LOCK_ALARM_NAME })
-    return () => {
-      port.disconnect()
-    }
-  }, [])
-}
-
 function SidebarWrapper(): JSX.Element {
   useDappRequestPortListener()
-  useAutoLockAlarmConnection()
   useTestnetModeForLoggingAndAnalytics()
 
   const resetUnitagsQueries = useResetUnitagsQueries()
@@ -252,17 +220,6 @@ router.subscribe((state) => {
 
 setRouter(router)
 
-function SidebarContent(): JSX.Element {
-  useTraceSidebarDappUrl()
-
-  return (
-    <>
-      <PrimaryAppInstanceDebuggerLazy />
-      <RouterProvider router={router} />
-    </>
-  )
-}
-
 export default function SidebarApp(): JSX.Element {
   // initialize analytics on load
   useEffect(() => {
@@ -283,7 +240,8 @@ export default function SidebarApp(): JSX.Element {
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Sidebar}>
         <DappContextProvider>
-          <SidebarContent />
+          <PrimaryAppInstanceDebuggerLazy />
+          <RouterProvider router={router} />
         </DappContextProvider>
       </BaseAppContainer>
     </PersistGate>

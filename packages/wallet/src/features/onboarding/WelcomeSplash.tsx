@@ -3,9 +3,9 @@ import Animated, { Easing, FadeIn, FadeInDown, RotateInUpLeft } from 'react-nati
 import { Button, Flex, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { isExtensionApp } from 'utilities/src/platform'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { isExtension } from 'utilities/src/platform'
 
 export function WelcomeSplash({
   address,
@@ -17,18 +17,16 @@ export function WelcomeSplash({
   pb?: number
 }): JSX.Element {
   const { t } = useTranslation()
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: address ? { address } : undefined,
-  })
+  const { unitag } = useUnitagByAddress(address)
 
   return (
     <Flex fill>
-      <Flex centered fill gap={isExtensionApp ? '$spacing24' : '$spacing40'} pb={pb}>
+      <Flex centered fill gap={isExtension ? '$spacing24' : '$spacing40'} pb={pb}>
         <Flex centered>
           <Animated.View entering={FadeInDown.duration(300)}>
             <AccountIcon
               address={address}
-              avatarUriOverride={unitag?.metadata?.avatar}
+              avatarUri={unitag?.metadata?.avatar}
               showBackground={true}
               size={iconSizes.icon70}
             />

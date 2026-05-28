@@ -1,80 +1,107 @@
 import { NetworkStatus } from '@apollo/client'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
+import { ActionTile } from 'components/AccountDrawer/ActionTile'
+import { DownloadGraduatedWalletCard } from 'components/AccountDrawer/DownloadGraduatedWalletCard'
+import IconButton, { IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
+import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
+import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/ExtensionDeeplinks'
+import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
+import { LimitedSupportBanner } from 'components/Banner/LimitedSupportBanner'
+import { Power } from 'components/Icons/Power'
+import { Settings } from 'components/Icons/Settings'
+import StatusIcon from 'components/Identicon/StatusIcon'
+import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
+import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
+import { useAccount } from 'hooks/useAccount'
+import { useDisconnect } from 'hooks/useDisconnect'
+import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
+import { useModalState } from 'hooks/useModalState'
+import { useSignOutWithPasskey } from 'hooks/useSignOutWithPasskey'
+import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Button, Flex, IconButton, Image, useSporeColors } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { Trans, useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
+import { CopyHelper } from 'theme/components/CopyHelper'
+import { Button, Flex, Text } from 'ui/src'
+import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
+import { Bank } from 'ui/src/components/icons/Bank'
 import { Shine } from 'ui/src/loading/Shine'
-import { iconSizes } from 'ui/src/theme'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
-import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { MultiBlockchainAddressDisplay } from '~/components/AccountDetails/MultiBlockchainAddressDisplay'
-import { DisconnectButton } from '~/components/AccountDrawer/DisconnectButton'
-import { DownloadGraduatedWalletCard } from '~/components/AccountDrawer/DownloadGraduatedWalletCard'
-import { EmptyWallet } from '~/components/AccountDrawer/MiniPortfolio/EmptyWallet'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import MiniPortfolio from '~/components/AccountDrawer/MiniPortfolio/MiniPortfolio'
-import { ReceiveActionTile } from '~/components/ActionTiles/ReceiveActionTile'
-import { SendActionTile } from '~/components/ActionTiles/SendActionTile/SendActionTile'
-import { LimitedSupportBanner } from '~/components/Banner/LimitedSupportBanner'
-import DelegationMismatchModal from '~/components/delegation/DelegationMismatchModal'
-import { Settings } from '~/components/Icons/Settings'
-import StatusIcon from '~/components/StatusIcon'
-import { ExtensionRequestMethods, useUniswapExtensionRequest } from '~/components/WalletModal/useWagmiConnectorWithId'
-import { useAccountsStore } from '~/features/accounts/store/hooks'
-import { useIsUniswapExtensionConnected } from '~/hooks/useIsUniswapExtensionConnected'
-import { useModalState } from '~/hooks/useModalState'
-import { useIsPortfolioZero } from '~/pages/Portfolio/Overview/hooks/useIsPortfolioZero'
-import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/state/claim/hooks'
+import { useEvent } from 'utilities/src/react/hooks'
+import { isPathBlocked } from 'utils/blockedPaths'
 
-export default function AuthenticatedHeader({
-  evmAddress,
-  svmAddress,
-  openSettings,
-}: {
-  evmAddress?: string
-  svmAddress?: string
-  openSettings: () => void
-}) {
+export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
+  const { disconnect } = useDisconnect()
+  const { data: ENSName } = useENSName(account)
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
-  const isSolanaConnected = useConnectionStatus(Platform.SVM).isConnected
-  const multipleWalletsConnected = useAccountsStore((state) => {
-    const evmWalletId = state.activeConnectors.evm?.session?.walletId
-    const svmWalletId = state.activeConnectors.svm?.session?.walletId
-    return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
-  }) // if different wallets are connected, do not show mini wallet icon
+  const [modalState, setModalState] = useAtom(miniPortfolioModalStateAtom)
 
-  const isUniswapExtensionConnected = useIsUniswapExtensionConnected()
-  const uniswapExtensionRequest = useUniswapExtensionRequest()
-  const shouldShowExtensionButton = isUniswapExtensionConnected && !isSolanaConnected
+  const shouldShowBuyFiatButton = !isPathBlocked('/buy') && false
+  const isUniExtensionConnected = useIsUniExtensionConnected()
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const connectedAccount = useAccount()
+  const connectedWithEmbeddedWallet =
+    connectedAccount.connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const { signOutWithPasskey } = useSignOutWithPasskey()
   const isRightToLeft = i18next.dir() === 'rtl'
 
-  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(evmAddress)
-  const isUnclaimed = useUserHasAvailableClaim(evmAddress)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
+  const isUnclaimed = useUserHasAvailableClaim(account)
   const { toggleModal: toggleClaimModal } = useModalState(ModalName.AddressClaim)
 
   const accountDrawer = useAccountDrawer()
+  const dispatch = useDispatch()
+
+  const handleDisconnect = useCallback(async () => {
+    if (connectedWithEmbeddedWallet) {
+      await signOutWithPasskey()
+    }
+    dispatch(setIsTestnetModeEnabled(false))
+    disconnect()
+    accountDrawer.close()
+  }, [connectedWithEmbeddedWallet, dispatch, disconnect, accountDrawer, signOutWithPasskey])
+
+  const handleBuyCryptoClick = useCallback(() => {
+    accountDrawer.close()
+    navigate(`/buy`, { replace: true })
+  }, [accountDrawer, navigate])
+
+  const openAddressQRModal = useEvent(() => setModalState(ModalState.QR_CODE))
+  const openCEXTransferModal = useEvent(() => setModalState(ModalState.CEX_TRANSFER))
+  const openReceiveCryptoModal = useEvent(() => setModalState(ModalState.DEFAULT))
 
   const { data, networkStatus, loading } = usePortfolioTotalValue({
-    evmAddress,
-    svmAddress,
+    address: account,
   })
 
   const { percentChange, absoluteChangeUSD, balanceUSD } = data || {}
@@ -87,70 +114,66 @@ export default function AuthenticatedHeader({
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const totalFormattedValue = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
 
-  const isPortfolioZero = useIsPortfolioZero()
+  // denominated portfolio balance on testnet is always 0
+  const isPortfolioZero = !isTestnetModeEnabled && balanceUSD === 0
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
+
   const isDelegationMismatch = useHasAccountMismatchOnAnyChain()
   const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const shouldShowDelegationMismatch = isPermitMismatchUxEnabled && isDelegationMismatch
   const [displayDelegationMismatchModal, setDisplayDelegationMismatchModal] = useState(false)
-  const colors = useSporeColors()
+
+  const { unitag } = useUnitagByAddress(account)
+  const showAddress = ENSName || unitag?.username
 
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' }) ?? '-'
 
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
-  const handleOpenExtensionSidebar = useCallback(() => {
-    uniswapExtensionRequest?.(ExtensionRequestMethods.OPEN_SIDEBAR, 'Tokens')
-    accountDrawer.close()
-  }, [uniswapExtensionRequest, accountDrawer])
-
   return (
     <>
-      <Flex flex={1} px="$padding16" py="$spacing20">
-        <TestnetModeBanner mt={-20} mx={-24} mb="$spacing16" />
+      <Flex flex={1} px="$padding16" py={isUniExtensionConnected ? '$spacing16' : '$spacing20'}>
+        <TestnetModeBanner mt={isUniExtensionConnected ? -16 : -20} mx={-24} mb="$spacing16" />
         <Flex row justifyContent="space-between" alignItems="flex-start" mb="$spacing8">
-          <StatusIcon
-            showMiniIcons={!multipleWalletsConnected}
-            showConnectedIndicator={multipleWalletsConnected}
-            size={48}
-          />
-          <Flex row gap="$spacing4">
-            {shouldShowExtensionButton && (
-              <Trace logPress element={ElementName.AccountDrawerExtensionButton}>
-                <IconButton
-                  size="small"
-                  emphasis="text-only"
-                  icon={<Image height={iconSizes.icon24} source={UNISWAP_LOGO} width={iconSizes.icon24} />}
-                  borderRadius="$rounded32"
-                  hoverStyle={{
-                    backgroundColor: '$surface2',
-                  }}
-                  onPress={handleOpenExtensionSidebar}
-                />
-              </Trace>
-            )}
-            <Trace logPress element={ElementName.AccountDrawerSettingsButton}>
-              <IconButton
-                size="small"
-                emphasis="text-only"
-                data-testid={TestID.WalletSettings}
-                icon={<Settings height={24} width={24} color={colors.neutral2.val} />}
-                borderRadius="$rounded32"
-                hoverStyle={{
-                  backgroundColor: '$surface2',
-                }}
-                onPress={openSettings}
+          <StatusIcon size={48} />
+          <Flex row gap="$spacing8">
+            <IconButton
+              hideHorizontal={showDisconnectConfirm}
+              data-testid="wallet-settings"
+              onClick={openSettings}
+              Icon={Settings}
+            />
+            <Trace
+              logPress
+              element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
+              properties={{ connector_id: connectedAccount.connector?.id }}
+            >
+              <IconWithConfirmTextButton
+                data-testid="wallet-disconnect"
+                onConfirm={handleDisconnect}
+                onShowConfirm={setShowDisconnectConfirm}
+                Icon={Power}
+                text={t('common.button.disconnect')}
+                dismissOnHoverOut
               />
             </Trace>
-
-            <DisconnectButton />
           </Flex>
         </Flex>
         <Flex gap="$spacing4">
-          <MultiBlockchainAddressDisplay />
+          <Text variant="subheading1" color="$neutral1">
+            <AddressDisplay enableCopyAddress={!showAddress} address={account} />
+          </Text>
+          {showAddress && (
+            <CopyHelper iconSize={14} iconPosition="right" toCopy={account}>
+              <Text variant="body3" color="neutral3">
+                {shortenAddress(account)}
+              </Text>
+            </CopyHelper>
+          )}
         </Flex>
         <Flex flex={1} mt="$spacing16">
-          <Flex gap="$spacing4" mb="$spacing16" data-testid={TestID.MiniPortfolioTotalBalance}>
+          <Flex gap="$spacing4" mb="$spacing16" data-testid="portfolio-total-balance">
             <AnimatedNumber
               balance={balanceUSD}
               isRightToLeft={isRightToLeft}
@@ -178,36 +201,52 @@ export default function AuthenticatedHeader({
           {shouldShowDelegationMismatch && (
             <LimitedSupportBanner onPress={() => setDisplayDelegationMismatchModal(true)} />
           )}
-          {isPortfolioZero ? (
-            <EmptyWallet />
+          {isUniExtensionConnected ? (
+            <ExtensionDeeplinks account={account} />
           ) : (
             <>
-              <Flex row gap="$gap8">
-                <Flex grow>
-                  <SendActionTile />
-                </Flex>
-                <Flex grow>
-                  <ReceiveActionTile />
-                </Flex>
-              </Flex>
-              <DownloadGraduatedWalletCard />
-              <MiniPortfolio evmAddress={evmAddress} svmAddress={svmAddress} />
+              {isPortfolioZero ? (
+                <EmptyWallet
+                  handleReceiveCryptoClick={openAddressQRModal}
+                  handleCEXTransferClick={openCEXTransferModal}
+                />
+              ) : (
+                <>
+                  <Flex row gap="$gap8">
+                    {shouldShowBuyFiatButton && (
+                      <ActionTile
+                        dataTestId={TestID.WalletBuyCrypto}
+                        Icon={<Bank size={24} color="$accent1" />}
+                        name={t('common.buy.label')}
+                        onClick={handleBuyCryptoClick}
+                      />
+                    )}
+                    <ActionTile
+                      dataTestId={TestID.WalletReceiveCrypto}
+                      Icon={<ArrowDownCircleFilled size={24} color="$accent1" />}
+                      name={t('common.receive')}
+                      onClick={openReceiveCryptoModal}
+                    />
+                  </Flex>
+                  <DownloadGraduatedWalletCard />
+                  <MiniPortfolio account={account} />
+                </>
+              )}
+              {isUnclaimed && (
+                <Button
+                  my="$spacing8"
+                  fill={false}
+                  onPress={toggleClaimModal}
+                  style={{ background: 'linear-gradient(to right, #9139b0 0%, #4261d6 100%)' }}
+                >
+                  <Trans i18nKey="account.authHeader.claimReward" values={{ amount }} />
+                </Button>
+              )}
             </>
-          )}
-          {isUnclaimed && (
-            <Trace logPress element={ElementName.AccountDrawerClaimReward}>
-              <Button
-                my="$spacing8"
-                fill={false}
-                onPress={toggleClaimModal}
-                style={{ background: 'linear-gradient(to right, #9139b0 0%, #4261d6 100%)' }}
-              >
-                {t('account.authHeader.claimReward', { amount })}
-              </Button>
-            </Trace>
           )}
         </Flex>
       </Flex>
+      {modalState !== undefined && <ReceiveCryptoModal />}
       {displayDelegationMismatchModal && (
         <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />
       )}

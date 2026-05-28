@@ -6,7 +6,6 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ReactShadowNode
 import com.facebook.react.uimanager.ViewManager
-import com.uniswap.notifications.SilentPushEventEmitterModule
 import com.uniswap.onboarding.backup.MnemonicConfirmationViewManager
 import com.uniswap.onboarding.backup.MnemonicDisplayViewManager
 import com.uniswap.onboarding.import.SeedPhraseInputViewManager
@@ -29,6 +28,5 @@ class UniswapPackage : ReactPackage {
     RNEthersRSModule(reactContext),
     EmbeddedWalletModule(reactContext),
     ThemeModule(reactContext),
-    SilentPushEventEmitterModule(reactContext),
   )
 }

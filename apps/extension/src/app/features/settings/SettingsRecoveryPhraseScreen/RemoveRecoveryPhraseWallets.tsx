@@ -7,9 +7,9 @@ import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex, ScrollView, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -32,7 +32,7 @@ export function RemoveRecoveryPhraseWallets(): JSX.Element {
         title={t('setting.recoveryPhrase.remove.initial.title')}
         onNextPressed={(): void => {
           navigateTo(
-            `/${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Verify}`,
+            `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Verify}`,
           )
         }}
       >
@@ -102,7 +102,13 @@ function AssociatedAccountRow({
       py="$spacing12"
     >
       <Flex shrink>
-        <AddressDisplay address={address} captionVariant="body3" size={iconSizes.icon36} variant="body2" />
+        <AddressDisplay
+          disableForcedWidth
+          address={address}
+          captionVariant="body3"
+          size={iconSizes.icon36}
+          variant="body2"
+        />
       </Flex>
       <Flex flexGrow={0} pl="$padding8">
         <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">

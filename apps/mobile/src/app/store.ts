@@ -1,11 +1,12 @@
 import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
 import { MMKV } from 'react-native-mmkv'
-import { persistReducer, persistStore, Storage } from 'redux-persist'
+import { Storage, persistReducer, persistStore } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
 import { rootMobileSaga } from 'src/app/saga'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
-import { isNonTestDev } from 'utilities/src/environment/constants'
+import { isNonJestDev } from 'utilities/src/environment/constants'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
@@ -47,12 +48,12 @@ const dataDogReduxEnhancer = createDatadogReduxEnhancer({
 
 const enhancers = [dataDogReduxEnhancer]
 
-if (isNonTestDev) {
+if (isNonJestDev) {
   const reactotron = require('src/../ReactotronConfig').default
   enhancers.push(reactotron.createEnhancer())
 }
 
-const middlewares: Middleware[] = [delegationListenerMiddleware.middleware]
+const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware, delegationListenerMiddleware.middleware]
 
 const setupStore = (
   preloadedState?: PreloadedState<MobileState>,

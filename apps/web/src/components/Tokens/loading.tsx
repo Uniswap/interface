@@ -1,35 +1,34 @@
 import { lighten } from 'polished'
-import { FlexProps, Shine, useSporeColors, View, ViewProps } from 'ui/src'
-
-interface LoadingBubbleProps {
-  delay?: string
-  round?: boolean
-  height?: ViewProps['height']
-  width?: ViewProps['width']
-  containerProps?: FlexProps
-  skeletonProps?: ViewProps
-}
+import { FlexProps, Shine, View, useSporeColors } from 'ui/src'
 
 export const LoadingBubble = ({
-  delay,
+  containerWidth,
+  height,
+  width,
   round,
-  height = '$spacing24',
-  width = '50%',
-  containerProps,
-  skeletonProps,
-}: LoadingBubbleProps) => {
+  delay,
+  margin,
+  ...rest
+}: {
+  containerWidth?: string | number
+  height?: string | number
+  width?: string | number
+  round?: boolean
+  delay?: string
+  margin?: string
+} & FlexProps) => {
   const colors = useSporeColors()
-
   return (
-    <Shine flexDirection="row" width="100%" $platform-web={{ animationDelay: delay }} {...containerProps}>
+    <Shine $platform-web={{ animationDelay: delay, width: containerWidth ?? '100%' }}>
       <View
         borderRadius={round ? '$roundedFull' : '$rounded12'}
-        height={height}
-        width={width}
+        height={height ?? '$spacing24'}
+        width={width ?? '50%'}
+        m={margin}
         $platform-web={{
-          background: `linear-gradient(to left, ${colors.surface3.val} 25%, ${lighten(0.075, colors.surface3.val)} 50%, ${colors.surface3.val} 75%)`,
+          background: `linear-gradient(to left, ${colors.surface3.val} 25%, ${lighten(0.075, colors.surface3.val ?? '#FFFFFF12')} 50%, ${colors.surface3.val} 75%)`,
         }}
-        {...skeletonProps}
+        {...rest}
       />
     </Shine>
   )

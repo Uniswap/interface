@@ -1,0 +1,53 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "JH3UHGZD75.ring.exchange.mobile",
+          "JH3UHGZD75.ring.exchange.mobile.dev"
+        ],
+        "components": [
+          {
+            "#": "/nfts/asset/*",
+            "comment": "NFT Item"
+          },
+          {
+            "#": "/nfts/collection/*",
+            "comment": "NFT Collection"
+          },
+          {
+            "#": "/tokens/*",
+            "comment": "Token address"
+          },
+          {
+            "#": "/address/*",
+            "comment": "Wallet address"
+          },
+          {
+            "/": "/nfts/asset/*",
+            "comment": "NFT Item"
+          },
+          {
+            "/": "/nfts/collection/*",
+            "comment": "NFT Collection"
+          },
+          {
+            "/": "/tokens/*",
+            "comment": "Token address"
+          },
+          {
+            "/": "/address/*",
+            "comment": "Wallet address"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "JH3UHGZD75.ring.exchange.mobile",
+      "JH3UHGZD75.ring.exchange.mobile.beta",
+      "JH3UHGZD75.ring.exchange.mobile.dev"
+    ]
+  }
+}

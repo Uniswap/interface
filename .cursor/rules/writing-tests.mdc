@@ -1,0 +1,120 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Frontend Testing Strategy
+
+When writing tests for our frontend monorepo, follow these principles:
+
+## Core Philosophy
+- Test behaviors, not implementations
+- Optimize for confidence, readability, and maintainability
+- Follow the testing pyramid: unit tests > integration tests > E2E tests
+- Reference existing tests for examples of our team's best practices. For example: [useBooleanState.test.ts](mdc:packages/utilities/src/react/useBooleanState.test.ts) [useSwapNetworkNotification.test.ts](mdc:packages/uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkNotification.test.ts)
+
+## Test Structure & Patterns
+
+### Unit Tests
+- Test individual functions, hooks, and components in isolation
+- Use Jest and React Testing Library/React Native Testing Library
+- Follow Arrange-Act-Assert pattern
+- Mock dependencies appropriately
+- Name tests descriptively: `it('should [behavior] when [condition]')`
+
+```typescript
+// Component test example
+test('should display error when form submission fails', async () => {
+  // Arrange
+  const errorMessage = 'Invalid credentials';
+  const mockSubmit = jest.fn().mockRejectedValue(new Error(errorMessage));
+  render(<LoginForm onSubmit={mockSubmit} />);
+  
+  // Act
+  await userEvent.type(screen.getByLabelText(/email/i), 'user@example.com');
+  await userEvent.type(screen.getByLabelText(/password/i), 'password123');
+  await userEvent.click(screen.getByRole('button', { name: /login/i }));
+  
+  // Assert
+  expect(await screen.findByText(errorMessage)).toBeInTheDocument();
+  expect(mockSubmit).toHaveBeenCalledWith({
+    email: 'user@example.com',
+    password: 'password123'
+  });
+});
+
+// Hook test example
+test('should increment counter when increment function is called', () => {
+  // Arrange
+  const { result } = renderHook(() => useCounter(0));
+  
+  // Act
+  act(() => {
+    result.current.increment();
+  });
+  
+  // Assert
+  expect(result.current.count).toBe(1);
+});
+```
+
+### Integration Tests
+- Test interactions between multiple components
+- Focus on user workflows and component communication
+- Use React Testing Library's user-event
+- Minimize mocking to test actual integrations
+
+## Best Practices
+
+### Test Data Management
+- Create factory functions for generating test data
+- Use TypeScript to ensure test data matches expected interfaces
+
+```typescript
+const createUser = (overrides = {}): User => ({
+  id: uuid(),
+  name: 'Test User',
+  email: 'test@example.com',
+  role: 'user',
+  ...overrides
+});
+```
+
+### Mocking Strategy
+- Prefer manual mocks over automatic mocks
+- Mock at the boundary of your system (API calls, third-party services)
+- For React Native, mock native modules using Jest's mock functions
+
+```typescript
+jest.mock('packages/uniswap/...', () => ({
+  fetchUserData: jest.fn().mockResolvedValue({
+    id: '123',
+    name: 'Test User',
+    email: 'test@example.com'
+  })
+}));
+```
+
+### Coverage Guidelines
+- Aim for 80% coverage overall, 90%+ for critical business logic
+- When requested to write UI tests, cover all user-facing components with at least basic rendering tests
+- Test error states and edge cases; when unceratin about these states and cases, stop and ask for clarification before continuing
+- Focus on quality over quantity - 5 well-written tests > 20 poor tests
+
+## Monorepo Considerations
+- Use the same path import strategy found in other files; everything should pass linting
+- Respect the testing configuration of each package
+- For shared components, test in their own package, not in consuming packages
+
+## Implementation Checklist
+
+When implementing tests, verify:
+
+1. ✅ Tests focus on component/function behavior
+2. ✅ Tests are isolated and don't depend on each other
+3. ✅ Mocks are used appropriately and documented
+4. ✅ Error states and edge cases are covered
+5. ✅ Tests are readable and maintainable
+6. ✅ Tests fail when they should (verify with temporary bug)
+7. ✅ Test file structure matches source code structure
+8. ✅ Import paths follow monorepo conventions

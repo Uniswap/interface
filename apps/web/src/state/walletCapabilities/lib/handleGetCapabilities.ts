@@ -1,9 +1,9 @@
 import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core/experimental'
-import { ensure0xHex, numberToHex } from 'utilities/src/addresses/hex'
+import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { ensureValidatedCapabilities } from 'state/walletCapabilities/lib/ensureValidatedCapabilities'
+import { ChainCapabilities, GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
+import { ensure0xHex, numberToHex } from 'uniswap/src/utils/hex'
 import { getLogger } from 'utilities/src/logger/logger'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
-import { ensureValidatedCapabilities } from '~/state/walletCapabilities/lib/ensureValidatedCapabilities'
-import { ChainCapabilities, GetCapabilitiesResult } from '~/state/walletCapabilities/lib/types'
 
 const TIMEOUT_MS = 5000
 
@@ -52,8 +52,10 @@ enum AtomicBatchingStatus {
 
 export function isAtomicBatchingSupported(chainCapabilities: ChainCapabilities): boolean {
   return (
-    chainCapabilities.atomic?.status === AtomicBatchingStatus.Supported ||
-    chainCapabilities.atomic?.status === AtomicBatchingStatus.Ready
+    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Supported ||
+    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Ready ||
+    // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (remove line below)
+    chainCapabilities?.atomicBatch?.supported === true
   )
 }
 
@@ -63,7 +65,6 @@ export function isAtomicBatchingSupportedByChainId(
 ): boolean {
   const key = ensure0xHex(numberToHex(chainId))
   const chainCapabilities = chainCapabilitiesResult[key]
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!chainCapabilities) {
     return false
   }

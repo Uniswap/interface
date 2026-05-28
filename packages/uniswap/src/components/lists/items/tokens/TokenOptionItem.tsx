@@ -9,15 +9,14 @@ import {
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
-import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
+import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isWebApp, isWebPlatform } from 'utilities/src/platform'
+import { isInterface, isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export enum TokenContextMenuVariant {
@@ -28,7 +27,7 @@ export enum TokenContextMenuVariant {
 const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuAction[]> = {
   [TokenContextMenuVariant.Search]: [
     TokenContextMenuAction.CopyAddress,
-    ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
+    ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
     TokenContextMenuAction.Swap,
     TokenContextMenuAction.Send,
     TokenContextMenuAction.Receive,
@@ -36,7 +35,7 @@ const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuActi
   ],
   [TokenContextMenuVariant.TokenSelector]: [
     TokenContextMenuAction.CopyAddress,
-    ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
+    ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
     TokenContextMenuAction.ViewDetails,
   ],
 }
@@ -111,7 +110,7 @@ const LegacyBaseTokenOptionItem = memo(function LegacyBaseTokenOptionItem({
             {!currency.isNative && showTokenAddress && (
               <Flex shrink>
                 <Text color="$neutral3" numberOfLines={1} variant="body3">
-                  {shortenAddress({ address: currency.address })}
+                  {shortenAddress(currency.address)}
                 </Text>
               </Flex>
             )}
@@ -153,16 +152,15 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
     setShowWarningModal(true)
-  }, [])
+  }, [setShowWarningModal])
 
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
-  const { hapticFeedback } = useHapticFeedback()
 
   const onPressTokenOption = useCallback(() => {
     if (showWarnings && shouldShowWarningModalOnPress) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
-      if (isKeyboardOpen && isWebApp) {
+      if (isKeyboardOpen && isInterface) {
         const activeElement = document.activeElement as HTMLElement | null
         activeElement?.blur()
         setTimeout(handleShowWarningModal, 700)
@@ -193,14 +191,10 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
         opacity={(showWarnings && severity === WarningSeverity.Blocked) || isUnsupported ? 0.5 : 1}
         hoverStyle={{ backgroundColor: '$surface1Hovered' }}
         onPress={onPressTokenOption}
-        onLongPress={async (): Promise<void> => {
-          await hapticFeedback.success()
-          dismissNativeKeyboard()
-          openContextMenu()
-        }}
+        onLongPress={openContextMenu}
       >
-        {isWebPlatform ? (
-          // biome-ignore  lint/correctness/noRestrictedElements: needed here
+        {isWeb ? (
+          // eslint-disable-next-line react/forbid-elements
           <div onContextMenu={openContextMenu}>
             <LegacyBaseTokenOptionItem {...props} />
           </div>
@@ -275,7 +269,7 @@ const BaseTokenOptionItem = memo(function _BaseTokenOptionItem(
           {!currency.isNative && showTokenAddress && (
             <Flex shrink>
               <Text color="$neutral3" numberOfLines={1} variant="body3">
-                {shortenAddress({ address: currency.address })}
+                {shortenAddress(currency.address)}
               </Text>
             </Flex>
           )}
@@ -294,10 +288,7 @@ const BaseTokenOptionItem = memo(function _BaseTokenOptionItem(
       modalInfo={modalInfo}
       focusedRowControl={focusedRowControl}
       onPress={onPress}
-      onLongPress={() => {
-        dismissNativeKeyboard()
-        openContextMenu?.()
-      }}
+      onLongPress={openContextMenu}
     />
   )
 })
@@ -306,7 +297,6 @@ export const TokenOptionItem = memo(function _TokenOptionItem(
   props: TokenOptionItemProps | LegacyTokenOptionItemProps,
 ): JSX.Element {
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
-  const { hapticFeedback } = useHapticFeedback()
 
   if (!isLegacyTokenOptionItemProps(props)) {
     return (
@@ -316,19 +306,13 @@ export const TokenOptionItem = memo(function _TokenOptionItem(
         isOpen={isContextMenuOpen}
         closeMenu={closeContextMenu}
       >
-        {isWebPlatform ? (
-          // biome-ignore  lint/correctness/noRestrictedElements: needed here
+        {isWeb ? (
+          // eslint-disable-next-line react/forbid-elements
           <div onContextMenu={openContextMenu}>
             <BaseTokenOptionItem {...props} />
           </div>
         ) : (
-          <BaseTokenOptionItem
-            {...props}
-            openContextMenu={async (): Promise<void> => {
-              await hapticFeedback.success()
-              openContextMenu()
-            }}
-          />
+          <BaseTokenOptionItem {...props} openContextMenu={openContextMenu} />
         )}
       </TokenOptionItemContextMenu>
     )

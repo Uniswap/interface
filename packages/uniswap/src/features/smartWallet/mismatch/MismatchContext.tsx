@@ -1,16 +1,12 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { createContext, PropsWithChildren, useContext, useMemo } from 'react'
+import React, { PropsWithChildren, createContext, useContext, useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MismatchAccountEffects } from 'uniswap/src/features/smartWallet/mismatch/MismatchAccountEffects'
-import type {
-  HasMismatchInput,
-  HasMismatchResult,
-  HasMismatchUtil,
-} from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface MismatchContextValue {
-  mismatchCallback: HasMismatchUtil
+  mismatchCallback: (input: { address: string; chainId: number }) => Promise<boolean>
   account: { address?: string; chainId?: number }
   onHasAnyMismatch: () => void
   chains: UniverseChainId[]
@@ -33,11 +29,9 @@ export const MismatchContextProvider = React.memo(function MismatchContextProvid
   isTestnetModeEnabled,
 }: PropsWithChildren<MismatchContextProviderProps>): JSX.Element {
   const isMismatchForced = useIsMismatchForced()
-  const mismatchCallback = useEvent(async (input: HasMismatchInput): HasMismatchResult => {
+  const mismatchCallback = useEvent(async (input: { address: string; chainId: number }) => {
     if (isMismatchForced) {
-      return {
-        [String(chainId)]: true,
-      }
+      return true
     }
     return mismatchCallbackProp(input)
   })

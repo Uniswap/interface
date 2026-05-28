@@ -1,11 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
-import { useRegionalizedLineHeight } from 'src/components/text/useRegionalizedLineHeight'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
 import {
@@ -19,9 +17,11 @@ import { Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
 import { Eye, WalletFilled } from 'ui/src/components/icons'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { iconSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { authenticateWithPasskeyForSeedPhraseExport } from 'uniswap/src/features/passkey/embeddedWallet'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -34,7 +34,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function ImportMethodScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const entryPoint = params.entryPoint
+  const entryPoint = params?.entryPoint
   const [isLoadingPasskey, setIsLoadingPasskey] = useState(false)
 
   useNavigationHeader(navigation)
@@ -62,8 +62,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       return
     }
 
-    // We check against nav instead of importType to satisfy typescript
-    // This screen requires passkeyCredential as a param
     if (importType === ImportType.Passkey) {
       setIsLoadingPasskey(true)
       let credential: string | undefined
@@ -91,13 +89,12 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       setIsLoadingPasskey(false)
       return
     }
-    if (nav === OnboardingScreens.SeedPhraseInput || nav === OnboardingScreens.WatchWallet) {
-      navigation.navigate({
-        name: nav,
-        params: { importType, entryPoint },
-        merge: true,
-      })
-    }
+
+    navigation.navigate({
+      name: nav,
+      params: { importType, entryPoint },
+      merge: true,
+    })
   }
 
   let importOptions =
@@ -109,8 +106,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   if (!isEmbeddedWalletEnabled) {
     importOptions = importOptions.filter((option) => option.name !== ElementName.OnboardingPasskey)
   }
-
-  const regionalizedLineHeight = useRegionalizedLineHeight()
 
   return (
     <OnboardingScreen
@@ -147,10 +142,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
           <Flex row alignItems="center" gap="$spacing8">
             <Eye color="$accent1" size="$icon.20" />
             <Text
-              numberOfLines={1}
               color="$accent1"
               variant="buttonLabel1"
-              lineHeight={regionalizedLineHeight}
               onPress={(): Promise<void> => handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)}
             >
               {t('account.wallet.button.watch')}

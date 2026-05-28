@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
-import React, { forwardRef, RefObject, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import React, { RefObject, forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent, TextInput as RNTextInput, TextInputSelectionChangeEventData } from 'react-native'
+import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import {
@@ -13,22 +13,20 @@ import {
   useShakeAnimation,
   useSporeColors,
 } from 'ui/src'
-import { ArrowDownArrowUp } from 'ui/src/components/icons'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
-import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 
@@ -75,7 +73,7 @@ interface FiatOnRampAmountSectionProps {
 }
 
 export type FiatOnRampAmountSectionRef = {
-  textInputRef: RefObject<RNTextInput | null>
+  textInputRef: RefObject<TextInput>
   triggerShakeAnimation: () => void
 }
 
@@ -107,17 +105,13 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       onLayout: onInputLayout,
       fontSize,
       onSetFontSize,
-    } = useDynamicFontSizing({
-      maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
-      maxFontSize: MAX_INPUT_FONT_SIZE,
-      minFontSize: MIN_INPUT_FONT_SIZE,
-    })
+    } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
     const prevErrorText = usePrevious(errorText)
     const { fullHeight } = useDeviceDimensions()
 
     const { isTokenInputMode, isOffRamp } = useFiatOnRampContext()
 
-    const inputRef = useRef<RNTextInput>(null)
+    const inputRef = useRef<TextInput>(null)
 
     useImperativeHandle(forwardedRef, () => ({
       textInputRef: inputRef,
@@ -164,7 +158,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         if (!isTextInputRefActuallyFocused) {
           inputRef.current?.focus()
         }
-      }, [isTextInputRefActuallyFocused]),
+      }, [inputRef, isTextInputRefActuallyFocused]),
     )
 
     const derivedFiatAmount = isOffRamp ? quoteAmount : sourceAmount
@@ -230,27 +224,19 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         </Flex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
           <Flex alignItems="center" justifyContent="center" flexDirection={isTokenInputMode ? 'row-reverse' : 'row'}>
-            <TextInput
+            <Text
               allowFontScaling
-              disabled
               color={!value ? '$neutral3' : '$neutral1'}
-              fontFamily="$heading"
               fontSize={fontSize}
-              fontWeight="$book"
-              minHeight={MAX_INPUT_FONT_SIZE}
-              maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-              height={fontSize + 5}
-              placeholderTextColor="$neutral3"
-              px="$none"
-              py="$none"
+              height={fontSize}
+              lineHeight={fontSize}
             >
               {isTokenInputMode ? ' ' + currency.currencyInfo?.currency.symbol : fiatCurrencyInfo.symbol}
-            </TextInput>
+            </Text>
             <AmountInput
               ref={inputRef}
               adjustWidthToContent
               autoFocus
-              testID={TestID.BuyFormAmountInput}
               alignSelf="stretch"
               backgroundColor="$transparent"
               borderWidth="$none"
@@ -259,7 +245,8 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               fontFamily="$heading"
               fontSize={fontSize}
               fontWeight="$book"
-              height={fontSize + 5}
+              height={fontSize}
+              lineHeight={fontSize + (value ? 5 : 0)}
               maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
               minHeight={MAX_INPUT_FONT_SIZE}
               placeholder="0"
@@ -305,10 +292,15 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               pb="$spacing4"
               pt="$spacing4"
             >
-              <Text color="$neutral2" loading={selectTokenLoading} variant="subheading1">
+              <Text
+                color="$neutral2"
+                maxHeight={fonts.subheading1.lineHeight}
+                loading={selectTokenLoading}
+                variant="subheading1"
+              >
                 {formattedDerivedAmount}
               </Text>
-              <ArrowDownArrowUp color="$neutral2" maxWidth={16} size="$icon.16" />
+              <ArrowUpDown color="$neutral2" maxWidth={16} size="$icon.16" />
             </Flex>
           </TouchableArea>
         )}
@@ -343,7 +335,7 @@ function PredefinedAmount({
   const { addFiatSymbolToNumber } = useLocalizationContext()
   const { t } = useTranslation()
   const currencyBalance =
-    currency?.currencyInfo?.currency && portfolioBalance?.quantity && isOffRamp
+    currency?.currencyInfo?.currency && portfolioBalance?.quantity
       ? getCurrencyAmount({
           value: portfolioBalance.quantity.toString(),
           valueType: ValueType.Exact,

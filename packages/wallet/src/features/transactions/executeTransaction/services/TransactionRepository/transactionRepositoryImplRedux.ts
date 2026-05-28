@@ -1,14 +1,14 @@
+import { put, select, type SagaGenerator } from 'typed-redux-saga'
 /* eslint-disable @jambit/typed-redux-saga/use-typed-effects -- typed-redux-saga doesn't export these correctly */
 import type { PutEffect, SelectEffect } from 'redux-saga/effects'
-import { put, type SagaGenerator, select } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AddressTransactionsSelector } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
+  TransactionStatus,
   type OnChainTransactionDetails,
   type TransactionDetails,
-  TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { logger } from 'utilities/src/logger/logger'
@@ -38,12 +38,9 @@ interface SagaTransactionRepository {
   >
   updateTransaction: (input: {
     transaction: OnChainTransactionDetails
-    skipProcessing?: boolean
   }) => SagaGenerator<
-    | ReturnType<typeof transactionActions.updateTransaction>
-    | ReturnType<typeof transactionActions.updateTransactionWithoutWatch>,
-    | PutEffect<ReturnType<typeof transactionActions.updateTransaction>>
-    | PutEffect<ReturnType<typeof transactionActions.updateTransactionWithoutWatch>>
+    ReturnType<typeof transactionActions.updateTransaction>,
+    PutEffect<ReturnType<typeof transactionActions.updateTransaction>>
   >
   finalizeTransaction: (input: {
     transaction: OnChainTransactionDetails
@@ -80,16 +77,12 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
 
   const updateTransaction: SagaTransactionRepository['updateTransaction'] = (input) => {
     // Log before returning the effect
-    const method = input.skipProcessing ? 'updateTransactionWithoutWatch' : 'updateTransaction'
-    ctx.logger.debug('TransactionRepository', method, 'Transaction updated:', {
+    ctx.logger.debug('TransactionRepository', 'updateTransaction', 'Transaction updated:', {
       chainId: input.transaction.chainId,
       hash: input.transaction.hash,
       ...input.transaction.typeInfo,
     })
 
-    if (input.skipProcessing) {
-      return put(ctx.actions.updateTransactionWithoutWatch(input.transaction))
-    }
     return put(ctx.actions.updateTransaction(input.transaction))
   }
 
@@ -114,7 +107,7 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
   const getPendingPrivateTransactionCount: SagaTransactionRepository['getPendingPrivateTransactionCount'] = (input) => {
     // Return a select effect that will get and filter transactions
     return select((state: UniswapState) => {
-      const pendingTransactions = selectAddressTransactions(state, { evmAddress: input.address, svmAddress: null })
+      const pendingTransactions = selectAddressTransactions(state, input.address)
 
       if (!pendingTransactions) {
         return 0
@@ -137,7 +130,7 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
   const getTransactionsByAddress: SagaTransactionRepository['getTransactionsByAddress'] = (input) => {
     // Return a select effect
     return select((state: UniswapState) => {
-      const transactions = selectAddressTransactions(state, { evmAddress: input.address, svmAddress: null })
+      const transactions = selectAddressTransactions(state, input.address)
 
       if (!transactions) {
         return undefined
@@ -168,10 +161,7 @@ function createAsyncTransactionRepository(ctx: {
       await ctx.runSagaEffect(ctx.sagaRepo.addTransaction(input))
     },
 
-    async updateTransaction(input: {
-      transaction: OnChainTransactionDetails
-      skipProcessing?: boolean
-    }): Promise<void> {
+    async updateTransaction(input: { transaction: OnChainTransactionDetails }): Promise<void> {
       await ctx.runSagaEffect(ctx.sagaRepo.updateTransaction(input))
     },
 

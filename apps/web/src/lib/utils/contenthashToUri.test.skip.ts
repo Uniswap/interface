@@ -1,4 +1,4 @@
-import contenthashToUri, { hexToUint8Array } from '~/lib/utils/contenthashToUri'
+import contenthashToUri, { hexToUint8Array } from 'lib/utils/contenthashToUri'
 
 // this test is skipped for now because importing CID results in
 // TypeError: TextDecoder is not a constructor
@@ -10,7 +10,7 @@ describe('#contenthashToUri', () => {
     )
   })
   it('uniswap.eth contenthash', () => {
-    expect(contenthashToUri('0xe5010170000f6170702e756e69737761702e6f7267')).toEqual('ipns://app.uniswap.org')
+    expect(contenthashToUri('0xe5010170000f6170702e756e69737761702e6f7267')).toEqual('ipns://app.ring.exchange')
   })
 })
 

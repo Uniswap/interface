@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { saveDappChain } from 'src/app/features/dapp/actions'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
+import { saveDappChain } from 'src/app/features/dapp/actions'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { Flex, Popover, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled, RotatableChevron } from 'ui/src/components/icons'
@@ -53,7 +53,13 @@ export function SwitchNetworksModal({ onPress }: SwitchNetworksModalProps): JSX.
       <Flex px="$spacing8">
         <Flex row alignItems="center" py="$spacing4" width="100%">
           <TouchableArea onPress={handlePress}>
-            <RotatableChevron color="$neutral3" direction="left" flexShrink={1} size="$icon.16" />
+            <RotatableChevron
+              color="$neutral3"
+              direction="left"
+              flexShrink={1}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
+            />
           </TouchableArea>
           <Flex centered fill py="$spacing8">
             <Text color="$neutral1" variant="body3">

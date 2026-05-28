@@ -1,11 +1,9 @@
-import { ContentStyle } from '@shopify/flash-list'
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimateTransition, Flex, Loader, Text } from 'ui/src'
+import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
-import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
+import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import {
   ItemRowInfo,
   OnchainItemList,
@@ -13,7 +11,8 @@ import {
 } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SectionHeader, SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
-import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
+import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function EmptyResults(): JSX.Element {
@@ -39,8 +38,6 @@ interface SelectorBaseListProps<T extends OnchainItemListOption> {
   keyExtractor: (item: T, index: number) => string
   expandedItems?: string[]
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
-  renderedInModal: boolean
-  contentContainerStyle?: ContentStyle
 }
 
 function _SelectorBaseList<T extends OnchainItemListOption>({
@@ -55,13 +52,10 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
   keyExtractor,
   expandedItems,
   focusedRowControl,
-  renderedInModal,
-  contentContainerStyle,
 }: SelectorBaseListProps<T>): JSX.Element {
   const { t } = useTranslation()
-  const sectionListRef = useRef<OnchainItemListRef>(undefined)
+  const sectionListRef = useRef<OnchainItemListRef>()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +chainFilter
   useEffect(() => {
     if (sections?.length) {
       sectionListRef.current?.scrollToLocation({
@@ -79,7 +73,6 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
         endElement={section.endElement}
         sectionKey={section.sectionKey}
         name={section.name}
-        sectionHeader={section.sectionHeader}
       />
     ),
     [],
@@ -108,7 +101,9 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
     <AnimateTransition animationType="fade" currentIndex={(!sections || !sections.length) && loading ? 0 : 1}>
       <Flex grow px="$spacing20">
         <Flex height={ITEM_SECTION_HEADER_ROW_HEIGHT} justifyContent="center" py="$spacing12" width={80}>
-          <Loader.Box height={fonts.subheading2.lineHeight} />
+          <Skeleton>
+            <Loader.Box height={fonts.subheading2.lineHeight} />
+          </Skeleton>
         </Flex>
         <Loader.Token gap="$none" repeat={15} />
       </Flex>
@@ -121,8 +116,6 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
         sections={sections ?? []}
         expandedItems={expandedItems}
         focusedRowControl={focusedRowControl}
-        renderedInModal={renderedInModal}
-        contentContainerStyle={contentContainerStyle}
       />
     </AnimateTransition>
   )

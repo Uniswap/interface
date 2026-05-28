@@ -15,13 +15,12 @@ class SeedPhraseInputViewModel: ObservableObject {
     case error
   }
 
-  enum MnemonicError: Equatable {
+  enum MnemonicError {
     case invalidPhrase
     case invalidWord(String)
     case notEnoughWords
     case tooManyWords
     case wrongRecoveryPhrase
-    case wordIsAddress
   }
 
   struct ReactNativeStrings {
@@ -31,7 +30,6 @@ class SeedPhraseInputViewModel: ObservableObject {
     var errorPhraseLength: String
     var errorWrongPhrase: String
     var errorInvalidPhrase: String
-    var errorWordIsAddress: String
   }
 
   let rnEthersRS = RNEthersRS()
@@ -49,8 +47,7 @@ class SeedPhraseInputViewModel: ObservableObject {
         errorInvalidWord: rawRNStrings["errorInvalidWord"] ?? "",
         errorPhraseLength: rawRNStrings["errorPhraseLength"] ?? "",
         errorWrongPhrase: rawRNStrings["errorWrongPhrase"] ?? "",
-        errorInvalidPhrase: rawRNStrings["errorInvalidPhrase"] ?? "",
-        errorWordIsAddress: rawRNStrings["errorWordIsAddress"] ?? ""
+        errorInvalidPhrase: rawRNStrings["errorInvalidPhrase"] ?? ""
       )
     }
   }
@@ -60,8 +57,7 @@ class SeedPhraseInputViewModel: ObservableObject {
     errorInvalidWord: "",
     errorPhraseLength: "",
     errorWrongPhrase: "",
-    errorInvalidPhrase: "",
-    errorWordIsAddress: ""
+    errorInvalidPhrase: ""
   )
   @Published var onInputValidated: RCTDirectEventBlock = { _ in }
   @Published var onMnemonicStored: RCTDirectEventBlock = { _ in }
@@ -89,15 +85,13 @@ class SeedPhraseInputViewModel: ObservableObject {
   private let maxCount = 24
 
   func handleSubmit() {
-    lastWordValidationTimer?.invalidate()
-    
     let normalized = normalizeInput(value: input)
     let mnemonic = trimInput(value: normalized)
     let words = mnemonic.components(separatedBy: " ")
     let valid = rnEthersRS.validateMnemonic(mnemonic: mnemonic)
       
     error = nil
-    if (words.count < minCount || minCount + 1 ..< maxCount ~= words.count) {
+    if (words.count < minCount) {
       status = .error
       error = .notEnoughWords
     } else if (words.count > maxCount) {
@@ -153,10 +147,6 @@ class SeedPhraseInputViewModel: ObservableObject {
   private func normalizeInput(value: String) -> String {
     return value.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression).lowercased()
   }
-  
-  private func isAddress(value: String) -> Bool {
-    return value.starts(with: "0x") && value.count == 42
-  }
 
   private func trimInput(value: String) -> String {
     return value.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -165,8 +155,7 @@ class SeedPhraseInputViewModel: ObservableObject {
   private func handleInputChange() {
     let normalized = normalizeInput(value: input)
     let skipLastWord = normalized.last != " "
-    let skipInvalidWord = skipLastWord && !isAddress(value: normalized)
-    validateInput(normalizedInput: normalized, skipInvalidWord: skipInvalidWord)
+    validateInput(normalizedInput: normalized, skipLastWord: skipLastWord)
 
     lastWordValidationTimer?.invalidate()
 
@@ -175,37 +164,28 @@ class SeedPhraseInputViewModel: ObservableObject {
         withTimeInterval: lastWordValidationTimeout,
         repeats: false) { _ in
             DispatchQueue.global(qos: .background).async {
-                self.validateInput(normalizedInput: normalized, skipInvalidWord: false)
+                self.validateInput(normalizedInput: normalized, skipLastWord: false)
             }
         }
     }
   }
 
-  private func validateInput(normalizedInput: String, skipInvalidWord: Bool) {
+  private func validateInput(normalizedInput: String, skipLastWord: Bool) {
     let mnemonic = trimInput(value: normalizedInput)
-    
+
     let words = mnemonic.components(separatedBy: " ")
 
     let isValidLength = words.count >= minCount && words.count <= maxCount
     let firstInvalidWord = rnEthersRS.findInvalidWord(mnemonic: mnemonic)
-    
-    let isAddress = mnemonic.starts(with: "0x") && mnemonic.count == 42
-    let isFirstWordInvalid = firstInvalidWord == words.last && skipInvalidWord
-    let isInvalidLengthError = (error == .notEnoughWords || error == .tooManyWords) && !isValidLength
 
-    if (isFirstWordInvalid) {
-      return
-    } else if (isAddress) {
-      status = .error
-      error = .wordIsAddress
+    if (firstInvalidWord == words.last && skipLastWord) {
+      status = .none
+    } else if (firstInvalidWord == "" && isValidLength) {
+      status = .valid
     } else if (firstInvalidWord != "") {
       status = .error
       error = .invalidWord(firstInvalidWord)
-    } else if (isInvalidLengthError) {
-      return
-    } else if (firstInvalidWord == "" && isValidLength) {
-      status = .valid
-    } else{
+    } else {
       status = .none
     }
 
@@ -213,7 +193,7 @@ class SeedPhraseInputViewModel: ObservableObject {
       error = nil
     }
 
-    let canSubmit = error == nil && mnemonic != ""
+    let canSubmit = error == nil && mnemonic != "" && firstInvalidWord == "" && isValidLength
     onInputValidated(["canSubmit": canSubmit])
   }
 }

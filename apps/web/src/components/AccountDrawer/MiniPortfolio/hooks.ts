@@ -1,9 +1,6 @@
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useEvent } from 'utilities/src/react/hooks'
 
 const accountDrawerOpenAtom = atom(false)
 const showMoonpayTextAtom = atom(false)
@@ -12,23 +9,18 @@ export function useAccountDrawer() {
   const [isOpen, updateAccountDrawerOpen] = useAtom(accountDrawerOpenAtom)
   const setShowMoonpayTextInDrawer = useSetShowMoonpayText()
 
-  const open = useEvent(() => {
-    sendAnalyticsEvent(InterfaceEventName.MiniPortfolioToggled, { type: 'open' })
+  const open = useCallback(() => {
     updateAccountDrawerOpen(true)
-  })
+  }, [updateAccountDrawerOpen])
 
-  const close = useEvent(() => {
-    sendAnalyticsEvent(InterfaceEventName.MiniPortfolioToggled, { type: 'close' })
+  const close = useCallback(() => {
     setShowMoonpayTextInDrawer(false)
     updateAccountDrawerOpen(false)
-  })
+  }, [setShowMoonpayTextInDrawer, updateAccountDrawerOpen])
 
-  const toggle = useEvent(() => {
-    updateAccountDrawerOpen((prev) => {
-      sendAnalyticsEvent(InterfaceEventName.MiniPortfolioToggled, { type: prev ? 'close' : 'open' })
-      return !prev
-    })
-  })
+  const toggle = useCallback(() => {
+    updateAccountDrawerOpen((prev) => !prev)
+  }, [updateAccountDrawerOpen])
 
   return useMemo(() => ({ isOpen, open, close, toggle }), [isOpen, open, close, toggle])
 }

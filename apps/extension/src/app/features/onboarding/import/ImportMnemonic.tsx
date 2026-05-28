@@ -2,10 +2,10 @@ import { wordlists } from '@ethersproject/wordlists'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  type NativeSyntheticEvent,
-  type TextInputChangeEventData,
-  type TextInputFocusEventData,
-  type TextInputKeyPressEventData,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
+  TextInputFocusEventData,
+  TextInputKeyPressEventData,
 } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
@@ -13,7 +13,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Button, Flex, Input, inputStyles, Square, Text } from 'ui/src'
+import { Button, Flex, Input, Square, Text, inputStyles } from 'ui/src'
 import { FileListLock, RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -76,7 +76,7 @@ export function ImportMnemonic(): JSX.Element {
     return () => {
       window.document.removeEventListener('paste', handlePaste)
     }
-  }, [])
+  }, [setMnemonic])
 
   const handleChange = useCallback(
     (index: number) =>
@@ -92,7 +92,7 @@ export function ImportMnemonic(): JSX.Element {
         newMnemonic[index] = word.trim()
         setMnemonic(newMnemonic)
       },
-    [mnemonic],
+    [mnemonic, setMnemonic],
   )
 
   const handleKeyPress = useCallback(
@@ -117,7 +117,7 @@ export function ImportMnemonic(): JSX.Element {
         if (!word) {
           return
         }
-        const wordInList = wordlists['en']?.getWordIndex(word) !== -1
+        const wordInList = wordlists.en?.getWordIndex(word) !== -1
         setErrors({ ...errors, [index]: !wordInList })
       },
     [errors],
@@ -230,13 +230,11 @@ export function ImportMnemonic(): JSX.Element {
             <Flex row flexWrap="wrap" gap="$spacing16">
               {mnemonic.map(
                 (word, index) =>
-                  Boolean(expanded || index < 12) && (
+                  Boolean(expanded || (!expanded && index < 12)) && (
                     <Flex key={index} style={styles.recoveryPhraseWord}>
                       <RecoveryPhraseWord
                         key={index + 'input'}
-                        ref={(ref) => {
-                          inputRefs[index] = ref
-                        }}
+                        ref={(ref) => (inputRefs[index] = ref)}
                         handleBlur={handleBlur}
                         handleChange={handleChange}
                         handleKeyPress={handleKeyPress}
@@ -252,7 +250,9 @@ export function ImportMnemonic(): JSX.Element {
               <Button
                 mt="$spacing16"
                 mb="$spacing8"
-                icon={<RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} size="$icon.20" />}
+                icon={
+                  <RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} width={iconSizes.icon20} />
+                }
                 iconPosition="after"
                 emphasis="text-only"
                 onPress={(): void => {
@@ -289,7 +289,7 @@ const RecoveryPhraseWord = forwardRef<
   ref,
 ): JSX.Element {
   const debouncedWord = useDebounce(word, 500)
-  const showError = debouncedWord.length > 0 && !isValidMnemonicWord(debouncedWord)
+  const showError = isValidMnemonicWord(debouncedWord)
 
   return (
     <Flex key={index} position="relative" width={130}>

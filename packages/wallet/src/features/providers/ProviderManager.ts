@@ -1,4 +1,4 @@
-import { providers as ethersProviders, Signer } from 'ethers'
+import { Signer, providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
@@ -40,7 +40,7 @@ export class ProviderManager {
   tryGetProvider(chainId: UniverseChainId): ethersProviders.JsonRpcProvider | null {
     try {
       return this.getProvider(chainId)
-    } catch (_error) {
+    } catch (error) {
       return null
     }
   }
@@ -68,7 +68,7 @@ export class ProviderManager {
       cachedProviderDetails.address !== signerAddress ||
       cachedProviderDetails.status !== ProviderStatus.Connected
     ) {
-      this.createPrivateProvider({ chainId, signer, address: signerAddress })
+      this.createPrivateProvider(chainId, signer, signerAddress)
     }
 
     const providerDetails = this._providers[chainId]?.private
@@ -80,7 +80,7 @@ export class ProviderManager {
   }
 
   createProvider(chainId: UniverseChainId): undefined {
-    const provider = createEthersProvider({ chainId })
+    const provider = createEthersProvider(chainId)
     if (!provider) {
       return
     }
@@ -92,20 +92,9 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  private createPrivateProvider({
-    chainId,
-    signer,
-    address,
-  }: {
-    chainId: UniverseChainId
-    signer?: Signer
-    address?: Address
-  }): undefined {
-    const provider = createEthersProvider({
-      chainId,
-      rpcType: RPCType.Private,
-      signerInfo: signer && address ? { signer, address } : undefined,
-    })
+  createPrivateProvider(chainId: UniverseChainId, signer?: Signer, address?: Address): undefined {
+    const signerInfo = signer && address ? { signer, address } : undefined
+    const provider = createEthersProvider(chainId, RPCType.Private, signerInfo)
     if (!provider) {
       return
     }

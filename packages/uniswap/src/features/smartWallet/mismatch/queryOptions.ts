@@ -1,31 +1,31 @@
-import { queryOptions, type UseQueryResult } from '@tanstack/react-query'
-import type { HasMismatchInput, HasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
+import { queryOptions, type UseQueryOptions, type UseQueryResult } from '@tanstack/react-query'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
-
-type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
-
 /**
  * [public] getIsMismatchAccountQueryOptions -- gets the query options for the mismatch account status for the current account
  * @param ctx - the context object: hasMismatch (callback)
  * @returns a function that returns the query options for the mismatch account status for the passed in address
  */
 export const getIsMismatchAccountQueryOptions =
-  (ctx: { hasMismatch: HasMismatchUtil; isMainnet: boolean }) =>
-  (input: WithOptional<HasMismatchInput, 'address'>): MisMatchQueryOptions => {
+  (ctx: { hasMismatch: (input: { address: string; chainId: number }) => Promise<boolean>; isMainnet: boolean }) =>
+  (input: { address?: string; chainId?: number }): MisMatchQueryOptions => {
     return queryOptions({
-      queryKey: [ReactQueryCacheKey.MismatchAccountBulk, input.address, input.chainIds, ctx.isMainnet],
+      queryKey: [ReactQueryCacheKey.MismatchAccount, input.address, input.chainId, ctx.isMainnet],
       queryFn: async (): Promise<MismatchResult> => {
-        if (!input.address || !input.chainIds.length) {
-          return Object.fromEntries(input.chainIds.map((chainId) => [String(chainId), false]))
+        if (!input.address || !input.chainId) {
+          return {
+            chainId: input.chainId,
+            hasMismatch: false,
+          }
         }
-        const hasMismatch = await ctx.hasMismatch({ address: input.address, chainIds: input.chainIds })
-        const result: MismatchResult = Object.fromEntries(
-          input.chainIds.map((chainId) => [String(chainId), hasMismatch[String(chainId)] ?? false]),
-        )
+        const hasMismatch = await ctx.hasMismatch({ address: input.address, chainId: input.chainId })
+
+        const result: MismatchResult = {
+          chainId: input.chainId,
+          hasMismatch,
+        }
         return result
       },
-      enabled: !!input.address && input.chainIds.length > 0,
+      enabled: !!input.address,
       refetchInterval: false,
       refetchOnWindowFocus: true,
       refetchOnMount: true,
@@ -34,9 +34,14 @@ export const getIsMismatchAccountQueryOptions =
     })
   }
 
-export type MismatchResult = Record<string, boolean>
+export interface MismatchResult {
+  chainId?: number
+  hasMismatch: boolean
+}
 
-type QueryKey = [ReactQueryCacheKey.MismatchAccountBulk, string | undefined, number[], boolean]
+type OptionalString = string | undefined
+type OptionalNumber = number | undefined
+type QueryKey = [ReactQueryCacheKey.MismatchAccount, OptionalString, OptionalNumber, boolean]
 
-export type MisMatchQueryOptions = QueryOptionsResult<MismatchResult, Error, MismatchResult, QueryKey>
-export type MisMatchQueryResult<TData = MismatchResult> = UseQueryResult<TData, Error>
+export type MisMatchQueryOptions = UseQueryOptions<MismatchResult, Error, MismatchResult, QueryKey>
+export type MisMatchQueryResult = UseQueryResult<MismatchResult, Error>

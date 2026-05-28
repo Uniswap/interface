@@ -1,106 +1,112 @@
-import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { InterfacePageName } from '@uniswap/analytics-events'
+import { PoolData, RingPoolData, useRingPoolData } from 'appGraphql/data/pools/usePoolData'
+import { calculateApr } from 'appGraphql/data/pools/useTopPools'
+import { gqlToCurrency, unwrapFewToken, unwrapToken } from 'appGraphql/data/util'
+import { LpIncentivesPoolDetailsRewardsDistribution } from 'components/LpIncentives/LpIncentivesPoolDetailsRewardsDistribution'
+import ChartSection from 'components/Pools/PoolDetails/ChartSection'
+import { PoolDetailsApr } from 'components/Pools/PoolDetails/PoolDetailsApr'
+import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
+import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
+import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
+// import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
+import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
+import { useColor } from 'hooks/useColor'
+import styled, { useTheme } from 'lib/styled-components'
+import { ExploreTab } from 'pages/Explore/constants'
+import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
+import { useDynamicMetatags } from 'pages/metatags'
 import { useEffect, useMemo, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
-import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router'
-import { Flex, Separator, styled, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Trans, useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Text } from 'rebass'
+import { ThemeProvider } from 'theme'
+import { Flex } from 'ui/src'
+import { breakpoints } from 'ui/src/theme'
+import {
+  ProtocolVersion,
+  Token as RingToken,
+} from 'uniswap/src/data/graphql/ringswap-data-api/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { PoolData, usePoolData } from '~/appGraphql/data/pools/usePoolData'
-import { calculateApr } from '~/appGraphql/data/pools/useTopPools'
-import { gqlToCurrency, unwrapToken } from '~/appGraphql/data/util'
-import { DetailsHeaderContainer } from '~/components/Explore/stickyHeader/DetailsHeaderContainer'
-import { LpIncentivesPoolDetailsRewardsDistribution } from '~/components/LpIncentives/LpIncentivesPoolDetailsRewardsDistribution'
-import { useColor } from '~/hooks/useColor'
-import { useScroll } from '~/hooks/useScroll'
-import { useScrollCompact } from '~/hooks/useScrollCompact'
-import { ExploreTab } from '~/pages/Explore/constants'
-import { useDynamicMetatags } from '~/pages/metatags'
-import ChartSection from '~/pages/PoolDetails/components/ChartSection'
-import { PoolDetailsApr } from '~/pages/PoolDetails/components/PoolDetailsApr'
-import { PoolDetailsBreadcrumb } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsBreadcrumb'
-import { PoolDetailsHeader } from '~/pages/PoolDetails/components/PoolDetailsHeader/PoolDetailsHeader'
-import { PoolDetailsLink } from '~/pages/PoolDetails/components/PoolDetailsLink'
-import { PoolDetailsStats } from '~/pages/PoolDetails/components/PoolDetailsStats'
-import { PoolDetailsStatsButtons } from '~/pages/PoolDetails/components/PoolDetailsStatsButtons'
-import { PoolDetailsTableTab } from '~/pages/PoolDetails/components/PoolDetailsTable'
-import { getPoolDetailPageTitle } from '~/pages/PoolDetails/utils'
-import { ThemeProvider } from '~/theme'
-import { useChainIdFromUrlParam } from '~/utils/chainParams'
+import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 
-const PageWrapper = styled(Flex, {
-  row: true,
-  py: 48,
-  px: 40,
-  justifyContent: 'center',
-  width: '100%',
-  gap: 80,
-  alignItems: 'flex-start',
-  $lg: {
-    px: 20,
-    pb: 52,
-  },
-  $xl: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '$none',
-  },
-})
+const PageWrapper = styled(Row)`
+  padding: 0 20px 52px;
+  justify-content: center;
+  width: 100%;
+  gap: 80px;
+  align-items: flex-start;
 
-const LeftColumn = styled(Flex, {
-  gap: 40,
-  flex: 1,
-  minWidth: 0,
-  maxWidth: 780,
-  overflow: 'hidden',
-  justifyContent: 'flex-start',
-  width: '100%',
-  $xl: {
-    maxWidth: 'none',
-  },
-})
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    padding: 48px 40px;
+  }
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xl}px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0px;
+  }
+`
 
-const TokenDetailsWrapper = styled(Flex, {
-  gap: '$gap24',
-  p: '$padding20',
-  $xl: {
-    flexWrap: 'nowrap',
-    p: '$none',
-  },
-})
+const LeftColumn = styled(Column)`
+  gap: 40px;
+  max-width: 780px;
+  overflow: hidden;
+  justify-content: flex-start;
+  width: 100%;
 
-const TokenDetailsHeader = styled(Text, {
-  width: '100%',
-  fontSize: 24,
-  fontWeight: '$book',
-  lineHeight: 32,
-})
+  @media (max-width: ${breakpoints.xl}px) {
+    max-width: unset;
+  }
+`
 
-const LinksContainer = styled(Flex, {
-  gap: '$gap16',
-  width: '100%',
-})
+const HR = styled.hr`
+  border: 0.5px solid ${({ theme }) => theme.surface3};
+  width: 100%;
+`
 
-function getUnwrappedPoolToken({
-  poolData,
-  chainId,
-  protocolVersion,
-}: {
-  poolData?: PoolData
-  chainId?: number
-  protocolVersion?: GraphQLApi.ProtocolVersion
-}): [GraphQLApi.Token | undefined, GraphQLApi.Token | undefined] {
-  // for v4 pools can be created with ETH or WETH so we need to keep the original tokens
-  if (protocolVersion === GraphQLApi.ProtocolVersion.V4) {
-    return [poolData?.token0, poolData?.token1]
+const TokenDetailsWrapper = styled(Column)`
+  gap: 24px;
+  padding: 20px;
+
+  @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.md}px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: unset;
   }
 
-  return poolData && chainId
-    ? [unwrapToken(chainId, poolData.token0), unwrapToken(chainId, poolData.token1)]
+  @media (max-width: ${breakpoints.md}px) {
+    padding: unset;
+  }
+`
+
+const TokenDetailsHeader = styled(Text)`
+  width: 100%;
+  font-size: 24px;
+  font-weight: 485;
+  line-height: 32px;
+`
+
+const LinksContainer = styled(Column)`
+  gap: 16px;
+  width: 100%;
+`
+
+function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
+  return poolData?.token0 && poolData?.token1 && chainId
+    ? [unwrapToken(chainId, poolData?.token0), unwrapToken(chainId, poolData?.token1)]
+    : [undefined, undefined]
+}
+
+function getUnwrappedFewPoolToken(poolData?: RingPoolData, chainId?: number) {
+  return poolData?.token0 && poolData?.token1 && chainId
+    ? [unwrapFewToken(chainId, poolData?.token0), unwrapFewToken(chainId, poolData?.token1)]
     : [undefined, undefined]
 }
 
@@ -109,40 +115,31 @@ export default function PoolDetailsPage() {
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
-  const { data: poolData, loading } = usePoolData({
-    poolIdOrAddress: normalizeAddress(poolAddress ?? '', AddressStringFormat.Lowercase),
-    chainId: chainInfo?.id,
-    isPoolAddress: isEVMAddress(poolAddress),
-  })
+  // const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
+  const { data: poolData, loading } = useRingPoolData(
+    poolAddress?.toLowerCase() ?? '',
+    chainInfo?.backendChain.chain as Chain,
+  )
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
-  const unwrappedTokens = getUnwrappedPoolToken({
-    poolData,
-    chainId: chainInfo?.id,
-    protocolVersion: poolData?.protocolVersion,
-  })
-  const [token0, token1] = isReversed ? [unwrappedTokens[1], unwrappedTokens[0]] : unwrappedTokens
+  const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
+  const [token0, token1] = isReversed ? [unwrappedTokens?.[1], unwrappedTokens?.[0]] : unwrappedTokens
+  const [unwrapedToken0, unwrapedToken1] = getUnwrappedFewPoolToken(poolData as unknown as RingPoolData, chainInfo?.id)
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const poolApr = useMemo(
-    () =>
-      calculateApr({
-        volume24h: poolData?.volumeUSD24H,
-        tvl: poolData?.tvlUSD,
-        feeTier: poolData?.feeTier?.feeAmount,
-      }),
+    () => calculateApr(poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier),
     [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
   )
   const navigate = useNavigate()
 
-  const colors = useSporeColors()
-  const isDarkMode = useIsDarkMode()
+  const { darkMode, surface2, accent1 } = useTheme()
   const color0 = useColor(token0 && gqlToCurrency(token0), {
-    backgroundColor: colors.surface2.val,
-    darkMode: isDarkMode,
+    backgroundColor: surface2,
+    darkMode,
   })
   const color1 = useColor(token1 && gqlToCurrency(token1), {
-    backgroundColor: colors.surface2.val,
-    darkMode: isDarkMode,
+    backgroundColor: surface2,
+    darkMode,
   })
 
   const isInvalidPool = !poolAddress || !chainInfo
@@ -170,9 +167,6 @@ export default function PoolDetailsPage() {
     )
   }, [isLPIncentivesEnabled, poolData])
 
-  const { height: scrollY } = useScroll()
-  const isCompact = useScrollCompact({ scrollY, thresholdCompact: 100, thresholdExpanded: 60 })
-
   useEffect(() => {
     if (poolNotFound) {
       navigate(`/explore/pools?type=${ExploreTab.Pools}&result=${ModalName.NotFound}`)
@@ -184,10 +178,7 @@ export default function PoolDetailsPage() {
   }
 
   return (
-    <ThemeProvider
-      token0={color0 !== colors.accent1.val ? color0 : undefined}
-      token1={color1 !== colors.accent1.val ? color1 : undefined}
-    >
+    <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
       <Helmet>
         <title>{getPoolDetailPageTitle(t, poolData)}</title>
         {metatags.map((tag, index) => (
@@ -196,10 +187,10 @@ export default function PoolDetailsPage() {
       </Helmet>
       <Trace
         logImpression={!loading}
-        page={InterfacePageName.PoolDetailsPage}
+        page={InterfacePageName.POOL_DETAILS_PAGE}
         properties={{
           poolAddress,
-          chainId: chainInfo.id,
+          chainId: chainInfo?.id,
           feeTier: poolData?.feeTier,
           token0Address: poolData?.token0.address,
           token1Address: poolData?.token1.address,
@@ -209,92 +200,91 @@ export default function PoolDetailsPage() {
           token1Name: poolData?.token1.name,
         }}
       >
-        <PoolDetailsBreadcrumb poolAddress={poolAddress} token0={token0} token1={token1} loading={loading} />
-        <DetailsHeaderContainer isCompact={isCompact}>
-          <PoolDetailsHeader
-            chainId={chainInfo.id}
-            poolAddress={poolAddress}
-            token0={token0}
-            token1={token1}
-            feeTier={poolData?.feeTier}
-            hookAddress={poolData?.hookAddress}
-            protocolVersion={poolData?.protocolVersion}
-            rewardsApr={poolData?.rewardsCampaign?.boostedApr}
-            toggleReversed={toggleReversed}
-            loading={loading}
-            isCompact={isCompact}
-          />
-        </DetailsHeaderContainer>
         <PageWrapper>
           <LeftColumn>
-            <Flex gap="$spacing20">
+            <Column gap="20px">
+              <Column>
+                <PoolDetailsBreadcrumb
+                  chainId={chainInfo?.id}
+                  poolAddress={poolAddress}
+                  token0={token0}
+                  token1={token1}
+                  loading={loading}
+                />
+                <PoolDetailsHeader
+                  chainId={chainInfo?.id}
+                  poolAddress={poolAddress}
+                  token0={token0 as unknown as RingToken}
+                  token1={token1 as unknown as RingToken}
+                  feeTier={poolData?.feeTier}
+                  hookAddress={poolData?.hookAddress}
+                  protocolVersion={poolData?.protocolVersion}
+                  rewardsApr={poolData?.rewardsCampaign?.boostedApr}
+                  toggleReversed={toggleReversed}
+                  loading={loading}
+                />
+              </Column>
               <ChartSection
                 poolData={poolData}
                 loading={loading}
                 isReversed={isReversed}
-                chain={chainInfo.backendChain.chain}
-                tokenAColor={isReversed ? color1 : color0}
-                tokenBColor={isReversed ? color0 : color1}
+                chain={chainInfo?.backendChain.chain}
               />
-            </Flex>
-            <Separator />
+            </Column>
+            <HR />
             <PoolDetailsTableTab
               poolAddress={poolAddress}
-              token0={token0}
-              token1={token1}
-              protocolVersion={poolData?.protocolVersion}
+              token0={token0 as unknown as RingToken}
+              token1={token1 as unknown as RingToken}
             />
           </LeftColumn>
-          <Flex
-            gap="$spacing24"
-            width={360}
-            flexShrink={0}
-            $lg={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
-            $xl={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}
-          >
-            <Flex $lg={{ marginTop: -24 }} $xl={{ marginTop: -24 }} min-height="fit-content">
+          <Flex gap="$spacing24" width={360} $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}>
+            {/* <Flex $xl={{ marginTop: -24 }}>
               <PoolDetailsStatsButtons
-                chainId={chainInfo.id}
+                chainId={chainInfo?.id}
                 token0={token0}
                 token1={token1}
-                feeTier={poolData?.feeTier?.feeAmount}
-                tickSpacing={poolData?.feeTier?.tickSpacing}
+                feeTier={poolData?.feeTier}
                 hookAddress={poolData?.hookAddress}
-                isDynamic={poolData?.feeTier?.isDynamic}
                 protocolVersion={poolData?.protocolVersion}
                 loading={loading}
               />
-            </Flex>
+            </Flex> */}
             {poolData && (
               <PoolDetailsApr
                 poolApr={poolApr}
-                rewardsApr={isLPIncentivesEnabled ? poolData.rewardsCampaign?.boostedApr : undefined}
+                rewardsApr={isLPIncentivesEnabled ? poolData?.rewardsCampaign?.boostedApr : undefined}
               />
             )}
             {showRewardsDistribution && (
               <LpIncentivesPoolDetailsRewardsDistribution rewardsCampaign={poolData?.rewardsCampaign} />
             )}
-            <PoolDetailsStats
-              poolData={poolData}
-              isReversed={isReversed}
-              tokenAColor={color0}
-              tokenBColor={color1}
-              chainId={chainInfo.id}
-              loading={loading}
-            />
+            <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />
             <TokenDetailsWrapper>
-              <TokenDetailsHeader>{t('common.links')}</TokenDetailsHeader>
+              <TokenDetailsHeader>
+                <Trans i18nKey="common.links" />
+              </TokenDetailsHeader>
               <LinksContainer>
-                {poolData?.protocolVersion !== GraphQLApi.ProtocolVersion.V4 && (
+                {poolData?.protocolVersion !== ProtocolVersion.V4 && (
                   <PoolDetailsLink
                     address={poolAddress}
-                    chainId={chainInfo.id}
-                    tokens={[token0, token1]}
+                    chainId={chainInfo?.id}
+                    tokens={[token0 as unknown as RingToken, token1 as unknown as RingToken]}
                     loading={loading}
                   />
                 )}
-                <PoolDetailsLink address={token0?.address} chainId={chainInfo.id} tokens={[token0]} loading={loading} />
-                <PoolDetailsLink address={token1?.address} chainId={chainInfo.id} tokens={[token1]} loading={loading} />
+                <PoolDetailsLink
+                  address={unwrapedToken0?.address}
+                  chainId={chainInfo?.id}
+                  tokens={[token0 as unknown as RingToken]}
+                  loading={loading}
+                />
+                <PoolDetailsLink
+                  address={unwrapedToken1?.address}
+                  chainId={chainInfo?.id}
+                  tokens={[token1 as unknown as RingToken]}
+                  loading={loading}
+                />
               </LinksContainer>
             </TokenDetailsWrapper>
           </Flex>

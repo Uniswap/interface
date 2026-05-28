@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import { DeviceEventEmitter, Dimensions } from 'react-native'
 import { act } from 'react-test-renderer'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
@@ -28,11 +28,11 @@ const hideKeyboard = async (): Promise<void> => {
 }
 
 // Use native useKeyboardLayout implementation
-vi.mock('uniswap/src/utils/useKeyboardLayout', async (importOriginal) => {
-  return await vi.importActual('uniswap/src/utils/useKeyboardLayout.native.ts')
+jest.mock('uniswap/src/utils/useKeyboardLayout', () => {
+  return jest.requireActual('uniswap/src/utils/useKeyboardLayout.native.ts')
 })
 
-vi.mock('react-native/Libraries/Utilities/Platform', () => ({
+jest.mock('react-native/Libraries/Utilities/Platform', () => ({
   OS: 'android',
 }))
 

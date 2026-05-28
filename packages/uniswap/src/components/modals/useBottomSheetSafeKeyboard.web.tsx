@@ -1,6 +1,6 @@
 import { KeyboardInfo } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export function useBottomSheetSafeKeyboard(): KeyboardInfo {
-  // Not yet accounting for mWeb
-  return { keyboardHeight: 0 }
+  throw new NotImplementedError('useBottomSheetSafeKeyboard')
 }

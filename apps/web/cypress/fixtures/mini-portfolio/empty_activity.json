@@ -1,0 +1,12 @@
+{
+  "data": {
+    "portfolios": [
+      {
+        "id": "UG9ydGZvbGlvOjB4ZjM5RmQ2ZTUxYWFkODhGNkY0Y2U2YUI4ODI3Mjc5Y2ZmRmI5MjI2Ng==",
+        "assetActivities": [],
+        "__typename": "Portfolio"
+      }
+    ]
+  },
+  "errors": []
+}

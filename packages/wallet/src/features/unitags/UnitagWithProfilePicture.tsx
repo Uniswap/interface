@@ -1,4 +1,4 @@
-import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
@@ -12,10 +12,8 @@ export const UnitagWithProfilePicture = ({
   address: Address
   profilePictureUri?: string
 }): JSX.Element => {
-  const isDarkMode = useIsDarkMode()
-
   return (
-    <Flex centered pb="$spacing36" position="relative" width="100%">
+    <Flex centered pb="$spacing28" position="relative" width="100%">
       <UnitagProfilePicture address={address} size={imageSizes.image100} unitagAvatarUri={profilePictureUri} />
       <Flex
         row
@@ -24,10 +22,9 @@ export const UnitagWithProfilePicture = ({
         backgroundColor="$surface1"
         borderRadius="$rounded32"
         px="$spacing12"
-        py="$spacing12"
+        py="$spacing8"
         shadowColor="$neutral3"
-        elevationAndroid={isDarkMode ? 1.5 : 6}
-        shadowOpacity={0.25}
+        shadowOpacity={0.4}
         shadowRadius="$spacing4"
         transform={[{ rotateZ: '-2deg' }]}
         zIndex="$popover"

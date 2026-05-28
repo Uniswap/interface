@@ -9,7 +9,10 @@ type TradeAmounts = {
   outputCurrencyAmount: Maybe<CurrencyAmount<Currency>>
 }
 
-export function getTradeAmounts(acceptedDerivedSwapInfo?: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>): TradeAmounts {
+export function getTradeAmounts(
+  acceptedDerivedSwapInfo?: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>,
+  priceUXEnabled = false,
+): TradeAmounts {
   if (!acceptedDerivedSwapInfo) {
     return { inputCurrencyAmount: undefined, outputCurrencyAmount: undefined }
   }
@@ -26,15 +29,23 @@ export function getTradeAmounts(acceptedDerivedSwapInfo?: DerivedSwapInfo<Curren
   // For wraps, we need to detect if WETH is input or output, because we have logic in `useDerivedSwapInfo` that
   // sets both currencyAmounts to native currency, which would result in native ETH as both tokens for this UI.
   const wrapInputCurrencyAmount =
-    wrapType === WrapType.Wrap ? currencyAmounts[CurrencyField.INPUT] : currencyAmounts[CurrencyField.INPUT]?.wrapped
+    wrapType === WrapType.Wrap || wrapType === WrapType.FewWrap
+      ? currencyAmounts[CurrencyField.INPUT]
+      : currencyAmounts[CurrencyField.INPUT]?.wrapped
   const wrapOutputCurrencyAmount =
-    wrapType === WrapType.Wrap ? currencyAmounts[CurrencyField.OUTPUT]?.wrapped : currencyAmounts[CurrencyField.OUTPUT]
+    wrapType === WrapType.Wrap || wrapType === WrapType.FewWrap
+      ? currencyAmounts[CurrencyField.OUTPUT]?.wrapped
+      : currencyAmounts[CurrencyField.OUTPUT]
 
   // Token amounts
   // On review screen, always show values directly from trade object, to match exactly what is submitted on chain
   // For wraps, we have no trade object so use values from form state
   const inputCurrencyAmount = isWrap ? wrapInputCurrencyAmount : displayTrade?.inputAmount
-  const outputCurrencyAmount = isWrap ? wrapOutputCurrencyAmount : displayTrade?.outputAmount
+  const outputCurrencyAmount = isWrap
+    ? wrapOutputCurrencyAmount
+    : priceUXEnabled
+      ? displayTrade?.quoteOutputAmount
+      : displayTrade?.outputAmount
 
   return {
     inputCurrencyAmount,

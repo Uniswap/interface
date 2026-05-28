@@ -1,20 +1,16 @@
-import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
-import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
-import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NOTIFICATION_ICON_SIZE } from 'uniswap/src/features/notifications/constants'
-import { TransferCurrencyTxNotification } from 'uniswap/src/features/notifications/slice/types'
+import { TransferCurrencyTxNotification } from 'uniswap/src/features/notifications/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isAndroid } from 'utilities/src/platform'
+import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
+import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formTransferCurrencyNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-
-const platformAdjustedUnitagYPosition = isAndroid ? -1 : -2
 
 export function TransferCurrencyNotification({
   notification,
@@ -30,15 +26,15 @@ export function TransferCurrencyNotification({
   // Transfer canceled title doesn't end with the display name
   const showUnicon = txStatus !== TransactionStatus.Canceled && displayNameType === DisplayNameType.Unitag
 
-  const title = formTransferCurrencyNotificationTitle({
+  const title = formTransferCurrencyNotificationTitle(
     formatter,
     txType,
     txStatus,
-    currency: currencyInfo?.currency,
+    currencyInfo?.currency,
     tokenAddress,
     currencyAmountRaw,
-    senderOrRecipient: displayNameType !== DisplayNameType.Address && displayName ? displayName : senderOrRecipient,
-  })
+    displayNameType !== DisplayNameType.Address && displayName ? displayName : senderOrRecipient,
+  )
 
   const { navigateToAccountActivityList } = useWalletNavigation()
 
@@ -58,13 +54,7 @@ export function TransferCurrencyNotification({
       address={address}
       hideDelay={hideDelay}
       icon={icon}
-      postCaptionElement={
-        showUnicon ? (
-          <Flex y={platformAdjustedUnitagYPosition}>
-            <Unitag size="$icon.24" />
-          </Flex>
-        ) : undefined
-      }
+      postCaptionElement={showUnicon ? <Unitag size="$icon.24" /> : undefined}
       title={title}
       onPress={navigateToAccountActivityList}
     />

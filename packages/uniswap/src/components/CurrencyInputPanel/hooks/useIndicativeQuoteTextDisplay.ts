@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useEffect, useMemo, useRef } from 'react'
 import { CurrencyInputPanelProps } from 'uniswap/src/components/CurrencyInputPanel/types'
 
-export type PanelTextDisplay = {
+type PanelTextDisplay = {
   value: string | undefined
   color: '$neutral1' | '$neutral2' | '$neutral3'
   usdValue?: CurrencyAmount<Currency> | null
@@ -22,10 +22,7 @@ export function useIndicativeQuoteTextDisplay({
   usdValue,
   value,
   valueIsIndicative,
-}: Pick<
-  CurrencyInputPanelProps,
-  'currencyAmount' | 'focus' | 'isLoading' | 'usdValue' | 'value' | 'valueIsIndicative'
->): PanelTextDisplay {
+}: CurrencyInputPanelProps): PanelTextDisplay {
   const lastDisplayRef = useRef<PanelTextDisplay>({ value, color: '$neutral3', usdValue })
   const hasInput = Boolean(isLoading || currencyAmount)
 

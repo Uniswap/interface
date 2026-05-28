@@ -1,28 +1,23 @@
 import * as matchers from 'jest-extended'
-
 expect.extend(matchers)
 
-import Cache, { Data } from 'functions/utils/cache'
-import { getRequest } from 'functions/utils/getRequest'
-import { mocked } from '~/test-utils/mocked'
+import { mocked } from '../../src/test-utils/mocked'
+import Cache, { Data } from './cache'
+import { getRequest } from './getRequest'
 
-vi.mock('functions/utils/cache', () => ({
-  default: {
-    match: vi.fn(),
-    put: vi.fn(),
-  },
-  match: vi.fn(),
-  put: vi.fn(),
+jest.mock('./cache', () => ({
+  match: jest.fn(),
+  put: jest.fn(),
 }))
 
 test('should call Cache.match before calling getData when request is not cached', async () => {
   const url = 'https://example.com'
-  const getData = vi.fn().mockResolvedValueOnce({
+  const getData = jest.fn().mockResolvedValueOnce({
     title: 'test',
     image: 'testImage',
     url: 'testUrl',
   })
-  await getRequest({ url, getData, validateData: (data): data is Data => true })
+  await getRequest(url, getData, (data): data is Data => true)
   expect(Cache.match).toHaveBeenCalledWith(url)
   expect(getData).toHaveBeenCalled()
   expect(Cache.match).toHaveBeenCalledBefore(getData)
@@ -36,8 +31,8 @@ test('getData should not be called when request is cached', async () => {
     image: 'testImage',
     url: 'testUrl',
   })
-  const getData = vi.fn()
-  await getRequest({ url, getData, validateData: (data): data is Data => true })
+  const getData = jest.fn()
+  await getRequest(url, getData, (data): data is Data => true)
   expect(Cache.match).toHaveBeenCalledWith(url)
   expect(getData).not.toHaveBeenCalled()
 })

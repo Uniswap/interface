@@ -1,14 +1,19 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
-import { GraphQLApi, TradingApi } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { fetchTradingApiIndicativeQuoteIgnoring404 } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
+import {
+  PortfolioBalancesQuery,
+  TokenDocument,
+  TokenQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { QuoteRequest, QuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain, getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
-import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/gqlTokenToCurrencyInfo'
-import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { STABLECOIN_AMOUNT_OUT } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
@@ -32,7 +37,7 @@ export async function fetchOnChainBalances({
   currencyIds,
 }: {
   apolloCache: ApolloCache<NormalizedCacheObject>
-  cachedPortfolio: NonNullable<GraphQLApi.PortfolioBalancesQuery['portfolios']>[0]
+  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
   accountAddress: Address
   currencyIds: Set<CurrencyId>
 }): Promise<OnChainMap> {
@@ -53,15 +58,15 @@ export async function fetchOnChainBalances({
         return
       }
 
-      const { balance: onchainBalance } = await fetchOnChainCurrencyBalance({
+      const { balance: onchainBalance } = await getOnChainBalancesFetch({
         currencyAddress,
         chainId,
         currencyIsNative: isNativeCurrencyAddress(chainId, currencyAddress),
         accountAddress,
       })
 
-      const token = apolloCache.readQuery<GraphQLApi.TokenQuery>({
-        query: GraphQLApi.TokenDocument,
+      const token = apolloCache.readQuery<TokenQuery>({
+        query: TokenDocument,
         variables: currencyIdToContractInput(currencyId),
       })?.token
 
@@ -114,7 +119,7 @@ export async function fetchOnChainBalances({
   return onchainBalancesByCurrencyId
 }
 
-export type DenominatedValue = { value: number; currency: string }
+type DenominatedValue = { value: number; currency: string }
 
 async function getDenominatedValue({
   accountAddress,
@@ -124,8 +129,8 @@ async function getDenominatedValue({
 }: {
   accountAddress: Address
   onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
-  token: NonNullable<GraphQLApi.TokenQuery['token']>
-  cachedPortfolio: NonNullable<GraphQLApi.PortfolioBalancesQuery['portfolios']>[0]
+  token: NonNullable<TokenQuery['token']>
+  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
 }): Promise<DenominatedValue | undefined> {
   const inferredDenominatedValue = getInferredCachedDenominatedValue({
     cachedPortfolio,
@@ -168,10 +173,21 @@ async function getDenominatedValue({
 
   const tokenAddress = token.address ?? getNativeAddress(universeChainId)
 
-  const stablecoinCurrency = getPrimaryStablecoin(universeChainId)
+  const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[universeChainId]?.currency
+
+  if (!stablecoinCurrency) {
+    logger.error(new Error('[ITBU] No `stablecoinCurrency` found'), {
+      tags: {
+        file: 'fetchOnChainBalances.ts',
+        function: 'getDenominatedValue',
+      },
+      extra,
+    })
+    return undefined
+  }
 
   const indicativeQuote = await fetchIndicativeQuote({
-    type: TradingApi.TradeType.EXACT_INPUT,
+    type: TradeType.EXACT_INPUT,
     amount: onchainQuantityCurrencyAmount.quotient.toString(),
     tokenInChainId: chainId,
     tokenOutChainId: chainId,
@@ -206,8 +222,8 @@ function getInferredCachedDenominatedValue({
   token,
   onchainQuantityCurrencyAmount,
 }: {
-  cachedPortfolio: NonNullable<GraphQLApi.PortfolioBalancesQuery['portfolios']>[0]
-  token: NonNullable<GraphQLApi.TokenQuery['token']>
+  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
+  token: NonNullable<TokenQuery['token']>
   onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
 }): DenominatedValue | undefined {
   const cachedTokenBalance = cachedPortfolio?.tokenBalances?.find(
@@ -228,9 +244,7 @@ function getInferredCachedDenominatedValue({
   return undefined
 }
 
-export async function fetchIndicativeQuote(
-  params: TradingApi.QuoteRequest,
-): Promise<TradingApi.QuoteResponse | undefined> {
+async function fetchIndicativeQuote(params: QuoteRequest): Promise<QuoteResponse | undefined> {
   try {
     return await fetchTradingApiIndicativeQuoteIgnoring404({ params })
   } catch (error) {

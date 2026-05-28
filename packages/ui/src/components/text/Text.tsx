@@ -1,38 +1,10 @@
 import { PropsWithChildren } from 'react'
-import { GetProps, styled, Text as TamaguiText } from 'tamagui'
+import { GetProps, Text as TamaguiText, isWeb, styled } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
 import { useEnableFontScaling } from 'ui/src/components/text/useEnableFontScaling'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
-import { isWebPlatform } from 'utilities/src/platform'
-
-type TamaguiTextProps = GetProps<typeof TamaguiText>
-
-// When the user's language is set to Vietnamese, some strings are truncated because the line height
-// doesn't account for Vietnamese diacritical marks that extend beyond standard character bounds.
-// Setting lineHeight param to 'unset' skips the line height to prevent truncation.
-function createTextVariant({ fontFamily, fontSize, fontWeight, lineHeight, maxFontSizeMultiplier }: TamaguiTextProps) {
-  return (_variant: string, context: { props: Record<string, unknown> }): Record<string, unknown> => {
-    const baseStyles = {
-      fontFamily,
-      fontSize,
-      fontWeight,
-      maxFontSizeMultiplier,
-    }
-
-    const lineHeightValue = context.props['lineHeight']
-
-    if (lineHeightValue !== 'unset') {
-      return {
-        ...baseStyles,
-        lineHeight,
-      }
-    }
-
-    return baseStyles
-  }
-}
 
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
@@ -40,104 +12,104 @@ export const TextFrame = styled(TamaguiText, {
 
   variants: {
     variant: {
-      heading1: createTextVariant({
+      heading1: {
         fontFamily: '$heading',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading1.maxFontSizeMultiplier,
-      }),
-      heading2: createTextVariant({
+      },
+      heading2: {
         fontFamily: '$heading',
         fontSize: '$medium',
         lineHeight: '$medium',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading2.maxFontSizeMultiplier,
-      }),
-      heading3: createTextVariant({
+      },
+      heading3: {
         fontFamily: '$heading',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading3.maxFontSizeMultiplier,
-      }),
-      subheading1: createTextVariant({
+      },
+      subheading1: {
         fontFamily: '$subHeading',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.subheading1.maxFontSizeMultiplier,
-      }),
-      subheading2: createTextVariant({
+      },
+      subheading2: {
         fontFamily: '$subHeading',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.subheading2.maxFontSizeMultiplier,
-      }),
-      body1: createTextVariant({
+      },
+      body1: {
         fontFamily: '$body',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body1.maxFontSizeMultiplier,
-      }),
-      body2: createTextVariant({
+      },
+      body2: {
         fontFamily: '$body',
         fontSize: '$medium',
         lineHeight: '$medium',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body2.maxFontSizeMultiplier,
-      }),
-      body3: createTextVariant({
+      },
+      body3: {
         fontFamily: '$body',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body3.maxFontSizeMultiplier,
-      }),
-      body4: createTextVariant({
+      },
+      body4: {
         fontFamily: '$body',
         fontSize: '$micro',
         lineHeight: '$micro',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body4.maxFontSizeMultiplier,
-      }),
-      buttonLabel1: createTextVariant({
+      },
+      buttonLabel1: {
         fontFamily: '$button',
         fontSize: '$large',
         lineHeight: '$large',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel1.maxFontSizeMultiplier,
-      }),
-      buttonLabel2: createTextVariant({
+      },
+      buttonLabel2: {
         fontFamily: '$button',
         fontSize: '$medium',
         lineHeight: '$medium',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel2.maxFontSizeMultiplier,
-      }),
-      buttonLabel3: createTextVariant({
+      },
+      buttonLabel3: {
         fontFamily: '$button',
         fontSize: '$small',
         lineHeight: '$small',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel3.maxFontSizeMultiplier,
-      }),
-      buttonLabel4: createTextVariant({
+      },
+      buttonLabel4: {
         fontFamily: '$button',
         fontSize: '$micro',
         lineHeight: '$micro',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel4.maxFontSizeMultiplier,
-      }),
-      monospace: createTextVariant({
-        fontFamily: '$monospace',
-        fontSize: fonts.monospace.fontSize,
-        lineHeight: fonts.monospace.lineHeight,
+      },
+      monospace: {
+        fontFamily: '$body',
+        fontSize: fonts.body2.fontSize,
+        lineHeight: fonts.body2.lineHeight,
         fontWeight: '$book',
-        maxFontSizeMultiplier: fonts.monospace.maxFontSizeMultiplier,
-      }),
+        maxFontSizeMultiplier: fonts.body2.maxFontSizeMultiplier,
+      },
     },
   } as const,
 
@@ -146,25 +118,17 @@ export const TextFrame = styled(TamaguiText, {
   },
 })
 
-TextFrame.displayName = 'TextFrame'
-
 const Heading1 = styled(TextFrame, {
   tag: 'h1',
 })
-
-Heading1.displayName = 'Heading1'
 
 const Heading2 = styled(TextFrame, {
   tag: 'h2',
 })
 
-Heading2.displayName = 'Heading2'
-
 const Heading3 = styled(TextFrame, {
   tag: 'h3',
 })
-
-Heading3.displayName = 'Heading3'
 
 type TextFrameProps = GetProps<typeof TextFrame>
 
@@ -185,7 +149,7 @@ export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.E
       <Flex row alignItems="center" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
         <Flex
-          backgroundColor={isWebPlatform ? '$surface3' : '$surface2'}
+          backgroundColor={isWeb ? '$surface3' : '$surface2'}
           borderRadius="$roundedFull"
           bottom="5%"
           left={0}
@@ -217,7 +181,6 @@ const TEXT_COMPONENTS = {
 } as const
 
 const getTextComponent = (variant: TextProps['variant']): typeof TextFrame => {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return TEXT_COMPONENTS[variant as keyof typeof TEXT_COMPONENTS] ?? TextFrame
 }
 
@@ -227,14 +190,14 @@ const getTextComponent = (variant: TextProps['variant']): typeof TextFrame => {
  * @param loadingPlaceholderText - The text that the loader's size will be derived from. Pick something that's close to the same length as the final text is expected to be, e.g. if it's a ticker symbol, "XXX" might be a good placeholder text. This prop is optional and defaults to "000.00".
  */
 export const Text = TextFrame.styleable<TextProps>(
-  ({ loading = false, allowFontScaling, loadingPlaceholderText = '000.00', ...rest }) => {
+  ({ loading = false, allowFontScaling, loadingPlaceholderText = '000.00', ...rest }: TextProps, ref): JSX.Element => {
     const enableFontScaling = useEnableFontScaling(allowFontScaling)
     const TextComponent = getTextComponent(rest.variant)
 
     if (loading) {
       return (
         <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
-          <TextComponent allowFontScaling={enableFontScaling} color="$transparent" opacity={0} {...rest}>
+          <TextComponent ref={ref} allowFontScaling={enableFontScaling} color="$transparent" opacity={0} {...rest}>
             {/* Important that `children` isn't used or rendered by <Text> when `loading` is true, because if the child of a <Text> component is a dynamic variable that might not be finished fetching yet, it'll result in an error until it's finished loading. We use `loadingPlaceholderText` to set the size of the loading element instead. */}
             {loadingPlaceholderText}
           </TextComponent>
@@ -242,6 +205,6 @@ export const Text = TextFrame.styleable<TextProps>(
       )
     }
 
-    return <TextComponent allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
+    return <TextComponent ref={ref} allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
   },
 )

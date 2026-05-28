@@ -6,13 +6,13 @@ export function fetchDappDetails(
   currentState: Readonly<WalletConnectState>,
 ): { dappIcon: string | null; dappName: string } {
   try {
-    const sessions = currentState.sessions
+    const sessions = Object.values(currentState.byAccount).find((account) => account?.sessions?.[topic])?.sessions
 
-    if (sessions[topic]) {
+    if (sessions && sessions[topic]) {
       const wcSession = sessions[topic]
       return {
-        dappIcon: wcSession.dappRequestInfo.icon || null,
-        dappName: wcSession.dappRequestInfo.name || '',
+        dappIcon: wcSession?.dappRequestInfo?.icon || null,
+        dappName: wcSession?.dappRequestInfo?.name || '',
       }
     }
   } catch (error) {

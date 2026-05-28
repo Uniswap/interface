@@ -1,7 +1,7 @@
 import { createMigrate } from 'redux-persist'
-import { migration1, PersistAppStateV1 } from '~/state/migrations/1'
-import { RouterPreference } from '~/state/routing/types'
-import { SlippageTolerance } from '~/state/user/types'
+import { migration1, PersistAppStateV1 } from 'state/migrations/1'
+import { RouterPreference } from 'state/routing/types'
+import { SlippageTolerance } from 'state/user/types'
 
 const previousState: PersistAppStateV1 = {
   user: {
@@ -13,6 +13,7 @@ const previousState: PersistAppStateV1 = {
     userDeadline: 1800,
     tokens: {},
     pairs: {},
+    fewPairs: {},
     timestamp: Date.now(),
   },
   _persist: {

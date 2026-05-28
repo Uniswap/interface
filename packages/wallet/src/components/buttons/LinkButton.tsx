@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Flex, FlexProps, Text, TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons'
-import { iconSizes, TextVariantTokens } from 'ui/src/theme'
+import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { openUri } from 'uniswap/src/utils/linking'
 
 interface LinkButtonProps extends Omit<TouchableAreaProps, 'onPress' | 'children' | 'variant'> {
@@ -38,7 +38,7 @@ export function LinkButton({
   }, [color])
 
   return (
-    <TouchableArea onPress={() => openUri({ uri: url, openExternalBrowser, isSafeUri })} {...rest}>
+    <TouchableArea onPress={() => openUri(url, openExternalBrowser, isSafeUri)} {...rest}>
       <Flex row alignItems="center" gap="$spacing4" justifyContent={justifyContent}>
         <Text {...colorStyles} flexShrink={1} variant={textVariant}>
           {label}

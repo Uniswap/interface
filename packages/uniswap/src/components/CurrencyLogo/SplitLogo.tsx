@@ -1,4 +1,4 @@
-import { memo, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Flex } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { zIndexes } from 'ui/src/theme'
@@ -7,15 +7,16 @@ import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLo
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 interface Props {
   inputCurrencyInfo: Maybe<CurrencyInfo>
   outputCurrencyInfo: Maybe<CurrencyInfo>
   inputLogoUrl?: string
   outputLogoUrl?: string
-  inputFallbackSymbol?: string
-  outputFallbackSymbol?: string
+  inputSymbol?: string
+  outputSymbol?: string
+  inputName?: string
+  outputName?: string
   size: number
   chainId: UniverseChainId | null
   customIcon?: ReactNode
@@ -31,8 +32,10 @@ export function SplitLogo({
   outputCurrencyInfo,
   inputLogoUrl,
   outputLogoUrl,
-  inputFallbackSymbol,
-  outputFallbackSymbol,
+  inputSymbol,
+  outputSymbol,
+  inputName,
+  outputName,
   chainId,
   customIcon,
 }: Props): JSX.Element {
@@ -52,13 +55,14 @@ export function SplitLogo({
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}
       >
-        {inputLogoUrl || inputFallbackSymbol ? (
+        {inputLogoUrl ? (
           <TokenLogo
             hideNetworkLogo
             url={inputLogoUrl}
             chainId={chainId ?? undefined}
             size={size}
-            symbol={inputFallbackSymbol}
+            symbol={inputSymbol}
+            name={inputName}
           />
         ) : (
           <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrencyInfo} size={size} />
@@ -73,13 +77,14 @@ export function SplitLogo({
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}
       >
-        {outputLogoUrl || outputFallbackSymbol ? (
+        {outputLogoUrl ? (
           <TokenLogo
             hideNetworkLogo
             url={outputLogoUrl}
             chainId={chainId ?? undefined}
             size={size}
-            symbol={outputFallbackSymbol}
+            symbol={outputSymbol}
+            name={outputName}
           />
         ) : (
           <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size} />
@@ -94,34 +99,16 @@ export function SplitLogo({
   )
 }
 
-/**
- * Icon for cross-chain transactions. Icon is grey until TX is successful.
- */
-export const CrossChainIcon = memo(function CrossChainIcon({ status }: { status: TransactionStatus }): JSX.Element {
-  const backgroundColor = status === TransactionStatus.Success ? '$statusSuccess' : '$neutral2'
-
-  return (
-    //  Since the backgroundColor might be opaque, this outer div ensures the background color is solid.
-    <Flex
-      testID="cross-chain-icon"
-      borderColor="$surface1"
-      borderWidth="$spacing2"
-      borderRadius="$roundedFull"
-      overflow="hidden"
-      backgroundColor="$background"
-    >
-      <Flex
-        borderRadius="$roundedFull"
-        overflow="hidden"
-        backgroundColor={backgroundColor}
-        width="100%"
-        height="100%"
-        alignItems="center"
-        justifyContent="center"
-        p="$spacing1"
-      >
-        <Shuffle size="$icon.12" color="$surface1" />
-      </Flex>
-    </Flex>
-  )
-})
+export const BridgeIcon = (
+  <Flex
+    testID="bridge-icon"
+    borderColor="$surface1"
+    borderWidth="$spacing2"
+    borderRadius="$roundedFull"
+    overflow="hidden"
+    backgroundColor="$statusSuccess"
+    p="$spacing1"
+  >
+    <Shuffle size="$icon.12" color="$surface1" backgroundColor="$statusSuccess" />
+  </Flex>
+)

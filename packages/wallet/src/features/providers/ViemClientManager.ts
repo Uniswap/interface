@@ -20,7 +20,7 @@ export class ViemClientManager {
   }
 
   createViemClient(chainId: UniverseChainId): undefined {
-    const client = createViemClient({ chainId })
+    const client = createViemClient(chainId)
     if (!client) {
       return
     }
@@ -32,17 +32,9 @@ export class ViemClientManager {
     this.onUpdate?.()
   }
 
-  createPrivateViemClient({
-    chainId,
-    signer,
-    address,
-  }: {
-    chainId: UniverseChainId
-    signer?: Signer
-    address?: Address
-  }): undefined {
+  createPrivateViemClient(chainId: UniverseChainId, signer?: Signer, address?: Address): undefined {
     const signerInfo = signer && address ? { signer, address } : undefined
-    const client = createViemClient({ chainId, rpcType: RPCType.Private, signerInfo })
+    const client = createViemClient(chainId, RPCType.Private, signerInfo)
     if (!client) {
       return
     }
@@ -72,7 +64,7 @@ export class ViemClientManager {
     const signerAddress = await signer?.getAddress()
     const cachedClient = this._viemClients[chainId]?.private
     if (!cachedClient) {
-      this.createPrivateViemClient({ chainId, signer, address: signerAddress })
+      this.createPrivateViemClient(chainId, signer, signerAddress)
     }
 
     const clientDetails = this._viemClients[chainId]?.private

@@ -1,25 +1,17 @@
 import { createStore, Store } from 'redux'
-import { RouterPreference } from '~/state/routing/types'
+import { RouterPreference } from 'state/routing/types'
 import reducer, {
   addSerializedPair,
   initialState,
-  UserState,
   updateHideClosedPositions,
   updateIsEmbeddedWalletBackedUp,
   updateUserDeadline,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
-} from '~/state/user/reducer'
+  UserState,
+} from 'state/user/reducer'
 
-function buildSerializedPair({
-  token0Address,
-  token1Address,
-  chainId,
-}: {
-  token0Address: string
-  token1Address: string
-  chainId: number
-}) {
+function buildSerializedPair(token0Address: string, token1Address: string, chainId: number) {
   return {
     token0: {
       chainId,
@@ -83,85 +75,45 @@ describe('swap reducer', () => {
       })
       store.dispatch(
         addSerializedPair({
-          serializedPair: buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
+          serializedPair: buildSerializedPair('0x123', '0x456', 1),
         }),
       )
       expect(store.getState().pairs).toEqual({
-        1: {
-          '0x123;0x456': buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
-        },
+        1: { '0x123;0x456': buildSerializedPair('0x123', '0x456', 1) },
       })
     })
 
     it('adds two pair to the initialized list, no duplicates', () => {
       store.dispatch(
         addSerializedPair({
-          serializedPair: buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
+          serializedPair: buildSerializedPair('0x123', '0x456', 1),
         }),
       )
       store.dispatch(
         addSerializedPair({
-          serializedPair: buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
+          serializedPair: buildSerializedPair('0x123', '0x456', 1),
         }),
       )
       expect(store.getState().pairs).toEqual({
-        1: {
-          '0x123;0x456': buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
-        },
+        1: { '0x123;0x456': buildSerializedPair('0x123', '0x456', 1) },
       })
     })
 
     it('adds two new pairs to the initialized list, same chain', () => {
       store.dispatch(
         addSerializedPair({
-          serializedPair: buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
+          serializedPair: buildSerializedPair('0x123', '0x456', 1),
         }),
       )
       store.dispatch(
         addSerializedPair({
-          serializedPair: buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x789',
-            chainId: 1,
-          }),
+          serializedPair: buildSerializedPair('0x123', '0x789', 1),
         }),
       )
       expect(store.getState().pairs).toEqual({
         1: {
-          '0x123;0x456': buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
-          '0x123;0x789': buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x789',
-            chainId: 1,
-          }),
+          '0x123;0x456': buildSerializedPair('0x123', '0x456', 1),
+          '0x123;0x789': buildSerializedPair('0x123', '0x789', 1),
         },
       })
     })
@@ -169,36 +121,20 @@ describe('swap reducer', () => {
     it('adds two new pairs to the initialized list, different chains', () => {
       store.dispatch(
         addSerializedPair({
-          serializedPair: buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
+          serializedPair: buildSerializedPair('0x123', '0x456', 1),
         }),
       )
       store.dispatch(
         addSerializedPair({
-          serializedPair: buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 5,
-          }),
+          serializedPair: buildSerializedPair('0x123', '0x456', 5),
         }),
       )
       expect(store.getState().pairs).toEqual({
         1: {
-          '0x123;0x456': buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 1,
-          }),
+          '0x123;0x456': buildSerializedPair('0x123', '0x456', 1),
         },
         5: {
-          '0x123;0x456': buildSerializedPair({
-            token0Address: '0x123',
-            token1Address: '0x456',
-            chainId: 5,
-          }),
+          '0x123;0x456': buildSerializedPair('0x123', '0x456', 5),
         },
       })
     })

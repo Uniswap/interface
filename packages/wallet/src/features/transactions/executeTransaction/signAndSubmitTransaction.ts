@@ -1,12 +1,8 @@
 import { providers } from 'ethers'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { hexlifyTransaction } from 'utilities/src/transactions/hexlifyTransaction'
 import { PublicClient } from 'viem'
 import { getAccountDelegationDetails } from 'wallet/src/features/smartWallet/delegation/utils'
 import {
@@ -15,24 +11,15 @@ import {
   signAndSerializeEIP7702Transaction,
 } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
-export async function signAndSubmitTransaction({
-  request,
-  account,
-  provider,
-  signerManager,
-  viemClient,
-  isCancellation,
-  isRemoveDelegation,
-}: {
-  request: providers.TransactionRequest
-  account: AccountMeta
-  provider: providers.Provider
-  signerManager: SignerManager
-  viemClient?: PublicClient
-  isCancellation?: boolean
-  isRemoveDelegation?: boolean
-}): Promise<{
+export async function signAndSubmitTransaction(
+  request: providers.TransactionRequest,
+  account: AccountMeta,
+  provider: providers.Provider,
+  signerManager: SignerManager,
+  viemClient?: PublicClient,
+): Promise<{
   transactionResponse: providers.TransactionResponse
   populatedRequest: providers.TransactionRequest
   timestampBeforeSign: number
@@ -44,80 +31,45 @@ export async function signAndSubmitTransaction({
   const populatedRequest = await connectedSigner.populateTransaction(hexRequest)
   const chainId = populatedRequest.chainId ?? UniverseChainId.Mainnet
 
-  // For smart wallet transactions, check if the transaction needs delegation.
-  // Cancellations should be excluded
-  if (populatedRequest.to === populatedRequest.from && !isCancellation) {
+  // For smart wallet transactions, check if the transaction needs delegation
+  if (populatedRequest.to === populatedRequest.from) {
+    logger.debug('signAndSubmitTransaction', 'signAndSubmitTransaction', 'smart wallet transaction', populatedRequest)
     const delegationInfo = await getAccountDelegationDetails(account.address, chainId)
-    logger.debug(
-      'signAndSubmitTransaction',
-      'signAndSubmitTransaction',
-      'needs delegation to contract:',
-      delegationInfo.contractAddress,
-    )
-    if (!delegationInfo.contractAddress) {
-      throw new Error('Delegation contract address not found')
-    }
-
-    const delegationContractAddress = getValidAddress({
-      address: delegationInfo.contractAddress,
-      chainId,
-      withEVMChecksum: true,
-    }) as Nullable<HexString>
-    if (!delegationContractAddress) {
-      throw new Error('Delegation contract address is invalid')
-    }
-
-    const walletAddress = getValidAddress({
-      address: account.address,
-      chainId,
-      withEVMChecksum: true,
-    }) as Nullable<HexString>
-    if (!walletAddress) {
-      throw new Error('Wallet address is invalid')
-    }
-
-    let newDelegationContractAddress: HexString | undefined
-    if (isRemoveDelegation) {
-      newDelegationContractAddress = DEFAULT_NATIVE_ADDRESS
-      logger.debug('signAndSubmitTransaction', 'signAndSubmitTransaction', 'Remove delegation request')
-    } else {
-      // new delegation or contract address update
-      if (delegationInfo.needsDelegation) {
-        newDelegationContractAddress = delegationContractAddress
-        logger.debug(
-          'signAndSubmitTransaction',
-          'signAndSubmitTransaction',
-          'New delegation contract address:',
-          newDelegationContractAddress,
-        )
+    if (delegationInfo.needsDelegation) {
+      logger.debug(
+        'signAndSubmitTransaction',
+        'signAndSubmitTransaction',
+        'needs delegation to contract:',
+        delegationInfo.contractAddress,
+      )
+      if (!viemClient) {
+        throw new Error('viemClient is required for smart contract accounts')
       }
-    }
 
-    if (newDelegationContractAddress && viemClient) {
+      if (!delegationInfo.contractAddress) {
+        throw new Error('Delegation contract address not found')
+      }
+
       const timestampBeforeSign = Date.now()
 
       // Authorization nonce needs to be +1 of the nonce of the transaction
       const authorizationNonce = Number(populatedRequest.nonce) + 1
-      const signedAuthorization = await createSignedAuthorization({
-        signer: connectedSigner,
-        walletAddress,
+      const signedAuthorization = await createSignedAuthorization(
+        connectedSigner,
+        account.address as `0x${string}`,
         chainId,
-        contractAddress: newDelegationContractAddress,
-        nonce: authorizationNonce,
-      })
+        delegationInfo.contractAddress,
+        authorizationNonce,
+      )
 
       // Convert to EIP-7702 transaction format
-      const viemTxRequest = convertToEIP7702({
-        ethersTx: populatedRequest,
-        walletAddress,
-        signedAuthorization,
-      })
-      const serializedTxWithSignature = await signAndSerializeEIP7702Transaction({
-        signer: connectedSigner,
-        tx: viemTxRequest,
-        address: account.address,
+      const viemTxRequest = convertToEIP7702(populatedRequest, account.address as `0x${string}`, signedAuthorization)
+      const serializedTxWithSignature = await signAndSerializeEIP7702Transaction(
+        connectedSigner,
+        viemTxRequest,
+        account.address,
         chainId,
-      })
+      )
       logger.debug(
         'signAndSubmitTransaction',
         'signAndSubmitTransaction',

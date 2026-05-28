@@ -97,6 +97,8 @@ export const colors = {
   networkPolygon: '#A457FF',
   networkArbitrum: '#28A0F0',
   networkBsc: '#F0B90B',
+  networkHyper: '#97fce4',
+  networkMegaETH: '#627EEA',
   networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
   networkBase: '#0052FF',
@@ -172,6 +174,8 @@ const commonTheme = {
   chain_137: colors.networkPolygon,
   chain_42: colors.networkArbitrum,
   chain_56: colors.networkBsc,
+  chain_999: colors.networkHyper,
+  chain_4326: colors.networkMegaETH,
   chain_420: colors.networkOptimism,
   chain_42161: colors.networkArbitrum,
   chain_421613: colors.networkArbitrum,
@@ -188,7 +192,7 @@ const commonTheme = {
   chain_7777777: colors.neutral1_light,
   promotional: colors.magenta300,
 
-  brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',
+  brandedGradient: 'linear-gradient(139.57deg, #5C8AFF 4.35%, #8BB0FF 96.44%);',
   promotionalGradient: colors.accent1_light,
 }
 

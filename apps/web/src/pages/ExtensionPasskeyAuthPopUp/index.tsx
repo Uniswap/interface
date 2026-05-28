@@ -1,8 +1,9 @@
+import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
+import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router-dom'
 import { Anchor, Button, Flex, SpinningLoader, Text } from 'ui/src'
-import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -16,13 +17,11 @@ import {
   PasskeySignInFlowOpened,
 } from 'uniswap/src/extension/messagePassing/types/requests'
 import { authenticatePasskey } from 'uniswap/src/features/passkey/passkey'
-import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getChromeRuntime, getChromeRuntimeWithThrow } from 'utilities/src/chrome/chrome'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { useExternallyConnectableExtensionId } from '~/pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 
 // Passkey Auth Flow: Extension <> Web App
 // For a detailed flow chart of how the Web App and the Extension exchange messages,
@@ -46,7 +45,6 @@ export default function ExtensionPasskeyAuthPopUp() {
 
   const [searchParams] = useSearchParams()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally only runs once on mount
   useEffect(() => {
     const chromeRuntime = getChromeRuntime()
 
@@ -98,6 +96,7 @@ export default function ExtensionPasskeyAuthPopUp() {
       } satisfies PasskeySignInFlowOpened,
       handleMessageRequestPasskey,
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onPressSignIn = async () => {
@@ -158,7 +157,8 @@ export default function ExtensionPasskeyAuthPopUp() {
   }, EXTENSION_REFERRER_VERIFICATION_TIMEOUT)
 
   return (
-    <Trace logImpression page={InterfacePageName.ExtensionPasskeySignInPage}>
+    // TODO(WALL-6386): add InterfacePageName.EXTENSION_PASSKEY_SIGN_IN_PAGE to @uniswap/analytics-events
+    <Trace logImpression page="extension-passkey-sign-in-page">
       <Flex flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh">
         <Flex width="400px" padding="$spacing16" flexDirection="column" gap="$spacing16">
           <Flex row justifyContent="flex-end">
@@ -169,7 +169,7 @@ export default function ExtensionPasskeyAuthPopUp() {
                 href={uniswapUrls.helpArticleUrls.passkeysInfo}
                 textDecorationLine="none"
               >
-                <Button icon={<EnvelopeHeart size="$icon.16" color="$neutral2" />} size="xxsmall" emphasis="secondary">
+                <Button icon={<EnvelopeHeartIcon />} size="xxsmall" emphasis="secondary">
                   {t('common.getHelp.button')}
                 </Button>
               </Anchor>

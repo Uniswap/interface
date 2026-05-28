@@ -1,13 +1,13 @@
+import styled from 'lib/styled-components'
 import { Box } from 'rebass/styled-components'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { Gap } from '~/theme'
+import { Gap } from 'theme'
 
 // TODO(WEB-1983):
 // Setting `width: 100%` by default prevents composability in complex flex layouts.
 // Same applies to `RowFixed` and its negative margins. This component needs to be
 // further investigated and improved to make UI work easier.
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-const Row = deprecatedStyled(Box)<{
+const Row = styled(Box)<{
   width?: string
   align?: string
   justify?: string
@@ -28,12 +28,12 @@ const Row = deprecatedStyled(Box)<{
 `
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-export const RowBetween = deprecatedStyled(Row)`
+export const RowBetween = styled(Row)`
   justify-content: space-between;
 `
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-export const AutoRow = deprecatedStyled(Row)<{ gap?: string; justify?: string }>`
+export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   flex-wrap: wrap;
   margin: ${({ gap }) => gap && `-${gap}`};
   justify-content: ${({ justify }) => justify && justify};
@@ -44,7 +44,7 @@ export const AutoRow = deprecatedStyled(Row)<{ gap?: string; justify?: string }>
 `
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-export const RowFixed = deprecatedStyled(Row)<{ gap?: string; justify?: string }>`
+export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
   position: relative;
   width: fit-content;
   margin: ${({ gap }) => gap && `-${gap}`};

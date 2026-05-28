@@ -1,9 +1,9 @@
 import React from 'react'
+import { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import {
   useCurrentAccountChainMismatchEffect,
   useOnConnectCheckAllAccountChainMismatchEffect,
 } from 'uniswap/src/features/smartWallet/mismatch/hooks'
-import { useMismatchContext } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { useOnDisconnectEffect } from 'uniswap/src/features/smartWallet/mismatch/useOnDisconnectEffect'
 import { isTestEnv } from 'utilities/src/environment/env'
 

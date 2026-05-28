@@ -2,7 +2,6 @@
 
 const { minify } = require('terser')
 
-// eslint-disable-next-line max-params
 module.exports = async function terserLoader(source, map, meta) {
   const callback = this.async()
   const options = this.getOptions()

@@ -1,23 +1,46 @@
-import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { ThemeToggle } from 'uniswap/src/components/appearance/ThemeToggle'
+import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
+import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
+import styled, { useTheme } from 'lib/styled-components'
+import { ChevronRight } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
+import { ThemeSelector } from 'theme/components/ThemeToggle'
+import { Flex, Text } from 'ui/src'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { PreferencesHeader } from '~/components/NavBar/PreferencesMenu/Header'
-import { PreferencesView } from '~/components/NavBar/PreferencesMenu/shared'
+
+const Pref = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+`
+const StyledChevron = styled(ChevronRight)`
+  opacity: 0.8;
+`
+const SelectButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  width: 100%;
+  justify-content: end;
+  transition: opacity 0.2s;
+  &:hover {
+    opacity: 0.6;
+  }
+`
 
 function SelectButton({ label, onClick }: { label: string; onClick?: () => void }) {
-  const color = useSporeColors()
+  const theme = useTheme()
   return (
-    <TouchableArea row alignItems="center" gap="$gap4" onPress={onClick}>
+    <SelectButtonContainer onClick={onClick}>
       <Text variant="buttonLabel2" color="$neutral1">
         {label}
       </Text>
-      <RotatableChevron direction="right" size="$icon.24" color={color.neutral1.get() as ColorTokens} opacity={0.8} />
-    </TouchableArea>
+      <StyledChevron size={24} color={theme.neutral1} />
+    </SelectButtonContainer>
   )
 }
 
@@ -29,6 +52,7 @@ type SettingItem = {
 export function PreferenceSettings({
   setSettingsView,
   showHeader = true,
+  showThemeLabel = true,
 }: {
   setSettingsView: (view: PreferencesView) => void
   showHeader?: boolean
@@ -41,52 +65,39 @@ export function PreferenceSettings({
 
   const items: SettingItem[] = [
     {
-      label: t('settings.setting.appearance.title'),
-      component: (
-        <Trace logPress element={ElementName.NavbarPreferencesTheme}>
-          <ThemeToggle />
-        </Trace>
-      ),
+      label: showThemeLabel ? t('themeToggle.theme') : undefined,
+      component: <ThemeSelector compact fullWidth={!showThemeLabel} />,
     },
     {
       label: t('common.language'),
       component: (
-        <Trace logPress element={ElementName.NavbarPreferencesLanguage}>
-          <SelectButton label={languageInfo.displayName} onClick={() => setSettingsView(PreferencesView.LANGUAGE)} />
-        </Trace>
+        <SelectButton label={languageInfo.displayName} onClick={() => setSettingsView(PreferencesView.LANGUAGE)} />
       ),
     },
     {
       label: t('common.currency'),
-      component: (
-        <Trace logPress element={ElementName.NavbarPreferencesCurrency}>
-          <SelectButton label={activeLocalCurrency} onClick={() => setSettingsView(PreferencesView.CURRENCY)} />
-        </Trace>
-      ),
+      component: <SelectButton label={activeLocalCurrency} onClick={() => setSettingsView(PreferencesView.CURRENCY)} />,
     },
   ]
 
   return (
     <>
-      {showHeader && <PreferencesHeader>{t('globalPreferences.title')}</PreferencesHeader>}
+      {showHeader && (
+        <PreferencesHeader>
+          <Trans i18nKey="globalPreferences.title" />
+        </PreferencesHeader>
+      )}
 
       <Flex gap="$gap12">
         {items.map(({ label, component }, index) => (
-          <Flex
-            row
-            width="100%"
-            justifyContent="space-between"
-            alignItems="center"
-            gap="$gap12"
-            key={`${label}_${index}`}
-          >
+          <Pref key={`${label}_${index}`}>
             {label && (
               <Text variant="body2" color="$neutral2" textAlign="left">
                 {label}
               </Text>
             )}
             {component}
-          </Flex>
+          </Pref>
         ))}
       </Flex>
     </>

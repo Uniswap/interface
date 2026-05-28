@@ -1,19 +1,16 @@
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback } from 'react'
-import { Flex, Text } from 'ui/src'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Flex, Text, isWeb } from 'ui/src'
 import { spacing } from 'ui/src/theme/spacing'
-import {
-  AmountInputPresets,
-  PRESET_BUTTON_PROPS,
-} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
-import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
+import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
-import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
-import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TokenRate } from 'uniswap/src/components/CurrencyInputPanel/TokenRate'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { Experiments, Layers, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
+import { useExperimentValueFromLayer } from 'uniswap/src/features/gating/hooks'
+import { DefaultTokenOptions } from 'uniswap/src/features/transactions/swap/form/body/DefaultTokenOptions/DefaultTokenOptions'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtensionApp, isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
+import { isInterfaceDesktop } from 'utilities/src/platform'
 
 interface CurrencyInputPanelHeaderProps {
   headerLabel?: string
@@ -23,7 +20,6 @@ interface CurrencyInputPanelHeaderProps {
   currencyInfo: Maybe<CurrencyInfo>
   onSetPresetValue: (amount: string, percentage: PresetPercentage) => void
   showDefaultTokenOptions: boolean
-  hidePresets?: boolean
 }
 
 export function CurrencyInputPanelHeader({
@@ -34,46 +30,46 @@ export function CurrencyInputPanelHeader({
   currencyInfo,
   onSetPresetValue,
   showDefaultTokenOptions,
-  hidePresets,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
-  const renderPreset = useCallback(
-    (preset: PresetPercentage) => (
-      <PresetAmountButton
-        percentage={preset}
-        currencyAmount={currencyAmount}
-        currencyBalance={currencyBalance}
-        currencyField={currencyField}
-        elementName={ElementName.PresetPercentage}
-        buttonProps={PRESET_BUTTON_PROPS}
-        onSetPresetValue={onSetPresetValue}
-      />
-    ),
-    [currencyAmount, currencyBalance, currencyField, onSetPresetValue],
+  const priceUXEnabled = usePriceUXEnabled()
+  const isInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>(
+    Layers.SwapPage,
+    SwapPresetsProperties.InputEnabled,
+    false,
   )
+
+  const isOutput = currencyField === CurrencyField.OUTPUT
+  const showFlippableRate = priceUXEnabled && isOutput && !!currencyInfo
 
   if (!headerLabel && !showDefaultTokenOptions) {
     return null
   }
 
   const showInputPresets =
-    (isWebAppDesktop || isExtensionApp) && !hidePresets && currencyField === CurrencyField.INPUT && currencyBalance
+    isInputPresetsEnabled && isInterfaceDesktop && currencyField === CurrencyField.INPUT && currencyBalance
 
   return (
     <Flex row justifyContent="space-between">
       {/* IMPORTANT: $micro crashes on mobile */}
-      <Text color="$neutral2" variant="subheading2" fontSize={isWebPlatform ? '$micro' : '$small'}>
+      <Text color="$neutral2" variant="subheading2" fontSize={isWeb ? '$micro' : '$small'}>
         {headerLabel}
       </Text>
       {showInputPresets && (
         <Flex position="absolute" right={0} top={-spacing.spacing2}>
-          <AmountInputPresets presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
+          <AmountInputPresets
+            currencyAmount={currencyAmount}
+            currencyBalance={currencyBalance}
+            buttonProps={{ py: '$spacing4' }}
+            onSetPresetValue={onSetPresetValue}
+          />
         </Flex>
       )}
-      {showDefaultTokenOptions && isWebAppDesktop && (
-        <Flex position="absolute" right={0} top={-spacing.spacing6}>
+      {showDefaultTokenOptions && isInterfaceDesktop && (
+        <Flex position="absolute" right={0} top={-spacing.spacing4}>
           <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
         </Flex>
       )}
+      {showFlippableRate && isInterfaceDesktop && <TokenRate />}
     </Flex>
   )
 }

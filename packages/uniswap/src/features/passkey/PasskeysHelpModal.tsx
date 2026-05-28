@@ -5,11 +5,11 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 export enum PasskeysHelpModalTypes {
   Default = 'default',
@@ -67,7 +67,7 @@ export function PasskeysHelpModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const onPressGetHelp = async (): Promise<void> => {
-    await openUri({ uri: uniswapUrls.helpArticleUrls.passkeysInfo })
+    await openUri(uniswapUrls.helpArticleUrls.passkeysInfo)
   }
   const displayName = accountName ?? t('common.thisAccount')
   const modalContent = passkeysHelpModalContent[type]
@@ -86,9 +86,9 @@ export function PasskeysHelpModal({
       <Flex
         centered
         gap="$spacing12"
-        pb={isWebPlatform ? '$none' : '$spacing12'}
+        pb={isWeb ? '$none' : '$spacing12'}
         pt="$spacing12"
-        px={isWebPlatform ? '$none' : '$spacing24'}
+        px={isWeb ? '$none' : '$spacing24'}
       >
         {icon}
 

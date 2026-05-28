@@ -5,12 +5,12 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getFeeColor, useModalHeaderText, useModalSubtitleText } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
-import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/warnings/WarningInfoModalContainer'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/WarningInfoModalContainer'
+import { getFeeColor, useModalHeaderText, useModalSubtitleText } from 'uniswap/src/features/tokens/safetyUtils'
 import { FoTFeeType, TokenFeeInfo } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getFeeSeverity'
-import { isWebApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 export function FeeOnTransferWarning({
   children,
@@ -32,7 +32,7 @@ export function FeeOnTransferWarning({
       sellFeePercent: feeType === 'sell' ? feePercent : undefined,
     }) ?? ''
 
-  if (isWebApp) {
+  if (isInterface) {
     return (
       <InfoTooltip
         {...{

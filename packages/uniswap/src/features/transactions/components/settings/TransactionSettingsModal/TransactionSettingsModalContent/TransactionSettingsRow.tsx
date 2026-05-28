@@ -1,19 +1,26 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PropsWithChildren, ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { iconSizes } from 'ui/src/theme'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 
 interface TransactionSettingRowProps {
   setting: TransactionSettingConfig
   setSelectedSetting: (setting: TransactionSettingConfig) => void
+  warning?: JSX.Element | undefined
 }
 
-export function TransactionSettingRow({ setting, setSelectedSetting }: TransactionSettingRowProps): JSX.Element | null {
-  const { renderTitle, renderTooltip, Control, Description, Screen, InfoModal, featureFlag, Warning } = setting
+export function TransactionSettingRow({
+  setting,
+  setSelectedSetting,
+  warning,
+}: TransactionSettingRowProps): JSX.Element | null {
+  const { renderTitle, renderTooltip, Control, Description, Screen, InfoModal, featureFlag } = setting
   const { t } = useTranslation()
 
   const [showInfoModal, setShowInfoModal] = useState(false)
@@ -45,7 +52,7 @@ export function TransactionSettingRow({ setting, setSelectedSetting }: Transacti
                   <Description />
                 </Text>
               )}
-              {Warning && <Warning />}
+              {warning}
             </Flex>
           </TouchableAreaWrapper>
           <TouchableArea
@@ -58,7 +65,7 @@ export function TransactionSettingRow({ setting, setSelectedSetting }: Transacti
             onPress={onPressControl}
           >
             <Control />
-            {Screen && <RotatableChevron color="$neutral3" direction="right" size="$icon.24" />}
+            {Screen && <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon24} />}
           </TouchableArea>
         </Flex>
         {InfoModal && <InfoModal isOpen={showInfoModal} onClose={(): void => setShowInfoModal(false)} />}

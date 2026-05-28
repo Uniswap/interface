@@ -1,16 +1,15 @@
 import { Accordion, Flex } from 'ui/src'
-import { SwapFormButton } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButton'
 import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/ExpandableRows'
 import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/SwapFormScreenFooter'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
-import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
-import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
+import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/SwapFormButton'
+import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
+import { SwapFormWarningStateProvider } from 'uniswap/src/features/transactions/swap/form/context/SwapFormWarningStateContextProvider'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 
 export function SwapFormScreenDetails(): JSX.Element {
-  const { tokenColor, showFooter } = useSwapFormScreenStore((state) => ({
-    tokenColor: state.tokenColor,
-    showFooter: state.showFooter,
-  }))
+  const isPriceUXEnabled = usePriceUXEnabled()
+  const { tokenColor, isBridge, showFooter } = useSwapFormScreenState()
 
   return (
     <Accordion collapsible type="single" overflow="hidden">
@@ -23,14 +22,14 @@ export function SwapFormScreenDetails(): JSX.Element {
             `}</style>
         <Flex>
           <Flex>
-            <SwapFormWarningStoreContextProvider>
+            <SwapFormWarningStateProvider>
               <SwapFormButton tokenColor={tokenColor} />
               <SwapFormWarningModals />
-            </SwapFormWarningStoreContextProvider>
+            </SwapFormWarningStateProvider>
           </Flex>
           <SwapFormScreenFooter />
         </Flex>
-        {showFooter ? <ExpandableRows /> : null}
+        {showFooter && !isPriceUXEnabled ? <ExpandableRows isBridge={isBridge} /> : null}
       </Accordion.Item>
     </Accordion>
   )

@@ -1,11 +1,12 @@
-import { TradingApi } from '@universe/api'
-import { FeatureFlags, getFeatureFlagName, getStatsigClient } from '@universe/gating'
 import { SagaGenerator, take } from 'typed-redux-saga'
-import { getDelegationService } from 'uniswap/src/domains/services'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { PermitMethod, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getDelegationService } from 'wallet/src/features/smartWallet/delegation'
 
 /** Returns success condition after the transactions corresponding to the given hash finalizes. */
 export function* waitForTransactionConfirmation(params: { hash: string }): SagaGenerator<{ success: boolean }> {
@@ -61,7 +62,7 @@ export function getSwapTransactionCount(swapTxContext: SwapTxAndGasInfo): number
     count++
   }
 
-  if (swapTxContext.routing === TradingApi.Routing.CLASSIC) {
+  if (swapTxContext.routing === Routing.CLASSIC) {
     // Increment count for swap transaction
     count++
 
@@ -69,7 +70,7 @@ export function getSwapTransactionCount(swapTxContext: SwapTxAndGasInfo): number
       // Increment count for swap transaction
       count++
     }
-  } else if (swapTxContext.routing === TradingApi.Routing.BRIDGE) {
+  } else if (swapTxContext.routing === Routing.BRIDGE) {
     // Increment count for bridge transaction
     count++
   }

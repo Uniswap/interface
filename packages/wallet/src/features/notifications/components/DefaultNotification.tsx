@@ -1,5 +1,5 @@
-import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
-import { AppNotificationDefault } from 'uniswap/src/features/notifications/slice/types'
+import { AppNotificationDefault } from 'uniswap/src/features/notifications/types'
+import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 
 export function DefaultNotification({
   notification: { address, title, hideDelay },

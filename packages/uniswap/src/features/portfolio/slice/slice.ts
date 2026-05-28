@@ -1,11 +1,8 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
-import { type UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { type CurrencyId } from 'uniswap/src/types/currency'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
 
 const OVERRIDE_MAX_AGE = 30 * 60 * 1000 // 30 minutes
@@ -27,10 +24,7 @@ const slice = createSlice({
     addTokensToBalanceOverride: (state, action: PayloadAction<{ ownerAddress: Address; currencyIds: string[] }>) => {
       const { ownerAddress, currencyIds } = action.payload
 
-      const accountId = getValidAddress({
-        address: ownerAddress,
-        platform: isEVMAddressWithChecksum(ownerAddress) ? Platform.EVM : Platform.SVM,
-      })
+      const accountId = getValidAddress(ownerAddress)
 
       if (!accountId) {
         logger.error(new Error('Unexpected call to `addTokensToBalanceOverride` with an invalid address'), {
@@ -57,7 +51,7 @@ const slice = createSlice({
     ) => {
       const { ownerAddress, chainId, tokenAddress } = action.payload
 
-      const accountId = getValidAddress({ address: ownerAddress, chainId })
+      const accountId = getValidAddress(ownerAddress)
 
       if (!accountId) {
         logger.error(new Error('Unexpected call to `removeTokenFromBalanceOverride` with an invalid address'), {
@@ -67,7 +61,7 @@ const slice = createSlice({
         return
       }
 
-      const currencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(chainId, tokenAddress))
+      const currencyId = buildCurrencyId(chainId, tokenAddress).toLowerCase()
 
       delete state.tokenBalanceOverrides[accountId]?.[currencyId]
 
@@ -77,13 +71,13 @@ const slice = createSlice({
     },
     removeExpiredBalanceOverrides: (state) => {
       Object.keys(state.tokenBalanceOverrides).forEach((accountId) => {
-        // biome-ignore lint/style/noNonNullAssertion: array access is safe here
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const accountOverrides = state.tokenBalanceOverrides[accountId]!
 
         const now = Date.now()
 
         Object.keys(accountOverrides).forEach((currencyId) => {
-          // biome-ignore lint/style/noNonNullAssertion: array access is safe here
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           if (now - accountOverrides[currencyId]!.updatedAt > OVERRIDE_MAX_AGE) {
             logger.warn(
               'portfolio/slice/slice.ts',
@@ -101,15 +95,10 @@ const slice = createSlice({
         }
       })
     },
-    resetPortfolio: () => initialPortfolioState,
   },
 })
 
-export const {
-  addTokensToBalanceOverride,
-  removeTokenFromBalanceOverride,
-  removeExpiredBalanceOverrides,
-  resetPortfolio,
-} = slice.actions
+export const { addTokensToBalanceOverride, removeTokenFromBalanceOverride, removeExpiredBalanceOverrides } =
+  slice.actions
 
 export const portfolioReducer = slice.reducer

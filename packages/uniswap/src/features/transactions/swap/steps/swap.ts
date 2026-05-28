@@ -1,14 +1,14 @@
-import { TradingApi } from '@universe/api'
-import invariant from 'tiny-invariant'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
+import { fetchSwap } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import type { CreateSwapRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import {
   OnChainTransactionFields,
   OnChainTransactionFieldsBatched,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
-import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import {
+  ValidatedTransactionRequest,
+  validateTransactionRequest,
+} from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export interface SwapTransactionStep extends OnChainTransactionFields {
   // Swaps that don't require permit
@@ -29,7 +29,7 @@ export function createSwapTransactionStep(txRequest: ValidatedTransactionRequest
 }
 
 export function createSwapTransactionAsyncStep(
-  swapRequestArgs: TradingApi.CreateSwapRequest | undefined,
+  swapRequestArgs: CreateSwapRequest | undefined,
 ): SwapTransactionStepAsync {
   return {
     type: TransactionStepType.SwapTransactionAsync,
@@ -38,7 +38,8 @@ export function createSwapTransactionAsyncStep(
         return undefined
       }
 
-      const { swap } = await TradingApiClient.fetchSwap({
+      // Fallback: if no quote.methodParameters, call fetchSwap（need to deploy /v1/swap service）
+      const { swap } = await fetchSwap({
         ...swapRequestArgs,
         signature,
         /* simulating transaction provides a more accurate gas limit, and the simulation will succeed because async swap step will only occur after approval has been confirmed. */
@@ -54,21 +55,4 @@ export function createSwapTransactionStepBatched(
   txRequests: ValidatedTransactionRequest[],
 ): SwapTransactionStepBatched {
   return { type: TransactionStepType.SwapTransactionBatched, batchedTxRequests: txRequests }
-}
-
-export async function getSwapTxRequest(
-  step: SwapTransactionStep | SwapTransactionStepAsync,
-  signature: string | undefined,
-): Promise<ValidatedTransactionRequest> {
-  if (step.type === TransactionStepType.SwapTransaction) {
-    return step.txRequest
-  }
-  if (!signature) {
-    throw new UnexpectedTransactionStateError('Signature required for async swap transaction step')
-  }
-
-  const txRequest = await step.getTxRequest(signature)
-  invariant(txRequest !== undefined)
-
-  return txRequest
 }

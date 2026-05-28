@@ -1,8 +1,6 @@
-import type { ForwardedRef } from 'react'
-import { forwardRef, memo, useMemo, useRef } from 'react'
-import type { GestureResponderEvent } from 'react-native'
-import { Linking } from 'react-native'
-import { type ColorTokens, styled, type TamaguiElement } from 'tamagui'
+import { ForwardedRef, forwardRef, memo, useMemo, useRef } from 'react'
+import { GestureResponderEvent, Linking } from 'react-native'
+import { styled, type ColorTokens, type TamaguiElement } from 'tamagui'
 import { Text, type TextProps } from 'ui/src/components/text'
 import { TouchableAreaFrame } from 'ui/src/components/touchable/TouchableArea/TouchableAreaFrame'
 import type { TouchableAreaProps } from 'ui/src/components/touchable/TouchableArea/types'
@@ -16,10 +14,7 @@ type PropsFromText = Pick<
   'textTransform' | 'allowFontScaling' | 'adjustsFontSizeToFit' | 'textAlign' | 'flex' | 'flexGrow' | 'flexShrink'
 >
 
-type PropsFromTouchableArea = Pick<
-  TouchableAreaProps,
-  'onPress' | 'disabled' | 'disabledStyle' | 'forceStyle' | 'display'
->
+type PropsFromTouchableArea = Pick<TouchableAreaProps, 'onPress' | 'disabled' | 'disabledStyle' | 'forceStyle'>
 
 type OwnProps = {
   children: string
@@ -51,8 +46,6 @@ const TouchableTextLinkFrame = styled(TouchableAreaFrame, {
   borderRadius: '$none',
 })
 
-TouchableTextLinkFrame.displayName = 'TouchableTextLinkFrame'
-
 const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(function TouchableTextLink(
   {
     children,
@@ -65,12 +58,11 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
     disabledStyle,
     forceStyle,
     onlyUseText,
-    display,
     ...textProps
   },
   ref,
 ) {
-  const textRef = useRef<TamaguiElement>(undefined) as unknown as ForwardedRef<TamaguiElement>
+  const textRef = useRef<TamaguiElement>() as unknown as ForwardedRef<TamaguiElement>
 
   const hoveredColor = getMaybeHoverColor(color)
 
@@ -111,11 +103,11 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
       // We need to blur it after the link is pressed so that it is not focused when the link is not focused
       setTimeout(() => {
         if (ref && 'current' in ref) {
-          ref.current?.blur()
+          ref.current?.blur?.()
         }
 
         if (textRef && 'current' in textRef) {
-          textRef.current?.blur()
+          textRef.current?.blur?.()
         }
       }, 0)
     }
@@ -125,7 +117,6 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
     return (
       <Text
         ref={ref ?? textRef}
-        display={display}
         aria-disabled={disabled}
         disabled={disabled}
         focusStyle={focusVisibleStyle}
@@ -155,7 +146,6 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
       disabledStyle={disabledStyle}
       forceStyle={forceStyle}
       aria-disabled={disabled}
-      display={display}
       onPress={handleOnPressWithLink}
     >
       <Text

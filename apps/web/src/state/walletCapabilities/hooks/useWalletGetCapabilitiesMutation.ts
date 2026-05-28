@@ -1,13 +1,14 @@
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
+import { useAppDispatch } from 'state/hooks'
+import { handleGetCapabilities } from 'state/walletCapabilities/lib/handleGetCapabilities'
+import { setCapabilitiesByChain, setCapabilitiesNotSupported } from 'state/walletCapabilities/reducer'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { useAccount } from '~/hooks/useAccount'
-import { useAppDispatch } from '~/state/hooks'
-import { handleGetCapabilities } from '~/state/walletCapabilities/lib/handleGetCapabilities'
-import { setCapabilitiesByChain, setCapabilitiesNotSupported } from '~/state/walletCapabilities/reducer'
 
 /**
  * [public] useWalletGetCapabilitiesMutation -- gets the wallet capabilities for the current account
@@ -39,7 +40,7 @@ export function useWalletGetCapabilitiesMutation() {
       }
     },
     onError: (error) => {
-      logger.error(error, {
+      logger?.error(error, {
         tags: {
           file: 'useWalletCapabilities.ts',
           function: 'useWalletGetCapabilitiesMutation',

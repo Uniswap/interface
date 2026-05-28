@@ -1,22 +1,23 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import StatusIcon from 'components/Identicon/StatusIcon'
+import { useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useIsMobile } from 'hooks/screenSize/useIsMobile'
+import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
+import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { AdaptiveWebPopoverContent, Button, Flex, Text, useShadowPropsShort } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { X } from 'ui/src/components/icons/X'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
-import StatusIcon from '~/components/StatusIcon'
-import { useRecentConnectorId } from '~/components/Web3Provider/constants'
-import { useIsMobile } from '~/hooks/screenSize/useIsMobile'
-import { useAccount } from '~/hooks/useAccount'
-import { useModalState } from '~/hooks/useModalState'
-import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface RecentlyConnectedModalUIProps {
   isOpen: boolean
@@ -36,10 +37,10 @@ export function useWalletDisplay(walletAddress: string | undefined) {
   })
 
   return {
-    displayName: displayName?.name ?? shortenAddress({ address: walletAddress }),
+    displayName: displayName?.name ?? shortenAddress(walletAddress),
     showUnitagIcon: displayName?.type === DisplayNameType.Unitag,
     showShortAddress: displayName?.type === DisplayNameType.Unitag || displayName?.type === DisplayNameType.ENS,
-    shortAddress: shortenAddress({ address: walletAddress }),
+    shortAddress: shortenAddress(walletAddress),
   }
 }
 
@@ -56,10 +57,7 @@ function RecentlyConnectedModalUI({
   const { t } = useTranslation()
   const shadowProps = useShadowPropsShort()
   const modalRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside({
-    node: modalRef,
-    handler: onClose,
-  })
+  useOnClickOutside(modalRef, onClose)
   const isMobile = useIsMobile()
 
   return (
@@ -105,8 +103,8 @@ function RecentlyConnectedModalUI({
                 {displayName}
               </Text>
               {showUnitagIcon && (
-                <Flex flexShrink={0} pt="$spacing2">
-                  <Unitag size={22} />
+                <Flex flexShrink={0}>
+                  <Unitag size={16} />
                 </Flex>
               )}
               <X
@@ -156,19 +154,13 @@ function RecentlyConnectedModalUI({
   )
 }
 
-function shouldShowModal({
-  walletAddress,
-  account,
-  isEmbeddedWalletEnabled,
-  isOpenRef,
-  recentConnectorId,
-}: {
-  walletAddress?: string
-  account: ReturnType<typeof useAccount>
-  isEmbeddedWalletEnabled: boolean
-  isOpenRef: MutableRefObject<boolean>
-  recentConnectorId?: string
-}) {
+function shouldShowModal(
+  walletAddress: string | undefined,
+  account: ReturnType<typeof useAccount>,
+  isEmbeddedWalletEnabled: boolean,
+  isOpenRef: MutableRefObject<boolean>,
+  recentConnectorId?: string,
+) {
   return (
     !!walletAddress &&
     !(account.isConnected || account.isConnecting) &&
@@ -191,21 +183,12 @@ export function RecentlyConnectedModal() {
   const walletDisplay = useWalletDisplay(walletAddress)
 
   useEffect(() => {
-    if (
-      shouldShowModal({
-        walletAddress,
-        account,
-        isEmbeddedWalletEnabled,
-        isOpenRef,
-        recentConnectorId,
-      })
-    ) {
+    if (shouldShowModal(walletAddress, account, isEmbeddedWalletEnabled, isOpenRef, recentConnectorId)) {
       openModal()
       isOpenRef.current = true
     }
   }, [walletAddress, account, isEmbeddedWalletEnabled, openModal, recentConnectorId])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: account.isConnecting dependency is sufficient for this effect
   useEffect(() => {
     if (account.isConnected && isOpen) {
       closeModal()

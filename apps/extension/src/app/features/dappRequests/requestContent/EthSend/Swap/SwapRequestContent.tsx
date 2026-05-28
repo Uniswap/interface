@@ -1,18 +1,18 @@
-import { GasFeeResult } from '@universe/api'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapDisplay'
 import { formatUnits, useSwapDetails } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
+import { UniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
 import { UniversalRouterCall } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
-import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { assert } from 'utilities/src/errors'
-import { UniswapXSwapRequest } from 'wallet/src/components/dappRequests/types/Permit2Types'
 
 function getTransactionTypeInfo({
   inputCurrencyInfo,
@@ -29,8 +29,8 @@ function getTransactionTypeInfo({
     ? {
         type: TransactionType.Swap,
         tradeType: 0, // TradeType.EXACT_INPUT, but TradeType doesn't matter for the UI
-        inputCurrencyId: inputCurrencyInfo.currencyId,
-        outputCurrencyId: outputCurrencyInfo.currencyId,
+        inputCurrencyId: inputCurrencyInfo?.currencyId,
+        outputCurrencyId: outputCurrencyInfo?.currencyId,
         inputCurrencyAmountRaw: inputAmountRaw,
         expectedOutputCurrencyAmountRaw: outputAmountRaw,
         minimumOutputCurrencyAmountRaw: outputAmountRaw,
@@ -41,7 +41,6 @@ function getTransactionTypeInfo({
 interface SwapRequestContentProps {
   transactionGasFeeResult: GasFeeResult
   parsedCalldata: UniversalRouterCall
-  showSmartWalletActivation?: boolean
   onCancel: () => Promise<void>
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
 }
@@ -49,7 +48,6 @@ interface SwapRequestContentProps {
 export function SwapRequestContent({
   transactionGasFeeResult,
   parsedCalldata,
-  showSmartWalletActivation,
   onCancel,
   onConfirm,
 }: SwapRequestContentProps): JSX.Element {
@@ -99,7 +97,6 @@ export function SwapRequestContent({
       outputAmount={outputAmount}
       outputCurrencyInfo={currencyInfo1}
       transactionGasFeeResult={transactionGasFeeResult}
-      showSmartWalletActivation={showSmartWalletActivation}
       isWrap={false}
       isUnwrap={false}
       onCancel={onCancel}

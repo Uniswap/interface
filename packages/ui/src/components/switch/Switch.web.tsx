@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react'
-import { type OpaqueColorValue } from 'react-native'
-import type { ColorTokens, GetThemeValueForKey } from 'tamagui'
-import { Switch as TamaguiSwitch } from 'tamagui'
+import { ColorTokens, Switch as TamaguiSwitch } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
-import type { FlexProps } from 'ui/src/components/layout'
-import { Flex } from 'ui/src/components/layout'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 import { SWITCH_THUMB_HEIGHT, SWITCH_TRACK_HEIGHT, SWITCH_TRACK_WIDTH } from 'ui/src/components/switch/shared'
-import type { SwitchProps } from 'ui/src/components/switch/types'
+import { SwitchProps } from 'ui/src/components/switch/types'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 
 const animationProp = {
@@ -26,7 +23,6 @@ export function Switch({
   disabled,
   variant,
   disabledStyle,
-  backgroundColor,
   ...rest
 }: SwitchProps): JSX.Element {
   const [checked, setChecked] = useState(checkedProp)
@@ -50,11 +46,7 @@ export function Switch({
 
   const isDisabledStyling = disabled && !checked
 
-  const frameBackgroundColor = ((): ColorTokens | OpaqueColorValue | GetThemeValueForKey<'backgroundColor'> => {
-    if (backgroundColor) {
-      return backgroundColor
-    }
-
+  const frameBackgroundColor = ((): ColorTokens => {
     if (isDisabledStyling) {
       return '$surface3'
     }
@@ -66,13 +58,11 @@ export function Switch({
 
   const thumbBackgroundColor = ((): ColorTokens => {
     if (isDisabledStyling) {
-      return '$neutral3'
+      if (isBranded) {
+        return checked ? '$neutral2' : '$neutral3'
+      }
+      return checked ? '$neutral2' : '$neutral3'
     }
-
-    if (checked) {
-      return isBranded ? '$white' : '$surface1'
-    }
-
     return '$white'
   })()
 
@@ -83,6 +73,7 @@ export function Switch({
     return isBranded ? colors.accent1.val : colors.neutral1.val
   })()
 
+  // Switch is a bit performance sensitive on native, memo to help here
   const frameActiveStyle = {
     x: checked ? -2 : 0,
   }
@@ -163,7 +154,7 @@ export function Switch({
       <>
         {/* focus ring outer */}
         <Flex
-          $group-item-focusVisible={{
+          $group-item-focus={{
             borderColor: checked
               ? isBranded
                 ? '$accent1Hovered'
@@ -185,7 +176,7 @@ export function Switch({
 
         {/* focus ring inner */}
         <Flex
-          $group-item-focusVisible={{
+          $group-item-focus={{
             borderColor: isBranded ? '$surface1' : '$surface1',
           }}
           borderColor="transparent"

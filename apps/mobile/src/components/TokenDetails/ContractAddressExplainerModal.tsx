@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Text } from 'ui/src'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function ContractAddressExplainerModal({
   onAcknowledge,
@@ -21,12 +20,7 @@ export function ContractAddressExplainerModal({
       title={t('token.safety.warning.copyContractAddress.title')}
       captionComponent={
         <>
-          <Text
-            testID={TestID.ContractAddressExplainerModalWarning}
-            variant="body3"
-            color="$neutral2"
-            textAlign="center"
-          >
+          <Text variant="body3" color="$neutral2" textAlign="center">
             {t('token.safety.warning.copyContractAddress.message')}
           </Text>
           <LearnMoreLink

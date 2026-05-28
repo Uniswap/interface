@@ -1,16 +1,11 @@
+import { loadingOpacityMixin } from 'components/Loader/styled'
+import styled from 'lib/styled-components'
 import React, { forwardRef } from 'react'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { loadingOpacityMixin } from '~/components/Loader/styled'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { escapeRegExp } from '~/utils/escapeRegExp'
+import { escapeRegExp } from 'utils/escapeRegExp'
 
-export const StyledInput = deprecatedStyled.input<{
-  error?: boolean
-  fontSize?: string
-  align?: string
-  disabled?: boolean
-}>`
+export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; disabled?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
   width: 0;
@@ -107,7 +102,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ? value.toString().slice(prependSymbol.length, value.toString().length + 1)
               : value
 
-            // replace commas with periods, because uniswap exclusively uses period as the decimal separator
+            // replace commas with periods, because Ring exclusively uses period as the decimal separator
             enforcer(formattedValue.replace(/,/g, '.'))
           } else {
             enforcer(event.target.value.replace(/,/g, '.'))
@@ -135,7 +130,7 @@ const MemoizedInput = React.memo(Input)
 export { MemoizedInput as Input }
 // const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
-export const StyledNumericalInput = deprecatedStyled(MemoizedInput)<{ $loading: boolean }>`
+export const StyledNumericalInput = styled(MemoizedInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin};
   text-align: left;
   font-size: 36px;

@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { type TamaguiElement, withStaticProperties } from 'tamagui'
+import { withStaticProperties, type TamaguiElement } from 'tamagui'
 import { useLayoutAnimationOnChange } from 'ui/src/animations'
 import { CustomButtonFrame } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/CustomButtonFrame'
 import { CustomButtonText } from 'ui/src/components/buttons/Button/components/CustomButtonText/CustomButtonText'
@@ -20,7 +20,6 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
     focusScaling = 'default',
     emphasis = 'primary',
     size = 'medium',
-    lineHeightDisabled = false,
     loading,
     iconPosition: propIconPosition = 'before',
     isDisabled: propDisabled,
@@ -34,7 +33,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
   // This is responsible for the disabled UI state of the button
   // If `onDisabledPress` is provided, though, the button will be interactive even when disabled
   const isDisabled = getIsButtonDisabled({ isDisabled: propDisabled, loading })
-  const handleOnPress = isDisabled ? (props.onDisabledPress ? props.onDisabledPress : undefined) : onPress
+  const handleOnPress = isDisabled && props.onDisabledPress ? props.onDisabledPress : onPress
   const iconPosition = getIconPosition(propIconPosition)
 
   // We need to check if the children is a string, a Trans tag, or a custom component that likely renders a Trans tag, in which case we will pass it as a child to the `CustomButtonText` component
@@ -51,7 +50,8 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
       size={size}
       iconPosition={iconPosition}
       isDisabled={isDisabled}
-      disabled={props.onDisabledPress ? false : isDisabled}
+      // TODO(WEB-6347): Re-enable disabled prop once tamagui Adapt issue is fixed
+      // disabled={props.onDisabledPress ? false : isDisabled}
       custom-background-color={customBackgroundColor}
       dd-action-name={props['dd-action-name'] ?? (typeof children === 'string' ? children : undefined)}
       {...props}
@@ -79,11 +79,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
         />
       ) : null}
 
-      {isStringOrTransTag ? (
-        <CustomButtonText line-height-disabled={lineHeightDisabled.toString()}>{children}</CustomButtonText>
-      ) : (
-        children
-      )}
+      {isStringOrTransTag ? <CustomButtonText>{children}</CustomButtonText> : children}
     </CustomButtonFrame>
   )
 })

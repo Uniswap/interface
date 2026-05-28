@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createSearchParams } from 'react-router'
+import { createSearchParams } from 'react-router-dom'
 import { getRouter } from 'src/app/navigation/state'
 import { sleep } from 'utilities/src/time/timing'
 
@@ -14,7 +14,7 @@ export function useOptimizedSearchParams(): URLSearchParams {
 
   useEffect(() => {
     return getRouter().subscribe(async () => {
-      // react-router calls this before it actually updates the url bar :/
+      // react-router-dom calls this before it actually updates the url bar :/
       await sleep(0)
       setSearchParams((prev) => {
         const next = getSearchParams()

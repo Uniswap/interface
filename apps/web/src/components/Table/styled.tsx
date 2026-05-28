@@ -1,23 +1,26 @@
-import { GraphQLApi } from '@universe/api'
+/* eslint-disable import/no-unused-modules */
+import { getTokenDetailsURL, unwrapFewToken, unwrapToken } from 'appGraphql/data/util'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { Cell } from 'components/Table/Cell'
+import { useTableSize } from 'components/Table/TableSizeProvider'
+import { useAbbreviatedTimeString } from 'components/Table/utils'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
+import deprecatedStyled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
+import { ArrowDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
-import { Anchor, Flex, FlexProps, styled, Text, TextProps } from 'ui/src'
-import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
-import { ArrowUp } from 'ui/src/components/icons/ArrowUp'
-import { breakpoints, IconSizeTokens, zIndexes } from 'ui/src/theme'
+import { Link } from 'react-router-dom'
+import { ClickableStyle, ClickableTamaguiStyle } from 'theme/components/styles'
+import { Z_INDEX } from 'theme/zIndex'
+import { Anchor, Flex, Text, TextProps, View, styled } from 'ui/src'
+import { breakpoints, zIndexes } from 'ui/src/theme'
+import { Token as RingToken } from 'uniswap/src/data/graphql/ringswap-data-api/__generated__/types-and-hooks'
+import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { getTokenDetailsURL, unwrapToken } from '~/appGraphql/data/util'
-import { PortfolioLogo } from '~/components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { Cell } from '~/components/Table/Cell'
-import { useTableSize } from '~/components/Table/TableSizeProvider'
-import { useAbbreviatedTimeString } from '~/components/Table/utils'
-import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
-import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useCurrency } from '~/hooks/Tokens'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50
@@ -28,9 +31,7 @@ export const TableContainer = styled(Flex, {
   className: 'scrollbar-hidden',
 })
 
-export const TableHead = (
-  props: PropsWithChildren<{ $isSticky: boolean; $top: number; mb?: FlexProps['mb'] }>,
-): JSX.Element => (
+export const TableHead = (props: PropsWithChildren<{ $isSticky: boolean; $top: number }>): JSX.Element => (
   <Flex
     width="100%"
     zIndex={zIndexes.dropdown - 2}
@@ -39,105 +40,49 @@ export const TableHead = (
     backgroundColor="$surface1"
     className="scrollbar-hidden"
     $platform-web={props.$isSticky ? { position: 'sticky' } : {}}
-    mb={props.mb}
   >
     {props.$isSticky && <Flex height={12} />}
     {props.children}
   </Flex>
 )
 
-export const TableBodyContainer = styled(Flex, {
+export const TableBodyContainer = styled(View, {
   width: '100%',
   position: 'relative',
   className: 'scrollbar-hidden',
   justifyContent: 'flex-start',
+  borderColor: '$surface3',
   borderStyle: 'solid',
+  borderWidth: 1,
+  borderTopWidth: 0,
+  borderBottomRightRadius: '$rounded20',
+  borderBottomLeftRadius: '$rounded20',
   '$platform-web': {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
-    overflowY: 'auto',
-  },
-  variants: {
-    v2: {
-      true: {
-        borderBottomRightRadius: '$rounded12',
-        borderBottomLeftRadius: '$rounded12',
-        borderWidth: 0,
-      },
-      false: {
-        borderBottomRightRadius: '$rounded20',
-        borderBottomLeftRadius: '$rounded20',
-        borderColor: '$surface3',
-        borderWidth: 1,
-        borderTopWidth: '$none',
-      },
-    },
-    hasHiddenRows: {
-      true: {
-        borderBottomRightRadius: 0,
-        borderBottomLeftRadius: 0,
-        borderBottomWidth: 0,
-      },
-    },
+    overflowY: 'scroll',
   },
 })
 
-export const HiddenTableScrollContainer = styled(Flex, {
-  width: '100%',
-  position: 'relative',
-  className: 'scrollbar-hidden',
-  justifyContent: 'flex-start',
-  borderStyle: 'solid',
-  '$platform-web': {
-    overscrollBehaviorX: 'none',
-    overflowX: 'auto',
-    overflowY: 'visible', // Critical: allows sticky to work
-  },
-  variants: {
-    v2: {
-      true: {
-        borderBottomRightRadius: '$rounded12',
-        borderBottomLeftRadius: '$rounded12',
-        borderWidth: 0,
-      },
-      false: {
-        borderBottomRightRadius: '$rounded20',
-        borderBottomLeftRadius: '$rounded20',
-        borderColor: '$surface3',
-        borderWidth: 1,
-        borderTopWidth: 0,
-      },
-    },
-  },
-})
-
-export const TableSeparatorRow = styled(Flex, {
-  centered: true,
+export const LoadingIndicatorContainer = styled(Flex, {
   row: true,
-  gap: '$spacing12',
-  py: '$spacing8',
-  px: '$spacing16',
-  borderStyle: 'solid',
-  width: '100%',
-  variants: {
-    v2: {
-      true: {
-        borderWidth: 0,
-      },
-      false: {
-        borderColor: '$surface3',
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderTopWidth: 0,
-        borderBottomWidth: 0,
-      },
-    },
-    isExpanded: {
-      false: {
-        borderBottomWidth: 1,
-      },
-    },
-  } as const,
+  alignItems: 'center',
+  justifyContent: 'center',
+  mt: -48,
+  '$platform-web': {
+    position: 'sticky',
+  },
+})
+
+export const LoadingIndicator = styled(Flex, {
+  row: true,
+  backgroundColor: '$accent2',
+  borderRadius: '$rounded8',
+  width: 'fit-content',
+  p: '$padding8',
+  gap: '$gap8',
+  height: 34,
+  zIndex: Z_INDEX.under_dropdown,
 })
 
 const TableRow = styled(Flex, {
@@ -146,49 +91,49 @@ const TableRow = styled(Flex, {
   width: 'fit-content',
   minWidth: '100%',
   height: '100%',
-  transition: 'background-color 0.1s ease-in-out',
-  variants: {
-    v2: {
-      true: {
-        borderRadius: '$rounded12',
-      },
-      false: {
-        borderRadius: '$rounded20',
-      },
-    },
-  },
 })
 
 export const DataRow = styled(TableRow, {
+  hoverStyle: {
+    backgroundColor: '$surface1Hovered',
+  },
   variants: {
-    v2: {
+    selected: {
       true: {
+        backgroundColor: '$surface2',
         hoverStyle: {
-          backgroundColor: '$surface1Hovered',
-          transition: 'background-color 0ms',
+          backgroundColor: '$surface2',
         },
       },
-      false: {
-        hoverStyle: { backgroundColor: '$surface1Hovered' },
-      },
     },
-    dimmed: {
-      true: {
-        opacity: 0.6,
-      },
-    },
-  },
+  } as const,
 })
 
 export const NoDataFoundTableRow = styled(TableRow, {
   justifyContent: 'center',
 })
 
+export const TableScrollMask = styled(View, {
+  position: 'absolute',
+  zIndex: zIndexes.default,
+  top: 0,
+  bottom: 0,
+  right: 1,
+  width: 20,
+  pointerEvents: 'none',
+  background: `linear-gradient(to right, transparent, var(--surface1))`,
+})
+
 export const HeaderRow = styled(TableRow, {
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: '$surface3',
+  borderTopRightRadius: '$rounded20',
+  borderTopLeftRadius: '$rounded20',
   width: 'unset',
+  backgroundColor: '$surface1Hovered',
   scrollbarWidth: 'none',
   className: 'scrollbar-hidden',
-  transition: 'unset',
 
   '$platform-web': {
     overscrollBehavior: 'none',
@@ -200,22 +145,6 @@ export const HeaderRow = styled(TableRow, {
         opacity: 0.4,
       },
     },
-    v2: {
-      true: {
-        backgroundColor: '$surface2',
-        borderRadius: '$rounded12',
-      },
-      false: {
-        backgroundColor: '$surface1Hovered',
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: '$surface3',
-        borderTopRightRadius: '$rounded20',
-        borderTopLeftRadius: '$rounded20',
-        borderBottomRightRadius: 'unset',
-        borderBottomLeftRadius: 'unset',
-      },
-    },
   } as const,
 })
 
@@ -224,46 +153,56 @@ export const CellContainer = styled(Flex, {
   className: 'first-child-flex-grow-0 last-child-justify-end',
 })
 
-const StyledExternalLink = styled(Anchor, {
+export const StyledExternalLink = styled(Anchor, {
   textDecorationLine: 'none',
   ...ClickableTamaguiStyle,
   color: '$neutral1',
   target: '_blank',
   rel: 'noopener noreferrer',
 })
-const StyledInternalLink = styled(Link, {
-  ...ClickableTamaguiStyle,
-  color: '$neutral1',
-  '$platform-web': {
-    textDecoration: 'none',
-  },
-})
+const StyledInternalLink = deprecatedStyled(Link)`
+  text-decoration: none;
+  ${ClickableStyle}
+  color: ${({ theme }) => theme.neutral1};
+`
 
-export const TableRowLink = styled(Link, {
-  cursor: 'pointer',
-  '$platform-web': {
-    textDecoration: 'none',
-  },
-})
+export const TableRowLink = deprecatedStyled(Link)`
+  color: none;
+  text-decoration: none;
+  cursor: pointer;
+`
 
 export const ClickableHeaderRow = styled(Flex, {
   row: true,
   alignItems: 'center',
   justifyContent: 'flex-end',
+  width: '100%',
+  gap: '$gap4',
 
   ...ClickableTamaguiStyle,
 })
 
-export function HeaderArrow({
-  orderDirection,
-  size,
-}: {
-  orderDirection: 'asc' | 'desc'
-  size: IconSizeTokens
-}): JSX.Element {
-  const Icon = orderDirection === 'asc' ? ArrowUp : ArrowDown
-  return <Icon size={size} color="$neutral1" hoverStyle={{ opacity: 0.5 }} transition="opacity 0.08s ease-in-out" />
-}
+export const HeaderArrow = styled(ArrowDown, {
+  height: 14,
+  width: 14,
+  color: '$neutral1',
+  transform: 'rotate(0deg)',
+  transition: 'opacity 0.08s ease-in-out',
+  '$group-hover': {
+    opacity: 0.5,
+  },
+
+  variants: {
+    orderDirection: {
+      asc: {
+        transform: 'rotate(180deg)',
+      },
+      desc: {
+        transform: 'rotate(0deg)',
+      },
+    },
+  },
+})
 
 export const HeaderSortText = styled(Text, {
   variant: 'body3',
@@ -284,7 +223,8 @@ export const FilterHeaderRow = styled(Flex, {
   alignItems: 'center',
   userSelect: 'none',
   gap: '$gap4',
-  transition: 'all 0.1s ease-in-out',
+  animation: 'fast',
+
   ...ClickableTamaguiStyle,
 
   variants: {
@@ -309,11 +249,6 @@ const StyledTimestampRow = styled(StyledExternalLink, {
 
 export const TableText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
   const { width: tableWidth } = useTableSize()
-
-  // Avoid rendering text until we have the table width to prevent layout flickering
-  if (!tableWidth) {
-    return <></>
-  }
 
   return (
     <Text color="$neutral1" variant={tableWidth <= breakpoints.lg ? 'body3' : 'body2'} {...props}>
@@ -373,16 +308,13 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
  * @param token
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
-export const TokenLinkCell = ({ token, hideLogo }: { token: GraphQLApi.Token; hideLogo?: boolean }) => {
+export const TokenLinkCell = ({ token, hideLogo }: { token: Token; hideLogo?: boolean }) => {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
-  const unwrappedToken = unwrapToken(chainId, token)
+  const unwrappedToken = unwrapFewToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
-  const nativeCurrency = useCurrency({
-    address: NATIVE_CHAIN_ID,
-    chainId,
-  })
+  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
   return (
     <StyledInternalLink
       to={getTokenDetailsURL({
@@ -391,13 +323,49 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: GraphQLApi.Token; hi
       })}
     >
       <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
-        <EllipsisText>{unwrappedToken.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
+        <EllipsisText>{unwrappedToken?.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
         {!hideLogo && (
           <PortfolioLogo
             chainId={chainId}
-            size={22}
+            size={20}
             images={isNative ? undefined : [token.project?.logo?.url]}
-            fallbackSymbols={[token.symbol]}
+            currencies={isNative ? [nativeCurrency] : undefined}
+          />
+        )}
+      </Flex>
+    </StyledInternalLink>
+  )
+}
+
+export const RingTokenLinkCell = ({
+  token,
+  hideLogo,
+  logo,
+}: {
+  token: RingToken
+  hideLogo?: boolean
+  logo?: string
+}) => {
+  const { t } = useTranslation()
+  const { defaultChainId } = useEnabledChains()
+  const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
+  const unwrappedToken = unwrapToken(chainId, token)
+  const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
+  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
+  return (
+    <StyledInternalLink
+      to={getTokenDetailsURL({
+        address: unwrappedToken.address,
+        chain: token.chain as any,
+      })}
+    >
+      <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
+        <EllipsisText>{unwrappedToken?.originToken?.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
+        {!hideLogo && (
+          <PortfolioLogo
+            chainId={chainId}
+            size={20}
+            images={isNative ? undefined : [logo]}
             currencies={isNative ? [nativeCurrency] : undefined}
           />
         )}

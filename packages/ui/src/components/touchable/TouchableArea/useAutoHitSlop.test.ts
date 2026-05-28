@@ -1,32 +1,20 @@
-import { act, renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react-hooks'
 import type { LayoutChangeEvent } from 'react-native'
 import { getHitSlop, useAutoHitSlop } from 'ui/src/components/touchable/TouchableArea/useAutoHitSlop'
 import { isIOS } from 'utilities/src/platform'
-import { describe, expect, it, vi } from 'vitest'
 
 // Mock the isIOS value to test both iOS and Android cases
-vi.mock('utilities/src/platform', () => ({
+jest.mock('utilities/src/platform', () => ({
   isIOS: false,
 }))
 
 // Helper function to create LayoutChangeEvent objects
-function createLayoutEvent({
-  width,
-  height,
-  x = 0,
-  y = 0,
-}: {
-  width: number
-  height: number
-  x?: number
-  y?: number
-}): LayoutChangeEvent {
-  return {
+const createLayoutEvent = (width: number, height: number, x = 0, y = 0): LayoutChangeEvent =>
+  ({
     nativeEvent: {
       layout: { x, y, width, height },
     },
-  } as LayoutChangeEvent
-}
+  }) as LayoutChangeEvent
 
 // Helper constants
 const MIN_WIDTH_IOS = 44
@@ -93,10 +81,28 @@ describe('getHitSlop', () => {
     })
   })
 
-  it.skip('calculates hit slop for iOS devices correctly', () => {
-    // Skip this test as dynamic module mocking doesn't work the same way in Vitest
-    // The MIN_WIDTH/MIN_HEIGHT constants are set at module level based on isIOS
-    // and can't be changed after import
+  it('calculates hit slop for iOS devices correctly', () => {
+    // Arrange - Setup the mock to report as iOS
+    jest.resetModules()
+    jest.mock('utilities/src/platform', () => ({
+      isIOS: true,
+    }))
+
+    // Need to re-import after changing the mock
+    const { getHitSlop: getHitSlopiOS } = jest.requireActual('./useAutoHitSlop')
+
+    const frameSize = { width: 24, height: 24 }
+
+    // Act
+    const hitSlop = getHitSlopiOS(frameSize)
+
+    // Assert
+    expect(hitSlop).toEqual({
+      top: 10,
+      right: 10,
+      bottom: 10,
+      left: 10,
+    })
   })
 })
 
@@ -117,7 +123,7 @@ describe('useAutoHitSlop', () => {
 
     // Act - Simulate layout event with small dimensions
     await act(async () => {
-      onLayout(createLayoutEvent({ width: 20, height: 50 }))
+      onLayout(createLayoutEvent(20, 50))
     })
 
     // Assert
@@ -131,10 +137,10 @@ describe('useAutoHitSlop', () => {
 
   it('calls the provided onLayout callback when layout changes', async () => {
     // Arrange
-    const mockOnLayout = vi.fn()
+    const mockOnLayout = jest.fn()
     const { result } = renderHook(() => useAutoHitSlop(mockOnLayout))
     const onLayout = result.current[1]
-    const layoutEvent = createLayoutEvent({ width: 20, height: 20 })
+    const layoutEvent = createLayoutEvent(20, 20)
 
     // Act
     await act(async () => {
@@ -149,7 +155,7 @@ describe('useAutoHitSlop', () => {
     // Arrange
     const { result } = renderHook(() => useAutoHitSlop())
     const onLayout = result.current[1]
-    const layoutEvent = createLayoutEvent({ width: 20, height: 20 })
+    const layoutEvent = createLayoutEvent(20, 20)
 
     // Act - Call onLayout with same dimensions twice
     await act(async () => {

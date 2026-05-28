@@ -1,16 +1,16 @@
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
+import { useAccount } from 'hooks/useAccount'
+import styled, { useTheme } from 'lib/styled-components'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Text, useSporeColors } from 'ui/src'
+import { ExternalLink } from 'theme/components/Links'
+import { flexColumnNoWrap } from 'theme/styles'
+import { Text } from 'ui/src'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { AutoColumn } from '~/components/deprecated/Column'
-import { RowBetween } from '~/components/deprecated/Row'
-import { useAccount } from '~/hooks/useAccount'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { ExternalLink } from '~/theme/components/Links'
-import { flexColumnNoWrap } from '~/theme/styles'
 
-const InputPanel = deprecatedStyled.div`
+const InputPanel = styled.div`
   ${flexColumnNoWrap};
   position: relative;
   border-radius: 1.25rem;
@@ -19,7 +19,7 @@ const InputPanel = deprecatedStyled.div`
   width: 100%;
 `
 
-const ContainerRow = deprecatedStyled.div<{ error: boolean }>`
+const ContainerRow = styled.div<{ error: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,12 +31,12 @@ const ContainerRow = deprecatedStyled.div<{ error: boolean }>`
   background-color: ${({ theme }) => theme.surface1};
 `
 
-const InputContainer = deprecatedStyled.div`
+const InputContainer = styled.div`
   flex: 1;
   padding: 1rem;
 `
 
-const Input = deprecatedStyled.input<{ error?: boolean }>`
+const Input = styled.input<{ error?: boolean }>`
   font-size: 1.25rem;
   outline: none;
   border: none;
@@ -88,7 +88,7 @@ export default function AddressInputPanel({
 }) {
   const { t } = useTranslation()
   const { chainId } = useAccount()
-  const colors = useSporeColors()
+  const theme = useTheme()
 
   const { address, loading, name } = useENS({ nameOrAddress: value })
 
@@ -109,12 +109,12 @@ export default function AddressInputPanel({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <Text variant="body1" color={colors.neutral2.val}>
+              <Text variant="body1" color={theme.neutral2}>
                 {label ?? <Trans i18nKey="addressInput.recipient" />}
               </Text>
               {address && chainId && (
                 <ExternalLink
-                  href={getExplorerLink({ chainId, data: name ?? address, type: ExplorerDataType.ADDRESS })}
+                  href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}
                   style={{ fontSize: '14px' }}
                 >
                   (<Trans i18nKey="common.viewOnExplorer" />)

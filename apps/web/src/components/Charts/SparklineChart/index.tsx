@@ -1,23 +1,21 @@
+import { SparklineMap } from 'appGraphql/data/types'
+import { PricePoint } from 'appGraphql/data/util'
+import { getPriceBounds } from 'components/Charts/PriceChart/utils'
+import LineChart from 'components/Charts/SparklineChart/LineChart'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { curveCardinal, scaleLinear } from 'd3'
 import { memo } from 'react'
+import { RingTokenStat, TokenStat } from 'state/explore/types'
 import { Flex, useSporeColors } from 'ui/src'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { SparklineMap } from '~/appGraphql/data/types'
-import { PricePoint } from '~/appGraphql/data/util'
-import { getPriceBounds } from '~/components/Charts/PriceChart/utils'
-import LineChart from '~/components/Charts/SparklineChart/LineChart'
-import { LoadingBubble } from '~/components/Tokens/loading'
-import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { TokenStat } from '~/state/explore/types'
-import { getChainIdFromChainUrlParam } from '~/utils/chainParams'
+import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 interface SparklineChartProps {
   width: number
   height: number
-  tokenData: TokenStat
+  tokenData: TokenStat | RingTokenStat
   pricePercentChange?: number | null
   sparklineMap: SparklineMap
 }
@@ -25,14 +23,11 @@ interface SparklineChartProps {
 function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
   const colors = useSporeColors()
   // for sparkline
-  const chainId = getChainIdFromChainUrlParam(tokenData.chain.toLowerCase())
+  const chainId = getChainIdFromChainUrlParam(tokenData?.chain.toLowerCase())
   const chainInfo = chainId && getChainInfo(chainId)
-  const isNative = areAddressesEqual({
-    addressInput1: { address: tokenData.address, platform: chainInfo?.platform ?? Platform.EVM },
-    addressInput2: { address: chainInfo?.wrappedNativeCurrency.address, platform: chainInfo?.platform ?? Platform.EVM },
-  })
-  const pricePoints = tokenData.address
-    ? sparklineMap[isNative ? NATIVE_CHAIN_ID : normalizeTokenAddressForCache(tokenData.address)]
+  const isNative = areAddressesEqual(tokenData?.address, chainInfo?.wrappedNativeCurrency.address)
+  const pricePoints = tokenData?.address
+    ? sparklineMap[isNative ? NATIVE_CHAIN_ID : tokenData.address.toLowerCase()]
     : null
 
   // Don't display if there's one or less pricepoints

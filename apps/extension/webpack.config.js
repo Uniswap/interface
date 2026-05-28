@@ -15,7 +15,6 @@ const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
 process.env.NODE_ENV = NODE_ENV
 
 const isDevelopment = NODE_ENV === 'development'
-const isProduction = NODE_ENV === 'production'
 const appDirectory = path.resolve(__dirname)
 const manifest = require('./src/manifest.json')
 
@@ -29,7 +28,6 @@ const compileNodeModules = [
   'expo-linear-gradient',
   'react-native-image-picker',
   'expo-modules-core',
-  'react-native-reanimated',
 ]
 
 // This is needed for webpack to compile JavaScript.
@@ -49,8 +47,8 @@ const babelLoaderConfiguration = {
     loader: 'babel-loader',
     options: {
       cacheDirectory: true,
-      // The 'babel-preset-expo' preset is recommended to match React Native's packager
-      presets: ['babel-preset-expo'],
+      // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
+      presets: ['module:@react-native/babel-preset'],
       // Re-write paths to import only the modules needed by the app
       plugins: ['react-native-web'],
     },
@@ -156,22 +154,8 @@ module.exports = (env) => {
   const BUILD_ENV = env.BUILD_ENV
   const BUILD_NUM = env.BUILD_NUM || 0
 
-  const publicAssetsVariant = isDevelopment
-    ? 'local'
-    : BUILD_ENV === 'dev'
-      ? 'dev'
-      : BUILD_ENV === 'beta'
-        ? 'beta'
-        : 'prod'
-
   // Title Postfix
-  const EXTENSION_NAME_POSTFIX = isDevelopment
-    ? 'LOCAL'
-    : BUILD_ENV === 'dev'
-      ? 'DEV'
-      : BUILD_ENV === 'beta'
-        ? 'BETA'
-        : ''
+  const EXTENSION_NAME_POSTFIX = BUILD_ENV === 'dev' ? 'DEV' : BUILD_ENV === 'beta' ? 'BETA' : ''
 
   // Description
   let EXTENSION_DESCRIPTION = manifest.description
@@ -188,14 +172,14 @@ module.exports = (env) => {
   return {
     mode: NODE_ENV,
     entry: {
-      background: './src/entrypoints/background.ts',
-      onboarding: './src/entrypoints/onboarding/main.tsx',
-      loadSidebar: './src/entrypoints/sidepanel/loadSidebar.ts',
-      sidebar: './src/entrypoints/sidepanel/main.tsx',
-      injected: './src/entrypoints/injected.content.ts',
-      ethereum: './src/entrypoints/ethereum.content.ts',
-      popup: './src/entrypoints/fallback-popup/main.tsx',
-      unitagClaim: './src/entrypoints/unitagClaim/main.tsx',
+      background: './src/background/background.ts',
+      onboarding: './src/entry/onboarding.tsx',
+      loadSidebar: './src/entry/loadSidebar.ts',
+      sidebar: './src/entry/sidebar.tsx',
+      injected: './src/contentScript/injected.ts',
+      ethereum: './src/contentScript/ethereum.ts',
+      popup: './src/entry/popup.tsx',
+      unitagClaim: './src/entry/unitagClaim.tsx',
     },
     output: {
       filename: '[name].js',
@@ -214,15 +198,6 @@ module.exports = (env) => {
           resolve: {
             fullySpecified: false, // disable the behaviour
           },
-        },
-        // Add immediate execution calls to entry point files
-        {
-          test: /\/(background|injected\.content|ethereum\.content)\.ts$/,
-          use: [
-            {
-              loader: path.resolve(__dirname, 'webpack-plugins/immediate-execution-loader.js'),
-            },
-          ],
         },
         {
           oneOf: [
@@ -278,8 +253,7 @@ module.exports = (env) => {
                     // for example if you have constants.ts then constants.js goes here and it will eval them
                     // at build time and if it can flatten views even if they use imports from that file
                     importsWhitelist: ['constants.js'],
-                    // TODO: test re-enabling extraction in production when #27138 merges
-                    disableExtraction: true,
+                    disableExtraction: process.env.NODE_ENV === 'development',
                   },
                 },
 
@@ -308,13 +282,7 @@ module.exports = (env) => {
         'react-native-vector-icons$': 'react-native-vector-icons/dist',
         src: path.resolve(__dirname, 'src'), // absolute imports in apps/web
         'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
-        'expo-blur': require.resolve('./__mocks__/expo-blur.jsx'),
-        'react-router': path.resolve(
-          __dirname,
-          isProduction
-            ? '../../node_modules/react-router/dist/production/index.mjs'
-            : '../../node_modules/react-router/dist/development/index.mjs',
-        ),
+        'expo-blur': require.resolve('./__mocks__/expo-blur.js'),
       },
       // Add support for web-based extensions so we can share code between mobile/extension
       extensions: [
@@ -359,89 +327,41 @@ module.exports = (env) => {
             from: 'src/manifest.json',
             force: true,
             transform(content) {
-              const transformedManifest = {
-                ...manifest,
-                description: EXTENSION_DESCRIPTION,
-                version: EXTENSION_VERSION,
-                name: EXTENSION_NAME_POSTFIX ? manifest.name + ' ' + EXTENSION_NAME_POSTFIX : manifest.name,
-                externally_connectable: {
-                  ...manifest.externally_connectable,
-                  matches:
-                    BUILD_ENV === 'prod'
-                      ? ['https://app.uniswap.org/*']
-                      : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
-                },
-                // Ensure content scripts are registered in the webpack build (WXT handles this automatically).
-                // These mirror the matches/runAt used in the TS entrypoints.
-                content_scripts: [
+              return Buffer.from(
+                JSON.stringify(
                   {
-                    id: 'injected',
-                    matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
-                    js: ['injected.js'],
-                    run_at: 'document_start',
-                    all_frames: true,
+                    ...manifest,
+                    description: EXTENSION_DESCRIPTION,
+                    version: EXTENSION_VERSION,
+                    name: EXTENSION_NAME_POSTFIX ? manifest.name + ' ' + EXTENSION_NAME_POSTFIX : manifest.name,
+                    externally_connectable: {
+                      ...manifest.externally_connectable,
+                      matches:
+                        BUILD_ENV === 'prod'
+                          ? ['https://app.uniswap.org/*']
+                          : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
+                    },
                   },
-                  {
-                    id: 'ethereum',
-                    matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
-                    js: ['ethereum.js'],
-                    run_at: 'document_start',
-                    // Ethereum provider must run in the MAIN world to attach to window.ethereum
-                    world: 'MAIN',
-                    all_frames: true,
-                  },
-                ],
-              }
-
-              return Buffer.from(JSON.stringify(transformedManifest, null, 2))
+                  null,
+                  2,
+                ),
+              )
             },
           },
           {
-            from: 'src/public/assets/fonts/*.{woff,woff2,ttf}',
+            from: 'src/assets/fonts/*.{woff,woff2,ttf}',
             to: 'assets/fonts/[name][ext]',
             force: true,
           },
           {
-            from: 'src/public/assets/*.{png,svg}',
+            from: 'src/assets/*.{html,png,svg}',
             to: 'assets/[name][ext]',
             force: true,
           },
           {
-            from: `src/publicAssetsByEnv/${publicAssetsVariant}/*.{png,svg}`,
-            to: 'assets/[name][ext]',
+            from: 'src/*.{html,png,svg}',
+            to: '[name][ext]',
             force: true,
-          },
-          {
-            from: 'src/entrypoints/sidepanel/index.html',
-            to: 'sidepanel.html',
-            force: true,
-            transform(content) {
-              return content.toString().replace('src="loadSidebar.ts"', 'src="loadSidebar.js"')
-            },
-          },
-          {
-            from: 'src/entrypoints/fallback-popup/index.html',
-            to: 'fallback-popup.html',
-            force: true,
-            transform(content) {
-              return content.toString().replace('src="main.tsx"', 'src="popup.js"')
-            },
-          },
-          {
-            from: 'src/entrypoints/onboarding/index.html',
-            to: 'onboarding.html',
-            force: true,
-            transform(content) {
-              return content.toString().replace('src="main.tsx"', 'src="onboarding.js"')
-            },
-          },
-          {
-            from: 'src/entrypoints/unitagClaim/index.html',
-            to: 'unitagClaim.html',
-            force: true,
-            transform(content) {
-              return content.toString().replace('src="main.tsx"', 'src="unitagClaim.js"')
-            },
           },
         ],
       }),

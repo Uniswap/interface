@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex } from 'ui/src'
+import { Button, Flex, isWeb } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 type ReviewButtonProps = {
@@ -21,7 +20,7 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
     derivedSendInfo: { chainId },
   } = useSendContext()
 
-  const nativeCurrencySymbol = nativeOnChain(chainId).symbol
+  const nativeCurrencySymbol = NativeCurrency.onChain(chainId).symbol
 
   const insufficientGasFunds = warnings.warnings.some((warning) => warning.type === WarningLabel.InsufficientGasFunds)
 
@@ -29,7 +28,7 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
 
   const buttonText = insufficientGasFunds
     ? t('send.warning.insufficientFunds.title', {
-        currencySymbol: nativeCurrencySymbol ?? '',
+        currencySymbol: nativeCurrencySymbol,
       })
     : t('common.button.review')
 
@@ -39,7 +38,7 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
         <Button
           variant="branded"
           isDisabled={disableReviewButton}
-          size={isWebPlatform ? 'medium' : 'large'}
+          size={isWeb ? 'medium' : 'large'}
           testID={TestID.SendReview}
           onPress={onPress}
         >

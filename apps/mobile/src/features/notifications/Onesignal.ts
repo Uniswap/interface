@@ -1,12 +1,13 @@
 import { Linking } from 'react-native'
 import { OneSignal } from 'react-native-onesignal'
 import { NotificationType } from 'src/features/notifications/constants'
-import { startSilentPushListener } from 'src/features/notifications/SilentPushListener'
 import { config } from 'uniswap/src/config'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
-import { getUniqueId } from 'utilities/src/device/uniqueId'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
+import { isIOS } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 
@@ -16,17 +17,29 @@ export const initOneSignal = (): void => {
 
   OneSignal.initialize(config.onesignalAppId)
 
-  startSilentPushListener()
-
   OneSignal.Notifications.addEventListener('foregroundWillDisplay', (event) => {
     const notification = event.getNotification()
-    const additionalData = notification.additionalData as { notification_type?: string } | undefined
+    const additionalData = notification.additionalData as { notification_type?: string }
     const notificationType = additionalData?.notification_type
 
     let enabled = false
-
-    if (isAndroid) {
-      if (notificationType === NotificationType.UnfundedWalletReminder) {
+    // Some special notif filtering logic is needed for iOS
+    if (isIOS) {
+      switch (notificationType) {
+        case NotificationType.UnfundedWalletReminder:
+          enabled = getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.NotificationPriceAlertsIOS)
+          break
+        case NotificationType.PriceAlert:
+          enabled = getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.NotificationPriceAlertsIOS)
+          break
+        default:
+          enabled = false
+      }
+    } else {
+      if (
+        notificationType === NotificationType.UnfundedWalletReminder ||
+        notificationType === NotificationType.PriceAlert
+      ) {
         enabled = true
       }
     }
@@ -75,12 +88,6 @@ export const initOneSignal = (): void => {
 export const promptPushPermission = async (): Promise<boolean> => {
   const response = await OneSignal.Notifications.requestPermission(true)
   logger.debug('Onesignal', 'promptForPushNotificationsWithUserResponse', `Prompt response: ${response}`)
-
-  // Explicitly opt in to push notifications if permission was granted
-  if (response) {
-    OneSignal.User.pushSubscription.optIn()
-  }
-
   return response
 }
 

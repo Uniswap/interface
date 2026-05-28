@@ -1,19 +1,20 @@
+import { Action, AuthenticationTypes } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useLocation } from 'react-router'
+import { Navigate, useLocation } from 'react-router-dom'
+import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { usePasskeyImportContext } from 'src/app/features/onboarding/import/PasskeyImportContextProvider'
 import {
   InitiatePasskeyAuthLocationState,
   SelectImportMethodLocationState,
 } from 'src/app/features/onboarding/import/types'
-import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { bringWindowToFront, closeWindow, openPopupWindow } from 'src/app/navigation/utils'
 import { Button, Flex, IconButton, SpinningLoader, Text } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
+import { fetchChallengeRequest } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { parseMessage } from 'uniswap/src/extension/messagePassing/platform'
 import {
   ExtensionToInterfaceRequestType,
@@ -22,7 +23,6 @@ import {
   PasskeySignInFlowOpenedSchema,
 } from 'uniswap/src/extension/messagePassing/types/requests'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
-import { getPrivyEnums } from 'uniswap/src/features/passkey/embeddedWallet'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -114,7 +114,6 @@ function InitiatePasskeyAuthContent(): JSX.Element {
 
   const popupWindow = useRef<chrome.windows.Window | undefined>(undefined)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Only run once on mount to initiate auth flow, all handlers are created fresh each render
   useEffect(() => {
     let handleMessagePasskeySignInFlowOpened: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
     let handleMessagePasskeyCredentialRetrieved: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
@@ -129,8 +128,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       try {
         const requestId = uuid()
 
-        const { Action, AuthenticationTypes } = await getPrivyEnums()
-        const challengeResponse = await EmbeddedWalletApiClient.fetchChallengeRequest({
+        const challengeResponse = await fetchChallengeRequest({
           type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
           action: Action.EXPORT_SEED_PHRASE,
         })
@@ -163,7 +161,6 @@ function InitiatePasskeyAuthContent(): JSX.Element {
           message: unknown,
           _sender: unknown,
           sendResponse: (response: unknown) => void,
-          // eslint-disable-next-line max-params
         ) => {
           try {
             logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Message received', {
@@ -219,6 +216,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeySignInFlowOpened)
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeyCredentialRetrieved)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [showBringWindowToFrontButton, setShowBringWindowToFrontButton] = useState(false)
@@ -236,7 +234,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       // Will throw if window does not exist anymore.
       await chrome.windows.get(windowId)
       setShowBringWindowToFrontButton(true)
-    } catch {
+    } catch (e) {
       // Window does not exist anymore.
       navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
         replace: true,

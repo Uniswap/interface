@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { TradingApi } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import createSagaMiddleware from 'redux-saga'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions, transactionReducer } from 'uniswap/src/features/transactions/slice'
@@ -75,7 +75,7 @@ describe('TransactionRepositoryImplRedux', () => {
     typeInfo: mockTransactionTypeInfo,
     status: TransactionStatus.Pending,
     addedTime: Date.now(),
-    routing: TradingApi.Routing.CLASSIC,
+    routing: Routing.CLASSIC,
     options: {
       request: mockTransactionRequest,
     },
@@ -122,79 +122,6 @@ describe('TransactionRepositoryImplRedux', () => {
       const storedTx = state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]
       expect(storedTx).toBeDefined()
       expect(storedTx?.status).toBe(TransactionStatus.Success)
-    })
-  })
-
-  describe('updateTransaction with skipProcessing flag', () => {
-    it('should update a transaction without watching when skipProcessing is true', async () => {
-      // First add a transaction
-      store.dispatch(transactionActions.addTransaction(mockTransaction))
-
-      // Spy on the action creators to verify which one gets called
-      const updateTransactionSpy = jest.spyOn(transactionActions, 'updateTransaction')
-      const updateTransactionWithoutWatchSpy = jest.spyOn(transactionActions, 'updateTransactionWithoutWatch')
-
-      // Update the transaction with new status
-      const updatedTransaction = {
-        ...mockTransaction,
-        status: TransactionStatus.Success,
-      }
-
-      await repository.updateTransaction({ transaction: updatedTransaction, skipProcessing: true })
-
-      // Verify that runSagaEffect was called
-      expect(runSagaEffectSpy).toHaveBeenCalled()
-
-      // Verify that updateTransactionWithoutWatch was called, not updateTransaction
-      expect(updateTransactionWithoutWatchSpy).toHaveBeenCalledWith(updatedTransaction)
-      expect(updateTransactionSpy).not.toHaveBeenCalled()
-
-      // Check that the transaction was updated
-      const state = store.getState()
-      const storedTx = state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]
-      expect(storedTx).toBeDefined()
-      expect(storedTx?.status).toBe(TransactionStatus.Success)
-
-      // Cleanup spies
-      updateTransactionSpy.mockRestore()
-      updateTransactionWithoutWatchSpy.mockRestore()
-    })
-
-    it.each([
-      { skipProcessing: false, description: 'false' },
-      { skipProcessing: undefined, description: 'undefined' },
-    ])('should update a transaction with watching when skipProcessing is $description', async ({ skipProcessing }) => {
-      // First add a transaction
-      store.dispatch(transactionActions.addTransaction(mockTransaction))
-
-      // Spy on the action creators to verify which one gets called
-      const updateTransactionSpy = jest.spyOn(transactionActions, 'updateTransaction')
-      const updateTransactionWithoutWatchSpy = jest.spyOn(transactionActions, 'updateTransactionWithoutWatch')
-
-      // Update the transaction with new status
-      const updatedTransaction = {
-        ...mockTransaction,
-        status: TransactionStatus.Success,
-      }
-
-      await repository.updateTransaction({ transaction: updatedTransaction, skipProcessing })
-
-      // Verify that runSagaEffect was called
-      expect(runSagaEffectSpy).toHaveBeenCalled()
-
-      // Verify that updateTransaction was called, not updateTransactionWithoutWatch
-      expect(updateTransactionSpy).toHaveBeenCalledWith(updatedTransaction)
-      expect(updateTransactionWithoutWatchSpy).not.toHaveBeenCalled()
-
-      // Check that the transaction was updated
-      const state = store.getState()
-      const storedTx = state.transactions[mockAddress]?.[mockChainId]?.[mockTransaction.id]
-      expect(storedTx).toBeDefined()
-      expect(storedTx?.status).toBe(TransactionStatus.Success)
-
-      // Cleanup spies
-      updateTransactionSpy.mockRestore()
-      updateTransactionWithoutWatchSpy.mockRestore()
     })
   })
 

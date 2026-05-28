@@ -4,10 +4,10 @@ import { ViewProps } from 'react-native'
 import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
 import { Button, Flex, FlexProps, Loader, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
 const cardProps: FlexProps & ViewProps = {
   borderRadius: '$rounded20',
@@ -41,11 +41,11 @@ export function OnDeviceRecoveryWalletCard({
   const firstWalletInfo = targetWalletInfos[0]
   const remainingWalletCount = targetWalletInfos.length - 1
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to recalculate this only when loading, screenLoading changes
   useEffect(() => {
     if (!loading && screenLoading) {
       onLoadComplete(significantRecoveryWalletInfos.length)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, screenLoading])
 
   if (screenLoading || !firstWalletInfo) {

@@ -130,6 +130,10 @@ export const networkColors = {
     light: '#222222',
     dark: '#FCFC03',
   },
+  hyper: {
+    light: '#072723',
+    dark: '#97fce4',
+  },
   avalanche: {
     light: '#E84142',
     dark: '#E84142',
@@ -139,20 +143,12 @@ export const networkColors = {
     dark: '#FCFF52',
   },
   monad: {
-    light: '#735BF8',
+    light: '#836EF9',
     dark: '#836EF9',
-  },
-  solana: {
-    light: '#9945FF',
-    dark: '#9945FF',
   },
   soneium: {
     light: '#000000',
     dark: '#FFFFFF',
-  },
-  xlayer: {
-    light: '#A7A7A747',
-    dark: '#A7A7A724',
   },
   worldchain: {
     light: '#222222',
@@ -169,6 +165,14 @@ export const networkColors = {
   zksync: {
     light: '#3667F6',
     dark: '#3667F6',
+  },
+  xlayer: {
+    light: '#B08603',
+    dark: '#FFBF17',
+  },
+  megaeth: {
+    light: '#627EEA',
+    dark: '#627EEA',
   },
 }
 
@@ -188,21 +192,21 @@ const sporeLight = {
   surface1Hovered: '#FCFCFC',
   surface2: '#F9F9F9',
   surface2Hovered: '#F2F2F2',
-  surface3: 'rgba(19, 19, 19, 0.08)',
+  surface3: 'rgba(34,34,34,0.05)',
   surface3Solid: '#F2F2F2',
   surface3Hovered: 'rgba(19, 19, 19, 0.1)',
-  surface4: 'rgba(255, 255, 255, 0.64)',
+  surface4: 'rgba(19, 19, 19, 0.08)',
   surface5: 'rgba(0,0,0,0.04)',
   surface5Hovered: 'rgba(0,0,0,0.06)',
-  accent1: '#FF37C7',
-  accent1Hovered: '#E500A5',
-  accent2: 'rgba(255, 55, 199, 0.08)',
-  accent2Hovered: 'rgba(255, 55, 199, 0.12)',
-  accent2Solid: '#FFF3FC',
+  accent1: '#4673FA',
+  accent1Hovered: '#3C64DC',
+  accent2: 'rgba(70, 115, 250, 0.08)',
+  accent2Hovered: 'rgba(70, 115, 250, 0.12)',
+  accent2Solid: '#F0F4FF',
   accent3: '#222222',
   accent3Hovered: colors.black,
 
-  DEP_accentSoft: '#FC72FF33', //33 = 20%
+  DEP_accentSoft: '#4673FA33', //33 = 20%
   DEP_blue400: '#4C82FB',
 
   statusSuccess: '#0C8911',
@@ -243,16 +247,16 @@ const sporeDark = {
   surface4: 'rgba(255,255,255,0.20)',
   surface5: 'rgba(0,0,0,0.04)',
   surface5Hovered: 'rgba(0,0,0,0.06)',
-  accent1: '#FF37C7',
-  accent1Hovered: '#E500A5',
+  accent1: '#4673FA',
+  accent1Hovered: '#3C64DC',
 
-  accent2: 'rgba(255, 55, 199, 0.08)',
-  accent2Hovered: 'rgba(255, 55, 199, 0.12)',
-  accent2Solid: '#261621',
+  accent2: 'rgba(70, 115, 250, 0.08)',
+  accent2Hovered: 'rgba(70, 115, 250, 0.12)',
+  accent2Solid: '#1A1F2E',
   accent3: colors.white,
   accent3Hovered: '#F5F5F5',
 
-  DEP_accentSoft: '#FC72FF33', //33 = 20%
+  DEP_accentSoft: '#4673FA33', //33 = 20%
   DEP_blue400: '#4C82FB',
 
   statusSuccess: '#21C95E',
@@ -318,14 +322,14 @@ export const colorsLight = {
   statusWarning2: sporeLight.statusWarning2,
   statusWarning2Hovered: sporeLight.statusWarning2Hovered,
 
-  DEP_backgroundBranded: '#FCF7FF',
+  DEP_backgroundBranded: '#F0F4FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
 
-  DEP_accentBranded: DEP_accentColors.magentaVibrant,
-  DEP_shadowBranded: DEP_accentColors.magentaVibrant,
+  DEP_accentBranded: '#4673FA',
+  DEP_shadowBranded: '#4673FA',
 
-  DEP_brandedAccentSoft: DEP_accentColors.magenta100,
-  DEP_magentaDark: opacifyRaw(12, DEP_accentColors.magentaVibrant),
+  DEP_brandedAccentSoft: '#E8EDFF',
+  DEP_magentaDark: 'rgba(70, 115, 250, 0.12)',
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
@@ -339,14 +343,14 @@ export const colorsLight = {
   chain_7777777: networkColors.zora.light,
   chain_81457: networkColors.blast.light,
   chain_56: networkColors.bnb.light,
+  chain_999: networkColors.hyper.light,
   chain_42220: networkColors.celo.light,
   chain_43114: networkColors.avalanche.light,
   chain_324: networkColors.zksync.light,
   chain_480: networkColors.worldchain.light,
   chain_1868: networkColors.soneium.light,
   chain_196: networkColors.xlayer.light,
-  chain_501000101: networkColors.solana.light,
-  chain_143: networkColors.monad.light,
+  chain_4326: networkColors.megaeth.light,
 
   // Testnets
   chain_11155111: networkColors.ethereum.light,
@@ -408,14 +412,14 @@ export const colorsDark = {
   statusWarning2: sporeDark.statusWarning2,
   statusWarning2Hovered: sporeDark.statusWarning2Hovered,
 
-  DEP_backgroundBranded: '#100D1C',
+  DEP_backgroundBranded: '#0E1524',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),
 
   DEP_accentBranded: DEP_accentColors.magentaVibrant,
   // TODO(MOB-160): accommodate one-off color in cleaner way
-  DEP_shadowBranded: '#B60ACF',
+  DEP_shadowBranded: '#3C64DC',
 
-  DEP_brandedAccentSoft: '#46244F', // git blame Chelsy
+  DEP_brandedAccentSoft: '#1A1F2E',
   DEP_magentaDark: opacifyRaw(12, DEP_accentColors.magentaVibrant),
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
@@ -430,14 +434,14 @@ export const colorsDark = {
   chain_7777777: networkColors.zora.dark,
   chain_81457: networkColors.blast.dark,
   chain_56: networkColors.bnb.dark,
+  chain_999: networkColors.hyper.dark,
   chain_42220: networkColors.celo.dark,
   chain_43114: networkColors.avalanche.dark,
   chain_324: networkColors.zksync.dark,
   chain_480: networkColors.worldchain.dark,
   chain_1868: networkColors.soneium.dark,
   chain_196: networkColors.xlayer.dark,
-  chain_501000101: networkColors.solana.dark,
-  chain_143: networkColors.monad.dark,
+  chain_4326: networkColors.megaeth.dark,
 
   // Testnets
   chain_11155111: networkColors.ethereum.dark,

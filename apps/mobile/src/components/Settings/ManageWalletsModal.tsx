@@ -8,7 +8,6 @@ import {
   OnboardingStackNavigationProp,
   SettingsStackNavigationProp,
 } from 'src/app/navigation/types'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { RemoveWalletContent } from 'src/components/RemoveWallet/RemoveWalletContent'
 import {
   SettingsRow,
@@ -16,20 +15,21 @@ import {
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Button, Flex, IconProps, useSporeColors } from 'ui/src'
 import { Edit, Global } from 'ui/src/components/icons'
 import { Person } from 'ui/src/components/icons/Person'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -48,10 +48,8 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
   const { sessions } = useWalletConnect(address)
 
   const { defaultChainId } = useEnabledChains()
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: address ? { address } : undefined,
-  })
-  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId }).name
+  const { unitag } = useUnitagByAddress(address)
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
   const onlyLabeledWallet = ensName === null && unitag?.username === undefined
 
   const { canClaimUnitag } = useCanAddressClaimUnitag(address)
@@ -137,7 +135,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
           ...(currentAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet
             ? []
             : [editNicknameSectionOption]),
-          ...(unitag?.username !== undefined ? [editLabelSectionOption] : []),
+          ...(ensName === undefined || unitag?.username !== undefined ? [editLabelSectionOption] : []),
           {
             navigationModal: ModalName.ConnectionsDappListModal,
             text: t('settings.setting.wallet.connections.title'),
@@ -175,7 +173,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
               />
             </Flex>
 
-            {showUnitagBanner && (
+            {showUnitagBanner && currentAccount?.type === AccountType.SignerMnemonic && (
               <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} onPressClaim={onClose} />
             )}
 
@@ -190,7 +188,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
               />
             </Flex>
             <Flex row pb="$padding20" pt="$padding12">
-              <Button lineHeightDisabled variant="critical" emphasis="secondary" onPress={onRemoveWallet}>
+              <Button variant="critical" emphasis="secondary" onPress={onRemoveWallet}>
                 {t('settings.setting.wallet.action.remove')}
               </Button>
             </Flex>

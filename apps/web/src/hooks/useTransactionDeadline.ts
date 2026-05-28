@@ -1,12 +1,22 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useCallback } from 'react'
+import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { useAccount } from 'hooks/useAccount'
+import { useInterfaceMulticall } from 'hooks/useContract'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { useCallback, useMemo } from 'react'
+import { useAppSelector } from 'state/hooks'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { useInterfaceMulticall } from '~/hooks/useContract'
-import { useAppSelector } from '~/state/hooks'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
-// 5 minutes for L2 chains
-const L2_DEADLINE_FROM_NOW = 60 * 5
+export default function useTransactionDeadline(): BigNumber | undefined {
+  const { chainId } = useAccount()
+  const ttl = useAppSelector((state) => state.user.userDeadline)
+  const blockTimestamp = useCurrentBlockTimestamp()
+  return useMemo(
+    () => timestampToDeadline(chainId, BigNumber.from(blockTimestamp), ttl),
+    [blockTimestamp, chainId, ttl],
+  )
+}
 
 /**
  * Returns an asynchronous function which will get the block timestamp and combine it with user settings for a deadline.
@@ -18,19 +28,11 @@ export function useGetTransactionDeadline(): () => Promise<BigNumber | undefined
   const multicall = useInterfaceMulticall(chainId)
   return useCallback(async () => {
     const blockTimestamp = await multicall.getCurrentBlockTimestamp()
-    return timestampToDeadline({ chainId, blockTimestamp, ttl })
+    return timestampToDeadline(chainId, blockTimestamp, ttl)
   }, [chainId, multicall, ttl])
 }
 
-function timestampToDeadline({
-  chainId,
-  blockTimestamp,
-  ttl,
-}: {
-  chainId?: number
-  blockTimestamp?: BigNumber
-  ttl?: number
-}) {
+function timestampToDeadline(chainId?: number, blockTimestamp?: BigNumber, ttl?: number) {
   if (blockTimestamp && isL2ChainId(chainId)) {
     return blockTimestamp.add(L2_DEADLINE_FROM_NOW)
   }

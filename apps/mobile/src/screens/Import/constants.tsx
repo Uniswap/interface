@@ -1,26 +1,19 @@
 import React from 'react'
 import { OSDynamicCloudIcon, PaperStack, Passkey } from 'ui/src/components/icons'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 
-type ImportMethodScreens =
-  | OnboardingScreens.SeedPhraseInput
-  | OnboardingScreens.RestoreCloudBackupLoading
-  | OnboardingScreens.RestoreCloudBackup
-  | OnboardingScreens.PasskeyImport
-  | OnboardingScreens.WatchWallet
-
-export interface ImportMethodOption<T extends ImportMethodScreens = ImportMethodScreens> {
+export interface ImportMethodOption<T extends OnboardingScreens = OnboardingScreens> {
   title: (t: AppTFunction) => string
   blurb: (t: AppTFunction) => string
   icon: React.ReactNode
   nav: T
   importType: ImportType
-  name: ElementName
+  name: ElementNameType
   testID: TestIDType
 }
 

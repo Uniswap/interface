@@ -1,18 +1,12 @@
-import { AdaptParent } from '@tamagui/adapt'
-import { useEffect, useId } from 'react'
-import { styled, Tooltip as TamaguiTooltip, withStaticProperties } from 'tamagui'
+import { Tooltip as TamaguiTooltip, styled, withStaticProperties } from 'tamagui'
 import { TooltipContentProps } from 'ui/src/components/tooltip/Tooltip'
-import { useEvent } from 'utilities/src/react/hooks'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export type { TooltipProps } from 'tamagui'
 
 const ANIMATION_OFFSET = 4
 
 const StyledContent = styled(TamaguiTooltip.Content)
-StyledContent.displayName = 'StyledContent'
-
-const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((props) => {
+const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((props, ref) => {
   const { animationDirection = 'top' } = props
 
   const animationStyles: {
@@ -38,10 +32,8 @@ const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((p
       break
   }
 
-  return <StyledContent enterStyle={animationStyles} exitStyle={animationStyles} {...props} />
+  return <StyledContent ref={ref} enterStyle={animationStyles} exitStyle={animationStyles} {...props} />
 })
-
-HigherOrderStyledContent.displayName = 'HigherOrderStyledContent'
 
 const Content = styled(HigherOrderStyledContent, {
   animation: 'simple',
@@ -67,22 +59,18 @@ const Content = styled(HigherOrderStyledContent, {
   },
 })
 
-Content.displayName = 'Content'
-
 const Arrow = styled(TamaguiTooltip.Arrow, {
-  size: '$spacing12',
-  backgroundColor: '$surface1',
-  borderWidth: 1,
-  borderColor: '$surface3',
+  '$theme-dark': {
+    borderWidth: 1,
+    borderColor: '$surface2',
+  },
   '$theme-light': {
     shadowColor: '$surface3',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: '$spacing8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: '$spacing16',
   },
 })
-
-Arrow.displayName = 'Arrow'
 
 const TooltipRoot = styled(TamaguiTooltip, {
   offset: {
@@ -92,42 +80,7 @@ const TooltipRoot = styled(TamaguiTooltip, {
   restMs: 200,
 })
 
-TooltipRoot.displayName = 'TooltipRoot'
-
-function TooltipBase(props: React.ComponentProps<typeof TamaguiTooltip>): JSX.Element {
-  const { open: openProp, onOpenChange, ...rest } = props
-
-  const isControlled = openProp !== undefined
-  const { value: isOpenInternal, setValue: setIsOpenInternal } = useBooleanState(openProp ?? false)
-
-  const currentOpen = isControlled ? openProp : isOpenInternal
-
-  // Generate a unique scope to isolate this tooltip from parent Adapt contexts (e.g., AdaptiveWebModal).
-  // Without this, when rendered inside a component using Adapt (like a bottom sheet modal),
-  // the tooltip content gets captured by the parent's Adapt and renders as sheet content instead of floating.
-  const tooltipAdaptScope = `TooltipIsolated${useId()}`
-
-  useEffect(() => {
-    if (isControlled) {
-      setIsOpenInternal(openProp)
-    }
-  }, [isControlled, setIsOpenInternal, openProp])
-
-  const handleOpenChange = useEvent((nextOpen: boolean) => {
-    if (!isControlled) {
-      setIsOpenInternal(nextOpen)
-    }
-    onOpenChange?.(nextOpen)
-  })
-
-  return (
-    <AdaptParent scope={tooltipAdaptScope}>
-      <TooltipRoot open={currentOpen} onOpenChange={handleOpenChange} {...rest} />
-    </AdaptParent>
-  )
-}
-
-export const Tooltip = withStaticProperties(TooltipBase, {
+export const Tooltip = withStaticProperties(TooltipRoot, {
   Trigger: TamaguiTooltip.Trigger,
   Content,
   Arrow,

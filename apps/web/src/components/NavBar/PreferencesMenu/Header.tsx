@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Flex, styled, Text } from 'ui/src'
+import { Flex, Text, styled } from 'ui/src'
 import { ChevronLeft } from 'ui/src/components/icons/ChevronLeft'
 
 const Header = styled(Flex, {

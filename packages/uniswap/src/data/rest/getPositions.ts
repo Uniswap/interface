@@ -1,65 +1,49 @@
 import { PartialMessage } from '@bufbuild/protobuf'
-import { ConnectError, createPromiseClient } from '@connectrpc/connect'
+import { ConnectError } from '@connectrpc/connect'
+import { createQueryOptions, useInfiniteQuery, useQuery } from '@connectrpc/connect-query'
+import { Pair as FewPair } from '@ring-protocol/few-v2-sdk'
 import {
   InfiniteData,
-  infiniteQueryOptions,
-  keepPreviousData,
-  queryOptions,
   UseInfiniteQueryResult,
   UseQueryResult,
-  useInfiniteQuery,
+  keepPreviousData,
   useQueries,
-  useQuery,
 } from '@tanstack/react-query'
-import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
+import { getPosition, listPositions } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
 import {
-  GetPositionRequest,
   GetPositionResponse,
   ListPositionsRequest,
   ListPositionsResponse,
-} from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+} from '@uniswap/client-pools/dist/pools/v1/api_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
-import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
-import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
+import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 import { deserializeToken } from 'uniswap/src/utils/currency'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-
-const positionsClient = createPromiseClient(DataApiService, uniswapPostTransport)
 
 export function useGetPositionsQuery(
   input?: PartialMessage<ListPositionsRequest>,
   disabled?: boolean,
 ): UseQueryResult<ListPositionsResponse, ConnectError> {
-  return useQuery(
-    queryOptions({
-      queryKey: [ReactQueryCacheKey.ListPositions, input] as const,
-      queryFn: () => positionsClient.listPositions(input ?? {}),
-      enabled: !!input && !disabled,
-      placeholderData: keepPreviousData,
-    }),
-  )
+  return useQuery(listPositions, input, {
+    transport: uniswapGetTransport,
+    enabled: !!input && !disabled,
+    placeholderData: keepPreviousData,
+  })
 }
 
 export function useGetPositionsInfiniteQuery(
-  input: PartialMessage<ListPositionsRequest>,
+  input: PartialMessage<ListPositionsRequest> & { pageToken: string },
   disabled?: boolean,
 ): UseInfiniteQueryResult<InfiniteData<ListPositionsResponse>, ConnectError> {
-  return useInfiniteQuery(
-    infiniteQueryOptions({
-      queryKey: [ReactQueryCacheKey.ListPositions, 'infinite', input] as const,
-      queryFn: ({ pageParam }: { pageParam?: string }) =>
-        positionsClient.listPositions({
-          ...input,
-          pageToken: pageParam,
-        }),
-      initialPageParam: undefined,
-      getNextPageParam: (lastPage) => lastPage.nextPageToken || undefined,
-      enabled: !disabled,
-      placeholderData: keepPreviousData,
-    }),
-  )
+  return useInfiniteQuery(listPositions, input, {
+    transport: uniswapGetTransport,
+    enabled: !!input && !disabled,
+    pageParamKey: 'pageToken',
+    getNextPageParam: (lastPage) => lastPage.nextPageToken,
+    placeholderData: keepPreviousData,
+  })
 }
 
 export function useGetPositionsForPairs(
@@ -71,7 +55,7 @@ export function useGetPositionsForPairs(
   account?: Address,
 ): UseQueryResult<GetPositionResponse, ConnectError>[] {
   const positionsQueryOptions = useMemo(() => {
-    return Object.keys(serializedPairs)
+    return Object.keys(serializedPairs || {})
       .flatMap((chainId) => {
         const pairsForChain = serializedPairs[Number(chainId)]
         if (!pairsForChain) {
@@ -84,24 +68,69 @@ export function useGetPositionsForPairs(
           }
           const [token0, token1] = [deserializeToken(pair.token0), deserializeToken(pair.token1)]
           const pairAddress = Pair.getAddress(token0, token1)
-          const requestInput: PartialMessage<GetPositionRequest> | undefined = account
-            ? {
-                chainId: Number(chainId),
-                protocolVersion: ProtocolVersion.V2,
-                pairAddress,
-                owner: account,
-              }
-            : undefined
-
-          return queryOptions({
-            queryKey: [ReactQueryCacheKey.GetPosition, requestInput] as const,
-            queryFn: () => positionsClient.getPosition(requestInput ?? {}),
-            enabled: !!requestInput,
-          })
+          return createQueryOptions(
+            getPosition,
+            account
+              ? {
+                  chainId: Number(chainId),
+                  protocolVersion: ProtocolVersion.V2,
+                  pairAddress,
+                  owner: account,
+                }
+              : undefined,
+            { transport: uniswapGetTransport },
+          )
         })
       })
       .filter(isDefined)
   }, [serializedPairs, account])
+
+  return useQueries({
+    queries: positionsQueryOptions,
+  })
+}
+
+export function useGetPositionsForFewPairs(
+  serializedFewPairs: {
+    [chainId: number]: {
+      [key: string]: { token0: SerializedToken; token1: SerializedToken }
+    }
+  },
+  account?: Address,
+): UseQueryResult<GetPositionResponse, ConnectError>[] {
+  const positionsQueryOptions = useMemo(() => {
+    return Object.keys(serializedFewPairs || {})
+      .flatMap((chainId) => {
+        const pairsForChain = serializedFewPairs[Number(chainId)]
+        if (!pairsForChain) {
+          return []
+        }
+        return Object.keys(pairsForChain).map((pairId) => {
+          const pair = pairsForChain[pairId]
+          if (!pair) {
+            return undefined
+          }
+          const [token0, token1] = [deserializeToken(pair.token0), deserializeToken(pair.token1)]
+          // For FewV2, we query using V2 protocolVersion, and parseRestPosition will identify it as FewV2
+          // We need to use the liquidityToken address from the serialized pair, but we don't have it here
+          // So we'll compute the V2 pair address as a fallback, but the API should return the correct FewV2 position
+          const pairAddress = FewPair.getAddress(token0, token1)
+          return createQueryOptions(
+            getPosition,
+            account
+              ? {
+                  chainId: Number(chainId),
+                  protocolVersion: ProtocolVersion.Fewv2, // Use V2 to query, parseRestPosition will identify as FewV2
+                  pairAddress,
+                  owner: account,
+                }
+              : undefined,
+            { transport: uniswapGetTransport },
+          )
+        })
+      })
+      .filter(isDefined)
+  }, [serializedFewPairs, account])
 
   return useQueries({
     queries: positionsQueryOptions,

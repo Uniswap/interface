@@ -1,69 +1,71 @@
 /* eslint-disable max-lines */
-
-import type {
+import { SwapEventName } from '@uniswap/analytics-events'
+import { providers } from 'ethers/lib/ethers'
+import { useMemo } from 'react'
+import {
+  AggregatorQuoteResponse,
   BridgeQuoteResponse,
   ClassicQuoteResponse,
   DiscriminatedQuoteResponse,
-  GasEstimate,
-  GasFeeResult,
-  GasStrategy,
-  UnwrapQuoteResponse,
-  WrapQuoteResponse,
-} from '@universe/api'
-import { TradingApi } from '@universe/api'
-import type { providers } from 'ethers/lib/ethers'
-import { useMemo } from 'react'
+} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
+import {
+  BridgeQuote,
+  ClassicQuote,
+  CreateSwapRequest,
+  NullablePermit,
+  QuoteResponse,
+  Routing,
+  TransactionFailureReason,
+} from 'uniswap/src/data/tradingApi/__generated__/index'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { convertGasFeeToDisplayValue, useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
-import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
+import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
-import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
+import { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTokenApprovalInfo'
+import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
+import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import {
-  SlippageTooLowError,
-  UnknownSimulationError,
-} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
-import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
-import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
-import type {
+  AggregatorSwapTxAndGasInfo,
   BaseSwapTxAndGasInfo,
   BridgeSwapTxAndGasInfo,
   ClassicSwapTxAndGasInfo,
+  PermitMethod,
   SwapGasFeeEstimation,
-  WrapSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import type {
+import {
+  AggregatorTrade,
+  ApprovalAction,
   BridgeTrade,
   ClassicTrade,
   TokenApprovalInfo,
-  UnwrapTrade,
-  WrapTrade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
-import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { mergeGasFeeResults } from 'uniswap/src/features/transactions/swap/utils/gas'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isAggregator, isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
+  ValidatedTransactionRequest,
   validatePermit,
   validateTransactionRequest,
   validateTransactionRequests,
 } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { SWAP_GAS_URGENCY_OVERRIDE } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import { SWAP_GAS_URGENCY_OVERRIDE, isClassicQuote } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isMobileApp, isWebApp } from 'utilities/src/platform'
-import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
+import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
+import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export interface TransactionRequestInfo {
   txRequests: providers.TransactionRequest[] | undefined
-  permitData?: TradingApi.NullablePermit
+  permitData?: NullablePermit
   gasFeeResult: GasFeeResult
   gasEstimate: SwapGasFeeEstimation
-  swapRequestArgs: TradingApi.CreateSwapRequest | undefined
+  swapRequestArgs: CreateSwapRequest | undefined
   includesDelegation?: boolean
 }
 
@@ -81,7 +83,7 @@ export function processWrapResponse({
   const wrapTxRequestWithGasFee = { ...wrapTxRequest, ...gasParams }
 
   const gasEstimate: SwapGasFeeEstimation = {
-    wrapEstimate: gasFeeResult.gasEstimate,
+    wrapEstimates: gasFeeResult.gasEstimates,
   }
 
   return {
@@ -92,7 +94,13 @@ export function processWrapResponse({
   }
 }
 
-export function createPrepareSwapRequestParams({ gasStrategy }: { gasStrategy: GasStrategy }) {
+export function createPrepareSwapRequestParams({
+  activeGasStrategy,
+  shadowGasStrategies,
+}: {
+  activeGasStrategy: GasStrategy
+  shadowGasStrategies: GasStrategy[]
+}) {
   return function prepareSwapRequestParams({
     swapQuoteResponse,
     signature,
@@ -100,14 +108,14 @@ export function createPrepareSwapRequestParams({ gasStrategy }: { gasStrategy: G
     alreadyApproved,
     overrideSimulation,
   }: {
-    swapQuoteResponse: ClassicQuoteResponse | BridgeQuoteResponse | WrapQuoteResponse | UnwrapQuoteResponse
+    swapQuoteResponse: ClassicQuoteResponse | BridgeQuoteResponse | AggregatorQuoteResponse
     signature: string | undefined
-    transactionSettings: TransactionSettings
+    transactionSettings: TransactionSettingsContextState
     alreadyApproved: boolean
     overrideSimulation?: boolean
-  }): TradingApi.CreateSwapRequest {
-    const isBridgeTrade = swapQuoteResponse.routing === TradingApi.Routing.BRIDGE
-    const permitData = swapQuoteResponse.permitData
+  }): CreateSwapRequest {
+    const isBridgeTrade = swapQuoteResponse?.routing === Routing.BRIDGE
+    const permitData = swapQuoteResponse?.permitData
 
     /**
      * Simulate transactions to ensure they will not fail on-chain.
@@ -127,7 +135,7 @@ export function createPrepareSwapRequestParams({ gasStrategy }: { gasStrategy: G
       simulateTransaction: shouldSimulateTxn,
       deadline,
       refreshGasPrice: true,
-      gasStrategies: [gasStrategy],
+      gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
     }
   }
@@ -154,11 +162,12 @@ export function getShouldSkipSwapRequest({
 }): boolean {
   const { trade } = derivedSwapInfo.trade
 
-  const requiresPermit2Sig = !!trade?.quote.permitData
+  const requiresPermit2Sig = !!trade?.quote?.permitData
   const missingSig = requiresPermit2Sig && !signature && !permitsDontNeedSignature
-  const approvalInfoMissing = !tokenApprovalInfo?.action || tokenApprovalInfo.action === ApprovalAction.Unknown
+  const approvalInfoMissing = !tokenApprovalInfo?.action || tokenApprovalInfo?.action === ApprovalAction.Unknown
+  const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable
 
-  return getSwapInputExceedsBalance({ derivedSwapInfo }) || approvalInfoMissing || missingSig
+  return isWrapApplicable || getSwapInputExceedsBalance({ derivedSwapInfo }) || approvalInfoMissing || missingSig
 }
 
 /** Returns an error if simulation fails on backend and we expect the swap transaction to fail */
@@ -166,32 +175,29 @@ export function getSimulationError({
   swapQuote,
   isRevokeNeeded,
 }: {
-  swapQuote: TradingApi.ClassicQuote | TradingApi.BridgeQuote | undefined
+  swapQuote: ClassicQuote | BridgeQuote | undefined
   isRevokeNeeded: boolean
 }): Error | null {
-  if (!swapQuote || !('txFailureReasons' in swapQuote)) {
+  if (!isClassicQuote(swapQuote)) {
     return null
   }
 
-  const validSimulationErrors = swapQuote.txFailureReasons?.filter((reason) => {
-    const isExpectedErrorFromRevoke = isRevokeNeeded && reason === TradingApi.TransactionFailureReason.SIMULATION_ERROR
+  const validSimulationErrors = swapQuote?.txFailureReasons?.filter((reason) => {
+    const isExpectedErrorFromRevoke = isRevokeNeeded && reason === TransactionFailureReason.SIMULATION_ERROR
     return !isExpectedErrorFromRevoke
   })
 
-  // TODO(SWAP-415): review why we're only returning some errors and ignoring the rest.
-
-  if (validSimulationErrors?.includes(TradingApi.TransactionFailureReason.SLIPPAGE_TOO_LOW)) {
-    return new SlippageTooLowError()
-  }
-
-  if (validSimulationErrors?.includes(TradingApi.TransactionFailureReason.SIMULATION_ERROR)) {
-    return new UnknownSimulationError()
+  if (
+    validSimulationErrors?.includes(TransactionFailureReason.SIMULATION_ERROR) ||
+    validSimulationErrors?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
+  ) {
+    return new Error(UNKNOWN_SIM_ERROR)
   }
 
   return null
 }
 
-export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStrategy }) {
+export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStrategy: GasStrategy }) {
   return function processSwapResponse({
     response,
     error,
@@ -204,23 +210,23 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
   }: {
     response: SwapData | undefined
     error: Error | null
-    swapQuote: TradingApi.ClassicQuote | TradingApi.BridgeQuote | undefined
+    swapQuote: ClassicQuote | BridgeQuote | undefined
     isSwapLoading: boolean
-    permitData: TradingApi.NullablePermit | undefined
-    swapRequestParams: TradingApi.CreateSwapRequest | undefined
+    permitData: NullablePermit | undefined
+    swapRequestParams: CreateSwapRequest | undefined
     isRevokeNeeded: boolean
     permitsDontNeedSignature?: boolean
   }): TransactionRequestInfo {
     // We use the gasFee estimate from quote, as its more accurate
     const swapGasFee = {
       value: swapQuote?.gasFee,
-      displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, gasStrategy),
+      displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, activeGasStrategy),
     }
 
     // This is a case where simulation fails on backend, meaning txn is expected to fail
     const simulationError = getSimulationError({ swapQuote, isRevokeNeeded })
 
-    const gasEstimateError = simulationError ?? error
+    const gasEstimateError = simulationError ? new Error(UNKNOWN_SIM_ERROR) : error
 
     const gasFeeResult = {
       value: swapGasFee.value,
@@ -229,8 +235,15 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
       error: gasEstimateError,
     }
 
-    const gasEstimate: SwapGasFeeEstimation = {
-      swapEstimate: response?.gasEstimate,
+    const activeGasEstimate = response?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
+    const swapGasEstimate: GasFeeEstimates | undefined = activeGasEstimate
+      ? {
+          activeEstimate: activeGasEstimate,
+          shadowEstimates: response?.gasEstimates?.filter((e) => e !== activeGasEstimate),
+        }
+      : undefined
+    const gasEstimate = {
+      swapEstimates: swapGasEstimate,
     }
 
     return {
@@ -244,6 +257,18 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
   }
 }
 
+/** Extracts classic or bridge quote from a quote response */
+export function getBridgeOrClassicQuoteResponse({
+  quote,
+}: {
+  quote: QuoteResponse | undefined
+}): BridgeQuoteResponse | ClassicQuoteResponse | AggregatorQuoteResponse | undefined {
+  if (quote && (isClassic(quote) || isBridge(quote) || isAggregator(quote))) {
+    return quote as BridgeQuoteResponse | ClassicQuoteResponse | AggregatorQuoteResponse
+  }
+  return undefined
+}
+
 export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) {
   return function logSwapRequestErrors({
     txRequest,
@@ -255,7 +280,7 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
     txRequest: providers.TransactionRequest | undefined
     gasFeeResult: GasFeeResult
     derivedSwapInfo: DerivedSwapInfo
-    transactionSettings: TransactionSettings
+    transactionSettings: TransactionSettingsContextState
     previousRequestId: string | undefined
   }): void {
     const quote = derivedSwapInfo.trade.trade?.quote
@@ -266,45 +291,26 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
       return
     }
 
-    const quoteId = 'quoteId' in quote.quote ? quote.quote.quoteId : undefined
+    const swapQuote = getBridgeOrClassicQuoteResponse({ quote })?.quote
 
-    // TODO(SWAP-415): review how we're logging these errors to avoid spamming the logs with things we don't need to log.
     if (gasFeeResult.error) {
-      const extra = {
+      logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, trace }),
         // we explicitly log it here to show on Datadog dashboard
         chainLabel: getChainLabel(derivedSwapInfo.chainId),
-        requestId: quote.requestId,
-        quoteId,
+        requestId: quote?.requestId,
+        quoteId: swapQuote?.quoteId,
         error: gasFeeResult.error,
-        simulationFailureReasons: isClassic(quote) ? quote.quote.txFailureReasons : undefined,
+        simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         txRequest,
-      }
+      })
 
-      if (gasFeeResult.error instanceof UnknownSimulationError || gasFeeResult.error instanceof SlippageTooLowError) {
-        logger.warn('utils', 'logSwapRequestErrors', gasFeeResult.error.message, extra)
-      } else {
-        const gasFeeResultError = new Error('Failed to get gas estimate')
-        gasFeeResultError.cause = gasFeeResult.error
-
-        logger.error(gasFeeResultError, {
-          tags: {
-            file: 'swapTxAndGasInfoService/utils.ts',
-            function: 'logSwapRequestErrors',
-          },
-          extra: {
-            errorMessage: gasFeeResult.error.message,
-            ...extra,
-          },
-        })
-      }
-
-      if (!(isMobileApp || isExtensionApp)) {
-        sendAnalyticsEvent(SwapEventName.SwapEstimateGasCallFailed, {
+      if (!(isMobileApp || isExtension)) {
+        sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
           ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, trace }),
           error: gasFeeResult.error,
           txRequest,
-          simulationFailureReasons: isClassic(quote) ? quote.quote.txFailureReasons : undefined,
+          simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         })
       }
     }
@@ -320,7 +326,7 @@ export function createGasFields({
   approvalTxInfo: ApprovalTxInfo
   permitTxInfo?: {
     gasFeeResult: GasFeeResult
-    gasEstimate?: GasEstimate
+    gasEstimate?: SwapGasFeeEstimation
   }
 }): Pick<BaseSwapTxAndGasInfo, 'gasFee' | 'gasFeeEstimation'> {
   const { approvalGasFeeResult, revokeGasFeeResult } = approvalTxInfo
@@ -334,7 +340,7 @@ export function createGasFields({
 
   const gasFeeEstimation: SwapGasFeeEstimation = {
     ...swapTxInfo.gasEstimate,
-    approvalEstimate: approvalGasFeeResult.gasEstimate,
+    approvalEstimates: approvalGasFeeResult.gasEstimates,
   }
 
   return {
@@ -349,8 +355,8 @@ export function createApprovalFields({
   approvalTxInfo: ApprovalTxInfo
 }): Pick<BaseSwapTxAndGasInfo, 'approveTxRequest' | 'revocationTxRequest'> {
   const { tokenApprovalInfo } = approvalTxInfo
-  const approveTxRequest = validateTransactionRequest(tokenApprovalInfo.txRequest)
-  const revocationTxRequest = validateTransactionRequest(tokenApprovalInfo.cancelTxRequest)
+  const approveTxRequest = validateTransactionRequest(tokenApprovalInfo?.txRequest)
+  const revocationTxRequest = validateTransactionRequest(tokenApprovalInfo?.cancelTxRequest)
 
   return {
     approveTxRequest,
@@ -371,12 +377,12 @@ export function getClassicSwapTxAndGasInfo({
   includesDelegation?: boolean
 }): ClassicSwapTxAndGasInfo {
   const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
-  const unsigned = Boolean(isWebApp && swapTxInfo.permitData)
+  const unsigned = Boolean(isInterface && swapTxInfo.permitData)
   const typedData = validatePermit(swapTxInfo.permitData)
 
   const permit = typedData
     ? ({ method: PermitMethod.TypedData, typedData } as const)
-    : permitTxInfo.permitTxRequest
+    : permitTxInfo?.permitTxRequest
       ? ({ method: PermitMethod.Transaction, txRequest: permitTxInfo.permitTxRequest } as const)
       : undefined
 
@@ -389,16 +395,56 @@ export function getClassicSwapTxAndGasInfo({
     unsigned,
     txRequests,
     permit,
-    includesDelegation: swapTxInfo.includesDelegation,
+    includesDelegation: swapTxInfo.includesDelegation ?? false,
+  }
+}
+
+export function getAggregatorSwapTxAndGasInfo({
+  trade,
+  swapTxInfo,
+  approvalTxInfo,
+  permitTxInfo,
+}: {
+  trade: AggregatorTrade
+  swapTxInfo: TransactionRequestInfo
+  approvalTxInfo: ApprovalTxInfo
+  permitTxInfo: PermitTxInfo
+  includesDelegation?: boolean
+}): AggregatorSwapTxAndGasInfo {
+  // console.log('getAggregatorSwapTxAndGasInfo input trade:', trade)
+  // console.log('getAggregatorSwapTxAndGasInfo input swapTxInfo:', swapTxInfo)
+  const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
+  const unsigned = Boolean(isInterface && swapTxInfo.permitData)
+  const typedData = validatePermit(swapTxInfo.permitData)
+
+  const permit = typedData
+    ? ({ method: PermitMethod.TypedData, typedData } as const)
+    : permitTxInfo?.permitTxRequest
+      ? ({ method: PermitMethod.Transaction, txRequest: permitTxInfo.permitTxRequest } as const)
+      : undefined
+
+  const result = {
+    routing: trade.routing,
+    trade,
+    ...createGasFields({ swapTxInfo, approvalTxInfo, permitTxInfo }),
+    ...createApprovalFields({ approvalTxInfo }),
+    swapRequestArgs: swapTxInfo.swapRequestArgs,
+    unsigned,
+    txRequests,
+    permit,
+    includesDelegation: swapTxInfo.includesDelegation ?? false,
+  }
+  return {
+    ...result,
+    routing: Routing.AGGREGATOR,
   }
 }
 
 type PermitTxInfo = {
   permitTxRequest: ValidatedTransactionRequest | undefined
   gasFeeResult: GasFeeResult
-  gasEstimate?: GasEstimate
+  gasEstimates?: GasFeeEstimates
 }
-
 const EMPTY_PERMIT_TX_INFO: PermitTxInfo = {
   permitTxRequest: undefined,
   gasFeeResult: {
@@ -409,15 +455,14 @@ const EMPTY_PERMIT_TX_INFO: PermitTxInfo = {
   },
 }
 
-export function usePermitTxInfo({
-  quote,
-}: {
-  quote?: DiscriminatedQuoteResponse | SolanaTrade['quote']
-}): PermitTxInfo {
-  const classicQuote = quote && isClassic(quote) ? quote : undefined
-  const gasStrategy = useActiveGasStrategy(classicQuote?.quote.chainId, 'swap')
+export function usePermitTxInfo({ quote }: { quote?: DiscriminatedQuoteResponse }): PermitTxInfo {
+  const classicQuote =
+    quote && (isClassic(quote) || isAggregator(quote))
+      ? (quote as ClassicQuoteResponse | AggregatorQuoteResponse)
+      : undefined
+  const activeGasStrategy = useActiveGasStrategy(classicQuote?.quote.chainId, 'swap')
 
-  const getPermitTxInfo = useMemo(() => createGetPermitTxInfo({ gasStrategy }), [gasStrategy])
+  const getPermitTxInfo = useMemo(() => createGetPermitTxInfo({ activeGasStrategy }), [activeGasStrategy])
   return useMemo(() => {
     if (!classicQuote) {
       return EMPTY_PERMIT_TX_INFO
@@ -427,8 +472,8 @@ export function usePermitTxInfo({
   }, [getPermitTxInfo, classicQuote])
 }
 
-export function createGetPermitTxInfo({ gasStrategy }: { gasStrategy: GasStrategy }) {
-  return function getPermitTxInfo({ quote }: { quote: ClassicQuoteResponse }): PermitTxInfo {
+export function createGetPermitTxInfo({ activeGasStrategy }: { activeGasStrategy: GasStrategy }) {
+  return function getPermitTxInfo({ quote }: { quote: ClassicQuoteResponse | AggregatorQuoteResponse }): PermitTxInfo {
     const permitTxRequest = validateTransactionRequest(quote.permitTransaction)
 
     if (!permitTxRequest) {
@@ -439,7 +484,7 @@ export function createGetPermitTxInfo({ gasStrategy }: { gasStrategy: GasStrateg
       permitTxRequest,
       gasFeeResult: {
         value: quote.permitGasFee,
-        displayValue: convertGasFeeToDisplayValue(quote.permitGasFee, gasStrategy),
+        displayValue: convertGasFeeToDisplayValue(quote.permitGasFee, activeGasStrategy),
         isLoading: false,
         error: null,
       },
@@ -464,28 +509,36 @@ export function getBridgeSwapTxAndGasInfo({
     ...createGasFields({ swapTxInfo, approvalTxInfo }),
     ...createApprovalFields({ approvalTxInfo }),
     txRequests,
-    includesDelegation: swapTxInfo.includesDelegation,
+    includesDelegation: swapTxInfo.includesDelegation ?? false,
   }
 }
 
 export function getWrapTxAndGasInfo({
-  trade,
   swapTxInfo,
+  approvalTxInfo,
 }: {
-  trade: WrapTrade | UnwrapTrade
   swapTxInfo: TransactionRequestInfo
-}): ClassicSwapTxAndGasInfo | WrapSwapTxAndGasInfo {
+  approvalTxInfo?: ApprovalTxInfo
+}): ClassicSwapTxAndGasInfo {
   const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
 
+  // For FewWrap, include approval fields if approval is needed
+  const approvalFields = approvalTxInfo
+    ? createApprovalFields({ approvalTxInfo })
+    : { approveTxRequest: undefined, revocationTxRequest: undefined }
+  const gasFields = approvalTxInfo
+    ? createGasFields({ swapTxInfo, approvalTxInfo })
+    : { gasFee: swapTxInfo.gasFeeResult, gasFeeEstimation: swapTxInfo.gasEstimate }
+
   return {
-    routing: trade.routing,
-    trade,
+    routing: Routing.CLASSIC,
     txRequests,
-    approveTxRequest: undefined,
-    revocationTxRequest: undefined,
-    gasFee: swapTxInfo.gasFeeResult,
-    gasFeeEstimation: swapTxInfo.gasEstimate,
-    includesDelegation: swapTxInfo.includesDelegation,
+    swapRequestArgs: swapTxInfo.swapRequestArgs,
+    permit: undefined,
+    unsigned: false,
+    ...approvalFields,
+    ...gasFields,
+    includesDelegation: swapTxInfo.includesDelegation ?? false,
   }
 }
 
@@ -499,13 +552,13 @@ export function getFallbackSwapTxAndGasInfo({
   const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
 
   return {
-    routing: TradingApi.Routing.CLASSIC,
+    routing: Routing.CLASSIC,
     ...createGasFields({ swapTxInfo, approvalTxInfo }),
     ...createApprovalFields({ approvalTxInfo }),
     txRequests,
     permit: undefined,
     swapRequestArgs: swapTxInfo.swapRequestArgs,
     unsigned: false,
-    includesDelegation: swapTxInfo.includesDelegation,
+    includesDelegation: swapTxInfo.includesDelegation ?? false,
   }
 }

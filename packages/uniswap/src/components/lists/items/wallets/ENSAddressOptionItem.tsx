@@ -5,7 +5,7 @@ import { OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
 import { ENSAddressOption } from 'uniswap/src/components/lists/items/types'
 import { WalletBaseOptionItem } from 'uniswap/src/components/lists/items/wallets/WalletBaseOptionItem'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useENSName } from 'uniswap/src/features/ens/api'
+import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { getCompletedENSName } from 'uniswap/src/features/ens/useENS'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -21,10 +21,10 @@ export function ENSAddressOptionItem({ ensAddressOption, onPress }: ENSAddressOp
   // Use `savedPrimaryEnsName` for WalletSearchResults that are stored in the search history
   // so that we don't have to do an additional ENS fetch when loading search history
   const { address, ensName, primaryENSName: savedPrimaryENSName, isRawName } = ensAddressOption
-  const formattedAddress = sanitizeAddressText(shortenAddress({ address }))
+  const formattedAddress = sanitizeAddressText(shortenAddress(address))
 
   // Get the completed name if it's not a raw name
-  const completedENSName = isRawName ? ensName : getCompletedENSName(ensName)
+  const completedENSName = isRawName ? ensName : getCompletedENSName(ensName ?? null)
 
   /*
    * Fetch primary ENS associated with `address` since it may resolve to an
@@ -42,10 +42,12 @@ export function ENSAddressOptionItem({ ensAddressOption, onPress }: ENSAddressOp
   const showOwnedBy = !isFetchingPrimaryENSName && !isPrimaryENSName
   const showAddress = !showOwnedBy
 
+  const { data: avatar } = useENSAvatar(address)
+
   return (
     <WalletBaseOptionItem
       option={ensAddressOption}
-      image={<AccountIcon address={address} size={iconSizes.icon40} />}
+      image={<AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon40} />}
       title={(completedENSName || formattedAddress) ?? ''}
       subtitle={
         <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheading2">

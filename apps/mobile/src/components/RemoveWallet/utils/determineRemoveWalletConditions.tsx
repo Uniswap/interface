@@ -1,4 +1,3 @@
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
@@ -57,13 +56,7 @@ export function determineRemoveWalletConditions({
 
   // Remove the specifically targeted account
   const targetAccount = accountsMap[targetAddress]
-  const isTargetSignerAccount = signerAccounts.some((acc) =>
-    // TODO(WALL-7065): Update to support solana
-    areAddressesEqual({
-      addressInput1: { address: targetAddress, platform: Platform.EVM },
-      addressInput2: { address: acc.address, platform: Platform.EVM },
-    }),
-  )
+  const isTargetSignerAccount = signerAccounts.some((acc) => areAddressesEqual(targetAddress, acc.address))
 
   const accountsToRemove = targetAccount ? [targetAccount] : []
   const hasAccountsLeftAfterRemoval = Object.keys(accountsMap).length > accountsToRemove.length

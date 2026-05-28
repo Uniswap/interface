@@ -1,4 +1,3 @@
-/* eslint-disable max-params */
 declare module 'react-native' {
   interface NativeModulesStatic {
     RNEthersRS: IKeyring

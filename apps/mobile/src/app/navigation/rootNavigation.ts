@@ -23,10 +23,9 @@ export function navigate<RouteName extends keyof RootParamList>(...args: RootNav
     return
   }
 
-  // Type assignment to `any` is a workaround until we figure out how to
+  // Type assignment to `never` is a workaround until we figure out how to
   // type `createNavigationContainerRef` in a way that's compatible
-  // biome-ignore lint/suspicious/noExplicitAny: Navigation refs need flexible typing
-  navigationRef.navigate(routeName as any, params as never)
+  navigationRef.navigate(routeName as never, params as never)
 }
 
 export function dispatchNavigationAction(

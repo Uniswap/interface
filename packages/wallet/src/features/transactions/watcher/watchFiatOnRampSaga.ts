@@ -1,7 +1,7 @@
 import { call, delay, put, race, select, take } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
-import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
+import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { forceFetchFiatOnRampTransactions, upsertFiatOnRampTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
@@ -18,11 +18,7 @@ export function* watchFiatOnRampTransaction(transaction: FORTransactionDetails):
   try {
     while (true) {
       const activeAddress = yield* select(selectActiveAccountAddress)
-      const updatedTransaction = yield* call(fetchFORTransaction, {
-        previousTransactionDetails: transaction,
-        forceFetch,
-        activeAccountAddress: activeAddress,
-      })
+      const updatedTransaction = yield* call(fetchFORTransaction, transaction, forceFetch, activeAddress)
 
       forceFetch = false
       // We've got an invalid response from backend

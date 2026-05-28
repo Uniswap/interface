@@ -9,7 +9,6 @@ export function OnboardingScreen(props: OnboardingScreenProps): null {
     if (!context) {
       return undefined
     }
-
     context.setOnboardingScreen(props)
     return () => {
       context.clearOnboardingScreen(props)

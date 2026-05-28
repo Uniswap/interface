@@ -1,40 +1,32 @@
-import { queryOptions, type UseQueryOptions } from '@tanstack/react-query'
-import { type DiscriminatedQuoteResponse, type TradingApi } from '@universe/api'
+import { UseQueryResult, skipToken } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { type TradeRepository } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeRepository'
-import { type QuoteWithTradeAndGasEstimate } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/transformQuoteToTrade'
-import { type Logger } from 'utilities/src/logger/logger'
+import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
+import { DiscriminatedQuoteResponse, fetchQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
+import { QuoteRequest } from 'uniswap/src/data/tradingApi/__generated__'
+import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-type QueryFnData = DiscriminatedQuoteResponse | null
+export function useTradingApiQuoteQuery({
+  params,
+  ...rest
+}: UseQueryWithImmediateGarbageCollectionApiHelperHookArgs<
+  QuoteRequest & { isUSDQuote?: boolean },
+  DiscriminatedQuoteResponse
+>): UseQueryResult<DiscriminatedQuoteResponse> {
+  const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.quote, params]
 
-export type TradingApiQuoteQueryOptions = UseQueryOptions<
-  QueryFnData,
-  Error,
-  QuoteWithTradeAndGasEstimate,
-  [ReactQueryCacheKey.TradingApi, string, (TradingApi.QuoteRequest & { isUSDQuote?: boolean }) | undefined]
->
-
-export type GetTradingApiQuoteQueryOptions = (params?: TradingApi.QuoteRequest) => TradingApiQuoteQueryOptions
-
-export function createGetTradingApiQuoteQueryOptions(ctx: {
-  select: (data: DiscriminatedQuoteResponse | null) => QuoteWithTradeAndGasEstimate
-  tradeRepository: TradeRepository
-  logger?: Logger
-}): GetTradingApiQuoteQueryOptions {
-  const getTradingApiQuoteQueryOptions = (params?: TradingApi.QuoteRequest): TradingApiQuoteQueryOptions => {
-    return queryOptions({
-      queryKey: [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.quote, params],
-      queryFn: async (): Promise<DiscriminatedQuoteResponse | null> => {
-        if (!params) {
-          return null
+  return useQueryWithImmediateGarbageCollection<DiscriminatedQuoteResponse>({
+    queryKey,
+    queryFn: params
+      ? async (): ReturnType<typeof fetchQuote> => {
+          const { isUSDQuote, ...fetchParams } = params
+          if (fetchParams.tokenInChainId) {
+            logSwapQuoteFetch({ chainId: fetchParams.tokenInChainId, isUSDQuote })
+          }
+          return await fetchQuote(fetchParams)
         }
-        return ctx.tradeRepository.fetchQuote(params)
-      },
-      enabled: !!params,
-      select: ctx.select,
-    })
-  }
-
-  return getTradingApiQuoteQueryOptions
+      : skipToken,
+    ...rest,
+  })
 }

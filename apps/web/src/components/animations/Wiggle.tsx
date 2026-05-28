@@ -1,59 +1,44 @@
-import { forwardRef, PropsWithChildren } from 'react'
+import { PropsWithChildren, useState } from 'react'
 import { Flex, FlexProps, useSporeColors } from 'ui/src'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
-const getWiggleKeyframe = ({ wiggleAmount = 20 }: { wiggleAmount?: number }) => {
-  return `
+const wiggleKeyframe = `
   @keyframes wiggle {
     0% {
       transform: rotate(0deg) scale(1);
     }
     30% {
-      transform: rotate(${wiggleAmount}deg) scale(1.05);
+      transform: rotate(20deg) scale(1.1);
     }
     60% {
-      transform: rotate(-${wiggleAmount / 2}deg) scale(1.1);
+      transform: rotate(-10deg) scale(1.2);
     }
     100% {
-      transform: rotate(0deg) scale(1.06);
+      transform: rotate(0deg) scale(1.15);
     }
   }
 `
-}
 
-export const Wiggle = forwardRef<
-  any,
-  PropsWithChildren<FlexProps> & { wiggleAmount?: number; iconColor?: string; isAnimating?: boolean }
->(({ wiggleAmount = 20, iconColor, children, isAnimating, ...props }, ref) => {
-  const { value: isHovering, setTrue: setIsHovering, setFalse: setIsHoveringFalse } = useBooleanState(false)
+export function Wiggle({ iconColor, children, ...props }: PropsWithChildren<FlexProps> & { iconColor?: string }) {
+  const [isHovering, setIsHovering] = useState(false)
   const colors = useSporeColors()
-  const wiggleKeyframe = getWiggleKeyframe({ wiggleAmount })
-  // Use external isAnimating prop if provided, otherwise use internal hover state
-  const shouldAnimate = isAnimating !== undefined ? isAnimating : isHovering
 
   return (
     <>
       <style>{wiggleKeyframe}</style>
       <Flex
-        ref={ref}
-        onHoverIn={setIsHovering}
-        onHoverOut={setIsHoveringFalse}
+        onHoverIn={() => setIsHovering(true)}
+        onHoverOut={() => setIsHovering(false)}
         {...props}
         style={{
-          animationName: shouldAnimate ? 'wiggle' : 'none',
-          animationDuration: '0.5s',
-          animationTimingFunction: 'ease-in-out',
-          animationFillMode: 'forwards',
+          animation: isHovering ? 'wiggle 0.5s ease-in-out forwards' : 'none',
           animationIterationCount: 1,
           animationDirection: 'normal',
           transition: 'fill 0.3s ease-in-out',
-          fill: shouldAnimate ? iconColor || colors.neutral1.val : colors.neutral1.val,
+          fill: isHovering ? iconColor || colors.neutral1.val : colors.neutral1.val,
         }}
       >
         {children}
       </Flex>
     </>
   )
-})
-
-Wiggle.displayName = 'Wiggle'
+}

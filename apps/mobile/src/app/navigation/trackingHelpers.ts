@@ -1,7 +1,7 @@
 import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
 import { NavigationContainerRefWithCurrent } from '@react-navigation/core'
 import { NavigationState } from '@react-navigation/native'
-import { navigationRef, navRefs } from 'src/app/navigation/navigationRef'
+import { navRefs, navigationRef } from 'src/app/navigation/navigationRef'
 import { datadogEnabledBuild } from 'utilities/src/environment/constants'
 
 /**

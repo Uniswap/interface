@@ -2,23 +2,22 @@ import { NavigationContainer } from '@react-navigation/native'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
+  render as RNRender,
+  renderHook as RNRenderHook,
   RenderHookOptions,
   RenderHookResult,
   RenderOptions,
   RenderResult,
-  render as RNRender,
-  renderHook as RNRenderHook,
 } from '@testing-library/react-native'
-import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import type { MobileState } from 'src/app/mobileReducer'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { store as appStore, persistedReducer } from 'src/app/store'
-import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
-import { mockUniswapContext } from 'uniswap/src/test/render'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 type AppStore = typeof appStore
@@ -26,7 +25,7 @@ type AppStore = typeof appStore
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
-  resolvers?: GraphQLApi.Resolvers
+  resolvers?: Resolvers
   preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }
@@ -47,7 +46,7 @@ export function renderWithProviders(
     store = configureStore({
       reducer: persistedReducer,
       preloadedState,
-      middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(fiatOnRampAggregatorApi.middleware),
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {},
@@ -56,17 +55,15 @@ export function renderWithProviders(
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <UniswapProvider {...mockUniswapContext}>
-        <AutoMockedApolloProvider resolvers={resolvers}>
-          <BlankUrlProvider>
-            <SharedWalletProvider reduxStore={store}>
-              <NavigationContainer ref={navigationRef}>
-                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-              </NavigationContainer>
-            </SharedWalletProvider>
-          </BlankUrlProvider>
-        </AutoMockedApolloProvider>
-      </UniswapProvider>
+      <AutoMockedApolloProvider resolvers={resolvers}>
+        <BlankUrlProvider>
+          <SharedWalletProvider reduxStore={store}>
+            <NavigationContainer ref={navigationRef}>
+              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+            </NavigationContainer>
+          </SharedWalletProvider>
+        </BlankUrlProvider>
+      </AutoMockedApolloProvider>
     )
   }
 
@@ -77,7 +74,7 @@ export function renderWithProviders(
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
-  resolvers?: GraphQLApi.Resolvers
+  resolvers?: Resolvers
   preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }
@@ -117,24 +114,22 @@ export function renderHookWithProviders<P, R>(
     store = configureStore({
       reducer: persistedReducer,
       preloadedState,
-      middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(fiatOnRampAggregatorApi.middleware),
     }),
     ...renderOptions
   } = (hookOptions ?? {}) as ExtendedRenderHookOptions<P>
 
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <UniswapProvider {...mockUniswapContext}>
-        <AutoMockedApolloProvider resolvers={resolvers}>
-          <BlankUrlProvider>
-            <NavigationContainer ref={navigationRef}>
-              <SharedWalletProvider reduxStore={store}>
-                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-              </SharedWalletProvider>
-            </NavigationContainer>
-          </BlankUrlProvider>
-        </AutoMockedApolloProvider>
-      </UniswapProvider>
+      <AutoMockedApolloProvider resolvers={resolvers}>
+        <BlankUrlProvider>
+          <NavigationContainer ref={navigationRef}>
+            <SharedWalletProvider reduxStore={store}>
+              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+            </SharedWalletProvider>
+          </NavigationContainer>
+        </BlankUrlProvider>
+      </AutoMockedApolloProvider>
     )
   }
 

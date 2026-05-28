@@ -10,17 +10,16 @@ module.exports = function (api) {
   plugins = [
     ...plugins,
 
-    // Disable compiler to fix mobile theme issues and media queries
-    // process.env.NODE_ENV === 'test'
-    //   ? null
-    //   : [
-    //       '@tamagui/babel-plugin',
-    //       {
-    //         components: ['ui'],
-    //         // experimentalFlattenThemesOnNative: true,
-    //         config: '../../packages/ui/src/tamagui.config.ts',
-    //       },
-    //     ],
+    process.env.NODE_ENV === 'test'
+      ? null
+      : [
+          '@tamagui/babel-plugin',
+          {
+            components: ['ui'],
+            // experimentalFlattenThemesOnNative: true,
+            config: '../../packages/ui/src/tamagui.config.ts',
+          },
+        ],
 
     [
       'module-resolver',

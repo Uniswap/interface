@@ -1,23 +1,18 @@
 import { opacifyRaw } from 'ui/src/theme'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { mockLogger } = vi.hoisted(() => ({
-  mockLogger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    setDatadogEnabled: vi.fn(),
+jest.mock('utilities/src/logger/logger', () => ({
+  logger: {
+    error: jest.fn(),
+    warn: jest.fn(),
   },
 }))
 
-vi.mock('utilities/src/logger/logger', () => ({
-  logger: mockLogger,
-}))
+// Import the mocked logger to make assertions
+import { logger } from 'utilities/src/logger/logger'
 
 describe(opacifyRaw, () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it.each`
@@ -44,7 +39,7 @@ describe(opacifyRaw, () => {
     ${110.99}    | ${'#aaaaaa'}                  | ${'Error: provided opacity 110.99 should be between 0 and 100'}
     ${-10}       | ${'#123456'}                  | ${'Error: provided opacity -10 should be between 0 and 100'}
     ${-10.11}    | ${'#123456'}                  | ${'Error: provided opacity -10.11 should be between 0 and 100'}
-    ${undefined} | ${'123456'}                   | ${'Error: provided color 123456 is neither a hex nor an rgb color'}
+    ${undefined} | ${'123456'}                   | ${'Error: provided opacity undefined should be between 0 and 100'}
     ${50}        | ${undefined}                  | ${"TypeError: Cannot read properties of undefined (reading 'startsWith')"}
     ${50}        | ${'123456'}                   | ${'Error: provided color 123456 is neither a hex nor an rgb color'}
     ${50}        | ${'#12'}                      | ${'Error: provided color #12 was not in hexadecimal format (e.g. #000000)'}
@@ -57,7 +52,7 @@ describe(opacifyRaw, () => {
     ${33.111111} | ${'rgba(255, 255, 255, 0.5)'} | ${'Error: provided color rgba(255, 255, 255, 0.5) is neither a hex nor an rgb color'}
   `('should throw an error when (amount=$amount, color=$color)', async ({ amount, color, expectedError }) => {
     opacifyRaw(amount, color)
-    expect(mockLogger.warn).toHaveBeenCalledWith(
+    expect(logger.warn).toHaveBeenCalledWith(
       'color/utils',
       'opacifyRaw',
       `Error opacifying color ${color} with opacity ${amount}: ${expectedError}`,

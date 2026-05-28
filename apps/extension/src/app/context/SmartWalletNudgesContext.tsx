@@ -1,23 +1,19 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react'
+import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useGet5792DappInfo } from 'src/app/hooks/useGet5792DappInfo'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { extractUrlHost } from 'utilities/src/format/urls'
 import { useEvent } from 'utilities/src/react/hooks'
-import { ONE_DAY_MS } from 'utilities/src/time/time'
+import { selectHasSeenCreatedSmartWalletModal } from 'wallet/src/features/behaviorHistory/selectors'
+import { setHasSeenSmartWalletCreatedWalletModal } from 'wallet/src/features/behaviorHistory/slice'
+import { useAccountCountChanged } from 'wallet/src/features/wallet/hooks'
+
+import { extractUrlHost } from 'utilities/src/format/urls'
 import {
   SmartWalletDelegationAction,
   useSmartWalletDelegationStatus,
-} from 'wallet/src/components/smartWallet/smartAccounts/hooks'
-import {
-  selectHasSeenCreatedSmartWalletModal,
-  selectHasShownEip5792Nudge,
-} from 'wallet/src/features/behaviorHistory/selectors'
-import {
-  setHasSeenSmartWalletCreatedWalletModal,
-  setHasShown5792Nudge,
-} from 'wallet/src/features/behaviorHistory/slice'
-import { useAccountCountChanged } from 'wallet/src/features/wallet/hooks'
+} from 'wallet/src/components/smartWallet/smartAccounts/hook'
+import { selectHasShownEip5792Nudge } from 'wallet/src/features/behaviorHistory/selectors'
+import { setHasShown5792Nudge } from 'wallet/src/features/behaviorHistory/slice'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
 type DappInfo = {
@@ -44,9 +40,12 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
     name?: string
   }>()
 
-  const openModal = useCallback((modal: ModalNameType): void => {
-    setActiveModal(modal)
-  }, [])
+  const openModal = useCallback(
+    (modal: ModalNameType): void => {
+      setActiveModal(modal)
+    },
+    [setActiveModal],
+  )
 
   const closeModal = useCallback((): void => {
     setActiveModal(null)
@@ -56,32 +55,20 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
   const delegationStatus = useSmartWalletDelegationStatus({ overrideAddress: last5792DappInfo?.activeConnectedAddress })
   const hasShownNudge = useSelector((state: WalletState) =>
     last5792DappInfo
-      ? selectHasShownEip5792Nudge(state, last5792DappInfo.activeConnectedAddress, last5792DappInfo.url)
+      ? selectHasShownEip5792Nudge(state, last5792DappInfo?.activeConnectedAddress, last5792DappInfo?.url)
       : false,
   )
-  // Check if home screen nudge was recently shown (24 hour cooldown)
-  const lastHomeScreenShown = useSelector((state: WalletState) =>
-    last5792DappInfo
-      ? state.behaviorHistory.smartWalletNudge?.[last5792DappInfo.activeConnectedAddress]?.lastHomeScreenNudgeShown
-      : undefined,
-  )
-
-  const hasRecentHomeScreenShown = lastHomeScreenShown ? Date.now() - lastHomeScreenShown < ONE_DAY_MS : false
 
   const shouldShowNudge =
-    !hasShownNudge &&
-    !hasRecentHomeScreenShown &&
-    delegationStatus.status === SmartWalletDelegationAction.PromptUpgrade &&
-    !delegationStatus.loading
+    !hasShownNudge && delegationStatus.status === SmartWalletDelegationAction.PromptUpgrade && !delegationStatus.loading
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: delegationStatus is used in shouldShowNudge calculation above
   useEffect(() => {
     if (last5792DappInfo && shouldShowNudge) {
       setDappInfo({
         icon: last5792DappInfo.iconUrl,
         name: last5792DappInfo.displayName || extractUrlHost(last5792DappInfo.url),
       })
-      openModal(ModalName.SmartWalletNudge)
+      openModal(ModalName.PostSwapSmartWalletNudge)
       dispatch(
         setHasShown5792Nudge({
           walletAddress: last5792DappInfo.activeConnectedAddress,

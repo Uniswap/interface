@@ -1,0 +1,258 @@
+import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
+import useSearchPopularTokensGql from 'appGraphql/data/SearchPopularTokens'
+import { GqlSearchToken } from 'appGraphql/data/SearchTokens'
+import { ChainLogo } from 'components/Logo/ChainLogo'
+import {
+  InterfaceRemoteSearchHistoryItem,
+  useRecentlySearchedAssets,
+} from 'components/NavBar/SearchBar/RecentlySearchedAssets'
+import { SkeletonRow, SuggestionRow, suggestionIsToken } from 'components/NavBar/SearchBar/SuggestionRow'
+import QuestionHelper from 'components/QuestionHelper'
+import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
+import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
+import { useEffect, useMemo, useState } from 'react'
+import { Clock, TrendingUp } from 'react-feather'
+import { Trans } from 'react-i18next'
+import { ThemedText } from 'theme/components'
+import { Flex, Text, styled, useScrollbarStyles } from 'ui/src'
+import Badge from 'uniswap/src/components/badge/Badge'
+import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isBackendSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+interface SearchBarDropdownSectionProps {
+  toggleOpen: () => void
+  suggestions: (InterfaceRemoteSearchHistoryItem | undefined)[]
+  header: JSX.Element
+  headerIcon?: JSX.Element
+  headerInfoText?: JSX.Element
+  hoveredIndex?: number
+  startingIndex: number
+  setHoveredIndex: (index: number | undefined) => void
+  isLoading?: boolean
+  eventProperties: InterfaceSearchResultSelectionProperties
+}
+
+function SearchBarDropdownSection({
+  toggleOpen,
+  suggestions,
+  header,
+  headerIcon = undefined,
+  headerInfoText,
+  hoveredIndex,
+  startingIndex,
+  setHoveredIndex,
+  isLoading,
+  eventProperties,
+}: SearchBarDropdownSectionProps) {
+  return (
+    <Flex gap="$spacing4" data-testid="searchbar-dropdown">
+      <Flex row alignItems="center" py="$spacing4" px="$spacing16">
+        <Flex row alignItems="center" gap="$spacing8">
+          {headerIcon ? headerIcon : null}
+          <Text variant="body3">{header}</Text>
+        </Flex>
+        {headerInfoText ? <QuestionHelper text={headerInfoText} /> : null}
+      </Flex>
+      <Flex gap="$spacing4">
+        {suggestions.map((suggestion, index) =>
+          isLoading || !suggestion ? (
+            <SkeletonRow key={index} />
+          ) : (
+            <SuggestionRow
+              key={suggestionIsToken(suggestion) ? `${suggestion.chain}-${suggestion.address ?? NATIVE_CHAIN_ID}` : ''}
+              suggestion={suggestion}
+              isHovered={hoveredIndex === index + startingIndex}
+              setHoveredIndex={setHoveredIndex}
+              toggleOpen={toggleOpen}
+              index={index + startingIndex}
+              eventProperties={{
+                ...eventProperties,
+                position: index + startingIndex,
+                selected_search_result_name: suggestion.name,
+                selected_search_result_address: suggestion.address,
+              }}
+            />
+          ),
+        )}
+      </Flex>
+    </Flex>
+  )
+}
+
+const ChainComingSoonBadge = styled(Badge, {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  opacity: 1,
+  p: '$8',
+  m: '$16 $16 $4',
+  width: 'calc(100% - 32px)',
+  gap: '$8',
+})
+
+interface SearchBarDropdownProps {
+  toggleOpen: () => void
+  tokens: GqlSearchToken[]
+  queryText: string
+  hasInput: boolean
+  isLoading: boolean
+}
+
+export function SearchBarDropdown(props: SearchBarDropdownProps) {
+  const { isLoading } = props
+  const account = useAccount()
+  const showChainComingSoonBadge = account.chainId && !isBackendSupportedChainId(account.chainId) && !isLoading
+  const scrollBarStyles = useScrollbarStyles()
+
+  return (
+    <Flex
+      width="100%"
+      backdropFilter="blur(60px)"
+      animation="fast"
+      opacity={isLoading ? 0.3 : 1}
+      style={scrollBarStyles}
+      $platform-web={{
+        overflowY: 'auto',
+      }}
+    >
+      <SuspenseWithPreviousRenderAsFallback>
+        <SuspendConditionally if={isLoading}>
+          <SearchBarDropdownContents {...props} />
+        </SuspendConditionally>
+      </SuspenseWithPreviousRenderAsFallback>
+      {showChainComingSoonBadge && account.chainId && (
+        <ChainComingSoonBadge>
+          <ChainLogo chainId={account.chainId} size={20} />
+          <ThemedText.BodySmall color="neutral2" fontSize="14px" fontWeight="400" lineHeight="20px">
+            <ComingSoonText chainId={account.chainId} />
+          </ThemedText.BodySmall>
+        </ChainComingSoonBadge>
+      )}
+    </Flex>
+  )
+}
+
+function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: SearchBarDropdownProps): JSX.Element {
+  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
+  const { data: searchHistory } = useRecentlySearchedAssets()
+  const shortenedHistory = useMemo(
+    () => searchHistory?.filter((item) => (item as Token).chain) ?? [...Array<GqlSearchToken>(2)],
+    [searchHistory],
+  )
+
+  const { data: popularTokenData } = useSearchPopularTokensGql()
+
+  const popularTokens = useMemo(
+    () => popularTokenData?.slice(0, 3) ?? [...Array<GqlSearchToken>(3)],
+    [popularTokenData],
+  )
+
+  const totalSuggestions = hasInput
+    ? tokens.length
+    : Math.min(shortenedHistory.length, 2) + (popularTokens?.length ?? 0)
+
+  // Navigate search results via arrow keys
+  useEffect(() => {
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        if (!hoveredIndex) {
+          setHoveredIndex(popularTokens.length - 1)
+        } else {
+          setHoveredIndex(hoveredIndex - 1)
+        }
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        if (hoveredIndex && hoveredIndex === totalSuggestions - 1) {
+          setHoveredIndex(0)
+        } else {
+          setHoveredIndex((hoveredIndex ?? -1) + 1)
+        }
+      }
+    }
+
+    document.addEventListener('keydown', keyDownHandler)
+
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
+  }, [toggleOpen, hoveredIndex, totalSuggestions, popularTokens.length])
+
+  const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
+
+  const eventProperties = {
+    total_suggestions: totalSuggestions,
+    query_text: queryText,
+    ...trace,
+  }
+  return hasInput ? (
+    <Flex gap="$spacing20">
+      {tokens.length > 0 ? (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={0}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={tokens}
+          eventProperties={{
+            suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
+            ...eventProperties,
+          }}
+          header={<Trans i18nKey="common.tokens" />}
+        />
+      ) : (
+        <Flex py="$spacing4" px="$spacing16">
+          <Text variant="body3">
+            <Trans i18nKey="tokens.noneFound" />
+          </Text>
+        </Flex>
+      )}
+    </Flex>
+  ) : (
+    // Recent Searches, Popular Tokens
+    <Flex gap="$spacing20">
+      {shortenedHistory.length > 0 && (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={0}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={shortenedHistory}
+          eventProperties={{
+            suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
+            ...eventProperties,
+          }}
+          header={<Trans i18nKey="tokens.selector.section.recent" />}
+          headerIcon={<Clock width={20} height={20} />}
+          isLoading={!searchHistory}
+        />
+      )}
+      <SearchBarDropdownSection
+        hoveredIndex={hoveredIndex}
+        startingIndex={shortenedHistory.length}
+        setHoveredIndex={setHoveredIndex}
+        toggleOpen={toggleOpen}
+        suggestions={popularTokens}
+        eventProperties={{
+          suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
+          ...eventProperties,
+        }}
+        header={<Trans i18nKey="explore.search.section.popularTokens" />}
+        headerIcon={<TrendingUp width={20} height={20} />}
+        headerInfoText={<Trans i18nKey="explore.search.section.popularTokenInfo" />}
+        isLoading={!popularTokenData}
+      />
+    </Flex>
+  )
+}
+
+function ComingSoonText({ chainId }: { chainId: UniverseChainId }) {
+  const chainName = getChainInfo(chainId).name
+  return !isBackendSupportedChainId(chainId) ? <Trans i18nKey="search.chainComing" values={{ chainName }} /> : null
+}

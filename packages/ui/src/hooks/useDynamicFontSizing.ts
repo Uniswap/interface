@@ -1,13 +1,11 @@
 import { useCallback, useRef, useState } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
 
-export interface FontSizeOptions {
-  maxCharWidthAtMaxFontSize: number
-  maxFontSize: number
-  minFontSize: number
-}
-
-export function useDynamicFontSizing({ maxCharWidthAtMaxFontSize, maxFontSize, minFontSize }: FontSizeOptions): {
+export function useDynamicFontSizing(
+  maxCharWidthAtMaxFontSize: number,
+  maxFontSize: number,
+  minFontSize: number,
+): {
   onLayout: (event: LayoutChangeEvent) => void
   fontSize: number
   onSetFontSize: (amount: string) => void
@@ -26,12 +24,7 @@ export function useDynamicFontSizing({ maxCharWidthAtMaxFontSize, maxFontSize, m
 
   const onSetFontSize = useCallback(
     (amount: string) => {
-      const stringWidth = getStringWidth({
-        value: amount,
-        maxCharWidthAtMaxFontSize,
-        currentFontSize: fontSize,
-        maxFontSize,
-      })
+      const stringWidth = getStringWidth(amount, maxCharWidthAtMaxFontSize, fontSize, maxFontSize)
       const scaledSize = fontSize * (textInputElementWidthRef.current / stringWidth)
       // If scaledSize = 0 then onLayout hasn't triggered yet and we should default to the largest size
       const scaledSizeWithMin = scaledSize ? Math.max(scaledSize, minFontSize) : maxFontSize
@@ -44,17 +37,12 @@ export function useDynamicFontSizing({ maxCharWidthAtMaxFontSize, maxFontSize, m
   return { onLayout, fontSize, onSetFontSize }
 }
 
-function getStringWidth({
-  value,
-  maxCharWidthAtMaxFontSize,
-  currentFontSize,
-  maxFontSize,
-}: {
-  value: string
-  maxCharWidthAtMaxFontSize: number
-  currentFontSize: number
-  maxFontSize: number
-}): number {
+const getStringWidth = (
+  value: string,
+  maxCharWidthAtMaxFontSize: number,
+  currentFontSize: number,
+  maxFontSize: number,
+): number => {
   const widthAtMaxFontSize = value.length * maxCharWidthAtMaxFontSize
   return widthAtMaxFontSize * (currentFontSize / maxFontSize)
 }

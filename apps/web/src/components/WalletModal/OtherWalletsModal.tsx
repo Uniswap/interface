@@ -1,24 +1,22 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
+import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
+import { Option } from 'components/WalletModal/Option'
+import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
+import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
+import { useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useAtom } from 'jotai'
 import React from 'react'
 import { Trans } from 'react-i18next'
+import { transitions } from 'theme/styles'
 import { Flex, Separator, Text } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { useShowMoonpayText } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useSetMenu } from '~/components/AccountDrawer/menuState'
-import ConnectionErrorView from '~/components/WalletModal/ConnectionErrorView'
-import PrivacyPolicyNotice from '~/components/WalletModal/PrivacyPolicyNotice'
-import { UniswapMobileWalletConnectorOption } from '~/components/WalletModal/UniswapMobileWalletConnectorOption'
-import { WalletConnectorOption } from '~/components/WalletModal/WalletConnectorOption'
-import { useRecentConnectorId } from '~/components/Web3Provider/constants'
-import { useOrderedWallets } from '~/features/wallet/connection/hooks/useOrderedWalletConnectors'
-import { transitions } from '~/theme/styles'
 
 export function OtherWalletsModal() {
   const showMoonpayText = useShowMoonpayText()
-  const setMenu = useSetMenu()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const wallets = useOrderedWallets({ showSecondaryConnectors: true })
+  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+  const connectors = useOrderedConnections({ showSecondaryConnectors: true })
   const recentConnectorId = useRecentConnectorId()
 
   return (
@@ -36,7 +34,7 @@ export function OtherWalletsModal() {
         <BackArrow
           color="$neutral2"
           size={20}
-          onPress={() => setMenu({ variant: MenuStateVariant.MAIN })}
+          onPress={() => setMenu(MenuState.DEFAULT)}
           mr="auto"
           hoverStyle={{ opacity: 0.8 }}
           cursor="pointer"
@@ -55,20 +53,17 @@ export function OtherWalletsModal() {
             transition={`${transitions.duration.fast} ${transitions.timing.inOut}`}
             data-testid="option-grid"
           >
-            {/* If uniswap mobile was the last used connector it will be show on the primary window */}
-            {/* If Embedded Wallet is enabled, it will be shown on the primary window */}
-            {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
-              !isEmbeddedWalletEnabled && (
-                <>
-                  <UniswapMobileWalletConnectorOption />
-                  {wallets.length > 0 && <Separator />}
-                </>
-              )}
-            {wallets.map((wallet, index) => (
-              <React.Fragment key={wallet.name}>
-                <WalletConnectorOption wallet={wallet} />
-                {index < wallets.length - 1 &&
-                  (isEmbeddedWalletEnabled ? <Flex height={2} backgroundColor="$surface1" /> : <Separator />)}
+            {/* If Ring mobile was the last used connector it will be show on the primary window */}
+            {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID && (
+              <>
+                <Option connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
+                {connectors.length > 0 && <Separator />}
+              </>
+            )}
+            {connectors.map((c, index) => (
+              <React.Fragment key={c.uid + index}>
+                <Option connectorId={c.id} detected={c.isInjected} />
+                {index < connectors.length - 1 && <Separator />}
               </React.Fragment>
             ))}
           </Flex>

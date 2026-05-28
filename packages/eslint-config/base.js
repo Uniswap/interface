@@ -40,10 +40,8 @@ module.exports = {
     'no-extra-boolean-cast': 'error',
     'object-shorthand': ['error', 'always'],
     'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
-    'max-lines': ['error', 500], // cap file length
     // Disallow unnecessary curly braces in JSX props and children
     'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
-    'max-params': ['error', { max: 2 }],
 
     // Rules within the standard React plugin
     'react/no-danger': 'error',
@@ -110,30 +108,13 @@ module.exports = {
       },
       rules: {
         'local-rules/prevent-this-method-destructure': 'error',
-        'local-rules/enforce-query-options-result': [
-          'error',
-          {
-            importPath: 'utilities/src/reactQuery/queryOptions',
-          },
-        ],
         curly: 'error',
-
-        // Disable dot-notation to allow TypeScript's noPropertyAccessFromIndexSignature
-        'dot-notation': 'off',
-        '@typescript-eslint/dot-notation': 'off',
-
         '@typescript-eslint/prefer-enum-initializers': 'error',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/ban-ts-ignore': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
-        '@typescript-eslint/no-unnecessary-condition': [
-          'error',
-          {
-            allowConstantLoopConditions: true,
-          },
-        ],
       },
     },
     // Non-Test Typescript Files
@@ -142,7 +123,6 @@ module.exports = {
       excludedFiles: ['*.test.ts', '*.test.tsx'],
       rules: {
         'no-console': 'error',
-        'local-rules/no-hex-string-casting': 'error',
         'react/forbid-elements': [
           'error',
           {
@@ -159,6 +139,7 @@ module.exports = {
     // Test Files
     {
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)', '*.e2e.js'],
+      excludedFiles: '**/cypress/**',
       env: {
         jest: true,
         'jest/globals': true,
@@ -166,12 +147,14 @@ module.exports = {
       extends: ['plugin:jest/recommended'],
       plugins: ['jest'],
     },
+    // Cypress Files
     {
-      // Allow test files to exceed max-lines limit
-      files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
-      rules: {
-        'max-lines': 'off',
+      files: ['**/cypress/**/*.[jt]s?(x)'],
+      env: {
+        'cypress/globals': true,
       },
+      extends: ['plugin:cypress/recommended'],
+      plugins: ['cypress'],
     },
   ],
 }

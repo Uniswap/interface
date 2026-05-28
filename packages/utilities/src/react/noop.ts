@@ -1,4 +1,4 @@
 /** No-op function. Returns `null` to satisfy most React typings. */
-export function noop(): null {
+export default function noop(): null {
   return null
 }

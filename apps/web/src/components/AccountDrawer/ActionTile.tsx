@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import { Flex, FlexProps, styled, Text, useSporeColors } from 'ui/src'
-import { SpinnerSVG } from '~/theme/components/icons/spinner'
+import { SpinnerSVG } from 'theme/components/icons/spinner'
+import { Flex, Text, styled, useSporeColors } from 'ui/src'
 
 const LoadingButtonSpinner = (props: React.ComponentPropsWithoutRef<'svg'>) => (
   <SpinnerSVG width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -16,7 +16,7 @@ const Tile = styled(Flex, {
   gap: '$gap12',
   userSelect: 'none',
   height: '100%',
-  flex: 1,
+  width: 'calc((100% - 8px) / 2)',
   display: 'flex',
   justifyContent: 'flex-start',
   p: '$padding12',
@@ -46,24 +46,15 @@ export type ActionTileProps = {
   onClick: () => void
   loading?: boolean
   disabled?: boolean
-  padding?: FlexProps['p']
 }
 
-export function ActionTile({
-  dataTestId,
-  Icon,
-  name,
-  onClick,
-  loading,
-  disabled,
-  padding = '$spacing12',
-}: ActionTileProps) {
+export function ActionTile({ dataTestId, Icon, name, onClick, loading, disabled }: ActionTileProps) {
   const { accent1 } = useSporeColors()
 
   return (
-    <Tile data-testid={dataTestId} onPress={onClick} disabled={disabled} p={padding}>
+    <Tile data-testid={dataTestId} onPress={onClick} disabled={disabled}>
       {loading ? <LoadingButtonSpinner height={28} width={28} fill={accent1.val} /> : Icon}
-      <Text variant="buttonLabel2" color="$accent1">
+      <Text variant="subheading2" color="$accent1">
         {name}
       </Text>
     </Tile>

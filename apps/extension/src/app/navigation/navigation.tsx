@@ -1,35 +1,28 @@
-import { useMutation } from '@tanstack/react-query'
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router'
-import { AutoLockProvider } from 'src/app/components/AutoLockProvider'
+import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { SmartWalletNudgeModals } from 'src/app/components/modals/SmartWalletNudgeModals'
-import { SmartWalletNudgesProvider } from 'src/app/context/SmartWalletNudgesContext'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
 import { ForceUpgradeModal } from 'src/app/features/forceUpgrade/ForceUpgradeModal'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
 import { NotificationToastWrapper } from 'src/app/features/notifications/NotificationToastWrapper'
+import { StorageWarningModal } from 'src/app/features/warnings/StorageWarningModal'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
-import { AppRoutes } from 'src/app/navigation/constants'
-import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
 import { HideContentsWhenSidebarBecomesInactive } from 'src/app/navigation/HideContentsWhenSidebarBecomesInactive'
-import { SidebarNavigationProvider } from 'src/app/navigation/providers'
+import { SideBarNavigationProvider } from 'src/app/navigation/SideBarNavigationProvider'
+import { AppRoutes } from 'src/app/navigation/constants'
 import { useRouterState } from 'src/app/navigation/state'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
-import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
-import { useEvent, usePrevious } from 'utilities/src/react/hooks'
+import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
-import { useHeartbeatReporter } from 'wallet/src/features/telemetry/hooks/useHeartbeatReporter'
-import { useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks/useLastBalancesReporter'
+import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
-import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { NativeWalletProvider } from 'wallet/src/features/wallet/providers/NativeWalletProvider'
 
 export function MainContent(): JSX.Element {
   const isOnboarded = useSelector(isOnboardedSelector)
@@ -41,22 +34,10 @@ export function MainContent(): JSX.Element {
 
   return (
     <>
-      <BackgroundServices />
+      <StorageWarningModal isOnboarding={false} />
       <HomeScreen />
     </>
   )
-}
-
-/**
- * Background side effects that run in the background and are not part of the main app.
- * A separate component is used to avoid unnecessary re-rendering of the main app when
- * these services are running.
- */
-function BackgroundServices(): JSX.Element {
-  const isOnboarded = useSelector(isOnboardedSelector)
-  useHeartbeatReporter({ isOnboarded })
-  useLastBalancesReporter({ isOnboarded })
-  return <></>
 }
 
 enum Direction {
@@ -135,11 +116,9 @@ export function WebNavigation(): JSX.Element {
             {isLoggedIn === null ? (
               <Loading />
             ) : isLoggedIn === true ? (
-              <AutoLockProvider>
-                <HideContentsWhenSidebarBecomesInactive>
-                  <LoggedIn />
-                </HideContentsWhenSidebarBecomesInactive>
-              </AutoLockProvider>
+              <HideContentsWhenSidebarBecomesInactive>
+                <LoggedIn />
+              </HideContentsWhenSidebarBecomesInactive>
             ) : (
               <LoggedOut />
             )}
@@ -150,20 +129,14 @@ export function WebNavigation(): JSX.Element {
   }, [isLoggedIn, pathname, towards])
 
   return (
-    <SidebarNavigationProvider>
-      <NativeWalletProvider>
-        <TokenPriceProvider>
-          <WalletUniswapProvider>
-            <AccountsStoreContextProvider>
-              <NotificationToastWrapper />
-              {shouldRestoreScroll && <ScrollRestoration />}
-              {childrenMemo}
-              {isLoggedIn && <ForceUpgradeModal />}
-            </AccountsStoreContextProvider>
-          </WalletUniswapProvider>
-        </TokenPriceProvider>
-      </NativeWalletProvider>
-    </SidebarNavigationProvider>
+    <SideBarNavigationProvider>
+      <WalletUniswapProvider>
+        <NotificationToastWrapper />
+        {shouldRestoreScroll && <ScrollRestoration />}
+        {childrenMemo}
+        {isLoggedIn && <ForceUpgradeModal />}
+      </WalletUniswapProvider>
+    </SideBarNavigationProvider>
   )
 }
 
@@ -183,7 +156,6 @@ const AnimatedPane = styled(Flex, {
   x: 0,
   opacity: 1,
   maxWidth: 'calc(min(535px, 100vw))',
-  minWidth: 319,
   minHeight: '100vh',
   mx: 'auto',
   width: '100%',
@@ -207,7 +179,7 @@ const AnimatedPane = styled(Flex, {
 const isVertical = (dir: Direction): boolean => dir === 'up' || dir === 'down'
 
 function useConstant<A>(c: A): A {
-  const out = useRef<A>(undefined)
+  const out = useRef<A>()
   if (!out.current) {
     out.current = c
   }
@@ -240,7 +212,7 @@ function LoggedIn(): JSX.Element {
   const isChromeWindowFocused = useIsChromeWindowFocusedWithTimeout(30 * ONE_SECOND_MS)
 
   return (
-    <SmartWalletNudgesProvider>
+    <>
       {contents}
 
       <QueuedOrderModal />
@@ -250,7 +222,7 @@ function LoggedIn(): JSX.Element {
       <DappRequestQueue />
 
       <SmartWalletNudgeModals />
-    </SmartWalletNudgesProvider>
+    </>
   )
 }
 
@@ -258,27 +230,17 @@ function LoggedOut(): JSX.Element {
   const isOnboarded = useSelector(isOnboardedSelector)
   const didOpenOnboarding = useRef(false)
 
-  const focusOrCreateOnboardingTabMutation = useMutation({
-    onSettled: () => {
+  const handleOnboarding = useCallback(async () => {
+    if (!isOnboarded && !didOpenOnboarding.current) {
       // We keep track of this to avoid opening the onboarding page multiple times if this component remounts.
       didOpenOnboarding.current = true
-    },
-    mutationFn: () => {
-      return focusOrCreateOnboardingTab()
-    },
-    onSuccess: () => {
+      await focusOrCreateOnboardingTab()
       // Automatically close the pop up after focusing on the onboarding tab.
       window.close()
-    },
-  })
-
-  const focusOrCreateOnboardingTabEvent = useEvent(focusOrCreateOnboardingTabMutation.mutate)
-
-  useEffect(() => {
-    if (!focusOrCreateOnboardingTabMutation.isPending && !isOnboarded && !didOpenOnboarding.current) {
-      focusOrCreateOnboardingTabEvent()
     }
-  }, [focusOrCreateOnboardingTabEvent, isOnboarded, focusOrCreateOnboardingTabMutation.isPending])
+  }, [isOnboarded])
+
+  useAsyncData(handleOnboarding)
 
   // If the user has not onboarded, we render nothing and let the `useEffect` above automatically close the popup.
   // We could consider showing a loading spinner while the popup is being closed.

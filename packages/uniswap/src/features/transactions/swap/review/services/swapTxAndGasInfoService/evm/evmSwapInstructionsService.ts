@@ -1,44 +1,42 @@
-import type {
+import {
+  AggregatorQuoteResponse,
   BridgeQuoteResponse,
   ClassicQuoteResponse,
-  GasStrategy,
-  TradingApi,
-  UnwrapQuoteResponse,
-  WrapQuoteResponse,
-} from '@universe/api'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
-import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
-import type {
+} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { CreateSwapRequest, Permit } from 'uniswap/src/data/tradingApi/__generated__'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import {
   EVMSwapRepository,
   SwapData,
-} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
-import {
   create5792EVMSwapRepository,
   create7702EVMSwapRepository,
   createLegacyEVMSwapRepository,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
-import type { PresignPermitFn } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
+import { PresignPermitFn } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
 import { createPrepareSwapRequestParams } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 type SwapInstructions =
   | { response: SwapData; unsignedPermit: null; swapRequestParams: null }
-  | { response: null; unsignedPermit: TradingApi.Permit; swapRequestParams: TradingApi.CreateSwapRequest }
+  | { response: null; unsignedPermit: Permit; swapRequestParams: CreateSwapRequest }
 
 /** A service utility capable of fetching swap instructions or returning unsigned permit data when instructions cannot yet be fetched. */
 export interface EVMSwapInstructionsService {
   getSwapInstructions: (params: {
-    swapQuoteResponse: ClassicQuoteResponse | BridgeQuoteResponse | WrapQuoteResponse | UnwrapQuoteResponse
-    transactionSettings: TransactionSettings
+    swapQuoteResponse: ClassicQuoteResponse | BridgeQuoteResponse | AggregatorQuoteResponse
+    transactionSettings: TransactionSettingsContextState
     approvalAction: ApprovalAction
   }) => Promise<SwapInstructions>
 }
 
 interface EVMSwapInstructionsServiceContext {
   v4SwapEnabled: boolean
-  gasStrategy: GasStrategy
+  activeGasStrategy: GasStrategy
+  shadowGasStrategies: GasStrategy[]
   /** A function that should be provided in wallet environments that support signing permits without prompting the user. Allows fetching swap instructions earlier for some flows.*/
   presignPermit?: PresignPermitFn
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
@@ -48,10 +46,11 @@ interface EVMSwapInstructionsServiceContext {
 function createLegacyEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'swapDelegationAddress'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, swapRepository } = ctx
+  const { activeGasStrategy, shadowGasStrategies, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
-    gasStrategy,
+    activeGasStrategy,
+    shadowGasStrategies,
   })
 
   const service: EVMSwapInstructionsService = {
@@ -84,10 +83,11 @@ function createLegacyEVMSwapInstructionsService(
 function createBatchedEVMSwapInstructionsService(
   ctx: Omit<EVMSwapInstructionsServiceContext, 'presignPermit'> & { swapRepository: EVMSwapRepository },
 ): EVMSwapInstructionsService {
-  const { gasStrategy, swapRepository } = ctx
+  const { activeGasStrategy, shadowGasStrategies, swapRepository } = ctx
 
   const prepareSwapRequestParams = createPrepareSwapRequestParams({
-    gasStrategy,
+    activeGasStrategy,
+    shadowGasStrategies,
   })
 
   const service: EVMSwapInstructionsService = {
@@ -131,7 +131,7 @@ export function createEVMSwapInstructionsService(ctx: EVMSwapInstructionsService
     getSwapInstructions: async (params) => {
       const chainId = tradingApiToUniverseChainId(params.swapQuoteResponse.quote.chainId)
 
-      if (smartContractWalletInstructionService && ctx.getSwapDelegationInfo?.(chainId).delegationAddress) {
+      if (smartContractWalletInstructionService && ctx.getSwapDelegationInfo?.(chainId)?.delegationAddress) {
         return smartContractWalletInstructionService.getSwapInstructions(params)
       }
 

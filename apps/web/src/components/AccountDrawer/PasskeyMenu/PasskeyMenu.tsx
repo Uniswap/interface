@@ -1,7 +1,20 @@
+import { AddPasskeyMenu } from 'components/AccountDrawer/PasskeyMenu/AddPasskeyMenu'
+import { DeletePasskeyMenu } from 'components/AccountDrawer/PasskeyMenu/DeletePasskeyMenu'
+import { DeletePasskeySpeedbumpMenu } from 'components/AccountDrawer/PasskeyMenu/DeletePasskeySpeedbumpMenu'
+import { PasskeyMenuModalState } from 'components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
+import { VerifyPasskeyMenu } from 'components/AccountDrawer/PasskeyMenu/VerifyPasskeyMenu'
+import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
+import { MenuColumn } from 'components/AccountDrawer/shared'
+import { AndroidLogo } from 'components/Icons/AndroidLogo'
+import { AppleLogo } from 'components/Icons/AppleLogo'
+import { useAccount } from 'hooks/useAccount'
+import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
+import { t } from 'i18next'
 import { useCallback, useEffect, useState } from 'react'
+import { LifeBuoy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Button, Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { Buoy } from 'ui/src/components/icons/Buoy'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Trash } from 'ui/src/components/icons/Trash'
 import { Windows } from 'ui/src/components/icons/Windows'
@@ -10,29 +23,16 @@ import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import {
+  Action,
   Authenticator,
   AuthenticatorNameType,
   authenticateWithPasskey,
-  getPrivyEnums,
   listAuthenticators,
 } from 'uniswap/src/features/passkey/embeddedWallet'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import i18n from 'uniswap/src/i18n'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
-import { AddPasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/AddPasskeyMenu'
-import { DeletePasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/DeletePasskeyMenu'
-import { DeletePasskeySpeedbumpMenu } from '~/components/AccountDrawer/PasskeyMenu/DeletePasskeySpeedbumpMenu'
-import { PasskeyMenuModalState } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
-import { VerifyPasskeyMenu } from '~/components/AccountDrawer/PasskeyMenu/VerifyPasskeyMenu'
-import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
-import { MenuColumn } from '~/components/AccountDrawer/shared'
-import { AndroidLogo } from '~/components/Icons/AndroidLogo'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
-import { useAccount } from '~/hooks/useAccount'
-import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 enum AuthenticatorProvider {
   Google = 'Chrome',
@@ -71,7 +71,7 @@ function getProviderLabel(provider: AuthenticatorProvider, count?: number) {
       return provider
     }
     default: {
-      return i18n.t('common.passkey.count', { number: count })
+      return t('common.passkey.count', { number: count })
     }
   }
 }
@@ -122,7 +122,7 @@ const AuthenticatorRow = ({
   const formattedDate = createdAtDate?.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: createdAtDate.getFullYear() === new Date().getFullYear() ? undefined : 'numeric',
+    year: createdAtDate?.getFullYear() === new Date().getFullYear() ? undefined : 'numeric',
   })
 
   return (
@@ -182,6 +182,7 @@ function LoadingPasskeyRow() {
 
 export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const account = useAccount()
   const [authenticators, setAuthenticators] = useState<AuthenticatorDisplay[]>([])
   const [passkeyMenuModalState, setPasskeyMenuModalState] = useState<PasskeyMenuModalState | undefined>(undefined)
@@ -216,7 +217,6 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
 
   const { mutate: verifyPasskey } = usePasskeyAuthWithHelpModal(
     async () => {
-      const { Action } = await getPrivyEnums()
       return await authenticateWithPasskey(
         actionAfterVerify === PasskeyMenuModalState.ADD_PASSKEY
           ? Action.REGISTER_NEW_AUTHENTICATION_TYPES
@@ -291,7 +291,7 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
               href={uniswapUrls.helpArticleUrls.passkeysInfo}
               {...ClickableTamaguiStyle}
             >
-              <Buoy size="$icon.20" color="$neutral2" />
+              <LifeBuoy size={20} color={colors.neutral2.val} />
             </Anchor>
           </Trace>
         }

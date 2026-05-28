@@ -1,11 +1,11 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { type ModalsState } from 'src/features/modals/ModalsState'
-import { type FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
-import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ModalsState } from 'src/features/modals/ModalsState'
+import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { type TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { type TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { getKeys } from 'utilities/src/primitives/objects'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 
 /**
  * *********** DEPRECATION NOTICE ***********
@@ -27,6 +27,8 @@ type WalletConnectModalParams = {
   initialState: ScannerModalState
 }
 
+type SwapModalParams = { name: typeof ModalName.Swap; initialState?: TransactionState }
+
 type SendModalParams = {
   name: typeof ModalName.Send
   initialState?: TransactionState & {
@@ -34,9 +36,13 @@ type SendModalParams = {
   }
 }
 
-type OpenModalParams = FiatOnRampAggregatorModalParams | SendModalParams | WalletConnectModalParams
+export type OpenModalParams =
+  | FiatOnRampAggregatorModalParams
+  | SendModalParams
+  | SwapModalParams
+  | WalletConnectModalParams
 
-type CloseModalParams = { name: keyof ModalsState }
+export type CloseModalParams = { name: keyof ModalsState }
 
 const createInitialModalState = (overrides?: Partial<ModalsState>): ModalsState => {
   const defaultState = Object.values(ModalName).reduce((state, key) => {
@@ -82,9 +88,8 @@ const slice = createSlice({
         state[modalName].initialState = undefined
       })
     },
-    resetModals: () => initialModalsState,
   },
 })
 
-export const { openModal, closeModal, closeAllModals, resetModals } = slice.actions
+export const { openModal, closeModal, closeAllModals } = slice.actions
 export const { reducer: modalsReducer } = slice

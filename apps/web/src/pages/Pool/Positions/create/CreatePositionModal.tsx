@@ -1,0 +1,416 @@
+import { getFewTokenFromOriginalToken, isFewToken } from '@ring-protocol/few-v2-sdk'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency, Token } from '@uniswap/sdk-core'
+import {
+  WrappedLiquidityPositionRangeChart,
+  getLiquidityRangeChartProps,
+} from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { ErrorCallout } from 'components/ErrorCallout'
+import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
+import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
+import { DetailLineItem } from 'components/swap/DetailLineItem'
+import { useCurrencyInfo } from 'hooks/Tokens'
+import useSelectChain from 'hooks/useSelectChain'
+import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
+import {
+  useCreatePositionContext,
+  useCreateTxContext,
+  useDepositContext,
+  usePriceRangeContext,
+} from 'pages/Pool/Positions/create/CreatePositionContext'
+import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
+import { CreatePositionRouteVariant, getCreatePositionProtocolLabel } from 'pages/Pool/Positions/create/routeVariant'
+import { formatPrices } from 'pages/Pool/Positions/create/shared'
+import { getInvertedTuple, getPoolIdOrAddressFromCreatePositionInfo } from 'pages/Pool/Positions/create/utils'
+import { useCallback, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
+import { Button, Flex, Separator, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { NumberType } from 'utilities/src/format/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useAccount } from 'wagmi'
+
+export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const {
+    positionState: { fee, hook, routeVariant },
+    derivedPositionInfo,
+    currentTransactionStep,
+    setCurrentTransactionStep,
+  } = useCreatePositionContext()
+  const {
+    derivedPriceRangeInfo,
+    priceRangeState: { priceInverted },
+  } = usePriceRangeContext()
+  const {
+    derivedDepositInfo,
+    depositState: { exactField },
+  } = useDepositContext()
+  const { t } = useTranslation()
+  const { currencies, protocolVersion, creatingPoolOrPair } = derivedPositionInfo
+  const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue } = derivedDepositInfo
+
+  // For Fewv2, ensure we display original tokens instead of fewtokens
+  // Map currencyAmounts currencies (which may be fewtokens) back to original tokens
+  // while maintaining the same order as currencyAmounts
+  const displayCurrencies = useMemo(() => {
+    if (
+      protocolVersion !== ProtocolVersion.Fewv2 ||
+      routeVariant === CreatePositionRouteVariant.FewToken ||
+      !currencyAmounts?.TOKEN0?.currency ||
+      !currencyAmounts?.TOKEN1?.currency
+    ) {
+      return [currencyAmounts?.TOKEN0?.currency, currencyAmounts?.TOKEN1?.currency]
+    }
+
+    // Check if currencyAmounts contain fewtokens, and map them back to original tokens
+    const token0 = currencyAmounts.TOKEN0.currency.isNative
+      ? currencyAmounts.TOKEN0.currency.wrapped
+      : (currencyAmounts.TOKEN0.currency as Token)
+    const token1 = currencyAmounts.TOKEN1.currency.isNative
+      ? currencyAmounts.TOKEN1.currency.wrapped
+      : (currencyAmounts.TOKEN1.currency as Token)
+
+    const isToken0FewToken = isFewToken(token0)
+    const isToken1FewToken = isFewToken(token1)
+
+    // If either is a fewtoken, map back to original tokens
+    if (isToken0FewToken || isToken1FewToken) {
+      const chainId = currencies[0]?.chainId ?? currencies[1]?.chainId
+      if (!chainId) {
+        return [currencyAmounts.TOKEN0.currency, currencyAmounts.TOKEN1.currency]
+      }
+
+      // Map fewtokens back to original tokens by comparing addresses
+      const originalToken0 = currencies[0]?.wrapped
+      const originalToken1 = currencies[1]?.wrapped
+
+      if (!originalToken0 || !originalToken1) {
+        return [currencyAmounts.TOKEN0.currency, currencyAmounts.TOKEN1.currency]
+      }
+
+      const fewToken0 = getFewTokenFromOriginalToken(originalToken0, chainId)
+      const fewToken1 = getFewTokenFromOriginalToken(originalToken1, chainId)
+
+      // Find which original token corresponds to currencyAmounts.TOKEN0.currency
+      let displayToken0: Currency | undefined
+      let displayToken1: Currency | undefined
+
+      if (isToken0FewToken) {
+        // currencyAmounts.TOKEN0.currency is a fewtoken, find matching original token
+        if (token0.address.toLowerCase() === fewToken0.address.toLowerCase()) {
+          displayToken0 = currencies[0]
+        } else if (token0.address.toLowerCase() === fewToken1.address.toLowerCase()) {
+          displayToken0 = currencies[1]
+        } else {
+          displayToken0 = currencyAmounts.TOKEN0.currency
+        }
+      } else {
+        displayToken0 = currencyAmounts.TOKEN0.currency
+      }
+
+      if (isToken1FewToken) {
+        // currencyAmounts.TOKEN1.currency is a fewtoken, find matching original token
+        if (token1.address.toLowerCase() === fewToken0.address.toLowerCase()) {
+          displayToken1 = currencies[0]
+        } else if (token1.address.toLowerCase() === fewToken1.address.toLowerCase()) {
+          displayToken1 = currencies[1]
+        } else {
+          displayToken1 = currencyAmounts.TOKEN1.currency
+        }
+      } else {
+        displayToken1 = currencyAmounts.TOKEN1.currency
+      }
+
+      return [displayToken0, displayToken1]
+    }
+
+    return [currencyAmounts.TOKEN0.currency, currencyAmounts.TOKEN1.currency]
+  }, [protocolVersion, currencyAmounts, currencies, routeVariant])
+
+  const token0CurrencyInfo = useCurrencyInfo(displayCurrencies[0])
+  const token1CurrencyInfo = useCurrencyInfo(displayCurrencies[1])
+
+  const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
+  const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, priceInverted)
+
+  const { formattedPrices } = useMemo(() => {
+    return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
+  }, [formatNumberOrString, derivedPriceRangeInfo])
+
+  const versionLabel = getCreatePositionProtocolLabel(protocolVersion, routeVariant)
+
+  const [steps, setSteps] = useState<TransactionStep[]>([])
+  const dispatch = useDispatch()
+  const { txInfo, gasFeeEstimateUSD, error, refetch, dependentAmount } = useCreateTxContext()
+  const account = useAccountMeta()
+  const selectChain = useSelectChain()
+  const connectedAccount = useAccount()
+  const startChainId = connectedAccount.chainId
+  const navigate = useNavigate()
+  const trace = useTrace()
+
+  const onSuccess = useCallback(() => {
+    setSteps([])
+    setCurrentTransactionStep(undefined)
+    onClose()
+    navigate('/positions')
+  }, [setCurrentTransactionStep, onClose, navigate])
+
+  const liquidityRangeChartProps = useMemo(
+    () =>
+      getLiquidityRangeChartProps({
+        positionInfo: derivedPositionInfo,
+        priceRangeInfo: derivedPriceRangeInfo,
+        pricesInverted: priceInverted,
+      }),
+    [derivedPositionInfo, derivedPriceRangeInfo, priceInverted],
+  )
+
+  const handleCreate = useCallback(() => {
+    const isValidTx = isValidLiquidityTxContext(txInfo)
+    if (
+      !account ||
+      account?.type !== AccountType.SignerMnemonic ||
+      !isValidTx ||
+      !currencyAmounts?.TOKEN0 ||
+      !currencyAmounts?.TOKEN1
+    ) {
+      return
+    }
+
+    dispatch(
+      liquiditySaga.actions.trigger({
+        selectChain,
+        startChainId,
+        account,
+        liquidityTxContext: txInfo,
+        setCurrentStep: setCurrentTransactionStep,
+        setSteps,
+        onSuccess,
+        onFailure: () => {
+          setCurrentTransactionStep(undefined)
+        },
+        analytics: {
+          ...getLPBaseAnalyticsProperties({
+            trace,
+            version: protocolVersion,
+            fee: fee.feeAmount,
+            currency0: currencyAmounts.TOKEN0.currency,
+            currency1: currencyAmounts.TOKEN1.currency,
+            currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
+            currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
+            poolId: getPoolIdOrAddressFromCreatePositionInfo(derivedPositionInfo),
+          }),
+          expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient?.toString() ?? '0',
+          expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient?.toString() ?? '0',
+          createPool: creatingPoolOrPair,
+          createPosition: true,
+        },
+      }),
+    )
+  }, [
+    txInfo,
+    account,
+    currencyAmounts?.TOKEN0,
+    currencyAmounts?.TOKEN1,
+    dispatch,
+    selectChain,
+    startChainId,
+    setCurrentTransactionStep,
+    onSuccess,
+    trace,
+    protocolVersion,
+    fee.feeAmount,
+    currencyAmountsUSDValue?.TOKEN0,
+    currencyAmountsUSDValue?.TOKEN1,
+    derivedPositionInfo,
+    creatingPoolOrPair,
+  ])
+
+  const [token0, token1] = currencies
+  const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
+    token0,
+    token1,
+    dependentAmount,
+    exactField,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    formattedAmounts,
+    deposit0Disabled: derivedPriceRangeInfo.deposit0Disabled,
+    deposit1Disabled: derivedPriceRangeInfo.deposit1Disabled,
+  })
+
+  return (
+    <Modal name={ModalName.CreatePosition} padding="$none" onClose={onClose} isDismissible isModalOpen={isOpen}>
+      <Flex px="$spacing8" pt="$spacing12" pb="$spacing8" gap="$spacing24">
+        <Flex px="$spacing12">
+          <GetHelpHeader
+            title={
+              <Text variant="subheading2" color="$neutral2">
+                <Trans i18nKey="position.create.modal.header" />
+              </Text>
+            }
+            closeModal={() => onClose()}
+          />
+          <Flex py="$spacing12" gap="$spacing12" mt="$spacing16">
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Flex>
+                <Flex row gap="$gap8">
+                  <Text variant="heading3">{displayCurrencies[0]?.symbol}</Text>
+                  <Text variant="heading3">/</Text>
+                  <Text variant="heading3">{displayCurrencies[1]?.symbol}</Text>
+                </Flex>
+                <Flex row gap={2} alignItems="center">
+                  <LiquidityPositionInfoBadges
+                    size="small"
+                    versionLabel={versionLabel}
+                    v4hook={hook}
+                    feeTier={fee.feeAmount}
+                  />
+                </Flex>
+              </Flex>
+              <DoubleCurrencyLogo currencies={[displayCurrencies[0], displayCurrencies[1]]} size={iconSizes.icon36} />
+            </Flex>
+            {(protocolVersion === ProtocolVersion.V3 || protocolVersion === ProtocolVersion.V4) && (
+              <>
+                {!creatingPoolOrPair && !!liquidityRangeChartProps && (
+                  <WrappedLiquidityPositionRangeChart width="100%" {...liquidityRangeChartProps} />
+                )}
+                <Flex row>
+                  <Flex fill gap="$gap4">
+                    <Text variant="body3" color="$neutral2">
+                      <Trans i18nKey="common.min" />
+                    </Text>
+                    <Text variant="body3">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                  </Flex>
+                  <Flex fill gap="$gap4">
+                    <Text variant="body3" color="$neutral2">
+                      <Trans i18nKey="common.max" />
+                    </Text>
+                    <Text variant="body3">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                  </Flex>
+                </Flex>
+              </>
+            )}
+          </Flex>
+          {creatingPoolOrPair && (
+            <Flex gap="$spacing12" mt="$spacing32">
+              <Text variant="body3" color="$neutral2">
+                <Trans i18nKey="position.initialPrice" />
+              </Text>
+              <BaseQuoteFiatAmount
+                variant="body1"
+                price={
+                  derivedPriceRangeInfo.invertPrice
+                    ? derivedPriceRangeInfo.price?.invert()
+                    : derivedPriceRangeInfo.price
+                }
+                base={baseCurrency}
+                quote={quoteCurrency}
+              />
+            </Flex>
+          )}
+          <Flex gap="$spacing12" pb="$spacing8" mt="$spacing32">
+            <Text variant="body3" color="$neutral2">
+              <Trans i18nKey="common.depositing" />
+            </Text>
+            <Flex row justifyContent="space-between">
+              <Flex gap="$gap4">
+                <Flex row gap="$gap8">
+                  <Text variant="body1">{updatedFormattedAmounts?.TOKEN0}</Text>
+                  <Text variant="body1">{displayCurrencies[0]?.symbol}</Text>
+                </Flex>
+                <Text variant="body3" color="$neutral2">
+                  {formatCurrencyAmount({ value: updatedUSDAmounts?.TOKEN0, type: NumberType.FiatTokenPrice })}
+                </Text>
+              </Flex>
+              <TokenLogo
+                size={iconSizes.icon36}
+                chainId={displayCurrencies[0]?.chainId}
+                name={displayCurrencies[0]?.name}
+                symbol={displayCurrencies[0]?.symbol}
+                url={token0CurrencyInfo?.logoUrl}
+              />
+            </Flex>
+            <Flex row justifyContent="space-between">
+              <Flex gap="$gap4">
+                <Flex row gap="$gap8">
+                  <Text variant="body1">{updatedFormattedAmounts?.TOKEN1}</Text>
+                  <Text variant="body1">{displayCurrencies[1]?.symbol}</Text>
+                </Flex>
+                <Text variant="body3" color="$neutral2">
+                  {formatCurrencyAmount({ value: updatedUSDAmounts?.TOKEN1, type: NumberType.FiatTokenPrice })}
+                </Text>
+              </Flex>
+              <TokenLogo
+                size={iconSizes.icon36}
+                chainId={displayCurrencies[1]?.chainId}
+                name={displayCurrencies[1]?.name}
+                symbol={displayCurrencies[1]?.symbol}
+                url={token1CurrencyInfo?.logoUrl}
+              />
+            </Flex>
+          </Flex>
+          <ErrorCallout errorMessage={error} onPress={refetch} />
+          <PoolOutOfSyncError />
+        </Flex>
+        {currentTransactionStep && steps.length > 1 ? (
+          <ProgressIndicator steps={steps} currentStep={currentTransactionStep} />
+        ) : (
+          <>
+            <Separator mx="$padding12" />
+            <Flex mx="$padding12">
+              <DetailLineItem
+                LineItem={{
+                  Label: () => (
+                    <Text variant="body3" color="$neutral2">
+                      <Trans i18nKey="common.networkCost" />
+                    </Text>
+                  ),
+                  Value: () => (
+                    <Flex row gap="$gap4" alignItems="center">
+                      <NetworkLogo
+                        chainId={baseCurrency?.chainId || UniverseChainId.Mainnet}
+                        size={iconSizes.icon16}
+                        shape="square"
+                      />
+                      <Text variant="body3">
+                        {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
+                      </Text>
+                    </Flex>
+                  ),
+                }}
+              />
+            </Flex>
+            {currentTransactionStep ? (
+              <Button size="large" variant="branded" loading={true} key="create-position-confirm" fill={false}>
+                {t('common.confirmWallet')}
+              </Button>
+            ) : (
+              <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action} fill={false}>
+                {t('common.button.create')}
+              </Button>
+            )}
+          </>
+        )}
+      </Flex>
+    </Modal>
+  )
+}

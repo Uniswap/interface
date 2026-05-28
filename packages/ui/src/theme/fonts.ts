@@ -1,8 +1,8 @@
 // until the web app needs all of tamagui, avoid heavy imports there
-// biome-ignore lint/style/noRestrictedImports: until the web app needs all of tamagui, avoid heavy imports there
-import { createFont, isAndroid } from '@tamagui/core'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { createFont, isAndroid, isWeb } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
-import { isWebApp, isWebPlatform } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts
@@ -33,7 +33,7 @@ const fontFamilyByPlatform = {
   },
 }
 
-const platform = isWebPlatform ? 'web' : isAndroid ? 'android' : 'ios'
+const platform = isWeb ? 'web' : isAndroid ? 'android' : 'ios'
 
 const fontFamily = {
   serif: 'serif',
@@ -45,23 +45,19 @@ const fontFamily = {
   },
 }
 
-const baselMedium = isWebPlatform
+const baselMedium = isWeb
   ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.medium
 
-const baselBook = isWebPlatform
+const baselBook = isWeb
   ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.book
-
-const monospaceFontFamily = isWebPlatform
-  ? 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Courier New", monospace'
-  : fontFamily.sansSerif.monospace
 
 type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif
 type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamilyKey]
 
 const platformFontFamily = (family: SansSerifFontFamilyKey): SansSerifFontFamilyKey | SansSerifFontFamilyValue => {
-  if (isWebPlatform) {
+  if (isWeb) {
     return family
   }
 
@@ -81,9 +77,9 @@ const MEDIUM_WEIGHT = '500'
 const MEDIUM_WEIGHT_WEB = '535'
 
 const defaultWeights = {
-  book: isWebApp ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  true: isWebApp ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  medium: isWebApp ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
+  book: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  true: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  medium: isInterface ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
 }
 
 // on native, the Basel font files render down a few px
@@ -280,29 +276,9 @@ export const buttonFont = createFont({
   },
 })
 
-export const monospaceFont = createFont({
-  family: monospaceFontFamily,
-  size: {
-    micro: fonts.body4.fontSize,
-    small: fonts.body3.fontSize,
-    medium: fonts.body2.fontSize,
-    large: fonts.body1.fontSize,
-    true: fonts.body4.fontSize,
-  },
-  weight: defaultWeights,
-  lineHeight: {
-    micro: fonts.body4.lineHeight,
-    small: fonts.body3.lineHeight,
-    medium: fonts.body2.lineHeight,
-    large: fonts.body1.lineHeight,
-    true: fonts.body4.lineHeight,
-  },
-})
-
 export const allFonts = {
   heading: headingFont,
   subHeading: subHeadingFont,
   body: bodyFont,
   button: buttonFont,
-  monospace: monospaceFont,
 }

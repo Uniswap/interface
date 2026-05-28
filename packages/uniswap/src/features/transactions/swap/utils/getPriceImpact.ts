@@ -1,8 +1,8 @@
-import { type Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { CurrencyAmount, Percent, type Currency } from '@uniswap/sdk-core'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isAggregator, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 
 function stringToUSDAmount(value: string | number | undefined, USDCurrency: Currency): Maybe<CurrencyAmount<Currency>> {
   if (!value) {
@@ -52,7 +52,9 @@ export function getPriceImpact(derivedSwapInfo: DerivedSwapInfo): Percent | unde
 
   if (isUniswapX(trade)) {
     return getUniswapXPriceImpact({ derivedSwapInfo })
-  } else if (isClassic(trade) || isJupiter(trade)) {
+  } else if (isClassic(trade)) {
+    return trade.priceImpact
+  } else if (isAggregator(trade)) {
     return trade.priceImpact
   } else {
     return undefined

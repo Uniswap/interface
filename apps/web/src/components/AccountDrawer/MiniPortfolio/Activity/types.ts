@@ -1,19 +1,17 @@
 import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniswapXOrderDetails } from 'state/signatures/types'
 import {
-  TransactionOptions,
   TransactionStatus,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+  TransactionType,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 /**
  * TODO: refactor parsing / Activity so that all Activity Types can have a detail sheet.
  */
 
 export type Activity = {
-  id: string
-  hash?: string
+  hash: string
   chainId: UniverseChainId
   outputChainId?: UniverseChainId
   status: TransactionStatus
@@ -27,11 +25,12 @@ export type Activity = {
   currencies?: Array<Currency | undefined>
   otherAccount?: string
   from: string
-  options?: TransactionOptions
+  nonce?: number | null
   prefixIconSrc?: string
   suffixIconSrc?: string
+  cancelled?: boolean
   isSpam?: boolean
-  type?: GraphQLApi.TransactionType
+  type?: TransactionType
 }
 
 export type ActivityMap = { [id: string]: Activity | undefined }

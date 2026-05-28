@@ -1,33 +1,28 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { call, cancel, delay, fork, put, race, spawn, take } from 'typed-redux-saga'
+import { formatEther } from 'ethers/lib/utils'
+import { call, cancel, delay, fork, put, race, take } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { CancelableStepInfo } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { cancelTransaction, replaceTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
-  cancelPlanStep,
-  cancelTransaction,
-  replaceTransaction,
-  transactionActions,
-} from 'uniswap/src/features/transactions/slice'
-import { waitForPlanUpdateOrFinalizedState } from 'uniswap/src/features/transactions/swap/plan/planPollingUtils'
-import { isBridge, isChained, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import {
+  BridgeTransactionDetails,
   FinalizedTransactionDetails,
   OnChainTransactionDetails,
   TEMPORARY_TRANSACTION_STATUSES,
   TransactionDetails,
   TransactionStatus,
+  isFinalizedTx,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isFinalizedTx, isPlanTransactionDetails } from 'uniswap/src/features/transactions/types/utils'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
-import { cancelPlanStep as cancelPlanStepSaga } from 'wallet/src/features/transactions/cancelPlanStepSaga'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
-import { processTransactionReceipt } from 'wallet/src/features/transactions/utils'
+import { getFinalizedTransactionStatus, receiptFromEthersReceipt } from 'wallet/src/features/transactions/utils'
 import { OrderWatcher } from 'wallet/src/features/transactions/watcher/orderWatcherSaga'
 import {
   finalizeTransaction,
@@ -36,12 +31,18 @@ import {
 import { deleteTransaction } from 'wallet/src/features/transactions/watcher/transactionSagaUtils'
 import { waitForBridgingStatus } from 'wallet/src/features/transactions/watcher/watchBridgeSaga'
 import { watchForAppBackgrounded } from 'wallet/src/features/transactions/watcher/watchForAppBackgroundedSaga'
-import {
-  updateTransactionWithReceipt,
-  waitForReceiptWithSmartPolling,
-  waitForTransactionStatus,
-} from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
+
+export async function waitForReceipt(
+  hash: string,
+  provider: providers.Provider,
+): Promise<providers.TransactionReceipt> {
+  const txReceipt = await provider.waitForTransaction(hash)
+  if (txReceipt) {
+    logger.debug('watchOnChainTransactionSaga', 'waitForReceipt', 'Tx receipt received', hash)
+  }
+  return txReceipt
+}
 
 /**
  * Flashbots transactions won't return a receipt until they're included, and will fail silently.
@@ -97,14 +98,10 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options.rpcSubmissionTimestampMs) {
+  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.rpcSubmissionTimestampMs) {
     // Transaction was not submitted yet, ignore it for now
     // Once it's submitted, it'll be updated and the watcher will pick it up
     return undefined
-  }
-
-  if (isPlanTransactionDetails(transaction)) {
-    return yield* call(waitForPlanUpdateOrFinalizedState, transaction)
   }
 
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
@@ -119,7 +116,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     return undefined
   }
 
-  if (isClassic(transaction) && transaction.options.submitViaPrivateRpc) {
+  if (isClassic(transaction) && transaction.options?.submitViaPrivateRpc) {
     const flashbotsStatus = yield* call(getFlashbotsTransactionStatus, transaction, hash)
     if (flashbotsStatus === TransactionStatus.Failed || flashbotsStatus === TransactionStatus.Canceled) {
       // Status is final and we won't get a receipt from ethers. Return early and finalize the transaction
@@ -127,29 +124,45 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  // Bridge transactions need to wait for the send part to be confirmed via ethers, then wait for bridging status from BE
-  if (isBridge(transaction)) {
-    if (transaction.sendConfirmed) {
-      status = yield* call(waitForBridgingStatus, transaction)
-      return { ...transaction, status }
-    }
+  const ethersReceipt = yield* call(waitForReceipt, hash, provider)
+  const receipt = receiptFromEthersReceipt(ethersReceipt)
+  const nativeCurrency = NativeCurrency.onChain(transaction.chainId)
 
-    const ethersReceipt = yield* call(waitForReceiptWithSmartPolling, { hash, provider, transaction })
-
-    const updatedTransaction = processTransactionReceipt({
-      ethersReceipt,
-      transaction: { ...transaction, status, hash },
-    })
-
-    return updatedTransaction
+  const networkFee = {
+    quantity: formatEther(ethersReceipt.effectiveGasPrice.mul(ethersReceipt.gasUsed)),
+    tokenSymbol: nativeCurrency.symbol,
+    tokenAddress: nativeCurrency.address,
+    chainId: transaction.chainId,
   }
 
-  // For non-bridge transactions, use Trading API polling
-  // Trading API returns status but not receipt/networkFee, so update the transaction with these after the transaction is confirmed
-  yield* spawn(updateTransactionWithReceipt, { ...transaction, hash }, provider)
-  status = yield* call(waitForTransactionStatus, { ...transaction, hash })
+  if (
+    isBridge(transaction) &&
+    getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status) === TransactionStatus.Success
+  ) {
+    // Only the send part was successful, wait for receive part to be confirmed on chain.
+    // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
+    if (!transaction.sendConfirmed) {
+      const updatedTransaction: BridgeTransactionDetails = {
+        ...transaction,
+        sendConfirmed: true,
+        networkFee,
+      }
+      yield* put(transactionActions.updateTransaction(updatedTransaction))
+      // Updating the transaction will trigger a new watch.
+      // Return undefined to break out of the current watcher.
+      return undefined
+    }
 
-  return { ...transaction, status, hash }
+    // Send part was successful, poll for bridging status from BE
+    status = yield* call(waitForBridgingStatus, transaction)
+  }
+
+  // Classic transaction status is based on receipt, while UniswapX status is based backend response.
+  if (isClassic(transaction)) {
+    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
+  }
+
+  return { ...transaction, status, receipt, hash, networkFee }
 }
 
 /**
@@ -169,13 +182,11 @@ export function* checkIfTransactionInvalidated(
   }
 
   const tx = yield* call([provider, provider.getTransaction], transaction.hash)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (tx) {
     // Transaction is known to the provider, so it's still valid
     return false
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!tx && !transaction.options.submitViaPrivateRpc) {
     // If submitted via public RPC and not found, we can consider it lost/invalidated
     return true
@@ -192,20 +203,14 @@ export function* checkIfTransactionInvalidated(
   return false
 }
 
-function* handleTimeout({
-  transaction,
-  apolloClient,
-  provider,
-}: {
-  transaction: TransactionDetails
-  apolloClient: ApolloClient<NormalizedCacheObject>
-  provider: providers.Provider
-}) {
+function* handleTimeout(
+  transaction: TransactionDetails,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  provider: providers.Provider,
+) {
   if (
     isUniswapX(transaction) ||
-    // TODO: SWAP-440/SWAP-441 - Handle Plan transaction timeout
-    isChained(transaction) ||
-    !transaction.options.timeoutTimestampMs ||
+    !transaction.options?.timeoutTimestampMs ||
     !TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)
   ) {
     return
@@ -228,7 +233,6 @@ function* handleTimeout({
   }
 
   const isInvalidated = yield* call(checkIfTransactionInvalidated, transaction, provider)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (isInvalidated) {
     const failedTransaction = { ...transaction, status: TransactionStatus.Failed } as FinalizedTransactionDetails
     yield* call(finalizeTransaction, {
@@ -241,7 +245,6 @@ function* handleTimeout({
 function* waitForCancellation(chainId: UniverseChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) {
       return payload.cancelRequest
     }
@@ -257,33 +260,11 @@ function* waitForReplacement(chainId: UniverseChainId, id: string) {
   }
 }
 
-/**
- * Waits for a plan step cancellation action for the given plan ID.
- * Returns the cancellation payload when received.
- */
-function* waitForPlanStepCancellation(planId: string) {
-  while (true) {
-    const { payload } = yield* take<ReturnType<typeof cancelPlanStep>>(cancelPlanStep.type)
-    if (payload.planId === planId) {
-      return payload as {
-        chainId: UniverseChainId
-        id: string
-        address: string
-        cancelRequest: providers.TransactionRequest
-        planId: string
-        cancelableStepInfo: CancelableStepInfo
-      }
-    }
-  }
-}
-
-type WaitForParams = {
-  chainId: UniverseChainId
-  id: string
-  nonce?: BigNumberish
-}
-
-export function* waitForSameNonceFinalized({ chainId, id, nonce }: WaitForParams): Generator<unknown, boolean> {
+export function* waitForSameNonceFinalized(
+  chainId: UniverseChainId,
+  id: string,
+  nonce: BigNumberish | undefined,
+): Generator<unknown, boolean> {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
       transactionActions.finalizeTransaction.type,
@@ -304,7 +285,11 @@ export function* waitForSameNonceFinalized({ chainId, id, nonce }: WaitForParams
  * When we're canceling a bridge tx, we should invalidate the cancel tx as soon as the send part
  * of the bridge is confirmed on chain, instead of waiting for the full completion of the bridge.
  */
-export function* waitForBridgeSendCompleted({ chainId, id, nonce }: WaitForParams): Generator<unknown, boolean> {
+export function* waitForBridgeSendCompleted(
+  chainId: UniverseChainId,
+  id: string,
+  nonce: BigNumberish | undefined,
+): Generator<unknown, boolean> {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof transactionActions.updateTransaction>>(
       transactionActions.updateTransaction.type,
@@ -326,10 +311,14 @@ export function* waitForBridgeSendCompleted({ chainId, id, nonce }: WaitForParam
  * Monitor for transactions with the same nonce as the current transaction. If any duplicate is finalized, it means
  * the current transaction has been invalidated and wont be picked up on chain.
  */
-function* waitForTxnInvalidated({ chainId, id, nonce }: WaitForParams): Generator<unknown, boolean> {
+export function* waitForTxnInvalidated(
+  chainId: UniverseChainId,
+  id: string,
+  nonce: BigNumberish | undefined,
+): Generator<unknown, boolean> {
   yield* race({
-    sameNonceFinalized: call(waitForSameNonceFinalized, { chainId, id, nonce }),
-    bridgeSendCompleted: call(waitForBridgeSendCompleted, { chainId, id, nonce }),
+    sameNonceFinalized: call(waitForSameNonceFinalized, chainId, id, nonce),
+    bridgeSendCompleted: call(waitForBridgeSendCompleted, chainId, id, nonce),
   })
 
   return true
@@ -344,65 +333,17 @@ export function* watchTransaction({
 }): Generator<unknown> {
   const { chainId, id, hash } = transaction
 
-  logger.debug('watchOnChainTransactionSaga', 'watchTransaction', 'Watching for updates for tx:', { hash, id })
+  logger.debug('watchOnChainTransactionSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
   const options = isUniswapX(transaction) ? undefined : transaction.options
-  const timeoutTask = yield* fork(handleTimeout, { transaction, apolloClient, provider })
+  const timeoutTask = yield* fork(handleTimeout, transaction, apolloClient, provider)
   const listenForAppBackgrounded = options && !options.appBackgroundedWhilePending
-
-  // Handle plan transactions with cancellation support
-  if (isChained(transaction)) {
-    if (!isPlanTransactionDetails(transaction)) {
-      // This should never happen, but the typeguard is needed keep TS happy
-      logger.error(new Error('Invalid plan transaction'), {
-        tags: {
-          file: 'watchOnChainTransactionSaga',
-          function: 'watchTransaction',
-        },
-        extra: { transaction },
-      })
-      return
-    }
-
-    const planTransaction = transaction
-    const { planId } = planTransaction.typeInfo
-
-    const { updatedTransaction, cancelPlanStepRequest } = yield* race({
-      // waitForPlanUpdateOrFinalizedState is called inside waitForRemoteUpdate for plans
-      updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
-      cancelPlanStepRequest: call(waitForPlanStepCancellation, planId),
-    })
-
-    if (timeoutTask.isRunning()) {
-      yield* cancel(timeoutTask)
-    }
-
-    if (cancelPlanStepRequest) {
-      // Execute plan step cancellation
-      yield* call(cancelPlanStepSaga, {
-        planTransaction,
-        cancelRequest: cancelPlanStepRequest.cancelRequest,
-        cancelableStepInfo: cancelPlanStepRequest.cancelableStepInfo,
-      })
-      return
-    }
-
-    if (updatedTransaction) {
-      if (isFinalizedTx(updatedTransaction)) {
-        yield* call(finalizeTransaction, { transaction: updatedTransaction, apolloClient })
-        return
-      } else {
-        yield* put(transactionActions.updateTransaction(updatedTransaction))
-      }
-    }
-    return
-  }
 
   const { updatedTransaction, cancelTx, replace, invalidated, appBackgrounded } = yield* race({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
     cancelTx: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
-    invalidated: call(waitForTxnInvalidated, { chainId, id, nonce: options?.request.nonce }),
+    invalidated: call(waitForTxnInvalidated, chainId, id, options?.request.nonce),
     ...(listenForAppBackgrounded ? { appBackgrounded: call(watchForAppBackgrounded) } : {}),
   })
 
@@ -438,7 +379,7 @@ export function* watchTransaction({
   if (replace) {
     // Same logic as cancelation, but skip directly to replacement
     yield* fork(watchTransaction, { transaction, apolloClient })
-    yield* call(attemptReplaceTransaction, { transaction, newTxRequest: replace.newTxParams })
+    yield* call(attemptReplaceTransaction, transaction, replace.newTxParams)
     return
   }
 

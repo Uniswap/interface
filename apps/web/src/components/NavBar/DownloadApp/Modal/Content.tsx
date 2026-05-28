@@ -1,10 +1,11 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, FlexProps, Image, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { ExternalLink } from 'theme/components/Links'
+import { Flex, FlexProps, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
+// import { UNISWAP_LOGO } from 'ui/src/assets'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { RingswapLogo } from 'ui/src/components/icons/RingswapLogo'
 import { iconSizes } from 'ui/src/theme'
-import { ExternalLink } from '~/theme/components/Links'
 
 export function ModalContent({
   title,
@@ -45,7 +46,8 @@ export function ModalContent({
         </Flex>
         <Flex alignItems="center" gap="$spacing32" maxWidth="480px" {...rest}>
           <Flex alignItems="center" gap="$spacing12">
-            {header ?? <Image height={iconSizes.icon64} source={UNISWAP_LOGO} width={iconSizes.icon64} />}
+            {/* {header ?? <Image height={iconSizes.icon64} source={UNISWAP_LOGO} width={iconSizes.icon64} />} */}
+            {header ?? <RingswapLogo size={iconSizes.icon64} color="$accent1" />}
             <Flex alignItems="center" gap="$spacing12" px="$spacing40">
               <Text variant="heading3" color="$neutral1">
                 {title}

@@ -1,60 +1,20 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import {
-  useCurrencyInfo as useUniswapCurrencyInfo,
-  useCurrencyInfoWithLoading as useUniswapCurrencyInfoWithLoading,
-} from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
+import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { useAccount } from '~/hooks/useAccount'
+import { isAddress } from 'utilities/src/addresses'
 
 type Maybe<T> = T | undefined
 
-// Extract the common preprocessing logic
-function useCurrencyPreprocessing({
-  addressOrCurrency,
-  chainId,
-  skip,
-}: {
-  addressOrCurrency?: string | Currency
-  chainId?: UniverseChainId
-  skip?: boolean
-}) {
-  const { chainId: connectedChainId } = useAccount()
-  const chainIdWithFallback =
-    (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
-  const supportedChainId = useSupportedChainId(chainIdWithFallback)
-  const nativeAddressWithFallback = getChainInfo(supportedChainId ?? UniverseChainId.Mainnet).nativeCurrency.address
-
-  const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
-  const address = useMemo(
-    () => getAddress({ isNative, nativeAddressWithFallback, addressOrCurrency }),
-    [isNative, nativeAddressWithFallback, addressOrCurrency],
-  )
-
-  const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
-  const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
-  const shouldSkip = !addressOrCurrency || skip
-
-  return { currencyId, shouldSkip, addressOrCurrency }
-}
-
-export function useCurrency({ address, chainId }: { address?: string; chainId?: UniverseChainId }): Maybe<Currency> {
-  const currencyInfo = useCurrencyInfo(address, chainId, false)
+export function useCurrency(address?: string, chainId?: UniverseChainId, skip?: boolean): Maybe<Currency> {
+  const currencyInfo = useCurrencyInfo(address, chainId, skip)
   return currencyInfo?.currency
-}
-
-export function useCurrencyWithLoading(
-  { address, chainId }: { address?: string; chainId?: UniverseChainId },
-  options?: { skip?: boolean },
-): { currency: Maybe<Currency>; loading: boolean } {
-  const { currencyInfo, loading } = useCurrencyInfoWithLoading(address, chainId, options?.skip)
-  return { currency: currencyInfo?.currency, loading }
 }
 
 /**
@@ -63,75 +23,61 @@ export function useCurrencyWithLoading(
  */
 export function useCurrencyInfo(currency?: Currency, chainId?: UniverseChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(address?: string, chainId?: UniverseChainId, skip?: boolean): Maybe<CurrencyInfo>
-// eslint-disable-next-line max-params
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
   chainId?: UniverseChainId,
   skip?: boolean,
 ): Maybe<CurrencyInfo> {
-  const {
-    currencyId,
-    shouldSkip,
-    addressOrCurrency: processedAddress,
-  } = useCurrencyPreprocessing({ addressOrCurrency, chainId, skip })
-  const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip: shouldSkip })
+  const { chainId: connectedChainId } = useAccount()
+  const chainIdWithFallback =
+    (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
+  const supportedChainId = useSupportedChainId(chainIdWithFallback)
+  const nativeAddressWithFallback = getChainInfo(supportedChainId ?? UniverseChainId.Mainnet).nativeCurrency.address
+
+  const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
+  const address = useMemo(
+    () => getAddress(isNative, nativeAddressWithFallback, addressOrCurrency),
+    [isNative, nativeAddressWithFallback, addressOrCurrency],
+  )
+
+  const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
+
+  const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
+  const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip })
 
   return useMemo(() => {
-    if (!currencyInfo || !processedAddress || skip) {
+    if (!addressOrCurrency || skip) {
       return undefined
     }
-    return currencyInfo
-  }, [processedAddress, skip, currencyInfo])
-}
 
-function useCurrencyInfoWithLoading(
-  currency?: Currency,
-  chainId?: UniverseChainId,
-  skip?: boolean,
-): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean }
-function useCurrencyInfoWithLoading(
-  address?: string,
-  chainId?: UniverseChainId,
-  skip?: boolean,
-): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean }
-// eslint-disable-next-line max-params
-function useCurrencyInfoWithLoading(
-  addressOrCurrency?: string | Currency,
-  chainId?: UniverseChainId,
-  skip?: boolean,
-): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean } {
-  const {
-    currencyId,
-    shouldSkip,
-    addressOrCurrency: processedAddress,
-  } = useCurrencyPreprocessing({ addressOrCurrency, chainId, skip })
-  const { currencyInfo, loading } = useUniswapCurrencyInfoWithLoading(currencyId, { skip: shouldSkip })
-
-  const finalCurrencyInfo = useMemo(() => {
-    if (!currencyInfo || !processedAddress || skip) {
-      return undefined
+    if (currencyInfo) {
+      return currencyInfo
     }
-    return currencyInfo
-  }, [processedAddress, skip, currencyInfo])
 
-  return { currencyInfo: finalCurrencyInfo, loading }
+    if (typeof addressOrCurrency !== 'string') {
+      const tokenWithLogo = addressOrCurrency as Currency & { logoURI?: string }
+      return {
+        currency: addressOrCurrency,
+        currencyId,
+        logoUrl: tokenWithLogo.logoURI ?? null,
+      }
+    }
+
+    return undefined
+  }, [addressOrCurrency, skip, currencyId, currencyInfo])
 }
 
-export function checkIsNative(addressOrCurrency?: string | Currency): boolean {
+export const checkIsNative = (addressOrCurrency?: string | Currency): boolean => {
   return typeof addressOrCurrency === 'string'
-    ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(normalizeAddress(addressOrCurrency, AddressStringFormat.Lowercase))
-    : (addressOrCurrency?.isNative ?? false)
+    ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(addressOrCurrency.toLowerCase())
+    : addressOrCurrency?.isNative ?? false
 }
 
-function getAddress({
-  isNative,
-  nativeAddressWithFallback,
-  addressOrCurrency,
-}: {
-  isNative: boolean
-  nativeAddressWithFallback: string
-  addressOrCurrency?: string | Currency
-}): string | undefined {
+const getAddress = (
+  isNative: boolean,
+  nativeAddressWithFallback: string,
+  addressOrCurrency?: string | Currency,
+): string | undefined => {
   if (typeof addressOrCurrency === 'string') {
     if (isNative) {
       return nativeAddressWithFallback
@@ -143,10 +89,23 @@ function getAddress({
   if (addressOrCurrency) {
     if (addressOrCurrency.isNative) {
       return nativeAddressWithFallback
-    } else {
+    } else if (addressOrCurrency) {
       return addressOrCurrency.address
     }
   }
 
   return undefined
+}
+
+export function useToken(tokenAddress?: string, chainId?: UniverseChainId): Maybe<Token> {
+  const formattedAddress = isAddress(tokenAddress)
+  const { chainId: connectedChainId } = useAccount()
+  const currency = useCurrency(formattedAddress ? formattedAddress : undefined, chainId ?? connectedChainId)
+
+  return useMemo(() => {
+    if (currency && currency.isToken) {
+      return currency
+    }
+    return undefined
+  }, [currency])
 }

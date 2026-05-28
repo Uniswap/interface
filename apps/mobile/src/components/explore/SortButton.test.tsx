@@ -1,6 +1,6 @@
-import { CustomRankingType, RankingType } from '@universe/api'
 import { SortButton } from 'src/components/explore/SortButton'
 import { act, render } from 'src/test/test-utils'
+import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
 import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
 jest.mock('react-native-context-menu-view', () => {

@@ -1,0 +1,13 @@
+diff --git a/src/components/bottomSheet/BottomSheet.tsx b/src/components/bottomSheet/BottomSheet.tsx
+index cd6ea6bfbace8e9e0b5f0759d4dc7559d48d248f..3248773a3beab478143d3c9d13a47ff6ffd712f2 100644
+--- a/src/components/bottomSheet/BottomSheet.tsx
++++ b/src/components/bottomSheet/BottomSheet.tsx
+@@ -527,7 +527,7 @@ const BottomSheetComponent = forwardRef<BottomSheet, BottomSheetProps>(
+         animatedAnimationSource.value === ANIMATION_SOURCE.SNAP_POINT_CHANGE &&
+         animatedAnimationState.value === ANIMATION_STATE.RUNNING
+       ) {
+-        return animatedNextPositionIndex.value;
++        return Math.max(animatedCurrentIndex.value, currentIndex);
+       }
+ 
+       return currentIndex;

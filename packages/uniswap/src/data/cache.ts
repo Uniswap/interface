@@ -1,8 +1,5 @@
 import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
-import { Reference, relayStylePagination, StoreObject } from '@apollo/client/utilities'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
 import { isTestEnv } from 'utilities/src/environment/env'
 
 export function setupSharedApolloCache(): InMemoryCache {
@@ -37,8 +34,8 @@ export function setupSharedApolloCache(): InMemoryCache {
                   read(_, { args, toReference }): Reference | undefined {
                     return toReference({
                       __typename: 'Token',
-                      chain: args?.['chain'],
-                      address: normalizeTokenAddressForCache(args?.['address']),
+                      chain: args?.chain,
+                      address: args?.address?.toLowerCase(),
                     })
                   },
                 },
@@ -63,7 +60,9 @@ export function setupSharedApolloCache(): InMemoryCache {
         fields: {
           address: {
             read(address: string | null): string | null {
-              return normalizeTokenAddressForCache(address)
+              // backend endpoint sometimes returns checksummed, sometimes lowercased addresses
+              // always use lowercased addresses in our app for consistency
+              return address?.toLowerCase() ?? null
             },
           },
           feeData: {
@@ -109,23 +108,14 @@ export function setupSharedApolloCache(): InMemoryCache {
   })
 }
 
-type ReferenceOrStoreObject = Reference | StoreObject
-
-// eslint-disable-next-line max-params
 function ignoreIncomingNullValue(
-  existing: ReferenceOrStoreObject | undefined,
-  incoming: ReferenceOrStoreObject | null,
-  { mergeObjects }: FieldFunctionOptions,
-): ReferenceOrStoreObject | null {
-  if (existing === undefined) {
-    return incoming
-  }
-  // TODO(API-482): remove this once the backend bug is fixed.
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (incoming === null || incoming === undefined) {
+  existing: Reference | StoreObject,
+  incoming: Reference | StoreObject,
+  { mergeObjects }: FieldFunctionOptions<Record<string, unknown>, Record<string, unknown>>,
+): Reference | StoreObject {
+  if (existing && !incoming) {
     return existing
   }
-
   return mergeObjects(existing, incoming)
 }
 
@@ -134,34 +124,4 @@ function incomingOrExistingArray(
   incoming: unknown[] | undefined,
 ): unknown[] | undefined {
   return incoming ?? existing
-}
-
-export function normalizeCurrencyIdForMapLookup(currencyId: string): string
-export function normalizeCurrencyIdForMapLookup(currencyId: string | undefined): string | undefined
-export function normalizeCurrencyIdForMapLookup(currencyId: string | undefined): string | undefined {
-  if (!currencyId) {
-    return undefined
-  }
-
-  const chainId = currencyIdToChain(currencyId)
-  const normalizedAddress = normalizeTokenAddressForCache(currencyIdToAddress(currencyId))
-  return `${chainId}-${normalizedAddress}`
-}
-
-export function normalizeTokenAddressForCache(address: string): string
-export function normalizeTokenAddressForCache(address: null): null
-export function normalizeTokenAddressForCache(address: string | null): string | null
-export function normalizeTokenAddressForCache(address: string | null): string | null {
-  // Our graphql backend would sometimes return checksummed addresses and sometimes lowercase addresses.
-  // In order to improve local cache hits, avoid unnecessary network requests, and avoid having duplicate `Token` items stored in the cache,
-  // we use lowercase addresses when accessing the `Token` object from our local cache.
-  // Solana addresses are case sensitive though, so this only applies to EVM addresses.
-
-  if (address === 'NATIVE' || address === 'native') {
-    return 'native' // lowercased native address for lowercase consistency
-  }
-  const normalizedEvmAddress = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: false })
-
-  // if not a valid EVM address, must be SVM address
-  return normalizedEvmAddress ?? address ?? null
 }

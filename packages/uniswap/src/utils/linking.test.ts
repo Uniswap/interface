@@ -3,59 +3,26 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 describe(getExplorerLink, () => {
   it('handles different link cases', () => {
-    expect(
-      getExplorerLink({ chainId: UniverseChainId.ArbitrumOne, data: 'hash', type: ExplorerDataType.TRANSACTION }),
-    ).toEqual('https://arbiscan.io/tx/hash')
-    expect(getExplorerLink({ chainId: UniverseChainId.Mainnet, data: 'hash', type: ExplorerDataType.ADDRESS })).toEqual(
+    expect(getExplorerLink(UniverseChainId.ArbitrumOne, 'hash', ExplorerDataType.TRANSACTION)).toEqual(
+      'https://arbiscan.io/tx/hash',
+    )
+    expect(getExplorerLink(UniverseChainId.Mainnet, 'hash', ExplorerDataType.ADDRESS)).toEqual(
       'https://etherscan.io/address/hash',
     )
-    expect(getExplorerLink({ chainId: UniverseChainId.Polygon, data: 'hash', type: ExplorerDataType.TOKEN })).toEqual(
+    expect(getExplorerLink(UniverseChainId.Polygon, 'hash', ExplorerDataType.TOKEN)).toEqual(
       'https://polygonscan.com/token/hash',
     )
   })
 
   it('handles chain with explorer URL', () => {
-    expect(
-      getExplorerLink({ chainId: UniverseChainId.Sepolia, data: 'hash', type: ExplorerDataType.TRANSACTION }),
-    ).toEqual('https://sepolia.etherscan.io/tx/hash')
+    expect(getExplorerLink(UniverseChainId.Sepolia, 'hash', ExplorerDataType.TRANSACTION)).toEqual(
+      'https://sepolia.etherscan.io/tx/hash',
+    )
   })
 
   it('handles Optimism block special case', () => {
-    expect(getExplorerLink({ chainId: UniverseChainId.Optimism, data: 'hash', type: ExplorerDataType.BLOCK })).toEqual(
+    expect(getExplorerLink(UniverseChainId.Optimism, 'hash', ExplorerDataType.BLOCK)).toEqual(
       'https://optimistic.etherscan.io/tx/hash',
     )
-  })
-
-  it('handles native currency', () => {
-    expect(getExplorerLink({ chainId: UniverseChainId.Base, type: ExplorerDataType.NATIVE })).toEqual(
-      'https://basescan.org/',
-    )
-  })
-
-  it('returns prefix if no data', () => {
-    expect(getExplorerLink({ chainId: UniverseChainId.Base, type: ExplorerDataType.ADDRESS })).toEqual(
-      'https://basescan.org/',
-    )
-    expect(getExplorerLink({ chainId: UniverseChainId.Base, type: ExplorerDataType.TOKEN })).toEqual(
-      'https://basescan.org/',
-    )
-    expect(getExplorerLink({ chainId: UniverseChainId.Base, type: ExplorerDataType.BLOCK })).toEqual(
-      'https://basescan.org/',
-    )
-    expect(getExplorerLink({ chainId: UniverseChainId.Base, type: ExplorerDataType.TRANSACTION })).toEqual(
-      'https://basescan.org/',
-    )
-    expect(getExplorerLink({ chainId: UniverseChainId.Base, type: ExplorerDataType.NFT })).toEqual(
-      'https://basescan.org/',
-    )
-  })
-
-  it('returns empty string for unsupported chain IDs', () => {
-    // Test with an unsupported chain ID (e.g., a random chain ID that might come from a dapp)
-    const unsupportedChainId = 999999 as UniverseChainId
-    expect(getExplorerLink({ chainId: unsupportedChainId, data: 'hash', type: ExplorerDataType.TRANSACTION })).toEqual(
-      '',
-    )
-    expect(getExplorerLink({ chainId: unsupportedChainId, type: ExplorerDataType.ADDRESS })).toEqual('')
   })
 })

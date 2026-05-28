@@ -1,7 +1,7 @@
 import { isBetaEnv, isProdEnv } from 'utilities/src/environment/env'
 
 function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
-  return hostname === 'app.uniswap.org'
+  return hostname === 'ring.exchange'
 }
 
 function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
@@ -13,7 +13,7 @@ export function isBrowserRouterEnabled(): boolean {
     if (
       isAppUniswapOrg(window.location) ||
       isAppUniswapStagingOrg(window.location) ||
-      isLocalhost(window.location) // playwright tests
+      isLocalhost(window.location) // cypress tests
     ) {
       return true
     }
@@ -34,5 +34,6 @@ export function isRemoteReportingEnabled(): boolean {
   if (isProdEnv() && !isAppUniswapOrg(window.location)) {
     return false
   }
-  return process.env.REACT_APP_ANALYTICS_ENABLED === 'true'
+  return false
+  // return process.env.REACT_APP_ANALYTICS_ENABLED === 'true'
 }

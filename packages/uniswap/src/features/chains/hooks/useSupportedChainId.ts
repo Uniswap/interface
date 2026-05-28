@@ -1,25 +1,12 @@
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useCallback } from 'react'
+import { useEnabledChains, useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useEvent } from 'utilities/src/react/hooks'
-
-export function createGetSupportedChainId(ctx: { getChains: () => UniverseChainId[] }): {
-  getSupportedChainId: (chainId?: number | UniverseChainId) => UniverseChainId | undefined
-  isSupportedChainId: (chainId?: number | UniverseChainId) => chainId is UniverseChainId
-} {
-  function getSupportedChainId(chainId?: number | UniverseChainId): UniverseChainId | undefined {
-    const chains = ctx.getChains()
-    return chains.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
-  }
-  function isSupportedChainId(chainId?: number | UniverseChainId): chainId is UniverseChainId {
-    return getSupportedChainId(chainId) !== undefined
-  }
-  return { getSupportedChainId, isSupportedChainId }
-}
+import { Connector } from 'wagmi'
 
 export function useSupportedChainId(chainId?: number | UniverseChainId): UniverseChainId | undefined {
   const { chains } = useEnabledChains()
-  const getChains = useEvent(() => chains)
-  return createGetSupportedChainId({ getChains }).getSupportedChainId(chainId)
+
+  return chains.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
 }
 
 export function useIsSupportedChainId(chainId?: number | UniverseChainId): chainId is UniverseChainId {
@@ -29,7 +16,19 @@ export function useIsSupportedChainId(chainId?: number | UniverseChainId): chain
 
 export function useIsSupportedChainIdCallback(): (chainId?: number | UniverseChainId) => chainId is UniverseChainId {
   const { chains } = useEnabledChains()
-  return useEvent((chainId?: number | UniverseChainId): chainId is UniverseChainId => {
-    return createGetSupportedChainId({ getChains: () => chains }).isSupportedChainId(chainId)
-  })
+
+  return useCallback(
+    (chainId?: number | UniverseChainId): chainId is UniverseChainId => {
+      return chains.includes(chainId as UniverseChainId)
+    },
+    [chains],
+  )
+}
+
+export function useSupportedChainIdWithConnector(
+  chainId?: number | UniverseChainId,
+  connector?: Connector,
+): UniverseChainId | undefined {
+  const { chains } = useEnabledChainsWithConnector(connector)
+  return chains.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
 }

@@ -1,11 +1,10 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
-import { DEFAULT_DEVICE_ACCESS_TIMEOUT, type DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
 import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+import { isInterface } from 'utilities/src/platform'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 export interface UserSettingsState {
@@ -13,21 +12,15 @@ export interface UserSettingsState {
   currentCurrency: FiatCurrency
   hideSmallBalances: boolean
   hideSpamTokens: boolean
-  hideReportedActivity?: boolean
   isTestnetModeEnabled?: boolean
-  hapticsEnabled: boolean
-  deviceAccessTimeout: DeviceAccessTimeout
 }
 
 export const initialUserSettingsState: UserSettingsState = {
-  currentLanguage: isWebApp || isExtensionApp ? getCurrentLanguageFromNavigator() : Language.English,
+  currentLanguage: isInterface ? getCurrentLanguageFromNavigator() : Language.English,
   currentCurrency: FiatCurrency.UnitedStatesDollar,
   hideSmallBalances: true,
   hideSpamTokens: true,
-  hideReportedActivity: true,
   isTestnetModeEnabled: false,
-  hapticsEnabled: true,
-  deviceAccessTimeout: DEFAULT_DEVICE_ACCESS_TIMEOUT,
 }
 
 const slice = createSlice({
@@ -39,9 +32,6 @@ const slice = createSlice({
     },
     setHideSpamTokens: (state, { payload }: PayloadAction<boolean>) => {
       state.hideSpamTokens = payload
-    },
-    setHideReportedActivity: (state, { payload }: PayloadAction<boolean>) => {
-      state.hideReportedActivity = payload
     },
     setCurrentLanguage: (state, action: PayloadAction<Language>) => {
       state.currentLanguage = action.payload
@@ -56,26 +46,16 @@ const slice = createSlice({
       state.isTestnetModeEnabled = payload
       analytics.setTestnetMode(payload, WALLET_TESTNET_CONFIG)
     },
-    setHapticsEnabled: (state, { payload }: PayloadAction<boolean>) => {
-      state.hapticsEnabled = payload
-    },
-    setDeviceAccessTimeout: (state, { payload }: PayloadAction<DeviceAccessTimeout>) => {
-      state.deviceAccessTimeout = payload
-    },
-    resetUserSettings: () => initialUserSettingsState,
+    resetSettings: () => initialUserSettingsState,
   },
 })
 
 export const {
   setHideSmallBalances,
   setHideSpamTokens,
-  setHideReportedActivity,
   setCurrentLanguage,
   setCurrentFiatCurrency,
   setIsTestnetModeEnabled,
-  setHapticsEnabled,
-  setDeviceAccessTimeout,
-  resetUserSettings,
 } = slice.actions
 
 export const userSettingsReducer = slice.reducer

@@ -1,29 +1,22 @@
 import { Flex } from 'ui/src'
-import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/TradeInfoRow/TradeInfoRow'
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/useDebouncedGasInfo'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 export function GasAndWarningRows(): JSX.Element {
-  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
-  const address = useActiveAddress(chainId)
+  const account = useAccountMeta()
 
-  const { isBlocked } = useIsBlocked(address)
+  const { isBlocked } = useIsBlocked(account?.address)
 
   const { formScreenWarning, warnings } = useParsedSwapWarnings()
   const inlineWarning =
     formScreenWarning && formScreenWarning.displayedInline && !isBlocked ? formScreenWarning.warning : undefined
 
   const debouncedGasInfo = useDebouncedGasInfo()
-
-  const insufficientGasFundsWarning = warnings.find((w) => {
-    return w.type === WarningLabel.InsufficientFunds
-  })
 
   return (
     <>
@@ -47,11 +40,9 @@ export function GasAndWarningRows(): JSX.Element {
           />
         )}
 
-        {!insufficientGasFundsWarning && (
-          <Flex gap="$spacing8" px="$spacing8" py="$spacing4">
-            <TradeInfoRow gasInfo={debouncedGasInfo} warning={inlineWarning} />
-          </Flex>
-        )}
+        <Flex gap="$spacing8" px="$spacing8" py="$spacing4">
+          <TradeInfoRow gasInfo={debouncedGasInfo} warning={inlineWarning} />
+        </Flex>
 
         <InsufficientNativeTokenWarning flow="swap" gasFee={debouncedGasInfo.gasFee} warnings={warnings} />
       </Flex>

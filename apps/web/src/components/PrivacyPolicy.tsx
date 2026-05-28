@@ -1,21 +1,44 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { ReactNode, useEffect, useMemo, useRef } from 'react'
+import Card, { DarkGrayCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
+import Row, { AutoRow, RowBetween } from 'components/deprecated/Row'
+import { useModalState } from 'hooks/useModalState'
+import styled from 'lib/styled-components'
+import { useEffect, useMemo, useRef } from 'react'
+import { ArrowDown, Info } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Flex, ModalCloseIcon, Text } from 'ui/src'
-import { ArrowUpRight } from 'ui/src/components/icons/ArrowUpRight'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { ModalCloseIcon } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isMobileWeb } from 'utilities/src/platform'
-import Card, { DarkGrayCard } from '~/components/Card/cards'
-import { AutoColumn } from '~/components/deprecated/Column'
-import Row, { AutoRow, RowBetween } from '~/components/deprecated/Row'
-import { useModalState } from '~/hooks/useModalState'
-import { ExternalLink } from '~/theme/components/Links'
+
+const Wrapper = styled.div`
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0 1rem;
+`
+
+const StyledExternalCard = styled(Card)`
+  background-color: ${({ theme }) => theme.accent2};
+  padding: 0.5rem;
+  width: 100%;
+
+  :hover,
+  :focus,
+  :active {
+    background-color: ${({ theme }) => theme.neutral3};
+  }
+`
+
+const StyledLinkOut = styled(ArrowDown)`
+  transform: rotate(230deg);
+`
 
 export function PrivacyPolicyModal() {
-  const node = useRef<HTMLDivElement>(undefined)
+  const node = useRef<HTMLDivElement>()
   const { isOpen, closeModal } = useModalState(ModalName.PrivacyPolicy)
   const { t } = useTranslation()
 
@@ -33,36 +56,12 @@ export function PrivacyPolicyModal() {
     <Modal name={ModalName.Legal} isModalOpen={isOpen} onClose={() => closeModal()} padding={0}>
       <AutoColumn gap="md" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
-          <Text variant="subheading1">{t('common.legalAndPrivacy')}</Text>
+          <ThemedText.DeprecatedMediumHeader>{t('common.legalAndPrivacy')}</ThemedText.DeprecatedMediumHeader>
           <ModalCloseIcon onClose={closeModal} />
         </RowBetween>
         <PrivacyPolicy />
       </AutoColumn>
     </Modal>
-  )
-}
-
-function ExternalLinkCard({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
-      <Card
-        backgroundColor="$accent2"
-        width="100%"
-        cursor="pointer"
-        hoverStyle={{ opacity: 0.8 }}
-        pressStyle={{ opacity: 0.7 }}
-      >
-        <RowBetween>
-          <AutoRow gap="4px">
-            <InfoCircle size="$icon.20" color="$accent1" strokeWidth={0} />
-            <Text variant="body3" color="$accent1">
-              {children}
-            </Text>
-          </AutoRow>
-          <ArrowUpRight size="$icon.20" strokeWidth={0} color="$neutral2" />
-        </RowBetween>
-      </Card>
-    </a>
   )
 }
 
@@ -83,7 +82,7 @@ function PrivacyPolicy() {
         description: (
           <>
             {t('privacy.trm')}{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
+            <ExternalLink href="https://support.ring.exchange/hc/en-us/articles/8671777747597-Address-Screening-Guide">
               {t('common.button.learn')}
             </ExternalLink>
           </>
@@ -98,10 +97,8 @@ function PrivacyPolicy() {
   )
 
   return (
-    <Flex
-      maxHeight="70vh"
-      $platform-web={{ overflow: 'auto' }}
-      px="$spacing16"
+    <Wrapper
+      draggable="true"
       onTouchMove={(e) => {
         // prevent modal gesture handler from dismissing modal when content is scrolling
         if (isMobileWeb) {
@@ -111,38 +108,57 @@ function PrivacyPolicy() {
     >
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
-          <ExternalLinkCard href="https://uniswap.org/terms-of-service">{t('privacy.uniswaptos')}</ExternalLinkCard>
-          <ExternalLinkCard href="https://uniswap.org/privacy-policy/">{t('common.privacyPolicy')}</ExternalLinkCard>
+          <StyledExternalCard>
+            <ExternalLink href="https://ring.exchange/terms-of-service">
+              <RowBetween>
+                <AutoRow gap="4px">
+                  <Info size={20} />
+                  <ThemedText.DeprecatedMain fontSize={14} color="accent1">
+                    {t('privacy.uniswaptos')}
+                  </ThemedText.DeprecatedMain>
+                </AutoRow>
+                <StyledLinkOut size={20} />
+              </RowBetween>
+            </ExternalLink>
+          </StyledExternalCard>
+          <StyledExternalCard>
+            <ExternalLink href="https://ring.exchange/#privacy-policy/">
+              <RowBetween>
+                <AutoRow gap="4px">
+                  <Info size={20} />
+                  <ThemedText.DeprecatedMain fontSize={14} color="accent1">
+                    {t('common.privacyPolicy')}
+                  </ThemedText.DeprecatedMain>
+                </AutoRow>
+                <StyledLinkOut size={20} />
+              </RowBetween>
+            </ExternalLink>
+          </StyledExternalCard>
         </AutoColumn>
-        <Text variant="body3" color="$neutral2">
-          {t('privacy.thirdPartyApis')}
-        </Text>
+        <ThemedText.DeprecatedMain fontSize={14}>{t('privacy.thirdPartyApis')}</ThemedText.DeprecatedMain>
         <AutoColumn gap="md">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
             <DarkGrayCard key={i}>
               <AutoColumn gap="sm">
                 <AutoRow gap="4px">
-                  <InfoCircle size="$icon.18" color="$neutral1" />
-                  <Text variant="body3" color="$neutral1">
+                  <Info size={18} />
+                  <ThemedText.DeprecatedMain fontSize={14} color="neutral1">
                     {name}
-                  </Text>
+                  </ThemedText.DeprecatedMain>
                 </AutoRow>
-                <Text variant="body3" color="$neutral2">
-                  {description}
-                </Text>
+                <ThemedText.DeprecatedMain fontSize={14}>{description}</ThemedText.DeprecatedMain>
               </AutoColumn>
             </DarkGrayCard>
           ))}
-          <Row justify="center" marginBottom="1rem">
-            <ExternalLink
-              href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq"
-              style={{ fontSize: 12 }}
-            >
-              {t('common.button.learn')}
-            </ExternalLink>
-          </Row>
+          <ThemedText.DeprecatedBody fontSize={12}>
+            <Row justify="center" marginBottom="1rem">
+              <ExternalLink href="https://help.ring.exchange/en/articles/5675203-terms-of-service-faq">
+                {t('common.button.learn')}
+              </ExternalLink>
+            </Row>
+          </ThemedText.DeprecatedBody>
         </AutoColumn>
       </AutoColumn>
-    </Flex>
+    </Wrapper>
   )
 }

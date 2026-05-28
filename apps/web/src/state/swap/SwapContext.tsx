@@ -1,12 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useReportTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useReportTotalBalancesUsdForAnalytics'
+import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
-import { useReportTotalBalancesUsdForAnalytics } from '~/appGraphql/data/apollo/useReportTotalBalancesUsdForAnalytics'
-import usePrevious from '~/hooks/usePrevious'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { CurrencyState, SwapAndLimitContext } from '~/state/swap/types'
 
 export function SwapAndLimitContextProvider({
   children,
@@ -67,7 +67,6 @@ export function SwapAndLimitContextProvider({
     }
   }, [initialInputCurrency, isUserSelectedToken, prefilledState, previousInitialInputCurrency])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +prefilledState
   useEffect(() => {
     if (!isUserSelectedToken && initialChainId && previousInitialChainId !== initialChainId) {
       setSelectedChainId(initialChainId)

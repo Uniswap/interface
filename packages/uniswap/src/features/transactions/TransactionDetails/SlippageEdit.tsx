@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Popover } from 'ui/src'
+
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
-import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
-import { isWebApp } from 'utilities/src/platform'
+import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
+import { isInterface } from 'utilities/src/platform'
 
 export function SlippageEdit({
   onWalletSlippageEditPress: onSlippageEditPress,
@@ -17,13 +18,13 @@ export function SlippageEdit({
       size="xxsmall"
       emphasis="secondary"
       fill={false}
-      onPress={() => (isWebApp ? setShowInterfaceSlippageSettings(true) : onSlippageEditPress?.())}
+      onPress={() => (isInterface ? setShowInterfaceSlippageSettings(true) : onSlippageEditPress?.())}
     >
       {t('common.button.edit')}
     </Button>
   )
 
-  if (!isWebApp) {
+  if (!isInterface) {
     return editButton
   }
 
@@ -33,7 +34,7 @@ export function SlippageEdit({
       placement="bottom-end"
       open={showInterfaceSlippageSettings}
       onOpenChange={(open: boolean) => {
-        if (!open && isWebApp) {
+        if (!open && isInterface) {
           setShowInterfaceSlippageSettings(false)
         }
       }}

@@ -5,27 +5,28 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { ConnectPopupContent } from 'src/app/features/popups/ConnectPopup'
 import { selectPopupState } from 'src/app/features/popups/selectors'
-import { closePopup, openPopup, PopupName } from 'src/app/features/popups/slice'
+import { PopupName, closePopup, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Circle, Flex, Popover, Text, TouchableArea, UniversalImage } from 'ui/src'
 import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'
-import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
-import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
+import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -55,7 +56,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
         }),
       )
     }
-  }, [isScreenFocused])
+  }, [isScreenFocused, pressProgress])
 
   const onBegin = (): void => {
     pressProgress.value = withTiming(1)
@@ -98,8 +99,9 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
   const dispatch = useDispatch()
 
   const displayName = useDisplayName(address)
-  const walletHasName = displayName && displayName.type !== DisplayNameType.Address
-  const formattedAddress = sanitizeAddressText(shortenAddress({ address }))
+  const { avatar } = useAvatar(address)
+  const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
+  const formattedAddress = sanitizeAddressText(shortenAddress(address))
   const { isOpen: isPopupOpen } = useSelector(selectPopupState(PopupName.Connect))
 
   // Used to delay popup showing on initial render, which leads to improper anchoring
@@ -110,7 +112,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   const onPressAccount = async (): Promise<void> => {
     dispatch(closePopup(PopupName.Connect))
-    navigate(`/${AppRoutes.AccountSwitcher}`)
+    navigate(AppRoutes.AccountSwitcher)
   }
 
   const { isConnected, lastChainId, dappUrl, dappIconUrl } = useDappContext()
@@ -152,12 +154,12 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
     <Flex gap="$spacing8">
       <Flex row justifyContent="space-between" alignItems="flex-start">
         <TouchableArea pressStyle={{ scale: 0.95 }} onPress={onPressAccount}>
-          <Flex row alignItems="center" gap="$spacing4">
+          <Flex group row alignItems="center" gap="$spacing4">
             <Flex $group-hover={{ opacity: 0.6 }}>
-              <AccountIcon address={address} size={iconSizes.icon48} />
+              <AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon48} />
             </Flex>
             <Flex $group-hover={{ opacity: 1 }} opacity={0}>
-              <RotatableChevron color="$neutral3" direction="down" size="$icon.20" />
+              <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
             </Flex>
           </Flex>
         </TouchableArea>
@@ -189,7 +191,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
                 borderColor="$surface2"
                 borderRadius="$rounded20"
                 borderWidth="$spacing1"
-                enableRemoveScroll={true}
+                disableRemoveScroll={false}
                 zIndex="$default"
                 {...animationPresets.fadeInDownOutUp}
                 shadowColor="$shadowColor"

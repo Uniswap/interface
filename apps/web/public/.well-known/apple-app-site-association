@@ -4,37 +4,40 @@
       {
         "appIDs": [
           "JH3UHGZD75.com.uniswap.mobile",
-          "JH3UHGZD75.com.uniswap.mobile.beta",
           "JH3UHGZD75.com.uniswap.mobile.dev"
         ],
         "components": [
+          {
+            "#": "/nfts/asset/*",
+            "comment": "NFT Item"
+          },
+          {
+            "#": "/nfts/collection/*",
+            "comment": "NFT Collection"
+          },
           {
             "#": "/tokens/*",
             "comment": "Token address"
           },
           {
-            "#": "/portfolio/*",
-            "comment": "Wallet portfolio"
+            "#": "/address/*",
+            "comment": "Wallet address"
+          },
+          {
+            "/": "/nfts/asset/*",
+            "comment": "NFT Item"
+          },
+          {
+            "/": "/nfts/collection/*",
+            "comment": "NFT Collection"
           },
           {
             "/": "/tokens/*",
             "comment": "Token address"
           },
           {
-            "/": "/portfolio/*",
-            "comment": "Wallet portfolio"
-          },
-          {
-            "/": "/explore/tokens/*",
-            "comment": "Explore Tokens"
-          },
-          {
-            "/": "/swap/*",
-            "comment": "Swap"
-          },
-          {
-            "/": "/buy/*",
-            "comment": "Buy"
+            "/": "/address/*",
+            "comment": "Wallet address"
           }
         ]
       }

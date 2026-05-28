@@ -7,21 +7,21 @@ import { WalletConnectModal } from 'src/components/Requests/ScanSheet/WalletConn
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
+  WalletConnectSigningRequest,
   removePendingSession,
   removeRequest,
   setDidOpenFromDeepLink,
-  WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Flex } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { useActiveAccount, useActiveAccountAddressWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 const WalletConnectModalName = {
@@ -43,12 +43,8 @@ export function WalletConnectModals(): JSX.Element {
    * opens Uniswap app via Spotlight search – we don't want `returnToPreviousApp` to return
    * to Spotlight search.
    * */
-  useAppStateTrigger({
-    from: 'active',
-    to: 'inactive',
-    callback: () => {
-      dispatch(setDidOpenFromDeepLink(undefined))
-    },
+  useAppStateTrigger('active', 'inactive', () => {
+    dispatch(setDidOpenFromDeepLink(undefined))
   })
 
   const currRequest = pendingRequests[0] ?? null
@@ -124,11 +120,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   }
 
   const isRequestFromSignerAccount = signerAccounts.some((account) =>
-    // TODO(WALL-7065): Update to support solana
-    areAddressesEqual({
-      addressInput1: { address: account.address, platform: Platform.EVM },
-      addressInput2: { address: currRequest.account, platform: Platform.EVM },
-    }),
+    areAddressesEqual(account.address, currRequest.account),
   )
 
   if (!isRequestFromSignerAccount) {
@@ -145,7 +137,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         onClose={onClose}
       >
         <Flex alignSelf="stretch" backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing16">
-          <AccountDetails address={currRequest.account} />
+          <AccountDetails address={currRequest.account} iconSize={iconSizes.icon24} />
         </Flex>
       </WarningModal>
     )

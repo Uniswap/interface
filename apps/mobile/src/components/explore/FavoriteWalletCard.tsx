@@ -5,14 +5,15 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
+import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
-import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
 import { isIOS } from 'utilities/src/platform'
-import { noop } from 'utilities/src/react/noop'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export type FavoriteWalletCardProps = {
@@ -30,10 +31,11 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const displayName = useDisplayName(address)
+  const { avatar } = useAvatar(address)
 
   const icon = useMemo(() => {
-    return <AccountIcon address={address} size={iconSizes.icon20} />
-  }, [address])
+    return <AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon20} />
+  }, [address, avatar])
 
   const onRemove = useCallback(() => {
     dispatch(removeWatchedAddress({ address }))
@@ -42,7 +44,7 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
   /// Options for long press context menu
   const menuActions = useMemo(() => {
     return [
-      { title: t('explore.wallets.favorite.action.remove'), systemIcon: 'heart.slash.fill' },
+      { title: t('explore.wallets.favorite.action.remove'), systemIcon: 'heart.fill' },
       { title: t('explore.wallets.favorite.action.edit'), systemIcon: 'square.and.pencil' },
     ]
   }, [t])
@@ -77,7 +79,7 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
         disabled={isEditing}
         m="$spacing4"
         testID="favorite-wallet-card"
-        onLongPress={noop}
+        onLongPress={disableOnPress}
         onPress={(): void => {
           navigate(address)
         }}
@@ -87,14 +89,13 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
         {...shadowProps}
       >
         <Flex row gap="$spacing4" justifyContent="space-between" p="$spacing12">
-          <Flex row shrink alignItems="center" gap="$spacing8" {...(isEditing && { paddingRight: '$spacing24' })}>
+          <Flex row shrink alignItems="center" gap="$spacing8">
             {icon}
             <DisplayNameText
               displayName={displayName}
               textProps={{
                 adjustsFontSizeToFit: displayName?.type === DisplayNameType.Address,
                 variant: 'body1',
-                numberOfLines: 1,
               }}
             />
           </Flex>

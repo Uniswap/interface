@@ -7,19 +7,10 @@ declare module 'react-native' {
     ScantasticEncryption: ScantasticEncryption
   }
 }
-
 import { NativeModules } from 'react-native'
 
 const { ScantasticEncryption } = NativeModules
 
-export function getEncryptedMnemonic({
-  mnemonicId,
-  modulus,
-  exponent,
-}: {
-  mnemonicId: string
-  modulus: string
-  exponent: string
-}): Promise<string> {
-  return ScantasticEncryption.getEncryptedMnemonic(mnemonicId, modulus, exponent)
+export function getEncryptedMnemonic(mnemonicId: string, n: string, e: string): Promise<string> {
+  return ScantasticEncryption.getEncryptedMnemonic(mnemonicId, n, e)
 }

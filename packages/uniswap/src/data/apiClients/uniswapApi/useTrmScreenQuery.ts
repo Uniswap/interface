@@ -1,7 +1,7 @@
-import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
-import { type ScreenRequest, type ScreenResponse, type UseQueryApiHelperHookArgs } from '@universe/api'
+import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { UniswapApiClient } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
+import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
+import { ScreenRequest, ScreenResponse, fetchTrmScreen } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useTrmScreenQuery({
@@ -12,7 +12,7 @@ export function useTrmScreenQuery({
 
   return useQuery<ScreenResponse>({
     queryKey,
-    queryFn: params ? async (): Promise<ScreenResponse> => await UniswapApiClient.fetchTrmScreen(params) : skipToken,
+    queryFn: params ? async (): ReturnType<typeof fetchTrmScreen> => await fetchTrmScreen(params) : skipToken,
     ...rest,
   })
 }

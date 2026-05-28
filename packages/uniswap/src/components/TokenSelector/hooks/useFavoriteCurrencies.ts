@@ -1,10 +1,10 @@
 import { ApolloError } from '@apollo/client'
-import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
+import { GqlResult } from 'uniswap/src/data/types'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
+import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 
 export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {

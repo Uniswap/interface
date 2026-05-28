@@ -2,8 +2,8 @@ import userEvent from '@testing-library/user-event'
 import {
   LimitCustomMarketPriceButton,
   LimitPresetPriceButton,
-} from '~/components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
-import { render, screen } from '~/test-utils/render'
+} from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
+import { render, screen } from 'test-utils/render'
 
 describe('LimitPresetPriceButton', () => {
   it.each([
@@ -13,9 +13,8 @@ describe('LimitPresetPriceButton', () => {
     [5, false, true],
     [5, true, false],
     [10, false, true],
-    // eslint-disable-next-line max-params
   ])('renders %p correctly, disabled %p and selected %p', async (num, disabled, selected) => {
-    const onSelect = vi.fn()
+    const onSelect = jest.fn()
     const { container } = render(
       <LimitPresetPriceButton
         priceAdjustmentPercentage={num}
@@ -32,7 +31,7 @@ describe('LimitPresetPriceButton', () => {
 
 describe('LimitCustomMarketPriceButton', () => {
   it('renders the custom amount correctly', async () => {
-    const onSelect = vi.fn()
+    const onSelect = jest.fn()
     const { container } = render(<LimitCustomMarketPriceButton customAdjustmentPercentage={10} onSelect={onSelect} />)
     await userEvent.click(screen.getByText('+10%'))
     expect(container.firstChild).toMatchSnapshot()
@@ -40,22 +39,22 @@ describe('LimitCustomMarketPriceButton', () => {
   })
 
   it('renders the custom amount correctly, negative change', async () => {
-    const onSelect = vi.fn()
+    const onSelect = jest.fn()
     const { container } = render(<LimitCustomMarketPriceButton customAdjustmentPercentage={-10} onSelect={onSelect} />)
-    await userEvent.click(screen.getByText('-10.00%'))
+    await userEvent.click(screen.getByText('-10%'))
     expect(container.firstChild).toMatchSnapshot()
     expect(onSelect).toHaveBeenCalledWith(0)
   })
 
   it('renders disabled correctly', async () => {
-    const onSelect = vi.fn()
+    const onSelect = jest.fn()
     render(<LimitCustomMarketPriceButton customAdjustmentPercentage={10} onSelect={onSelect} disabled={true} />)
     await userEvent.click(screen.getByText('+10%'))
     expect(onSelect).toHaveBeenCalledTimes(0)
   })
 
   it('renders selected correctly', async () => {
-    const onSelect = vi.fn()
+    const onSelect = jest.fn()
     render(<LimitCustomMarketPriceButton customAdjustmentPercentage={10} onSelect={onSelect} selected={true} />)
     await userEvent.click(screen.getByText('+10%'))
     expect(onSelect).toHaveBeenCalledTimes(1)

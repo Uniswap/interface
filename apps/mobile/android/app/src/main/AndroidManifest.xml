@@ -7,7 +7,7 @@
   <uses-permission android:name="android.permission.USE_BIOMETRIC" />
   <uses-permission android:name="android.permission.USE_FINGERPRINT" />
   <uses-permission android:name="android.permission.VIBRATE" />
-  <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+  <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
   <application
     android:name=".MainApplication"
@@ -30,10 +30,6 @@
     <meta-data
       android:name="com.onesignal.NotificationAccentColor.DEFAULT"
       android:value="@string/notification_accent_color" />
-
-    <meta-data
-      android:name="com.onesignal.NotificationServiceExtension"
-      android:value="com.uniswap.notifications.SilentPushNotificationServiceExtension" />
 
     <!-- We use FCM for WalletConnect push notifications -->
 
@@ -67,12 +63,38 @@
         <data android:scheme="uniswap" />
       </intent-filter>
       <intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="wc" />
+			</intent-filter>
+      <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
 
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
 
-        <data android:scheme="wc" />
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/nfts/asset/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/nfts/collection/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/tokens/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/address/" />
       </intent-filter>
       <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
@@ -81,55 +103,14 @@
         <category android:name="android.intent.category.BROWSABLE" />
 
         <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/nfts/asset/" />
+            android:scheme="https"
+            android:host="uniswap.org"
+            android:pathPrefix="/app" />
 
         <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/nfts/collection/" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/tokens" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/portfolio/" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/explore/tokens" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/swap" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/buy" />
-      </intent-filter>
-      <intent-filter android:autoVerify="true">
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data
-          android:scheme="https"
-          android:host="uniswap.org"
-          android:pathPrefix="/app" />
-
-        <data
-          android:scheme="https"
-          android:host="uniswap.org"
-          android:pathPrefix="/app/wc" />
+            android:scheme="https"
+            android:host="uniswap.org"
+            android:pathPrefix="/app/wc" />
       </intent-filter>
     </activity>
   </application>

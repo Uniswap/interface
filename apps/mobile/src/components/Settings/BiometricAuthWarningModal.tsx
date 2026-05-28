@@ -1,8 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBiometricName } from 'src/features/biometricsSettings/hooks'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal, WarningModalProps } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'utilities/src/platform'
 
@@ -11,18 +11,9 @@ type Props = {
   isTouchIdDevice: boolean
   onConfirm: WarningModalProps['onAcknowledge']
   onClose: WarningModalProps['onClose']
-  rejectText?: WarningModalProps['rejectText']
-  acknowledgeText?: WarningModalProps['acknowledgeText']
 }
 
-export function BiometricAuthWarningModal({
-  isOpen,
-  isTouchIdDevice,
-  onConfirm,
-  onClose,
-  rejectText,
-  acknowledgeText,
-}: Props): JSX.Element {
+export function BiometricAuthWarningModal({ isOpen, isTouchIdDevice, onConfirm, onClose }: Props): JSX.Element {
   const { t } = useTranslation()
   const biometricsMethod = useBiometricName(isTouchIdDevice)
   return (
@@ -32,8 +23,8 @@ export function BiometricAuthWarningModal({
           ? t('settings.setting.biometrics.warning.message.android')
           : t('settings.setting.biometrics.warning.message.ios', { biometricsMethod })
       }
-      rejectText={rejectText ?? t('common.button.back')}
-      acknowledgeText={acknowledgeText ?? t('common.button.skip')}
+      rejectText={t('common.button.back')}
+      acknowledgeText={t('common.button.skip')}
       isOpen={isOpen}
       modalName={ModalName.FaceIDWarning}
       severity={WarningSeverity.Low}

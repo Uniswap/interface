@@ -1,18 +1,22 @@
 import { useQueries } from '@tanstack/react-query'
-import { GraphQLApi } from '@universe/api'
+import { apolloClient } from 'appGraphql/data/apollo/client'
+import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
+import { apolloQueryOptions } from 'appGraphql/data/util'
+import { useAccount } from 'hooks/useAccount'
+import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
 import { useMemo } from 'react'
+import { PositionDetails } from 'types/position'
+import {
+  Token,
+  TokenDocument,
+  TokenQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { apolloClient } from '~/appGraphql/data/apollo/client'
-import { gqlTokenToCurrencyInfo } from '~/appGraphql/data/types'
-import { apolloQueryOptions } from '~/appGraphql/data/util'
-import { useAccount } from '~/hooks/useAccount'
-import { useTokenContractsConstant } from '~/hooks/useTokenContractsConstant'
-import { PositionDetails } from '~/types/position'
-import { hasURL } from '~/utils/urlChecks'
+import { hasURL } from 'utils/urlChecks'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
   return Array.from(
@@ -25,16 +29,16 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
     queryKey: [ReactQueryCacheKey.PositionCurrencyInfo, position],
     queryFn: async () => {
       const queries = [
-        apolloClient.query<GraphQLApi.TokenQuery>({
-          query: GraphQLApi.TokenDocument,
+        apolloClient.query<TokenQuery>({
+          query: TokenDocument,
           variables: {
             address: position.token0,
             chain: toGraphQLChain(chainId),
           },
           fetchPolicy: 'cache-first',
         }),
-        apolloClient.query<GraphQLApi.TokenQuery>({
-          query: GraphQLApi.TokenDocument,
+        apolloClient.query<TokenQuery>({
+          query: TokenDocument,
           variables: {
             address: position.token1,
             chain: toGraphQLChain(chainId),
@@ -45,8 +49,8 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
       const [currency0, currency1] = await Promise.all(queries)
       return {
         position,
-        currency0Info: gqlTokenToCurrencyInfo(currency0.data.token as GraphQLApi.Token),
-        currency1Info: gqlTokenToCurrencyInfo(currency1.data.token as GraphQLApi.Token),
+        currency0Info: gqlTokenToCurrencyInfo(currency0.data.token as Token),
+        currency1Info: gqlTokenToCurrencyInfo(currency1.data.token as Token),
       }
     },
   })
@@ -110,10 +114,10 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
         // prioritize the token entity from the list if it exists
         // if the token isn't in the list, then use the data returned from chain calls
         let urlSymbolCount = 0
-        if (hasURL(currency0Info?.currency.symbol ?? addressesToSymbol[position.token0])) {
+        if (hasURL(currency0Info?.currency?.symbol ?? addressesToSymbol[position.token0])) {
           urlSymbolCount++
         }
-        if (hasURL(currency1Info?.currency.symbol ?? addressesToSymbol[position.token1])) {
+        if (hasURL(currency1Info?.currency?.symbol ?? addressesToSymbol[position.token1])) {
           urlSymbolCount++
         }
         // if one token is in the list, then one token can have a url symbol

@@ -1,13 +1,13 @@
 import { FlashList } from '@shopify/flash-list'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
-import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { OnchainItemListProps } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import {
   ProcessedRow,
   ProcessedRowType,
   processSectionsToRows,
 } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 const TOKEN_ITEM_SIZE = 64
@@ -20,8 +20,6 @@ export const OnchainItemList = memo(function _OnchainItemList({
   renderItem,
   renderSectionHeader,
   sections,
-  renderedInModal,
-  contentContainerStyle,
 }: OnchainItemListProps<OnchainItemListOption>): JSX.Element {
   const insets = useAppInsets()
   const ref = useRef<FlashList<ProcessedRow>>(null)
@@ -79,15 +77,13 @@ export const OnchainItemList = memo(function _OnchainItemList({
     },
     [keyExtractor],
   )
-  const ListComponent = renderedInModal ? AnimatedBottomSheetFlashList : FlashList
-
   return (
-    <ListComponent
+    <AnimatedBottomSheetFlashList
       ref={ref}
       data={data}
       ListEmptyComponent={ListEmptyComponent}
       estimatedItemSize={TOKEN_ITEM_SIZE}
-      contentContainerStyle={{ paddingBottom: insets.bottom, ...contentContainerStyle }}
+      contentContainerStyle={{ paddingBottom: insets.bottom }}
       keyboardShouldPersistTaps="always"
       keyExtractor={makeKey}
       keyboardDismissMode="on-drag"

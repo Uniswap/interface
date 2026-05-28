@@ -7,17 +7,16 @@ import {
   TrackingConsent,
   UploadFrequency,
 } from '@datadog/mobile-react-native'
-import { type ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
+import { ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
+import { PropsWithChildren, default as React, useEffect } from 'react'
+import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
   DatadogIgnoredErrorsValType,
   DynamicConfigs,
-  getDynamicConfigValue,
-} from '@universe/gating'
-import { PropsWithChildren, default as React, useEffect, useState } from 'react'
-import { DatadogContext } from 'src/features/datadog/DatadogContext'
-import { config } from 'uniswap/src/config'
-import { datadogEnabledBuild, isTestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
+} from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { datadogEnabledBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -53,11 +52,7 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
         DynamicConfigs.DatadogIgnoredErrors,
         DatadogIgnoredErrorsConfigKey,
         DatadogIgnoredErrorsValType
-      >({
-        config: DynamicConfigs.DatadogIgnoredErrors,
-        key: DatadogIgnoredErrorsConfigKey.Errors,
-        defaultValue: [],
-      })
+      >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
 
       const ignoredError = ignoredErrors.find(({ messageContains }) => event?.message.includes(messageContains))
       if (ignoredError) {
@@ -69,7 +64,6 @@ async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
     sessionSamplingRate,
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (localDevDatadogEnabled) {
     Object.assign(datadogConfig, {
       sessionSamplingRate: 100,
@@ -103,31 +97,26 @@ export function DatadogProviderWrapper({
   children,
   sessionSampleRate,
 }: PropsWithChildren<{ sessionSampleRate: number | undefined }>): JSX.Element {
-  const [isInitialized, setInitialized] = useState(false)
-
   useEffect(() => {
     if ((datadogEnabledBuild || config.isE2ETest) && sessionSampleRate !== undefined) {
       initializeDatadog(sessionSampleRate).catch(() => undefined)
     }
   }, [sessionSampleRate])
 
-  if (isTestRun) {
+  if (isJestRun) {
     return <>{children}</>
   }
   logger.setDatadogEnabled(true)
   return (
-    <DatadogContext.Provider value={{ isInitialized, setInitialized }}>
-      <DatadogProvider
-        configuration={datadogAutoInstrumentation}
-        onInitialization={async () => {
-          const sessionId = await DdRum.getCurrentSessionId()
-          // we do not want to log anything if session is not sampled
-          logger.setDatadogEnabled(sessionId !== undefined)
-          setInitialized(true)
-        }}
-      >
-        {children}
-      </DatadogProvider>
-    </DatadogContext.Provider>
+    <DatadogProvider
+      configuration={datadogAutoInstrumentation}
+      onInitialization={async () => {
+        const sessionId = await DdRum.getCurrentSessionId()
+        // we do not want to log anything if session is not sampled
+        logger.setDatadogEnabled(sessionId !== undefined)
+      }}
+    >
+      {children}
+    </DatadogProvider>
   )
 }

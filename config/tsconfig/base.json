@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "noEmit": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "inlineSources": false,
+    "strict": true,
+    "preserveSymlinks": true,
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2022",
+      "dom"
+    ],
+    "baseUrl": "../../",
+    "rootDir": "../../",
+    "outDir": "../../dist/out-tsc",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "ui/*": [
+        "packages/ui/*"
+      ],
+      "uniswap/*": [
+        "packages/uniswap/*"
+      ],
+      "utilities/*": [
+        "packages/utilities/*"
+      ],
+      "wallet/*": [
+        "packages/wallet/*"
+      ]
+    }
+  }
+}

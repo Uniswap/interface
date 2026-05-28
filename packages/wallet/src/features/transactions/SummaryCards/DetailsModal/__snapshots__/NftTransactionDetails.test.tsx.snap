@@ -1,0 +1,203 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NftTransactionDetails Component renders NftTransactionDetails without error 1`] = `
+[
+  <View
+    style={
+      {
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderTopLeftRadius": 20,
+        "borderTopRightRadius": 20,
+        "flexDirection": "column",
+        "overflow": "hidden",
+      }
+    }
+  >
+    <View
+      cancelable={true}
+      collapsable={false}
+      disabled={false}
+      focusVisibleStyle={{}}
+      focusable={true}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
+      minPressDuration={0}
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onLayout={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onPress={[Function]}
+      onPressIn={[Function]}
+      onPressOut={[Function]}
+      role="button"
+      style={
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        }
+      }
+    />
+    <View
+      style={
+        {
+          "borderBottomColor": {
+            "dynamic": {
+              "dark": "rgba(255,255,255,0.12)",
+              "light": "rgba(34,34,34,0.05)",
+            },
+          },
+          "borderBottomLeftRadius": 20,
+          "borderBottomRightRadius": 20,
+          "borderBottomWidth": 1,
+          "borderLeftColor": {
+            "dynamic": {
+              "dark": "rgba(255,255,255,0.12)",
+              "light": "rgba(34,34,34,0.05)",
+            },
+          },
+          "borderLeftWidth": 1,
+          "borderRightColor": {
+            "dynamic": {
+              "dark": "rgba(255,255,255,0.12)",
+              "light": "rgba(34,34,34,0.05)",
+            },
+          },
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": {
+            "dynamic": {
+              "dark": "rgba(255,255,255,0.12)",
+              "light": "rgba(34,34,34,0.05)",
+            },
+          },
+          "borderTopWidth": 0,
+          "flexDirection": "column",
+          "paddingBottom": 12,
+          "paddingLeft": 12,
+          "paddingRight": 12,
+          "paddingTop": 12,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.4}
+        style={
+          {
+            "color": {
+              "dynamic": {
+                "dark": "#FFFFFF",
+                "light": "#131313",
+              },
+            },
+            "fontFamily": "Basel Grotesk",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+        suppressHighlighting={true}
+      >
+        voluptates repudiandae aliquid
+      </Text>
+      <View
+        aria-disabled={true}
+        collapsable={false}
+        focusVisibleStyle={{}}
+        forwardedRef={[Function]}
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        onLayout={[Function]}
+        pointerEvents="box-none"
+        role="button"
+        style={
+          {
+            "backgroundColor": "transparent",
+            "borderBottomLeftRadius": 12,
+            "borderBottomRightRadius": 12,
+            "borderTopLeftRadius": 12,
+            "borderTopRightRadius": 12,
+            "flexDirection": "column",
+            "opacity": 0.6,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          }
+        }
+        tabIndex={-1}
+        userSelect="none"
+      >
+        <View
+          onBlur={[Function]}
+          onFocus={[Function]}
+          style={
+            {
+              "color": {
+                "dynamic": {
+                  "dark": "rgba(255, 255, 255, 0.65)",
+                  "light": "rgba(19, 19, 19, 0.63)",
+                },
+              },
+              "flexDirection": "row",
+              "paddingRight": 12,
+            }
+          }
+        >
+          <Text
+            allowFontScaling={false}
+            maxFontSizeMultiplier={1.4}
+            numberOfLines={1}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={
+              {
+                "color": {
+                  "dynamic": {
+                    "dark": "rgba(255, 255, 255, 0.65)",
+                    "light": "rgba(19, 19, 19, 0.63)",
+                  },
+                },
+                "fontFamily": "Basel Grotesk",
+                "fontSize": 14,
+                "fontWeight": "400",
+                "lineHeight": 18.2,
+              }
+            }
+            suppressHighlighting={true}
+          >
+            inventore qui fugiat
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>,
+  <div
+    style={
+      {
+        "display": "contents",
+      }
+    }
+  />,
+]
+`;

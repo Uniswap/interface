@@ -5,7 +5,7 @@ export enum OnchainItemSectionName {
   RecentSearches = 'recentSearches',
 
   YourTokens = 'yourTokens',
-  HiddenTokens = 'hiddenTokens',
+  StockTokens = 'stockTokens',
   TrendingTokens = 'trendingTokens',
   FavoriteTokens = 'favoriteTokens',
   SuggestedTokens = 'suggestedTokens',
@@ -17,6 +17,8 @@ export enum OnchainItemSectionName {
   TrendingPools = 'trendingPools',
   Wallets = 'wallets',
   FavoriteWallets = 'favoriteWallets',
+  NFTCollections = 'nftCollections',
+  PopularNFTCollections = 'popularNFTCollections',
 }
 
 export type OnchainItemSection<T extends OnchainItemListOption> = {
@@ -25,5 +27,4 @@ export type OnchainItemSection<T extends OnchainItemListOption> = {
   name?: string
   rightElement?: JSX.Element
   endElement?: JSX.Element
-  sectionHeader?: JSX.Element
 }

@@ -13,6 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import android.view.View
 
 class SeedPhraseInputViewModel(
   private val ethersRs: RnEthersRs,
@@ -33,7 +36,6 @@ class SeedPhraseInputViewModel(
     object NotEnoughWords : MnemonicError
     object WrongRecoveryPhrase : MnemonicError
     object InvalidPhrase : MnemonicError
-    object WordIsAddress : MnemonicError
   }
 
   data class ReactNativeStrings(
@@ -43,7 +45,6 @@ class SeedPhraseInputViewModel(
     val errorPhraseLength: String,
     val errorWrongPhrase: String,
     val errorInvalidPhrase: String,
-    val errorWordIsAddress: String,
   )
 
   // Sourced externally from RN
@@ -56,7 +57,6 @@ class SeedPhraseInputViewModel(
       errorPhraseLength = "",
       errorWrongPhrase = "",
       errorInvalidPhrase = "",
-      errorWordIsAddress = "",
     )
   )
 
@@ -80,11 +80,10 @@ class SeedPhraseInputViewModel(
 
   fun handleInputChange(value: TextFieldValue) {
     input = value
-    val normalized = normalizeInput(value)
 
+    val normalized = normalizeInput(value)
     val skipLastWord = normalized.lastOrNull() != ' '
-    val skipInvalidWord = skipLastWord && !isAddress(normalized)
-    validateInput(normalized, skipInvalidWord)
+    validateInput(normalized, skipLastWord)
 
     validateLastWordJob?.cancel()
 
@@ -94,53 +93,42 @@ class SeedPhraseInputViewModel(
     }
   }
 
-  private fun validateInput(normalizedInput: String, skipInvalidWord: Boolean) {
+  private fun validateInput(normalizedInput: String, skipLastWord: Boolean) {
     val mnemonic = normalizedInput.trim()
     val words = mnemonic.split(" ")
 
-    val prevStatus = status
-    val isValidLength = words.size in MIN_LENGTH..MAX_LENGTH
-    val firstInvalidWord = EthersRs.findInvalidWord(mnemonic)
-    val isFirstWordInvalid = firstInvalidWord == words.last() && skipInvalidWord
-    val isInvalidLengthError =
-      prevStatus is Status.Error && (prevStatus.error == MnemonicError.NotEnoughWords || prevStatus.error == MnemonicError.TooManyWords) && !isValidLength
-
-    if (isFirstWordInvalid) {
+    if (words.isEmpty()) {
+      status = Status.None
       return
     }
 
-    status =
-      if (isAddress(mnemonic)) {
-        Status.Error(MnemonicError.WordIsAddress)
-      } else if (firstInvalidWord.isNotEmpty()) {
-        Status.Error(MnemonicError.InvalidWord(firstInvalidWord))
-      } else if (isInvalidLengthError) {
-        prevStatus
-      } else if (firstInvalidWord.isEmpty() && isValidLength) {
-        Status.Valid
-      } else {
-        Status.None
-      }
+    val isValidLength = words.size in MIN_LENGTH..MAX_LENGTH
+    val firstInvalidWord = EthersRs.findInvalidWord(mnemonic)
+    status = if (firstInvalidWord == words.last() && skipLastWord) {
+      Status.None
+    } else if (firstInvalidWord.isEmpty() && isValidLength) {
+      Status.Valid
+    } else if (firstInvalidWord.isNotEmpty()) {
+      Status.Error(MnemonicError.InvalidWord(firstInvalidWord))
+    } else {
+      Status.None
+    }
 
-    val canSubmit = status !is Status.Error && mnemonic != ""
+    val canSubmit = status !is Status.Error && mnemonic != "" && firstInvalidWord.isEmpty()
     onInputValidated(canSubmit)
   }
 
   private fun normalizeInput(value: TextFieldValue) =
     value.text.replace("\\s+".toRegex(), " ").lowercase()
 
-  private fun isAddress(value: String) = value.startsWith("0x") && value.length == 42
-
   fun handleSubmit() {
-    validateLastWordJob?.cancel()
-    
     try {
       val normalized = normalizeInput(input)
       val mnemonic = normalized.trim()
       val words = mnemonic.split(" ")
       val valid = EthersRs.validateMnemonic(mnemonic)
 
-      if (words.size < MIN_LENGTH || words.size in MIN_LENGTH + 1..<MAX_LENGTH) {
+      if (words.size < MIN_LENGTH) {
         status = Status.Error(MnemonicError.NotEnoughWords)
       } else if (words.size > MAX_LENGTH) {
         status = Status.Error(MnemonicError.TooManyWords)

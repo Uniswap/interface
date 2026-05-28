@@ -25,7 +25,6 @@ export function SettingsCloudBackupPasswordConfirmScreen({ navigation, route: { 
   return (
     <CloudBackupPassword.FormProvider
       isConfirmation={true}
-      checkPasswordBeforeSubmit={true}
       navigateToNextScreen={navigateToNextScreen}
       passwordToConfirm={password}
     >

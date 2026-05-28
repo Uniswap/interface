@@ -1,18 +1,19 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { type Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { CurrencyAmount, type Currency } from '@uniswap/sdk-core'
+import { PositionInfo } from 'components/Liquidity/types'
+import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
-import { PositionInfo } from '~/components/Liquidity/types'
-import { LP_INCENTIVES_REWARD_TOKEN } from '~/components/LpIncentives/constants'
 
 interface UseLpIncentivesFormattedEarningsProps {
   liquidityPosition: PositionInfo
-  fiatFeeValue0: Maybe<CurrencyAmount<Currency>>
-  fiatFeeValue1: Maybe<CurrencyAmount<Currency>>
+  fiatFeeValue0?: CurrencyAmount<Currency>
+  fiatFeeValue1?: CurrencyAmount<Currency>
 }
 
 interface LpIncentivesEarningsResult {
@@ -32,13 +33,16 @@ export function useLpIncentivesFormattedEarnings({
   fiatFeeValue0,
   fiatFeeValue1,
 }: UseLpIncentivesFormattedEarningsProps): LpIncentivesEarningsResult {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatCurrencyAmount } = useLocalizationContext()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const { price: uniPrice } = useUSDCPrice(LP_INCENTIVES_REWARD_TOKEN)
 
   return useMemo(() => {
     const formatCurrency = (value: CurrencyAmount<Currency>) => {
-      return convertFiatAmountFormatted(value.toExact(), NumberType.FiatStandard)
+      return formatCurrencyAmount({
+        value,
+        type: NumberType.FiatStandard,
+      })
     }
 
     const result: LpIncentivesEarningsResult = {
@@ -107,5 +111,5 @@ export function useLpIncentivesFormattedEarnings({
     }
 
     return result
-  }, [fiatFeeValue0, fiatFeeValue1, liquidityPosition, isLPIncentivesEnabled, uniPrice, convertFiatAmountFormatted])
+  }, [fiatFeeValue0, fiatFeeValue1, liquidityPosition, isLPIncentivesEnabled, uniPrice, formatCurrencyAmount])
 }

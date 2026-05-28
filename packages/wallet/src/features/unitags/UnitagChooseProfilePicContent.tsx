@@ -1,12 +1,12 @@
-import { UnitagClaimSource } from '@universe/api'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { imageSizes, spacing } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
+import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
+import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { MobileScreens, OnboardingScreens, UnitagEntryPoint } from 'uniswap/src/types/screens/mobile'
@@ -89,18 +89,19 @@ export function UnitagChooseProfilePicContent({
   const attemptClaimUnitag = async (): Promise<void> => {
     setIsClaiming(true)
     const source = convertEntryPointToAnalyticsSource(entryPoint)
-    const { claimError: attemptClaimError } = await claimUnitag({
-      claim: {
+    const { claimError: attemptClaimError } = await claimUnitag(
+      {
         address,
         username: unitag,
         avatarUri: imageUri,
       },
-      context: {
+      {
         source,
         hasENSAddress: !!ensName,
       },
-      signMessage: generateSignerFunc(account, signerManager),
-    })
+      address,
+      generateSignerFunc(account, signerManager),
+    )
     setIsClaiming(false)
     setClaimError(attemptClaimError)
 
@@ -145,7 +146,7 @@ export function UnitagChooseProfilePicContent({
           loading={isClaiming}
           testID={TestID.Continue}
           isDisabled={!!claimError || isClaiming}
-          size="large"
+          size="medium"
           variant="branded"
           onPress={onPressContinue}
         >

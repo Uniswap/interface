@@ -1,15 +1,13 @@
+import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
+import { NavRingIcon } from 'components/Logo/NavRingIcon'
+import { MenuDropdown } from 'components/NavBar/CompanyMenu/MenuDropdown'
+import { MobileMenuDrawer } from 'components/NavBar/CompanyMenu/MobileMenuDrawer'
+import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router'
-import { Flex, Popover, styled, Text, useIsTouchDevice, useMedia } from 'ui/src'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Flex, Popover, Text, styled, useIsTouchDevice, useMedia } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons/Hamburger'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ArrowChangeDown } from '~/components/Icons/ArrowChangeDown'
-import { NavIcon } from '~/components/Logo/NavIcon'
-import { MenuDropdown } from '~/components/NavBar/CompanyMenu/MenuDropdown'
-import { MobileMenuDrawer } from '~/components/NavBar/CompanyMenu/MobileMenuDrawer'
-import { useIsMobileDrawer } from '~/components/NavBar/ScreenSizes'
 
 const ArrowDownWrapper = styled(Text, {
   color: '$neutral2',
@@ -21,29 +19,38 @@ const ArrowDownWrapper = styled(Text, {
   },
 })
 
+// Memoized gradient style object to avoid recreating on every render
+const gradientTextStyle = {
+  background: 'linear-gradient(90deg, #FF79C9 0%, #5C8AFF 100%)',
+  WebkitBackgroundClip: 'text' as const,
+  WebkitTextFillColor: 'transparent' as const,
+  backgroundClip: 'text' as const,
+}
+
 export function CompanyMenu() {
   const popoverRef = useRef<Popover>(null)
   const media = useMedia()
   const isMobileDrawer = useIsMobileDrawer()
   const isLargeScreen = !media.xxl
   const location = useLocation()
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +popoverRef
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
   }, [popoverRef])
-  // biome-ignore lint/correctness/useExhaustiveDependencies: location dependency is sufficient for this effect
-  useEffect(() => {
-    // Immediately reset state to prevent flash during transitions
-    setIsOpen(false)
-    closeMenu()
-  }, [location, closeMenu])
+  useEffect(() => closeMenu(), [location, closeMenu])
 
+  const handleLogoClick = useCallback(() => {
+    navigate({
+      pathname: '/',
+      search: '?intro=true',
+    })
+  }, [navigate])
   const isTouchDevice = useIsTouchDevice()
 
   return (
-    <Popover ref={popoverRef} placement="bottom" hoverable={!media.xl} stayInFrame allowFlip onOpenChange={setIsOpen}>
+    <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
       <Popover.Trigger data-testid={TestID.NavCompanyMenu}>
         <Flex
           row
@@ -54,18 +61,14 @@ export function CompanyMenu() {
           group
           $platform-web={{ containerType: 'normal' }}
         >
-          <Trace logPress element={ElementName.NavbarCompanyMenuLogo}>
-            <Link to="/?intro=true" style={{ textDecoration: 'none' }}>
-              <Flex row alignItems="center" gap="$gap4" data-testid={TestID.NavUniswapLogo}>
-                <NavIcon />
-                {isLargeScreen && (
-                  <Text variant="subheading1" color="$accent1" userSelect="none">
-                    Uniswap
-                  </Text>
-                )}
-              </Flex>
-            </Link>
-          </Trace>
+          <Flex row alignItems="center" gap="$gap4" onPress={handleLogoClick} data-testid={TestID.NavUniswapLogo}>
+            <NavRingIcon />
+            {isLargeScreen && (
+              <Text variant="subheading1" userSelect="none" style={gradientTextStyle}>
+                Ring Swap
+              </Text>
+            )}
+          </Flex>
           {(media.md || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
           {!media.md && !isTouchDevice && (
             <ArrowDownWrapper open={isOpen}>

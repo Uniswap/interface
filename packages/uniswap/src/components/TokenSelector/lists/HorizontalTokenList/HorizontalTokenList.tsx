@@ -1,7 +1,7 @@
 import { memo } from 'react'
-import { TokenOption } from 'uniswap/src/components/lists/items/types'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export type HorizontalTokenListProps = {
@@ -10,7 +10,7 @@ export type HorizontalTokenListProps = {
   index: number
   section: OnchainItemSection<TokenOption[]>
   expanded?: boolean
-  onExpand?: (tokens: TokenOption[]) => void
+  onExpand?: () => void
 }
 
 export const HorizontalTokenList = memo(function HorizontalTokenList(_props: HorizontalTokenListProps): JSX.Element {

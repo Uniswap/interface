@@ -1,26 +1,22 @@
-import { GqlResult } from '@universe/api'
 import { useCallback, useMemo } from 'react'
-import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useFavoriteCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteCurrencies'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
-import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-export function useFavoriteTokensOptions({
-  addresses,
-  chainFilter,
-}: {
-  addresses: AddressGroup
-  chainFilter: UniverseChainId | null
-}): GqlResult<TokenOption[] | undefined> {
+export function useFavoriteTokensOptions(
+  address: Address | undefined,
+  chainFilter: UniverseChainId | null,
+): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPorfolioBalancesById,
-  } = usePortfolioBalancesForAddressById(addresses)
+  } = usePortfolioBalancesForAddressById(address)
 
   const {
     data: favoriteCurrencies,
@@ -44,7 +40,7 @@ export function useFavoriteTokensOptions({
     (!portfolioBalancesById && portfolioBalancesByIdError) || (!favoriteCurrencies && favoriteCurrenciesError)
 
   const filteredFavoriteTokenOptions = useMemo(
-    () => favoriteTokenOptions && filter({ tokenOptions: favoriteTokenOptions, chainFilter }),
+    () => favoriteTokenOptions && filter(favoriteTokenOptions, chainFilter),
     [chainFilter, favoriteTokenOptions],
   )
 

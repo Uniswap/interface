@@ -1,7 +1,8 @@
-import { styled, YStack, type YStackProps } from 'tamagui'
+import { YStack, styled, type YStackProps } from 'tamagui'
 import { FOCUS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { withCommonPressStyle } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/utils'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isTestEnv } from 'utilities/src/environment/env'
+import { isWeb } from 'utilities/src/platform'
 
 type TouchableAreaVariant = 'unstyled' | 'none' | 'outlined' | 'filled' | 'raised' | 'floating'
 
@@ -19,6 +20,9 @@ export const TouchableAreaFrame = styled(YStack, {
   tag: 'div',
   role: 'button',
   group: true,
+  // TODO(MOB-2826): tests are picking up weird animationStyle on snapshots
+  animation: isTestEnv() ? undefined : 'simple',
+  animateOnly: isTestEnv() ? undefined : ['transform', 'opacity'],
   pressStyle: withCommonPressStyle({}),
   borderRadius: '$rounded12',
   backgroundColor: '$transparent',
@@ -58,12 +62,6 @@ export const TouchableAreaFrame = styled(YStack, {
         cursor: 'default',
         '$platform-web': {
           pointerEvents: 'none',
-        },
-      },
-      false: {
-        '$platform-web': {
-          // Explicitly setting this enables a child to be clickable even when the parent is disabled
-          pointerEvents: 'auto',
         },
       },
     },
@@ -130,18 +128,18 @@ export const TouchableAreaFrame = styled(YStack, {
           '$theme-dark': {
             boxShadow: disabled
               ? undefined
-              : isWebPlatform
+              : isWeb
                 ? `0px 1px 6px 2px rgba(0, 0, 0, 0.54), 0px 1px 2px 0px rgba(0, 0, 0, 0.40)`
                 : undefined,
-            shadowColor: disabled ? undefined : isWebPlatform ? 'rgba(0, 0, 0, 0.40)' : undefined,
+            shadowColor: disabled ? undefined : isWeb ? 'rgba(0, 0, 0, 0.40)' : undefined,
           },
           '$theme-light': {
             boxShadow: disabled
               ? undefined
-              : isWebPlatform
+              : isWeb
                 ? `0px 1px 6px 2px rgba(0, 0, 0, 0.03), 0px 1px 2px 0px rgba(0, 0, 0, 0.02)`
                 : undefined,
-            shadowColor: disabled ? undefined : isWebPlatform ? 'rgba(0, 0, 0, 0.02)' : undefined,
+            shadowColor: disabled ? undefined : isWeb ? 'rgba(0, 0, 0, 0.02)' : undefined,
           },
           '$platform-native': disabled
             ? {}
@@ -195,5 +193,3 @@ export const TouchableAreaFrame = styled(YStack, {
     row: false,
   },
 })
-
-TouchableAreaFrame.displayName = 'TouchableAreaFrame'

@@ -1,12 +1,11 @@
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DAI_CURRENCY_INFO, daiCurrencyInfo, ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
+import { DAI_CURRENCY_INFO, ETH_CURRENCY_INFO, daiCurrencyInfo, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { render, within } from 'uniswap/src/test/test-utils'
 
-vi.mock('ui/src/components/UniversalImage/internal/PlainImage', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('ui/src/components/UniversalImage/internal/PlainImage.web')>()
-  return { ...actual }
-})
+jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
+  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
+}))
 
 describe(SplitLogo, () => {
   it('renders without error', () => {

@@ -25,7 +25,6 @@ export enum ExtensionOnboardingScreens {
 
   // Shared Flows
   SetPassword = 'SetPassword',
-  SetUpBiometricUnlock = 'SetUpBiometricUnlock',
 
   // New Wallet Flow
   ClaimUnitag = 'ClaimUnitag',

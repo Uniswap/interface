@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType, DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { useOnchainDisplayName, WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -24,50 +24,26 @@ export function useAccounts(): Record<string, Account> {
 }
 
 /**
- * Hook used to get a list of signer mnemonic accounts sorted by derivation index
- * @returns list of signer mnemonic accounts sorted by derivation index
- */
-export function useSignerMnemonicAccountsSorted(): SignerMnemonicAccount[] {
-  const addressToAccount = useAccounts()
-
-  return useMemo(() => {
-    const accounts = Object.values(addressToAccount)
-    return accounts
-      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
-      .sort((a, b) => {
-        return a.derivationIndex - b.derivationIndex
-      })
-  }, [addressToAccount])
-}
-
-/**
- * Hook used to get a list of view-only accounts sorted by time imported
- * @returns list of view-only accounts sorted by time imported
- */
-export function useViewOnlyAccountsSorted(): Account[] {
-  const addressToAccount = useAccounts()
-
-  return useMemo(() => {
-    const accounts = Object.values(addressToAccount)
-    return accounts
-      .filter((a) => a.type === AccountType.Readonly)
-      .sort((a, b) => {
-        return a.timeImportedMs - b.timeImportedMs
-      })
-  }, [addressToAccount])
-}
-
-/**
  * Hook used to get a list of all accounts
  * @returns list of accounts, with signer accounts first sorted by derivation index then view only accounts sorted by time imported
  */
 export function useAccountsList(): Account[] {
-  const signerMnemonicAccounts = useSignerMnemonicAccountsSorted()
-  const viewOnlyAccounts = useViewOnlyAccountsSorted()
+  const addressToAccount = useAccounts()
 
   return useMemo(() => {
-    return [...signerMnemonicAccounts, ...viewOnlyAccounts]
-  }, [signerMnemonicAccounts, viewOnlyAccounts])
+    const accounts = Object.values(addressToAccount)
+    const _mnemonicWallets = accounts
+      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
+      .sort((a, b) => {
+        return a.derivationIndex - b.derivationIndex
+      })
+    const _viewOnlyWallets = accounts
+      .filter((a) => a.type === AccountType.Readonly)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+    return [..._mnemonicWallets, ..._viewOnlyWallets]
+  }, [addressToAccount])
 }
 
 export function useAccount(address: Address): Account {
@@ -154,6 +130,13 @@ export function useSelectAccountNotificationSetting(address: Address): boolean {
   return useSelector((state: WalletState) => selectAccountNotificationSetting(state, address))
 }
 
+type DisplayNameOptions = {
+  showShortenedEns?: boolean
+  includeUnitagSuffix?: boolean
+  showLocalName?: boolean
+  overrideDisplayName?: string
+}
+
 /**
  * If user has an onchain ENS/Unitag name, display that name.
  * Otherwise if user is onboarding or has saved a local label, display the local name.
@@ -164,7 +147,7 @@ export function useSelectAccountNotificationSetting(address: Address): boolean {
  * @param options.includeUnitagSuffix - Whether to include the unitag suffix (.uni.eth) in returned unitag name
  * @param options.showLocalName - Whether to show the local wallet name
  */
-export function useDisplayName(address: Maybe<string>, options?: WalletDisplayNameOptions): DisplayName | undefined {
+export function useDisplayName(address: Maybe<string>, options?: DisplayNameOptions): DisplayName | undefined {
   const onchainDisplayName = useOnchainDisplayName(address, options)
 
   // Need to account for pending accounts for use within onboarding

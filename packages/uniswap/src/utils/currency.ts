@@ -2,8 +2,8 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 
@@ -15,7 +15,7 @@ export function getSymbolDisplayText(symbol: Maybe<string>): Maybe<string> {
   }
 
   return symbol.length > DEFAULT_MAX_SYMBOL_CHARACTERS
-    ? symbol.substring(0, DEFAULT_MAX_SYMBOL_CHARACTERS - 1) + '…'
+    ? symbol?.substring(0, DEFAULT_MAX_SYMBOL_CHARACTERS - 1) + '…'
     : symbol
 }
 
@@ -50,21 +50,15 @@ export function deserializeToken(serializedToken: SerializedToken): Token {
   )
 }
 
-export function getFormattedCurrencyAmount({
-  currency,
-  amount,
-  formatter,
+export function getFormattedCurrencyAmount(
+  currency: Maybe<Currency>,
+  currencyAmountRaw: string,
+  formatter: LocalizationContextState,
   isApproximateAmount = false,
   valueType = ValueType.Raw,
-}: {
-  currency: Maybe<Currency>
-  amount: string
-  formatter: LocalizationContextState
-  isApproximateAmount?: boolean
-  valueType?: ValueType
-}): string {
+): string {
   const currencyAmount = getCurrencyAmount({
-    value: amount,
+    value: currencyAmountRaw,
     valueType,
     currency,
   })
@@ -87,11 +81,7 @@ export function getCurrencyDisplayText(
     return symbolDisplayText
   }
 
-  return tokenAddressString &&
-    getValidAddress({
-      address: tokenAddressString,
-      chainId: currency?.chainId ?? UniverseChainId.Mainnet,
-    })
-    ? shortenAddress({ address: tokenAddressString })
+  return tokenAddressString && getValidAddress(tokenAddressString, true)
+    ? shortenAddress(tokenAddressString)
     : tokenAddressString
 }

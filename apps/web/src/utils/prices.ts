@@ -1,8 +1,9 @@
+import { Pair as FewPair } from '@ring-protocol/few-v2-sdk'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { PriceChartData } from '~/components/Charts/PriceChart'
+import { PriceChartData } from 'components/Charts/PriceChart'
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -11,7 +12,8 @@ import {
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
   ONE_HUNDRED_PERCENT,
   ZERO_PERCENT,
-} from '~/constants/misc'
+} from 'constants/misc'
+import { DefaultTheme } from 'lib/styled-components'
 
 const THIRTY_BIPS_FEE = new Percent(30, BIPS_BASE)
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
@@ -45,10 +47,12 @@ function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>
         ONE_HUNDRED_PERCENT.subtract(
           swap.route.pools.reduce<Percent>((currentFee: Percent, pool): Percent => {
             const fee =
-              pool instanceof Pair
+              pool instanceof Pair || pool instanceof FewPair
                 ? // not currently possible given protocol check above, but not fatal
                   FeeAmount.MEDIUM
-                : pool.fee
+                : 'fee' in pool
+                  ? (pool as any).fee
+                  : FeeAmount.MEDIUM
             return currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(fee, 1_000_000)))
           }, ONE_HUNDRED_PERCENT),
         ),
@@ -103,6 +107,27 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
     impact--
   }
   return 0
+}
+
+function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error' | undefined {
+  if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
+    return 'error'
+  }
+  if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
+    return 'warning'
+  }
+  return undefined
+}
+
+export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | undefined {
+  switch (getPriceImpactWarning(priceImpact)) {
+    case 'error':
+      return 'critical'
+    case 'warning':
+      return 'deprecated_accentWarning'
+    default:
+      return undefined
+  }
 }
 
 /**

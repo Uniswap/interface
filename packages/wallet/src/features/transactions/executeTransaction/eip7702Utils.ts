@@ -1,15 +1,19 @@
 import { providers, utils } from 'ethers'
-import { ensure0xHex, HexString, isValidHexString } from 'utilities/src/addresses/hex'
+import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import {
   Address,
-  parseSignature,
-  SignedAuthorization,
-  serializeTransaction,
   TransactionSerializable,
   TransactionSerializableEIP7702,
+  parseSignature,
+  serializeTransaction,
 } from 'viem'
-import { hashAuthorization, recoverAuthorizationAddress, verifyAuthorization } from 'viem/utils'
+import {
+  SignedAuthorization,
+  hashAuthorization,
+  recoverAuthorizationAddress,
+  verifyAuthorization,
+} from 'viem/experimental'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 
 /**
@@ -19,29 +23,19 @@ import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
  * @param signedAuthorization - Optional signed authorization for delegation
  * @returns - A TransactionSerializableEIP7702 object for viem
  */
-export function convertToEIP7702({
-  ethersTx,
-  walletAddress,
-  signedAuthorization,
-}: {
-  ethersTx: providers.TransactionRequest
-  walletAddress: Address
-  signedAuthorization: SignedAuthorization
-}): TransactionSerializableEIP7702 {
+export function convertToEIP7702(
+  ethersTx: providers.TransactionRequest,
+  walletAddress: Address,
+  signedAuthorization: SignedAuthorization,
+): TransactionSerializableEIP7702 {
   if (ethersTx.to !== ethersTx.from) {
     throw new Error('Smart wallet transactions must already be encoded and have matching to/from addresses')
   }
-
-  const data = ethersTx.data
-  if (!data || typeof data !== 'string' || (data !== '0x' && !isValidHexString(data))) {
-    throw new Error(`Invalid data value: ${data}`)
-  }
-
   const serializableTx: TransactionSerializableEIP7702 = {
     // Standard transaction fields
     to: walletAddress,
     value: ethersTx.value ? BigInt(ethersTx.value.toString()) : BigInt(0),
-    data,
+    data: ethersTx.data as `0x${string}`,
     nonce: ethersTx.nonce ? Number(ethersTx.nonce) : 0,
     chainId: Number(ethersTx.chainId),
 
@@ -60,25 +54,19 @@ export function convertToEIP7702({
 
 /**
  * Signs and serializes an EIP-7702 transaction
- * @param signer
  * @param tx - The viem transaction to sign and serialize
  * @param address - The address to sign with
  * @param chainId - The chain ID for the transaction
  * @returns - The serialized transaction with signature
  */
-export async function signAndSerializeEIP7702Transaction({
-  signer,
-  tx,
-  address,
-  chainId,
-}: {
-  signer: NativeSigner
-  tx: TransactionSerializable
-  address: string
-  chainId: number
-}): Promise<HexString> {
+export async function signAndSerializeEIP7702Transaction(
+  signer: NativeSigner,
+  tx: TransactionSerializable,
+  address: string,
+  chainId: number,
+): Promise<`0x${string}`> {
   // Serialize the transaction using viem
-  const serializedTx = serializeTransaction(tx)
+  const serializedTx = await serializeTransaction(tx)
 
   // Hash the transaction
   const hashedTx = utils.keccak256(serializedTx)
@@ -109,23 +97,17 @@ export async function signAndSerializeEIP7702Transaction({
  * @param nonce - The nonce to use for the authorization
  * @returns - The signed authorization
  */
-export async function createSignedAuthorization({
-  signer,
-  walletAddress,
-  chainId,
-  contractAddress,
-  nonce,
-}: {
-  signer: NativeSigner
-  walletAddress: Address
-  chainId: number
-  contractAddress: Address
-  nonce: number
-}): Promise<SignedAuthorization> {
+export async function createSignedAuthorization(
+  signer: NativeSigner,
+  walletAddress: Address,
+  chainId: number,
+  contractAddress: string,
+  nonce: number,
+): Promise<SignedAuthorization> {
   try {
-    const authorizationHash: HexString = hashAuthorization({
+    const authorizationHash: `0x${string}` = hashAuthorization({
       chainId,
-      contractAddress,
+      contractAddress: contractAddress as `0x${string}`,
       nonce,
     })
 
@@ -136,12 +118,12 @@ export async function createSignedAuthorization({
     )
 
     // Reconstruct authorization from signature
-    let signedAuthorization = reconstructAuthorization({
+    let signedAuthorization = reconstructAuthorization(
       chainId,
-      contractAddress,
+      contractAddress as `0x${string}`,
       nonce,
-      signature: signedAuthorizationMessage,
-    })
+      signedAuthorizationMessage,
+    )
 
     // normalize values if needed
     const r = normalizeHexValue(signedAuthorization.r)
@@ -153,18 +135,14 @@ export async function createSignedAuthorization({
       s,
     }
 
-    if (!isValidHexString(signedAuthorizationMessage)) {
-      throw new Error(`Invalid signed authorization message: ${signedAuthorizationMessage}`)
-    }
-
     // Verify the authorization
     const recoveredAddress = await recoverAuthorizationAddress({
       authorization: signedAuthorization,
-      signature: signedAuthorizationMessage,
+      signature: signedAuthorizationMessage as `0x${string}`,
     })
 
     const signedAuthorizationValid = await verifyAuthorization({
-      address: walletAddress,
+      address: walletAddress as `0x${string}`,
       authorization: signedAuthorization,
     })
 
@@ -186,7 +164,7 @@ export async function createSignedAuthorization({
 }
 
 // Function to normalize hex strings by removing leading zeros
-function normalizeHexValue(hexValue: HexString): HexString {
+function normalizeHexValue(hexValue: `0x${string}`): `0x${string}` {
   // Check if it's a hex string with 0x prefix
   if (!hexValue.startsWith('0x')) {
     return hexValue
@@ -198,7 +176,7 @@ function normalizeHexValue(hexValue: HexString): HexString {
   if (normalized === '') {
     return '0x0'
   }
-  return `0x${normalized}`
+  return `0x${normalized}` as `0x${string}`
 }
 
 /**
@@ -209,30 +187,21 @@ function normalizeHexValue(hexValue: HexString): HexString {
  * @param signature - The signature of the authorization
  * @returns - The reconstructed SignedAuthorization
  */
-function reconstructAuthorization({
-  chainId,
-  contractAddress,
-  nonce,
-  signature,
-}: {
-  chainId: number
-  contractAddress: HexString
-  nonce: number
-  signature: string
-}): SignedAuthorization {
+export function reconstructAuthorization(
+  chainId: number,
+  contractAddress: `0x${string}`,
+  nonce: number,
+  signature: string,
+): SignedAuthorization {
   try {
     // ensure it starts with 0x and is 132 characters long
     if (!signature.startsWith('0x') || signature.length !== 132) {
       throw new Error('Invalid signature format')
     }
 
-    if (!isValidHexString(signature)) {
-      throw new Error(`Invalid signature: ${signature}`)
-    }
-
-    const parsedSignature = parseSignature(signature)
+    const parsedSignature = parseSignature(signature as `0x${string}`)
     const signedAuthorization: SignedAuthorization = {
-      address: contractAddress,
+      contractAddress,
       chainId,
       nonce,
       ...parsedSignature,

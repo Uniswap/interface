@@ -15,7 +15,6 @@ const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number
   return (
     <Skeleton>
       <Flex>
-        {/* eslint-disable-next-line max-params */}
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TransactionLoader opacity={(length - i) / length} />

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   cancelAnimation,
@@ -26,7 +26,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
-import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
@@ -36,12 +35,30 @@ const UNISWAP_LOGO_SCALE_LOADING = 1.2
 const UNISWAP_LOGO_SCALE_DEFAULT = 1
 const QR_CODE_SIZE = 212
 
+function useDocumentVisibility(): boolean {
+  const [isDocumentVisible, setIsDocumentVisible] = useState(!document.hidden)
+
+  const handleVisibilityChange = (): void => {
+    setIsDocumentVisible(!document.hidden)
+  }
+
+  useEffect(() => {
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
+
+  return isDocumentVisible
+}
+
 export function ScanToOnboard(): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
   const { goToNextStep } = useOnboardingSteps()
-  const isWindowVisible = useIsWindowVisible()
+  const isDocumentVisible = useDocumentVisibility()
 
   const { sessionUUID, isLoadingUUID, publicKey, resetScantastic, expirationTimestamp, setExpirationTimestamp } =
     useScantasticContext()
@@ -102,7 +119,7 @@ export function ScanToOnboard(): JSX.Element {
         throw new Error(`Scantastic OTP check response did not include the requested OTP state`)
       }
 
-      setExpirationTimestamp(data.expiresAtInSeconds * ONE_SECOND_MS)
+      setExpirationTimestamp((current) => data?.expiresAtInSeconds * ONE_SECOND_MS ?? current)
 
       // mobile app has received the OTP and the user should input it into this UI
       if (otpState === 'ready') {
@@ -125,12 +142,12 @@ export function ScanToOnboard(): JSX.Element {
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined
 
-    if (isWindowVisible) {
+    if (isDocumentVisible) {
       interval = setInterval(checkOTPState, ONE_SECOND_MS)
     }
 
     return () => clearInterval(interval)
-  }, [checkOTPState, isWindowVisible])
+  }, [checkOTPState, isDocumentVisible])
 
   useTimeout(resetScantastic, expirationTimestamp - Date.now())
 
@@ -156,7 +173,7 @@ export function ScanToOnboard(): JSX.Element {
     )
 
     return () => cancelAnimation(qrScale)
-  }, [isLoadingUUID])
+  }, [isLoadingUUID, qrScale])
   // Using useAnimatedStyle and AnimatedFlex because tamagui scale animation not working
   const qrAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -164,14 +181,12 @@ export function ScanToOnboard(): JSX.Element {
     }
   }, [qrScale])
 
-  /*
-   * This needs to be memoized in order to avoid a rerender loop when navigating back to
-   * this screen automatically on expiration or on HTTP error from within the Scantastic context.
-   * This happens because of the way we animate these screens (see `OnboardingSteps.tsx`).
-   * See WALL-6908 for original issue.
-   */
-  const onboardingScreen = useMemo(() => {
-    return (
+  return (
+    <Trace
+      logImpression
+      properties={{ flow: ExtensionOnboardingFlow.Scantastic }}
+      screen={ExtensionOnboardingScreens.OnboardingQRCode}
+    >
       <OnboardingScreen
         belowFrameContent={
           errorDerivingQR ? (
@@ -208,7 +223,12 @@ export function ScanToOnboard(): JSX.Element {
                       </Text>
                     </Flex>
 
-                    <RotatableChevron color="$neutral3" direction="end" size="$icon.24" />
+                    <RotatableChevron
+                      color="$neutral3"
+                      direction="end"
+                      height={iconSizes.icon24}
+                      width={iconSizes.icon24}
+                    />
                   </Flex>
                 </Flex>
               </TouchableArea>
@@ -246,16 +266,15 @@ export function ScanToOnboard(): JSX.Element {
           >
             {errorDerivingQR ? (
               <Flex px="$spacing16" height={QR_CODE_SIZE} width={QR_CODE_SIZE}>
-                <Text color={colors.black.val} m="auto" textAlign="center" variant="body3">
+                <Text color="$neutral2" m="auto" textAlign="center" variant="body3">
                   {t('onboarding.scan.error')}
                 </Text>
               </Flex>
             ) : (
               <>
                 {/*
-                NOTE: if you modify the style or colors of the QR code, make sure to thoroughly test
-                how they perform when scanning them both on light and dark modes.
-                */}
+                NOTE: if you modify the style or colors of the QR code, make sure to thoroughly test how they perform when scanning them both on light and dark modes.
+               */}
                 <AnimatedFlex
                   alignItems="center"
                   backgroundColor={isLoadingUUID ? '$transparent' : '$surface1'}
@@ -283,7 +302,6 @@ export function ScanToOnboard(): JSX.Element {
                     <QRCode
                       bgColor="transparent"
                       fgColor={colors.black.val}
-                      level="L"
                       size={QR_CODE_SIZE}
                       value={scantasticValue}
                     />
@@ -309,16 +327,6 @@ export function ScanToOnboard(): JSX.Element {
           </Flex>
         </Flex>
       </OnboardingScreen>
-    )
-  }, [colors.black.val, colors.white.val, errorDerivingQR, isLoadingUUID, qrAnimatedStyle, scantasticValue, t])
-
-  return (
-    <Trace
-      logImpression
-      properties={{ flow: ExtensionOnboardingFlow.Scantastic }}
-      screen={ExtensionOnboardingScreens.OnboardingQRCode}
-    >
-      {onboardingScreen}
     </Trace>
   )
 }

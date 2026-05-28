@@ -1,27 +1,33 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import type { ClassicQuoteResponse, GasFeeResult } from '@universe/api'
-import { FeeType, TradingApi } from '@universe/api'
-import type { providers } from 'ethers/lib/ethers'
+import { providers } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/consts'
-import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
-import { UnknownSimulationError } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
-import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import {
+  BridgeQuote,
+  ClassicQuote,
+  QuoteResponse,
+  Routing,
+  TransactionFailureReason,
+} from 'uniswap/src/data/tradingApi/__generated__/index'
+import { FeeType, GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
+import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import {
   createPrepareSwapRequestParams,
   createProcessSwapResponse,
+  getBridgeOrClassicQuoteResponse,
   getShouldSkipSwapRequest,
   getSimulationError,
   processWrapResponse,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type { TokenApprovalInfo, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
-import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { ApprovalAction, TokenApprovalInfo, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
-
-const mockPermitData = { fakePermitField: 'hi' } as unknown as TradingApi.NullablePermit
 
 describe('processWrapResponse', () => {
   it('should process wrap response with gas fee result', () => {
@@ -54,86 +60,80 @@ describe('processWrapResponse', () => {
       maxFeePerGas: '100000000000',
       maxPriorityFeePerGas: '1000000000',
     })
-    expect(result.gasEstimate.wrapEstimate).toBe(gasFeeResult.gasEstimate)
+    expect(result.gasEstimate.wrapEstimates).toBe(gasFeeResult.gasEstimates)
     expect(result.swapRequestArgs).toBeUndefined()
   })
 })
 
 describe('processWrapResponse (smart contract unwrap fallback)', () => {
-  it('should fallback to hardcoded gas limit when gas params are missing for a smart contract unwrap', async () => {
-    // Reset modules to allow re-mocking
-    vi.resetModules()
+  it('should fallback to hardcoded gas limit when gas params are missing for a smart contract unwrap', () => {
+    jest.isolateModules(() => {
+      jest.doMock('utilities/src/platform', () => ({
+        __esModule: true,
+        ...jest.requireActual('utilities/src/platform'),
+        isInterface: true,
+      }))
 
-    // Mock the platform module before importing
-    vi.doMock('utilities/src/platform', async () => {
-      const actual = await vi.importActual<typeof import('utilities/src/platform')>('utilities/src/platform')
-      return {
-        ...actual,
-        isWebApp: true,
+      const {
+        processWrapResponse: mockedProcessWrapResponse,
+      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils')
+
+      const {
+        WRAP_FALLBACK_GAS_LIMIT_IN_GWEI,
+      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants')
+
+      const gasFeeResult: GasFeeResult = {
+        value: '1000',
+        displayValue: '0.001',
+        isLoading: false,
+        error: null,
+        params: undefined,
       }
+
+      const wrapTxRequest = {
+        to: '0x123',
+        value: '1000000',
+      } as providers.TransactionRequest
+
+      const expectedGasLimit = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9
+
+      const fallbackGasParams = { gasLimit: expectedGasLimit }
+
+      const result = mockedProcessWrapResponse({
+        gasFeeResult,
+        wrapTxRequest,
+        fallbackGasParams,
+      })
+
+      expect(result.txRequests?.[0]).toEqual(expect.objectContaining({ gasLimit: expectedGasLimit }))
     })
-
-    // Use dynamic imports to get modules with the mock applied
-    const { processWrapResponse: mockedProcessWrapResponse } = await import(
-      'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
-    )
-
-    const { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } = await import(
-      'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
-    )
-
-    const gasFeeResult: GasFeeResult = {
-      value: '1000',
-      displayValue: '0.001',
-      isLoading: false,
-      error: null,
-      params: undefined,
-    }
-
-    const wrapTxRequest = {
-      to: '0x123',
-      value: '1000000',
-    } as providers.TransactionRequest
-
-    const expectedGasLimit = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9
-
-    const fallbackGasParams = { gasLimit: expectedGasLimit }
-
-    const result = mockedProcessWrapResponse({
-      gasFeeResult,
-      wrapTxRequest,
-      fallbackGasParams,
-    })
-
-    expect(result.txRequests?.[0]).toEqual(expect.objectContaining({ gasLimit: expectedGasLimit }))
-
-    // Clean up by resetting mocks
-    vi.resetModules()
-    vi.doUnmock('utilities/src/platform')
   })
 })
 
 describe('createPrepareSwapRequestParams', () => {
   it('should prepare swap request params for classic quote', () => {
     // Given
-    const gasStrategy = DEFAULT_GAS_STRATEGY
+    const activeGasStrategy = DEFAULT_GAS_STRATEGY
+    const shadowGasStrategies: GasStrategy[] = []
     const prepareParams = createPrepareSwapRequestParams({
-      gasStrategy,
+      activeGasStrategy,
+      shadowGasStrategies,
     })
 
     const swapQuoteResponse = {
-      quote: {} as TradingApi.ClassicQuote,
-      routing: TradingApi.Routing.CLASSIC,
+      quote: {} as ClassicQuote,
+      routing: Routing.CLASSIC,
       requestId: '123',
-      permitData: mockPermitData,
+      permitData: { fakePermitField: 'hi' },
     } satisfies ClassicQuoteResponse
     const signature = '0x123'
-    const transactionSettings: TransactionSettingsState = {
+    const transactionSettings: TransactionSettingsContextState = {
       customDeadline: 1800,
       selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
       slippageWarningModalSeen: false,
+      updateTransactionSettings: () => undefined,
       isV4HookPoolsEnabled: false,
-      isSlippageDirty: false,
+      selectedAggregators: [],
     }
     const alreadyApproved = true
 
@@ -146,7 +146,6 @@ describe('createPrepareSwapRequestParams', () => {
     })
 
     // Then
-    // Note: urgency is 'normal' in web environment (jsdom), undefined in mobile
     expect(result).toEqual({
       quote: swapQuoteResponse.quote,
       permitData: swapQuoteResponse.permitData,
@@ -155,7 +154,7 @@ describe('createPrepareSwapRequestParams', () => {
       deadline: expect.any(Number),
       refreshGasPrice: true,
       gasStrategies: [DEFAULT_GAS_STRATEGY],
-      urgency: 'normal',
+      urgency: undefined,
     })
   })
 })
@@ -163,9 +162,9 @@ describe('createPrepareSwapRequestParams', () => {
 describe('getSimulationError', () => {
   it('should return error when simulation fails with SIMULATION_ERROR', () => {
     const swapQuote = {
-      txFailureReasons: [TradingApi.TransactionFailureReason.SIMULATION_ERROR],
+      txFailureReasons: [TransactionFailureReason.SIMULATION_ERROR],
       route: [],
-    } as TradingApi.ClassicQuote
+    } as ClassicQuote
 
     const error = getSimulationError({ swapQuote, isRevokeNeeded: false })
 
@@ -174,9 +173,9 @@ describe('getSimulationError', () => {
 
   it('should ignore SIMULATION_ERROR when isRevokeNeeded is true', () => {
     const swapQuote = {
-      txFailureReasons: [TradingApi.TransactionFailureReason.SIMULATION_ERROR],
+      txFailureReasons: [TransactionFailureReason.SIMULATION_ERROR],
       route: [],
-    } as TradingApi.ClassicQuote
+    } as ClassicQuote
 
     const error = getSimulationError({ swapQuote, isRevokeNeeded: true })
 
@@ -184,11 +183,37 @@ describe('getSimulationError', () => {
   })
 
   it('should return null for bridge quote', () => {
-    const swapQuote = {} as TradingApi.BridgeQuote
+    const swapQuote = {} as BridgeQuote
 
     const error = getSimulationError({ swapQuote, isRevokeNeeded: false })
 
     expect(error).toBeNull()
+  })
+})
+
+describe('getBridgeOrClassicQuoteResponse', () => {
+  it('should return classic quote response', () => {
+    const quote = { routing: Routing.CLASSIC } as QuoteResponse
+
+    const result = getBridgeOrClassicQuoteResponse({ quote })
+
+    expect(result).toBe(quote)
+  })
+
+  it('should return bridge quote response', () => {
+    const quote = { routing: Routing.BRIDGE } as QuoteResponse
+
+    const result = getBridgeOrClassicQuoteResponse({ quote })
+
+    expect(result).toBe(quote)
+  })
+
+  it('should return undefined for other routing types', () => {
+    const quote = { routing: Routing.DUTCH_V2 } as QuoteResponse
+
+    const result = getBridgeOrClassicQuoteResponse({ quote })
+
+    expect(result).toBeUndefined()
   })
 })
 
@@ -282,6 +307,23 @@ describe('getShouldSkipSwapRequest', () => {
     expect(result).toBe(true)
   })
 
+  it('should return true when wrap is passed', () => {
+    // Given
+    const derivedSwapInfo = {
+      ...baseDerivedSwapInfo,
+      wrapType: WrapType.Wrap,
+    } as unknown as DerivedSwapInfo
+
+    // When
+    const result = getShouldSkipSwapRequest({
+      ...baseValidInput,
+      derivedSwapInfo,
+    })
+
+    // Then
+    expect(result).toBe(true)
+  })
+
   it('should return true when unknown approval action is passed', () => {
     // Given
     const tokenApprovalInfo = {
@@ -302,15 +344,15 @@ describe('getShouldSkipSwapRequest', () => {
 })
 
 describe('createProcessSwapResponse', () => {
-  const gasStrategy = DEFAULT_GAS_STRATEGY
-  const processSwapResponse = createProcessSwapResponse({ gasStrategy })
+  const activeGasStrategy = DEFAULT_GAS_STRATEGY
+  const processSwapResponse = createProcessSwapResponse({ activeGasStrategy })
 
   it('should process successful swap response', () => {
     // Given
     const swapQuote = {
       gasFee: '1000',
       route: [],
-    } as TradingApi.ClassicQuote
+    } as ClassicQuote
 
     const response = {
       requestId: '123',
@@ -323,14 +365,16 @@ describe('createProcessSwapResponse', () => {
           chainId: 1,
         },
       ],
-      gasEstimate: {
-        strategy: DEFAULT_GAS_STRATEGY,
-        gasLimit: '21000',
-        maxFeePerGas: '100000000000',
-        maxPriorityFeePerGas: '1000000000',
-        type: FeeType.EIP1559,
-        gasFee: '1000',
-      },
+      gasEstimates: [
+        {
+          strategy: DEFAULT_GAS_STRATEGY,
+          gasLimit: '21000',
+          maxFeePerGas: '100000000000',
+          maxPriorityFeePerGas: '1000000000',
+          type: FeeType.EIP1559,
+          gasFee: '1000',
+        },
+      ],
     } as const satisfies SwapData
 
     // When
@@ -339,7 +383,7 @@ describe('createProcessSwapResponse', () => {
       error: null,
       swapQuote,
       isSwapLoading: false,
-      permitData: mockPermitData,
+      permitData: { fakePermitField: 'hi' },
       swapRequestParams: { quote: swapQuote },
       isRevokeNeeded: false,
     })
@@ -353,9 +397,13 @@ describe('createProcessSwapResponse', () => {
         error: null,
       },
       txRequests: response.transactions,
-      permitData: mockPermitData,
+      permitData: { fakePermitField: 'hi' },
       gasEstimate: {
-        swapEstimate: response.gasEstimate,
+        swapEstimates: {
+          activeEstimate: response.gasEstimates[0],
+          shadowEstimates: [],
+        },
+        wrapEstimates: undefined,
       },
       swapRequestArgs: { quote: swapQuote },
     })
@@ -365,9 +413,9 @@ describe('createProcessSwapResponse', () => {
     // Given
     const swapQuote = {
       gasFee: '1000',
-      txFailureReasons: [TradingApi.TransactionFailureReason.SIMULATION_ERROR],
+      txFailureReasons: [TransactionFailureReason.SIMULATION_ERROR],
       route: [],
-    } as TradingApi.ClassicQuote
+    } as ClassicQuote
 
     // When
     const result = processSwapResponse({
@@ -381,6 +429,6 @@ describe('createProcessSwapResponse', () => {
     })
 
     // Then
-    expect(result.gasFeeResult.error).toBeInstanceOf(UnknownSimulationError)
+    expect(result.gasFeeResult.error?.message).toBe(UNKNOWN_SIM_ERROR)
   })
 })

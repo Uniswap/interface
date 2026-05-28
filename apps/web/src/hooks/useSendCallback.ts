@@ -1,21 +1,19 @@
-import type { TransactionRequest } from '@ethersproject/abstract-provider'
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import type { GasFeeResult } from '@universe/api'
+import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { InterfaceEventName } from '@uniswap/analytics-events'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersProvider } from 'hooks/useEthersProvider'
+import { useSwitchChain } from 'hooks/useSwitchChain'
+import { GasFeeResult } from 'hooks/useTransactionGasFee'
 import { useCallback, useRef } from 'react'
-import { AssetType } from 'uniswap/src/entities/assets'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { SendTransactionInfo, TransactionType } from 'state/transactions/types'
+import { trace } from 'tracing/trace'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { SendTokenTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
-import { useAccount } from '~/hooks/useAccount'
-import { useEthersProvider } from '~/hooks/useEthersProvider'
-import useSelectChain from '~/hooks/useSelectChain'
-import { useTransactionAdder } from '~/state/transactions/hooks'
-import { toReadableError, UserRejectedRequestError } from '~/utils/errors'
-import { didUserReject } from '~/utils/swapErrorToUserReadableMessage'
+import { currencyId } from 'utils/currencyId'
+import { UserRejectedRequestError, toReadableError } from 'utils/errors'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 export function useSendCallback({
   currencyAmount,
@@ -36,88 +34,83 @@ export function useSendCallback({
   providerRef.current = provider
 
   const addTransaction = useTransactionAdder()
-  const selectChain = useSelectChain()
+  const switchChain = useSwitchChain()
   const supportedTransactionChainId = useSupportedChainId(transactionRequest?.chainId)
 
-  return useCallback(async () => {
-    if (!transactionRequest) {
-      throw new Error('missing to transaction to execute')
-    }
-    if (!currencyAmount) {
-      throw new Error('missing currency amount to send')
-    }
-    if (!recipient) {
-      throw new Error('missing recipient')
-    }
-    if (!supportedTransactionChainId) {
-      throw new Error('missing chainId in transactionRequest')
-    }
+  return useCallback(
+    () =>
+      trace({ name: 'Send', op: 'send' }, async (trace) => {
+        if (!transactionRequest) {
+          throw new Error('missing to transaction to execute')
+        }
+        if (!currencyAmount) {
+          throw new Error('missing currency amount to send')
+        }
+        if (!recipient) {
+          throw new Error('missing recipient')
+        }
+        if (!supportedTransactionChainId) {
+          throw new Error('missing chainId in transactionRequest')
+        }
 
-    // TODO(WEB-7953): Implement Solana send
-    if (isSVMChain(supportedTransactionChainId)) {
-      throw new Error('Solana send is not supported')
-    }
-
-    try {
-      const response = await (async () => {
         try {
-          const account = accountRef.current
-          let provider = providerRef.current
-          if (account.status !== 'connected') {
-            throw new Error('wallet must be connected to send')
-          }
-          if (account.chainId !== supportedTransactionChainId) {
-            const success = await selectChain(supportedTransactionChainId)
-            if (!success) {
-              throw new Error('Failed to switch chain')
+          const response = await trace.child({ name: 'Send transaction', op: 'wallet.send_transaction' }, async () => {
+            try {
+              const account = accountRef.current
+              let provider = providerRef.current
+              if (account.status !== 'connected') {
+                throw new Error('wallet must be connected to send')
+              }
+              if (account.chainId !== supportedTransactionChainId) {
+                await switchChain(supportedTransactionChainId)
+                // We need to reassign the provider after switching chains
+                // otherwise sendTransaction will use the provider that is
+                // not connected to the correct chain
+                provider = providerRef.current
+              }
+              if (!provider) {
+                throw new Error('missing provider')
+              }
+              return await provider.getSigner().sendTransaction({
+                ...transactionRequest,
+                ...gasFee?.params,
+              })
+            } catch (error) {
+              if (didUserReject(error)) {
+                throw new UserRejectedRequestError(`Transfer failed: User rejected signature`)
+              } else {
+                throw error
+              }
             }
-            // We need to reassign the provider after switching chains
-            // otherwise sendTransaction will use the provider that is
-            // not connected to the correct chain
-            provider = providerRef.current
+          })
+          const sendInfo: SendTransactionInfo = {
+            type: TransactionType.SEND,
+            currencyId: currencyId(currencyAmount.currency),
+            amount: currencyAmount.quotient.toString(),
+            recipient,
           }
-          if (!provider) {
-            throw new Error('missing provider')
-          }
-          return await provider.getSigner().sendTransaction({
-            ...transactionRequest,
-            ...gasFee?.params,
+          addTransaction(response, sendInfo)
+          sendAnalyticsEvent(InterfaceEventName.SEND_INITIATED, {
+            currencyId: sendInfo.currencyId,
+            amount: sendInfo.amount,
+            recipient: sendInfo.recipient,
           })
         } catch (error) {
-          if (didUserReject(error)) {
-            throw new UserRejectedRequestError(`Transfer failed: User rejected signature`)
-          } else {
+          if (error instanceof UserRejectedRequestError) {
             throw error
+          } else {
+            throw toReadableError(`Transfer failed:`, error)
           }
         }
-      })()
-      const sendInfo: SendTokenTransactionInfo = {
-        type: TransactionType.Send,
-        tokenAddress: currencyAddress(currencyAmount.currency),
-        assetType: AssetType.Currency,
-        currencyAmountRaw: currencyAmount.quotient.toString(),
-        recipient,
-      }
-      addTransaction(response, sendInfo)
-      sendAnalyticsEvent(InterfaceEventName.SendInitiated, {
-        currencyId: currencyId(currencyAmount.currency),
-        amount: sendInfo.currencyAmountRaw ?? '',
-        recipient: sendInfo.recipient,
-      })
-    } catch (error) {
-      if (error instanceof UserRejectedRequestError) {
-        throw error
-      } else {
-        throw toReadableError(`Transfer failed:`, error)
-      }
-    }
-  }, [
-    addTransaction,
-    currencyAmount,
-    gasFee?.params,
-    recipient,
-    supportedTransactionChainId,
-    selectChain,
-    transactionRequest,
-  ])
+      }),
+    [
+      addTransaction,
+      currencyAmount,
+      gasFee?.params,
+      recipient,
+      supportedTransactionChainId,
+      switchChain,
+      transactionRequest,
+    ],
+  )
 }

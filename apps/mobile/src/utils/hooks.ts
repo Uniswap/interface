@@ -3,15 +3,11 @@ import { useCallback, useEffect } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 
-export function usePollOnFocusOnly({
-  startPolling,
-  stopPolling,
-  pollingInterval,
-}: {
-  startPolling: (interval: PollingInterval) => void
-  stopPolling: () => void
-  pollingInterval: PollingInterval
-}): void {
+export function usePollOnFocusOnly(
+  startPolling: (interval: PollingInterval) => void,
+  stopPolling: () => void,
+  pollingInterval: PollingInterval,
+): void {
   useFocusEffect(
     useCallback(() => {
       startPolling(pollingInterval)
@@ -37,7 +33,7 @@ export function useFunctionAfterNavigationTransitionEndWithDelay(fn: () => void,
   const navigation = useAppStackNavigation()
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout | number | null = null
+    let timeout: NodeJS.Timeout | null = null
 
     const unsubscribe = navigation.addListener('transitionEnd', () => {
       timeout = setTimeout(fn, timeoutMs)

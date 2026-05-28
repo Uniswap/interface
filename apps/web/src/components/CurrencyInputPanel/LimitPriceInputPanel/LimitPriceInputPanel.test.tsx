@@ -1,25 +1,18 @@
-import '~/test-utils/tokens/mocks'
+import 'test-utils/tokens/mocks'
 
-vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
-  useActiveAddresses: vi.fn(),
-}))
-
+import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
+import { LimitContext } from 'state/limit/LimitContext'
+import { MultichainContext } from 'state/multichain/types'
+import { SwapAndLimitContext } from 'state/swap/types'
+import { act, render, screen } from 'test-utils/render'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { LimitPriceInputPanel } from '~/components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
-import { LimitContext } from '~/state/limit/LimitContext'
-import { MultichainContext } from '~/state/multichain/types'
-import { SwapAndLimitContext } from '~/state/swap/types'
-import { act, renderWithUniswapContext, screen } from '~/test-utils/render'
-
-const mockUseActiveAddresses = useActiveAddresses as ReturnType<typeof vi.fn>
 
 const mockMultichainContextValue = {
-  reset: vi.fn(),
-  setSelectedChainId: vi.fn(),
-  setIsUserSelectedToken: vi.fn(),
+  reset: jest.fn(),
+  setSelectedChainId: jest.fn(),
+  setIsUserSelectedToken: jest.fn(),
   isSwapAndLimitContext: true,
   isUserSelectedToken: false,
   isMultichainContext: true,
@@ -31,9 +24,9 @@ const mockSwapAndLimitContextValue = {
     outputCurrency: undefined,
   },
   prefilledState: {},
-  setCurrencyState: vi.fn(),
+  setCurrencyState: jest.fn(),
   currentTab: SwapTab.Limit,
-  setCurrentTab: vi.fn(),
+  setCurrentTab: jest.fn(),
 }
 
 const mockLimitContextValue = {
@@ -46,7 +39,7 @@ const mockLimitContextValue = {
     limitPriceEdited: false,
     limitPriceInverted: false,
   },
-  setLimitState: vi.fn(),
+  setLimitState: jest.fn(),
   derivedLimitInfo: {
     currencyBalances: {},
     parsedAmounts: {},
@@ -54,19 +47,10 @@ const mockLimitContextValue = {
 }
 
 describe('LimitPriceInputPanel', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-
-    mockUseActiveAddresses.mockReturnValue({
-      evmAddress: undefined,
-      svmAddress: undefined,
-    })
-  })
-
   it('should render the component with no currencies selected', async () => {
-    const onCurrencySelect = vi.fn()
+    const onCurrencySelect = jest.fn()
     await act(async () => {
-      return renderWithUniswapContext(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
+      return render(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
     })
     expect(screen.getByText('Limit price')).toBeVisible()
     expect(screen.getByPlaceholderText('0')).toBeVisible()
@@ -79,8 +63,8 @@ describe('LimitPriceInputPanel', () => {
   })
 
   it('should render correct subheader with inputCurrency defined, but no price', () => {
-    const onCurrencySelect = vi.fn()
-    renderWithUniswapContext(
+    const onCurrencySelect = jest.fn()
+    render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />
@@ -94,8 +78,8 @@ describe('LimitPriceInputPanel', () => {
   })
 
   it('should render correct subheader with input currency and limit price defined', () => {
-    const onCurrencySelect = vi.fn()
-    renderWithUniswapContext(
+    const onCurrencySelect = jest.fn()
+    render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <LimitContext.Provider value={mockLimitContextValue}>
@@ -109,8 +93,8 @@ describe('LimitPriceInputPanel', () => {
   })
 
   it('should render the output currency when defined', () => {
-    const onCurrencySelect = vi.fn()
-    const { container } = renderWithUniswapContext(
+    const onCurrencySelect = jest.fn()
+    const { container } = render(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider
           value={{

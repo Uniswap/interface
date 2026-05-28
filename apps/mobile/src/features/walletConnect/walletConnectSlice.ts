@@ -1,17 +1,22 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { type ProposalTypes, type SessionTypes } from '@walletconnect/types'
-import { type UniverseChainId } from 'uniswap/src/features/chains/types'
-import { EthMethod, type EthSignMethod } from 'uniswap/src/features/dappRequests/types'
-import { type DappRequestInfo, type EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
-import { logger } from 'utilities/src/logger/logger'
-import { type Call, type Capability, type DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { ProposalTypes, SessionTypes } from '@walletconnect/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappRequestInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { Call, Capability } from 'wallet/src/features/dappRequests/types'
+
+export enum WalletConnectVerifyStatus {
+  Verified = 'VERIFIED',
+  Unverified = 'UNVERIFIED',
+  Threat = 'THREAT',
+}
 
 export type WalletConnectPendingSession = {
   id: string
   chains: UniverseChainId[]
   dappRequestInfo: DappRequestInfo
-  proposalNamespaces: ProposalTypes.OptionalNamespaces
-  verifyStatus: DappVerificationStatus
+  proposalNamespaces: ProposalTypes.RequiredNamespaces
+  verifyStatus: WalletConnectVerifyStatus
 }
 
 export type WalletConnectSession = {
@@ -19,19 +24,10 @@ export type WalletConnectSession = {
   chains: UniverseChainId[]
   dappRequestInfo: DappRequestInfo
   namespaces: SessionTypes.Namespaces
+}
 
-  /**
-   * WC session namespaces can contain approvals for multiple accounts. The active account represents the account that the dapp
-   * is tracking as the active account based on session events (approve session, change account, etc).
-   */
-  activeAccount: string
-
-  /**
-   * EIP-5792 capabilities for this session, stored in hex chainId format.
-   * Contains atomic batch support status per chain.
-   * Only populated if EIP-5792 feature flag was enabled during session approval.
-   */
-  capabilities?: Record<string, Capability>
+interface SessionMapping {
+  [sessionId: string]: WalletConnectSession
 }
 
 interface BaseRequest {
@@ -100,23 +96,18 @@ export type WalletConnectSigningRequest =
   | UwuLinkErc20Request
   | WalletSendCallsEncodedRequest
 
-type PersonalSignRequest = SignRequest & {
-  type: EthMethod.PersonalSign | EthMethod.EthSign
-}
-
 export const isTransactionRequest = (request: WalletConnectSigningRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
-
-export const isPersonalSignRequest = (request: WalletConnectSigningRequest): request is PersonalSignRequest =>
-  request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign
 
 export const isBatchedTransactionRequest = (
   request: WalletConnectSigningRequest,
 ): request is WalletSendCallsEncodedRequest => request.type === EthMethod.WalletSendCalls
 
 export interface WalletConnectState {
-  sessions: {
-    [sessionId: string]: WalletConnectSession
+  byAccount: {
+    [accountId: string]: {
+      sessions: SessionMapping
+    }
   }
   pendingSession: WalletConnectPendingSession | null
   pendingRequests: WalletConnectSigningRequest[]
@@ -125,7 +116,7 @@ export interface WalletConnectState {
 }
 
 export const initialWalletConnectState: Readonly<WalletConnectState> = {
-  sessions: {},
+  byAccount: {},
   pendingSession: null,
   pendingRequests: [],
 }
@@ -134,25 +125,34 @@ const slice = createSlice({
   name: 'walletConnect',
   initialState: initialWalletConnectState,
   reducers: {
-    addSession: (state, action: PayloadAction<{ wcSession: WalletConnectSession }>) => {
-      const { wcSession } = action.payload
-      state.sessions[wcSession.id] = wcSession
+    addSession: (state, action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>) => {
+      const { wcSession, account } = action.payload
+      state.byAccount[account] ??= { sessions: {} }
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      state.byAccount[account]!.sessions[wcSession.id] = wcSession
       state.pendingSession = null
     },
 
-    replaceSession: (state, action: PayloadAction<{ wcSession: WalletConnectSession }>) => {
-      const { wcSession } = action.payload
-      state.sessions[wcSession.id] = wcSession
-    },
+    removeSession: (state, action: PayloadAction<{ sessionId: string; account?: string }>) => {
+      const { sessionId, account } = action.payload
 
-    removeSession: (state, action: PayloadAction<{ sessionId: string }>) => {
-      const { sessionId } = action.payload
-
-      if (!state.sessions[sessionId]) {
-        logger.warn('walletConnect/walletConnectSlice.ts', 'removeSession', `Session ${sessionId} doesnt exist`)
+      // If account address is known, delete directly
+      if (account) {
+        const wcAccount = state.byAccount[account]
+        if (wcAccount) {
+          delete wcAccount.sessions[sessionId]
+        }
+        return
       }
 
-      delete state.sessions[sessionId]
+      // If account address is not known (handling `session_delete` events),
+      // iterate over each account and delete the sessionId
+      Object.keys(state.byAccount).forEach((accountAddress) => {
+        const wcAccount = state.byAccount[accountAddress]
+        if (wcAccount && wcAccount.sessions[sessionId]) {
+          delete wcAccount.sessions[sessionId]
+        }
+      })
     },
 
     addPendingSession: (state, action: PayloadAction<{ wcSession: WalletConnectPendingSession }>) => {
@@ -180,13 +180,11 @@ const slice = createSlice({
     setHasPendingSessionError: (state, action: PayloadAction<boolean | undefined>) => {
       state.hasPendingSessionError = action.payload
     },
-    resetWalletConnect: () => initialWalletConnectState,
   },
 })
 
 export const {
   addSession,
-  replaceSession,
   removeSession,
   addPendingSession,
   removePendingSession,
@@ -194,6 +192,5 @@ export const {
   removeRequest,
   setDidOpenFromDeepLink,
   setHasPendingSessionError,
-  resetWalletConnect,
 } = slice.actions
 export const { reducer: walletConnectReducer } = slice

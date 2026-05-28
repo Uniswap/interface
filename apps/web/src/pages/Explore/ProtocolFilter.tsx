@@ -1,24 +1,23 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
+import { getExploreProtocolVersionLabel } from 'components/Liquidity/utils'
+import { atom, useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
+import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useMedia } from 'ui/src'
-import { Check } from 'ui/src/components/icons/Check'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
-import {
-  useExploreTablesFilterStore,
-  useExploreTablesFilterStoreActions,
-} from '~/pages/Explore/exploreTablesFilterStore'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
+export const exploreProtocolVersionFilterAtom = atom(ProtocolVersion.UNSPECIFIED)
+//can this import from PositionsHeader
 const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
 
-export function ProtocolFilter() {
+function ProtocolFilter() {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const [open, setOpen] = useState(false)
-  const selectedProtocol = useExploreTablesFilterStore((s) => s.selectedProtocol)
-  const { setSelectedProtocol } = useExploreTablesFilterStoreActions()
+  const [selectedProtocol, setSelectedProtocol] = useAtom(exploreProtocolVersionFilterAtom)
   const media = useMedia()
 
   const onVersionChange = useCallback(
@@ -32,23 +31,23 @@ export function ProtocolFilter() {
   const versionFilterOptions = useMemo(() => {
     return PROTOCOL_VERSIONS.map((option) => (
       <InternalMenuItem key={`ExplorePools-version-${option}`} onPress={() => onVersionChange(option)}>
-        {option === ProtocolVersion.UNSPECIFIED ? t('common.all') : getProtocolVersionLabel(option)}
-        {selectedProtocol === option && <Check size="$icon.16" color="$accent1" />}
+        {option === ProtocolVersion.UNSPECIFIED ? t('common.all') : getExploreProtocolVersionLabel(option)}
+        {selectedProtocol === option && <Check size={16} color={colors.accent1.val} />}
       </InternalMenuItem>
     ))
-  }, [selectedProtocol, onVersionChange, t])
+  }, [selectedProtocol, onVersionChange, colors, t])
 
   return (
     <Flex>
       <Trace modal={ModalName.ExploreProtocolFilter}>
-        <Dropdown
+        <DropdownSelector
           isOpen={open}
           toggleOpen={() => setOpen((prev) => !prev)}
           menuLabel={
             <Text variant="buttonLabel3" width="max-content">
               {selectedProtocol === ProtocolVersion.UNSPECIFIED
                 ? t('common.protocol')
-                : getProtocolVersionLabel(selectedProtocol)}
+                : getExploreProtocolVersionLabel(selectedProtocol)}
             </Text>
           }
           dropdownStyle={{ width: 160 }}
@@ -57,8 +56,10 @@ export function ProtocolFilter() {
           alignRight={!media.lg}
         >
           {versionFilterOptions}
-        </Dropdown>
+        </DropdownSelector>
       </Trace>
     </Flex>
   )
 }
+
+export default ProtocolFilter

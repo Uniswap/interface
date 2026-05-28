@@ -58,7 +58,6 @@ export function OnboardingStepsProvider({
   const isOnboarded = useSelector(isOnboardedSelector)
   const wasAlreadyOnboardedWhenPageLoaded = useRef(isOnboarded)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we also want to run this effect if isOnboarded changes
   useEffect(() => {
     if (!isResetting && wasAlreadyOnboardedWhenPageLoaded.current && !disableRedirect) {
       // Redirect to the intro screen screen if user is already onboarded.
@@ -67,7 +66,7 @@ export function OnboardingStepsProvider({
     }
   }, [disableRedirect, isOnboarded, isResetting])
 
-  const initialStep = Object.keys(steps)[0] as Step | undefined
+  const initialStep = Object.keys(steps)[0] as Step
 
   if (!initialStep) {
     throw new Error('`steps` must have at least one `step`')
@@ -116,14 +115,13 @@ export function OnboardingStepsProvider({
     setState((prev) => ({ ...prev, step: nextStep }))
   }, [])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: onboardingScreenKey is a helper function defined below that doesn't need to be a dependency
   const setOnboardingScreen = useCallback((next: OnboardingScreenProps) => {
     clearTimeout(clearScreenTimeout)
     setState((prev) => {
       // we are only updating onboardingScreen here once per unique title so
       // the state in this component is accurate, but subsequent updates go
       // through the emitter
-      if (onboardingScreenKey(prev.onboardingScreen) !== onboardingScreenKey(next)) {
+      if (onboardingScreenKey(prev?.onboardingScreen) !== onboardingScreenKey(next)) {
         return {
           ...prev,
           onboardingScreen: next,
@@ -135,7 +133,6 @@ export function OnboardingStepsProvider({
     currentOnboardingScreen = next
   }, [])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: onboardingScreenKey is a helper function defined below that doesn't need to be a dependency
   const clearOnboardingScreen = useCallback((next: OnboardingScreenProps) => {
     // delay clear so the next screen can beat clearing the old one to avoid flickering
     clearScreenTimeout = setTimeout(() => {
@@ -159,7 +156,7 @@ export function OnboardingStepsProvider({
 
   const goToNextStep = useCallback(() => {
     const stepIndex = Object.keys(steps).indexOf(step)
-    const nextStep = Object.keys(steps)[stepIndex + 1] as Step | undefined
+    const nextStep = Object.keys(steps)[stepIndex + 1] as Step
 
     if (!nextStep) {
       throw new Error('No next step')
@@ -174,7 +171,7 @@ export function OnboardingStepsProvider({
 
   const goToPreviousStep = useCallback(() => {
     const stepIndex = Object.keys(steps).indexOf(step)
-    const previousStep = Object.keys(steps)[stepIndex - 1] as Step | undefined
+    const previousStep = Object.keys(steps)[stepIndex - 1] as Step
 
     if (!previousStep) {
       throw new Error('No previous step')
@@ -229,7 +226,7 @@ export function OnboardingStepsProvider({
         {onboardingScreen && (
           <>
             {/* render actual screen contents "offscreen", we use context and put it on onboardingScreen */}
-            {/* biome-ignore lint/correctness/noRestrictedElements: probably we can replace it here */}
+            {/* eslint-disable-next-line react/forbid-elements */}
             <div style={{ height: 0, opacity: 0, pointerEvents: 'none' }}>{stepContents}</div>
             <Frame
               animation="stiff"
@@ -264,7 +261,7 @@ export function OnboardingStepsProvider({
                   y="$spacing16"
                   onLayout={(e) => setBelowFrameHeight(e.nativeEvent.layout.height)}
                 >
-                  {onboardingScreen.belowFrameContent}
+                  {onboardingScreen?.belowFrameContent}
                 </Flex>
               )}
             </Frame>

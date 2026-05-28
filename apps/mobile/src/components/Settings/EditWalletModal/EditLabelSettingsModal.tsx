@@ -1,13 +1,12 @@
 import { default as React, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TextInput as NativeTextInput, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { KeyboardStickyView } from 'react-native-keyboard-controller'
 import { useDispatch } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
-import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { Button, Flex, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -18,6 +17,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { isIOS } from 'utilities/src/platform'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -33,7 +33,7 @@ export function EditLabelSettingsModal({
   const entryPoint = accessPoint ?? MobileScreens.SettingsWallet
 
   const displayName = useDisplayName(address)
-  const [nickname, setNickname] = useState(displayName?.type === DisplayNameType.Local ? displayName.name : '')
+  const [nickname, setNickname] = useState(displayName?.type === DisplayNameType.Local ? displayName?.name : '')
   const [isUpdatingWalletLabel, setIsUpdatingWalletLabel] = useState(false)
 
   const accountNameIsEditable =
@@ -44,7 +44,7 @@ export function EditLabelSettingsModal({
   const onFinishEditing = (): void => {
     dismissNativeKeyboard()
 
-    setNickname(nickname.trim())
+    setNickname(nickname?.trim())
   }
 
   const onPressSaveChanges = (): void => {
@@ -54,7 +54,7 @@ export function EditLabelSettingsModal({
       editAccountActions.trigger({
         type: EditAccountAction.Rename,
         address,
-        newName: nickname.trim(),
+        newName: nickname?.trim() ?? '',
       }),
     )
     onPressBack()
@@ -72,7 +72,12 @@ export function EditLabelSettingsModal({
       {/* This GestureDetector is used to consume all pan gestures and prevent
            keyboard from flickering (see https://github.com/Uniswap/universe/pull/8242) */}
       <GestureDetector gesture={Gesture.Pan()}>
-        <Flex style={styles.base}>
+        <KeyboardAvoidingView
+          enabled
+          behavior={isIOS ? 'padding' : undefined}
+          contentContainerStyle={styles.expand}
+          style={styles.base}
+        >
           <BackHeader alignment="center" mx="$spacing16" pt="$spacing16" onPressBack={onPressBack}>
             <Text variant="body1">{t('settings.setting.wallet.action.editLabel')}</Text>
           </BackHeader>
@@ -104,8 +109,8 @@ export function EditLabelSettingsModal({
                   px="$none"
                   py="$spacing12"
                   returnKeyType="done"
-                  defaultValue={nickname}
-                  placeholder={sanitizeAddressText(shortenAddress({ address })) ?? t('settings.setting.wallet.label')}
+                  value={nickname}
+                  placeholder={sanitizeAddressText(shortenAddress(address, 6)) ?? t('settings.setting.wallet.label')}
                   onBlur={onFinishEditing}
                   onChangeText={setNickname}
                   onSubmitEditing={onFinishEditing}
@@ -117,15 +122,13 @@ export function EditLabelSettingsModal({
                 </Flex>
               )}
             </Flex>
-            <KeyboardStickyView>
-              <Flex row alignSelf="stretch">
-                <Button emphasis="primary" variant="branded" onPress={onPressSaveChanges}>
-                  {t('settings.setting.wallet.editLabel.save')}
-                </Button>
-              </Flex>
-            </KeyboardStickyView>
+            <Flex row alignSelf="stretch">
+              <Button emphasis="primary" variant="branded" onPress={onPressSaveChanges}>
+                {t('settings.setting.wallet.editLabel.save')}
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
+        </KeyboardAvoidingView>
       </GestureDetector>
     </Modal>
   )
@@ -135,5 +138,8 @@ const styles = StyleSheet.create({
   base: {
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  expand: {
+    flexGrow: 1,
   },
 })

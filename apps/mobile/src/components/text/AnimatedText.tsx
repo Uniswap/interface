@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextProps as RNTextProps, StyleSheet, TextInput, TextInputProps, useWindowDimensions } from 'react-native'
-import Animated, { createAnimatedPropAdapter, useAnimatedProps } from 'react-native-reanimated'
+import Animated, { useAnimatedProps } from 'react-native-reanimated'
 import { Flex, TextProps as TamaTextProps, TextFrame, TextLoaderWrapper, usePropsAndStyle } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 
@@ -20,21 +20,6 @@ type TextProps = TextPropsBase & {
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
-// adapted from https://github.com/software-mansion/react-native-reanimated/blob/Reanimated2/src/reanimated2/PropAdapters.ts#L57,
-// as Reanimated 3 does not contain the TextInputAdapter
-const TextInputAdapter = createAnimatedPropAdapter(
-  (props) => {
-    'worklet'
-    const keys = Object.keys(props)
-    // convert text to value like RN does here: https://github.com/facebook/react-native/blob/f2c6279ca497b34d5a2bfbb6f2d33dc7a7bea02a/Libraries/Components/TextInput/TextInput.js#L878
-    if (keys.includes('value')) {
-      props['text'] = props['value']
-      delete props['value']
-    }
-  },
-  ['text'],
-)
-
 const BaseAnimatedText = ({
   style,
   text,
@@ -42,19 +27,14 @@ const BaseAnimatedText = ({
   loadingPlaceholderText = '000.00',
   ...rest
 }: TextProps): JSX.Element => {
-  const animatedProps = useAnimatedProps(
-    () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return {
-        text: text?.value,
-        defaultValue: text?.value,
-        // Here we use any because the text prop is not available in the type
-        // biome-ignore lint/suspicious/noExplicitAny: Text prop not available in animated type definition
-      } as any
-    },
-    [text],
-    TextInputAdapter,
-  )
+  const animatedProps = useAnimatedProps(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return {
+      text: text?.value,
+      // Here we use any because the text prop is not available in the type
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any
+  })
 
   if (loading) {
     return (
@@ -69,7 +49,7 @@ const BaseAnimatedText = ({
             {...rest}
           />
           {/* Use the text component to properly calculate the width of the loading shimmer.
-          An input component with a width dependent on the length of the content was sometimes
+          An input component with a width dependent on the length of the content was sometimes 
           rendered with a very small width regardless of the text passed as a value */}
           <Animated.Text style={[style, styles.loadingPlaceholder]}>{loadingPlaceholderText}</Animated.Text>
         </Flex>
@@ -79,11 +59,12 @@ const BaseAnimatedText = ({
 
   return (
     <AnimatedTextInput
-      animatedProps={animatedProps}
       editable={false}
       style={style}
       underlineColorAndroid="transparent"
+      value={text?.value}
       {...rest}
+      {...{ animatedProps }}
     />
   )
 }
@@ -115,8 +96,7 @@ export const AnimatedText = ({ style, ...propsIn }: TextProps): JSX.Element => {
 
   return (
     <BaseAnimatedText
-      // biome-ignore lint/suspicious/noExplicitAny: Ambigous to type
-      {...(props as any)}
+      {...(props as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
       allowFontScaling={enableFontScaling}
       maxFontSizeMultiplier={multiplier}
       style={[styles.input, textStyles, style]}

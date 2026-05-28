@@ -6,29 +6,28 @@ import { Flex, Separator, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import { isSafeNumber } from 'utilities/src/primitives/integer'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
-import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
 import { SendAmountInput } from 'wallet/src/features/transactions/send/SendAmountInput'
 import { SendReviewDetails } from 'wallet/src/features/transactions/send/SendReviewDetails'
 import { TokenSelectorPanel } from 'wallet/src/features/transactions/send/TokenSelectorPanel'
+import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
 import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
@@ -93,11 +92,7 @@ export function SendFormScreen(): JSX.Element {
   const showTokenSelector = selectingCurrencyField === CurrencyField.INPUT
 
   const hasValueGreaterThanZero = useMemo(() => {
-    return isAmountGreaterThanZero({
-      exactAmountToken,
-      exactAmountFiat,
-      currency: currencyInInfo?.currency,
-    })
+    return isAmountGreaterThanZero(exactAmountToken, exactAmountFiat, currencyInInfo?.currency)
   }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
 
   // blocked addresses
@@ -124,11 +119,6 @@ export function SendFormScreen(): JSX.Element {
 
   const onSetExactAmount = useCallback(
     (amount: string) => {
-      // Omit parsing errors by checking if amount exceeds Number range limit
-      if (!isSafeNumber(amount)) {
-        return
-      }
-
       updateSendForm(isFiatInput ? { exactAmountFiat: amount } : { exactAmountToken: amount })
     },
     [isFiatInput, updateSendForm],
@@ -234,7 +224,7 @@ export function SendFormScreen(): JSX.Element {
               />
             )}
             <ReviewButton disabled={isButtonBlocked} onPress={onPressReview} />
-            {!warnings.insufficientGasFundsWarning && <GasFeeRow chainId={chainId} gasFee={gasFee} />}
+            <GasFeeRow chainId={chainId as UniverseChainId} gasFee={gasFee} />
             <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
           </>
         )}

@@ -1,17 +1,9 @@
 import { useRef, useState } from 'react'
-// biome-ignore lint/style/noRestrictedImports: styled-components needed for NFT component styling
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 
 // snapshots a src img into a canvas
-function getSnapshot({
-  src,
-  canvas,
-  targetHeight,
-}: {
-  src: HTMLImageElement
-  canvas: HTMLCanvasElement
-  targetHeight: number
-}) {
+function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
   const context = canvas.getContext('2d')
 
   if (context) {
@@ -65,7 +57,7 @@ export function PositionNFT({ image, height: targetHeight }: { image: string; he
       onMouseLeave={() => {
         // snapshot the current frame so the transition to the canvas is smooth
         if (imageRef.current && canvasRef.current) {
-          getSnapshot({ src: imageRef.current, canvas: canvasRef.current, targetHeight })
+          getSnapshot(imageRef.current, canvasRef.current, targetHeight)
         }
         setAnimate(false)
       }}
@@ -78,7 +70,7 @@ export function PositionNFT({ image, height: targetHeight }: { image: string; he
         onLoad={() => {
           // snapshot for the canvas
           if (imageRef.current && canvasRef.current) {
-            getSnapshot({ src: imageRef.current, canvas: canvasRef.current, targetHeight })
+            getSnapshot(imageRef.current, canvasRef.current, targetHeight)
           }
         }}
       />

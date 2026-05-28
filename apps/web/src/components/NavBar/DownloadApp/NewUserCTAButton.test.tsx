@@ -1,18 +1,14 @@
-import { NewUserCTAButton } from '~/components/NavBar/DownloadApp/NewUserCTAButton'
-import { render, screen } from '~/test-utils/render'
+import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
+import { render, screen } from 'test-utils/render'
 
-vi.mock('@universe/gating', async (importOriginal) => {
-  return {
-    ...(await importOriginal()),
-    useFeatureFlag: vi.fn(),
-    getFeatureFlag: vi.fn(),
-  }
-})
+jest.mock('uniswap/src/features/gating/hooks', () => ({
+  useFeatureFlag: jest.fn(),
+}))
 
 beforeEach(() => {
-  window.matchMedia = vi.fn().mockImplementation(() => ({
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
+  window.matchMedia = jest.fn().mockImplementation(() => ({
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
   }))
 })
 

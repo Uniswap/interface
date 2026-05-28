@@ -19,7 +19,7 @@ import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
-import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
+import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 
 export const SETTINGS_ROW_HEIGHT = 60
 
@@ -110,15 +110,11 @@ export const SettingsRow = memo(
       if (onToggle) {
         return
       } else if (screen) {
-        // Type assignment to `any` is a workaround until we figure out how to
-        // properly type screen param. `navigate` function also brings some issues,
-        // where it accepts other screen's params, and not throws an error on required ones.
-        // biome-ignore lint/suspicious/noExplicitAny: Navigation types don't properly handle dynamic screen names
-        navigation.navigate(screen as any, screenProps)
+        navigation.navigate(screen, screenProps)
       } else if (navigationModal) {
         navigate(navigationModal, navigationProps)
       } else if (externalLink) {
-        await openUri({ uri: externalLink })
+        await openUri(externalLink)
       }
     }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, navigationProps, navigationModal, externalLink])
 
@@ -241,7 +237,7 @@ const RowRightContent = memo(
                 />
               </Skeleton>
             ))}
-          <RotatableChevron color="$neutral3" direction="end" size="$icon.24" />
+          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
       )
     }

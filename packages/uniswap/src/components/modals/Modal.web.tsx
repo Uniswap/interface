@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
-// biome-ignore lint/style/noRestrictedImports: needed here
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
-import type { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 const ANIMATION_MS = 200
 
-// eslint-disable-next-line complexity
 export function Modal({
   children,
   name,
@@ -25,22 +24,12 @@ export function Modal({
   gap,
   paddingX,
   paddingY,
-  pt,
-  pb,
-  mx = '$none',
   analyticsProperties,
   skipLogImpression,
   position,
   flex,
   zIndex,
   isDismissible = true,
-  hideHandlebar,
-  borderWidth,
-  borderColor,
-  overlayOpacity,
-  snapPointsMode,
-  snapPoints,
-  testID,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -71,28 +60,21 @@ export function Modal({
         <ModalComponent
           position={position}
           bottomAttachment={bottomAttachment}
-          data-testid={testID}
-          shadowOpacity={isExtensionApp ? 0 : undefined}
-          borderWidth={borderWidth !== undefined ? borderWidth : isExtensionApp ? 1 : undefined}
-          borderColor={borderColor !== undefined ? borderColor : isExtensionApp ? '$surface2' : undefined}
-          overlayOpacity={overlayOpacity !== undefined ? overlayOpacity : isExtensionApp ? 1 : undefined}
-          adaptToSheet={isWebApp}
+          shadowOpacity={isExtension ? 0 : undefined}
+          borderWidth={isExtension ? 0 : undefined}
+          adaptToSheet={isInterface}
           alignment={alignment}
           backgroundColor={backgroundColor}
           height={height ?? (fullScreen ? '100%' : undefined)}
           isOpen={isModalOpen}
-          mx={mx}
-          my="$none"
+          m="$none"
           maxWidth={maxWidth}
           maxHeight={maxHeight}
           gap={gap}
           zIndex={zIndex}
-          hideHandlebar={hideHandlebar}
-          snapPointsMode={snapPointsMode}
-          snapPoints={snapPoints}
           $sm={{
             p: padding ?? '$spacing12',
-            ...(isWebApp && {
+            ...(isInterface && {
               '$platform-web': {
                 height: height ?? 'max-content',
                 maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
@@ -102,8 +84,6 @@ export function Modal({
           p={padding ?? '$spacing24'}
           px={paddingX}
           py={paddingY}
-          pt={pt}
-          pb={pb}
           flex={flex}
           onClose={isDismissible ? onClose : undefined}
         >

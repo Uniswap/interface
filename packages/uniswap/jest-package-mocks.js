@@ -1,7 +1,5 @@
 /**
- * Common Jest mocks for packages that depend on uniswap.
- * Note: The uniswap package itself has migrated to Vitest (see vitest-package-mocks.ts).
- * This file is kept for other packages (e.g., mobile, extension, wallet) that still use Jest.
+ * Common mocks for this package. This file is intended to be imported in the jest-setup.js file of the package.
  *
  * Notes:
  * * Try not to add test specific mocks here.
@@ -18,18 +16,10 @@ jest.mock('react-native-localize', () => mockRNLocalize)
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
 
-jest.mock('utilities/src/device/uniqueId', () => {
-  return jest.requireActual('uniswap/src/test/mocks/uniqueId')
-})
-
-jest.mock('uniswap/src/data/getVersionHeader', () => {
-  return jest.requireActual('uniswap/src/data/getVersionHeader.web')
-})
-
-jest.mock('@universe/gating', () => {
-  const actual = jest.requireActual('@universe/gating')
+jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
+  const actualStatsig = jest.requireActual('uniswap/src/features/gating/sdk/statsig')
   return {
-    ...actual,
+    ...actualStatsig,
     useClientAsyncInit: jest.fn(() => ({
       client: null,
       isLoading: true,

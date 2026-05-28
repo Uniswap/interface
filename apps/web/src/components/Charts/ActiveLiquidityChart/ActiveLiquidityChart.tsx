@@ -1,17 +1,17 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
+import { AxisRight } from 'components/Charts/ActiveLiquidityChart/AxisRight'
+import { Brush } from 'components/Charts/ActiveLiquidityChart/Brush'
+import { HorizontalArea } from 'components/Charts/ActiveLiquidityChart/HorizontalArea'
+import { HorizontalLine } from 'components/Charts/ActiveLiquidityChart/HorizontalLine'
+import { TickTooltip } from 'components/Charts/ActiveLiquidityChart/TickTooltip'
+import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { max as getMax, scaleLinear } from 'd3'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { AxisRight } from '~/components/Charts/ActiveLiquidityChart/AxisRight'
-import { Brush } from '~/components/Charts/ActiveLiquidityChart/Brush'
-import { HorizontalArea } from '~/components/Charts/ActiveLiquidityChart/HorizontalArea'
-import { HorizontalLine } from '~/components/Charts/ActiveLiquidityChart/HorizontalLine'
-import { TickTooltip } from '~/components/Charts/ActiveLiquidityChart/TickTooltip'
-import { ChartEntry } from '~/components/Charts/LiquidityRangeInput/types'
+import { useFormatter } from 'utils/formatNumbers'
 
-const xAccessor = (d: ChartEntry) => d.liquidityActive
+const xAccessor = (d: ChartEntry) => d.activeLiquidity
 const yAccessor = (d: ChartEntry) => d.price0
 
 const priceDataCache = new Map<string, ChartEntry>()
@@ -49,7 +49,9 @@ function findClosestElementBinarySearch(data: ChartEntry[], target?: number) {
   const closestElement =
     Math.abs(closest.price0 - target) <= Math.abs(nextClosest.price0 - target) ? closest : nextClosest
 
-  priceDataCache.set(target.toString(), closestElement)
+  if (closestElement) {
+    priceDataCache.set(target.toString(), closestElement)
+  }
   return closestElement
 }
 
@@ -99,7 +101,7 @@ export function ActiveLiquidityChart({
   isMobile?: boolean
   barColor?: string
 }) {
-  const { formatPercent } = useLocalizationContext()
+  const { formatPercent } = useFormatter()
   const colors = useSporeColors()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [hoverY, setHoverY] = useState<number>()
@@ -120,7 +122,7 @@ export function ActiveLiquidityChart({
   }, [min, max, series, height, width, axisLabelPaneWidth, contentWidth])
 
   const hoveredTick = useMemo(() => {
-    if (!hoverY) {
+    if (!hoverY || !yScale) {
       return undefined
     }
     const price = yScale.invert(hoverY)
@@ -172,9 +174,7 @@ export function ActiveLiquidityChart({
               top={yScale(brushDomain[0]) - 16}
             >
               <Text variant="body4">
-                {formatPercent(
-                  new Percent(scaleToInteger(brushDomain[0] - current), scaleToInteger(current)).toSignificant(),
-                )}
+                {formatPercent(new Percent(scaleToInteger(brushDomain[0] - current), scaleToInteger(current)))}
               </Text>
             </Flex>
           )}
@@ -190,9 +190,7 @@ export function ActiveLiquidityChart({
               top={yScale(brushDomain[1]) - 16}
             >
               <Text variant="body4">
-                {formatPercent(
-                  new Percent(scaleToInteger(brushDomain[1] - current), scaleToInteger(current)).toSignificant(),
-                )}
+                {formatPercent(new Percent(scaleToInteger(brushDomain[1] - current), scaleToInteger(current)))}
               </Text>
             </Flex>
           )}
@@ -207,7 +205,7 @@ export function ActiveLiquidityChart({
           if (!svgRef.current) {
             return
           }
-          const rect = svgRef.current.getBoundingClientRect()
+          const rect = svgRef.current?.getBoundingClientRect()
           const y = event.clientY - rect.top
           const x = event.clientX - rect.left
           if (x > width - axisLabelPaneWidth - contentWidth) {
@@ -254,7 +252,7 @@ export function ActiveLiquidityChart({
               yValue={yAccessor}
               brushDomain={brushDomain}
               containerHeight={height}
-              fill={opacify(10, brushDomain ? colors.neutral1.val : (barColor ?? colors.accent1.val))}
+              fill={opacify(10, brushDomain ? colors.neutral1.val : barColor ?? colors.accent1.val)}
               selectedFill={opacify(10, barColor ?? colors.accent1.val)}
               containerWidth={width - axisLabelPaneWidth}
             />

@@ -1,7 +1,6 @@
-import { act, renderHook } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react-hooks'
 import { LayoutChangeEvent } from 'react-native'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { describe, expect, it } from 'vitest'
 
 const MAX_INPUT_FONT_SIZE = 42
 const MIN_INPUT_FONT_SIZE = 28
@@ -10,11 +9,7 @@ const MAX_CHAR_PIXEL_WIDTH = 23
 describe(useDynamicFontSizing, () => {
   it('returns maxFontSize if text input element width is not set', () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing({
-        maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
-        maxFontSize: MAX_INPUT_FONT_SIZE,
-        minFontSize: MIN_INPUT_FONT_SIZE,
-      }),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
     )
 
     expect(result.current.fontSize).toBe(MAX_INPUT_FONT_SIZE)
@@ -22,11 +17,7 @@ describe(useDynamicFontSizing, () => {
 
   it('returns maxFontSize as fontSize if text fits in the container', async () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing({
-        maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
-        maxFontSize: MAX_INPUT_FONT_SIZE,
-        minFontSize: MIN_INPUT_FONT_SIZE,
-      }),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
     )
 
     await act(() => {
@@ -40,11 +31,7 @@ describe(useDynamicFontSizing, () => {
 
   it('scales down font when text does not fit in the container', async () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing({
-        maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
-        maxFontSize: MAX_INPUT_FONT_SIZE,
-        minFontSize: MIN_INPUT_FONT_SIZE,
-      }),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
     )
 
     await act(() => {
@@ -58,11 +45,7 @@ describe(useDynamicFontSizing, () => {
 
   it("doesn't return font size less than minFontSize", async () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing({
-        maxCharWidthAtMaxFontSize: MAX_CHAR_PIXEL_WIDTH,
-        maxFontSize: MAX_INPUT_FONT_SIZE,
-        minFontSize: MIN_INPUT_FONT_SIZE,
-      }),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
     )
 
     await act(() => {

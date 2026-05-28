@@ -1,12 +1,8 @@
 import { renderHook } from '@testing-library/react'
-import useInterval from '~/lib/hooks/useInterval'
+import useInterval from 'lib/hooks/useInterval'
 
 describe('useInterval', () => {
-  const spy = vi.fn()
-
-  afterEach(() => {
-    vi.clearAllMocks()
-  })
+  const spy = jest.fn()
 
   it('with no interval it does not run', () => {
     renderHook(() => useInterval(spy, null))
@@ -15,29 +11,29 @@ describe('useInterval', () => {
 
   describe('with a synchronous function', () => {
     it('runs on an interval', () => {
-      vi.useFakeTimers()
+      jest.useFakeTimers()
 
       renderHook(() => useInterval(spy, 100))
       expect(spy).toHaveBeenCalledTimes(1)
 
-      vi.advanceTimersByTime(100)
+      jest.advanceTimersByTime(100)
       expect(spy).toHaveBeenCalledTimes(2)
     })
   })
 
   describe('with an async funtion', () => {
     it('runs on an interval exclusive of fn resolving', async () => {
-      vi.useFakeTimers()
+      jest.useFakeTimers()
       spy.mockImplementation(() => Promise.resolve(undefined))
 
       renderHook(() => useInterval(spy, 100))
       expect(spy).toHaveBeenCalledTimes(1)
 
-      vi.advanceTimersByTime(100)
+      jest.advanceTimersByTime(100)
       expect(spy).toHaveBeenCalledTimes(1)
 
       await spy.mock.results[0].value
-      vi.advanceTimersByTime(100)
+      jest.advanceTimersByTime(100)
       expect(spy).toHaveBeenCalledTimes(2)
     })
   })

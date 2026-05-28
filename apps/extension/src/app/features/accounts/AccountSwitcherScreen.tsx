@@ -1,5 +1,4 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { BaseSyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
@@ -7,38 +6,30 @@ import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { CreateWalletModal } from 'src/app/features/accounts/CreateWalletModal'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
 import { useSortedAccountList } from 'src/app/features/accounts/useSortedAccountList'
-import { updateDappConnectedAddressFromExtension } from 'src/app/features/dapp/actions'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
+import { updateDappConnectedAddressFromExtension } from 'src/app/features/dapp/actions'
 import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
 import { isConnectedAccount } from 'src/app/features/dapp/utils'
-import { openPopup, PopupName } from 'src/app/features/popups/slice'
+import { PopupName, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { focusOrCreateUnitagTab, useExtensionNavigation } from 'src/app/navigation/utils'
 import { Button, Flex, Popover, ScrollView, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Ellipsis, Globe, Person, TrashFilled, WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
-import { UniswapWrapped2025Card } from 'uniswap/src/components/banners/UniswapWrapped2025Card/UniswapWrapped2025Card'
-import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
-import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { sleep } from 'utilities/src/time/timing'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
+import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
@@ -67,20 +58,9 @@ export function AccountSwitcherScreen(): JSX.Element {
   const activeAddress = activeAccount.address
   const isViewOnly = activeAccount.type === AccountType.Readonly
 
-  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
-
   const accounts = useSignerAccounts()
   const accountAddresses = useMemo(
-    () =>
-      accounts
-        .map((account) => account.address)
-        .filter(
-          (address) =>
-            !areAddressesEqual({
-              addressInput1: { address, platform: Platform.EVM },
-              addressInput2: { address: activeAddress, platform: Platform.EVM },
-            }),
-        ),
+    () => accounts.map((account) => account.address).filter((address) => address !== activeAddress),
     [accounts, activeAddress],
   )
   const { dappUrl } = useDappContext()
@@ -90,14 +70,12 @@ export function AccountSwitcherScreen(): JSX.Element {
   // TODO: EXT-899 https://linear.app/uniswap/issue/EXT-899/enable-unitag-edit-button-is-account-header
   const activeAccountDisplayName = useDisplayName(activeAddress)
   const activeAccountHasUnitag = activeAccountDisplayName?.type === DisplayNameType.Unitag
-  const activeAccountHasENS = activeAccountDisplayName?.type === DisplayNameType.ENS
 
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
 
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
   const [showImportWalletModal, setShowImportWalletModal] = useState(false)
   const [showCreateWalletModal, setShowCreateWalletModal] = useState(false)
-  const { value: isEllipsisMenuOpen, setTrue: openEllipsisMenu, setFalse: closeEllipsisMenu } = useBooleanState(false)
 
   const [pendingWallet, setPendingWallet] = useState<SignerMnemonicAccount>()
 
@@ -164,17 +142,6 @@ export function AccountSwitcherScreen(): JSX.Element {
     [connectedAccounts.length, dispatch, pendingWallet],
   )
 
-  const onPressWrappedCard = useCallback(() => {
-    try {
-      const url = buildWrappedUrl(UNISWAP_WEB_URL, activeAddress)
-      window.open(url, '_blank')
-      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
-      navigate(-1)
-    } catch (error) {
-      logger.error(error, { tags: { file: 'AccountSwitcherScreen', function: 'onPressWrappedCard' } })
-    }
-  }, [activeAddress, dispatch])
-
   const addWalletMenuOptions: MenuContentItem[] = [
     {
       label: t('account.wallet.button.create'),
@@ -195,35 +162,37 @@ export function AccountSwitcherScreen(): JSX.Element {
     zIndex: 1,
   }
 
-  const menuOptions = useMemo((): MenuOptionItem[] => {
+  const menuOptions = useMemo((): MenuContentItem[] => {
     return [
       ...(canClaimUnitag
         ? [
             {
               label: t('account.wallet.menu.claimUsername'),
-              onPress: async (): Promise<void> => {
-                await focusOrCreateUnitagTab(activeAddress, UnitagClaimRoutes.ClaimIntro)
-              },
+
+              onPress: async () => await focusOrCreateUnitagTab(activeAddress, UnitagClaimRoutes.ClaimIntro),
+
               Icon: Person,
             },
           ]
         : []),
+
       {
         label: t('account.wallet.menu.manageConnections'),
-        onPress: (): void => {
-          navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}?address=${activeAddress}`)
-        },
+        onPress: () => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`),
         Icon: Globe,
       },
       {
         label: t('account.wallet.menu.remove.title'),
-        onPress: (): void => {
+        onPress: (e: BaseSyntheticEvent): void => {
+          // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
+          // means that without it the TouchableArea handler will get called
+          e.preventDefault()
+          e.stopPropagation()
           setShowRemoveWalletModal(true)
         },
-        textColor: '$statusCritical',
+        textProps: { color: '$statusCritical' },
         Icon: TrashFilled,
-        iconColor: '$statusCritical',
-        destructive: true,
+        iconProps: { color: '$statusCritical' },
       },
     ]
   }, [canClaimUnitag, activeAddress, navigateTo, t])
@@ -271,11 +240,11 @@ export function AccountSwitcherScreen(): JSX.Element {
           Icon={X}
           rightColumn={
             <ContextMenu
-              menuItems={menuOptions}
-              triggerMode={ContextMenuTriggerMode.Primary}
-              isOpen={isEllipsisMenuOpen}
-              openMenu={openEllipsisMenu}
-              closeMenu={closeEllipsisMenu}
+              closeOnClick
+              itemId="account-switcher-ellipsis-dropdown"
+              menuOptions={menuOptions}
+              placement="bottom"
+              onLeftClick
             >
               <TouchableArea
                 borderRadius="$roundedFull"
@@ -289,13 +258,14 @@ export function AccountSwitcherScreen(): JSX.Element {
         />
         <Flex pb="$spacing4" pt="$spacing8" px="$spacing12">
           <Flex row alignSelf="stretch" width="100%" justifyContent="center">
-            <Flex flex={1} justifyContent="center">
+            <Flex flex={1} justifyContent="center" alignItems="center">
               <AddressDisplay
                 showCopy
                 centered
                 address={activeAddress}
                 captionVariant="body3"
                 direction="column"
+                displayNameTextAlign="center"
                 horizontalGap="$spacing8"
                 showViewOnlyBadge={isViewOnly}
                 size={spacing.spacing60 - spacing.spacing4}
@@ -304,28 +274,20 @@ export function AccountSwitcherScreen(): JSX.Element {
             </Flex>
           </Flex>
 
-          {isWrappedBannerEnabled && (
-            <Flex pt="$spacing16">
-              <UniswapWrapped2025Card onPress={onPressWrappedCard} />
-            </Flex>
-          )}
-
-          <Flex pt={activeAccountHasENS ? undefined : '$padding16'}>
+          <Flex pt="$padding16">
             {activeAccountHasUnitag ? (
               <UnitagActionButton />
             ) : (
-              !activeAccountHasENS && (
-                <Flex row>
-                  <Button
-                    size="small"
-                    testID={TestID.AccountCard}
-                    emphasis="secondary"
-                    onPress={() => setShowEditLabelModal(true)}
-                  >
-                    {t('account.wallet.header.button.title')}
-                  </Button>
-                </Flex>
-              )
+              <Flex row>
+                <Button
+                  size="small"
+                  testID={TestID.AccountCard}
+                  emphasis="secondary"
+                  onPress={() => setShowEditLabelModal(true)}
+                >
+                  {t('account.wallet.header.button.title')}
+                </Button>
+              </Flex>
             )}
           </Flex>
         </Flex>
@@ -378,7 +340,7 @@ export function AccountSwitcherScreen(): JSX.Element {
               borderColor="$surface3"
               borderRadius="$rounded16"
               borderWidth="$spacing1"
-              enableRemoveScroll={true}
+              disableRemoveScroll={false}
               enterStyle={{ y: -10, opacity: 0 }}
               exitStyle={{ y: -10, opacity: 0 }}
               p="$none"

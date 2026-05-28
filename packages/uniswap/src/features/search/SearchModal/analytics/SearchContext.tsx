@@ -11,8 +11,7 @@ export type SearchFilterContext = {
 export type SearchContext = {
   category?: OnchainItemSectionName
   query?: string
-  position?: number // overall position of item in list (1-indexed)
-  sectionPosition?: number // position of item in section (1-indexed)
+  position?: number
   suggestionCount?: number
   isHistory?: boolean // history item click
 } & Partial<SearchFilterContext>

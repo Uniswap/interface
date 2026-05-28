@@ -1,23 +1,22 @@
-import { connect } from '@wagmi/core'
+import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
+import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
+import { useConnect } from 'hooks/useConnect'
+import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useDispatch } from 'react-redux'
+import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
+import { updateIsEmbeddedWalletBackedUp } from 'state/user/reducer'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import {
   createNewEmbeddedWallet,
   signInWithPasskey as signInWithPasskeyAPI,
-  signMessageWithPasskey,
+  signMessagesWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
-import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
 import { logger } from 'utilities/src/logger/logger'
-import { useWagmiConnectorWithId } from '~/components/WalletModal/useWagmiConnectorWithId'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
-import { walletTypeToAmplitudeWalletType } from '~/components/Web3Provider/walletConnect'
-import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
-import { updateIsEmbeddedWalletBackedUp } from '~/state/user/reducer'
-import { isIFramed } from '~/utils/isIFramed'
+import { isIFramed } from 'utils/isIFramed'
 
 interface SignInWithPasskeyOptions {
   createNewWallet?: boolean
@@ -45,23 +44,19 @@ export function useSignInWithPasskey({
   onSuccess,
   onError,
 }: SignInWithPasskeyOptions = {}) {
-  const { setIsConnected, setWalletAddress, setWalletId } = useEmbeddedWalletState()
-  const connector = useWagmiConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
+  const { setIsConnected, setWalletAddress } = useEmbeddedWalletState()
+  const connection = useConnect()
+  const connector = useConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
     shouldThrow: true,
   })
   const claimUnitag = useClaimUnitag()
   const dispatch = useDispatch()
 
-  const {
-    mutate: signInWithPasskey,
-    mutateAsync: signInWithPasskeyAsync,
-    ...rest
-  } = usePasskeyAuthWithHelpModal<{
+  const { mutate: signInWithPasskey, ...rest } = usePasskeyAuthWithHelpModal<{
     walletAddress: string
-    walletId: string
     exported?: boolean
   }>(
-    async (): Promise<{ walletAddress: string; walletId: string; exported?: boolean }> => {
+    async (): Promise<{ walletAddress: string; exported?: boolean }> => {
       // We do not support EW passkeys in iframes to prevent clickjacking
       // If a user is embedded in an iframe, they will be frame busted and redirected to the web app
       if (isIFramed(true)) {
@@ -69,58 +64,54 @@ export function useSignInWithPasskey({
       }
 
       if (createNewWallet) {
-        const walletData = await createNewEmbeddedWallet(unitag ?? '')
-        if (!walletData) {
+        const walletAddress = await createNewEmbeddedWallet(unitag ?? '')
+        if (!walletAddress) {
           throw new Error(`Failed to create wallet for passkey`)
         }
 
         if (unitag) {
-          const unitagResult = await claimUnitag({
-            claim: {
-              address: walletData.address,
+          const unitagResult = await claimUnitag(
+            {
+              address: walletAddress,
               username: unitag,
             },
-            context: {
+            {
               source: 'onboarding',
               hasENSAddress: false,
             },
-            signMessage: async (message) => {
-              const signedMessage = await signMessageWithPasskey(message, walletData.walletId)
-              return signedMessage || ''
+            walletAddress,
+            async (message) => {
+              const messages = await signMessagesWithPasskey([message])
+              return messages?.[0] || ''
             },
-          })
+          )
 
           if (unitagResult.claimError) {
             // TODO(WEB-7294): retry unitag flow
           }
         }
 
-        return { walletAddress: walletData.address, walletId: walletData.walletId }
+        return { walletAddress }
       } else {
         const signInResponse = await signInWithPasskeyAPI()
-        if (!signInResponse || !signInResponse.walletAddress || !signInResponse.walletId) {
+        if (!signInResponse) {
           throw new Error(`Failed to sign in with passkey`)
         }
 
-        return {
-          walletAddress: signInResponse.walletAddress,
-          walletId: signInResponse.walletId,
-          exported: signInResponse.exported,
-        }
+        return signInResponse
       }
     },
     {
-      onSuccess: ({ walletAddress, walletId, exported }) => {
+      onSuccess: ({ walletAddress, exported }) => {
         dispatch(updateIsEmbeddedWalletBackedUp({ isEmbeddedWalletBackedUp: exported ?? false }))
         setWalletAddress(walletAddress)
-        setWalletId(walletId)
         setIsConnected(true)
-        connect(wagmiConfig, { connector })
+        connection.connect({ connector })
         if (createNewWallet) {
-          sendAnalyticsEvent(InterfaceEventName.EmbeddedWalletCreated)
+          sendAnalyticsEvent(InterfaceEventNameLocal.EmbeddedWalletCreated)
         } else {
-          sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
-            result: WalletConnectionResult.Succeeded,
+          sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
+            result: WalletConnectionResult.SUCCEEDED,
             wallet_name: connector.name,
             wallet_type: walletTypeToAmplitudeWalletType(connector.type),
             wallet_address: walletAddress,
@@ -142,5 +133,5 @@ export function useSignInWithPasskey({
     },
   )
 
-  return { signInWithPasskey, signInWithPasskeyAsync, ...rest }
+  return { signInWithPasskey, ...rest }
 }

@@ -1,20 +1,10 @@
-/** biome-ignore-all lint/style/noRestrictedGlobals: need to reference chrome for test setup */
+import { chrome } from 'jest-chrome'
 import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG } from 'utilities/src/device/constants'
 import { getDeviceLocales } from 'utilities/src/device/locales.web'
-import { Mock, vi } from 'vitest'
-
-// Mock the chrome utilities to return the global chrome mock from vitest setup
-vi.mock('utilities/src/chrome/chrome', () => ({
-  getChromeWithThrow: (): typeof chrome => global.chrome,
-}))
 
 describe(getDeviceLocales, () => {
   const MOCK_LANGUAGE = 'es-ES'
-
-  beforeEach(() => {
-    // eslint-disable-next-line no-extra-semi
-    ;(chrome.i18n.getUILanguage as Mock).mockImplementation(() => MOCK_LANGUAGE)
-  })
+  chrome.i18n.getUILanguage.mockImplementation(() => MOCK_LANGUAGE)
 
   it('should return the device locale', () => {
     expect(getDeviceLocales).not.toThrow()
@@ -22,8 +12,7 @@ describe(getDeviceLocales, () => {
   })
 
   it('should return the default locale if an error occurs', () => {
-    // eslint-disable-next-line no-extra-semi
-    ;(chrome.i18n.getUILanguage as Mock).mockImplementation(() => {
+    chrome.i18n.getUILanguage.mockImplementation(() => {
       throw new Error('test error')
     })
 

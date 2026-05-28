@@ -1,4 +1,4 @@
-import { RankingType } from '@universe/api'
+import { RankingType } from 'uniswap/src/data/types'
 
 // only add fields that are persisted
 export const initialSchema = {
@@ -254,34 +254,5 @@ export const v22Schema = {
   batchedTransactions: {},
 }
 
-export const v23Schema = v22Schema
-
-const v24SchemaIntermediate = {
-  ...v23Schema,
-  appearanceSettings: {
-    ...v23Schema.appearanceSettings,
-    hapticsEnabled: undefined,
-  },
-  userSettings: {
-    ...v23Schema.userSettings,
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    hapticsEnabled: v23Schema.appearanceSettings.hapticsEnabled ?? false,
-  },
-}
-delete v24SchemaIntermediate.appearanceSettings.hapticsEnabled
-
-export const v24Schema = v24SchemaIntermediate
-
-export const v25Schema = { ...v24Schema }
-
-export const v26Schema = { ...v25Schema }
-
-export const v27Schema = { ...v26Schema }
-
-export const v29Schema = { ...v27Schema, visibility: { ...v27Schema.visibility, activity: {} } }
-
-export const v30Schema = { ...v29Schema }
-
-const v31Schema = { ...v30Schema }
-
-export const getSchema = (): typeof v31Schema => v31Schema
+const v23Schema = v22Schema
+export const getSchema = (): typeof v23Schema => v23Schema

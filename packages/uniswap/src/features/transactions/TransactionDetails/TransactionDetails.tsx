@@ -1,33 +1,32 @@
-import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import type { GasFeeResult } from '@universe/api'
-import { TradingApi } from '@universe/api'
-import type { PropsWithChildren, ReactNode } from 'react'
-import { useState } from 'react'
+import { SwapEventName } from '@uniswap/analytics-events'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex } from 'ui/src'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
-import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
+import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
-import { EstimatedSwapTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
-import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
-import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import type { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isBridge, isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { ExpectedFailureBanner } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedFailureBanner'
-import { ExpectedSpeed } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedSpeed'
 import { FeeOnTransferFeeGroup } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { ListSeparatorToggle } from 'uniswap/src/features/transactions/TransactionDetails/ListSeparatorToggle'
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
 import { SwapReviewTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/SwapReviewTokenWarningCard'
 import { TransactionWarning } from 'uniswap/src/features/transactions/TransactionDetails/TransactionWarning'
-import type {
+import { UserReceiveAmount } from 'uniswap/src/features/transactions/TransactionDetails/UserReceiveAmount'
+import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { isWebApp } from 'utilities/src/platform'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
+import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
+import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
+import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isInterface } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
@@ -38,7 +37,6 @@ interface TransactionDetailsProps {
   uniswapXGasBreakdown?: UniswapXGasBreakdown
   showExpandedChildren?: boolean
   showGasFeeError?: boolean
-  showNetworkLogo?: boolean
   showWarning?: boolean
   showSeparatorToggle?: boolean
   warning?: Warning
@@ -50,14 +48,14 @@ interface TransactionDetailsProps {
   onShowWarning?: () => void
   indicative?: boolean
   isSwap?: boolean
-  routingType?: TradingApi.Routing
-  estimatedSwapTime?: number | undefined
+  isBridgeTrade?: boolean
+  estimatedBridgingTime?: number
   AccountDetails?: JSX.Element
   RoutingInfo?: JSX.Element
-  CollapsedInfoRow?: JSX.Element
   RateInfo?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
-  txSimulationErrors?: TradingApi.TransactionFailureReason[]
+  txSimulationErrors?: TransactionFailureReason[]
+  amountUserWillReceive?: CurrencyAmount<Currency>
   includesDelegation?: boolean
 }
 
@@ -73,7 +71,6 @@ export function TransactionDetails({
   swapFee,
   swapFeeUsd,
   showGasFeeError = true,
-  showNetworkLogo = true,
   showSeparatorToggle = true,
   showWarning,
   warning,
@@ -83,37 +80,35 @@ export function TransactionDetails({
   setTokenWarningChecked,
   onShowWarning,
   indicative = false,
+  isSwap,
   transactionUSDValue,
   txSimulationErrors,
-  routingType,
+  isBridgeTrade,
   AccountDetails,
-  estimatedSwapTime,
+  estimatedBridgingTime,
   RoutingInfo,
-  CollapsedInfoRow,
   RateInfo,
+  amountUserWillReceive,
   includesDelegation,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
+  const priceUXEnabled = usePriceUXEnabled()
 
   const onPressToggleShowChildren = (): void => {
     if (!showChildren) {
-      sendAnalyticsEvent(SwapEventName.SwapDetailsExpanded)
+      sendAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED)
     }
     setShowChildren(!showChildren)
   }
-
-  const isChainedTrade = routingType && isChained({ routing: routingType })
-  const isBridgeTrade = routingType && isBridge({ routing: routingType })
-  const isSwap = !isBridgeTrade && !isChainedTrade
 
   // Used to show slippage settings on mobile, where the modal needs to be added outside of the conditional expected failure banner
   const [showSlippageSettings, setShowSlippageSettings] = useState(false)
   const showExpectedFailureBanner =
     isSwap &&
     ((showGasFeeError && gasFee.error) ||
-      txSimulationErrors?.includes(TradingApi.TransactionFailureReason.SIMULATION_ERROR) ||
-      txSimulationErrors?.includes(TradingApi.TransactionFailureReason.SLIPPAGE_TOO_LOW))
+      txSimulationErrors?.includes(TransactionFailureReason.SIMULATION_ERROR) ||
+      txSimulationErrors?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW))
 
   return (
     <Flex>
@@ -132,11 +127,18 @@ export function TransactionDetails({
           onPress={onPressToggleShowChildren}
         />
       ) : null}
-      <Flex gap="$spacing16">
+      <Flex gap="$spacing16" pb="$spacing8">
         <Flex gap="$spacing8" px="$spacing8">
-          {showChildren ? RateInfo : null}
+          {showChildren && priceUXEnabled ? (
+            <AnimatePresence>
+              <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
+                {children}
+              </Flex>
+            </AnimatePresence>
+          ) : null}
+          {RateInfo}
           {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-          <EstimatedSwapTime showIfLongerThanCutoff={true} timeMs={estimatedSwapTime} />
+          {isSwap && isBridgeTrade && <EstimatedTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
           {isSwap && outputCurrency && (
             <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
           )}
@@ -147,19 +149,19 @@ export function TransactionDetails({
             transactionUSDValue={transactionUSDValue}
             uniswapXGasBreakdown={uniswapXGasBreakdown}
             includesDelegation={includesDelegation}
-            showNetworkLogo={showNetworkLogo}
           />
-          {!showChildren && CollapsedInfoRow}
-          {(isSwap || isChainedTrade) && RoutingInfo}
+          {isSwap && RoutingInfo}
           {AccountDetails}
-          {!isChainedTrade && <ExpectedSpeed chainId={chainId} />}
-          {showChildren ? (
+          {showChildren && !priceUXEnabled ? (
             <AnimatePresence>
               <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
                 {children}
               </Flex>
             </AnimatePresence>
           ) : null}
+          {amountUserWillReceive && outputCurrency && priceUXEnabled && (
+            <UserReceiveAmount amountUserWillReceive={amountUserWillReceive} outputCurrency={outputCurrency} />
+          )}
         </Flex>
         {setTokenWarningChecked && tokenWarningProps && (
           <SwapReviewTokenWarningCard
@@ -171,11 +173,9 @@ export function TransactionDetails({
         )}
       </Flex>
       {showWarning && warning && onShowWarning && (
-        <Flex mt="$spacing16">
-          <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
-        </Flex>
+        <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
       )}
-      {!isWebApp && isSwap && (
+      {!isInterface && isSwap && (
         <TransactionSettingsModal
           settings={[SlippageUpdate]}
           initialSelectedSetting={SlippageUpdate}

@@ -1,7 +1,6 @@
-import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FiatNumberType } from 'utilities/src/format/types'
@@ -13,9 +12,10 @@ export type OnSelectCurrency = (
 ) => void
 
 export type TokenSectionsHookProps = {
-  addresses: AddressGroup
+  activeAccountAddress?: string
   chainFilter: UniverseChainId | null
   oppositeSelectedToken?: TradeableAsset
+  isKeyboardOpen?: boolean
 }
 
 export type ConvertFiatAmountFormattedCallback = (

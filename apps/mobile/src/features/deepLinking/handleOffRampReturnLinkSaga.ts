@@ -20,7 +20,7 @@ import { fetchOffRampTransferDetails } from 'wallet/src/features/fiatOnRamp/api'
 export function* handleOffRampReturnLink(url: URL) {
   try {
     yield* call(_handleOffRampReturnLink, url)
-  } catch {
+  } catch (error) {
     Alert.alert(i18n.t('fiatOffRamp.error.populateSend.title'), i18n.t('fiatOffRamp.error.populateSend.description'))
   }
 }
@@ -39,12 +39,13 @@ function* _handleOffRampReturnLink(url: URL) {
   let offRampTransferDetails: OffRampTransferDetailsResponse | undefined
 
   try {
-    offRampTransferDetails = yield* call(fetchOffRampTransferDetails, {
-      sessionId: externalTransactionId,
-      baseCurrencyCode: currencyCode,
-      baseCurrencyAmount: Number(currencyAmount),
-      depositWalletAddress: walletAddress,
-    })
+    offRampTransferDetails = yield* call(
+      fetchOffRampTransferDetails,
+      externalTransactionId,
+      currencyCode,
+      Number(currencyAmount),
+      walletAddress,
+    )
   } catch (error) {
     logger.error(error, {
       tags: { file: 'handleOffRampReturnLinkSaga', function: 'handleOffRampReturnLink' },
@@ -54,9 +55,11 @@ function* _handleOffRampReturnLink(url: URL) {
   }
 
   if (
+    !offRampTransferDetails ||
     !offRampTransferDetails.tokenAddress ||
     !offRampTransferDetails.baseCurrencyCode ||
-    !offRampTransferDetails.depositWalletAddress
+    !offRampTransferDetails.depositWalletAddress ||
+    !!offRampTransferDetails.errorCode
   ) {
     throw new Error('Missing offRampTransferDetails in fiat offramp deep link')
   }
@@ -82,7 +85,7 @@ function* _handleOffRampReturnLink(url: URL) {
 
   const fiatOffRampMetaData: FiatOffRampMetaData = {
     name: provider,
-    logoUrl: logos?.lightLogo ?? '',
+    logoUrl: logos.lightLogo,
     onSubmitCallback: (amountUSD?: number) => {
       sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampFundsSent, { ...analyticsProperties, amountUSD })
     },

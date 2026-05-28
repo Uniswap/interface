@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export const SwapFormHeader = (): JSX.Element => {
   const { t } = useTranslation()
@@ -22,7 +21,7 @@ export const SwapFormHeader = (): JSX.Element => {
         <Flex
           centered
           row
-          backgroundColor={isWebPlatform ? undefined : '$surface2'}
+          backgroundColor={isWeb ? undefined : '$surface2'}
           borderRadius="$roundedFull"
           px="$spacing4"
           py="$spacing4"

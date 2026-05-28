@@ -9,9 +9,9 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { RecipientData, SendInfo, useDerivedSendInfo } from 'state/send/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { RecipientData, SendInfo, useDerivedSendInfo } from '~/state/send/hooks'
-import { useSwapAndLimitContext } from '~/state/swap/useSwapContext'
 
 export type SendState = {
   readonly exactAmountToken?: string
@@ -77,11 +77,7 @@ export function useSendContext() {
   return useContext(SendContext)
 }
 
-interface SendContextProviderProps extends PropsWithChildren {
-  initialRecipient?: string
-}
-
-export function SendContextProvider({ children, initialRecipient }: SendContextProviderProps) {
+export function SendContextProvider({ children }: PropsWithChildren) {
   const {
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
@@ -96,7 +92,6 @@ export function SendContextProvider({ children, initialRecipient }: SendContextP
   const [sendState, setSendState] = useState<SendState>({
     ...(isTestnetModeEnabled ? DEFAULT_TESTNET_SEND_STATE : DEFAULT_SEND_STATE),
     inputCurrency: initialCurrency,
-    recipient: initialRecipient ?? '',
   })
 
   useEffect(() => {
@@ -137,7 +132,7 @@ export function SendContextProvider({ children, initialRecipient }: SendContextP
       setSendState,
       derivedSendInfo,
     }),
-    [derivedSendInfo, sendState],
+    [derivedSendInfo, setSendState, sendState],
   )
 
   return <SendContext.Provider value={value}>{children}</SendContext.Provider>

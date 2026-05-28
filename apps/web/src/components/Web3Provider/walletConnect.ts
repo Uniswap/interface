@@ -1,4 +1,4 @@
-import { zIndexes } from 'ui/src/theme'
+import { Z_INDEX } from 'theme/zIndex'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
@@ -8,7 +8,7 @@ if (process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID === undefined) {
 }
 const WALLET_CONNECT_PROJECT_ID = <string>process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID
 
-export function walletTypeToAmplitudeWalletType(connectionType?: string): string {
+export const walletTypeToAmplitudeWalletType = (connectionType?: string) => {
   switch (connectionType) {
     case 'injected': {
       return 'Browser Extension'
@@ -36,13 +36,13 @@ export const WC_PARAMS = {
   metadata: {
     name: 'Uniswap',
     description: 'Uniswap Interface',
-    url: 'https://app.uniswap.org',
-    icons: ['https://app.uniswap.org/favicon.png'],
+    url: 'https://app.ring.exchange',
+    icons: ['https://app.ring.exchange/favicon.png'],
   },
   qrModalOptions: {
     themeVariables: {
       '--wcm-font-family': '"Inter custom", sans-serif',
-      '--wcm-z-index': zIndexes.overlay.toString(),
+      '--wcm-z-index': Z_INDEX.modal.toString(),
     },
   },
 }
@@ -62,7 +62,7 @@ export function uniswapWalletConnect() {
         // Emits custom event to display the Uniswap Wallet URI
         window.dispatchEvent(new MessageEvent('display_uniswap_uri', { data: uniswapWalletUri }))
 
-        // Opens deeplink to Uniswap Wallet if on mobile
+        // Opens deeplink to Ring Wallet if on mobile
         if (isWebIOS || isWebAndroid) {
           // Using window.location.href to open the deep link ensures smooth navigation and leverages OS handling for installed apps,
           // avoiding potential popup blockers or inconsistent behavior associated with window.open
@@ -76,7 +76,7 @@ export function uniswapWalletConnect() {
       id: 'uniswapWalletConnect',
       type: 'uniswapWalletConnect',
       name: 'Uniswap Wallet',
-      icon: 'https://app.uniswap.org/favicon.png',
+      icon: 'https://app.ring.exchange/favicon.png',
     }
   })
 }

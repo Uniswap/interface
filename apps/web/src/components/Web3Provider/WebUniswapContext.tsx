@@ -1,48 +1,62 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { PropsWithChildren, useCallback, useEffect } from 'react'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersProvider } from 'hooks/useEthersProvider'
+import { useEthersSigner } from 'hooks/useEthersSigner'
+import { useModalState } from 'hooks/useModalState'
+import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
+import { useTokenSelectorListSearch } from 'hooks/useTokenSelectorListSearch'
+import { useUpdateAtom } from 'jotai/utils'
+import { useOneClickSwapSetting } from 'pages/Swap/settings/OneClickSwap'
+import React, { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useLocation, useNavigate } from 'react-router'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useNavigate } from 'react-router-dom'
+import { serializeSwapAddressesToURLParameters } from 'state/swap/hooks'
+import { useIsAtomicBatchingSupportedByChainIdCallback } from 'state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
+import { useHasMismatchCallback, useShowMismatchToast } from 'state/walletCapabilities/hooks/useMismatchAccount'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
-import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
+import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
-import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
+import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { getFiatOnRampURL, getPoolDetailsURL, getTokenDetailsURL } from 'uniswap/src/utils/linking'
+import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
-import { noop } from 'utilities/src/react/noop'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useMenuState } from '~/components/AccountDrawer/menuState'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
-import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
-import { useConnectionStatus } from '~/features/accounts/store/hooks'
-import { useAccountsStoreContext } from '~/features/accounts/store/provider'
-import { useAccount } from '~/hooks/useAccount'
-import { useEthersProvider } from '~/hooks/useEthersProvider'
-import { useEthersSigner } from '~/hooks/useEthersSigner'
-import { useModalState } from '~/hooks/useModalState'
-import { buildPortfolioUrl } from '~/pages/Portfolio/utils/portfolioUrls'
-import { useOneClickSwapSetting } from '~/pages/Swap/settings/OneClickSwap'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { serializeSwapAddressesToURLParameters } from '~/state/swap/hooks'
-import { useIsAtomicBatchingSupportedByChainIdCallback } from '~/state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
-import { useHasMismatchCallback, useShowMismatchToast } from '~/state/walletCapabilities/hooks/useMismatchAccount'
-import { showSwitchNetworkNotification } from '~/utils/showSwitchNetworkNotification'
+import noop from 'utilities/src/react/noop'
+import { Connector } from 'wagmi'
 
-// Adapts useEthersProvider to fit uniswap context hook shape
+// Adapts useEthersProvider to fit Ring context hook shape
 function useWebProvider(chainId: number) {
   return useEthersProvider({ chainId })
+}
+
+function useWagmiAccount(): { account?: AccountMeta; connector?: Connector } {
+  const account = useAccount()
+
+  return useMemo(() => {
+    if (!account.address) {
+      return {
+        account: undefined,
+        connector: account.connector,
+      }
+    }
+
+    return {
+      account: {
+        address: account.address,
+        type: AccountType.SignerMnemonic,
+      },
+      connector: account.connector,
+    }
+  }, [account.address, account.connector])
 }
 
 export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element {
@@ -53,102 +67,43 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
   )
 }
 
-// Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
+// Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `Ring` package.
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
-  const account = useAccount()
-
-  // Check if current wallet can pay gas fees in any token (e.g., Porto wallet)
-  const getCanPayGasInAnyToken = useCallback(() => {
-    return account.connector?.id === CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID
-  }, [account.connector?.id])
+  const { account, connector } = useWagmiAccount()
   const signer = useEthersSigner()
-  const location = useLocation()
+  const showSwapNetworkNotification = useShowSwapNetworkNotification()
+  const searchLocalTokenSelectorResults = useTokenSelectorListSearch()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
-  const { chainId } = useMultichainContext()
+  const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`, { replace: true }), [navigate])
 
-  const { closeModal: closeSendModal } = useModalState(ModalName.Send)
   const { closeModal: closeSearchModal } = useModalState(ModalName.Search)
-  const { openModal: openSendModal } = useModalState(ModalName.Send)
 
   const navigateToSwapFlow = useCallback(
-    ({
-      inputCurrencyId,
-      outputCurrencyId,
-      exactCurrencyField,
-      exactAmountToken,
-    }: {
-      inputCurrencyId?: string
-      outputCurrencyId?: string
-      exactCurrencyField?: CurrencyField
-      exactAmountToken?: string
-    }) => {
+    ({ inputCurrencyId, outputCurrencyId }: { inputCurrencyId?: string; outputCurrencyId?: string }) => {
       const queryParams = serializeSwapAddressesToURLParameters({
         inputTokenAddress: inputCurrencyId ? currencyIdToAddress(inputCurrencyId) : undefined,
         outputTokenAddress: outputCurrencyId ? currencyIdToAddress(outputCurrencyId) : undefined,
         chainId: inputCurrencyId ? currencyIdToChain(inputCurrencyId) : undefined,
         outputChainId: outputCurrencyId ? currencyIdToChain(outputCurrencyId) : undefined,
-        exactCurrencyField,
-        exactAmountToken,
       })
-      navigate(`/swap${queryParams}`)
-      closeSearchModal()
-      accountDrawer.close()
-    },
-    [navigate, closeSearchModal, accountDrawer],
-  )
-
-  const navigateToPoolDetails = useCallback(
-    ({ poolId, chainId }: { poolId: Address; chainId: UniverseChainId }) => {
-      const url = getPoolDetailsURL(poolId, chainId)
-      navigate(url)
+      navigate(`/swap${queryParams}`, { replace: true })
       closeSearchModal()
     },
     [navigate, closeSearchModal],
   )
 
-  const navigateToFiatOnRamp = useCallback(() => navigate(getFiatOnRampURL()), [navigate])
-
-  const navigateToBuyOrReceiveWithEmptyWallet = useCallback(() => {
-    const url = getFiatOnRampURL(chainId ?? undefined)
-    navigate(url)
-    closeSendModal()
-  }, [navigate, chainId, closeSendModal])
-
   const navigateToSendFlow = useCallback(
-    ({
-      chainId,
-      currencyAddress,
-      recipient,
-    }: {
-      chainId: UniverseChainId
-      currencyAddress?: Address
-      recipient?: Address
-    }) => {
+    ({ chainId, currencyAddress }: { chainId: UniverseChainId; currencyAddress?: Address }) => {
       const chainUrlParam = getChainInfo(chainId).urlParam
-      const params = new URLSearchParams(location.search)
-
-      openSendModal()
+      navigate(`/send?chain=${chainUrlParam}&inputCurrency=${currencyAddress}`, { replace: true })
       closeSearchModal()
-
-      // When we are in portfolio, we want to keep the previous state of selected network.
-      // Thus, we keep the state of the `chain` parameter and append it to the new URL.
-      const openingInPortfolio = location.pathname.includes('/portfolio')
-      const retainedNetworkParam = openingInPortfolio && params.has('chain') ? `chain=${params.get('chain')}&` : ''
-
-      const newPathname = location.pathname === '/' ? '/send' : location.pathname
-      const currencyAddressParam = currencyAddress ? `&sendCurrency=${currencyAddress}` : ''
-      const recipientParam = recipient ? `&sendRecipient=${recipient}` : ''
-      navigate(
-        `${newPathname}?${retainedNetworkParam}sendChain=${chainUrlParam}${currencyAddressParam}${recipientParam}`,
-      )
     },
-    [openSendModal, closeSearchModal, navigate, location.pathname, location.search],
+    [navigate, closeSearchModal],
   )
 
-  const navigateToReceive = useOpenReceiveCryptoModal({
-    modalState: ReceiveModalState.DEFAULT,
-  })
+  const setReceiveModalState = useUpdateAtom(miniPortfolioModalStateAtom)
+  const navigateToReceive = useCallback(() => setReceiveModalState(ModalState.QR_CODE), [setReceiveModalState])
 
   // no-op until we have a share token screen on web
   const handleShareToken = useCallback((_: { currencyId: string }) => {
@@ -163,9 +118,8 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       })
       navigate(url)
       closeSearchModal()
-      accountDrawer.close()
     },
-    [navigate, closeSearchModal, accountDrawer],
+    [navigate, closeSearchModal],
   )
 
   const getHasMismatch = useHasAccountMismatchCallback()
@@ -178,13 +132,18 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   })
   const getCanSignPermits = useGetCanSignPermits()
 
-  const navigateToExternalProfile = useCallback(
-    ({ address }: { address: Address }) => {
-      navigate(buildPortfolioUrl({ externalAddress: address }))
-      closeSearchModal()
-    },
-    [navigate, closeSearchModal],
-  )
+  // no-op until we have an external profile screen on web
+  const navigateToExternalProfile = useCallback((_: { address: Address }) => noop(), [])
+
+  const navigateToNftCollection = useCallback((args: { collectionAddress: Address; chainId: UniverseChainId }) => {
+    window.open(
+      `https://opensea.io/assets/${getChainInfo(
+        args.chainId,
+      ).backendChain.chain.toLowerCase()}/${args.collectionAddress}`,
+      '_blank',
+      'noopener,noreferrer',
+    )
+  }, [])
 
   const { openModal } = useModalState(ModalName.DelegationMismatch)
 
@@ -205,67 +164,35 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const setActiveChainId = useSetActiveChainId()
 
   const onSwapChainsChanged = useEvent(
-    ({
-      chainId,
-      prevChainId,
-      outputChainId,
-    }: {
-      chainId: UniverseChainId
-      outputChainId?: UniverseChainId
-      prevChainId?: UniverseChainId
-    }) => {
+    ({ chainId, prevChainId }: { chainId: UniverseChainId; prevChainId?: UniverseChainId }) => {
       setActiveChainId(chainId)
-      showSwitchNetworkNotification({ chainId, outputChainId, prevChainId, action: SwitchNetworkAction.Swap })
+      showSwapNetworkNotification({ chainId, prevChainId })
     },
   )
-
-  const accountDrawerMenu = useMenuState()
-
-  const { isConnected } = useConnectionStatus()
-  const onConnectWallet = useEvent((platform?: Platform) => {
-    accountDrawer.open()
-
-    // If a wallet is already connected, and swap prompts to connect on a specific platform,
-    // then the connect platform menu should be shown
-    if (platform && isConnected) {
-      accountDrawerMenu.setMenuState({ variant: MenuStateVariant.CONNECT_PLATFORM, platform })
-      return
-    }
-  })
-
-  const navigateToAdvancedSettings = useCallback(() => {
-    accountDrawer.open()
-    accountDrawerMenu.setMenuState({ variant: MenuStateVariant.ADVANCED_SETTINGS })
-  }, [accountDrawer, accountDrawerMenu])
-
-  const navigateToNftDetails = useNavigateToNftExplorerLink()
 
   useAccountChainIdEffect()
 
   return (
     <UniswapProvider
+      account={account}
       signer={signer}
+      connector={connector}
       useProviderHook={useWebProvider}
-      useWalletDisplayName={useOnchainDisplayName}
       onSwapChainsChanged={onSwapChainsChanged}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToSendFlow={navigateToSendFlow}
       navigateToReceive={navigateToReceive}
-      navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToTokenDetails={navigateToTokenDetails}
       navigateToExternalProfile={navigateToExternalProfile}
-      navigateToNftDetails={navigateToNftDetails}
-      navigateToPoolDetails={navigateToPoolDetails}
+      navigateToNftCollection={navigateToNftCollection}
       handleShareToken={handleShareToken}
-      navigateToAdvancedSettings={navigateToAdvancedSettings}
-      onConnectWallet={onConnectWallet}
+      onConnectWallet={accountDrawer.open}
       getCanSignPermits={getCanSignPermits}
       getIsUniswapXSupported={getIsUniswapXSupported}
       handleOnPressUniswapXUnsupported={handleOpenUniswapXUnsupportedModal}
       getCanBatchTransactions={getCanBatchTransactions}
-      useAccountsStoreContextHook={useAccountsStoreContext}
-      getCanPayGasInAnyToken={getCanPayGasInAnyToken}
+      searchLocalTokenSelectorResults={searchLocalTokenSelectorResults}
     >
       {children}
     </UniswapProvider>
@@ -276,12 +203,12 @@ const MismatchContextWrapper = React.memo(function MismatchContextWrapper({ chil
   const getHasMismatch = useHasMismatchCallback()
   const account = useAccount()
   const onHasAnyMismatch = useShowMismatchToast()
-  const { chains, defaultChainId, isTestnetModeEnabled } = useEnabledChains()
+  const { chains, defaultChainId, isTestnetModeEnabled } = useEnabledChainsWithConnector(account.connector)
   return (
     <MismatchContextProvider
       mismatchCallback={getHasMismatch}
-      address={account.address}
-      chainId={account.chainId}
+      address={account?.address}
+      chainId={account?.chainId}
       onHasAnyMismatch={onHasAnyMismatch}
       chains={chains}
       defaultChainId={defaultChainId}
@@ -299,8 +226,8 @@ MismatchContextWrapper.displayName = 'MismatchContextWrapper'
  */
 function useAccountChainIdEffect() {
   const currentChainId = useSelector((state: { delegation: DelegatedState }) => state.delegation.activeChainId)
-  const { chainId } = useAccount()
-  const { defaultChainId } = useEnabledChains()
+  const { chainId, connector } = useAccount()
+  const { defaultChainId } = useEnabledChainsWithConnector(connector)
   const accountChainId = chainId ?? defaultChainId
   const prevChainId = usePrevious(chainId)
   const setActiveChainId = useSetActiveChainId()

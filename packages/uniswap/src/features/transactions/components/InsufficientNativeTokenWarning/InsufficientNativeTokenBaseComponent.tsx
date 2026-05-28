@@ -1,11 +1,10 @@
 import { Trans } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, isWeb } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
-import { type useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
-import { isWebPlatform } from 'utilities/src/platform'
+import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 
 export function InsufficientNativeTokenBaseComponent({
   parsedInsufficientNativeTokenWarning,
@@ -26,16 +25,18 @@ export function InsufficientNativeTokenBaseComponent({
     <Flex
       centered
       row
-      backgroundColor={isWebPlatform ? '$surface2' : 'transparent'}
+      backgroundColor={isWeb ? '$surface2' : undefined}
       borderRadius="$rounded12"
       gap="$spacing8"
-      p={isWebPlatform ? '$spacing16' : '$none'}
+      p={isWeb ? '$spacing16' : '$none'}
     >
-      <Flex>
-        <AlertTriangleFilled color="$neutral2" size="$icon.16" />
-      </Flex>
+      {isWeb && (
+        <Flex>
+          <AlertTriangleFilled color="$neutral2" size="$icon.16" />
+        </Flex>
+      )}
 
-      <Flex fill={isWebPlatform}>
+      <Flex fill={isWeb}>
         <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
           {shouldShowNetworkName ? (
             flow === 'swap' ? (
@@ -81,7 +82,7 @@ export function InsufficientNativeTokenBaseComponent({
         </Text>
       </Flex>
 
-      {!isWebPlatform && (
+      {!isWeb && (
         <Flex>
           <InfoCircle color="$neutral3" size="$icon.16" />
         </Flex>

@@ -1,5 +1,4 @@
 import { BottomSheetFooter, BottomSheetScrollView, useBottomSheetInternal } from '@gorhom/bottom-sheet'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PropsWithChildren, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -18,6 +17,8 @@ import { Button, ButtonProps, Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -31,7 +32,6 @@ export type ModalWithOverlayProps = PropsWithChildren<
     onReject: () => void
     onConfirm?: () => void
     disableConfirm?: boolean
-    confirmationLoading?: boolean
     contentContainerStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
     cancelButtonProps?: ButtonProps
     confirmationButtonProps?: ButtonProps
@@ -50,7 +50,6 @@ export function ModalWithOverlay({
   onReject,
   onConfirm,
   disableConfirm,
-  confirmationLoading,
   contentContainerStyle,
   cancelButtonProps,
   confirmationButtonProps,
@@ -58,7 +57,7 @@ export function ModalWithOverlay({
 }: ModalWithOverlayProps): JSX.Element {
   const scrollViewRef = useRef<ScrollView>(null)
   const contentViewRef = useRef<View>(null)
-  const measureLayoutTimeoutRef = useRef<NodeJS.Timeout | number>(undefined)
+  const measureLayoutTimeoutRef = useRef<NodeJS.Timeout>()
 
   const startedScrollingRef = useRef(false)
   const [showOverlay, setShowOverlay] = useState(false)
@@ -82,7 +81,6 @@ export function ModalWithOverlay({
   }, [])
 
   const measureContent = useCallback((parentHeight: number) => {
-    // eslint-disable-next-line max-params
     const onSuccess: MeasureLayoutOnSuccessCallback = (x, y, w, h) => {
       if (h > parentHeight) {
         setShowOverlay(!startedScrollingRef.current)
@@ -117,7 +115,7 @@ export function ModalWithOverlay({
     [measureContent],
   )
 
-  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods)
+  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
 
   return (
     <Modal overrideInnerContainer {...bottomSheetModalProps}>
@@ -126,6 +124,7 @@ export function ModalWithOverlay({
         contentContainerStyle={
           contentContainerStyle ?? {
             paddingHorizontal: spacing.spacing24,
+            paddingTop: spacing.spacing12,
           }
         }
         showsVerticalScrollIndicator={false}
@@ -139,7 +138,6 @@ export function ModalWithOverlay({
         cancelButtonText={cancelButtonText}
         confirmationButtonText={confirmationButtonText}
         confirmationEnabled={!disableConfirm && confirmationEnabled}
-        confirmationLoading={confirmationLoading}
         scrollDownButtonText={scrollDownButtonText}
         showScrollDownOverlay={showOverlay && !eip5792MethodsEnabled}
         cancelButtonProps={cancelButtonProps}
@@ -154,7 +152,6 @@ export function ModalWithOverlay({
 
 type ModalFooterProps = {
   confirmationEnabled: boolean
-  confirmationLoading?: boolean
   showScrollDownOverlay: boolean
   cancelButtonText?: string
   confirmationButtonText?: string
@@ -168,7 +165,6 @@ type ModalFooterProps = {
 
 function ModalFooter({
   confirmationEnabled,
-  confirmationLoading,
   showScrollDownOverlay,
   scrollDownButtonText,
   cancelButtonText,
@@ -215,7 +211,6 @@ function ModalFooter({
           <Button
             variant="branded"
             isDisabled={!confirmationEnabled}
-            loading={confirmationLoading}
             size="large"
             testID={TestID.Confirm}
             onPress={onConfirm}

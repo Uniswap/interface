@@ -1,37 +1,36 @@
 import { Currency } from '@uniswap/sdk-core'
+import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
+import { AutoColumn } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
+import { InterfaceTrade } from 'state/routing/types'
+import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
+import { ThemedText } from 'theme/components'
+import { Divider } from 'theme/components/Dividers'
+import { ExternalLink } from 'theme/components/Links'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NumberType } from 'utilities/src/format/types'
-import { AutoColumn } from '~/components/deprecated/Column'
-import Row from '~/components/deprecated/Row'
-import UniswapXRouterLabel, { UniswapXGradient } from '~/components/RouterLabel/UniswapXRouterLabel'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { InterfaceTrade } from '~/state/routing/types'
-import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from '~/state/routing/utils'
-import { ThemedText } from '~/theme/components'
-import { Divider } from '~/theme/components/Dividers'
-import { ExternalLink } from '~/theme/components/Links'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-const Container = deprecatedStyled(AutoColumn)`
+const Container = styled(AutoColumn)`
   padding: 4px;
 `
 
 type GasCostItemProps = { title: ReactNode; itemValue?: React.ReactNode; amount?: number }
 
 const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatNumber } = useFormatter()
 
   if (!amount && !itemValue) {
     return null
   }
 
-  const value = itemValue ?? convertFiatAmountFormatted(amount, NumberType.FiatGasPrice)
+  const value = itemValue ?? formatNumber({ input: amount, type: NumberType.FiatGasPrice })
   return (
     <Row justify="space-between">
       <ThemedText.SubHeaderSmall>{title}</ThemedText.SubHeaderSmall>
@@ -41,8 +40,8 @@ const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
 }
 
 const GaslessSwapLabel = () => {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-  return <UniswapXRouterLabel>{convertFiatAmountFormatted(0, NumberType.FiatGasPrice)}</UniswapXRouterLabel>
+  const { formatNumber } = useFormatter()
+  return <UniswapXRouterLabel>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</UniswapXRouterLabel>
 }
 
 type GasBreakdownTooltipProps = { trade: InterfaceTrade }
@@ -58,8 +57,7 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 
   const swapEstimate = !isUniswapX ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
-  // Limit orders still require wrapping ETH to WETH (unlike regular UniswapX swaps which now support native ETH)
-  const wrapEstimate = isLimitTrade(trade) && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
+  const wrapEstimate = isUniswapX && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
   const showEstimateDetails = Boolean(wrapEstimate || approvalEstimate)
 
   const description = isUniswapX ? <UniswapXDescription /> : <NetworkCostDescription native={native} />
@@ -96,14 +94,14 @@ function NetworkCostDescription({ native }: { native: Currency }) {
   return (
     <ThemedText.LabelMicro>
       <Trans i18nKey="swap.networkCost.paidIn" values={{ sym: native.symbol, chainName }} />{' '}
-      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
+      <ExternalLink href="https://support.ring.exchange/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         <Trans i18nKey="common.button.learn" />
       </ExternalLink>
     </ThemedText.LabelMicro>
   )
 }
 
-const InlineUniswapXGradient = deprecatedStyled(UniswapXGradient)`
+const InlineUniswapXGradient = styled(UniswapXGradient)`
   display: inline;
 `
 export function UniswapXDescription() {

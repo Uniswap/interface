@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { PasswordInput } from 'src/app/components/PasswordInput'
+import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { removeAllDappConnectionsFromExtension } from 'src/app/features/dapp/actions'
 import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SettingsRecoveryPhrase'
-import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
-import { Flex, inputStyles, LabeledCheckbox, Text } from 'ui/src'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
+import { Flex, LabeledCheckbox, Text, inputStyles } from 'ui/src'
 import { TrashFilled } from 'ui/src/components/icons'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export function RemoveRecoveryPhraseVerify(): JSX.Element {
   const { t } = useTranslation()
@@ -38,8 +38,8 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
 
   const onRemove = async (): Promise<void> => {
     const accountsToRemove = associatedAccounts
-    const mnemonicId = accountsToRemove[0]?.mnemonicId
-    const accAddress = accountsToRemove[0]?.address
+    const mnemonicId = accountsToRemove?.[0]?.mnemonicId
+    const accAddress = accountsToRemove?.[0]?.address
 
     if (!accAddress) {
       logger.error(new Error('No accounts to remove'), {
@@ -117,7 +117,7 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
               {...(showPasswordError && { borderColor: '$statusCritical' })}
             />
             <Text color="$statusCritical" minHeight="$spacing24" textAlign="center" variant="body2">
-              {showPasswordError ? t('extension.passwordPrompt.error.wrongPassword') : ''}
+              {showPasswordError ? t('setting.recoveryPhrase.remove.password.error') : ''}
             </Text>
           </Flex>
           <Flex pb="$spacing24">

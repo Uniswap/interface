@@ -4,17 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { Image } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
-import { SPLASH_SCREEN_IMAGE_SIZE } from 'src/features/appLoading/SplashScreen'
+import { SPLASH_SCREEN_IMAGE_SIZE, SplashScreen } from 'src/features/appLoading/SplashScreen'
 import { useBiometricsAlert } from 'src/features/biometrics/useBiometricsAlert'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
-import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
 import { useBiometricName, useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useLockScreenState } from 'src/features/lockScreen/hooks/useLockScreenState'
-import { Button, Flex, flexStyles, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Button, Flex, TouchableArea, flexStyles, useIsDarkMode } from 'ui/src'
 import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing, zIndexes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -25,17 +26,14 @@ const fadeOut = FadeOut.duration(250)
 const useBiometricAuth = (): (() => Promise<void>) => {
   const { t } = useTranslation()
   const { trigger } = useBiometricPrompt()
-  const { touchId } = useDeviceSupportsBiometricAuth()
-  const biometricsMethod = useBiometricName(touchId)
+  const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
+  const biometricsMethod = useBiometricName(isTouchIdDevice)
   const { showBiometricsAlert } = useBiometricsAlert({ t })
-  const isBiometricsEnabled = useOsBiometricAuthEnabled()
 
   const onPress = useEvent(async (): Promise<void> => {
     await trigger({
       failureCallback: () => {
-        if (!isBiometricsEnabled) {
-          showBiometricsAlert(biometricsMethod)
-        }
+        showBiometricsAlert(biometricsMethod)
       },
     })
   })
@@ -45,6 +43,7 @@ const useBiometricAuth = (): (() => Promise<void>) => {
 
 export const LockScreenModal = memo(function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible } = useLockScreenState()
+  const isBlurredLockScreenEnabled = useFeatureFlag(FeatureFlags.BlurredLockScreen)
   const onPress = useBiometricAuth()
 
   if (!isLockScreenVisible) {
@@ -56,9 +55,30 @@ export const LockScreenModal = memo(function LockScreenModal(): JSX.Element | nu
   return (
     <FullScreenFader>
       <TouchableArea activeOpacity={1} style={flexStyles.fill} onPress={onPress}>
-        <BlurredLockScreen />
+        {isBlurredLockScreenEnabled ? (
+          <BlurredLockScreen />
+        ) : (
+          // fallback to splash screen with unlock button
+          <LegacySplashLockScreen />
+        )}
       </TouchableArea>
     </FullScreenFader>
+  )
+})
+
+const LegacySplashLockScreen = memo(function LegacySplashLockScreen(): JSX.Element {
+  const { manualRetryRequired } = useLockScreenState()
+  const bottomInset = useBottomInset()
+
+  return (
+    <>
+      <SplashScreen />
+      {manualRetryRequired && (
+        <Flex position="absolute" top={0} left={0} right={0} bottom={0} justifyContent="flex-end" pb={bottomInset}>
+          <UnlockButton />
+        </Flex>
+      )}
+    </>
   )
 })
 

@@ -1,15 +1,27 @@
-# public allows this caching on the public cache (CDN) not just the browser
-# max-age=0 tells browsers to revalidate every time so they don't get a stale version pointing at outdated JS assets
-# s-maxage=60 tells CDN to cache for 1 minute
-# stale-while-revalidate allows us to serve the stale version while revalidating
+# ============================================================
+# Security Headers (applied to all responses)
+# ============================================================
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+# ============================================================
+# Cache Control
+# ============================================================
+# max-age=0 tells browsers to revalidate every time so they don't get
+# a stale version pointing at outdated JS assets.
+# s-maxage=60 tells CDN to cache for 1 minute.
+# stale-while-revalidate allows us to serve the stale version while revalidating.
 
 /index.html
   Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=30
 
-
-
-# aggressively caches static unchanging assets on the CDN
-# as long as the filename doesn't change, cache for a while
+# Aggressively cache static unchanging assets on the CDN.
+# As long as the filename doesn't change (content-hash), cache for 1 year.
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
@@ -21,7 +33,7 @@
   Cache-Control: public, max-age=31536000, immutable
 
 /static/js/*
-  Cache-Control: max-age=31536000, immutable
+  Cache-Control: public, max-age=31536000, immutable
 
 /static/css/*
   Cache-Control: public, max-age=31536000, immutable

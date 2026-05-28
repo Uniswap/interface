@@ -4,7 +4,7 @@ export const mockPermit = {
   method: PermitMethod.TypedData,
   typedData: {
     domain: {
-      name: 'Uniswap',
+      name: 'Ring',
       version: '1.0',
       chainId: 1,
       verifyingContract: '0x123',

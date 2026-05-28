@@ -1,14 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "UI",
-  "extends": "../../tsconfig.base.json",
+  "extends": "./base.json",
   "compilerOptions": {
-    "allowJs": false,
     "esModuleInterop": true,
+    "allowJs": false,
     "jsx": "preserve",
-    "noEmit": false,
     "resolveJsonModule": true,
+    "noEmit": false,
     "target": "es2019",
-    "types": ["node"]
+    "types": [
+      "node"
+    ],
   }
 }

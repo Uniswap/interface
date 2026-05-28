@@ -1,7 +1,7 @@
 export type ColorStrings = string[]
 
 export const UNICON_COLORS: ColorStrings[] = [
-  ['#F50DB4', '#FC74FE'],
+  ['#5C8AFF', '#7AA5FF'],
   ['#FFBF17', '#FFF612'],
   ['#FF8934', '#FF4D00'],
   ['#85754A', '#996F01'],

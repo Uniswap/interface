@@ -1,24 +1,10 @@
-import { getMonitoredSagaReducers, type MonitoredSaga } from 'uniswap/src/utils/saga'
+import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
-  removeDelegationActions,
-  removeDelegationReducer,
-  removeDelegationSaga,
-  removeDelegationSagaName,
-} from 'wallet/src/features/smartWallet/sagas/removeDelegationSaga'
-import {
-  executePlanActions,
-  executePlanReducer,
-  executePlanSaga,
-  executePlanSagaName,
-  executeSwapActions,
-  executeSwapReducer,
-  executeSwapSaga,
-  executeSwapSagaName,
-  prepareAndSignSwapActions,
-  prepareAndSignSwapReducer,
-  prepareAndSignSwapSaga,
-  prepareAndSignSwapSagaName,
-} from 'wallet/src/features/transactions/swap/configuredSagas'
+  tokenWrapActions,
+  tokenWrapReducer,
+  tokenWrapSaga,
+  tokenWrapSagaName,
+} from 'wallet/src/features/transactions/swap/wrapSaga'
 import {
   editAccountActions,
   editAccountReducer,
@@ -31,6 +17,7 @@ import {
   createAccountsSaga,
   createAccountsSagaName,
 } from 'wallet/src/features/wallet/create/createAccountsSaga'
+import { MonitoredSaga, getMonitoredSagaReducers } from 'wallet/src/state/saga'
 
 // All monitored sagas must be included here
 export const monitoredSagas: Record<string, MonitoredSaga> = {
@@ -46,29 +33,17 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     reducer: editAccountReducer,
     actions: editAccountActions,
   },
-  [prepareAndSignSwapSagaName]: {
-    name: prepareAndSignSwapSagaName,
-    wrappedSaga: prepareAndSignSwapSaga,
-    reducer: prepareAndSignSwapReducer,
-    actions: prepareAndSignSwapActions,
+  [swapSagaName]: {
+    name: swapSagaName,
+    wrappedSaga: swapSaga,
+    reducer: swapReducer,
+    actions: swapActions,
   },
-  [executeSwapSagaName]: {
-    name: executeSwapSagaName,
-    wrappedSaga: executeSwapSaga,
-    reducer: executeSwapReducer,
-    actions: executeSwapActions,
-  },
-  [executePlanSagaName]: {
-    name: executePlanSagaName,
-    wrappedSaga: executePlanSaga,
-    reducer: executePlanReducer,
-    actions: executePlanActions,
-  },
-  [removeDelegationSagaName]: {
-    name: removeDelegationSagaName,
-    wrappedSaga: removeDelegationSaga,
-    reducer: removeDelegationReducer,
-    actions: removeDelegationActions,
+  [tokenWrapSagaName]: {
+    name: tokenWrapSagaName,
+    wrappedSaga: tokenWrapSaga,
+    reducer: tokenWrapReducer,
+    actions: tokenWrapActions,
   },
 }
 

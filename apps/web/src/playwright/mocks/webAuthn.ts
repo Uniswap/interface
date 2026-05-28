@@ -1,4 +1,4 @@
-import type { Page } from '~/playwright/fixtures'
+import { Page } from 'playwright'
 
 export async function setupWebAuthn(page: Page) {
   const client = await page.context().newCDPSession(page)

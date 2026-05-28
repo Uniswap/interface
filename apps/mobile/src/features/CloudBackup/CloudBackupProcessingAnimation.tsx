@@ -9,6 +9,7 @@ import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudSt
 import { Flex, Text } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
@@ -46,28 +47,27 @@ export function CloudBackupProcessingAnimation({
 
   const account = activeAccount || onboardingContextAccount
 
-  // Compute backup status at component level to avoid stale closure - ensures fresh evaluation on each render
-  // when onboardingContextAccount updates with new backup state
-  const accountHasCloudBackup = hasBackup(BackupType.Cloud, account)
-
   if (!account) {
     throw Error('No account available for backup')
   }
 
-  const mnemonicId = account.mnemonicId
+  if (account.type !== AccountType.SignerMnemonic) {
+    throw new Error(`Backed up account with address: ${account.address} is not a mnemonic account`)
+  }
+  const mnemonicId = account?.mnemonicId
 
   const [processing, doneProcessing] = useReducer(() => false, true)
 
   // Handle finished backing up to Cloud
   useEffect(() => {
-    if (accountHasCloudBackup) {
+    if (hasBackup(BackupType.Cloud, account)) {
       doneProcessing()
       // Show success state for 1s before navigating
       const timer = setTimeout(onBackupComplete, ONE_SECOND_MS)
       return () => clearTimeout(timer)
     }
     return undefined
-  }, [accountHasCloudBackup, onBackupComplete])
+  }, [account, onBackupComplete])
 
   // Handle backup to Cloud when screen appears
   const backup = useCallback(async () => {

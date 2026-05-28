@@ -12,8 +12,8 @@ import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingC
 import { PasskeyImportLoading } from 'wallet/src/features/onboarding/PasskeyImportLoading'
 import { WelcomeSplash } from 'wallet/src/features/onboarding/WelcomeSplash'
 import { fetchSeedPhrase } from 'wallet/src/features/passkeys/passkeys'
-import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.PasskeyImport>
 
@@ -30,7 +30,6 @@ export function PasskeyImportScreen({ navigation, route: { params } }: Props): J
     })
   })
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: We want to import the mnemonic only once
   useEffect(() => {
     const importAndGenerateAccount = async (): Promise<void> => {
       const mnemonic = await fetchSeedPhrase(params.passkeyCredential)
@@ -54,7 +53,8 @@ export function PasskeyImportScreen({ navigation, route: { params } }: Props): J
       navigation.goBack()
       navigate(ModalName.PasskeysHelp)
     })
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // We want to import the mnemonic only once
 
   return (
     <OnboardingScreen disableGoBack={false}>

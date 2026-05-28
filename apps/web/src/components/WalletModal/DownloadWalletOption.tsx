@@ -1,14 +1,16 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { InterfaceElementName } from '@uniswap/analytics-events'
+import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { OptionContainer } from 'components/WalletModal/UniswapWalletOptions'
+import { useModalState } from 'hooks/useModalState'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Image, Text } from 'ui/src'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
-import UNIWALLET_ICON from '~/assets/wallets/uniswap-wallet-icon.png'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { OptionContainer } from '~/components/WalletModal/UniswapWalletOptions'
-import { useModalState } from '~/hooks/useModalState'
 
 interface BackgroundImageProps {
   backgroundImage?: string
@@ -37,6 +39,7 @@ function BackgroundImage({ backgroundImage, isHovered }: BackgroundImageProps) {
   )
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export const DownloadWalletOption = () => {
   const accountDrawer = useAccountDrawer()
   const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
@@ -50,7 +53,7 @@ export const DownloadWalletOption = () => {
   })
 
   return (
-    <Trace logPress element={ElementName.ExtensionDownloadConnector}>
+    <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_CONNECTOR}>
       {/* The white background is needed so that when hovered the background image always becomes lighter even when the app is in dark mode */}
       <Flex
         maxHeight={72}

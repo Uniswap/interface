@@ -1,11 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
-import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
-import { DAI, DAI_ARBITRUM_ONE, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
+import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
-const ETH = nativeOnChain(UniverseChainId.Mainnet)
+const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 
 const TEST_TOKEN_INPUT: TokenOption[] = [
   {
@@ -47,8 +48,7 @@ const filterAndGetCurrencies = (
   currencies: TokenOption[],
   chainFilter: UniverseChainId | null,
   searchFilter?: string,
-  // eslint-disable-next-line max-params
-): Currency[] => filter({ tokenOptions: currencies, chainFilter, searchFilter }).map((cm) => cm.currencyInfo.currency)
+): Currency[] => filter(currencies, chainFilter, searchFilter).map((cm) => cm.currencyInfo.currency)
 
 describe(filter, () => {
   it('returns the entire input flattened if chainFilter and searchFilter are null', () => {

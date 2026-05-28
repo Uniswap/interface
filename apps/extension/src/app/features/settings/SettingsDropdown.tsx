@@ -16,7 +16,7 @@ export type SettingsDropdownProps = {
 }
 
 const MAX_DROPDOWN_HEIGHT = 220
-const MAX_DROPDOWN_WIDTH = 250
+const MAX_DROPDOWN_WIDTH = 200
 
 export function SettingsDropdown({ selected, items, disableDropdown, onSelect }: SettingsDropdownProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false)
@@ -25,23 +25,19 @@ export function SettingsDropdown({ selected, items, disableDropdown, onSelect }:
     <Flex>
       <Popover open={isOpen} stayInFrame={true} onOpenChange={setIsOpen}>
         <Popover.Trigger disabled={disableDropdown}>
-          <Flex
-            row
-            backgroundColor="$surface3"
-            borderRadius="$roundedFull"
-            cursor="pointer"
-            p="$spacing8"
-            gap="$gap4"
-            alignItems="center"
-            pl="$spacing12"
-          >
+          <Flex row backgroundColor="$surface3" borderRadius="$roundedFull" cursor="pointer" p="$spacing8" gap="$gap4">
             <Text color="$neutral1" variant="buttonLabel4">
               {selected}
             </Text>
-            <RotatableChevron color="$neutral1" direction={isOpen ? 'up' : 'down'} size="$icon.16" />
+            <RotatableChevron
+              color="$neutral1"
+              direction={isOpen ? 'up' : 'down'}
+              height={iconSizes.icon16}
+              width={iconSizes.icon20}
+            />
           </Flex>
         </Popover.Trigger>
-        <Popover.Content zIndex={zIndexes.popover} backgroundColor="$transparent" enableRemoveScroll={true}>
+        <Popover.Content zIndex={zIndexes.popover} backgroundColor="$transparent" disableRemoveScroll={false}>
           <Flex
             borderColor="$surface3"
             borderRadius="$rounded16"

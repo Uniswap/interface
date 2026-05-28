@@ -1,9 +1,9 @@
+import { DirectToDefi } from 'pages/Landing/sections/DirectToDefi'
+import { Footer } from 'pages/Landing/sections/Footer'
+import { NewsletterEtc } from 'pages/Landing/sections/NewsletterEtc'
+import { Stats } from 'pages/Landing/sections/Stats'
 import { forwardRef } from 'react'
 import { Flex } from 'ui/src'
-import { AppsOverview } from '~/pages/Landing/sections/AppsOverview'
-import { Footer } from '~/pages/Landing/sections/Footer'
-import { NewsletterEtc } from '~/pages/Landing/sections/NewsletterEtc'
-import { Stats } from '~/pages/Landing/sections/Stats'
 
 const Fold = forwardRef<HTMLDivElement>(function Fold(_props, scrollAnchor) {
   return (
@@ -17,8 +17,8 @@ const Fold = forwardRef<HTMLDivElement>(function Fold(_props, scrollAnchor) {
       maxWidth="100vw"
       ref={scrollAnchor}
     >
+      <DirectToDefi />
       <Stats />
-      <AppsOverview />
       <NewsletterEtc />
       <Footer />
     </Flex>

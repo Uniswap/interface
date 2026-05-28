@@ -6,7 +6,7 @@
 .pnp.js
 
 # misc
-/src/__generated__
+/src/__generated__/*
 .DS_Store
 .env.local
 .env.development.local

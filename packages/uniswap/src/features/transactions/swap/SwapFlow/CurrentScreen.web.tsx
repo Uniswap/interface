@@ -1,18 +1,14 @@
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { UnichainInstantBalanceModal } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/UnichainInstantBalanceModal'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
-import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
-import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
-import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
-import { isWebApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 export function CurrentScreen({
   settings,
@@ -23,12 +19,7 @@ export function CurrentScreen({
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
 }): JSX.Element {
-  const { screen } = useTransactionModalContext()
-
-  const chainId = useSwapDependenciesStore((s) => s.derivedSwapInfo.chainId)
-  const isFlashblocksEnabled = useIsUnichainFlashblocksEnabled(chainId)
-
-  const { onPrev } = useSwapOnPrevious()
+  const { screen, setScreen } = useTransactionModalContext()
 
   return (
     <>
@@ -42,19 +33,16 @@ export function CurrentScreen({
         */}
       <Modal
         height="auto"
-        alignment={isWebApp ? 'center' : 'top'}
+        alignment={isInterface ? 'center' : 'top'}
         isModalOpen={screen === TransactionScreen.Review}
         name={ModalName.SwapReview}
         padding="$spacing12"
-        gap={0}
-        onClose={onPrev}
+        onClose={() => setScreen(TransactionScreen.Form)}
       >
         <Trace logImpression section={SectionName.SwapReview}>
           <SwapReviewScreen hideContent={false} onSubmitSwap={onSubmitSwap} />
         </Trace>
       </Modal>
-
-      {isFlashblocksEnabled && <UnichainInstantBalanceModal />}
     </>
   )
 }

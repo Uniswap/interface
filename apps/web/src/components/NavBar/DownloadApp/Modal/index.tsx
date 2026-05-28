@@ -1,16 +1,17 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ChooseUnitagModal } from 'components/NavBar/DownloadApp/Modal/ChooseUnitag'
+import { DownloadAppsModal } from 'components/NavBar/DownloadApp/Modal/DownloadApps'
+import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
+import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
+import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
 import { AnimatedPager, Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
-import { ChooseUnitagModal } from '~/components/NavBar/DownloadApp/Modal/ChooseUnitag'
-import { DownloadAppsModal } from '~/components/NavBar/DownloadApp/Modal/DownloadApps'
-import { GetStarted } from '~/components/NavBar/DownloadApp/Modal/GetStarted'
-import { PasskeyGenerationModal } from '~/components/NavBar/DownloadApp/Modal/PasskeyGeneration'
-import { useModalState } from '~/hooks/useModalState'
 
 export enum Page {
   GetStarted = 0,
@@ -21,6 +22,7 @@ export enum Page {
 
 export const downloadAppModalPageAtom = atom<Page>(Page.GetApp)
 
+// eslint-disable-next-line import/no-unused-modules
 export function GetTheAppModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const initialPage = isEmbeddedWalletEnabled ? Page.GetStarted : Page.GetApp
@@ -44,7 +46,6 @@ export function GetTheAppModal() {
       name={ModalName.DownloadApp}
       isModalOpen={isOpen}
       maxWidth="fit-content"
-      mx="auto"
       onClose={close}
       padding={0}
     >

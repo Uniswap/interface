@@ -19,6 +19,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { initAndPersistCache } from 'wallet/src/data/apollo/cache'
+import { getOnRampAuthLink } from 'wallet/src/data/onRampAuthLink'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -129,7 +130,7 @@ function makeApolloClientInit(ctx: {
   accounts: ReturnType<typeof useAccounts>
   signerManager: ReturnType<typeof useWalletSigners>
 }): () => Promise<ApolloClient<NormalizedCacheObject>> {
-  const { storageWrapper, maxCacheSizeInBytes, customEndpoint, reduxStore } = ctx
+  const { storageWrapper, maxCacheSizeInBytes, customEndpoint, reduxStore, accounts, signerManager } = ctx
   const apolloLink = customEndpoint ? getCustomGraphqlHttpLink(customEndpoint) : getGraphqlHttpLink()
 
   const init = async (): Promise<ApolloClient<NormalizedCacheObject>> => {
@@ -148,8 +149,9 @@ function makeApolloClientInit(ctx: {
     const linkList: ApolloLink[] = [
       getErrorLink(),
       // requires typing outside of wallet package
-      // biome-ignore lint/suspicious/noExplicitAny: PerformanceLink args come from Apollo and require typing outside wallet package
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
+      getOnRampAuthLink(accounts, signerManager),
       getInstantTokenBalanceUpdateApolloLink({ reduxStore }),
       restLink,
     ]

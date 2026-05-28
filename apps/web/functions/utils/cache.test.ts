@@ -1,7 +1,7 @@
 import CacheMock from 'browser-cache-mock'
 
-import Cache, { Data } from 'functions/utils/cache'
-import { mocked } from '~/test-utils/mocked'
+import { mocked } from '../../src/test-utils/mocked'
+import Cache, { Data } from './cache'
 
 const cacheMock = new CacheMock()
 
@@ -20,7 +20,7 @@ beforeAll(() => {
 })
 
 test('Should put cache properly', async () => {
-  vi.spyOn(cacheMock, 'put')
+  jest.spyOn(cacheMock, 'put')
   await Cache.put(data, 'https://example.com')
   expect(cacheMock.put).toHaveBeenCalledWith('https://example.com', expect.anything())
   const call = mocked(cacheMock.put).mock.calls[0]
@@ -31,13 +31,13 @@ test('Should put cache properly', async () => {
 })
 
 test('Should match cache properly', async () => {
-  vi.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify(data)))
+  jest.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify(data)))
   const response = await Cache.match('https://example.com')
   expect(response).toStrictEqual(data)
 })
 
 test('Should return undefined if not all data is present', async () => {
-  vi.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify({ ...data, title: undefined })))
+  jest.spyOn(cacheMock, 'match').mockResolvedValueOnce(new Response(JSON.stringify({ ...data, title: undefined })))
   const response = await Cache.match('https://example.com')
   expect(response).toBeUndefined()
 })

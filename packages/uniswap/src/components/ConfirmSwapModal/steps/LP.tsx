@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { Swap } from 'ui/src/components/icons/Swap' // TODO: update to LP icon
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
@@ -28,17 +28,12 @@ type LPSteps =
   | MigratePositionTransactionStep
   | MigratePositionTransactionStepAsync
   | CollectFeesSteps
-export function LPTransactionStepRow({
-  status,
-  currentStepIndex,
-  totalStepsCount,
-}: StepRowProps<LPSteps>): JSX.Element {
+export function LPTransactionStepRow({ status }: StepRowProps<LPSteps>): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
 
   const title = {
     [StepStatus.Preview]: t('common.confirmWallet'),
-    [StepStatus.Failed]: t('common.failed'),
-    [StepStatus.Replaced]: t('common.failed'),
     [StepStatus.Active]: t('common.confirmWallet'),
     [StepStatus.InProgress]: t('common.transactionPending'),
     [StepStatus.Complete]: t('common.confirmWallet'),
@@ -49,12 +44,11 @@ export function LPTransactionStepRow({
       title={title}
       icon={<LPIcon />}
       learnMore={{
-        url: uniswapUrls.helpArticleUrls.providingLiquidityVersions,
-        text: t('common.learnMoreLiquidity'),
+        url: uniswapUrls.helpArticleUrls.howToSwapTokens,
+        text: t('common.learnMoreSwap'),
       }}
+      rippleColor={colors.DEP_blue400.val}
       status={status}
-      currentStepIndex={currentStepIndex}
-      totalStepsCount={totalStepsCount}
     />
   )
 }

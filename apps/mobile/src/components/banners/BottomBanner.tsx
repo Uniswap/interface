@@ -1,7 +1,6 @@
 import React from 'react'
 import { FadeIn, FadeOut, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { ColorTokens, Flex, Text, TouchableArea } from 'ui/src'
-import { X } from 'ui/src/components/icons/X'
+import { ColorTokens, Text } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export const BANNER_HEIGHT = 45
@@ -11,10 +10,9 @@ type BottomBannerProps = {
   icon?: JSX.Element
   backgroundColor?: ColorTokens
   translateY?: number
-  onDismiss?: () => void
 }
 
-export function BottomBanner({ text, icon, backgroundColor, translateY, onDismiss }: BottomBannerProps): JSX.Element {
+export function BottomBanner({ text, icon, backgroundColor, translateY }: BottomBannerProps): JSX.Element {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -51,14 +49,7 @@ export function BottomBanner({ text, icon, backgroundColor, translateY, onDismis
       zIndex="$modal"
     >
       {icon}
-      <Flex fill row alignItems="center" justifyContent="space-between">
-        <Text variant="body2">{text}</Text>
-        {onDismiss && (
-          <TouchableArea hitSlop={8} onPress={onDismiss}>
-            <X color="$neutral2" size="$icon.16" />
-          </TouchableArea>
-        )}
-      </Flex>
+      <Text variant="body2">{text}</Text>
     </AnimatedFlex>
   )
 }

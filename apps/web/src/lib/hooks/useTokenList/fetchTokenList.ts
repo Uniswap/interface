@@ -1,27 +1,76 @@
 import type { TokenList } from '@uniswap/token-lists'
+import { LEGACY_ARRAY_TOKEN_LIST_CHAIN_IDS } from 'constants/lists'
+import contenthashToUri from 'lib/utils/contenthashToUri'
+import parseENSAddress from 'lib/utils/parseENSAddress'
 import { uriToHttpUrls } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
-import contenthashToUri from '~/lib/utils/contenthashToUri'
-import parseENSAddress from '~/lib/utils/parseENSAddress'
-import { validateTokenList } from '~/utils/validateTokenList'
+import { validateTokenList, validateTokens } from 'utils/validateTokenList'
 
 const listCache = new Map<string, TokenList>()
+
+type LegacyTokenEntry = {
+  address: string
+  name: string
+  symbol: string
+  decimals: number
+  logoURI?: string
+  chainId?: number
+}
+
+function getLegacyListVersion(lastModifiedHeader: string | null): TokenList['version'] {
+  const lastModified = lastModifiedHeader ? new Date(lastModifiedHeader) : undefined
+  if (!lastModified || Number.isNaN(lastModified.getTime())) {
+    return { major: 1, minor: 0, patch: 0 }
+  }
+
+  return {
+    major: lastModified.getUTCFullYear(),
+    minor: lastModified.getUTCMonth() + 1,
+    patch: lastModified.getUTCDate() * 10000 + lastModified.getUTCHours() * 100 + lastModified.getUTCMinutes(),
+  }
+}
+
+async function normalizeLegacyTokenArray(
+  listUrl: string,
+  json: LegacyTokenEntry[],
+  lastModifiedHeader: string | null,
+  skipValidation?: boolean,
+): Promise<TokenList | null> {
+  const fallbackChainId = LEGACY_ARRAY_TOKEN_LIST_CHAIN_IDS[listUrl]
+  const normalizedTokens = json.map((token) => ({
+    ...token,
+    chainId: token.chainId ?? fallbackChainId,
+  }))
+
+  if (normalizedTokens.some((token) => token.chainId === undefined)) {
+    return null
+  }
+
+  if (!skipValidation) {
+    await validateTokens(normalizedTokens)
+  }
+
+  const fileName = listUrl.split('/').pop()?.replace('.tokenlist.json', '') ?? 'legacy'
+
+  return {
+    name: `Ring ${fileName} token list`,
+    timestamp: new Date().toISOString(),
+    version: getLegacyListVersion(lastModifiedHeader),
+    tokens: normalizedTokens,
+  }
+}
 
 /**
  * Fetches and validates a token list.
  * For a given token list URL, we try to fetch the list from all the possible HTTP URLs.
  * For example, IPFS URLs can be fetched through multiple gateways.
  */
-export default async function fetchTokenList({
-  listUrl,
-  resolveENSContentHash,
-  skipValidation,
-}: {
-  listUrl: string
-  resolveENSContentHash: (ensName: string) => Promise<string>
-  skipValidation?: boolean
-}): Promise<TokenList> {
-  const cached = listCache.get(listUrl) // avoid spurious re-fetches
+export default async function fetchTokenList(
+  listUrl: string,
+  resolveENSContentHash: (ensName: string) => Promise<string>,
+  skipValidation?: boolean,
+): Promise<TokenList> {
+  const cached = listCache?.get(listUrl) // avoid spurious re-fetches
   if (cached) {
     return cached
   }
@@ -74,8 +123,17 @@ export default async function fetchTokenList({
       // The content of the result is sometimes invalid even with a 200 status code.
       // A response can be invalid if it's not a valid JSON or if it doesn't match the TokenList schema.
       const json = await response.json()
-      const list = skipValidation ? json : await validateTokenList(json)
-      listCache.set(listUrl, list)
+      const list = Array.isArray(json)
+        ? await normalizeLegacyTokenArray(listUrl, json, response.headers.get('last-modified'), skipValidation)
+        : skipValidation
+          ? json
+          : await validateTokenList(json)
+
+      if (!list) {
+        throw new Error(`legacy token array from ${listUrl} is missing chain IDs`)
+      }
+
+      listCache?.set(listUrl, list)
       return list
     } catch (error) {
       logger.debug(

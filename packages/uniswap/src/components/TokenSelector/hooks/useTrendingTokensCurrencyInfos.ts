@@ -1,6 +1,7 @@
-import { ALL_NETWORKS_ARG, CustomRankingType } from '@universe/api'
 import { useMemo } from 'react'
+import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { tokenRankingsStatToCurrencyInfo, useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
+import { CustomRankingType } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
@@ -20,11 +21,15 @@ export function useTrendingTokensCurrencyInfos(
     !skip,
   )
 
-  const trendingTokens = data?.tokenRankings[CustomRankingType.Trending]?.tokens
-  const formattedTokens = useMemo(
-    () => trendingTokens?.map(tokenRankingsStatToCurrencyInfo).filter((t): t is CurrencyInfo => Boolean(t)),
-    [trendingTokens],
-  )
+  const trendingTokens = data?.tokenRankings?.[CustomRankingType.Trending]?.tokens
+  const formattedTokens = useMemo(() => {
+    const tokens = trendingTokens?.map(tokenRankingsStatToCurrencyInfo).filter((t): t is CurrencyInfo => Boolean(t))
+    // Filter by chainFilter if specified, to ensure only tokens from the selected chain are shown
+    if (chainFilter && tokens) {
+      return tokens.filter((token) => token.currency.chainId === chainFilter)
+    }
+    return tokens
+  }, [trendingTokens, chainFilter])
 
   return { data: formattedTokens, loading: isLoading || isFetching, error: error ?? undefined, refetch }
 }

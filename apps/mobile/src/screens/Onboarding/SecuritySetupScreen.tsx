@@ -11,13 +11,13 @@ import { useBiometricsAlert } from 'src/features/biometrics/useBiometricsAlert'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { checkOsBiometricAuthEnabled, useBiometricName } from 'src/features/biometricsSettings/hooks'
 import { setRequiredForTransactions } from 'src/features/biometricsSettings/slice'
-import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { Button, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { Lock } from 'ui/src/components/icons'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
@@ -46,12 +46,12 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   }, [isLoadingAccount, onCompleteOnboarding])
 
   const onSkipPressed = useCallback(async () => {
-    if (params.importType === ImportType.Watch) {
+    if (params?.importType === ImportType.Watch) {
       await onPressNext()
     } else {
       setShowWarningModal(true)
     }
-  }, [onPressNext, params.importType])
+  }, [onPressNext, params?.importType])
 
   const onPressEnableSecurity = useCallback(async () => {
     const isOSBiometricAuthEnabled = await checkOsBiometricAuthEnabled()

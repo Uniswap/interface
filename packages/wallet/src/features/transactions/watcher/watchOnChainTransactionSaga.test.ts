@@ -1,11 +1,7 @@
 import { providers } from 'ethers'
-import { call } from 'redux-saga/effects'
 import { expectSaga } from 'redux-saga-test-plan'
-import * as matchers from 'redux-saga-test-plan/matchers'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
-import { cancelTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
-import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { call } from 'redux-saga/effects'
+import { cancelTransaction, finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
   fiatPurchaseTransactionInfo,
   getTxFixtures,
@@ -23,31 +19,16 @@ import {
   waitForSameNonceFinalized,
   watchTransaction,
 } from 'wallet/src/features/transactions/watcher/watchOnChainTransactionSaga'
-import { waitForTransactionStatus } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
-
-jest.mock('@universe/api', () => ({
-  ...jest.requireActual('@universe/api'),
-  provideSessionService: jest.fn(() => ({
-    createSession: jest.fn(),
-    getSession: jest.fn(),
-    getSessionState: jest.fn().mockResolvedValue(null),
-  })),
-}))
-
-jest.mock('uniswap/src/data/apiClients/tradingApi/TradingApiClient', () => ({
-  TradingApiClient: {
-    fetchSwaps: jest.fn().mockResolvedValue({ swaps: [] }),
-  },
-}))
 
 const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
 const {
   ethersTxReceipt,
   txReceipt,
+  finalizedTxAction,
   txDetailsPending: originalTxDetailsPending,
 } = getTxFixtures(transactionDetailsFixture({ typeInfo: fiatPurchaseTransactionInfo(), from: ACTIVE_ACCOUNT_ADDRESS }))
-const txDetailsPending: TransactionDetails = { ...originalTxDetailsPending, from: ACTIVE_ACCOUNT_ADDRESS }
+const txDetailsPending = { ...originalTxDetailsPending, from: ACTIVE_ACCOUNT_ADDRESS }
 
 describe(watchTransaction, () => {
   let dateNowSpy: jest.SpyInstance
@@ -56,58 +37,30 @@ describe(watchTransaction, () => {
       await sleep(1000)
       return null
     }),
-    getTransactionReceipt: jest.fn(),
-    getBlockNumber: jest.fn(),
   }
-
-  // Build transaction state structure for selectors
-  const getTransactionsState = (
-    tx: typeof txDetailsPending,
-  ): Record<string, Record<number, Record<string, TransactionDetails>>> => ({
-    [ACTIVE_ACCOUNT_ADDRESS]: {
-      [tx.chainId]: {
-        [tx.id]: tx,
-      },
-    },
-  })
-
   beforeAll(() => {
     dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => txReceipt.confirmedTime)
   })
-
   afterAll(() => {
-    dateNowSpy.mockRestore()
+    dateNowSpy?.mockRestore()
   })
 
   const { chainId, id, from, options } = txDetailsPending
 
   it('Finalizes successful transaction', () => {
-    const providerMock = {
-      getTransactionReceipt: jest.fn(),
-      getBlockNumber: jest.fn(),
-      waitForTransaction: jest.fn(async () => ethersTxReceipt),
-    } as unknown as providers.Provider
-
-    const pendingTx = {
-      ...txDetailsPending,
-      options: { ...txDetailsPending.options, rpcSubmissionTimestampMs: Date.now() },
+    const successProvider = {
+      waitForTransaction: jest.fn(() => ethersTxReceipt),
     }
-
-    // --- Act / Assert ------------------------------------------------------
-    return expectSaga(watchTransaction, { transaction: pendingTx, apolloClient: mockApolloClient })
+    return expectSaga(watchTransaction, {
+      transaction: txDetailsPending,
+      apolloClient: mockApolloClient,
+    })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
-        transactions: getTransactionsState(pendingTx),
       })
-      .provide([
-        [call(getProvider, chainId), providerMock],
-        // For non-bridge transactions, waitForTransactionStatus is called (Trading API polling)
-        [matchers.call.fn(waitForTransactionStatus), TransactionStatus.Success],
-        // Downstream helper inside finalizeTransaction
-        [call(getEnabledChainIdsSaga, Platform.EVM), { chains: [] }],
-      ])
-      .put.like({ action: { type: transactionActions.finalizeTransaction.type } })
+      .provide([[call(getProvider, chainId), successProvider]])
+      .put(finalizeTransaction(finalizedTxAction.payload))
       .silentRun()
   })
 
@@ -120,7 +73,6 @@ describe(watchTransaction, () => {
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
-        transactions: getTransactionsState(txDetailsPending),
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
@@ -143,7 +95,6 @@ describe(watchTransaction, () => {
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
-        transactions: getTransactionsState(txDetailsPending),
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
@@ -166,7 +117,6 @@ describe(watchTransaction, () => {
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
-        transactions: getTransactionsState(txWithAppBackgrounded),
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
@@ -184,11 +134,10 @@ describe(watchTransaction, () => {
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
-        transactions: getTransactionsState(txDetailsPending),
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(waitForSameNonceFinalized, { chainId, id, nonce: options.request.nonce }), true],
+        [call(waitForSameNonceFinalized, chainId, id, options.request.nonce), true],
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))
@@ -203,11 +152,10 @@ describe(watchTransaction, () => {
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
-        transactions: getTransactionsState(txDetailsPending),
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(waitForBridgeSendCompleted, { chainId, id, nonce: options.request.nonce }), true],
+        [call(waitForBridgeSendCompleted, chainId, id, options.request.nonce), true],
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))
@@ -228,12 +176,9 @@ describe(watchTransaction, () => {
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
         userSettings: { isTestnetModeEnabled: false },
-        transactions: getTransactionsState(transaction),
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        // For non-bridge transactions, waitForTransactionStatus is called (Trading API polling)
-        [matchers.call.fn(waitForTransactionStatus), TransactionStatus.Success],
         [call(logTransactionTimeout, transaction), undefined],
       ])
       .call(logTransactionTimeout, transaction)

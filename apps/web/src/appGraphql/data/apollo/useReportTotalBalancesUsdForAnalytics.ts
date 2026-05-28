@@ -1,12 +1,12 @@
+import { useTokenBalancesQuery } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
+import { UNISWAP_EXTENSION_CONNECTOR_NAME } from 'components/Web3Provider/constants'
+import { useAccount } from 'hooks/useAccount'
 import { useCallback, useEffect } from 'react'
-import { CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
 import { CONVERSION_EVENTS } from 'uniswap/src/data/rest/conversionTracking/constants'
 import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
 import { reportBalancesForAnalytics } from 'uniswap/src/features/accounts/reportBalancesForAnalytics'
-import { useTokenBalancesQuery } from '~/appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { useTotalBalancesUsdForAnalytics } from '~/appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
-import { useAccount } from '~/hooks/useAccount'
 
 export function useReportTotalBalancesUsdForAnalytics() {
   const account = useAccount()
@@ -23,7 +23,7 @@ export function useReportTotalBalancesUsdForAnalytics() {
       wallets: account.address ? [account.address] : [],
     })
 
-    if (account.connector?.name === CONNECTION_PROVIDER_NAMES.UNISWAP_EXTENSION) {
+    if (account.connector?.name === UNISWAP_EXTENSION_CONNECTOR_NAME) {
       trackConversions(CONVERSION_EVENTS.Extension.WalletFunded)
     }
 

@@ -8,12 +8,11 @@ import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassi
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { AnimatePresence, Flex } from 'ui/src'
 import { Edit, Ellipsis, Trash } from 'ui/src/components/icons'
-import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
-import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
+import { MenuContentItem } from 'wallet/src/components/menu/types'
 import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal'
 import { DeleteUnitagModal } from 'wallet/src/features/unitags/DeleteUnitagModal'
 import { EditUnitagProfileContent } from 'wallet/src/features/unitags/EditUnitagProfileContent'
@@ -22,28 +21,21 @@ import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/ho
 export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: boolean }): JSX.Element {
   const { t } = useTranslation()
   const address = useAccountAddressFromUrlWithThrow()
-  const {
-    data: retrievedUnitag,
-    isPending,
-    isFetching,
-  } = useUnitagsAddressQuery({
-    params: address ? { address } : undefined,
-  })
+  const { unitag: retrievedUnitag, pending, fetching } = useUnitagByAddress(address)
   const unitag = retrievedUnitag?.username
 
   useEffect(() => {
-    if (!isPending && !isFetching && !unitag) {
-      navigate(`/${UnitagClaimRoutes.ClaimIntro}`)
+    if (!pending && !fetching && !unitag) {
+      navigate(UnitagClaimRoutes.ClaimIntro)
     }
-  }, [unitag, isPending, isFetching])
+  }, [unitag, pending, fetching])
 
   const { goToPreviousStep } = useOnboardingSteps()
 
   const [showDeleteUnitagModal, setShowDeleteUnitagModal] = useState(false)
   const [showChangeUnitagModal, setShowChangeUnitagModal] = useState(false)
-  const { value: isMenuOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
 
-  const menuOptions = useMemo((): MenuOptionItem[] => {
+  const menuOptions = useMemo((): MenuContentItem[] => {
     return [
       {
         label: t('unitags.profile.action.edit'),
@@ -57,7 +49,7 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
         destructive: true,
       },
     ]
-  }, [t])
+  }, [t, setShowChangeUnitagModal, setShowDeleteUnitagModal])
 
   const refreshUnitags = async (): Promise<void> => {
     await backgroundToSidePanelMessageChannel.sendMessage({
@@ -71,13 +63,7 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
         noTopPadding
         title={t('settings.setting.wallet.action.editProfile')}
         endAdornment={
-          <ContextMenu
-            menuItems={menuOptions}
-            triggerMode={ContextMenuTriggerMode.Primary}
-            isOpen={isMenuOpen}
-            openMenu={openMenu}
-            closeMenu={closeMenu}
-          >
+          <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
             <Flex>
               <Ellipsis color="$neutral2" size="$icon.24" />
             </Flex>

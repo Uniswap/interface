@@ -5,10 +5,10 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 /**
@@ -56,11 +56,11 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.JapaneseYen]: t('currency.jpy'),
     [FiatCurrency.SouthKoreanWon]: t('currency.krw'),
     [FiatCurrency.MexicanPeso]: t('currency.mxn'),
-    [FiatCurrency.NewZealandDollar]: t('currency.nzd'),
     [FiatCurrency.NigerianNaira]: t('currency.ngn'),
     [FiatCurrency.PakistaniRupee]: t('currency.pkr'),
     [FiatCurrency.RussianRuble]: t('currency.rub'),
     [FiatCurrency.SingaporeDollar]: t('currency.sgd'),
+    [FiatCurrency.ThaiBaht]: t('currency.thb'),
     [FiatCurrency.TurkishLira]: t('currency.try'),
     [FiatCurrency.UkrainianHryvnia]: t('currency.uah'),
     [FiatCurrency.UnitedStatesDollar]: t('currency.usd'),
@@ -81,11 +81,11 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.JapaneseYen]: '¥',
     [FiatCurrency.SouthKoreanWon]: '₩',
     [FiatCurrency.MexicanPeso]: '$',
-    [FiatCurrency.NewZealandDollar]: '$',
     [FiatCurrency.NigerianNaira]: '₦',
     [FiatCurrency.PakistaniRupee]: 'Rs',
     [FiatCurrency.RussianRuble]: '₽',
     [FiatCurrency.SingaporeDollar]: '$',
+    [FiatCurrency.ThaiBaht]: '฿',
     [FiatCurrency.TurkishLira]: '₺',
     [FiatCurrency.UkrainianHryvnia]: '₴',
     [FiatCurrency.UnitedStatesDollar]: '$',
@@ -119,7 +119,7 @@ export function useFiatCurrencyInfo(currency: FiatCurrency): FiatCurrencyInfo {
 function useUrlLocalCurrency(): FiatCurrency | undefined {
   const { useParsedQueryString } = useUrlContext()
   const parsed = useParsedQueryString()
-  const parsedLocalCurrency = parsed['cur']
+  const parsedLocalCurrency = parsed.cur
 
   if (typeof parsedLocalCurrency !== 'string') {
     return undefined

@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 interface TokenData {
   symbol: string
@@ -7,7 +7,7 @@ interface PoolData {
   token0Symbol?: string
   token1Symbol?: string
   feeTier: string
-  protocolVersion: GraphQLApi.ProtocolVersion
+  protocolVersion: ProtocolVersion
   token0Image?: string
   token1Image?: string
 }

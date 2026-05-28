@@ -1,0 +1,1049 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TDP Skeleton should render correctly 1`] = `
+<DocumentFragment>
+  .c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c15 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c14 {
+  gap: 16px;
+  padding: 24px 0px;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+}
+
+.c16 {
+  font-size: 28px !important;
+}
+
+.c10 {
+  color: rgba(19,19,19,0.63);
+  font-size: 14px;
+  min-width: 121px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding-top: 24px;
+  padding-bottom: 0px;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c6 {
+  gap: 16px;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+}
+
+.c13 {
+  background-color: rgba(34,34,34,0.05);
+  border: none;
+  height: 0.5px;
+}
+
+.c20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 4px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 8px;
+  border: 1px solid rgba(34,34,34,0.05);
+  border-radius: 16px;
+  background-color: #FFFFFF;
+}
+
+.c24 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  height: 56px;
+  width: 60px;
+}
+
+.c26 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  height: 56px;
+  width: 100px;
+}
+
+.c28 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  height: 56px;
+  width: 100%;
+}
+
+.c25 {
+  background-color: rgba(34,34,34,0.05);
+  height: 36px;
+}
+
+.c21 {
+  padding: 8px;
+}
+
+.c23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 30px;
+  padding: 48px 12px;
+}
+
+.c27 {
+  position: relative;
+}
+
+.c0 {
+  height: 16px;
+  width: 180px;
+}
+
+.c7 {
+  height: 32px;
+  border-radius: 8px;
+}
+
+.c1 {
+  width: 169px;
+}
+
+.c2 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c3 {
+  height: 36px;
+  width: 136px;
+}
+
+.c8 {
+  width: 120px;
+}
+
+.c11 {
+  width: 80px;
+  margin-bottom: 4px;
+}
+
+.c12 {
+  width: 116px;
+}
+
+.c17 {
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+.c19 {
+  width: 120px;
+}
+
+.c18 {
+  width: 50%;
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <div
+      class="_gap-_sm_0px _pt-_lg_0px _pr-_lg_t-space-pad1331704900 _pl-_lg_t-space-pad1331704900 _pb-_lg_52px _flexDirection-_xl_column _alignItems-_xl_center _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037 _gap-80px _pt-t-space-spa1360333981 _pb-t-space-spa1360333981 _pr-t-space-spa1360333989 _pl-t-space-spa1360333989"
+    >
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _maxWidth-780px _overflowX-hidden _overflowY-hidden _width-10037 _flexGrow-1 _flexShrink-1"
+      >
+        <div
+          aria-label="breadcrumb-nav"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap52 _mb-20px _width-fit-content"
+        >
+          <a
+            href="/explore/ethereum"
+            style="text-decoration: none;"
+          >
+            <span
+              class="font_unset  font_body "
+              data-disable-theme="true"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; display: flex; align-items: center; text-decoration: none; color: rgba(19, 19, 19, 0.63); font-size: 16px; line-height: 20.8px; font-weight: 485;"
+            >
+              Explore 
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="9 18 15 12 9 6"
+                />
+              </svg>
+            </span>
+          </a>
+          <a
+            href="/explore/tokens/ethereum"
+            style="text-decoration: none;"
+          >
+            <span
+              class="font_unset  font_body "
+              data-disable-theme="true"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; display: flex; align-items: center; text-decoration: none; color: rgba(19, 19, 19, 0.63); font-size: 16px; line-height: 20.8px; font-weight: 485;"
+            >
+              Tokens 
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="9 18 15 12 9 6"
+                />
+              </svg>
+            </span>
+          </a>
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c1"
+            />
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px; z-index: 1;"
+        >
+          <div
+            class="_flexDirection-_md_column _alignItems-_md_flex-start _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _pt-t-space-spa94665589 _minWidth-32px"
+          >
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
+            <div
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c2"
+              />
+            </div>
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
+            <div
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c3"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="c4 c5"
+          style="position: relative;"
+        >
+          <svg
+            fill="none"
+            height="356"
+            width="100%"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g>
+              <rect
+                fill="rgba(19, 19, 19, 0.35)"
+                height="32"
+                rx="4"
+                width="180"
+                y="0"
+              />
+              <rect
+                fill="rgba(19, 19, 19, 0.35)"
+                height="13"
+                rx="4"
+                width="80"
+                y="48"
+              />
+              <g
+                transform="translate(0, 342)"
+              >
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="7%"
+                  x="10%"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="7%"
+                  x="28.25%"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="7%"
+                  x="46.5%"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="7%"
+                  x="64.75%"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="7%"
+                  x="83%"
+                />
+              </g>
+              <g
+                transform="translate(0, 10)"
+              >
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="24"
+                  x="96%"
+                  y="0"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="24"
+                  x="96%"
+                  y="71.2"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="24"
+                  x="96%"
+                  y="142.4"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="24"
+                  x="96%"
+                  y="213.6"
+                />
+                <rect
+                  fill="rgba(19, 19, 19, 0.35)"
+                  height="6"
+                  rx="3"
+                  width="24"
+                  x="96%"
+                  y="284.8"
+                />
+              </g>
+            </g>
+            <defs>
+              <lineargradient
+                id="mask-Price-356-gradient"
+                x1="0%"
+                x2="100%"
+                y1="0%"
+                y2="0%"
+              >
+                <stop
+                  offset="0"
+                  stop-color="rgba(19, 19, 19, 0.35)"
+                >
+                  <animate
+                    attributeName="offset"
+                    dur="1.3s"
+                    repeatCount="indefinite"
+                    values="-1;3"
+                  />
+                </stop>
+                <stop
+                  offset="0.5"
+                  stop-color="rgba(80,80,80,0.35)"
+                >
+                  <animate
+                    attributeName="offset"
+                    dur="1.3s"
+                    repeatCount="indefinite"
+                    values="-0.5;3.5"
+                  />
+                </stop>
+                <stop
+                  offset="1"
+                  stop-color="rgba(19, 19, 19, 0.35)"
+                >
+                  <animate
+                    attributeName="offset"
+                    dur="1.3s"
+                    repeatCount="indefinite"
+                    values="0;4"
+                  />
+                </stop>
+              </lineargradient>
+            </defs>
+            <mask
+              id="mask-Price-356"
+              style="mask-type: alpha;"
+            >
+              <path
+                d="M0 122.5L7.26 116.158L14.52 109.916L21.78 103.873L29.04 98.1233L36.3 92.7582L43.56 87.862L50.82 83.5121L58.08 79.7771L65.34 76.7159L72.6 74.3767L79.86 72.7964L87.12 72H94.38L101.64 72.7964L108.9 74.3767L116.16 76.7159L123.42 79.7771L130.68 83.5121L137.94 87.862L145.2 92.7582L152.46 98.1233L159.72 103.873L166.98 109.916L174.24 116.158L181.5 122.5L188.76 128.842L196.02 135.084L203.28 141.127L210.54 146.877L217.8 152.242L225.06 157.138L232.32 161.488L239.58 165.223L246.84 168.284L254.1 170.623L261.36 172.204L268.62 173H275.88L283.14 172.204L290.4 170.623L297.66 168.284L304.92 165.223L312.18 161.488L319.44 157.138L326.7 152.242L333.96 146.877L341.22 141.127L348.48 135.084L355.74 128.842L363 122.5L370.26 116.158L377.52 109.916L384.78 103.873L392.04 98.1233L399.3 92.7582L406.56 87.862L413.82 83.5121L421.08 79.7771L428.34 76.7159L435.6 74.3767L442.86 72.7964L450.12 72L457.38 72L464.64 72.7964L471.9 74.3767L479.16 76.7159L486.42 79.7771L493.68 83.5121L500.94 87.862L508.2 92.7582L515.46 98.1233L522.72 103.873L529.98 109.916L537.24 116.158L544.5 122.5L551.76 128.842L559.02 135.084L566.28 141.127L573.54 146.877L580.8 152.242L588.06 157.138L595.32 161.488L602.58 165.223L609.84 168.284L617.1 170.623L624.36 172.204L631.62 173H638.88L646.14 172.204L653.4 170.623L660.66 168.284L667.92 165.223L675.18 161.488L682.44 157.138L689.7 152.242L696.96 146.877L704.22 141.127L711.48 135.084L718.74 128.842L726 122.5"
+                stroke="white"
+                stroke-linecap="round"
+                stroke-width="4"
+                transform="translate(5, 75)"
+              />
+            </mask>
+            <g
+              mask="url(#mask-Price-356)"
+            >
+              <rect
+                fill="url(#mask-Price-356-gradient)"
+                height="356"
+                rx="4"
+                width="94%"
+              />
+            </g>
+          </svg>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-4px"
+        />
+        <div
+          class="c6"
+        >
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c8"
+            />
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _width-10037"
+          >
+            <div
+              class="c9"
+            >
+              <div
+                class="c10"
+              >
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                  />
+                </div>
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                  />
+                </div>
+              </div>
+              <div
+                class="c10"
+              >
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                  />
+                </div>
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="c9"
+            >
+              <div
+                class="c10"
+              >
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                  />
+                </div>
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                  />
+                </div>
+              </div>
+              <div
+                class="c10"
+              >
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c11"
+                  />
+                </div>
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c12"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr
+          class="c13"
+        />
+        <div
+          class="c14"
+        >
+          <div
+            class="c15 c16 css-1a9hfw6"
+          >
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
+            <div
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c7 c8"
+              />
+            </div>
+          </div>
+        </div>
+        <style>
+          
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+        </style>
+        <div
+          class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          <div
+            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17"
+          />
+        </div>
+        <style>
+          
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+        </style>
+        <div
+          class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          <div
+            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17"
+          />
+        </div>
+        <style>
+          
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+        </style>
+        <div
+          class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+          style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          <div
+            class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c18"
+            style="margin-bottom: 24px;"
+          />
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334047"
+        >
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c19"
+            />
+          </div>
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c18"
+            />
+          </div>
+        </div>
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334047"
+        >
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c19"
+            />
+          </div>
+          <style>
+            
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+          </style>
+          <div
+            class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+            style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
+          >
+            <div
+              class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c0 c17 c18"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="_width-_xl_10037 _maxWidth-_xl_780px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-53px _gap-40px _width-360px"
+      >
+        <div
+          class="c20"
+        >
+          <div
+            class="c21"
+          >
+            <div
+              class="c15 css-n8z49y"
+            >
+              Swap
+            </div>
+          </div>
+          <div
+            class="c22"
+          >
+            <div
+              class="c23"
+            >
+              <div
+                class="c24 c25"
+                width="60"
+              />
+              <div
+                class="c26 c25"
+                radius="16"
+                width="100"
+              />
+            </div>
+          </div>
+          <div
+            class="c27"
+          >
+            <div
+              class="_alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _display-flex _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-40px _width-40px _mt-0px _mb-0px _ml-0px _mr-0px _backgroundColor-surface2 _borderTopWidth-t-space-spa94665589 _borderRightWidth-t-space-spa94665589 _borderBottomWidth-t-space-spa94665589 _borderLeftWidth-t-space-spa94665589 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface1 _borderRightColor-surface1 _borderBottomColor-surface1 _borderLeftColor-surface1 _zIndex-2 _position-absolute _left-5037 _transform-translate-51285172859"
+            >
+              <div
+                class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _display-inline-flex _alignItems-center _justifyContent-center _width-10037 _height-10037"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  stroke="rgba(19, 19, 19, 0.35)"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="12"
+                    x2="12"
+                    y1="5"
+                    y2="19"
+                  />
+                  <polyline
+                    points="19 12 12 19 5 12"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="c22"
+            >
+              <div
+                class="c23"
+              >
+                <div
+                  class="c24 c25"
+                  width="60"
+                />
+                <div
+                  class="c26 c25"
+                  radius="16"
+                  width="100"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="c28"
+            radius="16"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;
+
+exports[`getLoadingTitle should return correct title 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    token data for 
+    <a
+      class="is_Anchor font_body _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _fontFamily-f-family _fontWeight-500 _fontSize-12px _lineHeight-16px _color-neutral3 _cursor-pointer is_Anchor font_body "
+      data-disable-theme="true"
+      href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+      rel="noopener noreferrer"
+      role="link"
+      style="transition: 100ms;"
+      target="_blank"
+    >
+      USD Coin (USDC)
+    </a>
+     on Ethereum
+    <div
+      style="display: contents;"
+    />
+  </span>
+</DocumentFragment>
+`;

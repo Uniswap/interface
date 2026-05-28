@@ -1,61 +1,53 @@
-import { GraphQLApi } from '@universe/api'
-import { useCallback, useMemo, useRef } from 'react'
-import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import { removeDuplicatesBy } from 'utilities/src/primitives/array'
 import {
+  PoolTableSortState,
+  TablePool,
+  V2_BIPS,
   calculate1DVolOverTvl,
   calculateApr,
-  PoolTableSortState,
   sortPools,
-  TablePool,
-} from '~/appGraphql/data/pools/useTopPools'
+} from 'appGraphql/data/pools/useTopPools'
+import { useCallback, useMemo, useRef } from 'react'
+import {
+  useTopV2PairsQuery,
+  useTopV3PoolsQuery,
+  useTopV4PoolsQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 const DEFAULT_QUERY_SIZE = 20
 
-export function usePoolsFromTokenAddress({
-  tokenAddress,
-  sortState,
-  chainId,
-  isNative,
-}: {
-  tokenAddress: string
-  sortState: PoolTableSortState
-  chainId: UniverseChainId
-  isNative?: boolean
-}) {
-  const chain = toGraphQLChain(chainId)
-  const skipPoolQueries = isSVMChain(chainId)
-
+export function usePoolsFromTokenAddress(
+  tokenAddress: string,
+  sortState: PoolTableSortState,
+  chainId?: UniverseChainId,
+) {
+  const { defaultChainId } = useEnabledChains()
+  const chain = toGraphQLChain(chainId ?? defaultChainId)
   const {
     loading: loadingV4,
     error: errorV4,
     data: dataV4,
     fetchMore: fetchMoreV4,
-  } = GraphQLApi.useTopV4PoolsQuery({
-    variables: {
-      first: DEFAULT_QUERY_SIZE,
-      tokenAddress: isNative ? DEFAULT_NATIVE_ADDRESS : tokenAddress,
-      chain,
-    },
-    skip: skipPoolQueries,
-  })
-
-  const {
-    loading: loadingV3,
-    error: errorV3,
-    data: dataV3,
-    fetchMore: fetchMoreV3,
-  } = GraphQLApi.useTopV3PoolsQuery({
+  } = useTopV4PoolsQuery({
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
       chain,
     },
-    skip: skipPoolQueries,
+  })
+  const {
+    loading: loadingV3,
+    error: errorV3,
+    data: dataV3,
+    fetchMore: fetchMoreV3,
+  } = useTopV3PoolsQuery({
+    variables: {
+      first: DEFAULT_QUERY_SIZE,
+      tokenAddress,
+      chain,
+    },
   })
 
   const {
@@ -63,13 +55,13 @@ export function usePoolsFromTokenAddress({
     error: errorV2,
     data: dataV2,
     fetchMore: fetchMoreV2,
-  } = GraphQLApi.useTopV2PairsQuery({
+  } = useTopV2PairsQuery({
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
       chain,
     },
-    skip: skipPoolQueries,
+    skip: !chainId,
   })
   const loading = loadingV4 || loadingV3 || loadingV2
 
@@ -91,7 +83,7 @@ export function usePoolsFromTokenAddress({
           cursor: dataV4?.topV4Pools?.[dataV4.topV4Pools.length - 1]?.totalLiquidity?.value,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!Object.keys(prev).length) {
+          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
             loadingMoreV4.current = false
             return prev
           }
@@ -110,7 +102,7 @@ export function usePoolsFromTokenAddress({
           cursor: dataV3?.topV3Pools?.[dataV3.topV3Pools.length - 1]?.totalLiquidity?.value,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!Object.keys(prev).length) {
+          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
             loadingMoreV3.current = false
             return prev
           }
@@ -129,7 +121,7 @@ export function usePoolsFromTokenAddress({
           cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!Object.keys(prev).length) {
+          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
             loadingMoreV2.current = false
             return prev
           }
@@ -158,18 +150,8 @@ export function usePoolsFromTokenAddress({
           volume24h: pool.volume24h?.value,
           volume30d: pool.volume30d?.value,
           volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          apr: calculateApr({
-            volume24h: pool.volume24h?.value,
-            tvl: pool.totalLiquidity?.value,
-            feeTier: pool.feeTier,
-          }),
-          feeTier: pool.feeTier
-            ? {
-                feeAmount: pool.feeTier,
-                tickSpacing: DEFAULT_TICK_SPACING,
-                isDynamic: pool.isDynamicFee ?? false,
-              }
-            : undefined,
+          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
           hookAddress: pool.hook?.address,
         } as TablePool
@@ -185,18 +167,8 @@ export function usePoolsFromTokenAddress({
           volume24h: pool.volume24h?.value,
           volume30d: pool.volume30d?.value,
           volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          apr: calculateApr({
-            volume24h: pool.volume24h?.value,
-            tvl: pool.totalLiquidity?.value,
-            feeTier: pool.feeTier,
-          }),
-          feeTier: pool.feeTier
-            ? {
-                feeAmount: pool.feeTier,
-                tickSpacing: DEFAULT_TICK_SPACING,
-                isDynamic: false,
-              }
-            : undefined,
+          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []
@@ -210,24 +182,13 @@ export function usePoolsFromTokenAddress({
           volume24h: pool.volume24h?.value,
           volume30d: pool.volume30d?.value,
           volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          apr: calculateApr({
-            volume24h: pool.volume24h?.value,
-            tvl: pool.totalLiquidity?.value,
-            feeTier: V2_DEFAULT_FEE_TIER,
-          }),
-          feeTier: {
-            feeAmount: V2_DEFAULT_FEE_TIER,
-            tickSpacing: DEFAULT_TICK_SPACING,
-            isDynamic: false,
-          },
+          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
+          feeTier: V2_BIPS,
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []
 
-    const pools = sortPools(removeDuplicatesBy([...topV4Pools, ...topV3Pools, ...topV2Pairs], 'hash'), sortState).slice(
-      0,
-      sizeRef.current,
-    )
+    const pools = sortPools([...topV4Pools, ...topV3Pools, ...topV2Pairs], sortState).slice(0, sizeRef.current)
     return { loading, errorV2, errorV3, errorV4, pools, loadMore }
   }, [
     dataV2?.topV2Pairs,

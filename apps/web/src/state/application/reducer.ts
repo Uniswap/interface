@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { PositionInfo } from 'components/Liquidity/types'
+import { PopupType } from 'components/Popups/types'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { PositionInfo } from '~/components/Liquidity/types'
-import { PopupType } from '~/components/Popups/types'
-import { ReceiveCryptoModalInitialState } from '~/components/ReceiveCryptoModal/types'
 
 export type LiquidityModalInitialState = PositionInfo
 
@@ -21,23 +20,11 @@ type ClaimFeeModalParams = {
   initialState: LiquidityModalInitialState
 }
 
-type BlockedAccountModalParams = {
-  name: typeof ModalName.BlockedAccount
-  initialState: { blockedAddress?: string }
-}
-
-type ReceiveCryptoModalParams = {
-  name: typeof ModalName.ReceiveCryptoModal
-  initialState: ReceiveCryptoModalInitialState
-}
-
 export type OpenModalParams =
   | { name: ModalNameType; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
-  | BlockedAccountModalParams
-  | ReceiveCryptoModalParams
 
 type CloseModalParams = ModalNameType
 
@@ -87,7 +74,6 @@ const applicationSlice = createSlice({
     removeSuppressedPopups(state, { payload: { popupTypes } }) {
       state.suppressedPopups = state.suppressedPopups.filter((type) => !popupTypes.includes(type))
     },
-    resetApplication: () => initialState,
   },
 })
 
@@ -98,6 +84,5 @@ export const {
   addSuppressedPopups,
   removeSuppressedPopups,
   updateDownloadGraduatedWalletCardsDismissed,
-  resetApplication,
 } = applicationSlice.actions
 export default applicationSlice.reducer

@@ -2,7 +2,7 @@ import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 
 import { PropsWithChildren, useEffect } from 'react'
-import { createHashRouter, Outlet, RouterProvider, useSearchParams } from 'react-router'
+import { Outlet, RouterProvider, createHashRouter, useSearchParams } from 'react-router-dom'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
@@ -51,9 +51,7 @@ const router = createHashRouter([
  * this is the root of the app and it imports all sub-pages, we need to push the
  * router/router state to a different file so it can be imported by those pages
  */
-
-// biome-ignore lint/suspicious/noExplicitAny: Router state object has dynamic structure from react-router
-router.subscribe((state: any) => {
+router.subscribe((state) => {
   setRouterState(state)
 })
 
@@ -77,8 +75,7 @@ function UnitagAppInner(): JSX.Element {
       // needed to reload on address param change for hash router
       router
         .navigate(0)
-        // biome-ignore lint/suspicious/noExplicitAny: Router state object has dynamic structure from react-router
-        .catch((e: any) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
+        .catch((e) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
     }
   }, [address, prevAddress])
 

@@ -1,8 +1,7 @@
-import { GraphQLApi } from '@universe/api'
+import { Portfolio, Token, TokenBalance } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
+import { buildCurrency, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { currencyInfo, portfolio, tokenBalance } from 'uniswap/src/test/fixtures'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
@@ -19,8 +18,8 @@ const portfolioBalanceBase = createFixture<PortfolioBalance>()(() => ({
 }))
 
 type PortfolioBalanceOptions = {
-  fromBalance: RequireNonNullable<GraphQLApi.TokenBalance, 'quantity' | 'token'> | null
-  fromToken: GraphQLApi.Token | null
+  fromBalance: RequireNonNullable<TokenBalance, 'quantity' | 'token'> | null
+  fromToken: Token | null
 }
 
 export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalanceOptions>({
@@ -55,8 +54,7 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
     // This field is normally calculated dynamically. We cannot mock it in the
     // fixture returned by the mocked resolver as it is ignored and replaced
     // by randomly generated Amount mock. As a result, we expect any number here.
-    // Cast to unknown as number since vitest's expect.any returns AsymmetricMatcher
-    relativeChange24: expect.any(Number) as unknown as number,
+    relativeChange24: expect.any(Number),
     currencyInfo: {
       currency,
       currencyId: currencyId(currency),
@@ -69,21 +67,21 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
 })
 
 type PortfolioBalancesOptions = {
-  portfolio: GraphQLApi.Portfolio
+  portfolio: Portfolio
 }
 
 export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBalancesOptions>(() => ({
   portfolio: portfolio(),
 }))(
   ({ portfolio: { tokenBalances } }) =>
-    tokenBalances
+    (tokenBalances
       ?.map((balance) => {
-        if (balance?.quantity && balance.token) {
+        if (balance?.quantity && balance?.token) {
           return portfolioBalance({
-            fromBalance: balance as RequireNonNullable<GraphQLApi.TokenBalance, 'quantity' | 'token'>,
+            fromBalance: balance as RequireNonNullable<TokenBalance, 'quantity' | 'token'>,
           })
         }
         return undefined
       })
-      .filter(Boolean) as PortfolioBalance[],
+      .filter(Boolean) as PortfolioBalance[]) ?? [],
 )

@@ -1,9 +1,10 @@
+import { SwapEventName } from '@uniswap/analytics-events'
+import { memo } from 'react'
 import { Flex, useIsShortMobileDevice } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/components/SwapArrowButton'
-import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/body/SwapArrowButton'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
@@ -21,10 +22,13 @@ const SWAP_DIRECTION_BUTTON_SIZE = {
   },
 } as const
 
-export function SwitchCurrenciesButton(): JSX.Element {
+export const SwitchCurrenciesButton = memo(function _SwitchCurrenciesButton({
+  onSwitchCurrencies,
+}: {
+  onSwitchCurrencies: () => void
+}): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const smallOrRegular = isShortMobileDevice ? 'small' : 'regular'
-  const onSwitchCurrencies = useSwapFormScreenStore((state) => state.onSwitchCurrencies)
 
   return (
     <Flex zIndex="$mask">
@@ -47,7 +51,7 @@ export function SwitchCurrenciesButton(): JSX.Element {
           <Trace
             logPress
             element={ElementName.SwitchCurrenciesButton}
-            eventOnTrigger={SwapEventName.SwapTokensReversed}
+            eventOnTrigger={SwapEventName.SWAP_TOKENS_REVERSED}
           >
             <SwapArrowButton
               backgroundColor="$surface2"
@@ -60,4 +64,4 @@ export function SwitchCurrenciesButton(): JSX.Element {
       </Flex>
     </Flex>
   )
-}
+})

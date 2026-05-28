@@ -1,66 +1,58 @@
-import { ProfileMetadata } from '@universe/api'
-import { type ComponentType, type PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
   Button,
   Flex,
-  getUniconColors,
   InputProps,
   LinearGradient,
   ScrollView,
   Text,
+  getUniconColors,
   useExtractedColors,
   useIsDarkMode,
   useSporeColors,
 } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
-import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { updateUnitagMetadata } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
-import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { tryUploadAvatar } from 'uniswap/src/features/unitags/avatars'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSelection'
 import { extensionNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
 import { ChoosePhotoOptionsModal } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { HeaderRadial, solidHeaderProps } from 'wallet/src/features/unitags/HeaderRadial'
-import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hooks/useAvatarUploadCredsWithRefresh'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
+import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hooks/useAvatarUploadCredsWithRefresh'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
-const PADDING_WIDTH = isExtensionApp ? '$none' : '$spacing16'
+const PADDING_WIDTH = isExtension ? '$none' : '$spacing16'
 
-function DefaultButtonWrapper({ children }: PropsWithChildren): JSX.Element {
-  return <>{children}</>
-}
-
-function isProfileMetadataEdited({
-  loading,
-  updatedMetadata,
-  initialMetadata,
-}: {
-  loading: boolean
-  updatedMetadata: ProfileMetadata
-  initialMetadata?: ProfileMetadata
-}): boolean {
+const isProfileMetadataEdited = (
+  loading: boolean,
+  updatedMetadata: ProfileMetadata,
+  initialMetadata?: ProfileMetadata,
+): boolean => {
   return (
     !loading &&
     (isFieldEdited(initialMetadata?.avatar, updatedMetadata.avatar) ||
@@ -86,14 +78,12 @@ export function EditUnitagProfileContent({
   entryPoint,
   onNavigate,
   onButtonClick,
-  SaveButtonWrapper: ButtonWrapper = DefaultButtonWrapper,
 }: {
   address: string
   unitag: string
   entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet | UnitagScreens.EditProfile
   onNavigate?: () => void
   onButtonClick?: () => void
-  SaveButtonWrapper?: ComponentType<PropsWithChildren>
 }): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount(address)
@@ -101,9 +91,7 @@ export function EditUnitagProfileContent({
   const signerManager = useWalletSigners()
   const dispatch = useDispatch()
 
-  const { data: retrievedUnitag, isLoading: loading } = useUnitagsAddressQuery({
-    params: address ? { address } : undefined,
-  })
+  const { unitag: retrievedUnitag, loading } = useUnitagByAddress(address)
   const unitagMetadata = retrievedUnitag?.metadata
 
   const { value: isSaving, setFalse: setIsNotSaving, setTrue: setIsSaving } = useBooleanState(false)
@@ -155,11 +143,11 @@ export function EditUnitagProfileContent({
     setTwitterInput(normalizedInput)
   }
 
-  const profileMetadataEdited = isProfileMetadataEdited({
-    loading: updateResponseLoading || isSaving,
+  const profileMetadataEdited = isProfileMetadataEdited(
+    updateResponseLoading || isSaving,
     updatedMetadata,
-    initialMetadata: unitagMetadata,
-  })
+    unitagMetadata,
+  )
 
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
 
@@ -212,7 +200,8 @@ export function EditUnitagProfileContent({
         return
       }
 
-      await updateProfileMetadata(!skipped)
+      const uploadedNewAvatar = success && !skipped
+      await updateProfileMetadata(uploadedNewAvatar)
     } catch (e) {
       logger.error(e, {
         tags: { file: 'EditUnitagProfileScreen', function: 'onPressSaveChanges' },
@@ -237,7 +226,7 @@ export function EditUnitagProfileContent({
       : updatedMetadata
 
     setUpdateResponseLoading(true)
-    const updateResponse = await UnitagsApiClient.updateUnitagMetadata({
+    const updateResponse = await updateUnitagMetadata({
       username: unitag,
       data: {
         metadata,
@@ -299,7 +288,7 @@ export function EditUnitagProfileContent({
     placeholderTextColor: '$neutral3',
     returnKeyType: 'done',
     textAlign: 'left',
-    borderRadius: isExtensionApp ? 0 : undefined,
+    borderRadius: isExtension ? 0 : undefined,
   }
 
   return (
@@ -307,12 +296,12 @@ export function EditUnitagProfileContent({
       <ScrollView
         contentContainerStyle={{ pb: '$spacing24' }}
         keyboardShouldPersistTaps="handled"
-        px={isExtensionApp ? undefined : '$spacing24'}
+        px={isExtension ? undefined : '$spacing24'}
         showsVerticalScrollIndicator={false}
       >
         <Flex grow gap="$spacing36">
           <Flex fill justifyContent="space-between">
-            <Flex pt={isExtensionApp ? '$spacing48' : undefined} pb="$spacing48">
+            <Flex pt={isExtension ? '$spacing48' : undefined} pb="$spacing48">
               {isMobileApp && (
                 <Flex height={imageSizes.image100}>
                   <Flex
@@ -347,12 +336,7 @@ export function EditUnitagProfileContent({
                 onPress={avatarSelectionHandler}
               >
                 <Flex backgroundColor="$surface1" borderRadius="$roundedFull">
-                  <UnitagProfilePicture
-                    forcePassedAvatarUri={avatarImageUri === undefined && unitagMetadata?.avatar !== undefined}
-                    address={address}
-                    size={iconSizes.icon70}
-                    unitagAvatarUri={avatarImageUri}
-                  />
+                  <UnitagProfilePicture address={address} size={iconSizes.icon70} unitagAvatarUri={avatarImageUri} />
                 </Flex>
                 <Flex
                   backgroundColor="$surface1"
@@ -375,12 +359,12 @@ export function EditUnitagProfileContent({
                 textProps={{ variant: 'heading3' }}
               />
               <Text color="$neutral2" variant="subheading2">
-                {shortenAddress({ address })}
+                {shortenAddress(address)}
               </Text>
             </Flex>
 
             <Flex row gap="$spacing24" px={PADDING_WIDTH} pt="$spacing16">
-              <Flex flex={1.5} gap="$spacing24">
+              <Flex flex={1} gap="$spacing24">
                 <Text color="$neutral2" pt="$spacing4" variant="subheading1">
                   {t('unitags.profile.bio.label')}
                 </Text>
@@ -393,7 +377,7 @@ export function EditUnitagProfileContent({
                   </Text>
                 )}
               </Flex>
-              <Flex flex={2.5} gap="$spacing24">
+              <Flex flex={3} gap="$spacing24">
                 {!loading ? (
                   <TextInput
                     autoCorrect
@@ -432,27 +416,25 @@ export function EditUnitagProfileContent({
           </Flex>
         </Flex>
       </ScrollView>
-      <ButtonWrapper>
-        <Button
-          loading={isSaving}
-          isDisabled={!profileMetadataEdited}
-          mt="$spacing12"
-          mx={isExtensionApp ? undefined : '$spacing24'}
-          size="large"
-          variant="branded"
-          fill={false}
-          onPress={onPressSaveChanges}
-        >
-          {t('common.button.save')}
-        </Button>
-      </ButtonWrapper>
+      <Button
+        loading={isSaving}
+        isDisabled={!profileMetadataEdited}
+        mt="$spacing12"
+        mx={isExtension ? undefined : '$spacing24'}
+        size="large"
+        variant="branded"
+        fill={false}
+        onPress={onPressSaveChanges}
+      >
+        {t('common.button.save')}
+      </Button>
       {showAvatarModal && (
         <ChoosePhotoOptionsModal
           address={address}
           hasNFTs={hasNFTs}
           setPhotoUri={setAvatarImageUri}
           showRemoveOption={!!avatarImageUri}
-          nftModalProps={isExtensionApp ? extensionNftModalProps : undefined}
+          nftModalProps={isExtension ? extensionNftModalProps : undefined}
           onClose={onCloseAvatarModal}
         />
       )}

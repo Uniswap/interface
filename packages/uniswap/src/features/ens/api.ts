@@ -2,11 +2,8 @@
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { providers } from 'ethers/lib/ethers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { sanitizeAvatarUrl } from 'utilities/src/format/urls'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
@@ -33,12 +30,7 @@ async function getNameFetch(address: string, provider: providers.JsonRpcProvider
   const fwdAddr = name ? await provider.resolveName(name) : null
 
   // Normalize data as provider response is checksummed
-  return areAddressesEqual({
-    addressInput1: { address: fwdAddr, platform: Platform.EVM },
-    addressInput2: { address, platform: Platform.EVM },
-  })
-    ? name
-    : null
+  return areAddressesEqual(fwdAddr, address) ? name : null
 }
 
 async function getAddressFetch(name: string, provider: providers.JsonRpcProvider) {
@@ -48,25 +40,11 @@ async function getAddressFetch(name: string, provider: providers.JsonRpcProvider
 async function getAvatarFetch(address: string, provider: providers.JsonRpcProvider) {
   const name = await provider.lookupAddress(address)
   const fwdAddr = name ? await provider.resolveName(name) : null
-  const checkedName = areAddressesEqual({
-    addressInput1: { address, platform: Platform.EVM },
-    addressInput2: { address: fwdAddr, platform: Platform.EVM },
-  })
-    ? name
-    : null
-  const avatarUrl = checkedName ? await provider.getAvatar(checkedName) : null
-  return sanitizeAvatarUrl(avatarUrl)
+  const checkedName = areAddressesEqual(address, fwdAddr) ? name : null
+  return checkedName ? await provider.getAvatar(checkedName) : null
 }
 
-async function getTextFetch({
-  key,
-  name,
-  provider,
-}: {
-  key: string
-  name: string
-  provider: providers.JsonRpcProvider
-}) {
+async function getTextFetch(key: string, name: string, provider: providers.JsonRpcProvider) {
   const resolver = await provider.getResolver(name)
   const text = resolver?.getText(key)
   return text ?? null
@@ -75,7 +53,7 @@ async function getTextFetch({
 async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | null> {
   const { type, nameOrAddress } = params
 
-  const provider = createEthersProvider({ chainId: UniverseChainId.Mainnet })
+  const provider = createEthersProvider(UniverseChainId.Mainnet)
 
   if (!provider) {
     return null
@@ -89,9 +67,9 @@ async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | nul
     case EnsLookupType.Avatar:
       return await getAvatarFetch(nameOrAddress, provider)
     case EnsLookupType.Description:
-      return await getTextFetch({ key: 'description', name: nameOrAddress, provider })
+      return await getTextFetch('description', nameOrAddress, provider)
     case EnsLookupType.TwitterUsername:
-      return await getTextFetch({ key: 'com.twitter', name: nameOrAddress, provider })
+      return await getTextFetch('com.twitter', nameOrAddress, provider)
     default:
       throw new Error(`Invalid ENS lookup type: ${type}`)
   }
@@ -109,15 +87,13 @@ function useEnsQuery(type: EnsLookupType, nameOrAddress?: string | null) {
 }
 
 export function useENSName(address?: Address) {
-  const isValidEVMAddress = isEVMAddress(address)
-  return useEnsQuery(EnsLookupType.Name, isValidEVMAddress ? address : undefined)
+  return useEnsQuery(EnsLookupType.Name, address)
 }
 export function useAddressFromEns(maybeName: string | null) {
   return useEnsQuery(EnsLookupType.Address, maybeName)
 }
 export function useENSAvatar(address?: string | null) {
-  const isValidEVMAddress = isEVMAddress(address)
-  return useEnsQuery(EnsLookupType.Avatar, isValidEVMAddress ? address : undefined)
+  return useEnsQuery(EnsLookupType.Avatar, address)
 }
 export function useENSDescription(name?: string | null) {
   return useEnsQuery(EnsLookupType.Description, name)

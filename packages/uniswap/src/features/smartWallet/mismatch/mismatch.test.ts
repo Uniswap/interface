@@ -1,4 +1,4 @@
-import type { DelegatedResult } from 'uniswap/src/features/smartWallet/delegation/delegationRepository'
+import { DelegatedResult } from 'uniswap/src/features/smartWallet/delegation/delegation'
 import { createHasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 
 describe('createHasMismatchUtil', () => {
@@ -31,7 +31,7 @@ describe('createHasMismatchUtil', () => {
       expected: true,
     },
   ])('$name', async ({ isDelegated, isAtomicSupported, expected }) => {
-    const mockOnMismatchDetected = vi.fn()
+    const mockOnMismatchDetected = jest.fn()
     const hasMismatch = createHasMismatchUtil({
       delegationService: {
         getIsAddressDelegated: async (): Promise<DelegatedResult> =>
@@ -39,19 +39,12 @@ describe('createHasMismatchUtil', () => {
             isDelegated,
             delegatedAddress: isDelegated ? mockDelegatedAddress : null,
           }) as DelegatedResult,
-        getAddressDelegations: async () => ({
-          '1': {
-            isDelegated,
-            delegatedAddress: isDelegated ? mockDelegatedAddress : null,
-          } as DelegatedResult,
-        }),
       },
       getIsAtomicBatchingSupported: async (): Promise<boolean> => isAtomicSupported,
       onMismatchDetected: mockOnMismatchDetected,
     })
 
-    const result = await hasMismatch({ address: mockAddress, chainIds: [1] })
-    expect(result['1']).toBe(expected)
+    expect(await hasMismatch({ address: mockAddress, chainId: 1 })).toBe(expected)
 
     if (expected) {
       expect(mockOnMismatchDetected).toHaveBeenCalledWith({

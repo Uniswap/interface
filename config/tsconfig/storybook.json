@@ -1,20 +1,20 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Storybook",
-  "extends": "../../tsconfig.base.json",
+  "extends": "./base.json",
   "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "declaration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
-    "jsx": "react-jsx",
-    "lib": ["es5", "es6", "es7", "es2017", "dom"],
     "module": "commonjs",
-    "moduleResolution": "node",
-    "noEmit": true,
+    "target": "es5",
+    "lib": ["es5", "es6", "es7", "es2017", "dom"],
     "sourceMap": true,
-    "target": "es5"
+    "allowJs": false,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noEmit": true
   }
 }

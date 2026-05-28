@@ -1,10 +1,13 @@
 /* eslint-env node */
 require('@uniswap/eslint-config/load')
 
+const rulesDirPlugin = require('eslint-plugin-rulesdir')
+rulesDirPlugin.RULES_DIR = 'eslint_rules'
+
 module.exports = {
   root: true,
-  ignorePatterns: ['scripts/build-vercel.ts'],
   extends: ['@uniswap/eslint-config/interface', 'plugin:storybook/recommended'],
+  plugins: ['rulesdir'],
   parserOptions: {
     project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,
@@ -13,7 +16,10 @@ module.exports = {
     },
   },
   rules: {
-    // let biome do things:
+    // TODO: had to add this rule to avoid errors on monorepo migration that didnt happen in interface
+    'cypress/unsafe-to-chain-command': 'off',
+
+    // let prettier do things:
     semi: 0,
     quotes: 0,
     'comma-dangle': 0,
@@ -23,43 +29,9 @@ module.exports = {
 
   overrides: [
     {
-      // Portfolio pages must not use useAccount directly. Use usePortfolioAddress (or a domain-specific hook) instead.
-      // NOTE: This override also includes the Tamagui Tooltip restriction from the **/*.ts, **/*.tsx override below,
-      // because ESLint doesn't merge no-restricted-imports rules from multiple matching overrides - the later one
-      // takes precedence. Without duplicating the Tooltip restriction here, it would silently disable the useAccount restriction.
-      files: ['src/pages/Portfolio/*.{ts,tsx}', 'src/pages/Portfolio/**/*.{ts,tsx}'],
-      rules: {
-        'no-restricted-imports': [
-          'error',
-          {
-            paths: [
-              {
-                name: 'hooks/useAccount',
-                message:
-                  "Do not import 'useAccount' in portfolio pages. Use 'pages/Portfolio/hooks/usePortfolioAddress' (or a domain-specific hook) instead.",
-              },
-              {
-                name: 'tamagui',
-                importNames: ['Tooltip'],
-                message:
-                  "Do not import 'Tooltip' directly from 'tamagui'. Use the Tooltip component from 'ui/src/components/tooltip' instead.",
-              },
-            ],
-          },
-        ],
-        'no-restricted-syntax': [
-          'error',
-          {
-            selector: 'CallExpression[callee.name="useAccount"]',
-            message:
-              "Do not call 'useAccount' in portfolio pages. Use 'pages/Portfolio/hooks/usePortfolioAddress' (or a domain-specific hook) instead.",
-          },
-        ],
-      },
-    },
-    {
       files: [
         'src/index.tsx',
+        'cypress/utils/index.ts',
         'src/tracing/index.ts',
         'src/state/index.ts',
         'src/state/explore/index.tsx',
@@ -82,12 +54,24 @@ module.exports = {
             rootDir: 'src',
           },
         ],
+        'import/no-restricted-paths': [
+          'error',
+          {
+            zones: [
+              {
+                target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
+                from: 'src/test-utils',
+              },
+            ],
+          },
+        ],
       },
     },
     {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
+        'rulesdir/no-undefined-or': 'error',
       },
     },
     {
@@ -108,24 +92,6 @@ module.exports = {
               {
                 target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
                 from: 'src/test-utils',
-              },
-            ],
-          },
-        ],
-        'no-restricted-imports': [
-          'error',
-          {
-            paths: [
-              {
-                name: 'tamagui',
-                importNames: ['Tooltip'],
-                message:
-                  "Do not import 'Tooltip' directly from 'tamagui'. Use the Tooltip component from 'ui/src/components/tooltip' instead.",
-              },
-              {
-                name: 'react-native-reanimated',
-                message:
-                  "Do not import 'react-native-reanimated' in web code. Use CSS animations, Tamagui's animation system, or create a platform-specific file (.native.ts/.web.ts).",
               },
             ],
           },
@@ -179,29 +145,6 @@ module.exports = {
             selector: 'CallExpression[callee.property.name="getByTestId"] > Literal',
             message:
               'Use TestID enum from uniswap/src/test/fixtures/testIDs instead of string literals with getByTestId (e.g. TestID.SwapSettings)',
-          },
-        ],
-      },
-    },
-    {
-      // Enforce anvil test separation - anvil tests must only be in *.anvil.e2e.test.ts files
-      files: ['**/*.e2e.test.ts'],
-      excludedFiles: ['**/*.anvil.e2e.test.ts'],
-      rules: {
-        'no-restricted-syntax': [
-          'error',
-          // Block getTest({ withAnvil: true })
-          {
-            selector:
-              'CallExpression[callee.name="getTest"] > ObjectExpression > Property[key.name="withAnvil"][value.value=true]',
-            message:
-              'Anvil tests must be in *.anvil.e2e.test.ts files. Move this test to a file with .anvil.e2e.test.ts extension.',
-          },
-          // Block anvil fixture usage (anvil.setErc20Balance, etc.)
-          {
-            selector: 'MemberExpression[object.name="anvil"]',
-            message:
-              'Anvil fixture usage must be in *.anvil.e2e.test.ts files. Move this test to a file with .anvil.e2e.test.ts extension.',
           },
         ],
       },

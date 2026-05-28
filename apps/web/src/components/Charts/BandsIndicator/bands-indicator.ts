@@ -1,3 +1,7 @@
+import { ClosestTimeIndexFinder } from 'components/Charts/BandsIndicator/helpers/closest-index'
+import { UpperLowerInRange } from 'components/Charts/BandsIndicator/helpers/min-max-in-range'
+import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
+import { PluginBase } from 'components/Charts/BandsIndicator/plugin-base'
 import { CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   Coordinate,
@@ -10,10 +14,6 @@ import {
   SeriesType,
   Time,
 } from 'lightweight-charts'
-import { ClosestTimeIndexFinder } from '~/components/Charts/BandsIndicator/helpers/closest-index'
-import { UpperLowerInRange } from '~/components/Charts/BandsIndicator/helpers/min-max-in-range'
-import { cloneReadonly } from '~/components/Charts/BandsIndicator/helpers/simple-clone'
-import { PluginBase } from '~/components/Charts/BandsIndicator/plugin-base'
 
 interface BandRendererData {
   x: Coordinate | number
@@ -41,8 +41,8 @@ class BandsIndicatorPaneRenderer implements ISeriesPrimitivePaneRenderer {
       region.moveTo(points[0]?.x, points[0]?.upper)
       lines.moveTo(points[0]?.x, points[0]?.upper)
       for (const point of points) {
-        region.lineTo(point.x, point.upper)
-        lines.lineTo(point.x, point.upper)
+        region.lineTo(point?.x, point.upper)
+        lines.lineTo(point?.x, point.upper)
       }
       const end = points.length - 1
       region.lineTo(points[end]?.x, points[end]?.lower)

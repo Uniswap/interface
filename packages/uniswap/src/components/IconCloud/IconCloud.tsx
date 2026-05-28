@@ -3,7 +3,6 @@ import { useMemo, useRef } from 'react'
 import { Flex } from 'ui/src'
 import { CloudItem } from 'uniswap/src/components/IconCloud/CloudItem'
 import { randomFloat, randomInt } from 'uniswap/src/components/IconCloud/utils'
-import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
 
 export type FloatingElementPosition = 'left' | 'right'
 
@@ -58,7 +57,7 @@ export function IconCloud<T extends ItemData>({
       // Order by distance from center, ie idx = 0 is closest to center
       .sort((a, b) => Math.abs(a[0] ?? 0 - w / 2) - Math.abs(b[0] ?? 0 - w / 2))
       .map(([x = 0, y = 0], idx: number) => {
-        // biome-ignore lint/style/noNonNullAssertion: array access is safe here
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const item = data[idx % data.length]!
         const size = randomInt(minItemSize, maxItemSize)
 
@@ -79,8 +78,8 @@ export function IconCloud<T extends ItemData>({
       .map((p) => {
         return {
           ...p,
-          y: p.y - 0.5 * p.size,
-          x: p.x - 0.5 * p.size,
+          y: (p?.y ?? 0) - 0.5 * (p?.size ?? 0),
+          x: (p?.x ?? 0) - 0.5 * (p?.size ?? 0),
         }
       })
 
@@ -88,7 +87,6 @@ export function IconCloud<T extends ItemData>({
   }, [data, maxItemSize, minItemSize])
 
   const constraintsRef = useRef(null)
-  const isWindowVisible = useIsWindowVisible()
 
   return (
     <Flex
@@ -108,7 +106,6 @@ export function IconCloud<T extends ItemData>({
             point={point}
             renderOuterElement={renderOuterElement}
             getElementRounded={getElementRounded}
-            isPaused={!isWindowVisible}
             onPress={onPress}
           />
         )

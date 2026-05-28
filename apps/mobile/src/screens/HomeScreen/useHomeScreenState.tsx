@@ -1,12 +1,11 @@
-import { GraphQLApi } from '@universe/api'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
+import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useRestOnRampAuth } from 'wallet/src/features/activity/useRestOnRampAuth'
-import { useAccounts, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks/useFormattedTransactionDataForActivity'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectHasBalanceOrActivityForAddress } from 'wallet/src/features/wallet/selectors'
 import { setHasBalanceOrActivity } from 'wallet/src/features/wallet/slice'
 import { WalletState } from 'wallet/src/state/walletReducer'
@@ -29,7 +28,6 @@ export function useHomeScreenState(): {
 } {
   const dispatch = useDispatch()
   const { address } = useActiveAccountWithThrow()
-  const ownerAddresses = Object.keys(useAccounts())
   const hasUsedWalletFromCache = useSelector((state: WalletState) =>
     selectHasBalanceOrActivityForAddress(state, address),
   )
@@ -43,13 +41,11 @@ export function useHomeScreenState(): {
   // is a work around to only trigger the loading state once.
   const dataLoadedRef = useRef(false)
 
-  const fiatOnRampParams = useRestOnRampAuth(address)
-
   const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
-    evmAddress: address,
+    address,
     skip: hasUsedWalletFromCache,
   })
-  const { data: nftData, loading: areNFTsLoading } = GraphQLApi.useNftsTabQuery({
+  const { data: nftData, loading: areNFTsLoading } = useNftsTabQuery({
     variables: {
       ownerAddress: address,
       first: 1,
@@ -62,9 +58,7 @@ export function useHomeScreenState(): {
     skip: hasUsedWalletFromCache,
   })
   const { hasData: hasActivity, isLoading: isActivityLoading } = useFormattedTransactionDataForActivity({
-    evmAddress: address,
-    ownerAddresses,
-    fiatOnRampParams,
+    address,
     hideSpamTokens: true,
     pageSize: 1,
     skip: hasUsedWalletFromCache,

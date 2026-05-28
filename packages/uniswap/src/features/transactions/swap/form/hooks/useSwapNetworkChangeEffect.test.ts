@@ -1,22 +1,21 @@
 import { act, renderHook } from '@testing-library/react-native'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useSwapNetworkChangeEffect'
-import type { Mock } from 'vitest'
+import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkChangeEffect'
 
-vi.mock('uniswap/src/contexts/UniswapContext', () => ({
-  useUniswapContext: vi.fn(),
+jest.mock('uniswap/src/contexts/UniswapContext', () => ({
+  useUniswapContext: jest.fn(),
 }))
 
-const onSwapChainsChangedMock = vi.fn()
+const onSwapChainsChangedMock = jest.fn()
 
-;(useUniswapContext as Mock).mockReturnValue({
+;(useUniswapContext as jest.Mock).mockReturnValue({
   onSwapChainsChanged: onSwapChainsChangedMock,
 })
 
 describe('useSwapNetworkChangeEffect', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('does not call onSwapChainsChanged if input and output chain ids are the same', () => {

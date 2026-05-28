@@ -2,9 +2,10 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 
 export function BridgeTokenButton({
@@ -19,8 +20,9 @@ export function BridgeTokenButton({
   onPress?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const { foreground } = useNetworkColors(outputToken.currency.chainId)
+  const { foreground, background } = useNetworkColors(outputToken.currency?.chainId ?? UniverseChainId.Mainnet)
   const primaryColor = validColor(foreground)
+  const backgroundColor = validColor(background)
 
   const { navigateToSwapFlow } = useUniswapContext()
 
@@ -42,7 +44,7 @@ export function BridgeTokenButton({
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
       <Flex row alignSelf="stretch">
         <Button
-          backgroundColor="$accent1"
+          backgroundColor={backgroundColor}
           borderColor="$transparent"
           hoverStyle={{
             borderColor: primaryColor,
@@ -52,7 +54,7 @@ export function BridgeTokenButton({
           primary-color={primaryColor}
           onPress={onPressBridgeToken}
         >
-          <Button.Text color="$white">
+          <Button.Text color={primaryColor}>
             {t('swap.warning.insufficientGas.button.bridge', {
               tokenSymbol: outputToken.currency.symbol,
               networkName: outputNetworkName,

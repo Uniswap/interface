@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalNameType, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { ModalNameType, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
 
 export function useFilterCallbacks(
   chainId: UniverseChainId | null,
@@ -17,34 +18,56 @@ export function useFilterCallbacks(
   onClearSearchFilter: () => void
   onChangeText: (newSearchFilter: string) => void
 } {
-  const [chainFilter, setChainFilter] = useState<UniverseChainId | null>(chainId)
-  const [searchFilter, setSearchFilter] = useState<string | null>(null)
+  const { chains: enabledChains, defaultChainId: hookDefaultChainId } = useEnabledChains()
 
-  const { chains: enabledChains } = useEnabledChains()
+  // Use the provided chainId if available, otherwise fall back to the hook's defaultChainId
+  const initialChainId = chainId ?? hookDefaultChainId
+  const [chainFilter, setChainFilter] = useState<UniverseChainId | null>(initialChainId)
+  const [parsedChainFilter, setParsedChainFilter] = useState<UniverseChainId | null>(null)
+  const [searchFilter, setSearchFilter] = useState<string | null>(null)
+  const [parsedSearchFilter, setParsedSearchFilter] = useState<string | null>(null)
+  const [userManuallySelectedChain, setUserManuallySelectedChain] = useState(false)
 
   // Parses the user input to determine if the user is searching for a chain + token
-  // i.e "eth dai" or "dai eth"
+  // i.e "eth dai"
   // parsedChainFilter: 1
   // parsedSearchFilter: "dai"
-  const { chainFilter: parsedChainFilter, searchTerm: parsedSearchFilter } = useMemo(() => {
-    // If there's already a chain filter set, don't parse chains from search text
-    if (chainFilter) {
-      return {
-        chainFilter: null,
-        searchTerm: null,
-      }
+  useEffect(() => {
+    const splitSearch = searchFilter?.split(' ')
+    const maybeChainName = splitSearch?.[0]?.toLowerCase()
+
+    const chainMatch = getNativeCurrencyNames(enabledChains).find((currency) =>
+      currency.name.startsWith(maybeChainName ?? ''),
+    )
+    const search = splitSearch?.slice(1).join(' ')
+
+    if (!chainFilter && chainMatch && search) {
+      setParsedChainFilter(chainMatch.chainId)
+      setParsedSearchFilter(search)
+    } else {
+      setParsedChainFilter(null)
+      setParsedSearchFilter(null)
     }
-    return parseChainFromTokenSearchQuery(searchFilter, enabledChains)
-  }, [chainFilter, searchFilter, enabledChains])
+  }, [searchFilter, chainFilter, enabledChains])
 
   useEffect(() => {
-    setChainFilter(chainId)
-  }, [chainId])
+    // Update chainFilter when chainId changes
+    // If chainId is null, use the hook's defaultChainId instead
+    // But don't override if user has manually selected a chain
+    if (userManuallySelectedChain) {
+      return
+    }
+    const targetChainId = chainId ?? hookDefaultChainId
+    if (targetChainId && targetChainId !== chainFilter) {
+      setChainFilter(targetChainId)
+    }
+  }, [chainId, hookDefaultChainId, chainFilter, userManuallySelectedChain])
 
   const onChangeChainFilter = useCallback(
     (newChainFilter: typeof chainFilter) => {
       setChainFilter(newChainFilter)
-      sendAnalyticsEvent(UniswapEventName.NetworkFilterSelected, {
+      setUserManuallySelectedChain(true)
+      sendAnalyticsEvent(WalletEventName.NetworkFilterSelected, {
         chain: newChainFilter ?? 'All',
         modal: modalName,
       })
@@ -56,7 +79,7 @@ export function useFilterCallbacks(
     setSearchFilter(null)
   }, [])
 
-  const onChangeText = useCallback((newSearchFilter: string) => setSearchFilter(newSearchFilter), [])
+  const onChangeText = useCallback((newSearchFilter: string) => setSearchFilter(newSearchFilter), [setSearchFilter])
 
   return {
     chainFilter,
@@ -68,3 +91,15 @@ export function useFilterCallbacks(
     onChangeText,
   }
 }
+
+const getNativeCurrencyNames = (chains: UniverseChainId[]): { chainId: UniverseChainId; name: string }[] =>
+  chains
+    .map((chainId) => {
+      return isTestnetChain(chainId)
+        ? false
+        : {
+            chainId,
+            name: getChainInfo(chainId).nativeCurrency.name.toLowerCase(),
+          }
+    })
+    .filter(Boolean) as { chainId: UniverseChainId; name: string }[]

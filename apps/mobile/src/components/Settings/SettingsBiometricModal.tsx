@@ -192,8 +192,6 @@ export function SettingsBiometricModal(): JSX.Element {
       <BiometricAuthWarningModal
         isOpen={showUnsafeWarningModal}
         isTouchIdDevice={touchId}
-        rejectText={t('common.button.cancel')}
-        acknowledgeText={t('common.button.disable')}
         onClose={onCloseModal}
         onConfirm={async (): Promise<void> => {
           await trigger({

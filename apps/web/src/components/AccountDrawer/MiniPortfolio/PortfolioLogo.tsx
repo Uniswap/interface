@@ -1,22 +1,22 @@
 import { Currency } from '@uniswap/sdk-core'
+import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
+import Identicon from 'components/Identicon'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import React, { memo } from 'react'
 import { Flex, useSporeColors } from 'ui/src'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { ReactComponent as UnknownStatus } from '~/assets/svg/contract-interaction.svg'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
-import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
+import { SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface PortfolioLogoProps {
   chainId: UniverseChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: Array<string | undefined>
-  fallbackSymbols?: Array<string | undefined>
+  symbols?: Array<string | undefined>
+  names?: Array<string | undefined>
   size?: number
   style?: React.CSSProperties
   customIcon?: React.ReactNode
@@ -27,7 +27,7 @@ const LOGO_DEFAULT_SIZE = 40
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
   const colors = useSporeColors()
 
-  if (isTestnetChain(props.chainId)) {
+  if (SUPPORTED_TESTNET_CHAIN_IDS.includes(props.chainId) && props.currencies?.[0]) {
     return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
   }
 
@@ -43,7 +43,8 @@ function getLogo(
     accountAddress,
     currencies,
     images,
-    fallbackSymbols,
+    symbols,
+    names,
     chainId,
     customIcon,
     size = LOGO_DEFAULT_SIZE,
@@ -51,28 +52,29 @@ function getLogo(
   colors: UseSporeColorsReturn,
 ) {
   if (accountAddress) {
-    return <AccountIcon address={accountAddress} size={size} />
+    return <Identicon account={accountAddress} size={size} />
   }
   if (currencies && currencies.length) {
     return <DoubleCurrencyLogo currencies={currencies} size={size} customIcon={customIcon} />
   }
-
   if (images && images.length >= 2) {
     return (
       <SplitLogo
         inputLogoUrl={images[0]}
         outputLogoUrl={images[1]}
-        inputFallbackSymbol={fallbackSymbols?.[0]}
-        outputFallbackSymbol={fallbackSymbols?.[1]}
         inputCurrencyInfo={null}
         outputCurrencyInfo={null}
+        inputSymbol={symbols?.[0]}
+        outputSymbol={symbols?.[1]}
+        inputName={names?.[0]}
+        outputName={names?.[1]}
         chainId={chainId}
         size={size}
       />
     )
   }
   if (images && images.length === 1) {
-    return <TokenLogo url={images[0]} size={size} chainId={chainId} symbol={fallbackSymbols?.[0]} />
+    return <TokenLogo url={images[0]} size={size} chainId={chainId} symbol={symbols?.[0]} name={names?.[0]} />
   }
   return <UnknownStatus width={size} height={size} color={colors.neutral2.val} />
 }

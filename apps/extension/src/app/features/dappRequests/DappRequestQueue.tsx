@@ -1,14 +1,13 @@
 import { memo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
-import { TransactionConfirmationTrackerProvider } from 'src/app/features/dappRequests/context/TransactionConfirmationTracker'
 import { AnimatedPane, DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { DappRequestCards } from 'src/app/features/dappRequests/DappRequestQueueCards'
 import {
   DappRequestQueueProvider,
   useDappRequestQueueContext,
 } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
 import { ConnectionRequestContent } from 'src/app/features/dappRequests/requestContent/Connection/ConnectionRequestContent'
 import { EthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/EthSend'
 import { PersonalSignRequestContent } from 'src/app/features/dappRequests/requestContent/PersonalSign/PersonalSignRequestContent'
@@ -26,7 +25,7 @@ import {
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { AnimatePresence, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ReceiptText, RotatableChevron } from 'ui/src/components/icons'
-import { zIndexes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -45,11 +44,9 @@ export function DappRequestQueue(): JSX.Element {
       padding="$none"
       zIndex={zIndexes.overlay}
     >
-      <TransactionConfirmationTrackerProvider>
-        <DappRequestQueueProvider>
-          <DappRequestQueueContent />
-        </DappRequestQueueProvider>
-      </TransactionConfirmationTrackerProvider>
+      <DappRequestQueueProvider>
+        <DappRequestQueueContent />
+      </DappRequestQueueProvider>
     </Modal>
   )
 }
@@ -115,7 +112,9 @@ function DappRequestQueueContent(): JSX.Element {
       <Flex
         animation="200ms"
         backgroundColor="$surface1"
+        borderRadius="$rounded24"
         gap="$spacing12"
+        mb="$spacing12"
         top={totalRequestCount > 1 ? 12 : 0}
         width="100%"
         py="$spacing12"
@@ -143,7 +142,12 @@ function DappRequestQueueContent(): JSX.Element {
               }}
               onPress={onPressPrevious}
             >
-              <RotatableChevron color={disabledPrevious ? '$neutral3' : '$neutral2'} direction="left" size="$icon.16" />
+              <RotatableChevron
+                color={disabledPrevious ? '$neutral3' : '$neutral2'}
+                direction="left"
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
             </TouchableArea>
             <Text color="$neutral2" variant="buttonLabel4">
               {currentIndex + 1}
@@ -167,7 +171,12 @@ function DappRequestQueueContent(): JSX.Element {
               }}
               onPress={onPressNext}
             >
-              <RotatableChevron color={disabledNext ? '$neutral3' : '$neutral2'} direction="right" size="$icon.16" />
+              <RotatableChevron
+                color={disabledNext ? '$neutral3' : '$neutral2'}
+                direction="right"
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
             </TouchableArea>
           </Flex>
         )}

@@ -1,18 +1,18 @@
-import { GraphQLApi } from '@universe/api'
+import { Chain, Image } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
 
 export const GQL_CHAINS = [
-  GraphQLApi.Chain.Ethereum,
-  GraphQLApi.Chain.EthereumSepolia,
-  GraphQLApi.Chain.Arbitrum,
-  GraphQLApi.Chain.Optimism,
-  GraphQLApi.Chain.Polygon,
-  GraphQLApi.Chain.Base,
-  GraphQLApi.Chain.Bnb,
+  Chain.Ethereum,
+  Chain.EthereumSepolia,
+  Chain.Arbitrum,
+  Chain.Optimism,
+  Chain.Polygon,
+  Chain.Base,
+  Chain.Bnb,
 ]
 
-export const image = createFixture<GraphQLApi.Image>()(() => ({
+export const image = createFixture<Image>()(() => ({
   __typename: 'Image',
   id: faker.datatype.uuid(),
   url: faker.image.imageUrl(),

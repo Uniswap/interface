@@ -1,33 +1,35 @@
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { PropsWithChildren, ReactNode, useMemo } from 'react'
+import { ReactComponent as ExpandoIconClosed } from 'assets/svg/expando-icon-closed.svg'
+import { ReactComponent as ExpandoIconOpened } from 'assets/svg/expando-icon-opened.svg'
+import Column from 'components/deprecated/Column'
+import { AutoRow, RowBetween } from 'components/deprecated/Row'
+import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
+import SwapLineItem, { SwapLineItemType } from 'components/swap/SwapLineItem'
+import { SwapCallbackError, SwapShowAcceptChanges } from 'components/swap/styled'
+import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
+import { SwapResult } from 'hooks/useSwapCallback'
+import styled from 'lib/styled-components'
+import ms from 'ms'
+import { ReactNode, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Button, Flex, Separator, Text } from 'ui/src'
+import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
+import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
+import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { Button, Flex, HeightAnimator, Separator, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { ReactComponent as ExpandoIconClosed } from '~/assets/svg/expando-icon-closed.svg'
-import { ReactComponent as ExpandoIconOpened } from '~/assets/svg/expando-icon-opened.svg'
-import Column from '~/components/deprecated/Column'
-import { AutoRow, RowBetween } from '~/components/deprecated/Row'
-import { LimitDisclaimer } from '~/components/swap/LimitDisclaimer'
-import SwapLineItem, { SwapLineItemType } from '~/components/swap/SwapLineItem'
-import { SwapCallbackError, SwapShowAcceptChanges } from '~/components/swap/styled'
-import { Allowance, AllowanceState } from '~/hooks/usePermit2Allowance'
-import { SwapResult } from '~/hooks/useSwapCallback'
-import { deprecatedStyled } from '~/lib/deprecated-styled'
-import { InterfaceTrade, LimitOrderTrade, RouterPreference } from '~/state/routing/types'
-import { isLimitTrade } from '~/state/routing/utils'
-import { useRouterPreference, useUserSlippageTolerance } from '~/state/user/hooks'
-import { ThemedText } from '~/theme/components'
-import { ExternalLink } from '~/theme/components/Links'
-import { formatSwapButtonClickEventProperties } from '~/utils/loggingFormatters'
+import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
+import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
-const DetailsContainer = deprecatedStyled(Column)`
+const DetailsContainer = styled(Column)`
   padding: 0px 12px 8px;
 `
 
-const DropdownControllerWrapper = deprecatedStyled.div`
+const DropdownControllerWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-right: -6px;
@@ -37,7 +39,7 @@ const DropdownControllerWrapper = deprecatedStyled.div`
   white-space: nowrap;
 `
 
-const DropdownButton = deprecatedStyled.button`
+const DropdownButton = styled.button`
   padding: 0px 16px;
   margin-top: 4px;
   margin-bottom: 4px;
@@ -50,7 +52,7 @@ const DropdownButton = deprecatedStyled.button`
   cursor: pointer;
 `
 
-const HelpLink = deprecatedStyled(ExternalLink)`
+const HelpLink = styled(ExternalLink)`
   width: 100%;
   text-align: center;
   margin-top: 16px;
@@ -67,24 +69,13 @@ interface HelpLink {
   url: string
 }
 
-// TODO: Extract to Spore ExpandoRow component (WEB-7906)
-export function DropdownController({
-  open,
-  onClick,
-  children,
-}: PropsWithChildren & { open: boolean; onClick: () => void }) {
+function DropdownController({ open, onClick }: { open: boolean; onClick: () => void }) {
   return (
     <DropdownButton onClick={onClick}>
       <Separator />
       <DropdownControllerWrapper>
         <ThemedText.BodySmall color="neutral2">
-          {children ? (
-            children
-          ) : open ? (
-            <Trans i18nKey="common.showLess.button" />
-          ) : (
-            <Trans i18nKey="common.showMore.button" />
-          )}
+          {open ? <Trans i18nKey="common.showLess.button" /> : <Trans i18nKey="common.showMore.button" />}
         </ThemedText.BodySmall>
         {open ? <ExpandoIconOpened /> : <ExpandoIconClosed />}
       </DropdownControllerWrapper>
@@ -93,10 +84,6 @@ export function DropdownController({
   )
 }
 
-/**
- * IMPORTANT: This legacy component is only used for web LIMIT orders and assumes `trade` is a `LimitOrderTrade`,
- *            even though there are some `isLimitTrade` calls. This should eventually be cleaned up or deprecated.
- */
 export function SwapDetails({
   trade,
   inputCurrency,
@@ -111,6 +98,7 @@ export function SwapDetails({
   showAcceptChanges,
   onAcceptChanges,
   isLoading,
+  priceImpact,
 }: {
   trade: InterfaceTrade
   inputCurrency?: Currency
@@ -125,12 +113,17 @@ export function SwapDetails({
   showAcceptChanges: boolean
   onAcceptChanges?: () => void
   isLoading: boolean
+  priceImpact?: Percent
 }) {
   const { t } = useTranslation()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
+  const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
+  const [showMore, setShowMore] = useState(false)
 
   const analyticsContext = useTrace()
+
+  const lineItemProps = { trade, allowedSlippage, syncing: false, priceImpact }
 
   const callToAction: CallToAction = useMemo(() => {
     if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
@@ -156,7 +149,12 @@ export function SwapDetails({
             <Separator />
             <LimitLineItems trade={trade} />
           </>
-        ) : null}
+        ) : (
+          <>
+            <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
+            <SwapLineItems showMore={showMore} {...lineItemProps} />
+          </>
+        )}
       </DetailsContainer>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">
@@ -178,8 +176,8 @@ export function SwapDetails({
         <AutoRow>
           <Trace
             logPress
-            element={ElementName.ConfirmSwapButton}
-            eventOnTrigger={SwapEventName.SwapSubmittedButtonClicked}
+            element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
+            eventOnTrigger={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
             properties={{
               ...formatSwapButtonClickEventProperties({
                 trade,
@@ -188,6 +186,7 @@ export function SwapDetails({
                 allowedSlippage,
                 isAutoSlippage,
                 isAutoRouterApi: routerPreference === RouterPreference.API,
+                routes,
                 fiatValueInput: fiatValueInput.data,
                 fiatValueOutput: fiatValueOutput.data,
               }),
@@ -200,7 +199,7 @@ export function SwapDetails({
               loading={isLoading}
               onPress={onConfirm}
               isDisabled={disabledConfirm}
-              id={ElementName.ConfirmSwapButton}
+              id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
               {isLoading ? t('swap.finalizingQuote') : callToAction.buttonText}
             </Button>
@@ -213,6 +212,102 @@ export function SwapDetails({
         </AutoRow>
       )}
     </>
+  )
+}
+
+function SwapLineItems({
+  showMore,
+  trade,
+  allowedSlippage,
+  syncing,
+  priceImpact,
+}: {
+  showMore: boolean
+  trade: InterfaceTrade
+  allowedSlippage: Percent
+  syncing: boolean
+  priceImpact?: Percent
+}) {
+  return (
+    <>
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.EXCHANGE_RATE}
+      />
+      <ExpandableLineItems trade={trade} allowedSlippage={allowedSlippage} open={showMore} priceImpact={priceImpact} />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER}
+      />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER}
+      />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.SWAP_FEE}
+      />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.NETWORK_COST}
+      />
+    </>
+  )
+}
+
+function ExpandableLineItems(props: {
+  trade: InterfaceTrade
+  allowedSlippage: Percent
+  open: boolean
+  priceImpact?: Percent
+}) {
+  const { open, trade, allowedSlippage, priceImpact } = props
+
+  if (!trade) {
+    return null
+  }
+
+  const lineItemProps = { trade, allowedSlippage, syncing: false, priceImpact }
+
+  return (
+    <HeightAnimator open={open} mt={open ? 0 : -8}>
+      <Flex gap="$gap8">
+        <SwapLineItem
+          {...lineItemProps}
+          visible={open}
+          type={SwapLineItemType.PRICE_IMPACT}
+          animationDelay={ms('50ms')}
+        />
+        <SwapLineItem
+          {...lineItemProps}
+          visible={open}
+          type={SwapLineItemType.MAX_SLIPPAGE}
+          animationDelay={ms('100ms')}
+        />
+        <SwapLineItem
+          {...lineItemProps}
+          visible={open}
+          type={SwapLineItemType.MINIMUM_OUTPUT}
+          animationDelay={ms('120ms')}
+        />
+        <SwapLineItem
+          {...lineItemProps}
+          visible={open}
+          type={SwapLineItemType.MAXIMUM_INPUT}
+          animationDelay={ms('120ms')}
+        />
+      </Flex>
+    </HeightAnimator>
   )
 }
 

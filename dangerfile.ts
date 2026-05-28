@@ -3,11 +3,11 @@ import * as fs from 'fs'
 import { dirname } from 'path'
 
 function getIndicesOf(searchStr: string, str: string): number[] {
-  const searchStrLen = searchStr.length
-  if (searchStrLen === 0) {
+  var searchStrLen = searchStr.length
+  if (searchStrLen == 0) {
     return []
   }
-  let startIndex = 0,
+  var startIndex = 0,
     index,
     indices: number[] = []
   while ((index = str.indexOf(searchStr, startIndex)) > -1) {
@@ -74,7 +74,7 @@ function checkGeneralizedHookFiles() {
 }
 
 // Put any files here that we explicitly want to ignore!
-const IGNORED_SPLIT_RULE_FILES: string[] = ['packages/gating/src/sdk/statsig.native.ts']
+const IGNORED_SPLIT_RULE_FILES: string[] = ['packages/uniswap/src/features/gating/sdk/statsig.native.ts']
 
 function checkSplitFiles() {
   const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
@@ -143,7 +143,7 @@ async function processAddChanges() {
 
   // Check for non-UI package lines for tamagui imports
   const allNonUILinesAddedByFile = await getLinesAddedByFile(updatedNonUITsFiles, {
-    exclude: ['env.d.ts', 'tamaguiProvider.tsx', 'setupTests.ts'],
+    exclude: ['env.d.ts', 'tamaguiProvider.tsx'],
   })
   const allNonUILinesAdded = allNonUILinesAddedByFile.flatMap((x) => x)
   allNonUILinesAdded.forEach((change) => {
@@ -225,9 +225,8 @@ async function processAddChanges() {
     })
   })
 
-  linesAddedByFile.forEach((linesAdded, fileIndex) => {
+  linesAddedByFile.forEach((linesAdded) => {
     const concatenatedAddedLines = linesAdded.reduce((acc, curr) => acc + curr.content, '')
-    const filePath = updatedTsFiles[fileIndex]
 
     // In this section we concatenate all the added lines by file in order to account for multiline changes.
 
@@ -253,34 +252,13 @@ async function processAddChanges() {
       )
     }
 
-    // Check for direct string cache key usage with react query (skip mission-control app)
-    if (concatenatedAddedLines.includes(`queryKey: ['`) && !filePath?.startsWith('apps/mission-control/')) {
+    // Check for direct string cache key usage with react query
+    if (concatenatedAddedLines.includes(`queryKey: ['`)) {
       fail(
         `It appears you're using a direct string cache key with react query. Please use the ReactQueryCacheKey enum instead!`,
       )
     }
   })
-
-  // Warn if any changed file contains TouchableArea (entire file, not just diff)
-  const changedFiles = danger.git.modified_files
-    .concat(danger.git.created_files)
-    .filter((file) => file.endsWith('.ts') || file.endsWith('.tsx'))
-  const filesWithTouchableArea: string[] = []
-  for (const file of changedFiles) {
-    try {
-      const fileContent = fs.readFileSync(file, 'utf8')
-      if (fileContent.includes('TouchableArea')) {
-        filesWithTouchableArea.push(file)
-      }
-    } catch {
-      // Ignore files that can't be read (e.g., deleted or binary)
-    }
-  }
-  if (filesWithTouchableArea.length > 0) {
-    warn(
-      `Detected usage of \`TouchableArea\` in the following file(s):\n\n${filesWithTouchableArea.map((f) => `- ${f}`).join('\n')}\n\nIn each of these files, please audit the usage of \`TouchableArea\` and consider migrating to the new implementation! Examples of new variants and API usage can be found in the \`TouchableArea.stories.tsx\` file.`,
-    )
-  }
 }
 
 async function checkCocoaPodsVersion() {
@@ -336,7 +314,7 @@ async function checkPRSize() {
 const envChanged = danger.git.modified_files.includes('.env.defaults')
 if (envChanged) {
   warn(
-    'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `bun upload-env-local` to store it in 1Password.',
+    'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `yarn upload-env-local` to store it in 1Password.',
   )
 }
 
@@ -381,7 +359,7 @@ const updatedGraphQLfile = danger.git.modified_files.find((file) => file.endsWit
 
 if (updatedGraphQLfile) {
   warn(
-    'You have updated the GraphQL schema. Please ensure that the Swift GraphQL Schema generation is valid by running `bun mobile ios` and rebuilding for iOS. ' +
+    'You have updated the GraphQL schema. Please ensure that the Swift GraphQL Schema generation is valid by running `yarn mobile ios` and rebuilding for iOS. ' +
       'You may need to add or remove generated files to the project.pbxproj. For more information see `apps/mobile/ios/WidgetsCore/MobileSchema/README.md`',
   )
 }

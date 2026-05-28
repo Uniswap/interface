@@ -1,7 +1,6 @@
-import { GraphQLApi } from '@universe/api'
 import { PersistState } from 'redux-persist'
-import { createPersistState, createSafeMigration } from 'uniswap/src/state/createSafeMigration'
-import { PreV55SearchResult, PreV55SearchResultType, TokenSearchResult } from 'uniswap/src/state/oldTypes'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SearchResult, SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 
 export type PersistAppStateV15 = {
   _persist: PersistState
@@ -10,18 +9,18 @@ export type PersistAppStateV15 = {
 const recentSearchAtomName = 'recentlySearchedAssetsV3'
 
 type TokenSearchResultWeb = Omit<TokenSearchResult, 'type'> & {
-  type: PreV55SearchResultType.Token | PreV55SearchResultType.NFTCollection
+  type: SearchResultType.Token | SearchResultType.NFTCollection
   address: string
-  chain: GraphQLApi.Chain
+  chain: Chain
   isNft?: boolean
   isToken?: boolean
   isNative?: boolean
 }
 
-function webResultToUniswapResult(webItem: TokenSearchResultWeb): PreV55SearchResult | null {
-  if (webItem.type === PreV55SearchResultType.Token) {
+function webResultToUniswapResult(webItem: TokenSearchResultWeb): SearchResult | null {
+  if (webItem.type === SearchResultType.Token) {
     return {
-      type: PreV55SearchResultType.Token,
+      type: SearchResultType.Token,
       chainId: webItem.chainId,
       symbol: webItem.symbol,
       address: webItem.address,
@@ -29,10 +28,9 @@ function webResultToUniswapResult(webItem: TokenSearchResultWeb): PreV55SearchRe
       logoUrl: webItem.logoUrl,
       safetyInfo: webItem.safetyInfo,
     }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  } else if (webItem.type === PreV55SearchResultType.NFTCollection) {
+  } else if (webItem.type === SearchResultType.NFTCollection) {
     return {
-      type: PreV55SearchResultType.NFTCollection,
+      type: SearchResultType.NFTCollection,
       chainId: webItem.chainId,
       address: webItem.address,
       name: webItem.name!,
@@ -47,35 +45,26 @@ function webResultToUniswapResult(webItem: TokenSearchResultWeb): PreV55SearchRe
 /**
  * Migrate existing search history atom to shared redux state
  */
-export const migration15 = createSafeMigration({
-  filename: '15.ts',
-  name: 'migration15',
-  migrate: (state: PersistAppStateV15 | undefined) => {
-    if (!state) {
-      return undefined
-    }
+export const migration15 = (state: PersistAppStateV15 | undefined) => {
+  if (!state) {
+    return undefined
+  }
 
-    const newState: any = { ...state }
+  const newState: any = { ...state }
 
-    const recentlySearchedAssetsAtomValue = localStorage.getItem(recentSearchAtomName)
-    const webSearchHistory = JSON.parse(recentlySearchedAssetsAtomValue ?? '[]') as TokenSearchResultWeb[]
+  const recentlySearchedAssetsAtomValue = localStorage.getItem(recentSearchAtomName)
+  const webSearchHistory = JSON.parse(recentlySearchedAssetsAtomValue ?? '[]') as TokenSearchResultWeb[]
 
-    // map old search items to new search items
-    const translatedResults: PreV55SearchResult[] = webSearchHistory
-      .map(webResultToUniswapResult)
-      .filter((r): r is PreV55SearchResult => r !== null)
+  // map old search items to new search items
+  const translatedResults: SearchResult[] = webSearchHistory
+    .map(webResultToUniswapResult)
+    .filter((r): r is SearchResult => r !== null)
 
-    // set new state as this modified search history
-    newState.searchHistory = { results: translatedResults }
+  // set new state as this modified search history
+  newState.searchHistory = { results: translatedResults }
 
-    // Delete the atom value
-    localStorage.removeItem(recentSearchAtomName)
+  // Delete the atom value
+  localStorage.removeItem(recentSearchAtomName)
 
-    return { ...newState, _persist: { ...state._persist, version: 15 } }
-  },
-  onError: (state: PersistAppStateV15 | undefined) => ({
-    ...state,
-    searchHistory: { results: [] },
-    _persist: createPersistState(state, 15),
-  }),
-})
+  return { ...newState, _persist: { ...state._persist, version: 15 } }
+}

@@ -1,9 +1,16 @@
-import { GraphQLApi } from '@universe/api'
+/* eslint-disable import/no-unused-modules */
+import { useRingTransactionsQuery } from 'appGraphql/data/ring/useRingTransactions'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useCallback, useMemo, useRef } from 'react'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import i18n from 'uniswap/src/i18n'
-import { useIsWindowVisible } from 'utilities/src/react/useIsWindowVisible'
+import { PoolTransaction } from 'uniswap/src/data/graphql/ringswap-data-api/__generated__/types-and-hooks'
+import {
+  Chain,
+  PoolTransactionType,
+  PoolTxFragment,
+  useV2TransactionsQuery,
+  useV3TransactionsQuery,
+  useV4TransactionsQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export enum TransactionType {
   SWAP = 'Swap',
@@ -11,60 +18,52 @@ export enum TransactionType {
   REMOVE = 'Remove',
 }
 
-export const getTransactionTypeTranslation = (type: TransactionType): string => {
-  switch (type) {
-    case TransactionType.SWAP:
-      return i18n.t('common.swap')
-    case TransactionType.ADD:
-      return i18n.t('common.add.label')
-    case TransactionType.REMOVE:
-      return i18n.t('common.remove.label')
-    default:
-      return ''
-  }
+export const BETypeToTransactionType: { [key: string]: TransactionType } = {
+  [PoolTransactionType.Swap]: TransactionType.SWAP,
+  [PoolTransactionType.Remove]: TransactionType.REMOVE,
+  [PoolTransactionType.Add]: TransactionType.ADD,
 }
 
-export const BETypeToTransactionType: { [key: string]: TransactionType } = {
-  [GraphQLApi.PoolTransactionType.Swap]: TransactionType.SWAP,
-  [GraphQLApi.PoolTransactionType.Remove]: TransactionType.REMOVE,
-  [GraphQLApi.PoolTransactionType.Add]: TransactionType.ADD,
+export const BETypeToPoolTransactionType: { [key: string]: PoolTransactionType } = {
+  [TransactionType.SWAP]: PoolTransactionType.Swap,
+  [TransactionType.REMOVE]: PoolTransactionType.Remove,
+  [TransactionType.ADD]: PoolTransactionType.Add,
 }
 
 const ALL_TX_DEFAULT_QUERY_SIZE = 20
 
 export function useAllTransactions(
-  chain: GraphQLApi.Chain,
+  chain: Chain,
   filter: TransactionType[] = [TransactionType.SWAP, TransactionType.ADD, TransactionType.REMOVE],
 ) {
   const isWindowVisible = useIsWindowVisible()
-  const skipTransactionsQueries = !isWindowVisible || fromGraphQLChain(chain) === UniverseChainId.Solana
 
   const {
     data: dataV4,
     loading: loadingV4,
     error: errorV4,
     fetchMore: fetchMoreV4,
-  } = GraphQLApi.useV4TransactionsQuery({
+  } = useV4TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: skipTransactionsQueries,
+    skip: !isWindowVisible,
   })
   const {
     data: dataV3,
     loading: loadingV3,
     error: errorV3,
     fetchMore: fetchMoreV3,
-  } = GraphQLApi.useV3TransactionsQuery({
+  } = useV3TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: skipTransactionsQueries,
+    skip: !isWindowVisible,
   })
   const {
     data: dataV2,
     loading: loadingV2,
     error: errorV2,
     fetchMore: fetchMoreV2,
-  } = GraphQLApi.useV2TransactionsQuery({
+  } = useV2TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: skipTransactionsQueries,
+    skip: !isWindowVisible,
   })
 
   const loadingMoreV4 = useRef(false)
@@ -86,6 +85,10 @@ export function useAllTransactions(
           cursor: dataV4?.v4Transactions?.[dataV4.v4Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            loadingMoreV4.current = false
+            return prev
+          }
           if (!loadingMoreV3.current && !loadingMoreV2.current) {
             onComplete?.()
           }
@@ -102,6 +105,10 @@ export function useAllTransactions(
           cursor: dataV3?.v3Transactions?.[dataV3.v3Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            loadingMoreV3.current = false
+            return prev
+          }
           if (!loadingMoreV2.current && !loadingMoreV4.current) {
             onComplete?.()
           }
@@ -118,6 +125,10 @@ export function useAllTransactions(
           cursor: dataV2?.v2Transactions?.[dataV2.v2Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            loadingMoreV2.current = false
+            return prev
+          }
           if (!loadingMoreV3.current && !loadingMoreV4.current) {
             onComplete?.()
           }
@@ -133,16 +144,16 @@ export function useAllTransactions(
   )
 
   const filterTransaction = useCallback(
-    (tx: GraphQLApi.PoolTxFragment | undefined): tx is GraphQLApi.PoolTxFragment => {
+    (tx: PoolTxFragment | undefined): tx is PoolTxFragment => {
       return !!tx?.type && filter.includes(BETypeToTransactionType[tx.type])
     },
     [filter],
   )
 
-  const transactions: GraphQLApi.PoolTxFragment[] = useMemo(() => {
+  const transactions: PoolTxFragment[] = useMemo(() => {
     return [...(dataV4?.v4Transactions ?? []), ...(dataV3?.v3Transactions ?? []), ...(dataV2?.v2Transactions ?? [])]
       .filter(filterTransaction)
-      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+      .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))
       .slice(0, querySizeRef.current)
   }, [dataV2?.v2Transactions, dataV3?.v3Transactions, dataV4?.v4Transactions, filterTransaction])
 
@@ -153,6 +164,80 @@ export function useAllTransactions(
     errorV2,
     errorV3,
     errorV4,
+    loadMore,
+  }
+}
+
+export function useAllRingTransactions(
+  chain: Chain,
+  filter: PoolTransactionType[] = [PoolTransactionType.Swap, PoolTransactionType.Add, PoolTransactionType.Remove],
+) {
+  const isWindowVisible = useIsWindowVisible()
+
+  const typeFilter = filter.map((t) => ({ type: t }))
+
+  const { data, loading, error, fetchMore } = useRingTransactionsQuery({
+    chain,
+    type: typeFilter,
+    limit: ALL_TX_DEFAULT_QUERY_SIZE,
+    skip: !isWindowVisible,
+  })
+
+  const loadingMore = useRef(false)
+  const pageInfo = useMemo(() => data?.poolTransactions?.pageInfo, [data?.poolTransactions])
+  const querySizeRef = useRef(ALL_TX_DEFAULT_QUERY_SIZE)
+  const loadMore = useCallback(
+    ({ onComplete }: { onComplete?: () => void }) => {
+      if (loadingMore.current) {
+        return
+      }
+      loadingMore.current = true
+      const after = pageInfo?.endCursor
+      querySizeRef.current += ALL_TX_DEFAULT_QUERY_SIZE
+
+      fetchMore({
+        variables: {
+          ...(after ? { after } : {}),
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            loadingMore.current = false
+            return prev
+          }
+          onComplete?.()
+          const mergedData = {
+            poolTransactions: {
+              ...fetchMoreResult.poolTransactions,
+              items: [...prev.poolTransactions.items, ...fetchMoreResult.poolTransactions.items],
+            },
+          }
+          loadingMore.current = false
+          return mergedData
+        },
+      })
+    },
+    [pageInfo?.endCursor, fetchMore],
+  )
+
+  const filterTransaction = useCallback(
+    (tx: PoolTransaction | undefined): tx is PoolTransaction => {
+      return !!tx?.type && filter.includes(tx.type as PoolTransactionType)
+    },
+    [filter],
+  )
+
+  const transactions: PoolTransaction[] = useMemo(() => {
+    return [...(data?.poolTransactions?.items ?? [])]
+      .filter(filterTransaction)
+      .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))
+      .slice(0, querySizeRef.current)
+  }, [data?.poolTransactions, filterTransaction])
+
+  return {
+    transactions,
+    // useIsWindowVisible briefly initializes as false, which skips the GQL transaction query, so the "no data found" state initially flashes
+    loading: loading || !isWindowVisible,
+    error,
     loadMore,
   }
 }

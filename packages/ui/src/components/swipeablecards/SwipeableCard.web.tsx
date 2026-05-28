@@ -6,13 +6,12 @@ export function SwipeableCard({
   children,
   stackIndex,
   cardHeight,
-  activeCardHeight,
   onPress,
   onLayout,
 }: SwipeableCardProps): JSX.Element {
   return (
-    <TouchableArea activeOpacity={1} onPress={onPress}>
-      <BaseCard stackIndex={stackIndex} cardHeight={cardHeight} activeCardHeight={activeCardHeight} onLayout={onLayout}>
+    <TouchableArea onPress={onPress}>
+      <BaseCard stackIndex={stackIndex} cardHeight={cardHeight} onLayout={onLayout}>
         {children}
       </BaseCard>
     </TouchableArea>

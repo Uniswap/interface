@@ -1,19 +1,49 @@
+/* eslint-disable import/no-unused-modules */
 import { DeepPartial } from '@apollo/client/utilities'
-import { DataTag, DefaultError, QueryKey, queryOptions, UndefinedInitialDataOptions } from '@tanstack/react-query'
-import { Currency } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { BigNumber } from '@ethersproject/bignumber'
+import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import ms from 'ms'
+import { ExploreTab } from 'pages/Explore/constants'
+import { RingPoolStat, RingTokenStat, TokenStat } from 'state/explore/types'
 import { ColorTokens } from 'ui/src'
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isUniverseChainId, toGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
+import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
+import {
+  V2PairDayData,
+  V2PairHourData,
+  V3PoolDayData,
+  V3PoolHourData,
+  V4PoolDayData,
+  V4PoolHourData,
+} from 'uniswap/src/data/graphql/ringswap-data-api/__generated__/types-and-hooks'
+import {
+  Chain,
+  ContractInput,
+  Token as GqlToken,
+  HistoryDuration,
+  PriceSource,
+  TokenStandard,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GqlChainId, UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  fromGraphQLChain,
+  isBackendSupportedChain,
+  toGraphQLChain,
+  toSupportedChainId,
+} from 'uniswap/src/features/chains/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { NATIVE_CHAIN_ID } from '~/constants/tokens'
-import { ExploreTab } from '~/pages/Explore/constants'
-import { TokenStat } from '~/state/explore/types'
-import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from '~/utils/chainParams'
-import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { ONE_DAY_MS } from 'utilities/src/time/time'
+import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from 'utils/chainParams'
+import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+
+export enum PollingInterval {
+  Slow = ms(`5m`),
+  Normal = ms(`1m`),
+  Fast = AVERAGE_L1_BLOCK_TIME_MS,
+  LightningMcQueen = ms(`3s`), // approx block interval for polygon
+}
 
 export enum TimePeriod {
   HOUR = 'H',
@@ -21,36 +51,72 @@ export enum TimePeriod {
   WEEK = 'W',
   MONTH = 'M',
   YEAR = 'Y',
-  MAX = 'MAX',
+}
+
+export enum RingTimePeriod {
+  DAY = 'D',
+  WEEK = 'W',
+  MONTH = 'M',
+  // YEAR = 'Y',
+}
+
+export enum RingChartTimePeriod {
+  DAY = 'D',
+  WEEK = 'W',
+  MONTH = 'M',
+  YEAR = 'Y',
 }
 
 // eslint-disable-next-line consistent-return
-export function toHistoryDuration(timePeriod: TimePeriod): GraphQLApi.HistoryDuration {
+export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:
-      return GraphQLApi.HistoryDuration.Hour
+      return HistoryDuration.Hour
     case TimePeriod.DAY:
-      return GraphQLApi.HistoryDuration.Day
+      return HistoryDuration.Day
     case TimePeriod.WEEK:
-      return GraphQLApi.HistoryDuration.Week
+      return HistoryDuration.Week
     case TimePeriod.MONTH:
-      return GraphQLApi.HistoryDuration.Month
+      return HistoryDuration.Month
     case TimePeriod.YEAR:
-      return GraphQLApi.HistoryDuration.Year
-    case TimePeriod.MAX:
-      return GraphQLApi.HistoryDuration.Max
+      return HistoryDuration.Year
+  }
+}
+
+/**   FIVE_MINUTE is only supported for TokenMarket.pricePercentChange */
+export enum RingHistoryDuration {
+  Day = 'DAY',
+  FiveMinute = 'FIVE_MINUTE',
+  Hour = 'HOUR',
+  Max = 'MAX',
+  Month = 'MONTH',
+  Week = 'WEEK',
+  Year = 'YEAR',
+}
+
+// eslint-disable-next-line consistent-return
+export function toRingHistoryDuration(timePeriod: RingChartTimePeriod): RingHistoryDuration {
+  switch (timePeriod) {
+    case RingChartTimePeriod.DAY:
+      return RingHistoryDuration.Day
+    case RingChartTimePeriod.WEEK:
+      return RingHistoryDuration.Week
+    case RingChartTimePeriod.MONTH:
+      return RingHistoryDuration.Month
+    case RingChartTimePeriod.YEAR:
+      return RingHistoryDuration.Year
   }
 }
 
 export type PricePoint = { timestamp: number; value: number }
 
-export function toContractInput(currency: Currency, fallback: UniverseChainId): GraphQLApi.ContractInput {
+export function toContractInput(currency: Currency, fallback: UniverseChainId): ContractInput {
   const supportedChainId = toSupportedChainId(currency.chainId)
   const chain = toGraphQLChain(supportedChainId ?? fallback)
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: DeepPartial<GraphQLApi.Token | TokenStat>): Currency | undefined {
+export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currency | undefined {
   if (!token.chain) {
     return undefined
   }
@@ -59,19 +125,43 @@ export function gqlToCurrency(token: DeepPartial<GraphQLApi.Token | TokenStat>):
   if (!chainId) {
     return undefined
   }
-  if (token.standard === GraphQLApi.TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
+  if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
     return nativeOnChain(chainId)
   } else {
-    return buildCurrency({
-      ...token,
-      decimals: token.decimals ?? 18,
-      symbol: token.symbol ?? undefined,
-      name: token.name ?? token.project?.name ?? undefined,
+    return new Token(
       chainId,
-      bypassChecksum: false,
-      buyFeeBps: token.feeData?.buyFeeBps,
-      sellFeeBps: token.feeData?.sellFeeBps,
-    })
+      token.address,
+      token.decimals ?? 18,
+      token.symbol ?? undefined,
+      token.name ?? token.project?.name ?? undefined,
+      undefined,
+      token.feeData?.buyFeeBps ? BigNumber.from(token.feeData.buyFeeBps) : undefined,
+      token.feeData?.sellFeeBps ? BigNumber.from(token.feeData.sellFeeBps) : undefined,
+    )
+  }
+}
+
+export function gqlToRingCurrency(token: DeepPartial<RingTokenStat>): Currency | undefined {
+  if (!token?.chain) {
+    return undefined
+  }
+  const chainId = fromGraphQLChain(token.chain)
+  if (!chainId) {
+    return undefined
+  }
+  if (token.standard === TokenStandard.Native.toString() || token.address === NATIVE_CHAIN_ID || !token.address) {
+    return nativeOnChain(chainId)
+  } else {
+    return new Token(
+      chainId,
+      token.originToken?.address ?? '',
+      token.originToken?.decimals ?? 18,
+      token.originToken?.symbol ?? undefined,
+      token.originToken?.name ?? undefined,
+      undefined,
+      token.feeData?.buyFeeBps ? BigNumber.from(token.feeData.buyFeeBps) : undefined,
+      token.feeData?.sellFeeBps ? BigNumber.from(token.feeData.sellFeeBps) : undefined,
+    )
   }
 }
 
@@ -85,14 +175,14 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
     return nativeOnChain(supportedChainId)
   } else {
     // The Meld code may not match the currency's symbol (e.g. codes like USDC_BASE), so these should not be used for display.
-    return buildCurrency({
-      chainId: supportedChainId,
-      address: forCurrency.address,
-      decimals: 18,
-      symbol: forCurrency.cryptoCurrencyCode,
-      name: forCurrency.displayName,
-    })
+    return new Token(supportedChainId, forCurrency.address, 18, forCurrency.cryptoCurrencyCode, forCurrency.displayName)
   }
+}
+
+export function supportedChainIdFromGQLChain(chain: GqlChainId): UniverseChainId
+export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined
+export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined {
+  return isBackendSupportedChain(chain) ? fromGraphQLChain(chain) ?? undefined : undefined
 }
 
 export function getTokenExploreURL({ tab, chainUrlParam }: { tab: ExploreTab; chainUrlParam?: string }) {
@@ -107,12 +197,12 @@ export function getTokenDetailsURL({
   outputAddress,
 }: {
   address?: string | null
-  chain?: GraphQLApi.Chain
+  chain?: Chain
   chainUrlParam?: string
   inputAddress?: string | null
   outputAddress?: string | null
 }) {
-  const chainName = chainUrlParam || chain?.toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
+  const chainName = chainUrlParam || chain?.toLowerCase() || Chain.Ethereum.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
   const outputAddressSuffix = outputAddress ? `&outputCurrency=${outputAddress}` : ''
@@ -131,12 +221,9 @@ export function unwrapToken<
     return token
   }
 
-  if (
-    !areAddressesEqual({
-      addressInput1: { address: token.address, chainId },
-      addressInput2: { address: WRAPPED_NATIVE_CURRENCY[chainId]?.address, chainId },
-    })
-  ) {
+  const address = token.address.toLowerCase()
+  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  if (address !== nativeAddress) {
     return token
   }
 
@@ -154,37 +241,92 @@ export function unwrapToken<
   }
 }
 
+export function unwrapFewToken<
+  T extends
+    | {
+        address?: string | null
+        chainId?: number | null
+        isNative?: boolean | null
+        logoUrl?: string | null
+        originToken?: {
+          name?: string | null
+          address?: string | null
+          symbol?: string | null
+          decimals?: number | null
+        }
+      }
+    | undefined,
+>(chainId: number, token: T, logo?: string): T {
+  if (!token?.address || !token?.originToken?.address) {
+    return token
+  }
+
+  const address = token.originToken.address.toLowerCase()
+  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  if (address !== nativeAddress) {
+    return {
+      ...token,
+      address: token.originToken.address,
+      name: token.originToken.name,
+      symbol: token.originToken.symbol,
+      decimals: token.originToken.decimals,
+      chainId,
+      logoUrl: logo,
+      isNative: false,
+      project: {
+        ...token.originToken,
+        logoUrl: logo,
+      },
+    }
+  }
+
+  const nativeToken = nativeOnChain(chainId)
+
+  return {
+    ...token,
+    ...nativeToken,
+    chainId,
+    isNative: true,
+    project: {
+      ...token.originToken,
+      symbol: nativeToken.symbol,
+      name: nativeToken.name,
+    },
+    address: NATIVE_CHAIN_ID,
+    extensions: undefined, // prevents marking cross-chain wrapped tokens as native
+  }
+}
+
 type ProtocolMeta = { name: string; color: ColorTokens; gradient: { start: string; end: string } }
-const PROTOCOL_META: { [source in GraphQLApi.PriceSource]: ProtocolMeta } = {
-  [GraphQLApi.PriceSource.SubgraphV2]: {
+const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
+  [PriceSource.SubgraphV2]: {
     name: 'v2',
     color: '$DEP_blue400',
     gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
-  [GraphQLApi.PriceSource.SubgraphV3]: {
+  [PriceSource.SubgraphV3]: {
     name: 'v3',
     color: '$accent1',
     gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
   },
-  [GraphQLApi.PriceSource.SubgraphV4]: {
+  [PriceSource.SubgraphV4]: {
     name: 'v4',
     color: '$chain_137',
     gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
-  [GraphQLApi.PriceSource.External]: {
-    // TODO (LP-350): Remove this since this protocol chart does not exist anymore
-    name: 'external',
-    color: '$neutral1',
-    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
+  [PriceSource.SubgraphFewv2]: {
+    name: 'fewv2',
+    color: '$chain_137',
+    gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
-  /* [GraphQLApi.PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
+  /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
 }
 
-export function getProtocolColor(priceSource: GraphQLApi.PriceSource): ColorTokens {
+export function getProtocolColor(priceSource: PriceSource): ColorTokens {
   return PROTOCOL_META[priceSource].color
 }
 
-export function getProtocolName(priceSource: GraphQLApi.PriceSource): string {
+export function getProtocolName(priceSource: PriceSource): string {
   return PROTOCOL_META[priceSource].name
 }
 
@@ -215,4 +357,66 @@ export function apolloQueryOptions<
     ...options,
     staleTime: 0,
   })
+}
+
+export const getTokenVolumeByTime = (token: RingTokenStat, timePeriod: RingTimePeriod, currentTime: number): number => {
+  if (!token) {
+    return 0
+  }
+  const volumeData = timePeriod == RingTimePeriod.DAY ? token?.hourData?.items || [] : token?.dayData?.items || []
+
+  switch (timePeriod) {
+    case RingTimePeriod.DAY:
+      return volumeData.reduce((acc, item) => {
+        return Number(item.date) > currentTime - ONE_DAY_MS / 1000 ? acc + Number(item.volumeUSD) : acc
+      }, 0)
+    case RingTimePeriod.WEEK:
+      return volumeData.reduce((acc, item) => {
+        return Number(item.date) > currentTime - 7 * (ONE_DAY_MS / 1000) ? acc + Number(item.volumeUSD) : acc
+      }, 0)
+    case RingTimePeriod.MONTH:
+      return volumeData.reduce((acc, item) => {
+        return Number(item.date) > currentTime - 30 * (ONE_DAY_MS / 1000) ? acc + Number(item.volumeUSD) : acc
+      }, 0)
+    // case RingTimePeriod.YEAR:
+    //   return volumeData.reduce((acc, item) => {
+    //     return Number(item.date) > currentTime - 365 * (ONE_DAY_MS / 1000) ? acc + Number(item.volumeUSD) : acc
+    //   }, 0)
+    default:
+      return 0
+  }
+}
+
+export const getPoolVolume24h = (pool: RingPoolStat, currentTime: number): number => {
+  if (!pool) {
+    return 0
+  }
+  const volumeData: (V2PairHourData | V3PoolHourData | V4PoolHourData)[] = pool?.hourData?.items || []
+  const SECONDS_IN_DAY = 86400
+  const hourDataWhere = Number(currentTime) - SECONDS_IN_DAY
+  const totalVolume = volumeData.reduce((acc, item) => {
+    return Number(item.date) > hourDataWhere ? acc + Number(item.volumeUSD) : acc
+  }, 0)
+  const totalUntrackedVolume = volumeData.reduce((acc, item) => {
+    return Number(item.date) > hourDataWhere ? acc + Number(item.untrackedVolumeUSD) : acc
+  }, 0)
+
+  return totalVolume == 0 ? totalUntrackedVolume : totalVolume
+}
+
+export const getPoolVolume30Day = (pool: RingPoolStat, currentTime: number): number => {
+  if (!pool) {
+    return 0
+  }
+  const volumeData: (V2PairDayData | V3PoolDayData | V4PoolDayData)[] = pool?.dayData?.items || []
+  const SECONDS_IN_30_DAYS = 86400 * 30
+  const hourDataWhere = Number(currentTime) - SECONDS_IN_30_DAYS
+  const totalVolume = volumeData.reduce((acc, item) => {
+    return Number(item.date) > hourDataWhere ? acc + Number(item.volumeUSD) : acc
+  }, 0)
+  const totalUntrackedVolume = volumeData.reduce((acc, item) => {
+    return Number(item.date) > hourDataWhere ? acc + Number(item.untrackedVolumeUSD) : acc
+  }, 0)
+
+  return totalVolume == 0 ? totalUntrackedVolume : totalVolume
 }

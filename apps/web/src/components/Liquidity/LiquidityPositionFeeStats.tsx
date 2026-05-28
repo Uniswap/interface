@@ -1,19 +1,19 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
+import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentiveRewardsBadge'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks'
+import { PriceOrdering } from 'components/Liquidity/types'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, styled, Text, useMedia } from 'ui/src'
-import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Flex, Text, styled, useMedia } from 'ui/src'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { CHART_WIDTH } from '~/components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
-import { useGetRangeDisplay } from '~/components/Liquidity/hooks/useGetRangeDisplay'
-import { TextLoader } from '~/components/Liquidity/Loader'
-import LPIncentiveFeeStatTooltip from '~/components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
-import { LPIncentiveRewardsBadge } from '~/components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
-import { PriceOrdering } from '~/components/Liquidity/types'
-import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
-import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 interface LiquidityPositionFeeStatsProps extends LiquidityPositionMinMaxRangeProps {
   version: ProtocolVersion
@@ -105,7 +105,9 @@ export function LiquidityPositionFeeStats({
   hasRewards,
 }: LiquidityPositionFeeStatsProps) {
   const { t } = useTranslation()
-  const earningsOrFees = hasRewards ? formattedLpIncentiveEarnings : (formattedUsdFees ?? '-')
+  const earningsOrFees = hasRewards ? formattedLpIncentiveEarnings : formattedUsdFees ?? '-'
+  // Temporarily hide APR for all protocols – display "-" instead.
+  const aprForDisplay = undefined
 
   return (
     <Flex
@@ -131,7 +133,7 @@ export function LiquidityPositionFeeStats({
             <SecondaryText>{t('pool.position')}</SecondaryText>
           </FeeStat>
           <FeeStat>
-            {version === ProtocolVersion.V2 ? (
+            {version === ProtocolVersion.V2 || version === ProtocolVersion.Fewv2 ? (
               <Flex row gap="$gap4" alignItems="center">
                 <Text variant="body2" color="$neutral2">
                   {t('common.unavailable')}
@@ -159,7 +161,7 @@ export function LiquidityPositionFeeStats({
             totalApr={totalApr}
           />
         ) : (
-          <APRFeeStat apr={apr} />
+          <APRFeeStat apr={aprForDisplay} />
         )}
       </Flex>
       <Flex $md={{ display: 'none' }}>
@@ -179,8 +181,8 @@ export function LiquidityPositionFeeStats({
 interface LiquidityPositionMinMaxRangeProps {
   priceOrdering: PriceOrdering
   tickSpacing?: number
-  tickLower?: number
-  tickUpper?: number
+  tickLower?: string
+  tickUpper?: string
   pricesInverted: boolean
   setPricesInverted: Dispatch<SetStateAction<boolean>>
 }
@@ -251,7 +253,7 @@ export function MinMaxRange({
               display="none"
               $group-item-hover={{ display: 'flex' }}
             >
-              <ArrowDownArrowUp color="$neutral2" size="$icon.16" rotate="90deg" />
+              <ArrowUpDown color="$neutral2" size="$icon.16" rotate="90deg" />
             </Flex>
           </Flex>
         </Flex>

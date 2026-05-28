@@ -5,21 +5,20 @@ import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { SeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/SeedPhraseInput'
 import {
   NativeSeedPhraseInputProps,
   NativeSeedPhraseInputRef,
   StringKey,
 } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
+import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useFunctionAfterNavigationTransitionEndWithDelay } from 'src/utils/hooks'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, MobileDeviceHeight, Text, TouchableArea, useIsShortMobileDevice } from 'ui/src'
 import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -70,14 +69,16 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
   const isShowingAsCloudBackupFallback = params.showAsCloudBackupFallback ?? false
   const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
-  const handleOnInputValidated: NativeSeedPhraseInputProps['onInputValidated'] = useCallback((event) => {
-    setIsSubmitEnabled(event.nativeEvent.canSubmit)
-  }, [])
+  const handleOnInputValidated: NativeSeedPhraseInputProps['onInputValidated'] = useCallback(
+    (event) => {
+      setIsSubmitEnabled(event.nativeEvent.canSubmit)
+    },
+    [setIsSubmitEnabled],
+  )
 
   const handleSubmitError: NativeSeedPhraseInputProps['onSubmitError'] = useCallback(() => {
-    sendAnalyticsEvent(MobileEventName.SeedPhraseInputSubmitError)
     setIsSubmitEnabled(true)
-  }, [])
+  }, [setIsSubmitEnabled])
 
   const handleOnMnemonicStored: NativeSeedPhraseInputProps['onMnemonicStored'] = useCallback(
     async (event) => {
@@ -94,11 +95,11 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
       })
       setIsSubmitEnabled(true)
     },
-    [dispatch, generateImportedAccounts, isRestoringMnemonic, navigation, params],
+    [dispatch, generateImportedAccounts, setIsSubmitEnabled, isRestoringMnemonic, navigation, params],
   )
 
   const onPressRecoveryHelpButton = useCallback(
-    () => openUri({ uri: uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport }),
+    () => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport),
     [],
   )
 
@@ -162,7 +163,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
           [StringKey.ErrorPhraseLength]: t('account.recoveryPhrase.error.phraseLength'),
           [StringKey.ErrorWrongPhrase]: t('account.recoveryPhrase.error.wrong'),
           [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
-          [StringKey.ErrorWordIsAddress]: t('account.recoveryPhrase.error.wordIsAddress'),
         }}
         targetMnemonicId={targetMnemonicId}
         testID={TestID.ImportAccountInput}

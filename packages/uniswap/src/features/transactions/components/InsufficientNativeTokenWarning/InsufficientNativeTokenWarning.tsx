@@ -1,19 +1,18 @@
 import { Currency } from '@uniswap/sdk-core'
-import { GasFeeResult } from '@universe/api'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
-import type { AddressGroup } from 'uniswap/src/features/accounts/store/types/AccountsState'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BridgeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BridgeTokenButton'
 import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/BuyNativeTokenButton'
@@ -21,7 +20,6 @@ import { InsufficientNativeTokenBaseComponent } from 'uniswap/src/features/trans
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
 
 export function InsufficientNativeTokenWarning({
   warnings,
@@ -40,13 +38,13 @@ export function InsufficientNativeTokenWarning({
 
   const { nativeCurrency, nativeCurrencyInfo } = parsedInsufficientNativeTokenWarning ?? {}
 
-  const addresses = useActiveAddresses()
+  const address = useAccountMeta()?.address
 
   if (!parsedInsufficientNativeTokenWarning || !nativeCurrencyInfo || !nativeCurrency) {
     return null
   }
 
-  if (!addresses.evmAddress && !addresses.svmAddress) {
+  if (!address) {
     logger.error(new Error('Unexpected render of `InsufficientNativeTokenWarning` without an active address'), {
       tags: {
         file: 'InsufficientNativeTokenWarning.tsx',
@@ -58,27 +56,24 @@ export function InsufficientNativeTokenWarning({
 
   return (
     <InsufficientNativeTokenWarningContent
-      addresses={addresses}
+      address={address}
       parsedInsufficientNativeTokenWarning={parsedInsufficientNativeTokenWarning}
       nativeCurrencyInfo={nativeCurrencyInfo}
       nativeCurrency={nativeCurrency}
-      gasFee={gasFee}
     />
   )
 }
 
 function InsufficientNativeTokenWarningContent({
-  addresses,
+  address,
   parsedInsufficientNativeTokenWarning,
   nativeCurrencyInfo,
   nativeCurrency,
-  gasFee,
 }: {
-  addresses: AddressGroup
+  address: Address
   parsedInsufficientNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
   nativeCurrencyInfo: CurrencyInfo
   nativeCurrency: Currency
-  gasFee: GasFeeResult
 }): JSX.Element {
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
@@ -89,7 +84,7 @@ function InsufficientNativeTokenWarningContent({
   const currencyAddress = currencyIdToAddress(nativeCurrencyInfo.currencyId)
 
   const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
-    ...addresses,
+    address,
     currencyAddress,
     currencyChainId: nativeCurrencyInfo.currency.chainId,
   })
@@ -117,14 +112,13 @@ function InsufficientNativeTokenWarningContent({
           title={
             shouldShowNetworkName
               ? t('transaction.warning.insufficientGas.modal.title.withNetwork', {
-                  tokenSymbol: nativeCurrency.symbol,
+                  tokenSymbol: nativeCurrency.symbol ?? '',
                   networkName,
                 })
               : t('transaction.warning.insufficientGas.modal.title.withoutNetwork', {
                   tokenSymbol: nativeCurrency.symbol ?? '',
                 })
           }
-          showCloseButton={isExtensionApp || isWebPlatform}
           onClose={onClose}
         >
           <Text color="$neutral2" textAlign="center" variant="body3">

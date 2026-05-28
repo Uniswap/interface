@@ -1,60 +1,71 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
-import { SettingsItem } from 'src/app/features/settings/components/SettingsItem'
-import { SettingsSection } from 'src/app/features/settings/components/SettingsSection'
-import { SettingsToggleRow } from 'src/app/features/settings/components/SettingsToggleRow'
+import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
-import { ThemeToggleWithLabel } from 'src/app/features/settings/ThemeToggle'
+import ThemeToggle from 'src/app/features/settings/ThemeToggle'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { getIsDefaultProviderFromStorage, setIsDefaultProviderToStorage } from 'src/app/utils/provider'
-import { Button, Flex, ScrollView, Text } from 'ui/src'
+import {
+  Button,
+  ColorTokens,
+  Flex,
+  GeneratedIcon,
+  ScrollView,
+  Switch,
+  Text,
+  TouchableArea,
+  useSporeColors,
+} from 'ui/src'
 import {
   ArrowUpRight,
   Chart,
   Coins,
   FileListLock,
+  Global,
   HelpCenter,
-  Language as LanguageIcon,
+  Key,
+  Language,
   LineChartDots,
   Lock,
   Passkey,
+  RotatableChevron,
   Settings,
   Sliders,
   Wrench,
 } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { Language, WALLET_SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
-import { getLanguageInfo, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
-import {
-  setCurrentFiatCurrency,
-  setCurrentLanguage,
-  setIsTestnetModeEnabled,
-} from 'uniswap/src/features/settings/slice'
+import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ConnectionCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
-import { changeLanguage } from 'uniswap/src/i18n'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
+import noop from 'utilities/src/react/noop'
+import { CardType, IntroCard, IntroCardGraphicType } from 'wallet/src/components/introCards/IntroCard'
+import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'
 import { PortfolioBalanceModal } from 'wallet/src/components/settings/portfolioBalance/PortfolioBalanceModal'
-import { SmartWalletAdvancedSettingsModal } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
-import { resetWalletBehaviorHistory } from 'wallet/src/features/behaviorHistory/slice'
+import { selectHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/selectors'
+import { resetWalletBehaviorHistory, setHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/slice'
+import { SmartWalletAdvancedSettingsModal } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -64,30 +75,21 @@ const manifestVersion = chrome.runtime.getManifest().version
 export function SettingsScreen(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const location = useLocation()
   const { navigateTo, navigateBack } = useExtensionNavigation()
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
-
+  const hasViewedConnectionMigration = useSelector(selectHasViewedConnectionMigration)
   const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
-
   const signerAccount = useSignerAccounts()[0]
   const hasPasskeyBackup = hasBackup(BackupType.Passkey, signerAccount)
 
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
   const [isPortfolioBalanceModalOpen, setIsPortfolioBalanceModalOpen] = useState(false)
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
   const [isAdvancedModalOpen, setIsAdvancedModalOpen] = useState(false)
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
   const [isPasskeyModalOpen, setIsPasskeyModalOpen] = useState(false)
   const [isDefaultProvider, setIsDefaultProvider] = useState(true)
-
-  // Auto-open advanced settings modal if navigating with openAdvancedSettings state
-  useEffect(() => {
-    const state = location.state as { openAdvancedSettings?: boolean } | undefined
-    if (state?.openAdvancedSettings) {
-      setIsAdvancedModalOpen(true)
-    }
-  }, [location.state])
 
   const onPressLockWallet = async (): Promise<void> => {
     navigateBack()
@@ -124,12 +126,7 @@ export function SettingsScreen(): JSX.Element {
   const handleAdvancedModalClose = useCallback(() => setIsAdvancedModalOpen(false), [])
 
   const handleSmartWalletPress = useCallback(() => {
-    navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
-    setIsAdvancedModalOpen(false)
-  }, [navigateTo])
-
-  const handleStoragePress = useCallback(() => {
-    navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.Storage}`)
+    navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
     setIsAdvancedModalOpen(false)
   }, [navigateTo])
 
@@ -148,8 +145,15 @@ export function SettingsScreen(): JSX.Element {
     await setIsDefaultProviderToStorage(!!isChecked)
   }
 
+  const setConnectionMigrationAsViewed = (): void => {
+    dispatch(setHasViewedConnectionMigration(true))
+  }
+
   return (
     <Trace logImpression screen={ExtensionScreens.Settings}>
+      {isLanguageModalOpen ? (
+        <SettingsLanguageModal isOpen={isLanguageModalOpen} onClose={() => setIsLanguageModalOpen(false)} />
+      ) : undefined}
       {isPortfolioBalanceModalOpen ? (
         <PortfolioBalanceModal
           isOpen={isPortfolioBalanceModalOpen}
@@ -171,7 +175,6 @@ export function SettingsScreen(): JSX.Element {
         isOpen={isAdvancedModalOpen}
         onClose={handleAdvancedModalClose}
         onPressSmartWallet={handleSmartWalletPress}
-        onPressStorage={handleStoragePress}
       />
       {hasPasskeyBackup && (
         <PasskeyManagementModal
@@ -189,7 +192,7 @@ export function SettingsScreen(): JSX.Element {
                 <SettingsItem
                   Icon={Settings}
                   title="Developer Settings"
-                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DevMenu}`)}
+                  onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.DevMenu}`)}
                 />
               )}
             </>
@@ -206,7 +209,7 @@ export function SettingsScreen(): JSX.Element {
                 />
               )}
             </>
-            <ThemeToggleWithLabel />
+            <ThemeToggle />
             <SettingsItemWithDropdown
               Icon={Coins}
               items={ORDERED_CURRENCIES.map((currency) => {
@@ -223,27 +226,24 @@ export function SettingsScreen(): JSX.Element {
               }}
             />
             <SettingsItemWithDropdown
-              Icon={LanguageIcon}
-              items={WALLET_SUPPORTED_LANGUAGES.map((language: Language) => {
-                return { value: language, label: getLanguageInfo(t, language).displayName }
-              })}
+              Icon={Language}
+              disableDropdown={true}
+              items={[]}
               selected={currentLanguageInfo.displayName}
               title={t('settings.setting.language.title')}
-              onSelect={async (value) => {
-                const language = value as Language
-                await changeLanguage(getLanguageInfo(t, language).locale)
-                dispatch(setCurrentLanguage(language))
+              onDisabledDropdownPress={() => {
+                setIsLanguageModalOpen(true)
               }}
+              onSelect={noop}
             />
             <SettingsItem
               Icon={Chart}
-              title={t('settings.setting.balancesActivity.title')}
+              title={t('settings.setting.smallBalances.title')}
               onPress={(): void => setIsPortfolioBalanceModalOpen(true)}
             />
             {isSmartWalletEnabled ? (
               <SettingsItem
                 Icon={Sliders}
-                testID={TestID.AdvancedSettingsButton}
                 title={t('settings.setting.advanced.title')}
                 onPress={(): void => setIsAdvancedModalOpen(true)}
               />
@@ -256,17 +256,40 @@ export function SettingsScreen(): JSX.Element {
               />
             )}
           </SettingsSection>
+          {!hasViewedConnectionMigration && (
+            <Flex pt="$padding8">
+              <IntroCard
+                loggingName={ConnectionCardLoggingName.ConnectionBanner}
+                graphic={{ type: IntroCardGraphicType.Icon, Icon: Global }}
+                title={t('settings.setting.wallet.connection.banner.title')}
+                description={t('settings.setting.wallet.connection.banner.description')}
+                cardType={CardType.Dismissible}
+                iconColor="$neutral2"
+                containerProps={{
+                  borderWidth: 0,
+                  backgroundColor: '$surface2',
+                  shadowColor: '$transparent',
+                }}
+                onPress={() => {
+                  setConnectionMigrationAsViewed()
+                }}
+                onClose={(): void => {
+                  setConnectionMigrationAsViewed()
+                }}
+              />
+            </Flex>
+          )}
           <Flex pt="$padding16">
             <SettingsSection title={t('settings.section.privacyAndSecurity')}>
               <SettingsItem
-                Icon={Lock}
-                title={t('settings.setting.deviceAccess.title')}
-                onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
+                Icon={Key}
+                title={t('settings.setting.password.title')}
+                onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
               />
               <SettingsItem
                 Icon={FileListLock}
                 title={t('settings.setting.recoveryPhrase.title')}
-                onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
+                onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
               />
               <>
                 {hasPasskeyBackup && (
@@ -308,5 +331,126 @@ export function SettingsScreen(): JSX.Element {
         </Flex>
       </Flex>
     </Trace>
+  )
+}
+
+function SettingsItem({
+  Icon,
+  title,
+  onPress,
+  iconProps,
+  themeProps,
+  url,
+  count,
+  hideChevron = false,
+  RightIcon,
+}: {
+  Icon: GeneratedIcon
+  title: string
+  hideChevron?: boolean
+  RightIcon?: GeneratedIcon
+  onPress?: () => void
+  iconProps?: { strokeWidth?: number }
+  // TODO: do this with a wrapping Theme, "detrimental" wasn't working
+  themeProps?: { color?: string; hoverColor?: string }
+  url?: string
+  count?: number
+}): JSX.Element {
+  const colors = useSporeColors()
+  const hoverColor = themeProps?.hoverColor ?? colors.surface2.val
+
+  const content = (
+    <TouchableArea
+      alignItems="center"
+      borderRadius="$rounded12"
+      flexDirection="row"
+      flexGrow={1}
+      gap="$spacing12"
+      hoverStyle={{
+        backgroundColor: hoverColor as ColorTokens,
+      }}
+      justifyContent="space-between"
+      px="$spacing12"
+      py="$spacing8"
+      onPress={onPress}
+    >
+      <Flex row justifyContent="space-between" flexGrow={1}>
+        <Flex row gap="$spacing12">
+          <Icon
+            color={themeProps?.color ?? '$neutral2'}
+            size="$icon.24"
+            strokeWidth={iconProps?.strokeWidth ?? undefined}
+          />
+          <Text style={{ color: themeProps?.color ?? colors.neutral1.val }} variant="subheading2">
+            {title}
+          </Text>
+        </Flex>
+        {count !== undefined && (
+          <Text alignSelf="center" color="$neutral2" variant="subheading2">
+            {count}
+          </Text>
+        )}
+      </Flex>
+
+      {RightIcon ? (
+        <RightIcon color="$neutral3" size="$icon.24" strokeWidth={iconProps?.strokeWidth ?? undefined} />
+      ) : (
+        !hideChevron && (
+          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
+        )
+      )}
+    </TouchableArea>
+  )
+
+  if (url) {
+    return (
+      <Link style={{ textDecoration: 'none' }} target="_blank" to={url}>
+        {content}
+      </Link>
+    )
+  }
+
+  return content
+}
+
+function SettingsToggleRow({
+  Icon,
+  title,
+  checked,
+  disabled,
+  onCheckedChange,
+}: {
+  title: string
+  Icon: GeneratedIcon
+  checked: boolean
+  disabled?: boolean
+  onCheckedChange: (checked: boolean) => void
+}): JSX.Element {
+  return (
+    <Flex
+      alignItems="center"
+      flexDirection="row"
+      gap="$spacing16"
+      justifyContent="space-between"
+      px={SCREEN_ITEM_HORIZONTAL_PAD}
+      py="$spacing4"
+    >
+      <Flex row gap="$spacing12">
+        <Icon color="$neutral2" size="$icon.24" />
+        <Text>{title}</Text>
+      </Flex>
+      <Switch checked={checked} variant="branded" disabled={disabled} onCheckedChange={onCheckedChange} />
+    </Flex>
+  )
+}
+
+function SettingsSection({ title, children }: { title: string; children: JSX.Element | JSX.Element[] }): JSX.Element {
+  return (
+    <Flex gap="$spacing4">
+      <Text color="$neutral2" px={SCREEN_ITEM_HORIZONTAL_PAD} variant="subheading2">
+        {title}
+      </Text>
+      {children}
+    </Flex>
   )
 }

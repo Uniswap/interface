@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
-import { FontSizeOptions, useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
+import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 
 const MAX_INPUT_FONT_SIZE = 36
 export const MIN_INPUT_FONT_SIZE = 24
@@ -9,29 +9,19 @@ export const MIN_INPUT_FONT_SIZE = 24
 // changes from 36 then width value must be adjusted
 const MAX_CHAR_PIXEL_WIDTH = 23
 
-export function useCurrencyInputFontSize({
-  value,
-  focus,
-  options,
-}: {
-  value?: string
-  focus?: boolean
-  options?: Partial<FontSizeOptions>
-}): {
+export function useCurrencyInputFontSize(
+  value: string | undefined,
+  focus: boolean | undefined,
+): {
   onLayout: (event: LayoutChangeEvent) => void
   fontSize: number
   lineHeight: number
 } {
-  const maxFontSize = options?.maxFontSize ?? MAX_INPUT_FONT_SIZE
-  const minFontSize = options?.minFontSize ?? MIN_INPUT_FONT_SIZE
-  const defaultCharPixelWidth = (maxFontSize / MAX_INPUT_FONT_SIZE) * MAX_CHAR_PIXEL_WIDTH
-  const charPixelWidth = options?.maxCharWidthAtMaxFontSize ?? defaultCharPixelWidth
-
-  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
-    maxCharWidthAtMaxFontSize: charPixelWidth,
-    maxFontSize,
-    minFontSize,
-  })
+  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
+    MAX_CHAR_PIXEL_WIDTH,
+    MAX_INPUT_FONT_SIZE,
+    MIN_INPUT_FONT_SIZE,
+  )
 
   const lineHeight = fontSize * 1.2
 

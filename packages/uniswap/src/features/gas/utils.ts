@@ -1,43 +1,15 @@
-import type { TransactionRequest } from '@ethersproject/providers'
-import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
-import {
-  type GasEstimate,
-  type GasFeeResult,
-  type GasFeeResultWithoutState,
-  type GasStrategy,
-  type TransactionEip1559FeeParams,
-  type TransactionLegacyFeeParams,
-} from '@universe/api'
+import { Currency, CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import {
   DynamicConfigs,
-  type GasStrategies,
-  type GasStrategyType,
-  type GasStrategyWithConditions,
-  getStatsigClient,
-} from '@universe/gating'
-import JSBI from 'jsbi'
-import {
-  CHAIN_GAS_STRATEGY_OVERRIDES,
-  DEFAULT_GAS_STRATEGY,
-  FAST_GAS_STRATEGY,
-  NORMAL_GAS_STRATEGY,
-  URGENT_GAS_STRATEGY,
-} from 'uniswap/src/features/gas/consts'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
-import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { type Prettify } from 'viem'
-
-export enum GasSpeed {
-  Normal = 'normal',
-  Fast = 'fast',
-  Urgent = 'urgent',
-}
-
-export const GAS_SPEED_STRATEGIES: Record<GasSpeed, GasStrategy> = {
-  [GasSpeed.Normal]: NORMAL_GAS_STRATEGY,
-  [GasSpeed.Fast]: FAST_GAS_STRATEGY,
-  [GasSpeed.Urgent]: URGENT_GAS_STRATEGY,
-} as const
+  GasStrategies,
+  GasStrategyType,
+  GasStrategyWithConditions,
+} from 'uniswap/src/features/gating/configs'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 
 export function applyNativeTokenPercentageBuffer(
   currencyAmount: Maybe<CurrencyAmount<Currency>>,
@@ -70,15 +42,11 @@ export function applyNativeTokenPercentageBuffer(
   })
 }
 
-function getNativeCurrencyTotalSpend({
-  value,
-  gasFee,
-  nativeCurrency,
-}: {
-  value?: CurrencyAmount<Currency>
-  gasFee?: string
-  nativeCurrency?: Currency
-}): Maybe<CurrencyAmount<Currency>> {
+function getNativeCurrencyTotalSpend(
+  value?: CurrencyAmount<NativeCurrency>,
+  gasFee?: string,
+  nativeCurrency?: NativeCurrency,
+): Maybe<CurrencyAmount<NativeCurrency>> {
   if (!gasFee || !nativeCurrency) {
     return value
   }
@@ -93,16 +61,12 @@ function getNativeCurrencyTotalSpend({
 }
 
 export function hasSufficientFundsIncludingGas(params: {
-  transactionAmount?: CurrencyAmount<Currency>
+  transactionAmount?: CurrencyAmount<NativeCurrency>
   gasFee?: string
-  nativeCurrencyBalance?: CurrencyAmount<Currency>
+  nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
 }): boolean {
   const { transactionAmount, gasFee, nativeCurrencyBalance } = params
-  const totalSpend = getNativeCurrencyTotalSpend({
-    value: transactionAmount,
-    gasFee,
-    nativeCurrency: nativeCurrencyBalance?.currency,
-  })
+  const totalSpend = getNativeCurrencyTotalSpend(transactionAmount, gasFee, nativeCurrencyBalance?.currency)
   return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
 }
 
@@ -114,144 +78,5 @@ export function findLocalGasStrategy(
   const gasStrategies = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies).value as GasStrategies
   return gasStrategies.strategies.find(
     (s) => s.conditions.types === type && areEqualGasStrategies(s.strategy, gasEstimate.strategy),
-  )
-}
-
-// Helper function to check if the config value is a valid GasStrategies object
-function isValidGasStrategies(value: unknown): value is GasStrategies {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'strategies' in value &&
-    Array.isArray((value as GasStrategies).strategies)
-  )
-}
-
-function getIsStatsigReady(): boolean {
-  return getStatsigClient().loadingStatus === 'Ready'
-}
-
-export function getActiveGasStrategy({
-  chainId,
-  type,
-  isStatsigReady,
-}: {
-  chainId: number | undefined
-  type: GasStrategyType
-  isStatsigReady?: boolean
-}): GasStrategy {
-  let baseStrategy: GasStrategy = DEFAULT_GAS_STRATEGY
-
-  if (isStatsigReady !== false && getIsStatsigReady()) {
-    const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
-    const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
-    const activeStrategy = gasStrategies?.strategies.find(
-      (s) => s.conditions.chainId === chainId && s.conditions.types === type && s.conditions.isActive,
-    )
-    if (activeStrategy) {
-      baseStrategy = activeStrategy.strategy
-    }
-  }
-
-  const overrides = chainId ? CHAIN_GAS_STRATEGY_OVERRIDES[chainId] : undefined
-  return { ...baseStrategy, ...overrides }
-}
-
-export function areEqualGasStrategies(a?: GasStrategy, b?: GasStrategy): boolean {
-  if (!a || !b) {
-    return false
-  }
-
-  const optionalFieldMatch = <T>(fieldA: T | undefined | null, fieldB: T | undefined | null): boolean => {
-    return fieldA == null || fieldB == null || fieldA === fieldB
-  }
-
-  // Required fields must be exactly equal
-  const requiredFieldsEqual =
-    a.limitInflationFactor === b.limitInflationFactor &&
-    a.priceInflationFactor === b.priceInflationFactor &&
-    a.percentileThresholdFor1559Fee === b.percentileThresholdFor1559Fee
-
-  // Optional fields can be undefined on either side or equal if both defined
-  const optionalFieldsMatch =
-    optionalFieldMatch(a.thresholdToInflateLastBlockBaseFee, b.thresholdToInflateLastBlockBaseFee) &&
-    optionalFieldMatch(a.baseFeeMultiplier, b.baseFeeMultiplier) &&
-    optionalFieldMatch(a.baseFeeHistoryWindow, b.baseFeeHistoryWindow) &&
-    optionalFieldMatch(a.minPriorityFeeRatioOfBaseFee, b.minPriorityFeeRatioOfBaseFee) &&
-    optionalFieldMatch(a.minPriorityFeeGwei, b.minPriorityFeeGwei) &&
-    optionalFieldMatch(a.maxPriorityFeeGwei, b.maxPriorityFeeGwei)
-
-  // displayLimitInflationFactor is not returned by the server, so it's ignored here
-  return requiredFieldsEqual && optionalFieldsMatch
-}
-
-export function getGasPrice(estimate?: GasEstimate): string | undefined {
-  return estimate && 'gasPrice' in estimate ? estimate.gasPrice : (estimate?.maxFeePerGas ?? undefined)
-}
-
-export type ValidatedGasFeeResult = Prettify<GasFeeResult & { value: string; error: null }>
-export function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResult | undefined {
-  if (gasFee.value === undefined || gasFee.error) {
-    return undefined
-  }
-  return { ...gasFee, value: gasFee.value, error: null }
-}
-
-export async function estimateGasWithClientSideProvider({
-  tx,
-  fallbackGasLimit,
-}: {
-  tx: TransactionRequest
-  fallbackGasLimit?: number
-}): Promise<GasFeeResultWithoutState> {
-  try {
-    if (!tx.chainId) {
-      throw new Error('No chainId for clientside gas estimation')
-    }
-    const provider = createEthersProvider({ chainId: tx.chainId })
-    if (!provider) {
-      throw new Error('No provider for clientside gas estimation')
-    }
-    const gasUseEstimate = (await provider.estimateGas(tx)).toNumber() * 10e9
-
-    return {
-      value: gasUseEstimate.toString(),
-      displayValue: gasUseEstimate.toString(),
-    }
-  } catch {
-    // provider.estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
-    return {
-      value: fallbackGasLimit?.toString(),
-      // These estimates don't inflate the gas limit, so we can use the same value for display
-      displayValue: fallbackGasLimit?.toString(),
-    }
-  }
-}
-
-export function extractGasFeeParams(estimate: GasEstimate): TransactionLegacyFeeParams | TransactionEip1559FeeParams {
-  if ('maxFeePerGas' in estimate) {
-    return {
-      maxFeePerGas: estimate.maxFeePerGas,
-      maxPriorityFeePerGas: estimate.maxPriorityFeePerGas,
-      gasLimit: estimate.gasLimit,
-    }
-  } else {
-    return {
-      gasPrice: estimate.gasPrice,
-      gasLimit: estimate.gasLimit,
-    }
-  }
-}
-
-/**
- * Determines if gas estimation has failed for a transaction request.
- * Returns true when:
- * - The request is a transaction type that requires gas estimation
- * - Gas fee result has finished loading
- * - Either an error occurred OR no value was returned
- */
-export function hasGasEstimationFailed(isTransactionRequest: boolean, gasFeeResult: GasFeeResult | undefined): boolean {
-  return (
-    isTransactionRequest && !!gasFeeResult && !gasFeeResult.isLoading && (!!gasFeeResult.error || !gasFeeResult.value)
   )
 }

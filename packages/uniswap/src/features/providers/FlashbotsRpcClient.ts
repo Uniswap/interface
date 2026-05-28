@@ -1,11 +1,10 @@
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import {
-  buildFlashbotsUrl,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
+  FLASHBOTS_RPC_URL,
   FLASHBOTS_SIGNATURE_HEADER,
+  getRefundString,
   SignerInfo,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import {
   Chain,
   ClientConfig,
@@ -16,8 +15,8 @@ import {
   PublicClient,
   Transport,
   TransportConfig,
-  walletActions,
 } from 'viem'
+import { eip7702Actions } from 'viem/experimental'
 
 /**
  * Creates a Flashbots RPC client using viem
@@ -48,7 +47,7 @@ export function createFlashbotsRpcClient({
   return createPublicClient({
     chain,
     transport,
-  }).extend(walletActions)
+  }).extend(eip7702Actions())
 }
 
 /**
@@ -88,12 +87,12 @@ export function createFlashbotsTransport({
     // Request handler with conditional authentication
     const request: EIP1193RequestFn = async ({ method, params }) => {
       // Normal request path - most requests go here
-      if (!signerInfo || !shouldAuthenticateRequest({ method, params, signerAddress: signerInfo.address })) {
+      if (!signerInfo || !shouldAuthenticateRequest(method, params, signerInfo.address)) {
         return baseTransport.request({ method, params })
       }
 
       // Authentication needed - special handling path
-      const requestBody = formatJsonRpcRequest({ method, params, getId: getNextId })
+      const requestBody = formatJsonRpcRequest(method, params, getNextId)
       const headers = await createAuthHeaders(requestBody, signerInfo)
 
       // Create a one-time authenticated transport
@@ -119,27 +118,32 @@ export function createFlashbotsTransport({
 // --- Utility Functions ---
 
 /**
+ * Builds a Flashbots URL with the appropriate parameters
+ */
+function buildFlashbotsUrl({
+  baseUrl = FLASHBOTS_RPC_URL,
+  address,
+  refundPercent,
+}: {
+  baseUrl?: string
+  address?: `0x${string}` | string | undefined
+  refundPercent?: number
+}): string {
+  const refundParam = getRefundString(address, refundPercent)
+  return `${baseUrl}${refundParam}`
+}
+
+/**
  * Determines if a request should be authenticated with Flashbots headers
  */
-function shouldAuthenticateRequest({
-  method,
-  params,
-  signerAddress,
-}: {
-  method: string
-  params: unknown
-  signerAddress?: string
-}): boolean {
+function shouldAuthenticateRequest(method: string, params: unknown, signerAddress?: string): boolean {
   return (
     method === 'eth_getTransactionCount' &&
     Array.isArray(params) &&
     params[1] === 'pending' &&
     !!signerAddress &&
     typeof params[0] === 'string' &&
-    areAddressesEqual({
-      addressInput1: { address: params[0], platform: Platform.EVM },
-      addressInput2: { address: signerAddress, platform: Platform.EVM },
-    })
+    params[0].toLowerCase() === signerAddress.toLowerCase()
   )
 }
 
@@ -155,15 +159,7 @@ async function createAuthHeaders(requestBody: string, signerInfo: SignerInfo): P
 /**
  * Formats a JSON-RPC request with the next request ID
  */
-function formatJsonRpcRequest({
-  method,
-  params,
-  getId,
-}: {
-  method: string
-  params: unknown
-  getId: () => number
-}): string {
+function formatJsonRpcRequest(method: string, params: unknown, getId: () => number): string {
   return JSON.stringify({
     jsonrpc: '2.0',
     method,

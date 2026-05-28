@@ -5,16 +5,36 @@ exports[`renders selection circle 1`] = `
   style={
     {
       "alignItems": "center",
-      "borderBottomColor": "#FF37C7",
+      "borderBottomColor": {
+        "dynamic": {
+          "dark": "#FF37C7",
+          "light": "#FF37C7",
+        },
+      },
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
       "borderBottomWidth": 1,
-      "borderLeftColor": "#FF37C7",
+      "borderLeftColor": {
+        "dynamic": {
+          "dark": "#FF37C7",
+          "light": "#FF37C7",
+        },
+      },
       "borderLeftWidth": 1,
-      "borderRightColor": "#FF37C7",
+      "borderRightColor": {
+        "dynamic": {
+          "dark": "#FF37C7",
+          "light": "#FF37C7",
+        },
+      },
       "borderRightWidth": 1,
       "borderStyle": "solid",
-      "borderTopColor": "#FF37C7",
+      "borderTopColor": {
+        "dynamic": {
+          "dark": "#FF37C7",
+          "light": "#FF37C7",
+        },
+      },
       "borderTopLeftRadius": 999999,
       "borderTopRightRadius": 999999,
       "borderTopWidth": 1,
@@ -28,7 +48,12 @@ exports[`renders selection circle 1`] = `
   <View
     style={
       {
-        "backgroundColor": "#FF37C7",
+        "backgroundColor": {
+          "dynamic": {
+            "dark": "#FF37C7",
+            "light": "#FF37C7",
+          },
+        },
         "borderBottomLeftRadius": 999999,
         "borderBottomRightRadius": 999999,
         "borderTopLeftRadius": 999999,

@@ -1,11 +1,11 @@
 import { datadogRum } from '@datadog/browser-rum'
-import { FetchError, is401Error } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { isWebApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
 export abstract class TransactionError extends Error {}
@@ -21,7 +21,6 @@ export class UnexpectedTransactionStateError extends TransactionError {
 /** Thrown when a transaction step fails for an unknown reason. */
 export class TransactionStepFailedError extends TransactionError {
   step: TransactionStep
-  stepIndex?: number
   isBackendRejection: boolean
   originalError?: Error
 
@@ -29,28 +28,22 @@ export class TransactionStepFailedError extends TransactionError {
   originalErrorString?: string // originalErrorStringified error may get cut off by size limits; this acts as minimal backup
   stepStringified?: string
 
-  isPlanStep?: boolean
-
   constructor({
     message,
     step,
     isBackendRejection = false,
     originalError,
-    isPlanStep = false,
   }: {
     message: string
-    step: TransactionStep & { stepIndex?: number }
+    step: TransactionStep
     isBackendRejection?: boolean
     originalError?: Error
-    isPlanStep?: boolean
   }) {
-    super(message, { cause: originalError })
+    super(message)
     this.name = 'TransactionStepFailedError'
     this.step = step
-    this.stepIndex = step.stepIndex
     this.isBackendRejection = isBackendRejection
     this.originalError = originalError
-    this.isPlanStep = isPlanStep
 
     try {
       this.originalErrorString = originalError?.toString()
@@ -68,18 +61,18 @@ export class TransactionStepFailedError extends TransactionError {
         'code' in this.originalError &&
         (typeof this.originalError.code === 'string' || typeof this.originalError.code === 'number')
       ) {
-        fingerprint.push(String(this.originalError.code))
+        fingerprint.push(String(this.originalError?.code))
       }
 
       if (this.originalError?.message) {
-        fingerprint.push(String(this.originalError.message))
+        fingerprint.push(String(this.originalError?.message))
       }
 
       if (this.isBackendRejection && this.originalError instanceof FetchError && this.originalError.data?.detail) {
         fingerprint.push(String(this.originalError.data.detail))
       }
     } catch (e) {
-      if (isWebApp) {
+      if (isInterface) {
         datadogRum.addAction('Transaction Action', {
           message: `problem determining fingerprint for ${this.step.type}`,
           level: 'info',
@@ -92,16 +85,6 @@ export class TransactionStepFailedError extends TransactionError {
     }
 
     return fingerprint
-  }
-}
-
-export class JupiterExecuteError extends TransactionError {
-  code: number
-
-  constructor(message: string, code: number) {
-    super(message)
-    this.name = 'JupiterExecuteError'
-    this.code = code
   }
 }
 
@@ -121,20 +104,6 @@ export class HandledTransactionInterrupt extends TransactionError {
   }
 }
 
-function isSessionError(error: Error): boolean {
-  let e: unknown | undefined = error
-
-  while (e && !(e instanceof FetchError)) {
-    if (e instanceof TransactionStepFailedError) {
-      e = e.originalError
-    } else if (e instanceof Error) {
-      e = e.cause
-    }
-  }
-
-  return is401Error(e)
-}
-
 export function getErrorContent(
   t: AppTFunction,
   error: Error,
@@ -144,76 +113,14 @@ export function getErrorContent(
   message: string
   supportArticleURL?: string
 } {
-  if (isSessionError(error)) {
-    return {
-      title: t('common.session.fail.title'),
-      message: isWebApp ? t('common.session.fail.browser') : t('common.session.fail'),
-    }
-  }
-
   if (error instanceof TransactionStepFailedError) {
     return getStepSpecificErrorContent(t, error)
-  }
-
-  if (error instanceof JupiterExecuteError) {
-    return getJupiterExecuteErrorContent(t, error.code)
   }
 
   // Generic / default error
   return {
     title: t('common.unknownError.error'),
     message: t('common.swap.failed'),
-  }
-}
-
-function getJupiterExecuteErrorContent(
-  t: AppTFunction,
-  code: number,
-): {
-  title: string
-  message: string
-  supportArticleURL?: string
-} {
-  const errorContent = {
-    title: t('common.swap.failed'),
-    message: t('error.jupiterApi.execute.default.title'),
-    supportArticleURL: uniswapUrls.helpArticleUrls.jupiterApiError,
-  }
-
-  switch (code) {
-    case -1:
-      errorContent.message += ' ' + t('error.jupiterApi.missingCachedOrder')
-      return errorContent
-    case -2:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidSignedTransaction')
-      return errorContent
-    case -3:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidMessageBytes')
-      return errorContent
-    case -1000:
-    case -2000:
-      errorContent.message += ' ' + t('error.jupiterApi.failedToLand', { code })
-      return errorContent
-    case -2002:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidPayload')
-      return errorContent
-    case -2003:
-      errorContent.title = t('transaction.status.swap.expired')
-      errorContent.message = t('error.jupiterApi.quoteExpired')
-      return errorContent
-    case -1002:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidTransaction')
-      return errorContent
-    case -1003:
-      errorContent.message += ' ' + t('error.jupiterApi.notFullySigned')
-      return errorContent
-    case -1004:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidBlockHeight')
-      return errorContent
-    default:
-      // Fallback for unmapped codes
-      errorContent.message += ' ' + t('error.jupiterApi.unknownErrorCode', { code })
-      return errorContent
   }
 }
 
@@ -237,31 +144,17 @@ function getStepSpecificErrorContent(
     case TransactionStepType.SwapTransactionAsync:
       return {
         title: t('common.swap.failed'),
-        message: error.isPlanStep ? t('swap.fail.message.plan') : t('swap.fail.message'),
+        message: t('swap.fail.message'),
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
-    case TransactionStepType.SwapTransactionBatched: {
-      // Only show batched-specific retry UI if the first step failed;
-      // Handles scenarios where plan cannot disable one-click swap beyond first step.
-      const shouldDisableOneClickSwap = !error.stepIndex || error.stepIndex === 0
-
-      if (shouldDisableOneClickSwap) {
-        return {
-          title: t('swap.fail.batched.title'),
-          buttonText: t('swap.fail.batched.retry'),
-          message: t('swap.fail.batched'),
-          supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
-        }
-      }
-      // Fall through to generic swap error
+    case TransactionStepType.SwapTransactionBatched:
       return {
-        title: t('common.swap.failed'),
-        message: error.isPlanStep ? t('swap.fail.message.plan') : t('swap.fail.message'),
+        title: t('swap.fail.batched.title'),
+        buttonText: t('swap.fail.batched.retry'),
+        message: t('swap.fail.batched'),
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
-    }
     case TransactionStepType.UniswapXSignature:
-    case TransactionStepType.UniswapXPlanSignature:
       if (error.isBackendRejection) {
         return {
           title: t('common.swap.failed'),
@@ -290,7 +183,7 @@ function getStepSpecificErrorContent(
       }
       return {
         title: t('error.tokenApproval'),
-        message: t('error.tokenApproval.message'),
+        message: t('error.access.expiry'),
         supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case TransactionStepType.TokenRevocationTransaction:

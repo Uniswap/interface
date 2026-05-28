@@ -1,8 +1,9 @@
-import { Experiments, FeatureFlags, PrivateRpcProperties } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/FlashbotsCommon'
+
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
-import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { FeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagService'
 import type { TransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigService'
 
@@ -47,11 +48,7 @@ export function createTransactionConfigService(ctx: {
         Experiments.PrivateRpc,
         PrivateRpcProperties,
         boolean
-      >({
-        experiment: Experiments.PrivateRpc,
-        property: PrivateRpcProperties.FlashbotsEnabled,
-        defaultValue: DEFAULT_FLASHBOTS_ENABLED,
-      })
+      >(Experiments.PrivateRpc, PrivateRpcProperties.FlashbotsEnabled, DEFAULT_FLASHBOTS_ENABLED)
 
       return { flashbotsEnabled }
     },
@@ -61,22 +58,21 @@ export function createTransactionConfigService(ctx: {
      */
     getTransactionTimeoutMs(input: { chainId: UniverseChainId }): number {
       // Get chain-specific timeout or use default
-      return chainTimeouts.get(input.chainId) || ONE_MINUTE_MS
+      return input.chainId ? chainTimeouts.get(input.chainId) || ONE_MINUTE_MS : ONE_MINUTE_MS
     },
 
     /**
      * Determine if private RPC should be used for a chain
      */
-    shouldUsePrivateRpc({
-      chainId,
-      submitViaPrivateRpc = false,
-    }: {
-      chainId: UniverseChainId
-      submitViaPrivateRpc?: boolean
-    }): boolean {
+    shouldUsePrivateRpc(input: { chainId: UniverseChainId; submitViaPrivateRpc?: boolean }): boolean {
+      if (input.submitViaPrivateRpc) {
+        return true
+      }
+
       const isPrivateRpcEnabled = this.isPrivateRpcEnabled()
-      const privateRpcSupportedOnChain = isPrivateRpcSupportedOnChain(chainId)
-      return submitViaPrivateRpc && isPrivateRpcEnabled && privateRpcSupportedOnChain
+      const { flashbotsEnabled } = this.getPrivateRpcConfig()
+
+      return isPrivateRpcEnabled && input.chainId === UniverseChainId.Mainnet && flashbotsEnabled
     },
   }
 }

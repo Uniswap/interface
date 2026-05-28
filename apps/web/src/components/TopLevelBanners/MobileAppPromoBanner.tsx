@@ -1,18 +1,18 @@
+import { ReactComponent as UniswapLogo } from 'assets/svg/uniswap_app_logo.svg'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Flex, styled, Text, TouchableArea } from 'ui/src'
-import { X } from 'ui/src/components/icons/X'
+import { hideMobileAppPromoBannerAtom, persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
+import { Anchor, Flex, Text, styled, useSporeColors } from 'ui/src'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import { ReactComponent as UniswapLogo } from '~/assets/svg/uniswap_app_logo.svg'
-import { useEthersWeb3Provider } from '~/hooks/useEthersProvider'
-import { hideMobileAppPromoBannerAtom, persistHideMobileAppPromoBannerAtom } from '~/state/application/atoms'
-import { getWalletMeta } from '~/utils/walletMeta'
+import { getWalletMeta } from 'utils/walletMeta'
 
 const Wrapper = styled(Flex, {
   height: 56,
   width: '100%',
-  backgroundColor: '$accent2Solid',
+  backgroundColor: '$accent2',
   pl: '$spacing12',
   pr: '$spacing16',
   zIndex: '$sticky',
@@ -42,6 +42,7 @@ const StyledButton = styled(Anchor, {
  * - The user has not dismissed the banner during this session
  * - The user has not clicked the Uniswap wallet or Get Uniswap Wallet buttons in wallet options
  */
+// eslint-disable-next-line import/no-unused-modules
 export function useMobileAppPromoBannerEligible(): boolean {
   const hideMobileAppPromoBanner = useAtomValue(hideMobileAppPromoBannerAtom)
   const persistHideMobileAppPromoBanner = useAtomValue(persistHideMobileAppPromoBannerAtom)
@@ -81,6 +82,7 @@ function getDownloadLink(userAgent: string, peerWalletAgent?: string): string {
 export function MobileAppPromoBanner() {
   const { t } = useTranslation()
   const [, setHideMobileAppPromoBanner] = useAtom(hideMobileAppPromoBannerAtom)
+  const colors = useSporeColors()
 
   const provider = useEthersWeb3Provider()
 
@@ -89,9 +91,14 @@ export function MobileAppPromoBanner() {
   return (
     <Wrapper>
       <Flex shrink row gap="$spacing8" alignItems="center">
-        <TouchableArea data-testid="mobile-promo-banner-close-button" onPress={() => setHideMobileAppPromoBanner(true)}>
-          <X size="$icon.20" color="$neutral2" />
-        </TouchableArea>
+        <X
+          data-testid="mobile-promo-banner-close-button"
+          size={20}
+          color={colors.neutral2.val}
+          onClick={() => {
+            setHideMobileAppPromoBanner(true)
+          }}
+        />
         <UniswapLogo width="32px" height="32px" />
         <Flex shrink>
           <Text variant="body3">{t('mobileAppPromo.banner.title')}</Text>

@@ -11,7 +11,6 @@ export function FastImageWrapper({
   resizeMode,
   style,
   setError,
-  shouldRasterizeIOS,
 }: FastImageWrapperProps): JSX.Element | null {
   const isLoaded = useSharedValue(false)
 
@@ -27,7 +26,6 @@ export function FastImageWrapper({
     ...(isLoaded.value ? style : {}),
   }))
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to trigger this effect when uri changes
   useEffect(() => {
     isLoaded.value = false
   }, [isLoaded, uri])
@@ -46,7 +44,6 @@ export function FastImageWrapper({
     <Animated.View style={[styles.fullWidth, animatedImageContainerStyle]}>
       <FastImage
         resizeMode={resizeMode ?? FastImage.resizeMode.contain}
-        shouldRasterizeIOS={shouldRasterizeIOS}
         source={{
           uri,
           cache: FastImage.cacheControl.immutable,

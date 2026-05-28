@@ -1,19 +1,14 @@
-import { TradingApi } from '@universe/api'
-import { FeatureFlags, getFeatureFlag, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-import { createGetSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { createGetV4SwapEnabled, useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
-  ...([
-    TradingApi.ProtocolItems.UNISWAPX_V2,
-    TradingApi.ProtocolItems.V4,
-    TradingApi.ProtocolItems.V3,
-    TradingApi.ProtocolItems.V2,
-  ] as const),
+  ...([ProtocolItems.UNISWAPX_V2, ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2, ProtocolItems.FEW_V2] as const),
 ]
 export type FrontendSupportedProtocol = (typeof DEFAULT_PROTOCOL_OPTIONS)[number]
 
@@ -23,128 +18,107 @@ const LAUNCHED_UNISWAPX_CHAINS = [UniverseChainId.Mainnet]
 export function useProtocolsForChain(
   userSelectedProtocols: FrontendSupportedProtocol[],
   chainId?: UniverseChainId,
-): TradingApi.ProtocolItems[] {
+): ProtocolItems[] {
   const getIsUniswapXSupported = useUniswapContextSelector((state) => state.getIsUniswapXSupported)
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const priorityOrdersAllowed = useUniswapXPriorityOrderFlag(chainId)
   const isDutchV3Enabled = useFeatureFlag(FeatureFlags.ArbitrumDutchV3)
+  const arbUniswapXAllowed = chainId === UniverseChainId.ArbitrumOne && isDutchV3Enabled
   const v4SwapAllowed = useV4SwapEnabled(chainId)
 
-  const protocolFilter = useMemo(
+  const getProtocolsForChain = useMemo(
     () =>
-      createProtocolFilter({
-        getUniswapXEnabled: () => uniswapXEnabled,
-        getIsUniswapXSupported,
-        getPriorityOrderFlag: () => priorityOrdersAllowed,
-        getV4Enabled: () => v4SwapAllowed,
-        getArbitrumDutchV3Enabled: () => isDutchV3Enabled,
+      createGetProtocolsForChain({
+        getUniswapXEnabled: () =>
+          getIsUniswapXSupported ? uniswapXEnabled && getIsUniswapXSupported(chainId) : uniswapXEnabled,
+        getPriorityOrdersAllowed: () => priorityOrdersAllowed,
+        getV4SwapAllowed: () => v4SwapAllowed,
+        getArbUniswapXAllowed: () => arbUniswapXAllowed,
       }),
-    [uniswapXEnabled, priorityOrdersAllowed, isDutchV3Enabled, v4SwapAllowed, getIsUniswapXSupported],
+    [uniswapXEnabled, priorityOrdersAllowed, arbUniswapXAllowed, v4SwapAllowed, getIsUniswapXSupported, chainId],
   )
 
   return useMemo(() => {
-    return protocolFilter(userSelectedProtocols, chainId)
-  }, [protocolFilter, userSelectedProtocols, chainId])
+    return getProtocolsForChain(userSelectedProtocols, chainId)
+  }, [getProtocolsForChain, userSelectedProtocols, chainId])
 }
 
-export function createProtocolFilter(ctx: {
+function createGetProtocolsForChain(ctx: {
   getUniswapXEnabled: () => boolean
-  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
-  getPriorityOrderFlag: (chainId?: UniverseChainId) => boolean
-  getV4Enabled: (chainId?: UniverseChainId) => boolean
-  getArbitrumDutchV3Enabled: () => boolean
+  getPriorityOrdersAllowed: (chainId?: UniverseChainId) => boolean
+  getV4SwapAllowed: (chainId?: UniverseChainId) => boolean
+  getArbUniswapXAllowed: (chainId?: UniverseChainId) => boolean
 }) {
-  return function filterProtocols(
-    protocols: FrontendSupportedProtocol[],
+  return function getProtocolsForChain(
+    userSelectedProtocols: FrontendSupportedProtocol[],
     chainId?: UniverseChainId,
-  ): TradingApi.ProtocolItems[] {
-    const uniswapXEnabled = ctx.getUniswapXEnabled()
-    const uniswapXSupportedForChain = ctx.getIsUniswapXSupported ? ctx.getIsUniswapXSupported(chainId) : true
-    const combinedUniswapXEnabled = uniswapXEnabled && uniswapXSupportedForChain
-
-    const priorityOrdersAllowed = ctx.getPriorityOrderFlag(chainId)
-    const arbDutchV3Enabled = chainId === UniverseChainId.ArbitrumOne && ctx.getArbitrumDutchV3Enabled()
-    const v4Enabled = ctx.getV4Enabled(chainId)
-
-    const uniswapXAllowedForChain =
-      (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbDutchV3Enabled
-
-    let filteredProtocols: TradingApi.ProtocolItems[] = [...protocols]
-
-    // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
-    if (!uniswapXAllowedForChain || !combinedUniswapXEnabled) {
-      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== TradingApi.ProtocolItems.UNISWAPX_V2)
+  ): ProtocolItems[] {
+    // MEGAETH Mainnet: quote V3 plus Ring FewV2 liquidity.
+    if (chainId === UniverseChainId.MEGAETHMainnet) {
+      return [ProtocolItems.V3, ProtocolItems.FEW_V2]
     }
 
+    // Hyper: only use FewV2 for quote requests
+    if (chainId === UniverseChainId.HyperMainnet) {
+      return [ProtocolItems.FEW_V2]
+    }
+
+    const uniswapXEnabled = ctx.getUniswapXEnabled()
+    const priorityOrdersAllowed = ctx.getPriorityOrdersAllowed(chainId)
+    const arbUniswapXAllowed = ctx.getArbUniswapXAllowed(chainId)
+    const v4SwapAllowed = ctx.getV4SwapAllowed(chainId)
+
+    const uniswapXAllowedForChain =
+      (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
+
+    let protocols: ProtocolItems[] = [...userSelectedProtocols]
+    // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
+    if (!uniswapXAllowedForChain || !uniswapXEnabled) {
+      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
+    }
     // Replace UniswapXV2 with V3 if V3 experiment is enabled on arbitrum
-    if (arbDutchV3Enabled) {
-      filteredProtocols = filteredProtocols.map((protocol) =>
-        protocol === TradingApi.ProtocolItems.UNISWAPX_V2 ? TradingApi.ProtocolItems.UNISWAPX_V3 : protocol,
+    if (arbUniswapXAllowed) {
+      protocols = protocols.map((protocol) =>
+        protocol === ProtocolItems.UNISWAPX_V2 ? ProtocolItems.UNISWAPX_V3 : protocol,
       )
     }
 
-    if (!v4Enabled) {
-      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== TradingApi.ProtocolItems.V4)
+    // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
+    if (!uniswapXAllowedForChain || !uniswapXEnabled) {
+      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
     }
 
-    return filteredProtocols
+    if (!v4SwapAllowed) {
+      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.V4)
+    }
+
+    // Remove FewV2 for XLayer chain
+    if (chainId === UniverseChainId.XLayer) {
+      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.FEW_V2)
+    }
+
+    return protocols
   }
 }
 
 export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean {
+  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId ?? UniverseChainId.Base]
+  const result = useFeatureFlag(flagName ?? FeatureFlags.UniswapXPriorityOrdersBase)
+
   if (!chainId) {
     return false
   }
 
-  return getUniswapXPriorityOrderFlag(chainId)
-}
-
-export function createGetProtocolsForChain(ctx: {
-  // these need to come from react unfortunately
-  getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
-  getEnabledChains: () => UniverseChainId[]
-}): (userSelectedProtocols: FrontendSupportedProtocol[], chainId?: UniverseChainId) => TradingApi.ProtocolItems[] {
-  const uniswapXEnabled = getFeatureFlag(FeatureFlags.UniswapX)
-  const isDutchV3Enabled = getFeatureFlag(FeatureFlags.ArbitrumDutchV3)
-
-  const getV4SwapAllowed = createGetV4SwapEnabled({
-    getSupportedChainId: createGetSupportedChainId({
-      getChains: () => ctx.getEnabledChains(),
-    }).getSupportedChainId,
-  })
-
-  const getProtocolsForChain = createProtocolFilter({
-    getUniswapXEnabled: () => uniswapXEnabled,
-    getIsUniswapXSupported: ctx.getIsUniswapXSupported,
-    getPriorityOrderFlag: getUniswapXPriorityOrderFlag,
-    getV4Enabled: getV4SwapAllowed,
-    getArbitrumDutchV3Enabled: () => isDutchV3Enabled,
-  })
-
-  return getProtocolsForChain
-}
-
-export function createGetUniswapXPriorityOrderFlag(ctx: {
-  getFeatureFlag: (flagName: FeatureFlags) => boolean
-}): (chainId?: UniverseChainId) => boolean {
-  return (chainId?: UniverseChainId) => {
-    if (!chainId) {
-      return false
-    }
-
-    switch (chainId) {
-      case UniverseChainId.Base:
-        return ctx.getFeatureFlag(FeatureFlags.UniswapXPriorityOrdersBase)
-      case UniverseChainId.Optimism:
-        return ctx.getFeatureFlag(FeatureFlags.UniswapXPriorityOrdersOptimism)
-      case UniverseChainId.Unichain:
-        return ctx.getFeatureFlag(FeatureFlags.UniswapXPriorityOrdersUnichain)
-      default:
-        return false
-    }
+  if (!flagName) {
+    return false
   }
+
+  return result
 }
 
-export const getUniswapXPriorityOrderFlag = createGetUniswapXPriorityOrderFlag({
-  getFeatureFlag,
-})
+// These are primarily OP stack chains, since only Priority Orders can only operate on chains with Priority Gas Auctions (PGA)
+const UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP: Partial<Record<UniverseChainId, FeatureFlags>> = {
+  [UniverseChainId.Base]: FeatureFlags.UniswapXPriorityOrdersBase,
+  [UniverseChainId.Optimism]: FeatureFlags.UniswapXPriorityOrdersOptimism,
+  [UniverseChainId.Unichain]: FeatureFlags.UniswapXPriorityOrdersUnichain,
+}

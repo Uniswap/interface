@@ -1,75 +1,63 @@
-import { GraphQLApi } from '@universe/api'
 import { useCallback, useMemo, useRef } from 'react'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import {
+  Chain,
+  PoolTransaction,
+  PoolTransactionType,
+  PoolTxFragment,
+  useV2TokenTransactionsQuery,
+  useV3TokenTransactionsQuery,
+  useV4TokenTransactionsQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
-import i18n from 'uniswap/src/i18n'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 export enum TokenTransactionType {
   BUY = 'Buy',
   SELL = 'Sell',
 }
 
-export const getTokenTransactionTypeTranslation = (type: TokenTransactionType): string => {
-  switch (type) {
-    case TokenTransactionType.BUY:
-      return i18n.t('common.buy.label')
-    case TokenTransactionType.SELL:
-      return i18n.t('common.sell.label')
-    default:
-      return ''
-  }
-}
-
 const TokenTransactionDefaultQuerySize = 25
 
-export function useTokenTransactions({
-  address,
-  chainId,
-  filter = [TokenTransactionType.BUY, TokenTransactionType.SELL],
-}: {
-  address: string
-  chainId: UniverseChainId
-  filter?: TokenTransactionType[]
-}) {
-  const skipV3V4Solana = isSVMChain(chainId) // Solana token txs data are surfaced via Gql Token.V2Transactions
-
+// eslint-disable-next-line import/no-unused-modules
+export function useTokenTransactions(
+  address: string,
+  chainId: UniverseChainId,
+  filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL],
+) {
+  const { defaultChainId } = useEnabledChains()
   const {
     data: dataV4,
     loading: loadingV4,
     fetchMore: fetchMoreV4,
     error: errorV4,
-  } = GraphQLApi.useV4TokenTransactionsQuery({
+  } = useV4TokenTransactionsQuery({
     variables: {
-      address: normalizeTokenAddressForCache(address),
-      chain: toGraphQLChain(chainId),
+      address: address.toLowerCase(),
+      chain: toGraphQLChain(chainId ?? defaultChainId),
       first: TokenTransactionDefaultQuerySize,
     },
-    skip: skipV3V4Solana,
   })
   const {
     data: dataV3,
     loading: loadingV3,
     fetchMore: fetchMoreV3,
     error: errorV3,
-  } = GraphQLApi.useV3TokenTransactionsQuery({
+  } = useV3TokenTransactionsQuery({
     variables: {
-      address: normalizeTokenAddressForCache(address),
-      chain: toGraphQLChain(chainId),
+      address: address.toLowerCase(),
+      chain: toGraphQLChain(chainId ?? defaultChainId),
       first: TokenTransactionDefaultQuerySize,
     },
-    skip: skipV3V4Solana,
   })
   const {
     data: dataV2,
     loading: loadingV2,
     error: errorV2,
     fetchMore: fetchMoreV2,
-  } = GraphQLApi.useV2TokenTransactionsQuery({
+  } = useV2TokenTransactionsQuery({
     variables: {
-      address: normalizeTokenAddressForCache(address),
+      address: address.toLowerCase(),
       first: TokenTransactionDefaultQuerySize,
       chain: toGraphQLChain(chainId),
     },
@@ -89,17 +77,21 @@ export function useTokenTransactions({
       querySizeRef.current += TokenTransactionDefaultQuerySize
       fetchMoreV4({
         variables: {
-          cursor: dataV4?.token?.v4Transactions?.[dataV4.token.v4Transactions.length - 1]?.timestamp,
+          cursor: dataV4?.token?.v4Transactions?.[dataV4.token?.v4Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            loadingMoreV4.current = false
+            return prev
+          }
           if (!loadingMoreV3.current && !loadingMoreV2.current) {
             onComplete?.()
           }
           const mergedData = {
             token: {
               ...prev.token,
-              id: prev.token?.id ?? '',
-              chain: prev.token?.chain ?? GraphQLApi.Chain.Ethereum,
+              id: prev?.token?.id ?? '',
+              chain: prev?.token?.chain ?? Chain.Ethereum,
               v4Transactions: [...(prev.token?.v4Transactions ?? []), ...(fetchMoreResult.token?.v4Transactions ?? [])],
             },
           }
@@ -109,17 +101,21 @@ export function useTokenTransactions({
       })
       fetchMoreV3({
         variables: {
-          cursor: dataV3?.token?.v3Transactions?.[dataV3.token.v3Transactions.length - 1]?.timestamp,
+          cursor: dataV3?.token?.v3Transactions?.[dataV3.token?.v3Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            loadingMoreV3.current = false
+            return prev
+          }
           if (!loadingMoreV2.current && !loadingMoreV4.current) {
             onComplete?.()
           }
           const mergedData = {
             token: {
               ...prev.token,
-              id: prev.token?.id ?? '',
-              chain: prev.token?.chain ?? GraphQLApi.Chain.Ethereum,
+              id: prev?.token?.id ?? '',
+              chain: prev?.token?.chain ?? Chain.Ethereum,
               v3Transactions: [...(prev.token?.v3Transactions ?? []), ...(fetchMoreResult.token?.v3Transactions ?? [])],
             },
           }
@@ -129,17 +125,21 @@ export function useTokenTransactions({
       })
       fetchMoreV2({
         variables: {
-          cursor: dataV2?.token?.v2Transactions?.[dataV2.token.v2Transactions.length - 1]?.timestamp,
+          cursor: dataV2?.token?.v2Transactions?.[dataV2.token?.v2Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            loadingMoreV2.current = false
+            return prev
+          }
           if (!loadingMoreV3.current && !loadingMoreV4.current) {
             onComplete?.()
           }
           const mergedData = {
             token: {
               ...prev.token,
-              id: prev.token?.id ?? '',
-              chain: prev.token?.chain ?? GraphQLApi.Chain.Ethereum,
+              id: prev?.token?.id ?? '',
+              chain: prev?.token?.chain ?? Chain.Ethereum,
               v2Transactions: [...(prev.token?.v2Transactions ?? []), ...(fetchMoreResult.token?.v2Transactions ?? [])],
             },
           }
@@ -159,24 +159,18 @@ export function useTokenTransactions({
   )
 
   const filterTransaction = useCallback(
-    (tx: GraphQLApi.PoolTxFragment | undefined) => {
+    (tx: PoolTxFragment | undefined) => {
       if (!tx) {
         return false
       }
       const tokenBeingSold = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
-      const isSell = areAddressesEqual({
-        addressInput1: {
-          address: tokenBeingSold.address,
-          chainId: fromGraphQLChain(tokenBeingSold.chain) ?? chainId,
-        },
-        addressInput2: { address, chainId },
-      })
+      const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
       return (
-        tx.type === GraphQLApi.PoolTransactionType.Swap &&
+        tx.type === PoolTransactionType.Swap &&
         filter.includes(isSell ? TokenTransactionType.SELL : TokenTransactionType.BUY)
       )
     },
-    [address, chainId, filter],
+    [address, filter],
   )
 
   const transactions = useMemo(
@@ -187,14 +181,16 @@ export function useTokenTransactions({
         ...(dataV2?.token?.v2Transactions ?? []),
       ]
         .filter(filterTransaction)
-        .sort((a, b): number => (a?.timestamp && b?.timestamp ? b.timestamp - a.timestamp : 1))
+        .sort((a, b): number =>
+          a?.timestamp && b?.timestamp ? b.timestamp - a.timestamp : a?.timestamp === null ? -1 : 1,
+        )
         .slice(0, querySizeRef.current),
     [dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, dataV4?.token?.v4Transactions, filterTransaction],
   )
 
   return useMemo(
     () => ({
-      transactions: transactions as GraphQLApi.PoolTransaction[],
+      transactions: transactions as PoolTransaction[],
       loading: loadingV4 || loadingV3 || loadingV2,
       loadMore,
       errorV2,

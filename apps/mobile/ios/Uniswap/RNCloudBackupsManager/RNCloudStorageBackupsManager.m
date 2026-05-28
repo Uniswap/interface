@@ -27,7 +27,8 @@ RCT_EXTERN_METHOD(deleteCloudStorageMnemonicBackup: (NSString *)mnemonicId
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(getCloudBackupList: (RCTPromiseResolveBlock)resolve
-                  reject: (RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(startFetchingCloudStorageBackups)
+
+RCT_EXTERN_METHOD(stopFetchingCloudStorageBackups)
 
 @end

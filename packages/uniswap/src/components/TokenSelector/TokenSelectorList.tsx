@@ -1,33 +1,30 @@
 import { memo, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'ui/src'
-import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
+import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import {
   TokenOptionItem as BaseTokenOptionItem,
   TokenContextMenuVariant,
 } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
 import { TokenOption, TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
-import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
-import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getTokenProtectionWarning, getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import {
-  useDismissedBridgedAssetWarnings,
-  useDismissedTokenWarnings,
-} from 'uniswap/src/features/tokens/warnings/slice/hooks'
-import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { useEvent } from 'utilities/src/react/hooks'
 
 function isHorizontalListTokenItem(data: TokenSelectorOption): data is TokenOption[] {
   return Array.isArray(data)
@@ -40,15 +37,18 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   index,
   showWarnings,
   showTokenAddress,
+  isKeyboardOpen,
 }: {
   tokenOption: TokenOption
   section: OnchainItemSection<TokenOption>
   index: number
   showWarnings: boolean
   showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   const { currencyInfo } = tokenOption
+  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
 
   const onPress = useCallback(
     () => onSelectCurrency(currencyInfo, section, index),
@@ -68,7 +68,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
     value: tokenOption.quantity,
     type: NumberType.TokenTx,
   })
-  const fiatBalance = convertFiatAmountFormatted(tokenOption.balanceUSD, NumberType.FiatTokenQuantity)
+  const fiatBalance = convertFiatAmountFormatted(tokenOption.balanceUSD, NumberType.FiatTokenPrice)
 
   const { isTestnetModeEnabled } = useEnabledChains()
   const balanceText = isTestnetModeEnabled ? tokenBalance : fiatBalance
@@ -77,60 +77,23 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   // Token protection modal
   const severity = getTokenWarningSeverity(currencyInfo)
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo.currency, tokenProtectionWarning)
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo.currency)
   const isBlocked = severity === WarningSeverity.Blocked
-  const shouldShowWarningModalOnPress =
-    showWarnings && (isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed))
-
-  const isBridgedAsset = Boolean(currencyInfo.isBridged)
-  const [showBridgedAssetWarningModal, setShowBridgedAssetWarningModal] = useState(false)
-  const { tokenWarningDismissed: bridgedAssetTokenWarningDismissed } = useDismissedBridgedAssetWarnings(
-    currencyInfo.currency,
-  )
-  const shouldShowBridgedAssetWarningModalOnPress = showWarnings && isBridgedAsset && !bridgedAssetTokenWarningDismissed
-  const hasWarningModals = shouldShowWarningModalOnPress || shouldShowBridgedAssetWarningModalOnPress
-
-  const setWarningModalVisible = useCallback(
-    (visible: boolean) => {
-      // Handle token warning modal visibility as first priority
-      if (shouldShowWarningModalOnPress) {
-        setShowWarningModal(visible)
-        return
-      }
-
-      // Handle bridged asset warning modal visibility
-      setShowBridgedAssetWarningModal(visible)
-    },
-    [shouldShowWarningModalOnPress],
-  )
+  const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
 
   const onAcceptTokenWarning = useCallback(() => {
-    // Handle token warning modal dismissal
-    if (showWarningModal) {
-      setShowWarningModal(false)
-
-      // If the bridged asset warning modal should not be shown, proceed to the next step
-      if (!shouldShowBridgedAssetWarningModalOnPress) {
-        onPress()
-      } else {
-        setShowBridgedAssetWarningModal(true)
-      }
-
-      return
-    }
-
-    // Handle bridged asset warning modal dismissal
-    if (showBridgedAssetWarningModal) {
-      setShowBridgedAssetWarningModal(false)
-      onPress()
-
-      return
-    }
-
-    // No modals showing - proceed with action
+    setShowWarningModal(false)
     onPress()
-  }, [onPress, showWarningModal, showBridgedAssetWarningModal, shouldShowBridgedAssetWarningModalOnPress])
+  }, [onPress])
+
+  const legacyTokenOptionItemProps = {
+    balance: balanceText,
+    isKeyboardOpen,
+    quantity: tokenOption.quantity,
+    quantityFormatted: quantityText,
+    showWarnings,
+    tokenWarningDismissed,
+  }
 
   return (
     <BaseTokenOptionItem
@@ -151,14 +114,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
       }
       showDisabled={Boolean((showWarnings && isBlocked) || tokenOption.isUnsupported)}
       modalInfo={{
-        modal: showBridgedAssetWarningModal ? (
-          <BridgedAssetModal
-            currencyInfo0={currencyInfo}
-            isOpen={showBridgedAssetWarningModal}
-            onClose={(): void => setShowBridgedAssetWarningModal(false)}
-            onContinue={onAcceptTokenWarning}
-          />
-        ) : (
+        modal: (
           <TokenWarningModal
             currencyInfo0={currencyInfo}
             isVisible={showWarningModal}
@@ -166,10 +122,11 @@ const TokenOptionItem = memo(function _TokenOptionItem({
             onAcknowledge={onAcceptTokenWarning}
           />
         ),
-        modalShouldShow: hasWarningModals,
-        modalSetIsOpen: setWarningModalVisible,
+        modalShouldShow: showWarnings && shouldShowWarningModalOnPress,
+        modalSetIsOpen: setShowWarningModal,
       }}
       onPress={onPressTokenOption}
+      {...(!searchRevampEnabled && legacyTokenOptionItemProps)} // TODO: clean up legacy token selector variables
     />
   )
 })
@@ -186,7 +143,6 @@ interface TokenSelectorListProps {
   errorText?: string
   showTokenAddress?: boolean
   isKeyboardOpen?: boolean
-  renderedInModal: boolean
 }
 
 function _TokenSelectorList({
@@ -194,27 +150,33 @@ function _TokenSelectorList({
   sections,
   chainFilter,
   showTokenWarnings,
+  isKeyboardOpen,
   refetch,
   loading,
   hasError,
   emptyElement,
   errorText,
   showTokenAddress,
-  renderedInModal,
 }: TokenSelectorListProps): JSX.Element {
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 
-  const handleExpand = useEvent((item: TokenSelectorOption) => {
-    setExpandedItems((prev) => [...prev, key(item)])
-  })
+  const handleExpand = useCallback(
+    (item: TokenSelectorOption) => {
+      setExpandedItems((prev) => [...prev, key(item)])
+    },
+    [setExpandedItems],
+  )
 
-  const isExpandedItem = useEvent((item: TokenOption[]) => {
-    return expandedItems.includes(key(item))
-  })
+  const isExpandedItem = useCallback(
+    (item: TokenOption[]) => {
+      return expandedItems.includes(key(item))
+    },
+    [expandedItems],
+  )
 
-  const renderItem = useEvent(({ item, section, index }: ItemRowInfo<TokenSelectorOption>): JSX.Element => {
+  const renderItem = ({ item, section, index }: ItemRowInfo<TokenSelectorOption>): JSX.Element => {
     if (isHorizontalListTokenItem(item)) {
       return (
         <HorizontalTokenList
@@ -223,13 +185,14 @@ function _TokenSelectorList({
           index={index}
           expanded={isExpandedItem(item)}
           onSelectCurrency={onSelectCurrency}
-          onExpand={handleExpand}
+          onExpand={() => handleExpand(item)}
         />
       )
     }
     return (
       <TokenOptionItem
         index={index}
+        isKeyboardOpen={isKeyboardOpen}
         section={section as OnchainItemSection<TokenOption>}
         showTokenAddress={showTokenAddress}
         showWarnings={showTokenWarnings}
@@ -237,7 +200,7 @@ function _TokenSelectorList({
         onSelectCurrency={onSelectCurrency}
       />
     )
-  })
+  }
 
   return (
     <SelectorBaseList
@@ -251,7 +214,6 @@ function _TokenSelectorList({
       errorText={errorText}
       keyExtractor={key}
       expandedItems={expandedItems}
-      renderedInModal={renderedInModal}
     />
   )
 }

@@ -23,7 +23,7 @@ If you have suggestions on how we can improve the app, or would like to report a
 - [Migrations](#migrations)
 - [Testing & Performance](#testing--performance)
  - [Build local app files](./docs/build-app-files.md)
- - [E2E testing](./docs/e2e-mobile.md)
+ - [E2E testing](./docs/e2e-testing.md)
  - [Performance monitoring](./docs/perf-monitoring.md)
 - [Troubleshooting](#troubleshooting)
  - [Common issues](#common-issues)
@@ -54,18 +54,18 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 3. Install `node`
 
-    Look at the `.nvmrc` file in your workspace to determine which version to install. Then run the following command in your terminal with that version:
+    Run the following command in your terminal:
 
     ```bash
-    nvm install 22.13.1
-    nvm use 22.13.1
+    nvm install 18
+    nvm use 18
     ```
 
-    Quit and re-open the terminal, and then run to confirm that v22 is running
+    Quit and re-open the terminal, and then run to confirm that v18 is running
 
     ```bash
     > node -v
-    v22.13.1
+    v18.20.4
     ```
 
     Alternatively, to automatically try to find and use an `.nvmrc` file in your workspace, per the [official nvm docs for zsh](https://github.com/nvm-sh/nvm?tab=readme-ov-file#zsh), add the following script to your shell (typically `~/.zshrc` on mac):
@@ -98,19 +98,19 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
     load-nvmrc
     ```
 
-4. Install `bun`. We use bun as our package manager and to run scripts.
+4. Install `yarn`. We use yarn as our package manager and to run scripts.
 
-    Look at the `.bun-version` file in your workspace to determine which version to install. Run the following command to install it, being mindful of the version string here (npm comes with node, so it should work if the above step has been completed correctly)
+    Run the following command to install it (npm comes with node, so it should work if the above step has been completed correctly)
 
     ```bash
-    curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.1"
+    npm install --global yarn
     ```
 
     Check version to verify installation
 
     ```bash
-    > bun -v
-    1.3.1
+    > yarn -v
+    3.2.3
     ```
 
 5. Install `ruby`
@@ -150,7 +150,7 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-You must use the [Required Xcode Version](https://github.com/Uniswap/universe/blob/main/.xcode-version) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
+You must use the [Required Xcode Version](https://github.com/Uniswap/universe/blob/main/apps/mobile/scripts/podinstall.sh#L5) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
 
 #### Add Xcode Command Line Tools
 
@@ -209,7 +209,7 @@ Select the version that pops up.
 
     ```bash
     adb reverse tcp:8081 tcp:8081
-    bun mobile android
+    yarn mobile android
     ```
 
 If it fails, quit the terminal and run it directly from Android Studio. Once you get the first build running, retry the previous step.
@@ -224,21 +224,21 @@ Note: The app will likely have limited functionality when running it locally wit
 
 Use the environment variables defined in the `.env.defaults.local` file to run the app locally.
 
-You can use the command `bun mobile env:local:download` if you have the 1password CLI to copy that file to your root folder.
+You can use the command `yarn mobile env:local:download` if you have the 1password CLI to copy that file to your root folder.
 
 ### Compile contract ABI types
 
-This is done in bootstrap but good to know about. Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `bun g:prepare` at the top level. Re-run this if the ABIs are ever changed.
+This is done in bootstrap but good to know about. Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn g:prepare` at the top level. Re-run this if the ABIs are ever changed.
 
 ### Run the app
 
-In the root directory, run `bun install` to install all the necessary npm packages.
+In the root directory, run `yarn` to install all the necessary npm packages.
 
-Then run `bun mobile pod` to install all the necessary pods. (You may need to updated source repos with `pod repo update` if this fails.)
+Then run `yarn mobile pod` to install all the necessary pods. (You may need to updated source repos with `pod repo update` if this fails.)
 
-Finally, run `bun mobile ios` to boot up the iOS Simulator and run the app inside it. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `bun start`.
+Finally, run `yarn mobile ios` to boot up the iOS Simulator and run the app inside it. The JS bundler (metro) should automatically open in a new terminal window. If it does not, start it manually with `yarn start`.
 
-Or you can use one command to run them all one after the other: `bun install && bun pod && bun ios`
+Or you can use one command to run them all one after the other: `yarn && yarn pod && yarn ios`
 
 You can also run the app from Xcode, which is necessary for any Swift related changes. Xcode will automatically start the metro bundler.
 
@@ -284,7 +284,7 @@ We use `redux-persist` to persist the Redux state between user sessions. Most of
 ## Testing & Performance
 
 - [Build local app files](./docs/build-app-files.md)
-- [E2E testing](./docs/e2e-mobile.md)
+- [E2E testing](./docs/e2e-testing.md)
 - [Performance monitoring](./docs/perf-monitoring.md)
 
 
@@ -331,8 +331,8 @@ If something isn’t working the way it should or you’re getting a weird error
 8. Go to Product → Clean Build Folder
 9. Open your terminal again
 10. Navigate to the `mobile` directory in the terminal
-11. Run `bun install && bun pod` again
-12. Run `bun ios`
+11. Run `yarn && yarn pod` again
+12. Run `yarn ios`
 
 ### Shell profile setup
 

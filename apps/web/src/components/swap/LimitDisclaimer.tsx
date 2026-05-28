@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next'
-import { Flex, FlexProps, styled, Text } from 'ui/src'
-import { ExternalLink } from '~/theme/components/Links'
+import { ExternalLink } from 'theme/components/Links'
+import { Flex, FlexProps, Text, styled } from 'ui/src'
 
 const DisclaimerText = styled(Text, {
   variant: 'body4',
@@ -15,7 +15,7 @@ export function LimitDisclaimer(props: FlexProps) {
       </DisclaimerText>
       <DisclaimerText>Canceling a limit has a network cost.</DisclaimerText>
       <DisclaimerText>
-        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
+        <ExternalLink href="https://support.ring.exchange/hc/en-us/articles/24300813697933">
           <Trans i18nKey="common.button.learn" />
         </ExternalLink>
       </DisclaimerText>

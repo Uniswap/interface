@@ -1,10 +1,10 @@
+import { useAccount } from 'hooks/useAccount'
+import { useLpIncentivesTransactionState } from 'hooks/useLpIncentivesTransactionState'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
 import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useAccount } from '~/hooks/useAccount'
-import { useLpIncentivesTransactionState } from '~/hooks/useLpIncentivesTransactionState'
 
 // This is used as check to avoid showing user rewards they just claimed
 // This date/amount will be saved on successful rewards claim, and checked against when rewards refetches on page refresh
@@ -34,7 +34,7 @@ export function useLpIncentives(): UseLpIncentivesResult {
 
   // Refetch rewards on transaction success with "reload" true to bust the Merkl cache for users wallet address
   const { refetch } = useGetPoolsRewards(
-    { walletAddress: account.address, chainIds: [UniverseChainId.Mainnet], reload: true },
+    { walletAddress: account?.address, chainIds: [UniverseChainId.Mainnet], reload: true },
     false,
   )
 
@@ -43,7 +43,7 @@ export function useLpIncentives(): UseLpIncentivesResult {
     setHasCollectedRewards(true)
 
     // Reload rewards data from the API
-    if (account.address) {
+    if (account?.address) {
       try {
         const { data: rewardsData } = await refetch()
 
@@ -56,11 +56,11 @@ export function useLpIncentives(): UseLpIncentivesResult {
           // If refetch shows 0 rewards, clear the temporary storage
           setLastClaimed(null)
         }
-      } catch {
+      } catch (error) {
         setLastClaimed(null)
       }
     }
-  }, [refetch, account.address, setLastClaimed])
+  }, [refetch, account?.address, setLastClaimed])
 
   const openModal = useCallback(() => {
     setIsModalOpen(true)

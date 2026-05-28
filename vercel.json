@@ -7,6 +7,35 @@
   ],
   "headers": [
     {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self' https://vercel.live/ https://vercel.com; script-src 'self' data: 'wasm-unsafe-eval' 'sha256-jhb+qiJiVBxruYChJWIrsskRE2fAoV/F/B10cAoiSB0='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com https://fonts.gstatic.com/s/inter/v18/*; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://fonts.gstatic.com/s/inter/v18/*; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; media-src 'self' *; form-action 'none'; base-uri 'self'; frame-ancestors 'none'; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.railway.app https://*.twnodes.com https://*.ring.exchange https://*.walletconnect.com https://*.walletconnect.org https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.morpho.org https://api.opensea.io https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.morpho.org https://celo-org.github.io https://cloudflare-eth.com https://erasld2vrf.execute-api.us-east-2.amazonaws.com https://kkt5z5xhw3.execute-api.us-east-1.amazonaws.com https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com https://embedded-wallet.app-907329d19a06.enclave.evervault.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://hardbin.com/ https://i.seadn.io/ https://images-country.meld.io https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://browser-intake-datadoghq.com https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://rpc.soneium.org https://rpc.zora.energy/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://ring.exchange https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io https://x6ahx1oagk.execute-api.us-east-2.amazonaws.com https://mainnet.era.zksync.io/ https://8mr3mthjba.execute-api.us-east-2.amazonaws.com https://mainnet.unichain.org/ https://api.web3modal.org https://api.statsig.com https://featuregates.org https://events.statsigapi.net https://api.statsigcdn.com https://featureassets.org https://assetsconfigcdn.org https://prodregistryv2.org https://cloudflare-dns.com https://beyondwickedmapping.org https://testring.org https://*.testring.org wss://*.ring.exchange wss://*.testring.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
       "source": "/index.html",
       "headers": [
         {

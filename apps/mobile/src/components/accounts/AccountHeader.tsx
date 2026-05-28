@@ -1,5 +1,4 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect } from 'react'
 import { Gesture, GestureDetector, State } from 'react-native-gesture-handler'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
@@ -9,20 +8,21 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, ScanHome, SettingsHome } from 'ui/src/components/icons'
-import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
-import { setClipboard } from 'utilities/src/clipboard/clipboard'
 import { isDevEnv } from 'utilities/src/environment/env'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useActiveAccount, useActiveAccountAddress, useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -38,7 +38,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
     if (isScreenFocused) {
       pressProgress.value = withDelay(50, withTiming(0))
     }
-  }, [isScreenFocused])
+  }, [isScreenFocused, pressProgress])
 
   const tap = Gesture.Tap()
     .withTestId(TestID.AccountHeaderSettings)
@@ -77,6 +77,7 @@ export function AccountHeader(): JSX.Element {
   const account = useActiveAccount()
   const dispatch = useDispatch()
 
+  const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
 
   // Log ENS and Unitag ownership for user usage stats
@@ -122,20 +123,11 @@ export function AccountHeader(): JSX.Element {
     dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr }))
   }, [dispatch])
 
-  const walletHasName = displayName && displayName.type !== DisplayNameType.Address
+  const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
   const iconSize = 52
 
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
-
   return (
-    <Flex
-      gap="$spacing12"
-      overflow="scroll"
-      pt="$spacing8"
-      px={isBottomTabsEnabled ? '$spacing24' : '$spacing12'}
-      testID="account-header"
-      width="100%"
-    >
+    <Flex gap="$spacing12" overflow="scroll" pt="$spacing8" px="$spacing12" testID="account-header" width="100%">
       {activeAddress && (
         <Flex alignItems="flex-start" gap="$spacing12" width="100%">
           <Flex row justifyContent="space-between" width="100%">
@@ -156,6 +148,7 @@ export function AccountHeader(): JSX.Element {
                 <AccountIcon
                   showBorder
                   address={activeAddress}
+                  avatarUri={avatar}
                   showBackground={true}
                   showViewOnlyBadge={account?.type === AccountType.Readonly}
                   size={iconSize}
@@ -180,14 +173,14 @@ export function AccountHeader(): JSX.Element {
                 <TouchableArea hitSlop={20} testID={TestID.AccountHeaderCopyAddress} onPress={onPressCopyAddress}>
                   <Flex centered row shrink gap="$spacing4">
                     <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} variant="subheading2">
-                      {sanitizeAddressText(shortenAddress({ address: activeAddress }))}
+                      {sanitizeAddressText(shortenAddress(activeAddress))}
                     </Text>
                     <CopyAlt color="$neutral2" size="$icon.16" />
                   </Flex>
                 </TouchableArea>
               )}
             </Flex>
-            <Flex row alignItems="flex-start" gap="$spacing12">
+            <Flex row alignItems="flex-start" gap="$spacing16">
               <TouchableArea
                 scaleTo={SCAN_ICON_ACTIVE_SCALE}
                 activeOpacity={1}

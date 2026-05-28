@@ -1,38 +1,43 @@
 import { act, screen } from '@testing-library/react'
+import { ModalRenderer, modalRegistry } from 'components/TopLevelModals/modalRegistry'
+import { useAppSelector } from 'state/hooks'
+import { mocked } from 'test-utils/mocked'
+import { render } from 'test-utils/render'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ModalRenderer, modalRegistry } from '~/components/TopLevelModals/modalRegistry'
-import { useAppSelector } from '~/state/hooks'
-import { mocked } from '~/test-utils/mocked'
-import { render } from '~/test-utils/render'
 
-vi.mock('~/components/claim/AddressClaimModal', () => ({
+jest.mock('components/claim/AddressClaimModal', () => ({
   __esModule: true,
   default: () => <div data-testid="mock-address-claim-modal">Address Claim Modal</div>,
 }))
 
-vi.mock('~/components/ConnectedAccountBlocked', () => ({
+jest.mock('components/ConnectedAccountBlocked', () => ({
   __esModule: true,
   default: () => <div data-testid="mock-connected-account-blocked">Connected Account Blocked</div>,
 }))
 
-vi.mock('~/components/AccountDrawer/UniwalletModal', () => ({
+jest.mock('components/AccountDrawer/UniwalletModal', () => ({
   __esModule: true,
   default: () => <div data-testid="mock-uniwallet-modal">Uniwallet Modal</div>,
 }))
 
-vi.mock('~/components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal', () => ({
+jest.mock('components/Banner/shared/Banners', () => ({
+  __esModule: true,
+  Banners: () => <div data-testid="mock-banners">Banners</div>,
+}))
+
+jest.mock('components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal', () => ({
   __esModule: true,
   OffchainActivityModal: () => <div data-testid="mock-offchain-activity-modal">Offchain Activity Modal</div>,
 }))
 
-vi.mock('~/components/TopLevelModals/UkDisclaimerModal', () => ({
+jest.mock('components/TopLevelModals/UkDisclaimerModal', () => ({
   __esModule: true,
   UkDisclaimerModal: () => <div data-testid="mock-uk-disclaimer-modal">UK Disclaimer Modal</div>,
 }))
 
-vi.mock('~/state/hooks', () => ({
-  useAppSelector: vi.fn(),
-  useAppDispatch: vi.fn(),
+jest.mock('state/hooks', () => ({
+  useAppSelector: jest.fn(),
+  useAppDispatch: jest.fn(),
 }))
 
 describe('ModalRegistry', () => {
@@ -70,6 +75,14 @@ describe('ModalRegistry', () => {
       expect(screen.queryByTestId('mock-address-claim-modal')).not.toBeInTheDocument()
     })
 
+    it('renders always mounted modals regardless of state', async () => {
+      mocked(useAppSelector).mockReturnValue({ application: { openModal: null } })
+      await act(async () => {
+        render(<ModalRenderer modalName={ModalName.Banners} />)
+      })
+      expect(screen.getByTestId('mock-banners')).toBeInTheDocument()
+    })
+
     it('renders modals with custom props', async () => {
       mocked(useAppSelector).mockReturnValue({ application: { openModal: { name: ModalName.UniWalletConnect } } })
       await act(async () => {
@@ -101,6 +114,7 @@ describe('ModalRegistry', () => {
         ModalName.AddressClaim,
         ModalName.BlockedAccount,
         ModalName.UniWalletConnect,
+        ModalName.Banners,
         ModalName.OffchainActivity,
         ModalName.UkDisclaimer,
         ModalName.TestnetMode,
@@ -122,7 +136,12 @@ describe('ModalRegistry', () => {
     })
 
     it('has correct isAlwaysMounted flags', () => {
-      const alwaysMountedModals = [ModalName.OffchainActivity, ModalName.UkDisclaimer, ModalName.DevFlags]
+      const alwaysMountedModals = [
+        ModalName.Banners,
+        ModalName.OffchainActivity,
+        ModalName.UkDisclaimer,
+        ModalName.DevFlags,
+      ]
 
       alwaysMountedModals.forEach((modalName) => {
         expect(modalRegistry[modalName]?.shouldMount(null)).toBe(true)
@@ -148,6 +167,13 @@ describe('ModalRegistry', () => {
     })
 
     it('has correct shouldMount logic for always mounted modals', () => {
+      expect(
+        modalRegistry[ModalName.Banners]?.shouldMount({
+          application: {
+            openModal: null,
+          },
+        }),
+      ).toBe(true)
       expect(
         modalRegistry[ModalName.OffchainActivity]?.shouldMount({
           application: {

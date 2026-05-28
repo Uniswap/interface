@@ -1,30 +1,31 @@
-import { useTranslation } from 'react-i18next'
-import { HeightAnimator } from 'ui/src'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
-import { useLPSlippageValue } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
-import { LiquidityModalHeader } from '~/components/Liquidity/LiquidityModalHeader'
-import { useModalState } from '~/hooks/useModalState'
 import {
   IncreaseLiquidityContextProvider,
   IncreaseLiquidityStep,
   useIncreaseLiquidityContext,
-} from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
-import { IncreaseLiquidityForm } from '~/pages/IncreaseLiquidity/IncreaseLiquidityForm'
-import { IncreaseLiquidityReview } from '~/pages/IncreaseLiquidity/IncreaseLiquidityReview'
-import { IncreaseLiquidityTxContextProvider } from '~/pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
+} from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
+import { IncreaseLiquidityReview } from 'components/IncreaseLiquidity/IncreaseLiquidityReview'
+import { IncreaseLiquidityTxContextProvider } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
+import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
+import { useModalState } from 'hooks/useModalState'
+import { IncreaseLiquidityForm } from 'pages/IncreaseLiquidity/IncreaseLiquidityForm'
+import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
+import { useTranslation } from 'react-i18next'
+import { HeightAnimator } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 
 function IncreaseLiquidityModalInner() {
   const { t } = useTranslation()
 
   const { step, setStep, increaseLiquidityState } = useIncreaseLiquidityContext()
   const { closeModal } = useModalState(ModalName.AddLiquidity)
-  const autoSlippageTolerance = useLPSlippageValue({
-    version: increaseLiquidityState.position?.version,
-    currencyA: increaseLiquidityState.position?.currency0Amount.currency,
-    currencyB: increaseLiquidityState.position?.currency1Amount.currency,
-  })
+  const autoSlippageTolerance = useLPSlippageValue(
+    increaseLiquidityState.position?.version,
+    increaseLiquidityState.position?.currency0Amount.currency,
+    increaseLiquidityState.position?.currency1Amount.currency,
+  )
 
   let modalContent
   switch (step) {
@@ -37,7 +38,10 @@ function IncreaseLiquidityModalInner() {
   }
 
   return (
-    <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
+    <TransactionSettingsContextProvider
+      settingKey={TransactionSettingKey.LP}
+      autoSlippageTolerance={autoSlippageTolerance}
+    >
       <IncreaseLiquidityTxContextProvider>
         <Modal name={ModalName.AddLiquidity} onClose={closeModal} isDismissible gap="$gap24" padding="$padding16">
           <LiquidityModalHeader
@@ -45,10 +49,12 @@ function IncreaseLiquidityModalInner() {
             closeModal={closeModal}
             goBack={step === IncreaseLiquidityStep.Review ? () => setStep(IncreaseLiquidityStep.Input) : undefined}
           />
-          <HeightAnimator useInitialHeight>{modalContent}</HeightAnimator>
+          <HeightAnimator animation="fast" useInitialHeight>
+            {modalContent}
+          </HeightAnimator>
         </Modal>
       </IncreaseLiquidityTxContextProvider>
-    </LPTransactionSettingsStoreContextProvider>
+    </TransactionSettingsContextProvider>
   )
 }
 

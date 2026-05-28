@@ -1,18 +1,18 @@
-import { type QueryKey, queryOptions, type UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query'
-import { type TradingApi } from '@universe/api'
+import { QueryKey, UseQueryResult, queryOptions, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useContext, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { type UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { type SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
+import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { MAX_REACT_QUERY_CACHE_TIME_MS, ONE_HOUR_MS } from 'utilities/src/time/time'
-import { type DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
+import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
 import {
   doesAccountNeedDelegationForChain,
   isNonUniswapDelegation,
@@ -78,7 +78,6 @@ export function useGetSwapDelegationInfoForActiveAccount(): (chainId?: UniverseC
     return {
       delegationAddress: delegationDetails?.contractAddress,
       delegationInclusion: delegationDetails?.needsDelegation ?? false,
-      isWalletDelegatedToUniswap: delegationDetails?.isWalletDelegatedToUniswap,
     }
   })
 }
@@ -89,6 +88,10 @@ export function useGetSwapDelegationAddressForActiveAccount(): (chainId?: Univer
 
   return useEvent((chainId?: UniverseChainId) => {
     if (!activeAccount || !chainId || activeAccount.type !== AccountType.SignerMnemonic) {
+      return undefined
+    }
+
+    if (!chainId) {
       return undefined
     }
 
@@ -107,7 +110,7 @@ interface WalletDelegationProviderProps {
 
 export function WalletDelegationProvider({
   children,
-  pollingInterval = ONE_HOUR_MS,
+  pollingInterval = 5 * ONE_HOUR_MS,
 }: WalletDelegationProviderProps): JSX.Element {
   const { chains } = useEnabledChains()
 
@@ -135,7 +138,7 @@ export function WalletDelegationProvider({
   const getDelegationDetails = useEvent(
     (address: Address, chainId: UniverseChainId): DelegationCheckResult | undefined => {
       // Get from cache first
-      const cachedDelegationDetails = delegationQuery.data?.[address]?.[chainId]
+      const cachedDelegationDetails = delegationQuery?.data?.[address]?.[chainId]
       if (cachedDelegationDetails) {
         return cachedDelegationDetails
       }
@@ -143,10 +146,7 @@ export function WalletDelegationProvider({
       // Not in cache and not a signer account we're tracking
       const isTrackedAccount = accountAddresses.includes(address)
       if (!isTrackedAccount) {
-        logger.error(new Error('Account is not tracked in WalletDelegationProvider'), {
-          tags: { file: 'WalletDelegationProvider', function: 'getDelegationDetails' },
-        })
-        return undefined
+        throw new Error('Account is not tracked in WalletDelegationProvider')
       }
 
       // If still not in cache, refetch the query to update the cache
@@ -163,7 +163,7 @@ export function WalletDelegationProvider({
   // Function to force refresh delegation data
   const refreshDelegationData = useEvent(async (): Promise<void> => {
     logger.debug('WalletDelegationProvider', 'refreshDelegationData', 'refreshing delegation data')
-    await queryClient.invalidateQueries({ queryKey: delegationQueryOptions.queryKey })
+    await queryClient.fetchQuery({ ...delegationQueryOptions, staleTime: 0 })
   })
 
   const contextValue = useMemo(
@@ -197,8 +197,8 @@ export function getWalletDelegationQueryKey(accountAddresses: Address[], chainId
 export function createDelegationQueryOptions(input: {
   accountAddresses: Address[]
   chainIds: UniverseChainId[]
-}): ReturnType<typeof queryOptions<TradingApi.WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>> {
-  return queryOptions<TradingApi.WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>({
+}): ReturnType<typeof queryOptions<WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>> {
+  return queryOptions<WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>({
     queryKey: getWalletDelegationQueryKey(input.accountAddresses, input.chainIds),
     queryFn: () =>
       checkWalletDelegation({
@@ -216,11 +216,6 @@ export function createDelegationQueryOptions(input: {
 const selectDelegationDetailsByAccount = (
   delegationResponse: Awaited<ReturnType<typeof checkWalletDelegation>>,
 ): DelegationDetailsByAccount => {
-  logger.debug(
-    'WalletDelegationProvider',
-    'selectDelegationDetailsByAccount',
-    'selecting delegation details by account',
-  )
   // Transform the API response to our internal structure
   const delegationDetailsByAccount: DelegationDetailsByAccount = {}
   for (const address of Object.keys(delegationResponse.delegationDetails)) {

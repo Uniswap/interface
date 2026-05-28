@@ -1,21 +1,21 @@
-import { GraphQLApi } from '@universe/api'
-import { TFunction } from 'i18next'
-import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useSporeColors } from 'ui/src'
-import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NumberType } from 'utilities/src/format/types'
-import { TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
-import { ChartHeader } from '~/components/Charts/ChartHeader'
-import { Chart, ChartModelParams } from '~/components/Charts/ChartModel'
-import { useHeaderDateFormatter } from '~/components/Charts/hooks/useHeaderDateFormatter'
+import { RingChartTimePeriod, TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
+import { ChartHeader } from 'components/Charts/ChartHeader'
+import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
 import {
   CustomVolumeChartModel,
   CustomVolumeChartModelParams,
-} from '~/components/Charts/VolumeChart/CustomVolumeChartModel'
-import { getCumulativeVolume, SingleHistogramData } from '~/components/Charts/VolumeChart/utils'
-import { ThemedText } from '~/theme/components'
+} from 'components/Charts/VolumeChart/CustomVolumeChartModel'
+import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
+import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
+import { useHeaderDateFormatter } from 'components/Charts/hooks'
+import { TFunction } from 'i18next'
+import { useTheme } from 'lib/styled-components'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ThemedText } from 'theme/components'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
@@ -49,21 +49,21 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
 }
 
 // eslint-disable-next-line consistent-return
-function formatHistoryDuration(t: TFunction, duration: GraphQLApi.HistoryDuration): string {
+function formatHistoryDuration(t: TFunction, duration: HistoryDuration): string {
   switch (duration) {
-    case GraphQLApi.HistoryDuration.FiveMinute:
+    case HistoryDuration.FiveMinute:
       return t('common.pastFiveMinutes')
-    case GraphQLApi.HistoryDuration.Hour:
+    case HistoryDuration.Hour:
       return t('common.pastHour')
-    case GraphQLApi.HistoryDuration.Day:
+    case HistoryDuration.Day:
       return t('common.pastDay')
-    case GraphQLApi.HistoryDuration.Week:
+    case HistoryDuration.Week:
       return t('common.pastWeek')
-    case GraphQLApi.HistoryDuration.Month:
+    case HistoryDuration.Month:
       return t('common.pastMonth')
-    case GraphQLApi.HistoryDuration.Year:
+    case HistoryDuration.Year:
       return t('common.pastYear')
-    case GraphQLApi.HistoryDuration.Max:
+    case HistoryDuration.Max:
       return t('common.allTime')
   }
 }
@@ -78,7 +78,7 @@ function VolumeChartHeader({
   timePeriod: TimePeriod
 }) {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatFiatPrice } = useFormatter()
   const headerDateFormatter = useHeaderDateFormatter()
 
   const display = useMemo(() => {
@@ -86,7 +86,11 @@ function VolumeChartHeader({
       volume: '-',
       time: '-',
     }
-    const priceFormatter = (price?: number) => convertFiatAmountFormatted(price, NumberType.FiatTokenStats)
+    const priceFormatter = (price?: number) =>
+      formatFiatPrice({
+        price,
+        type: NumberType.ChartFiatValue,
+      })
     if (crosshairData === undefined) {
       const cumulativeVolume = getCumulativeVolume(volumes)
       displayValues.volume = priceFormatter(cumulativeVolume)
@@ -96,7 +100,7 @@ function VolumeChartHeader({
       displayValues.time = headerDateFormatter(crosshairData.time)
     }
     return displayValues
-  }, [crosshairData, convertFiatAmountFormatted, headerDateFormatter, t, timePeriod, volumes])
+  }, [crosshairData, formatFiatPrice, headerDateFormatter, t, timePeriod, volumes])
 
   return (
     <ChartHeader
@@ -109,14 +113,17 @@ function VolumeChartHeader({
 
 function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeTier?: number }) {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { formatFiatPrice } = useFormatter()
   const fees = data.value * ((feeTier ?? 0) / BIPS_BASE / 100)
 
   return (
     <>
       <ThemedText.BodySmall>
         {t(`token.chart.tooltip`, {
-          amount: convertFiatAmountFormatted(fees, NumberType.FiatTokenStats),
+          amount: formatFiatPrice({
+            price: fees,
+            type: NumberType.ChartFiatValue,
+          }),
         })}
       </ThemedText.BodySmall>
     </>
@@ -127,18 +134,17 @@ interface VolumeChartProps {
   height: number
   data: SingleHistogramData[]
   feeTier?: number
-  timePeriod: TimePeriod
+  timePeriod: TimePeriod | RingChartTimePeriod
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
   stale: boolean
-  overrideColor?: string
 }
 
-export function VolumeChart({ height, data, feeTier, timePeriod, stale, overrideColor }: VolumeChartProps) {
-  const colors = useSporeColors()
+export function VolumeChart({ height, data, feeTier, timePeriod, stale }: VolumeChartProps) {
+  const theme = useTheme()
 
   const params = useMemo(
-    () => ({ data, chartColors: [colors.accent1.val], headerHeight: 75, stale }),
-    [data, stale, colors],
+    () => ({ data, colors: [theme.accent1], headerHeight: 75, stale }),
+    [data, stale, theme.accent1],
   )
 
   return (
@@ -146,15 +152,15 @@ export function VolumeChart({ height, data, feeTier, timePeriod, stale, override
       Model={VolumeChartModel}
       params={params}
       height={height}
-      showDottedBackground={true}
-      overrideColor={overrideColor}
       TooltipBody={
         feeTier === undefined // i.e. if is token volume chart
           ? undefined
           : ({ data }: { data: SingleHistogramData }) => <FeesTooltipDisplay data={data} feeTier={feeTier} />
       }
     >
-      {(crosshairData) => <VolumeChartHeader crosshairData={crosshairData} volumes={data} timePeriod={timePeriod} />}
+      {(crosshairData) => (
+        <VolumeChartHeader crosshairData={crosshairData} volumes={data} timePeriod={timePeriod as TimePeriod} />
+      )}
     </Chart>
   )
 }

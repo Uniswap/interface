@@ -1,4 +1,3 @@
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { dismissInAppBrowser } from 'src/utils/linking'
@@ -8,13 +7,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 export function* handleOnRampReturnLink() {
   yield* put(forceFetchFiatOnRampTransactions())
-
-  const isBottomTabsEnabled = getFeatureFlag(FeatureFlags.BottomTabs)
-
-  if (!isBottomTabsEnabled) {
-    yield* call(navigate, MobileScreens.Home, { tab: HomeScreenTabIndex.Activity })
-  } else {
-    yield* call(navigate, MobileScreens.Activity)
-  }
+  yield* call(navigate, MobileScreens.Home, { tab: HomeScreenTabIndex.Activity })
   yield* call(dismissInAppBrowser)
 }

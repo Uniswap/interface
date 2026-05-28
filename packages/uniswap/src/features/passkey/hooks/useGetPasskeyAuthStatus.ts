@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { getPrivyEnums, isSessionAuthenticatedForAction } from 'uniswap/src/features/passkey/embeddedWallet'
+import { Action, isSessionAuthenticatedForAction } from 'uniswap/src/features/passkey/embeddedWallet'
 import { PasskeyAuthStatus } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 export function useGetPasskeyAuthStatus(connectionType: string | undefined): PasskeyAuthStatus {
@@ -8,10 +8,7 @@ export function useGetPasskeyAuthStatus(connectionType: string | undefined): Pas
 
   const { data: isSessionAuthenticated = false } = useQuery({
     queryKey: [ReactQueryCacheKey.PasskeyAuthStatus, isSignedInWithPasskey],
-    queryFn: async () => {
-      const { Action } = await getPrivyEnums()
-      return isSessionAuthenticatedForAction(Action.SIGN_TRANSACTION)
-    },
+    queryFn: () => isSessionAuthenticatedForAction(Action.SIGN_TRANSACTIONS),
     enabled: isSignedInWithPasskey,
     gcTime: 0,
     staleTime: 0,
@@ -20,6 +17,5 @@ export function useGetPasskeyAuthStatus(connectionType: string | undefined): Pas
   return {
     isSignedInWithPasskey,
     isSessionAuthenticated,
-    needsPasskeySignin: isSignedInWithPasskey && !isSessionAuthenticated,
   }
 }

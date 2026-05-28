@@ -1,18 +1,16 @@
 import type { BottomSheetModal as BaseModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import type { ComponentProps, PropsWithChildren, ReactNode } from 'react'
-import type { SharedValue } from 'react-native-reanimated'
-import type { ColorTokens, GetProps, Sheet, SpaceTokens, View } from 'ui/src'
-import type { HandleBarProps } from 'uniswap/src/components/modals/HandleBar'
-import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ComponentProps, PropsWithChildren, ReactNode } from 'react'
+import { SharedValue } from 'react-native-reanimated'
+import { ColorTokens, SpaceTokens, View } from 'ui/src'
+import { HandleBarProps } from 'uniswap/src/components/modals/HandleBar'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
 export type ModalProps = PropsWithChildren<{
   animatedPosition?: SharedValue<number>
   hideHandlebar?: boolean
-  forceRoundedCorners?: boolean
   name: ModalNameType
   enableDynamicSizing?: boolean
   onClose?: () => void
-  snapPointsMode?: GetProps<typeof Sheet>['snapPointsMode']
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
   containerComponent?: ComponentProps<typeof BaseModal>['containerComponent']
@@ -45,16 +43,9 @@ export type ModalProps = PropsWithChildren<{
   padding?: SpaceTokens
   paddingX?: SpaceTokens
   paddingY?: SpaceTokens
-  pt?: SpaceTokens
-  pb?: SpaceTokens
-  mx?: SpaceTokens
   bottomAttachment?: ReactNode
   gap?: ComponentProps<typeof View>['gap']
   flex?: ComponentProps<typeof View>['flex']
   zIndex?: number
-  borderWidth?: number
-  borderColor?: ColorTokens
-  overlayOpacity?: number
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
-  testID?: string
 }>

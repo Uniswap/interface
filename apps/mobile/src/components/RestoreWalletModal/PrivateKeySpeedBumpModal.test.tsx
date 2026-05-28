@@ -1,6 +1,6 @@
 import React from 'react'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { PrivateKeySpeedBumpModal } from 'src/components/RestoreWalletModal/PrivateKeySpeedBumpModal'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { fireEvent, render } from 'src/test/test-utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -8,6 +8,18 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 jest.mock('src/components/modals/useReactNavigationModal', () => ({
   useReactNavigationModal: jest.fn(),
 }))
+
+jest.mock('@gorhom/bottom-sheet', () => {
+  const reactNative = jest.requireActual('react-native')
+  const { View } = reactNative
+  return {
+    __esModule: true,
+    default: View,
+    BottomSheetModal: View,
+    BottomSheetModalProvider: View,
+    BottomSheetView: View,
+  }
+})
 
 describe('PrivateKeySpeedBumpModal', () => {
   const mockPreventCloseRef = { current: false }
@@ -35,7 +47,7 @@ describe('PrivateKeySpeedBumpModal', () => {
     const continueButton = screen.getByTestId(TestID.Continue)
     fireEvent.press(continueButton)
 
-    expect(mockOnClose).toHaveBeenCalled()
+    expect(mockPreventCloseRef.current).toBe(true)
     expect(mockNavigation.navigate).toHaveBeenCalledWith(MobileScreens.ViewPrivateKeys)
   })
 })

@@ -1,6 +1,6 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DoubleLogo > renders with custom icon 1`] = `
+exports[`DoubleLogo renders with custom icon 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -75,7 +75,7 @@ exports[`DoubleLogo > renders with custom icon 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo > renders with custom size 1`] = `
+exports[`DoubleLogo renders with custom size 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -140,7 +140,7 @@ exports[`DoubleLogo > renders with custom size 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo > renders with one valid and one undefined currency 1`] = `
+exports[`DoubleLogo renders with one valid and one undefined currency 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -172,7 +172,7 @@ exports[`DoubleLogo > renders with one valid and one undefined currency 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo > renders with two undefined currencies 1`] = `
+exports[`DoubleLogo renders with two undefined currencies 1`] = `
 <DocumentFragment>
   .c0 {
   --size: 32px;
@@ -185,8 +185,17 @@ exports[`DoubleLogo > renders with two undefined currencies 1`] = `
   line-height: 32px;
   text-align: center;
   width: 32px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   position: relative;
 }
@@ -205,7 +214,7 @@ exports[`DoubleLogo > renders with two undefined currencies 1`] = `
 </DocumentFragment>
 `;
 
-exports[`DoubleLogo > renders with two valid currencies 1`] = `
+exports[`DoubleLogo renders with two valid currencies 1`] = `
 <DocumentFragment>
   <span
     class=""

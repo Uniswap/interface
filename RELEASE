@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmVLk1jqQH3mgTk8H8ZYra8LeP4rrxnCbKojCchonzjLLs`
-- CIDv1: `bafybeidia7heliyc25yheizvrrtvwptv5r4xstcgbydoix43t2zb6at25q`
+- CIDv0: `QmYLUSmyP2FahHkscj7gQbA43gJY3PQ7gekdk8Tt3yfrVq`
+- CIDv1: `bafybeieurfbwxnagisdo3rash52dwiew7ivubnbpig7sy6ub4d3tjfr73q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeidia7heliyc25yheizvrrtvwptv5r4xstcgbydoix43t2zb6at25q.ipfs.dweb.link/
-- [ipfs://QmVLk1jqQH3mgTk8H8ZYra8LeP4rrxnCbKojCchonzjLLs/](ipfs://QmVLk1jqQH3mgTk8H8ZYra8LeP4rrxnCbKojCchonzjLLs/)
+- https://bafybeieurfbwxnagisdo3rash52dwiew7ivubnbpig7sy6ub4d3tjfr73q.ipfs.dweb.link/
+- [ipfs://QmYLUSmyP2FahHkscj7gQbA43gJY3PQ7gekdk8Tt3yfrVq/](ipfs://QmYLUSmyP2FahHkscj7gQbA43gJY3PQ7gekdk8Tt3yfrVq/)
 
-### 5.137.2 (2026-03-13)
+### 5.87.1 (2025-05-29)
 
 
 ### Bug Fixes
 
-* **web:** hotfix #29651 (#5.136.5) (#29664) 417855b
+* **web:** fix token warning modal plural crash (#20340) 0adb22e
 
 

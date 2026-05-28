@@ -1,8 +1,9 @@
+/* eslint-disable import/no-unused-modules */
 import { Percent } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { OrderDirection } from 'appGraphql/data/util'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { OrderDirection } from '~/appGraphql/data/util'
-import { FeeData } from '~/components/Liquidity/Create/types'
+import { Token as RingToken } from 'uniswap/src/data/graphql/ringswap-data-api/__generated__/types-and-hooks'
+import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -44,32 +45,26 @@ export function calculate1DVolOverTvl(volume24h: number | undefined, tvl: number
  * @param feeTier the feeTier of the pool or 300 for a v2 pair
  * @returns APR expressed as a percent
  */
-export function calculateApr({
-  volume24h,
-  tvl,
-  feeTier,
-}: {
-  volume24h?: number
-  tvl?: number
-  feeTier?: number
-}): Percent {
+export function calculateApr(volume24h?: number, tvl?: number, feeTier?: number): Percent {
   if (!volume24h || !feeTier || !tvl || !Math.round(tvl)) {
     return new Percent(0)
   }
   return new Percent(Math.round(volume24h * (feeTier / (BIPS_BASE * 100)) * 365), Math.round(tvl))
 }
 
+export const V2_BIPS = 3000
+
 export interface TablePool {
   hash: string
-  token0: GraphQLApi.Token
-  token1: GraphQLApi.Token
+  token0: Token
+  token1: Token
   tvl: number
   volume24h: number
   volume30d: number
   apr: Percent
   volOverTvl: number
-  feeTier: FeeData
-  protocolVersion: GraphQLApi.ProtocolVersion
+  feeTier: number
+  protocolVersion: ProtocolVersion
   hookAddress?: string
   boostedApr?: number
 }
@@ -85,5 +80,36 @@ export enum PoolSortFields {
 
 export type PoolTableSortState = {
   sortBy: PoolSortFields
+  sortDirection: OrderDirection
+}
+
+export interface TableRingPool {
+  hash: string
+  chain: Chain
+  token0: RingToken
+  token1: RingToken
+  tvl: number
+  volume24h: number
+  volume30d: number
+  apr: Percent
+  volOverTvl: number
+  feeTier: number
+  protocolVersion: ProtocolVersion
+  hookAddress?: string
+  boostedApr?: number
+  address?: string
+  poolId?: string
+}
+
+export enum RingPoolSortFields {
+  TVL = 'TVL',
+  Apr = 'APR',
+  Volume24h = '1 day volume',
+  Volume30D = '30 day volume',
+  VolOverTvl = '1 day volume/TVL',
+}
+
+export type RingPoolTableSortState = {
+  sortBy: RingPoolSortFields
   sortDirection: OrderDirection
 }

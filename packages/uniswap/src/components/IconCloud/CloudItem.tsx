@@ -1,5 +1,5 @@
 import { startTransition, useEffect, useState } from 'react'
-import { Flex, type FlexProps, styled } from 'ui/src'
+import { Flex, styled, type FlexProps } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { ItemData, ItemPoint } from 'uniswap/src/components/IconCloud/IconCloud'
 import { randomChoice } from 'uniswap/src/components/IconCloud/utils'
@@ -51,13 +51,6 @@ const FloatContainer = styled(Flex, {
         },
       }),
     },
-    paused: {
-      true: {
-        '$platform-web': {
-          animationPlayState: 'paused',
-        },
-      },
-    },
   } as const,
 })
 
@@ -79,13 +72,6 @@ const RotateContainer = styled(Flex, {
           animationDuration: `${1000 * val}ms`,
         },
       }),
-    },
-    paused: {
-      true: {
-        '$platform-web': {
-          animationPlayState: 'paused',
-        },
-      },
     },
   } as const,
 })
@@ -119,6 +105,10 @@ const ItemContainer = styled(Flex, {
   backgroundPosition: 'center center',
   transition: 'filter 0.15s ease-in-out',
   transformOrigin: 'center center',
+
+  '$platform-web': {
+    willChange: 'filter',
+  },
 
   variants: {
     logoUrl: {
@@ -157,13 +147,11 @@ export function CloudItem<T extends ItemData>({
   renderOuterElement,
   getElementRounded,
   onPress,
-  isPaused = false,
 }: {
   point: ItemPoint<T>
   renderOuterElement?: (point: ItemPoint<T>) => JSX.Element
   getElementRounded?: (point: ItemPoint<T>) => boolean
   onPress?: (point: ItemPoint<T>) => void
-  isPaused?: boolean
 }): JSX.Element {
   const { x, y, blur, size, rotation, opacity, delay, floatDuration, color } = point
 
@@ -193,9 +181,9 @@ export function CloudItem<T extends ItemData>({
           }}
           size={size}
         >
-          <FloatContainer duration={floatDuration} paused={isPaused}>
+          <FloatContainer duration={floatDuration}>
             {renderOuterElement && renderOuterElement(point)}
-            <RotateContainer duration={duration} paused={isPaused}>
+            <RotateContainer duration={duration}>
               <ItemContainer
                 size={size}
                 animation="fast"

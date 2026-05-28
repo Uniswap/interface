@@ -1,7 +1,8 @@
+import { ReactNode } from 'react'
 import { Flex, Switch, Text } from 'ui/src'
 
 interface SettingsToggleProps {
-  title: string
+  title: ReactNode
   description?: string
   dataid?: string
   disabled?: boolean

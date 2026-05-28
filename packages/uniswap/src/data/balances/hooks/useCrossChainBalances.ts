@@ -1,22 +1,20 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
-import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useBalances } from 'uniswap/src/data/balances/hooks/useBalances'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 export function useCrossChainBalances({
-  evmAddress,
-  svmAddress,
+  address,
   currencyId,
   crossChainTokens,
   fetchPolicy = 'cache-and-network',
 }: {
-  evmAddress?: Address
-  svmAddress?: Address
+  address: Address
   currencyId: string
-  crossChainTokens: Maybe<{ chain: GraphQLApi.Chain; address?: Maybe<string> }[]>
+  crossChainTokens: Maybe<{ chain: Chain; address?: Maybe<string> }[]>
   fetchPolicy?: WatchQueryFetchPolicy
 }): {
   currentChainBalance: PortfolioBalance | null
@@ -24,8 +22,7 @@ export function useCrossChainBalances({
 } {
   const currentChainBalance =
     useBalances({
-      evmAddress,
-      svmAddress,
+      address,
       currencies: [currencyId],
       fetchPolicy,
     })?.[0] ?? null
@@ -50,7 +47,7 @@ export function useCrossChainBalances({
     [crossChainTokens, currentChainId],
   )
 
-  const otherChainBalances = useBalances({ evmAddress, svmAddress, currencies: bridgedCurrencyIds })
+  const otherChainBalances = useBalances({ address, currencies: bridgedCurrencyIds })
 
   return {
     currentChainBalance,

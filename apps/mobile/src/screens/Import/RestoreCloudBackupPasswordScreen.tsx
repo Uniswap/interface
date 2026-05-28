@@ -6,16 +6,16 @@ import { TextInput } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
+import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import {
   incrementPasswordAttempts,
   resetLockoutEndTime,
   resetPasswordAttempts,
   setLockoutEndTime,
 } from 'src/features/CloudBackup/passwordLockoutSlice'
-import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
+import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
-import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
@@ -128,7 +128,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
           navigation,
           screen: OnboardingScreens.RestoreCloudBackupPassword,
         })
-      } catch {
+      } catch (error) {
         setIsLoading(false)
         dispatch(incrementPasswordAttempts())
         const updatedLockoutEndTime = calculateLockoutEndTime(passwordAttemptCount + 1)
@@ -151,25 +151,10 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
   }
 
   return (
-    <SafeKeyboardOnboardingScreen
+    <OnboardingScreen
       Icon={Cloud}
       subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
       title={t('account.cloud.password.title')}
-      footer={
-        <Flex row>
-          <Button
-            isDisabled={!enteredPassword || isLockedOut || isLoading}
-            testID={TestID.Continue}
-            variant="branded"
-            size="large"
-            my="$spacing12"
-            mx="$spacing16"
-            onPress={onPasswordSubmit}
-          >
-            {t('common.button.continue')}
-          </Button>
-        </Flex>
-      }
     >
       <Flex>
         <PasswordInput
@@ -196,7 +181,18 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
             </Text>
           </TouchableArea>
         )}
+        <Flex row>
+          <Button
+            isDisabled={!enteredPassword || isLockedOut || isLoading}
+            testID={TestID.Continue}
+            variant="branded"
+            size="large"
+            onPress={onPasswordSubmit}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Flex>
       </Flex>
-    </SafeKeyboardOnboardingScreen>
+    </OnboardingScreen>
   )
 }

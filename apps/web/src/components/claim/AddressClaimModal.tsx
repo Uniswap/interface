@@ -1,6 +1,18 @@
 import { isAddress } from '@ethersproject/address'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import Circle from 'assets/images/blue-loader.svg'
+import tokenLogo from 'assets/images/token-logo.png'
+import AddressInputPanel from 'components/AddressInputPanel'
+import { AutoColumn } from 'components/deprecated/Column'
+import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection } from 'components/earn/styled'
+import { useAccount } from 'hooks/useAccount'
+import { ModalState } from 'hooks/useModalState'
 import { useState } from 'react'
+import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
+import { useIsTransactionPending } from 'state/transactions/hooks'
+import { ExternalLink } from 'theme/components/Links'
+import { CustomLightSpinner } from 'theme/components/icons/spinner'
+import { UniTokenAnimated } from 'theme/components/icons/uniTokenAnimated'
 import { Button, Flex, Text, View } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -9,18 +21,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import Circle from '~/assets/images/blue-loader.svg'
-import tokenLogo from '~/assets/images/token-logo.png'
-import AddressInputPanel from '~/components/AddressInputPanel'
-import { AutoColumn } from '~/components/deprecated/Column'
-import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection } from '~/components/earn/styled'
-import { useAccount } from '~/hooks/useAccount'
-import { ModalState } from '~/hooks/useModalState'
-import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from '~/state/claim/hooks'
-import { useIsTransactionPending } from '~/state/transactions/hooks'
-import { CustomLightSpinner } from '~/theme/components/icons/spinner'
-import { UniTokenAnimated } from '~/theme/components/icons/uniTokenAnimated'
-import { ExternalLink } from '~/theme/components/Links'
 
 export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
   const account = useAccount()
@@ -72,8 +72,8 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
     closeModal()
   }
 
-  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' })
-  const unclaimedUni = unclaimedAmount?.toFixed(0, { groupSeparator: ',' })
+  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
+  const unclaimedUni = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
 
   // Avoiding translating because the structure for "Claiming UNI for address" is wrong but this modal is rarely used
   // and ran into difficulties with testing it
@@ -161,7 +161,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
               )}
               {parsedAddress && (
                 <Text variant="subheading1" color="$black">
-                  for {shortenAddress({ address: parsedAddress })}
+                  for {shortenAddress(parsedAddress)}
                 </Text>
               )}
             </Flex>
@@ -184,10 +184,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
               </Text>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
-              <ExternalLink
-                href={getExplorerLink({ chainId, data: hash, type: ExplorerDataType.TRANSACTION })}
-                style={{ zIndex: 99 }}
-              >
+              <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>
                 View transaction on Explorer
               </ExternalLink>
             )}

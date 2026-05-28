@@ -1,20 +1,19 @@
-import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import { AppDownloadPlatform, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { AppDownloadPlatform } from 'uniswap/src/features/telemetry/types'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 
 // OneLink will direct to App/Play Store or microsite depending on user agent
-const APP_DOWNLOAD_LINKS: Partial<{ [key in ElementName]: string }> = {
-  [ElementName.UniswapWalletModalDownloadButton]: 'https://uniswapwallet.onelink.me/8q3y/qfwlncf9',
-  [ElementName.UniswapWalletNavbarMenuDownloadButton]: 'https://uniswapwallet.onelink.me/8q3y/46tvu6pb',
-  [ElementName.UniswapWalletLandingPageDownloadButton]: 'https://uniswapwallet.onelink.me/8q3y/79gveilz',
-  [ElementName.UniswapWalletBannerDownloadButton]: 'https://uniswapwallet.onelink.me/8q3y/jh9orof3',
+const APP_DOWNLOAD_LINKS: Partial<{ [key in InterfaceElementName]: string }> = {
+  [InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/qfwlncf9',
+  [InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/46tvu6pb',
+  [InterfaceElementName.UNISWAP_WALLET_LANDING_PAGE_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/79gveilz',
+  [InterfaceElementName.UNISWAP_WALLET_BANNER_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/jh9orof3',
 }
 
 export const MICROSITE_LINK = 'https://wallet.uniswap.org/'
 
 type OpenDownloadAppOptions = {
-  element: ElementName
+  element: InterfaceElementName
 }
 
 /**
@@ -30,24 +29,25 @@ type OpenDownloadAppOptions = {
  */
 export function openDownloadApp({ element }: OpenDownloadAppOptions) {
   if (isWebIOS) {
-    openDownloadStore({ element, appPlatform: AppDownloadPlatform.Ios })
+    openDownloadStore({ element, appPlatform: AppDownloadPlatform.IOS, linkTarget: 'uniswap_wallet_appstore' })
   } else if (isWebAndroid) {
-    openDownloadStore({ element, appPlatform: AppDownloadPlatform.Android })
+    openDownloadStore({ element, appPlatform: AppDownloadPlatform.ANDROID, linkTarget: 'uniswap_wallet_playstore' })
   } else {
-    sendAnalyticsEvent(InterfaceEventName.UniswapWalletMicrositeOpened, { element })
-    window.open(APP_DOWNLOAD_LINKS[element], '_blank', 'noopener,noreferrer')
+    sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element })
+    window.open(APP_DOWNLOAD_LINKS[element], /* target = */ 'uniswap_wallet_microsite')
   }
 }
 
 type AnalyticsLinkOptions = {
-  element: ElementName
+  element: InterfaceElementName
   appPlatform?: AppDownloadPlatform
+  linkTarget?: string
 }
 
 const openDownloadStore = (options: AnalyticsLinkOptions) => {
-  sendAnalyticsEvent(InterfaceEventName.UniswapWalletAppDownloadOpened, {
+  sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_APP_DOWNLOAD_OPENED, {
     element: options.element,
-    appPlatform: options.appPlatform,
+    appPlatform: options?.appPlatform,
   })
-  window.open(APP_DOWNLOAD_LINKS[options.element], '_blank', 'noopener,noreferrer')
+  window.open(APP_DOWNLOAD_LINKS[options.element], /* target = */ options.linkTarget)
 }

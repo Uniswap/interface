@@ -4,10 +4,10 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { Flex, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 import { useAccountsList, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const DEFAULT_ACCOUNTS_TO_DISPLAY = 3
@@ -53,9 +53,8 @@ export function WalletSettings(): JSX.Element {
             showViewOnlyBadge={isViewOnlyWallet}
             size={iconSizes.icon40}
             variant="body1"
-            alignItems="center"
           />
-          <RotatableChevron color="$neutral3" direction="end" size="$icon.24" />
+          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
       </TouchableArea>
     )
@@ -70,15 +69,16 @@ export function WalletSettings(): JSX.Element {
           <ExpandoRow
             isExpanded={showAll}
             label={t('settings.section.wallet.hidden.row.title', { numHidden: allAccounts.length - 1 })}
+            mx="$spacing16"
             onPress={(): void => toggleViewAll()}
           />
 
-          {showAll && accountsWithoutActiveAccount.map(renderAccountRow)}
+          {showAll && accountsWithoutActiveAccount?.map(renderAccountRow)}
         </>
       ) : (
         <>
           {renderAccountRow(activeAccount)}
-          {accountsWithoutActiveAccount.map(renderAccountRow)}
+          {accountsWithoutActiveAccount?.map(renderAccountRow)}
         </>
       )}
     </Flex>

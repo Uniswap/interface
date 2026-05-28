@@ -1,71 +1,22 @@
-import React, { memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { LayoutChangeEvent, View } from 'react-native'
+import { PropsWithChildren, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { View } from 'react-native'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { GestureResponderEvent } from 'react-native'
-import Animated, { useSharedValue } from 'react-native-reanimated'
-import {
-  AnimatePresence,
-  Flex,
-  FlexProps,
-  OverKeyboardContent,
-  Portal,
-  styled,
-  TouchableArea,
-  TouchableAreaProps,
-  useIsDarkMode,
-} from 'ui/src'
+import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import { AnimatePresence, Flex, FlexProps, Portal, TouchableArea, isWeb, styled, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { spacing, zIndexes } from 'ui/src/theme'
+import { iconSizes, spacing, zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isAndroid, isTouchable, isWebApp, isWebPlatform } from 'utilities/src/platform'
+import { isAndroid, isInterface, isTouchable } from 'utilities/src/platform'
 import { executeWithFrameDelay } from 'utilities/src/react/delayUtils'
-import { useEvent } from 'utilities/src/react/hooks'
 import { useTimeout } from 'utilities/src/time/timing'
 
 const DEFAULT_MIN_WIDTH = 225
 const MIN_HEIGHT = 250
-
-const enterStyle = { y: -20, opacity: 0 }
-const exitStyle = { y: -10, opacity: 0 }
-
-const contentContainerStyle = {
-  padding: spacing.spacing8,
-}
-
-const MenuOptionItem = ({
-  onPress,
-  closeOnSelect,
-  handleClose,
-  render,
-  testID,
-}: {
-  onPress: () => void
-  closeOnSelect: boolean
-  handleClose: DropdownContentProps['handleClose']
-  render: () => React.ReactNode
-  testID: string
-}): JSX.Element => {
-  const handleOnPress: TouchableAreaProps['onPress'] = useEvent((event) => {
-    executeWithFrameDelay({
-      firstAction: () => {
-        if (closeOnSelect) {
-          handleClose?.(event)
-        }
-      },
-      secondAction: onPress,
-    })
-  })
-  return (
-    <TouchableArea hoverable borderRadius="$rounded8" onPress={handleOnPress}>
-      <Flex testID={testID}>{render()}</Flex>
-    </TouchableArea>
-  )
-}
 
 type LayoutMeasurements = {
   x: number
@@ -109,40 +60,34 @@ export function ActionSheetDropdown({
   const insets = useAppInsets()
   const containerRef = useRef<View>(null)
   const [isOpen, setOpen] = useState(false)
-  const [toggleMeasurements, setToggleMeasurements] = useState<ToggleMeasurements | null>(null)
+  const [toggleMeasurements, setToggleMeasurements] = useState<ToggleMeasurements>(null)
 
   const openDropdown = (event: GestureResponderEvent): void => {
     onPress?.(event)
 
-    // Dismiss the keyboard before opening the dropdown to avoid touch handling issues
-    closeKeyboardBeforeCallback(() => {
-      const containerNode = containerRef.current
+    const containerNode = containerRef?.current
 
-      if (containerNode) {
-        // eslint-disable-next-line max-params
-        containerNode.measureInWindow((x, y, width, height) => {
-          setToggleMeasurements({
-            x,
-            y: y + (isAndroid ? insets.top : 0),
-            width,
-            height,
-            sticky: styles?.sticky,
-          })
-          setOpen(true)
+    if (containerNode) {
+      containerNode.measureInWindow((x, y, width, height) => {
+        setToggleMeasurements({
+          x,
+          y: y + (isAndroid ? insets.top : 0),
+          width,
+          height,
+          sticky: styles?.sticky,
         })
-      }
-    })
+        setOpen(true)
+      })
+    }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +toggleMeasurements?.sticky, insets.top
   useEffect(() => {
-    if (!isWebPlatform) {
+    if (!isWeb) {
       return undefined
     }
 
     function resizeListener(): void {
-      // eslint-disable-next-line max-params
-      containerRef.current?.measureInWindow((x, y, width, height) => {
+      containerRef?.current?.measureInWindow((x, y, width, height) => {
         setToggleMeasurements((prev) => ({
           ...prev,
           x,
@@ -160,7 +105,6 @@ export function ActionSheetDropdown({
     }
   }, [toggleMeasurements?.sticky, insets.top])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +setOpen, setToggleMeasurements
   const closeDropdown = useCallback(
     (event: GestureResponderEvent): void => {
       setOpen(false)
@@ -184,12 +128,17 @@ export function ActionSheetDropdown({
           gap="$spacing8"
           px={styles?.buttonPaddingX}
           py={styles?.buttonPaddingY || '$spacing8'}
-          // TODO(INFRA-1126) -- testIDs inside TouchableArea are not recognized by Maestro
           testID={testID || 'dropdown-toggle'}
         >
           {children}
           {showArrow && (
-            <RotatableChevron animation="100ms" color="$neutral2" direction={isOpen ? 'up' : 'down'} size="$icon.20" />
+            <RotatableChevron
+              animation="100ms"
+              color="$neutral2"
+              direction={isOpen ? 'up' : 'down'}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
           )}
         </Flex>
       </TouchableArea>
@@ -229,37 +178,26 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   const [shouldRender, setShouldRender] = useState(false)
   useTimeout(() => setShouldRender(true), 0)
 
-  const isSheetOpenMemo = useMemo(() => ({ isOpen }), [isOpen])
-
   if (!shouldRender) {
     return null
   }
 
-  const zIndex =
-    typeof styles?.dropdownZIndex === 'number'
-      ? styles.dropdownZIndex
-      : typeof styles?.dropdownZIndex === 'boolean'
-        ? Number(styles.dropdownZIndex)
-        : zIndexes.popover
-
   return (
-    <Portal zIndex={zIndex}>
-      <AnimatePresence custom={isSheetOpenMemo}>
-        {toggleMeasurements && (
+    <Portal zIndex={styles?.dropdownZIndex || zIndexes.popover}>
+      <AnimatePresence custom={{ isOpen }}>
+        {isOpen && toggleMeasurements && (
           <>
-            <OverKeyboardContent visible={isOpen}>
-              <Backdrop handleClose={closeDropdown} opacity={!isWebApp || isTouchable ? styles?.backdropOpacity : 0} />
-              <DropdownContent
-                {...contentProps}
-                alignment={styles?.alignment}
-                dropdownMaxHeight={styles?.dropdownMaxHeight}
-                dropdownMinWidth={styles?.dropdownMinWidth}
-                dropdownGap={styles?.dropdownGap}
-                handleClose={closeDropdown}
-                toggleMeasurements={toggleMeasurements}
-                closeOnSelect={closeOnSelect}
-              />
-            </OverKeyboardContent>
+            <Backdrop handleClose={closeDropdown} opacity={!isInterface || isTouchable ? styles?.backdropOpacity : 0} />
+            <DropdownContent
+              {...contentProps}
+              alignment={styles?.alignment}
+              dropdownMaxHeight={styles?.dropdownMaxHeight}
+              dropdownMinWidth={styles?.dropdownMinWidth}
+              dropdownGap={styles?.dropdownGap}
+              handleClose={closeDropdown}
+              toggleMeasurements={toggleMeasurements}
+              closeOnSelect={closeOnSelect}
+            />
           </>
         )}
       </AnimatePresence>
@@ -313,6 +251,14 @@ function DropdownContent({
   const scrollOffset = useSharedValue(0)
   const [contentHeight, setContentHeight] = useState(0)
 
+  const scrollHandler = useAnimatedScrollHandler(
+    (event) => (scrollOffset.value = event.contentOffset.y),
+    // There seems to be a bug in `reanimated` that's causing the dependency array to not be automatically injected by the babel plugin,
+    // but it causes a crash when manually added on web. This is a workaround until the bug is fixed.
+    // The performance impact of not having the array is minimal on web, so this should be fine for now.
+    isWeb ? undefined : [scrollOffset],
+  )
+
   const containerProps = useMemo<FlexProps>(() => {
     if (alignment === 'left') {
       return {
@@ -330,19 +276,19 @@ function DropdownContent({
 
   const bottomOffset = insets.bottom + spacing.spacing12
   const maxHeight =
-    (isWebApp && dropdownMaxHeight) ||
+    (isInterface && dropdownMaxHeight) ||
     Math.max(fullHeight - toggleMeasurements.y - toggleMeasurements.height - bottomOffset, MIN_HEIGHT)
   const overflowsContainer = contentHeight > maxHeight
 
   const initialScrollY = useMemo(() => window.scrollY, [])
   const [windowScrollY, setWindowScrollY] = useState(0)
   useEffect(() => {
-    if (!isWebPlatform) {
+    if (!isWeb) {
       return undefined
     }
 
     function scrollListener(): void {
-      if (!toggleMeasurements.sticky && window.scrollY >= 0) {
+      if (!toggleMeasurements?.sticky && window.scrollY >= 0) {
         setWindowScrollY(window.scrollY - initialScrollY)
       }
     }
@@ -350,11 +296,12 @@ function DropdownContent({
     return () => {
       window.removeEventListener('scroll', scrollListener)
     }
-  }, [initialScrollY, toggleMeasurements.sticky])
+  }, [initialScrollY, toggleMeasurements?.sticky])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +toggleMeasurements
   useEffect(() => {
-    setWindowScrollY(0)
+    if (toggleMeasurements) {
+      setWindowScrollY(0)
+    }
   }, [toggleMeasurements])
 
   const position = useMemo((): { top?: number; bottom?: number } => {
@@ -372,10 +319,6 @@ function DropdownContent({
     return { top }
   }, [toggleMeasurements.y, windowScrollY, fullHeight, toggleMeasurements.height])
 
-  const handleOnLayout = useCallback((event: LayoutChangeEvent) => {
-    setContentHeight(event.nativeEvent.layout.height)
-  }, [])
-
   return (
     <TouchableWhenOpen
       animation="fast"
@@ -385,8 +328,8 @@ function DropdownContent({
       testID="dropdown-content"
       {...position}
       {...containerProps}
-      enterStyle={enterStyle}
-      exitStyle={exitStyle}
+      enterStyle={{ y: -20, opacity: 0 }}
+      exitStyle={{ y: -10, opacity: 0 }}
     >
       <BaseCard.Shadow
         backgroundColor="$surface1"
@@ -398,31 +341,46 @@ function DropdownContent({
       >
         <Flex row maxHeight={maxHeight}>
           <Animated.ScrollView
-            contentContainerStyle={contentContainerStyle}
+            contentContainerStyle={{
+              padding: spacing.spacing8,
+            }}
             scrollEnabled={overflowsContainer}
             scrollEventThrottle={16}
-            showsVerticalScrollIndicator={isWebPlatform}
-            onScroll={(event) => {
-              scrollOffset.value = event.nativeEvent.contentOffset.y
-            }}
+            showsVerticalScrollIndicator={isWeb}
+            onScroll={scrollHandler}
           >
-            <Flex gap={dropdownGap} onLayout={handleOnLayout}>
-              {options.map(({ key, onPress, render }) => (
-                <MenuOptionItem
+            <Flex
+              gap={dropdownGap}
+              onLayout={({
+                nativeEvent: {
+                  layout: { height },
+                },
+              }) => {
+                setContentHeight(height)
+              }}
+            >
+              {options.map(({ key, onPress, render }: MenuItemProp) => (
+                <TouchableArea
                   key={key}
-                  testID={key}
-                  closeOnSelect={closeOnSelect}
-                  handleClose={handleClose}
-                  render={render}
-                  onPress={onPress}
-                />
+                  hoverable
+                  borderRadius="$rounded8"
+                  onPress={(event) => {
+                    executeWithFrameDelay(() => {
+                      if (closeOnSelect) {
+                        handleClose?.(event)
+                      }
+                    }, onPress)
+                  }}
+                >
+                  <Flex testID={key}>{render()}</Flex>
+                </TouchableArea>
               ))}
             </Flex>
           </Animated.ScrollView>
 
           {/* Custom scrollbar to ensure it is visible on iOS and Android even if not scrolling
         and to be able to customize its appearance */}
-          {overflowsContainer && !isWebPlatform && (
+          {overflowsContainer && !isWeb && (
             <Scrollbar
               contentHeight={contentHeight}
               mr="$spacing4"
@@ -442,10 +400,6 @@ type BackdropProps = {
   handleClose?: FlexProps['onPress']
 }
 
-const backdropEnterExitStyle = {
-  opacity: 0,
-}
-
 function Backdrop({ handleClose, opacity: opacityProp }: BackdropProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
@@ -455,8 +409,12 @@ function Backdrop({ handleClose, opacity: opacityProp }: BackdropProps): JSX.Ele
     <TouchableWhenOpen
       animation="100ms"
       backgroundColor="$black"
-      enterStyle={backdropEnterExitStyle}
-      exitStyle={backdropEnterExitStyle}
+      enterStyle={{
+        opacity: 0,
+      }}
+      exitStyle={{
+        opacity: 0,
+      }}
       flex={1}
       inset={0}
       opacity={opacity}

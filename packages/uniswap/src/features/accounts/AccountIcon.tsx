@@ -1,7 +1,5 @@
 import { ColorTokens, Flex, FlexProps, Unicon, UniversalImage, UniversalImageResizeMode } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
-import { isWebPlatform } from 'utilities/src/platform'
 
 // Determines view only icon size in relation to Account Icon size
 const EYE_ICON_SCALING_FACTOR = 0.4
@@ -9,48 +7,28 @@ const EYE_ICON_SCALING_FACTOR = 0.4
 interface AccountIconProps {
   size: number
   showViewOnlyBadge?: boolean
-  address?: string
-  avatarUriOverride?: string | null
+  address: string
+  avatarUri?: string | null
   showBackground?: boolean // Display images with solid background.
   showBorder?: boolean // Display border stroke around image
   borderWidth?: FlexProps['borderWidth']
   borderColor?: ColorTokens
-  transition?: string
 }
-
-// We want to animate the icon only on web, as on Android the opacity is not being increased.
-const ACCOUNT_ICON_WEB_STYLING: FlexProps = isWebPlatform
-  ? {
-      animation: 'fast',
-      enterStyle: { opacity: 0 },
-    }
-  : {}
 
 export function AccountIcon({
   size,
   showViewOnlyBadge,
   address,
-  avatarUriOverride,
+  avatarUri,
   showBackground,
   showBorder,
   borderColor = '$surface1',
   borderWidth = '$spacing2',
-  transition,
-  ...flexProps
-}: FlexProps & AccountIconProps): JSX.Element | null {
-  const { avatar } = useAvatar(address)
-
-  if (!address) {
-    return null
-  }
+}: AccountIconProps): JSX.Element {
   // scale eye icon to be a portion of container size
   const eyeIconSize = size * EYE_ICON_SCALING_FACTOR
 
   const uniconImage = <Unicon address={address} size={size} />
-
-  const avatarUri = avatarUriOverride || avatar
-
-  const sizeTransitionStyle = transition ? { transition } : {}
 
   return (
     <Flex
@@ -60,17 +38,17 @@ export function AccountIcon({
       borderWidth={showBorder ? borderWidth : '$none'}
       position="relative"
       testID="account-icon"
-      style={sizeTransitionStyle}
-      {...flexProps}
     >
-      <Flex {...ACCOUNT_ICON_WEB_STYLING}>
+      {avatarUri ? (
         <UniversalImage
-          style={{ image: { borderRadius: size, ...sizeTransitionStyle } }}
+          style={{ image: { borderRadius: size } }}
           fallback={uniconImage}
           size={{ width: size, height: size, resizeMode: UniversalImageResizeMode.Cover }}
           uri={avatarUri}
         />
-      </Flex>
+      ) : (
+        uniconImage
+      )}
       {showViewOnlyBadge && (
         <Flex
           alignItems="center"

@@ -1,15 +1,13 @@
 import { ReactNode } from 'react'
-import { Flex, styled, Text } from 'ui/src'
+import { Flex, styled as TamaguiStyled, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 
-export const PAGE_WRAPPER_MAX_WIDTH = 480
-
-export const PageWrapper = styled(Flex, {
+export const PageWrapper = TamaguiStyled(Flex, {
   pt: '$spacing60',
   px: '$spacing8',
   pb: '$spacing40',
   width: '100%',
-  maxWidth: PAGE_WRAPPER_MAX_WIDTH,
+  maxWidth: 480,
   $lg: {
     pt: '$spacing48',
   },
@@ -18,7 +16,7 @@ export const PageWrapper = styled(Flex, {
   },
 })
 
-export const ArrowWrapper = styled(Flex, {
+export const ArrowWrapper = TamaguiStyled(Flex, {
   display: 'flex',
   borderRadius: '$rounded12',
   height: 40,
@@ -46,7 +44,44 @@ export const ArrowWrapper = styled(Flex, {
   },
 })
 
-const SwapCallbackErrorInner = styled(Flex, {
+// styles
+const dotsKeyframe = `
+  @keyframes ellipsis {
+    0% {
+      content: '.';
+    }
+    33% {
+      content: '..';
+    }
+    66% {
+      content: '...';
+    }
+  }
+    `
+
+const DotsComponent = TamaguiStyled(Flex, {
+  display: 'inline',
+  className: 'dots-animation',
+})
+
+export const Dots = ({ children }: { children: ReactNode }) => {
+  return (
+    <>
+      <style>{`
+      ${dotsKeyframe}
+      .dots-animation::after {
+        display: inline-block;
+        animation: ellipsis 1.25s infinite;
+        content: '.';
+        width: 1em;
+        text-align: left;
+      }`}</style>
+      <DotsComponent>{children}</DotsComponent>
+    </>
+  )
+}
+
+const SwapCallbackErrorInner = TamaguiStyled(Flex, {
   flexDirection: 'row',
   backgroundColor: '$statusCritical2',
   borderRadius: '$rounded12',
@@ -60,7 +95,7 @@ const SwapCallbackErrorInner = styled(Flex, {
   pl: 16,
 })
 
-const SwapCallbackErrorInnerAlertTriangle = styled(Flex, {
+const SwapCallbackErrorInnerAlertTriangle = TamaguiStyled(Flex, {
   backgroundColor: '$statusCritical2',
   alignItems: 'center',
   justifyContent: 'center',
@@ -83,13 +118,13 @@ export function SwapCallbackError({ error }: { error: ReactNode }) {
   )
 }
 
-export const SwapShowAcceptChanges = styled(Flex, {
+export const SwapShowAcceptChanges = TamaguiStyled(Flex, {
   backgroundColor: '$accent2',
   p: '$spacing12',
   borderRadius: '$rounded12',
 })
 
-export const SwapSection = styled(Flex, {
+export const SwapSection = TamaguiStyled(Flex, {
   backgroundColor: '$surface2',
   borderRadius: '$rounded16',
   height: '120px',
@@ -108,7 +143,7 @@ export const SwapSection = styled(Flex, {
   },
 })
 
-export const ArrowContainer = styled(Flex, {
+export const ArrowContainer = TamaguiStyled(Flex, {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',

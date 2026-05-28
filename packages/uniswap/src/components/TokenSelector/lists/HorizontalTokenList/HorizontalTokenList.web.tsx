@@ -24,7 +24,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
     : suggestedTokens
   const remainingCount = shouldShowExpansion ? suggestedTokens.length - MAX_CARDS_PER_ROW + 1 : 0
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: hack to animate the height of the container when the tokens get expanded
+  // Hack to animate the height of the container when the tokens get expanded
   useEffect(() => {
     if (containerRef.current) {
       setContainerHeight(containerRef.current.scrollHeight)
@@ -55,7 +55,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
         </Flex>
       ))}
       {!expanded && remainingCount > 0 && (
-        <TouchableArea style={styles.fiveTokenRowCard} onPress={() => onExpand?.(suggestedTokens)}>
+        <TouchableArea style={styles.fiveTokenRowCard} onPress={() => onExpand?.()}>
           <Flex fill centered borderRadius="$rounded16" backgroundColor="$surface2">
             <Text variant="buttonLabel3" color="$neutral2">
               {remainingCount}+

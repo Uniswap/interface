@@ -1,17 +1,23 @@
 import { call, select } from 'typed-redux-saga'
-import { getFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
-import { getEnabledChains } from 'uniswap/src/features/chains/utils'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 
-export function* getEnabledChainIdsSaga(platform?: Platform) {
+export function* getEnabledChainIdsSaga() {
   const isTestnetModeEnabled = yield* select(selectIsTestnetModeEnabled)
 
-  const featureFlaggedChainIds = yield* call(getFeatureFlaggedChainIds)
+  const monadTestnetEnabled = getFeatureFlag(FeatureFlags.MonadTestnet)
+  const soneiumEnabled = getFeatureFlag(FeatureFlags.Soneium)
+
+  const featureFlaggedChainIds = filterChainIdsByFeatureFlag({
+    [UniverseChainId.MonadTestnet]: monadTestnetEnabled,
+    [UniverseChainId.Soneium]: soneiumEnabled,
+  })
 
   return yield* call(getEnabledChains, {
-    platform,
     isTestnetModeEnabled,
     featureFlaggedChainIds,
   })

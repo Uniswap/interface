@@ -1,9 +1,9 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { call } from 'typed-redux-saga'
+import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
-import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
-import { Erc20, Erc721, Erc1155 } from 'uniswap/src/abis/types'
+import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -13,11 +13,11 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { createMonitoredSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
+import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 type Params = {
   sendTokenParams: SendTokenParams
@@ -29,7 +29,6 @@ export function* sendToken(params: Params) {
     const { sendTokenParams, txRequest } = params
     const { txId, account, chainId } = sendTokenParams
     const typeInfo = getSendTypeInfo(sendTokenParams)
-
     yield* call(validateSend, sendTokenParams)
     yield* call(executeTransaction, {
       txId,
@@ -75,12 +74,7 @@ function* validateSend(sendTokenParams: SendTokenParams) {
 
   switch (type) {
     case AssetType.ERC1155: {
-      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>({
-        chainId,
-        address: tokenAddress,
-        provider,
-        ABI: ERC1155_ABI,
-      })
+      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>(chainId, tokenAddress, provider, ERC1155_ABI)
 
       const balance = yield* call(erc1155Contract.balanceOf, account.address, sendTokenParams.tokenId)
 
@@ -88,12 +82,7 @@ function* validateSend(sendTokenParams: SendTokenParams) {
       return
     }
     case AssetType.ERC721: {
-      const erc721Contract = contractManager.getOrCreateContract<Erc721>({
-        chainId,
-        address: tokenAddress,
-        provider,
-        ABI: ERC721_ABI,
-      })
+      const erc721Contract = contractManager.getOrCreateContract<Erc721>(chainId, tokenAddress, provider, ERC721_ABI)
       const balance = yield* call(erc721Contract.balanceOf, account.address)
       validateSendAmount('1', balance)
       return
@@ -105,12 +94,7 @@ function* validateSend(sendTokenParams: SendTokenParams) {
         return
       }
 
-      const tokenContract = contractManager.getOrCreateContract<Erc20>({
-        chainId,
-        address: tokenAddress,
-        provider,
-        ABI: ERC20_ABI,
-      })
+      const tokenContract = contractManager.getOrCreateContract<Erc20>(chainId, tokenAddress, provider, ERC20_ABI)
       const currentBalance = yield* call(tokenContract.balanceOf, account.address)
       validateSendAmount(sendTokenParams.amountInWei, currentBalance)
     }
@@ -118,19 +102,18 @@ function* validateSend(sendTokenParams: SendTokenParams) {
 }
 
 function getSendTypeInfo(params: SendTokenParams): SendTokenTransactionInfo {
-  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD, gasEstimate } = params
+  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD, gasEstimates } = params
   const typeInfo: SendTokenTransactionInfo = {
     assetType,
     recipient: toAddress,
     tokenAddress,
     type: TransactionType.Send,
     currencyAmountUSD,
-    gasEstimate,
+    gasEstimates,
   }
 
   if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
     typeInfo.tokenId = params.tokenId
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   } else if (assetType === AssetType.Currency) {
     typeInfo.currencyAmountRaw = params.amountInWei
   }
@@ -143,7 +126,4 @@ export const {
   wrappedSaga: sendTokenSaga,
   reducer: sendTokenReducer,
   actions: sendTokenActions,
-} = createMonitoredSaga({
-  saga: sendToken,
-  name: 'sendToken',
-})
+} = createMonitoredSaga(sendToken, 'sendToken')

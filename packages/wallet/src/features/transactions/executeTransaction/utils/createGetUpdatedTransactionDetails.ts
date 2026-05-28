@@ -16,27 +16,30 @@ export function createGetUpdatedTransactionDetails(ctx: {
   timestampBeforeSign: number
   timestampBeforeSend: number
   populatedRequest: providers.TransactionRequest
-}) => Promise<OnChainTransactionDetails & { hash: string }> {
+}) => Promise<OnChainTransactionDetails> {
   return async function getUpdatedTransactionDetails(input: {
     transaction: OnChainTransactionDetails
     hash: string
     timestampBeforeSign: number
     timestampBeforeSend: number
     populatedRequest: providers.TransactionRequest
-  }): Promise<OnChainTransactionDetails & { hash: string }> {
+  }): Promise<OnChainTransactionDetails> {
     const { transaction, hash, timestampBeforeSign, timestampBeforeSend, populatedRequest } = input
     const timestampAfterSend = Date.now()
     const blockNumber = await ctx.getBlockNumber()
     const currentBlockFetchDelayMs = Date.now() - timestampAfterSend
     const request = getSerializableTransactionRequest(populatedRequest, transaction.chainId)
-    const timeoutTimestampMs = timestampAfterSend + getTransactionTimeoutMs(transaction.chainId)
+    const timeoutTimestampMs =
+      transaction.typeInfo.gasEstimates || transaction.options.submitViaPrivateRpc
+        ? timestampAfterSend + getTransactionTimeoutMs(transaction.chainId)
+        : undefined
     const privateRpcProvider = ctx.isPrivateRpc
       ? 'flashbots'
       : transaction.options.submitViaPrivateRpc
         ? 'mevblocker'
         : undefined
 
-    const updatedTransaction: OnChainTransactionDetails & { hash: string } = {
+    const updatedTransaction: OnChainTransactionDetails = {
       ...transaction,
       hash,
       status: TransactionStatus.Pending,
@@ -56,7 +59,7 @@ export function createGetUpdatedTransactionDetails(ctx: {
   }
 }
 
-// This timeout is used to trigger a log event and make the transaction clearable if it's been pending for too long
+// This timeout is used to trigger a log event if the transaction is pending for too long
 const getTransactionTimeoutMs = (chainId: UniverseChainId): number => {
   if (chainId === UniverseChainId.Mainnet) {
     return 10 * ONE_MINUTE_MS

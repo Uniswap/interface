@@ -1,9 +1,13 @@
+import { DropdownIcon } from 'components/Table/icons'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import deprecatedStyled from 'lib/styled-components'
+import { Portal } from 'nft/components/common/Portal'
 import { RefObject, useCallback, useRef } from 'react'
-import { Checkbox, Flex, styled, Text, useMedia } from 'ui/src'
-import { SortVertical } from 'ui/src/components/icons/SortVertical'
-import { Portal } from '~/components/Popups/Portal'
-import { useOnClickOutside } from '~/hooks/useOnClickOutside'
+import { Checkbox, Flex, Text, styled, useMedia } from 'ui/src'
 
+const StyledDropdownIcon = deprecatedStyled(DropdownIcon)`
+  position: relative;
+`
 const FilterDropdown = styled(Flex, {
   position: 'absolute',
   p: '$padding8',
@@ -38,16 +42,12 @@ const FilterRow = styled(Flex, {
 })
 
 interface FilterProps<T extends string> {
-  allFilters: {
-    value: T
-    label: string
-  }[]
+  allFilters: T[]
   activeFilter: T[]
   setFilters: (filter: T[]) => void
   isOpen: boolean
   toggleFilterModal: () => void
-  minSelected?: number
-  anchorRef: RefObject<HTMLElement | null>
+  anchorRef: RefObject<HTMLElement>
 }
 
 export function Filter<T extends string>({
@@ -56,36 +56,27 @@ export function Filter<T extends string>({
   setFilters,
   isOpen,
   toggleFilterModal,
-  minSelected,
   anchorRef,
 }: FilterProps<T>) {
   const media = useMedia()
   const isMobile = media.md
   const filterModalRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside({ node: filterModalRef, handler: isOpen ? toggleFilterModal : undefined })
+  useOnClickOutside(filterModalRef, isOpen ? toggleFilterModal : undefined)
 
   const handleFilterOptionClick = useCallback(
     (filter: T) => {
-      const isSelected = activeFilter.includes(filter)
-      const isBelowMinSelected = minSelected && activeFilter.length <= minSelected
-
-      // If the filter is already selected and unselecting it would result in fewer than the minimum selected filters, do nothing
-      if (isBelowMinSelected && isSelected) {
-        return
-      }
-
-      if (isSelected) {
+      if (activeFilter.includes(filter)) {
         setFilters(activeFilter.filter((f) => f !== filter))
       } else {
         setFilters([...activeFilter, filter])
       }
     },
-    [activeFilter, minSelected, setFilters],
+    [activeFilter, setFilters],
   )
 
   return (
     <>
-      <SortVertical color="$neutral3" size="$icon.16" />
+      <StyledDropdownIcon />
       {isOpen && anchorRef.current && (
         <Portal>
           <FilterDropdown
@@ -94,11 +85,11 @@ export function Filter<T extends string>({
             left={anchorRef.current.getBoundingClientRect().x}
           >
             {allFilters.map((filter) => (
-              <FilterRow key={filter.value} onPress={() => handleFilterOptionClick(filter.value)} cursor="pointer">
+              <FilterRow key={filter} onPress={() => handleFilterOptionClick(filter)} cursor="pointer">
                 <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
-                  {filter.label}
+                  {filter}
                 </Text>
-                <Checkbox checked={activeFilter.includes(filter.value)} variant="branded" />
+                <Checkbox checked={activeFilter.includes(filter)} variant="branded" />
               </FilterRow>
             ))}
           </FilterDropdown>

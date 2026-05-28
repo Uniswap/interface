@@ -1,14 +1,17 @@
-import { GraphQLApi } from '@universe/api'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
+import {
+  AssetActivity,
+  TransactionListQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { erc20RecentReceiveAssetActivity, erc20StaleReceiveAssetActivity, portfolio } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
-  getReceiveNotificationFromData,
   TransactionHistoryUpdater,
+  getReceiveNotificationFromData,
 } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -50,7 +53,6 @@ const walletSlice = {
     isReplacingAccount: false,
     skipToSeedPhrase: false,
   },
-  androidCloudBackupEmail: null,
 }
 
 const assetActivities = [
@@ -62,7 +64,7 @@ const assetActivities = [
     id: faker.datatype.uuid(),
     timestamp: past.add(1, 'day').unix(),
   },
-] as GraphQLApi.AssetActivity[]
+] as AssetActivity[]
 
 const assetActivities2 = [
   {
@@ -77,7 +79,7 @@ const assetActivities2 = [
     id: faker.datatype.uuid(),
     timestamp: past.add(2, 'day').unix(),
   },
-] as GraphQLApi.AssetActivity[]
+] as AssetActivity[]
 
 const portfolios = [
   portfolio({ ownerAddress: account1.address, assetActivities }),
@@ -92,10 +94,6 @@ const portfolioWithReceive = portfolio({
 const portfolioWithStaleReceive = portfolio({
   ownerAddress: account1.address,
   assetActivities: [erc20StaleReceiveAssetActivity()],
-})
-const portfolioWithNoReceive = portfolio({
-  ownerAddress: account1.address,
-  assetActivities: [],
 })
 
 const { resolvers } = queryResolvers({
@@ -212,11 +210,7 @@ describe(getReceiveNotificationFromData, () => {
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData({
-      data: txnData,
-      address: account1.address,
-      lastTxNotificationUpdateTimestamp: newTimestamp,
-    })
+    const notification = getReceiveNotificationFromData(txnData, account1.address, newTimestamp)
 
     const assetChange = receiveAssetActivity.details.assetChanges[0]!
 
@@ -238,16 +232,12 @@ describe(getReceiveNotificationFromData, () => {
 
   it('returns undefined if no receive txns found', () => {
     // No receive type txn in this mock
-    const txnDataWithoutReceiveTxns = { portfolios: [portfolioWithNoReceive] }
+    const txnDataWithoutReceiveTxns = { portfolios } as TransactionListQuery
 
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData({
-      data: txnDataWithoutReceiveTxns,
-      address: account1.address,
-      lastTxNotificationUpdateTimestamp: newTimestamp,
-    })
+    const notification = getReceiveNotificationFromData(txnDataWithoutReceiveTxns, account1.address, newTimestamp)
 
     expect(notification).toBeUndefined()
   })
@@ -260,11 +250,7 @@ describe(getReceiveNotificationFromData, () => {
     // mocked receive is made to be 5 minutes ago
     const oldTimestamp = Date.now() - ONE_MINUTE_MS
 
-    const notification = getReceiveNotificationFromData({
-      data: txnData,
-      address: account1.address,
-      lastTxNotificationUpdateTimestamp: oldTimestamp,
-    })
+    const notification = getReceiveNotificationFromData(txnData, account1.address, oldTimestamp)
 
     expect(notification).toBeUndefined()
   })
@@ -277,11 +263,7 @@ describe(getReceiveNotificationFromData, () => {
     // mocked receive is made to be 5 minutes ago
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData({
-      data: txnData,
-      address: account1.address,
-      lastTxNotificationUpdateTimestamp: newTimestamp,
-    })
+    const notification = getReceiveNotificationFromData(txnData, account1.address, newTimestamp)
 
     expect(notification).toBeUndefined()
   })

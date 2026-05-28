@@ -1,8 +1,8 @@
 import { BottomSheetFooter, BottomSheetView, KEYBOARD_STATE, useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { useMemo, useState } from 'react'
-import { type StyleProp, TouchableWithoutFeedback, type ViewStyle } from 'react-native'
+import { TouchableWithoutFeedback, type StyleProp, type ViewStyle } from 'react-native'
 import { Extrapolation, interpolate, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated'
-import { type ColorTokens, Flex, LinearGradient, type LinearGradientProps, useSporeColors } from 'ui/src'
+import { Flex, LinearGradient, useSporeColors, type ColorTokens, type LinearGradientProps } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEFAULT_BOTTOM_INSET } from 'ui/src/hooks/constants'
 import { borderRadii, opacify, spacing } from 'ui/src/theme'
@@ -36,7 +36,6 @@ export function TransactionModal({
   const fullscreen = screen === TransactionScreen.Form
 
   const colors = useSporeColors()
-
   const insets = useAppInsets()
 
   const animatedPosition = useSharedValue(0)
@@ -57,7 +56,8 @@ export function TransactionModal({
         // Note: we explicitly set this to 'transparent', otherwise we get a really annoying
         // line as a visual artifact on mobile. For example, if a white background is rendered
         // on a white background, a grey line sometimes appears as the bottom sheet resizes.
-        backgroundColor: 'transparent',
+        backgroundColor: '$transparent',
+        overflow: 'hidden',
         height: fullscreen ? '100%' : undefined,
       },
       animatedBorderRadius,

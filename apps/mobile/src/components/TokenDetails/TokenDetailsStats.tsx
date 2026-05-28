@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -7,15 +6,17 @@ import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar, ChartPie, ChartPyramid, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { DEP_accentColors, validColor } from 'ui/src/theme'
+import { useTokenProjectDescriptionQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
+  useTokenMarketPartsFragment,
+  useTokenProjectMarketsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
-import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -51,8 +52,21 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
   const { currencyId, tokenColor } = useTokenDetailsContext()
 
-  // Use shared hook for unified data fetching (CoinGecko-first strategy)
-  const { marketCap, fdv, volume, high52w, low52w } = useTokenMarketStats(currencyId)
+  const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data?.market
+  const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data.project?.markets
+
+  const price = projectMarkets?.[0]?.price?.value || tokenMarket?.price?.value || undefined
+  const marketCap = projectMarkets?.[0]?.marketCap?.value
+  const volume = tokenMarket?.volume?.value
+  const rawPriceHigh52W = projectMarkets?.[0]?.priceHigh52W?.value || tokenMarket?.priceHigh52W?.value || undefined
+  const rawPriceLow52W = projectMarkets?.[0]?.priceLow52W?.value || tokenMarket?.priceLow52W?.value || undefined
+
+  // Use current price for 52w high/low if it exceeds the bounds
+  const priceHight52W =
+    price !== undefined && rawPriceHigh52W !== undefined ? Math.max(price, rawPriceHigh52W) : rawPriceHigh52W
+  const priceLow52W =
+    price !== undefined && rawPriceLow52W !== undefined ? Math.min(price, rawPriceLow52W) : rawPriceLow52W
+  const fullyDilutedValuation = projectMarkets?.[0]?.fullyDilutedValuation?.value
 
   return (
     <Flex gap="$spacing8">
@@ -70,7 +84,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
         statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(fdv, NumberType.FiatTokenStats)}
+          {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
 
@@ -88,7 +102,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
         statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(high52w, NumberType.FiatTokenDetails)}
+          {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
 
@@ -97,7 +111,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
         statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
       >
         <Text textAlign="right" variant="body2">
-          {convertFiatAmountFormatted(low52w, NumberType.FiatTokenDetails)}
+          {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
     </Flex>
@@ -119,7 +133,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
 
   const language = useCurrentLanguage()
 
-  const descriptions = GraphQLApi.useTokenProjectDescriptionQuery({
+  const descriptions = useTokenProjectDescriptionQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
       includeSpanish:
@@ -148,7 +162,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
     descriptions?.descriptionTranslations?.descriptionZhHans ||
     descriptions?.descriptionTranslations?.descriptionZhHant
 
-  const name = offChainData?.name ?? onChainData.name
+  const name = offChainData?.name ?? onChainData?.name
   const currentDescription = showTranslation && translatedDescription ? translatedDescription : description
 
   return (

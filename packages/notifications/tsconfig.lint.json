@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "preserveSymlinks": true
-  },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
-  "exclude": ["node_modules"]
-}

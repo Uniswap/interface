@@ -1,35 +1,33 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { DeadlineOverride } from 'pages/Swap/settings/DeadlineOverride'
+import { MetaAggregator } from 'pages/Swap/settings/MetaAggregator'
+import { OneClickSwap } from 'pages/Swap/settings/OneClickSwap'
 import { useMemo } from 'react'
-import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
-import { filterSettingsByPlatformAndTradeRouting } from 'uniswap/src/features/transactions/components/settings/utils'
-import { Slippage } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
-import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
-import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { DeadlineOverride } from '~/pages/Swap/settings/DeadlineOverride'
-import { OneClickSwap } from '~/pages/Swap/settings/OneClickSwap'
-import { useAppSelector } from '~/state/hooks'
-import { useMultichainContext } from '~/state/multichain/useMultichainContext'
-import { selectIsAtomicBatchingSupported } from '~/state/walletCapabilities/reducer'
+import { useAppSelector } from 'state/hooks'
+import { selectIsAtomicBatchingSupported } from 'state/walletCapabilities/reducer'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 
 const DEFAULT_SETTINGS = [Slippage, DeadlineOverride, TradeRoutingPreference]
 
 export function useWebSwapSettings() {
+  const metaAggregator = useFeatureFlag(FeatureFlags.MetaAggregator)
   const batchSwapEnabled = useFeatureFlag(FeatureFlags.BatchedSwaps)
   const isAtomicBatchingSupported = useAppSelector(selectIsAtomicBatchingSupported)
-  const { chainId } = useMultichainContext()
-  const tradeRouting = useSwapFormStoreDerivedSwapInfo((s) => s.trade.trade?.routing)
 
   return useMemo(() => {
-    const canBatch = batchSwapEnabled && isAtomicBatchingSupported
-    const allSettings = canBatch ? [...DEFAULT_SETTINGS, OneClickSwap] : DEFAULT_SETTINGS
+    const settings = [...DEFAULT_SETTINGS]
 
-    // Filter settings based on current platform
-    if (chainId) {
-      const platform = chainIdToPlatform(chainId)
-      return filterSettingsByPlatformAndTradeRouting(allSettings, { platform, tradeRouting })
+    if (metaAggregator) {
+      settings.push(MetaAggregator)
     }
 
-    // If no chainId, return all settings (fallback)
-    return allSettings
-  }, [batchSwapEnabled, isAtomicBatchingSupported, chainId, tradeRouting])
+    const canBatch = batchSwapEnabled && isAtomicBatchingSupported
+    if (canBatch) {
+      settings.push(OneClickSwap)
+    }
+
+    return settings
+  }, [batchSwapEnabled, isAtomicBatchingSupported, metaAggregator])
 }

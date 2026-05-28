@@ -11,10 +11,9 @@ import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
@@ -48,15 +47,15 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
     throw new Error('This should not be accessed with no mnemonic accounts')
   }
 
-  const params = route.params.params
+  const params = route.params?.params
 
   const [OTP, setOTP] = useState('')
   // Once a user has scanned a QR they have 6 minutes to correctly input the OTP
   const [expirationTimestamp, setExpirationTimestamp] = useState<number>(Date.now() + 6 * ONE_MINUTE_MS)
-  const pubKey = params.publicKey
-  const uuid = params.uuid
-  const device = `${params.vendor || ''} ${params.model || ''}`.trim()
-  const browser = params.browser || ''
+  const pubKey = params?.publicKey
+  const uuid = params?.uuid
+  const device = `${params?.vendor || ''} ${params?.model || ''}`.trim()
+  const browser = params?.browser || ''
 
   const [expired, setExpired] = useState(false)
   const [redeemed, setRedeemed] = useState(false)
@@ -92,18 +91,18 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
     }, ONE_SECOND_MS)
 
     return () => clearInterval(interval)
-  }, [expirationTimestamp])
+  }, [expirationTimestamp, t])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
+    if (!pubKey) {
+      return
+    }
+
     setError('')
     let encryptedSeedphrase = ''
     const { n, e } = pubKey
     try {
-      encryptedSeedphrase = await getEncryptedMnemonic({
-        mnemonicId: account.address,
-        modulus: n,
-        exponent: e,
-      })
+      encryptedSeedphrase = await getEncryptedMnemonic(account?.address || '', n, e)
     } catch (err) {
       setError(t('scantastic.error.encryption'))
       logger.error(err, {
@@ -112,7 +111,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
           function: 'onEncryptSeedphrase->getEncryptedMnemonic',
         },
         extra: {
-          address: account.address,
+          address: account?.address,
           n,
           e,
         },
@@ -314,9 +313,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
           <Laptop color="$accent1" size="$icon.24" />
         </Flex>
-        <Text testID={TestID.ScantasticConfirmationTitle} variant="subheading1">
-          {t('scantastic.confirmation.title')}
-        </Text>
+        <Text variant="subheading1">{t('scantastic.confirmation.title')}</Text>
         <Text color="$neutral2" textAlign="center" variant="body3">
           {t('scantastic.confirmation.subtitle')}
         </Text>
@@ -334,9 +331,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
                 <Text color="$neutral2" flex={1} variant="body3">
                   {t('scantastic.confirmation.label.device')}
                 </Text>
-                <Text testID={TestID.ScantasticDevice} variant="body3">
-                  {device}
-                </Text>
+                <Text variant="body3">{device}</Text>
               </Flex>
             )}
             {browser && (
@@ -344,9 +339,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
                 <Text color="$neutral2" flex={1} variant="body3">
                   {t('scantastic.confirmation.label.browser')}
                 </Text>
-                <Text testID={TestID.ScantasticBrowser} variant="body3">
-                  {browser}
-                </Text>
+                <Text variant="body3">{browser}</Text>
               </Flex>
             )}
           </Flex>

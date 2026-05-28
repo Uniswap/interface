@@ -1,40 +1,31 @@
 import { NavigationContainerRefContext, NavigationContext, useFocusEffect } from '@react-navigation/core'
-import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useContext } from 'react'
 import { BackHandler } from 'react-native'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
-import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
+import { useTransactionListLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { useEvent } from 'utilities/src/react/hooks'
-
-interface EagerExternalProfileNavigationResult {
-  preload: (address: string) => Promise<void>
-  navigate: (address: string) => void
-}
-
-interface EagerExternalProfileRootNavigationResult {
-  preload: (address: string) => Promise<void>
-  navigate: (address: string, callback?: () => void) => Promise<void>
-}
 
 /**
- * Hook that returns external profile navigation utilities using REST API
  * Utility hook to simplify navigating to Activity screen.
  * Preloads query needed to render transaction list.
  */
-export function useEagerExternalProfileNavigation(): EagerExternalProfileNavigationResult {
+export function useEagerExternalProfileNavigation(): {
+  preload: (address: string) => Promise<void>
+  navigate: (address: string) => void
+} {
   const navigation = useExploreStackNavigation()
-  const queryClient = useQueryClient()
-  const { chains: chainIds } = useEnabledChains()
+
+  const [load] = useTransactionListLazyQuery()
+  const { gqlChains } = useEnabledChains()
 
   const preload = useCallback(
     async (address: string) => {
-      await queryClient.prefetchQuery(getListTransactionsQuery({ input: { evmAddress: address, chainIds } }))
+      await load({ variables: { address, chains: gqlChains } })
     },
-    [chainIds, queryClient],
+    [gqlChains, load],
   )
 
   const navigate = useCallback(
@@ -47,24 +38,29 @@ export function useEagerExternalProfileNavigation(): EagerExternalProfileNavigat
   return { preload, navigate }
 }
 
-/**
- * Hook that returns external profile root navigation utilities using REST API
- */
-export function useEagerExternalProfileRootNavigation(): EagerExternalProfileRootNavigationResult {
-  const queryClient = useQueryClient()
-  const { chains: chainIds } = useEnabledChains()
+export function useEagerExternalProfileRootNavigation(): {
+  preload: (address: string) => Promise<void>
+  navigate: (address: string, callback: () => void) => Promise<void>
+} {
+  const [load] = useTransactionListLazyQuery()
+  const { gqlChains } = useEnabledChains()
 
   const preload = useCallback(
     async (address: string) => {
-      await queryClient.prefetchQuery(getListTransactionsQuery({ input: { evmAddress: address, chainIds } }))
+      await load({
+        variables: {
+          address,
+          chains: gqlChains,
+        },
+      })
     },
-    [chainIds, queryClient],
+    [gqlChains, load],
   )
 
-  const navigate = useEvent(async (address: string, callback?: () => void) => {
+  const navigate = useCallback(async (address: string, callback?: () => void) => {
     await rootNavigate(MobileScreens.ExternalProfile, { address })
     callback?.()
-  })
+  }, [])
 
   return { preload, navigate }
 }

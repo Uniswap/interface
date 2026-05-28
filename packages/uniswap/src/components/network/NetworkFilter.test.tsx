@@ -1,29 +1,29 @@
 import ReactDOM from 'react-dom'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { renderWithProviders } from 'uniswap/src/test/render'
 import { act } from 'uniswap/src/test/test-utils'
 
-ReactDOM.createPortal = vi.fn((element) => {
+ReactDOM.createPortal = jest.fn((element) => {
   return element as React.ReactPortal
 })
 
 describe(NetworkFilter, () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    jest.useFakeTimers()
   })
 
   afterEach(() => {
-    vi.useRealTimers()
+    jest.useRealTimers()
   })
 
   it('renders a NetworkFilter', async () => {
     const tree = renderWithProviders(
-      <NetworkFilter chainIds={ALL_CHAIN_IDS} selectedChain={null} onPressChain={() => null} />,
+      <NetworkFilter chainIds={SUPPORTED_CHAIN_IDS} selectedChain={null} onPressChain={() => null} />,
     )
 
     await act(async () => {
-      vi.runAllTimers()
+      jest.runAllTimers()
     })
 
     expect(tree).toMatchSnapshot()

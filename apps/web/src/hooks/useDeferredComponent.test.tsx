@@ -1,26 +1,32 @@
 import { act, renderHook } from '@testing-library/react'
-import { mockLogger } from 'utilities/src/logger/mocks'
-import { useDeferredComponent } from '~/hooks/useDeferredComponent'
+import { useDeferredComponent } from 'hooks/useDeferredComponent'
+import { logger } from 'utilities/src/logger/logger'
+
+jest.mock('utilities/src/logger/logger', () => ({
+  logger: {
+    error: jest.fn(),
+  },
+}))
 
 describe('useDeferredComponent', () => {
-  const mockRequestIdleCallback = vi.fn()
-  const mockSetTimeout = vi.fn()
-  const mockImportFn = vi.fn()
+  const mockRequestIdleCallback = jest.fn()
+  const mockSetTimeout = jest.fn()
+  const mockImportFn = jest.fn()
 
   beforeEach(() => {
-    vi.useFakeTimers()
+    jest.useFakeTimers()
 
     Object.defineProperty(window, 'requestIdleCallback', {
       value: mockRequestIdleCallback,
       writable: true,
       configurable: true,
     })
-    vi.spyOn(window, 'setTimeout').mockImplementation(mockSetTimeout)
+    jest.spyOn(window, 'setTimeout').mockImplementation(mockSetTimeout)
   })
 
   afterEach(() => {
-    vi.useRealTimers()
-    vi.clearAllMocks()
+    jest.useRealTimers()
+    jest.clearAllMocks()
     delete (window as any).requestIdleCallback
   })
 
@@ -97,7 +103,7 @@ describe('useDeferredComponent', () => {
     })
 
     expect(result.current).toBeNull()
-    expect(mockLogger.error).toHaveBeenCalledWith(error, {
+    expect(logger.error).toHaveBeenCalledWith(error, {
       tags: {
         file: 'useDeferredComponent.tsx',
         function: 'requestIdleCallback',
