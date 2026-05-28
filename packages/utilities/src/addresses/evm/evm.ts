@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address'
-import { HexString } from 'utilities/src/addresses/hex'
+import { HexString } from '@universe/encoding'
 
 /**
  * Validates if the address is a valid EVM address format

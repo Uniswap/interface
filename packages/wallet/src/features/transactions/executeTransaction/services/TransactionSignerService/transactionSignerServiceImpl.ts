@@ -1,8 +1,8 @@
+import { HexString } from '@universe/encoding'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { signTypedData as signTypedDataFunction } from 'uniswap/src/features/transactions/signing'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
 import { PublicClient } from 'viem'
 import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
 import {

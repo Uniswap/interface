@@ -7,7 +7,6 @@ exports[`Portfolio > should render connected view correctly 1`] = `
     style="display: contents;"
   >
     <div
-      data-banner-visible="true"
       data-testid="portfolio-page-inner"
     >
       Portfolio Page Inner Mock
@@ -26,7 +25,6 @@ exports[`Portfolio > should render demo view correctly when user is not connecte
     style="display: contents;"
   >
     <div
-      data-banner-visible="true"
       data-mb="160"
       data-testid="portfolio-page-inner"
     >

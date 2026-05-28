@@ -3,6 +3,9 @@
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.mts", "env.d.ts"],
   "references": [
     {
+      "path": "../environment"
+    },
+    {
       "path": "../utilities"
     },
     {
@@ -18,7 +21,16 @@
       "path": "../gating"
     },
     {
+      "path": "../encoding"
+    },
+    {
+      "path": "../cryptography"
+    },
+    {
       "path": "../config"
+    },
+    {
+      "path": "../chains"
     },
     {
       "path": "../api"

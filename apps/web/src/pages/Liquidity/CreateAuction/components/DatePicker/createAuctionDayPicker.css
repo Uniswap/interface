@@ -1,0 +1,244 @@
+/**
+ * Token Launcher calendar: Sunday week, bordered selected state on a 48×48 day grid.
+ * Text and surfaces use `--auction-calendar-*` vars from `useSporeColors()` for light/dark parity.
+ * Scoped under `.auction-day-picker-shell` so overrides win over default `react-day-picker` CSS.
+ */
+/* Floor height for caption/head/table (DayPicker uses `fixedWeeks` so tbody is always 6 rows — stable centered modal). */
+/* Width is fixed at 7 × cell-size so columns sit flush together (Figma) and don't stretch with the popover. */
+.auction-day-picker-shell {
+  --auction-cell-size: 48px;
+  --auction-grid-width: calc(var(--auction-cell-size) * 7);
+  width: var(--auction-grid-width);
+  max-width: 100%;
+  overflow: hidden;
+  /* 360px = caption row (24) + parent gap (12) + weekday head (24) + table margin-top (12) + 6 fixed week rows × cell (48) */
+  min-height: 360px;
+  box-sizing: border-box;
+}
+
+.auction-day-picker-shell .rdp-months {
+  width: var(--auction-grid-width);
+  max-width: 100%;
+}
+
+/* Theme: --auction-calendar-* on shell → mapped to --rdp-* on `.rdp` (see block below). */
+/* Map theme vars onto .rdp: the library sets --rdp-selected-color: #fff on `.rdp`, which wins over
+   inherited values from the shell — without this block, selected day text stays white. */
+.auction-day-picker-shell .rdp {
+  --rdp-cell-size: var(--auction-cell-size);
+  --rdp-accent-color: var(--auction-calendar-accent-color);
+  --rdp-background-color: var(--auction-calendar-default-hover-bg);
+  margin: 0;
+  font-family: inherit;
+}
+
+.auction-day-picker-shell .rdp-month {
+  margin: 0;
+}
+
+.auction-day-picker-shell .rdp-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.auction-day-picker-shell .rdp-caption_label {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0;
+  color: var(--auction-calendar-text-primary);
+  padding: 0;
+}
+
+.auction-day-picker-shell .rdp-nav {
+  display: flex;
+  gap: 12px;
+}
+
+.auction-day-picker-shell .rdp-nav_button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--auction-calendar-text-secondary);
+}
+
+.auction-day-picker-shell .rdp-nav_button:hover:not([disabled]) {
+  background: var(--rdp-background-color);
+  color: var(--auction-calendar-text-primary);
+}
+
+.auction-day-picker-shell .rdp-nav_button[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.auction-day-picker-shell .rdp-table {
+  width: var(--auction-grid-width);
+  max-width: none;
+  margin-top: 12px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.auction-day-picker-shell .rdp-head_cell {
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--auction-calendar-text-primary);
+  text-align: center;
+  text-transform: none;
+  padding: 0;
+  height: 24px;
+  vertical-align: middle;
+}
+
+.auction-day-picker-shell .rdp-cell {
+  box-sizing: border-box;
+  width: var(--rdp-cell-size);
+  height: var(--rdp-cell-size);
+  padding: 0;
+  vertical-align: middle;
+}
+
+.auction-day-picker-shell .rdp-day {
+  border-radius: 16px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--auction-calendar-text-secondary);
+}
+
+/* Selected day: full-cell soft-accent fill, matching the range-middle visual for consistency. */
+.auction-day-picker-shell .rdp-day_selected,
+.auction-day-picker-shell .rdp-day_selected:focus-visible,
+.auction-day-picker-shell .rdp-day_selected:hover {
+  background: var(--auction-calendar-accent-soft);
+  color: var(--auction-calendar-text-secondary);
+  border: none;
+  border-radius: 16px;
+  opacity: 1;
+  outline: none;
+}
+
+/* Adjacent-month days: same surface as in-month, muted label only.
+ * Range modifiers + `_disabled` excluded so (a) range styling wins on outside days that fall inside
+ * the range, and (b) disabled outside days stay at the same faded opacity as disabled in-month days
+ * (otherwise this rule's high specificity would force `opacity: 1` and they'd look darker).
+ */
+.auction-day-picker-shell
+  .rdp-day_outside:not(.rdp-day_selected):not(.rdp-day_range-start):not(.rdp-day_range-end):not(
+    .rdp-day_range-middle
+  ):not(.rdp-day_disabled) {
+  background: transparent;
+  color: var(--auction-calendar-text-tertiary);
+  opacity: 1;
+}
+
+.auction-day-picker-shell
+  .rdp-day_outside:not(.rdp-day_selected):not(.rdp-day_range-start):not(.rdp-day_range-end):not(
+    .rdp-day_range-middle
+  ):hover:not([disabled]) {
+  color: var(--auction-calendar-text-secondary);
+}
+
+.auction-day-picker-shell .rdp-day_disabled {
+  opacity: 0.35;
+  cursor: default;
+  color: var(--auction-calendar-text-tertiary);
+}
+
+/* ---------- Range variant ---------- */
+/*
+ * Middle days fill the cell with `accent-soft`. Start/end days have a rounded thumb (filled
+ * or bordered) on top of a half-cell `accent-soft` strip that bleeds into the rounded-corner
+ * gaps so the range fill connects continuously between start → middle → end. The thumb's
+ * opaque background hides the strip everywhere except the small triangles outside the
+ * rounded corners.
+ */
+
+/* Middle: full-cell soft accent */
+.auction-day-picker-shell--range .rdp-cell:has(.rdp-day_range-middle) {
+  background: var(--auction-calendar-accent-soft);
+}
+
+/* Range start: full thumb (accent strong) on top of a right-half soft-accent strip. */
+.auction-day-picker-shell--range .rdp-cell:has(.rdp-day_range-start) {
+  position: relative;
+}
+.auction-day-picker-shell--range .rdp-cell:has(.rdp-day_range-start)::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 50%;
+  background: var(--auction-calendar-accent-soft);
+  z-index: 0;
+  pointer-events: none;
+}
+/* Specificity bumped with `.rdp-button` so we beat the library's default
+ * `.rdp-button:not([disabled]):not(.rdp-day_selected):hover` rule, which would otherwise
+ * replace our accent fill with the hover color and expose the half-cell strip behind. */
+.auction-day-picker-shell--range .rdp-button.rdp-day_range-start {
+  position: relative;
+  z-index: 1;
+  background: var(--auction-calendar-accent-strong);
+  color: var(--auction-calendar-accent-foreground);
+  border-radius: 16px;
+  font-weight: 535;
+}
+.auction-day-picker-shell--range .rdp-button.rdp-day_range-start:hover,
+.auction-day-picker-shell--range .rdp-button.rdp-day_range-start:focus-visible {
+  background: var(--auction-calendar-accent-strong-hovered);
+}
+
+/* Range end: surface1 thumb (clean fill, accent border) on top of a left-half soft-accent strip. */
+.auction-day-picker-shell--range .rdp-cell:has(.rdp-day_range-end) {
+  position: relative;
+}
+.auction-day-picker-shell--range .rdp-cell:has(.rdp-day_range-end)::before {
+  content: '';
+  position: absolute;
+  inset: 0 50% 0 0;
+  background: var(--auction-calendar-accent-soft);
+  z-index: 0;
+  pointer-events: none;
+}
+.auction-day-picker-shell--range .rdp-button.rdp-day_range-end {
+  position: relative;
+  z-index: 1;
+  background: var(--auction-calendar-surface1);
+  color: var(--auction-calendar-accent-strong);
+  border: 1px solid var(--auction-calendar-accent-strong);
+  border-radius: 16px;
+  font-weight: 535;
+}
+.auction-day-picker-shell--range .rdp-button.rdp-day_range-end:hover,
+.auction-day-picker-shell--range .rdp-button.rdp-day_range-end:focus-visible {
+  background: var(--auction-calendar-surface2);
+}
+
+/* When start and end fall on the same day, suppress both half-strips so only the start thumb shows. */
+.auction-day-picker-shell--range .rdp-cell:has(.rdp-day_range-start.rdp-day_range-end)::before,
+.auction-day-picker-shell--range .rdp-cell:has(.rdp-day_range-start.rdp-day_range-end)::after {
+  content: none;
+}
+
+/* Hover preview in 'start' mode: outline only, no fill. */
+.auction-day-picker-shell--range .rdp-day_hover-preview:not(.rdp-day_range-start):not(.rdp-day_range-end) {
+  border: 1px solid var(--auction-calendar-text-secondary);
+  border-radius: 16px;
+}
+
+/* Disable the default rdp-day_selected styling inside range variant since we use our own modifiers. */
+.auction-day-picker-shell--range .rdp-day_selected,
+.auction-day-picker-shell--range .rdp-day_selected:focus-visible,
+.auction-day-picker-shell--range .rdp-day_selected:hover {
+  background: transparent;
+  border: none;
+  color: inherit;
+}

@@ -5933,12 +5933,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                     class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _alignItems-center _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="account-icon"
                     >
                       <div
                         class="t_unmounted  t_unmounted"
-                        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: column; flex-grow: 1; opacity: 0; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                       >
                         <svg
                           height="60"
@@ -6055,7 +6055,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
                     data-disable-theme="true"
                   >
-                    13
+                    15
                      
                     networks
                   </span>
@@ -6079,7 +6079,7 @@ exports[`ReceiveScreen renders without error 1`] = `
               <h2
                 class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
                 data-disable-theme="true"
-                id="Dialog--:r1d:-title"
+                id="Dialog--«r1d»-title"
                 role="heading"
               />
             </span>
@@ -12033,12 +12033,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _alignItems-center _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-60px _height-60px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="account-icon"
                   >
                     <div
                       class="t_unmounted  t_unmounted"
-                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: column; flex-grow: 1; opacity: 0; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
                     >
                       <svg
                         height="60"
@@ -12155,7 +12155,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                   class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
                   data-disable-theme="true"
                 >
-                  13
+                  15
                    
                   networks
                 </span>
@@ -12179,7 +12179,7 @@ exports[`ReceiveScreen renders without error 1`] = `
             <h2
               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
               data-disable-theme="true"
-              id="Dialog--:r1d:-title"
+              id="Dialog--«r1d»-title"
               role="heading"
             />
           </span>

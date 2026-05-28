@@ -1,9 +1,9 @@
+import { isExtensionApp } from '@universe/environment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isExtensionApp } from 'utilities/src/platform'
 import { AnalyticsToggleLineSwitch } from 'wallet/src/components/settings/AnalyticsToggleLineSwitch'
 import { DefaultWalletLineSwitch } from 'wallet/src/components/settings/permissions/DefaultWalletLineSwitch'
 

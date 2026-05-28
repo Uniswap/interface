@@ -35,6 +35,8 @@ const mockBackgroundPlan = vi.fn()
 const mockLogHelper = vi.fn()
 const mockLockPlanForExecution = vi.fn()
 const mockUnlockPlanExecution = vi.fn()
+const mockLogPlanStepTradeAnalytics = vi.fn()
+const mockLogUniswapXPlanOrderSubmitted = vi.fn()
 
 // ── Module mocks ────────────────────────────────────────────────────────
 vi.mock('uniswap/src/features/transactions/swap/plan/planSagaUtils', async (importOriginal) => {
@@ -56,7 +58,6 @@ vi.mock('uniswap/src/features/transactions/swap/plan/planSagaUtils', async (impo
     lockPlanForExecution: (...args: unknown[]): unknown => mockLockPlanForExecution(...args),
     unlockPlanExecution: (...args: unknown[]): unknown => mockUnlockPlanExecution(...args),
     getWalletExecutionContext: (): undefined => undefined,
-    // oxlint-disable-next-line typescript/explicit-function-return-type
     // oxlint-disable-next-line eslint-js/object-shorthand
     showPendingOnEarlyModalClose: function* () {
       yield // no-op: avoids the real saga which waits on signalSwapModalClosed
@@ -69,6 +70,16 @@ vi.mock('uniswap/src/features/transactions/swap/plan/watchPlanStepSaga', () => (
   watchPlanStep: vi.fn().mockImplementation(function* () {
     return watchPlanStepResult
   }),
+}))
+
+vi.mock('uniswap/src/features/transactions/swap/plan/planStepAnalytics', () => ({
+  TRADE_STEP_TYPES: new Set<TransactionStepType>([
+    TransactionStepType.SwapTransaction,
+    TransactionStepType.SwapTransactionWalletCall,
+    TransactionStepType.UniswapXPlanSignature,
+  ]),
+  logPlanStepTradeAnalytics: (...args: unknown[]): unknown => mockLogPlanStepTradeAnalytics(...args),
+  logUniswapXPlanOrderSubmitted: (...args: unknown[]): unknown => mockLogUniswapXPlanOrderSubmitted(...args),
 }))
 
 vi.mock('utilities/src/async/retryWithBackoff', () => ({
@@ -113,7 +124,7 @@ function createMockPlanStep(overrides: Partial<TradingApi.PlanStep> = {}): Tradi
   } as TradingApi.PlanStep
 }
 
-function createTransactionAndPlanStep(overrides: Partial<TradingApi.PlanStep> = {}): TransactionAndPlanStep {
+function createTransactionAndPlanStep(overrides: Partial<TransactionAndPlanStep> = {}): TransactionAndPlanStep {
   return {
     ...createMockPlanStep(overrides),
     type: TransactionStepType.SwapTransaction,
@@ -187,9 +198,14 @@ function createPlanParams(trade: ChainedActionTrade): {
   params: Record<string, unknown>
   onSuccess: ReturnType<typeof vi.fn>
   onFailure: ReturnType<typeof vi.fn>
+  handleSwapTransactionStep: ReturnType<typeof vi.fn>
 } {
   const onSuccess = vi.fn()
   const onFailure = vi.fn()
+  // oxlint-disable-next-line require-yield -- saga mock
+  const handleSwapTransactionStep = vi.fn().mockImplementation(function* () {
+    return '0xhash'
+  })
 
   return {
     params: {
@@ -203,12 +219,9 @@ function createPlanParams(trade: ChainedActionTrade): {
       handleApprovalTransactionStep: vi.fn().mockImplementation(function* () {
         return '0xhash'
       }),
+      handleSwapTransactionStep,
       // oxlint-disable-next-line require-yield -- saga mock
-      handleSwapTransactionStep: vi.fn().mockImplementation(function* () {
-        return '0xhash'
-      }),
-      // oxlint-disable-next-line require-yield -- saga mock
-      handleSwapTransactionBatchedStep: vi.fn().mockImplementation(function* () {
+      handleSwapTransactionWalletCallStep: vi.fn().mockImplementation(function* () {
         return { batchId: '1', hash: '0xhash' }
       }),
       // oxlint-disable-next-line require-yield -- saga mock
@@ -228,6 +241,7 @@ function createPlanParams(trade: ChainedActionTrade): {
     },
     onSuccess,
     onFailure,
+    handleSwapTransactionStep,
   }
 }
 
@@ -521,6 +535,167 @@ describe('plan saga — price change interrupts', () => {
 
       // Price within threshold → saga proceeds to step 1 (which is last step) and succeeds
       expect(onSuccess).toHaveBeenCalled()
+      expect(onFailure).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('final-step classification', () => {
+    function getLastTradeRelevantNonErrorStep(steps: TransactionAndPlanStep[]): TransactionAndPlanStep | undefined {
+      const tradeStepTypes = new Set<TransactionStepType>([
+        TransactionStepType.SwapTransaction,
+        TransactionStepType.SwapTransactionWalletCall,
+        TransactionStepType.UniswapXPlanSignature,
+      ])
+
+      return [...steps]
+        .filter((step) => tradeStepTypes.has(step.type))
+        .filter((step) => step.status !== TradingApi.PlanStepStatus.STEP_ERROR)
+        .sort((a, b) => a.stepIndex - b.stepIndex)
+        .at(-1)
+    }
+
+    it('treats a semantically final trade step as final even when a trailing error row exists', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
+      const { params, onSuccess, onFailure, handleSwapTransactionStep } = createPlanParams(originalTrade)
+
+      const completedApprovalStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        type: TransactionStepType.TokenApprovalTransaction,
+        status: TradingApi.PlanStepStatus.COMPLETE,
+      })
+      const actionableSwapStep = createTransactionAndPlanStep({
+        stepIndex: 2,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      const trailingErroredSwapStep = createTransactionAndPlanStep({
+        stepIndex: 1,
+        status: TradingApi.PlanStepStatus.STEP_ERROR,
+      })
+
+      const initialSteps = [completedApprovalStep, actionableSwapStep, trailingErroredSwapStep]
+      const semanticFinalStep = getLastTradeRelevantNonErrorStep(initialSteps)
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(OUTPUT_AMOUNT, initialSteps),
+        wasPlanResumed: false,
+        steps: initialSteps,
+        currentStepIndex: 1,
+        currentStep: actionableSwapStep,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+
+      watchPlanStepResult = {
+        steps: [
+          completedApprovalStep,
+          createTransactionAndPlanStep({
+            stepIndex: 2,
+            status: TradingApi.PlanStepStatus.COMPLETE,
+            proof: { txHash: '0xcompleted' } as TransactionAndPlanStep['proof'],
+          }),
+          trailingErroredSwapStep,
+        ],
+        planResponse: createPlanResponse(OUTPUT_AMOUNT, [
+          completedApprovalStep,
+          createTransactionAndPlanStep({
+            stepIndex: 2,
+            status: TradingApi.PlanStepStatus.COMPLETE,
+            proof: { txHash: '0xcompleted' } as TransactionAndPlanStep['proof'],
+          }),
+          trailingErroredSwapStep,
+        ]),
+      }
+
+      await runPlanSaga(params)
+
+      expect(semanticFinalStep?.stepIndex).toBe(2)
+      expect(handleSwapTransactionStep).toHaveBeenCalledOnce()
+      expect(handleSwapTransactionStep.mock.calls[0]?.[0]).toMatchObject({
+        analytics: expect.objectContaining({
+          plan_id: 'test-plan',
+          step_index: 2,
+          is_final_step: true,
+        }),
+      })
+      expect(mockLogPlanStepTradeAnalytics).toHaveBeenCalledWith(
+        expect.objectContaining({
+          semanticStepIndex: 2,
+          stepFailure: false,
+          analyticsWithPlanStepContext: expect.objectContaining({
+            step_index: 2,
+            is_final_step: true,
+          }),
+        }),
+      )
+      expect(onSuccess).toHaveBeenCalled()
+      expect(onFailure).not.toHaveBeenCalled()
+    })
+
+    it('reads failure and proof data by semantic step index after plan mutation', async () => {
+      const originalTrade = createChainedTrade(OUTPUT_AMOUNT)
+      const { params, onFailure } = createPlanParams(originalTrade)
+
+      const completedApprovalStep = createTransactionAndPlanStep({
+        stepIndex: 0,
+        type: TransactionStepType.TokenApprovalTransaction,
+        status: TradingApi.PlanStepStatus.COMPLETE,
+      })
+      const actionableSwapStep = createTransactionAndPlanStep({
+        stepIndex: 2,
+        status: TradingApi.PlanStepStatus.AWAITING_ACTION,
+      })
+      const trailingErroredSwapStep = createTransactionAndPlanStep({
+        stepIndex: 1,
+        status: TradingApi.PlanStepStatus.STEP_ERROR,
+      })
+
+      initializePlanResult = {
+        planId: 'test-plan',
+        response: createPlanResponse(OUTPUT_AMOUNT, [
+          completedApprovalStep,
+          actionableSwapStep,
+          trailingErroredSwapStep,
+        ]),
+        wasPlanResumed: false,
+        steps: [completedApprovalStep, actionableSwapStep, trailingErroredSwapStep],
+        currentStepIndex: 1,
+        currentStep: actionableSwapStep,
+        inputChainId: UniverseChainId.Mainnet,
+      }
+
+      const updatedExecutedStep = createTransactionAndPlanStep({
+        stepIndex: 2,
+        status: TradingApi.PlanStepStatus.COMPLETE,
+        proof: { txHash: '0xcompleted' } as TransactionAndPlanStep['proof'],
+      })
+      const updatedErroredStep = createTransactionAndPlanStep({
+        stepIndex: 1,
+        status: TradingApi.PlanStepStatus.STEP_ERROR,
+        proof: { txHash: '0xerror' } as TransactionAndPlanStep['proof'],
+      })
+
+      watchPlanStepResult = {
+        steps: [completedApprovalStep, updatedErroredStep, updatedExecutedStep],
+        planResponse: createPlanResponse(OUTPUT_AMOUNT, [
+          completedApprovalStep,
+          updatedErroredStep,
+          updatedExecutedStep,
+        ]),
+      }
+
+      await runPlanSaga(params)
+
+      expect(mockLogPlanStepTradeAnalytics).toHaveBeenCalledOnce()
+      expect(mockLogPlanStepTradeAnalytics).toHaveBeenCalledWith(
+        expect.objectContaining({
+          semanticStepIndex: 2,
+          stepFailure: false,
+          analyticsWithPlanStepContext: expect.objectContaining({
+            step_index: 2,
+            is_final_step: true,
+          }),
+        }),
+      )
       expect(onFailure).not.toHaveBeenCalled()
     })
   })

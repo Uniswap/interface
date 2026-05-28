@@ -23,7 +23,6 @@ export type PriceNumberOfDigits = {
 /**
  * @returns Token price history for requested duration
  */
-// oxlint-disable-next-line complexity -- biome-parity: oxlint is stricter here
 export function useTokenPriceHistory({
   currencyId,
   initialDuration = GraphQLApi.HistoryDuration.Day,
@@ -108,7 +107,6 @@ export function useTokenPriceHistory({
   const spotValue = useDerivedValue(() => price ?? 0)
   const spotRelativeChange = useDerivedValue(() => priceChange)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- ensure spot updates when price changes
   const spot = useMemo(
     () =>
       price !== undefined

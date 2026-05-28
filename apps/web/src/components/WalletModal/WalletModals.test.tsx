@@ -1,5 +1,6 @@
 import { useLoginWithOAuth } from '@privy-io/react-auth'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { RECOVER_OAUTH_PENDING_KEY } from '~/components/Passkey/useOAuthRedirectRouter'
 import { EmbeddedWalletConnectionsModal } from '~/components/WalletModal/EmbeddedWalletModal'
 import { OtherWalletsModal } from '~/components/WalletModal/OtherWalletsModal'
@@ -37,8 +38,8 @@ vi.mock('~/features/wallet/connection/hooks/useOrderedWalletConnectors', () => (
   useOrderedWallets: vi.fn(() => []),
 }))
 
-vi.mock('~/components/Web3Provider/constants', async () => ({
-  ...(await vi.importActual('~/components/Web3Provider/constants')),
+vi.mock('~/connection/constants', async () => ({
+  ...(await vi.importActual('~/connection/constants')),
   useRecentConnectorId: vi.fn(() => undefined),
 }))
 
@@ -68,8 +69,8 @@ describe('EmbeddedWalletConnectionsModal', () => {
   })
 
   it('shows login method selection when Log In is clicked', () => {
-    const { getByRole, getByText } = render(<EmbeddedWalletConnectionsModal />)
-    fireEvent.click(getByRole('button', { name: 'Log in' }))
+    const { getByTestId, getByText } = render(<EmbeddedWalletConnectionsModal />)
+    fireEvent.click(getByTestId(TestID.LogIn))
 
     // Should show the login view with passkey and recovery options
     expect(getByText('Continue with passkey')).toBeDefined()

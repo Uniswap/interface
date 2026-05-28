@@ -1,4 +1,3 @@
-/* oxlint-disable typescript/explicit-function-return-type */
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
 import { SmartWalletSettingsContent } from 'wallet/src/features/smartWallet/SmartWalletSettingsContent'
 import { WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'

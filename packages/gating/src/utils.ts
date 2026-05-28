@@ -1,9 +1,23 @@
-import { StatsigClientEventCallback } from '@statsig/client-core'
+import { _getInstance, StatsigClientEventCallback } from '@statsig/client-core'
 import { PrecomputedEvaluationsInterface } from '@statsig/js-client'
+import { getConfig } from '@universe/config'
 import { getOverrideAdapter, getStatsigClient } from '@universe/gating/src/sdk/statsig'
 
 export function isStatsigReady(client: PrecomputedEvaluationsInterface): boolean {
   return client.loadingStatus === 'Ready'
+}
+
+/**
+ * Peeks the Statsig registry without invoking `StatsigClient.instance()` — calling
+ * `.instance()` on an empty registry creates a broken fallback client that gets
+ * cached permanently. Use before any pre-React Statsig access.
+ */
+export function isStatsigClientRegistered(): boolean {
+  try {
+    return _getInstance(getConfig().statsigApiKey) != null
+  } catch {
+    return false
+  }
 }
 
 const DEFAULT_STATSIG_READY_TIMEOUT_MS = 5000

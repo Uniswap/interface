@@ -23,6 +23,7 @@ import {
 import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* attemptReplaceTransaction({
   transaction,
   newTxRequest,

@@ -2,14 +2,14 @@
   "name": "@universe/config",
   "version": "0.0.0",
   "dependencies": {
-    "react-native-dotenv": "3.2.0",
-    "utilities": "workspace:^"
+    "zod": "4.3.6"
   },
   "devDependencies": {
-    "@types/node": "22.13.1",
-    "@typescript/native-preview": "7.0.0-dev.20260311.1",
-    "depcheck": "1.4.7",
-    "typescript": "5.8.3"
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.9.2",
+    "vitest": "3.2.1",
+    "vitest-presets": "workspace:^"
   },
   "scripts": {
     "typecheck": "nx typecheck config",
@@ -19,7 +19,8 @@
     "format": "nx format config",
     "format:check": "nx format:check config",
     "lint": "nx lint config",
-    "lint:fix": "nx lint:fix config"
+    "lint:fix": "nx lint:fix config",
+    "test": "nx test config"
   },
   "nx": {
     "includedScripts": []

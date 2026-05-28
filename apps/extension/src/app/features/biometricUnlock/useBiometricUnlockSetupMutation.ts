@@ -1,4 +1,5 @@
 import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query'
+import { uint8ToBase64 } from '@universe/encoding'
 import { encryptPasswordWithBiometricData } from 'src/app/features/biometricUnlock/biometricAuthUtils'
 import { biometricUnlockCredentialQuery } from 'src/app/features/biometricUnlock/biometricUnlockCredentialQuery'
 import {
@@ -69,7 +70,7 @@ async function createCredentialAndEncryptPassword({
   const randomBuffer = generateNew256BitRandomBuffer()
 
   const encryptionKey = await getEncryptionKeyFromBuffer({
-    buffer: randomBuffer,
+    buffer: randomBuffer as BufferSource,
     secretPayload,
   })
 
@@ -127,7 +128,7 @@ async function createCredential({
   // Create WebAuthn credential with platform authenticator (Touch ID, Windows Hello, etc.) forced
   const credential = await navigator.credentials.create({
     publicKey: {
-      challenge: generateNew256BitRandomBuffer(),
+      challenge: generateNew256BitRandomBuffer() as BufferSource,
       rp: {
         name: CREDENTIAL_NAME,
         id: window.location.hostname,
@@ -154,7 +155,7 @@ async function createCredential({
   const publicKeyCredential = assertPublicKeyCredential(credential)
 
   // Convert raw ID to a storable string format
-  const credentialId = btoa(String.fromCharCode(...new Uint8Array(publicKeyCredential.rawId)))
+  const credentialId = uint8ToBase64(new Uint8Array(publicKeyCredential.rawId))
 
   const response = publicKeyCredential.response as AuthenticatorAttestationResponse
   const transports = response.getTransports() as AuthenticatorTransport[]

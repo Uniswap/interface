@@ -2,8 +2,9 @@ import { Currency } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Flex } from 'ui/src'
+import { Flex, useMedia } from 'ui/src'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { UniswapContext, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -14,15 +15,15 @@ import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getTokenDetailsURL } from '~/appGraphql/data/util'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
+import type { CurrencyState } from '~/features/Swap/state/swap/tradeCurrencyStateTypes'
 import { useCurrency } from '~/hooks/Tokens'
 import { Swap } from '~/pages/Swap'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 import { useTDPSwapCurrency } from '~/pages/TokenDetails/hooks/useTDPSwapCurrency'
 import { useUserPreservedCurrencies } from '~/pages/TokenDetails/hooks/useUserPreservedCurrencies'
-import { CurrencyState } from '~/state/swap/types'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { getInitialLogoUrl } from '~/utils/getInitialLogoURL'
 
 export function TDPSwapComponent() {
@@ -35,6 +36,15 @@ export function TDPSwapComponent() {
   }))
   const navigate = useNavigate()
   const swapCurrency = useTDPSwapCurrency()
+
+  // Widget mounts-but-hidden at ≤xl, so chain-filter churn fires a ghost toast.
+  // Silence onSwapChainsChanged only when hidden; passthrough when visible (iPad landscape, desktop).
+  const media = useMedia()
+  const parentUniswapContext = useUniswapContext()
+  const uniswapContextOverride = useMemo(
+    () => (media.xl ? { ...parentUniswapContext, onSwapChainsChanged: () => {} } : parentUniswapContext),
+    [parentUniswapContext, media.xl],
+  )
 
   const currencyInfo = useCurrencyInfo(currencyId(currency))
 
@@ -77,7 +87,6 @@ export function TDPSwapComponent() {
 
   const handleCurrencyChange = useCallback(
     (tokens: CurrencyState, isBridgePair?: boolean) => {
-      markInteracted()
       const inputCurrencyURLAddress = getCurrencyURLAddress(tokens.inputCurrency)
       const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
 
@@ -127,7 +136,7 @@ export function TDPSwapComponent() {
       })
       navigate(url, { state: { preloadedLogoSrc } })
     },
-    [address, currencyChainId, markInteracted, navigate, prevTokens],
+    [address, currencyChainId, navigate, prevTokens],
   )
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -143,15 +152,21 @@ export function TDPSwapComponent() {
 
   return (
     <Flex gap="$gap12">
-      <Swap
-        syncTabToUrl={false}
-        initialInputChainId={swapCurrency.chainId}
-        initialInputCurrency={initialInputCurrency}
-        initialOutputCurrency={initialOutputCurrency}
-        onCurrencyChange={handleCurrencyChange}
-        tokenColor={tokenColor}
-        tdpCurrency={swapCurrency}
-      />
+      {/* TODO(SWAP-2334): Update interaction detection after swap flow refactor */}
+      {/* oxlint-disable-next-line react/forbid-elements -- raw div needed for onPointerDownCapture */}
+      <div onPointerDownCapture={markInteracted}>
+        <UniswapContext.Provider value={uniswapContextOverride}>
+          <Swap
+            syncTabToUrl={false}
+            initialInputChainId={swapCurrency.chainId}
+            initialInputCurrency={initialInputCurrency}
+            initialOutputCurrency={initialOutputCurrency}
+            onCurrencyChange={handleCurrencyChange}
+            tokenColor={tokenColor}
+            tdpCurrency={swapCurrency}
+          />
+        </UniswapContext.Provider>
+      </div>
       <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
       {currencyInfo && (
         // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard

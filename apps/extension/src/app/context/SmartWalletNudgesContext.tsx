@@ -74,7 +74,6 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
     delegationStatus.status === SmartWalletDelegationAction.PromptUpgrade &&
     !delegationStatus.loading
 
-  // oxlint-disable-next-line react/exhaustive-deps -- delegationStatus is used in shouldShowNudge calculation above
   useEffect(() => {
     if (last5792DappInfo && shouldShowNudge) {
       setDappInfo({

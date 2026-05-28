@@ -88,6 +88,7 @@ test.describe(
 
       await page.getByTestId(`${TestID.TokenTableRowPrefix}${USDT_ARBITRUM_ONE.address}`).click()
 
+      await expect(page).toHaveURL(/\/explore\/tokens\/arbitrum\//)
       await expect(page.getByTestId(TestID.ChooseOutputToken + '-label')).toHaveText('USDT')
     })
   },

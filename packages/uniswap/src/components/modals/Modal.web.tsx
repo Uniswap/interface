@@ -1,14 +1,13 @@
+import { isExtensionApp, isWebApp } from '@universe/environment'
 import { useEffect, useState } from 'react'
 // oxlint-disable-next-line no-restricted-imports -- needed here
 import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import type { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
 const ANIMATION_MS = 200
 
-// oxlint-disable-next-line complexity
 export function Modal({
   children,
   name,

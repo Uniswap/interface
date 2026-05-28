@@ -1,47 +1,45 @@
-import {
-  CompositeNavigationProp,
-  CompositeScreenProps,
-  NavigatorScreenParams,
-  useNavigation,
-} from '@react-navigation/native'
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
-import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
-import { RestoreWalletModalState, WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
-import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
-import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
-import { ManageWalletsModalState } from 'src/components/Settings/ManageWalletsModalState'
-import { BuyNativeTokenModalState } from 'src/components/TokenDetails/BuyNativeTokenModalState'
-import { UnitagsIntroModalState } from 'src/components/unitags/UnitagsIntroModalState'
-import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
-import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
-import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchModalState'
-import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
-import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
-import { ViewPrivateKeysScreenState } from 'src/screens/ViewPrivateKeys/ViewPrivateKeysScreenState'
-import { BridgedAssetModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { WormholeModalProps } from 'uniswap/src/components/BridgedAsset/WormholeModal'
-import { ReportPortfolioDataModalProps } from 'uniswap/src/components/reporting/ReportPortfolioDataModal'
-import { ReportTokenDataModalProps } from 'uniswap/src/components/reporting/ReportTokenDataModal'
-import { ReportTokenModalProps } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
-import { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
+import { useNavigation } from '@react-navigation/native'
+import type { CompositeNavigationProp, CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
+import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import type { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
+import type { EarnDepositReviewModalProps } from 'src/components/earn/EarnDepositReviewModal'
+import type { EarnVaultModalProps } from 'src/components/earn/EarnVaultModal'
+import type { EarnYouNeedTokenModalProps } from 'src/components/earn/EarnYouNeedTokenModal'
+import type { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
+import type {
+  RestoreWalletModalState,
+  WalletRestoreType,
+} from 'src/components/RestoreWalletModal/RestoreWalletModalState'
+import type { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
+import type { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
+import type { ManageWalletsModalState } from 'src/components/Settings/ManageWalletsModalState'
+import type { BuyNativeTokenModalState } from 'src/components/TokenDetails/BuyNativeTokenModalState'
+import type { UnitagsIntroModalState } from 'src/components/unitags/UnitagsIntroModalState'
+import type { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
+import type { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import type { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchModalState'
+import type { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import type { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
+import type { ViewPrivateKeysScreenState } from 'src/screens/ViewPrivateKeys/ViewPrivateKeysScreenState'
+import type { BridgedAssetModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import type { WormholeModalProps } from 'uniswap/src/components/BridgedAsset/WormholeModal'
+import type { ReportPortfolioDataModalProps } from 'uniswap/src/components/reporting/ReportPortfolioDataModal'
+import type { ReportTokenDataModalProps } from 'uniswap/src/components/reporting/ReportTokenDataModal'
+import type { ReportTokenModalProps } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import type { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import type { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
-import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import {
-  FiatOnRampScreens,
-  MobileScreens,
-  OnboardingScreens,
-  SharedUnitagScreenParams,
-  UnitagStackParamList,
-} from 'uniswap/src/types/screens/mobile'
-import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
-import { SmartWalletEnabledModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
-import { SmartWalletNudgeState } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
-import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
+import type { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
+import type { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import type { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { FiatOnRampScreens, MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import type { SharedUnitagScreenParams, UnitagStackParamList } from 'uniswap/src/types/screens/mobile'
+import type { AboutModalState } from 'wallet/src/components/settings/about/AboutModal'
+import type { SmartWalletAdvancedSettingsModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletAdvancedSettingsModal'
+import type { SmartWalletEnabledModalState } from 'wallet/src/components/smartWallet/modals/SmartWalletEnabledModal'
+import type { SmartWalletNudgeState } from 'wallet/src/components/smartWallet/modals/SmartWalletNudge'
+import type { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
 export type ExploreScreenParams = {
   showFavorites?: boolean
@@ -69,6 +67,7 @@ export type ExploreStackParamList = {
   }
   [MobileScreens.TokenDetails]: {
     currencyId: string
+    isMultichainAsset?: boolean
   }
 }
 
@@ -92,6 +91,7 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsCloudBackupPasswordCreate]: { address: Address }
   [MobileScreens.SettingsCloudBackupProcessing]: CloudBackupFormParams
   [MobileScreens.SettingsCloudBackupStatus]: { address: Address }
+  [MobileScreens.SettingsDisclosures]: undefined
   [MobileScreens.SettingsHelpCenter]: undefined
   [MobileScreens.SettingsLanguage]: undefined
   [MobileScreens.SettingsNotifications]: undefined
@@ -127,6 +127,13 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
   [OnboardingScreens.WelcomeWallet]: OnboardingStackBaseParams
   [OnboardingScreens.PasskeyImport]: PasskeyImportParams & OnboardingStackBaseParams
+  [OnboardingScreens.RecoveryFlow]: OnboardingStackBaseParams & {
+    // 'passkey' keeps the Login step visible but auto-triggers the passkey ceremony on
+    // mount so the user lands directly on the native prompt; failure falls back to the
+    // email/OAuth tiles on the same view. OAuth redirects land here post-return, so the
+    // default initial step is driven by the hook itself (OAUTH_LOADING if pending, else EMAIL_ENTRY).
+    initialMethod?: 'passkey'
+  }
   [OnboardingScreens.Security]: OnboardingStackBaseParams
   [MobileScreens.ViewPrivateKeys]?: ViewPrivateKeysScreenState
 
@@ -161,10 +168,12 @@ export type AppStackParamList = {
   } & OnboardingStackBaseParams
   [MobileScreens.Home]?: { tab?: HomeScreenTabIndex }
   [MobileScreens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
+  [MobileScreens.PortfolioChartDetails]: undefined
   [MobileScreens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [MobileScreens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>
   [MobileScreens.TokenDetails]: {
     currencyId: string
+    isMultichainAsset?: boolean
   }
   [MobileScreens.ExternalProfile]: {
     address: string
@@ -197,7 +206,6 @@ export type AppStackParamList = {
   [ModalName.HiddenTokenInfoModal]: undefined
   [ModalName.ScreenshotWarning]: { acknowledgeText?: string } | undefined
   [ModalName.PasskeyManagement]: PasskeyManagementModalState
-  [ModalName.PasskeysHelp]: undefined
   [ModalName.BiometricsModal]: undefined
   [ModalName.FiatCurrencySelector]: undefined
   [ModalName.ManageWalletsModal]: ManageWalletsModalState
@@ -209,8 +217,10 @@ export type AppStackParamList = {
   [ModalName.PrivateKeySpeedBumpModal]: undefined
   [ModalName.SmartWalletNudge]: SmartWalletNudgeState
   [ModalName.SettingsAppearance]: undefined
+  [ModalName.NetworkCostPicker]: undefined
   [ModalName.PermissionsModal]: undefined
   [ModalName.PortfolioBalanceModal]: undefined
+  [ModalName.About]: AboutModalState
   [ModalName.LanguageSelector]: undefined
   [ModalName.SmartWalletInfoModal]: undefined
   [ModalName.ConfirmDisableSmartWalletScreen]: undefined
@@ -219,6 +229,9 @@ export type AppStackParamList = {
   [ModalName.ReportTokenIssue]: ReportTokenModalProps
   [ModalName.ReportPortfolioData]: ReportPortfolioDataModalProps
   [ModalName.ReportTokenData]: ReportTokenDataModalProps
+  [ModalName.EarnDepositReview]: EarnDepositReviewModalProps
+  [ModalName.EarnVault]: EarnVaultModalProps
+  [ModalName.EarnYouNeedToken]: EarnYouNeedTokenModalProps
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

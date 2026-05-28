@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 
@@ -13,7 +14,17 @@ interface TransactionSettingRowProps {
 }
 
 export function TransactionSettingRow({ setting, setSelectedSetting }: TransactionSettingRowProps): JSX.Element | null {
-  const { renderTitle, renderTooltip, Control, Description, Screen, InfoModal, featureFlag, Warning } = setting
+  const {
+    renderTitle,
+    renderTooltip,
+    tooltipLearnMoreUrl,
+    Control,
+    Description,
+    Screen,
+    InfoModal,
+    featureFlag,
+    Warning,
+  } = setting
   const { t } = useTranslation()
 
   const [showInfoModal, setShowInfoModal] = useState(false)
@@ -31,23 +42,35 @@ export function TransactionSettingRow({ setting, setSelectedSetting }: Transacti
     <>
       <Flex>
         <Flex centered row columnGap="$spacing16" justifyContent="space-between">
-          <TouchableAreaWrapper isTouchable={!!InfoModal} onPress={(): void => setShowInfoModal(true)}>
-            <Flex gap="$spacing2" justifyContent="center" minHeight={48}>
-              <Flex row alignItems="center" gap="$spacing4">
-                <Text color="$neutral1" variant="subheading2">
-                  {renderTitle(t)}
-                </Text>
-                {InfoModal && InfoIcon}
-                {!!renderTooltip && <InfoTooltip trigger={InfoIcon} text={renderTooltip(t)} />}
+          <Flex flexGrow={1} flexShrink={1} minWidth={0}>
+            <TouchableAreaWrapper isTouchable={!!InfoModal} onPress={(): void => setShowInfoModal(true)}>
+              <Flex gap="$spacing2" justifyContent="center" minHeight={48}>
+                <Flex row alignItems="center" gap="$spacing4" minWidth={0}>
+                  <Text color="$neutral1" flexShrink={1} variant="subheading2" whiteSpace="initial">
+                    {renderTitle(t)}
+                  </Text>
+                  {InfoModal && InfoIcon}
+                  {!!renderTooltip && (
+                    <InfoTooltip
+                      trigger={InfoIcon}
+                      text={renderTooltip(t)}
+                      button={
+                        tooltipLearnMoreUrl ? (
+                          <LearnMoreLink url={tooltipLearnMoreUrl} textVariant="buttonLabel4" textColor="$neutral1" />
+                        ) : undefined
+                      }
+                    />
+                  )}
+                </Flex>
+                {Description && (
+                  <Text color="$neutral2" variant="body3">
+                    <Description />
+                  </Text>
+                )}
+                {Warning && <Warning />}
               </Flex>
-              {Description && (
-                <Text color="$neutral2" variant="body3">
-                  <Description />
-                </Text>
-              )}
-              {Warning && <Warning />}
-            </Flex>
-          </TouchableAreaWrapper>
+            </TouchableAreaWrapper>
+          </Flex>
           <TouchableArea
             group
             flexDirection="row"

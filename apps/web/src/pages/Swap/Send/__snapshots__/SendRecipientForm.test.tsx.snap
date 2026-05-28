@@ -1,59 +1,53 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SendCurrencyInputform > should render correctly with no verified recipient 1`] = `
-.c0 {
-  background: none;
-  width: 100%;
-  color: #131313;
-  outline: none;
-  border: none;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-}
-
-.c0 ::placeholder {
-  color: rgba(19, 19, 19, 0.35);
-}
-
+exports[`SendRecipientForm > should render correctly with no verified recipient 1`] = `
 <span
   class=""
   style="display: contents;"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    aria-expanded="false"
+    aria-haspopup="dialog"
+    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
   >
     <div
-      aria-expanded="false"
-      aria-haspopup="dialog"
-      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); cursor: text; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); padding: 16px 16px 16px 16px; gap: var(--t-space-spacing4); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
+      tabindex="0"
     >
       <div
-        aria-expanded="false"
-        class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-        data-state="closed"
+        class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _color-accent3"
       >
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-none"
+          data-disable-theme="true"
+        >
+          To
+        </span>
+        <span
+          class="_dsp_contents"
         >
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-none"
-            data-disable-theme="true"
+            class="_dsp_contents"
           >
-            To
+            <input
+              autocapitalize="none"
+              autocomplete="off"
+              autocorrect="off"
+              class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _width-10037 _backgroundColor-transparent _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _outlineWidth-0px _pt-0px _pr-0px _pb-0px _pl-0px _fontSize-16px _fontWeight-500 _lineHeight-24px _color-neutral1 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true "
+              data-disable-theme="true"
+              dir="auto"
+              enterkeyhint="done"
+              placeholder="Wallet address or ENS name"
+              rows="1"
+              spellcheck="false"
+              style="--placeholderTextColor: var(--neutral3);"
+              value="hayden.eth"
+              virtualkeyboardpolicy="auto"
+            />
           </span>
-          <input
-            autocapitalize="off"
-            autocomplete="off"
-            autocorrect="off"
-            class="c0"
-            pattern="^(0x[a-fA-F0-9]{40})$"
-            placeholder="Wallet address or ENS name"
-            spellcheck="false"
-            type="text"
-            value="hayden.eth"
-          />
-        </div>
+        </span>
       </div>
     </div>
   </div>
@@ -63,316 +57,84 @@ exports[`SendCurrencyInputform > should render correctly with no verified recipi
 </span>
 `;
 
-exports[`SendCurrencyInputform > should render correctly with unitag 1`] = `
-.c5 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.c3 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c6 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c7 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c2 {
-  padding: 6px 0px;
-  justify-content: space-between;
-}
-
-.c4 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-}
-
-.c4 :hover {
-  opacity: 0.6;
-}
-
-.c4 :active {
-  opacity: 0.4;
-}
-
+exports[`SendRecipientForm > should render correctly with verified recipient 1`] = `
 <span
   class=""
   style="display: contents;"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    aria-expanded="false"
+    aria-haspopup="dialog"
+    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
   >
     <div
-      aria-expanded="false"
-      aria-haspopup="dialog"
-      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); padding: 16px 16px 16px 16px; gap: var(--t-space-spacing4); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
+      tabindex="0"
     >
       <div
-        aria-expanded="false"
-        class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-        data-state="closed"
+        class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa94665591 _pb-t-space-spa94665591 _justifyContent-space-betwe3241 _alignItems-center _color-accent3"
       >
         <div
-          class="c0 c1 c2"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: var(--t-space-spacing12); transform: scale(1);"
+          tabindex="0"
         >
           <div
-            class="c0 c3 c4"
-            gap="md"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-36px _height-36px _color-accent3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+            data-testid="account-icon"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-              data-testid="account-icon"
+              class="t_unmounted  t_unmounted"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: column; flex-grow: 1; opacity: 0; transition: opacity 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
             >
-              <div
-                class="t_unmounted  t_unmounted"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              <span
+                data-testid="unicon"
               >
-                <span
-                  data-testid="unicon"
-                >
-                  🔵
-                </span>
-              </div>
-            </div>
-            <div
-              class="c5"
-            >
-              <div
-                class="c0 c6"
-                gap="xs"
-              >
-                <div
-                  class="c7 css-n8z49y"
-                >
-                  hayden
-                </div>
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665587"
-                >
-                  <img
-                    height="18"
-                    src="unitag-light-small.png"
-                    style="vertical-align: sub;"
-                    width="18"
-                  />
-                </div>
-              </div>
-              <div
-                class="c8 css-obwv3p"
-              >
-                0x9984...9103
-              </div>
+                🔵
+              </span>
             </div>
           </div>
           <div
-            class="is_TouchableArea  t_group_true"
-            role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
-            tabindex="0"
+            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589 _color-accent3"
           >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
-              viewBox="0 0 16 16"
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
             >
-              <path
-                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-                fill="currentColor"
-              />
-            </svg>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh507465454"
+                data-disable-theme="true"
+              >
+                hayden.eth
+              </span>
+            </div>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1263414315"
+              data-disable-theme="true"
+            >
+              0x9984...9103
+            </span>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div
-    style="display: contents;"
-  />
-</span>
-`;
-
-exports[`SendCurrencyInputform > should render correctly with verified recipient 1`] = `
-.c5 {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.c3 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c6 {
-  width: 100%;
-  display: flex;
-  padding: 0;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c7 {
-  color: #131313;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
-.c2 {
-  padding: 6px 0px;
-  justify-content: space-between;
-}
-
-.c4 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-}
-
-.c4 :hover {
-  opacity: 0.6;
-}
-
-.c4 :active {
-  opacity: 0.4;
-}
-
-<span
-  class=""
-  style="display: contents;"
->
-  <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-  >
-    <div
-      aria-expanded="false"
-      aria-haspopup="dialog"
-      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-    >
-      <div
-        aria-expanded="false"
-        class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-        data-state="closed"
-      >
         <div
-          class="c0 c1 c2"
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
+          tabindex="0"
         >
-          <div
-            class="c0 c3 c4"
-            gap="md"
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+            viewBox="0 0 16 16"
           >
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-              data-testid="account-icon"
-            >
-              <div
-                class="t_unmounted  t_unmounted"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0; transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
-              >
-                <span
-                  data-testid="unicon"
-                >
-                  🔵
-                </span>
-              </div>
-            </div>
-            <div
-              class="c5"
-            >
-              <div
-                class="c0 c6"
-                gap="xs"
-              >
-                <div
-                  class="c7 css-n8z49y"
-                >
-                  hayden.eth
-                </div>
-              </div>
-              <div
-                class="c8 css-obwv3p"
-              >
-                0x9984...9103
-              </div>
-            </div>
-          </div>
-          <div
-            class="is_TouchableArea  t_group_true"
-            role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
-            tabindex="0"
-          >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
+            <path
+              d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+              fill="currentColor"
+            />
+          </svg>
         </div>
       </div>
     </div>
@@ -383,60 +145,54 @@ exports[`SendCurrencyInputform > should render correctly with verified recipient
 </span>
 `;
 
-exports[`SendCurrencyInputform > should render placeholder values 1`] = `
-.c0 {
-  background: none;
-  width: 100%;
-  color: #131313;
-  outline: none;
-  border: none;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-}
-
-.c0 ::placeholder {
-  color: rgba(19, 19, 19, 0.35);
-}
-
+exports[`SendRecipientForm > should render placeholder values 1`] = `
 <span
   class=""
   style="display: contents;"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-spa94665589 _opacity-1 _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    aria-expanded="false"
+    aria-haspopup="dialog"
+    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
   >
     <div
-      aria-expanded="false"
-      aria-haspopup="dialog"
-      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+      class="is_TouchableArea  t_group_true"
+      role="button"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); cursor: text; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1); padding: 16px 16px 16px 16px; gap: var(--t-space-spacing4); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
+      tabindex="0"
     >
       <div
-        aria-expanded="false"
-        class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-        data-state="closed"
+        class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _color-accent3"
       >
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-none"
+          data-disable-theme="true"
+        >
+          To
+        </span>
+        <span
+          class="_dsp_contents"
         >
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494 _userSelect-none"
-            data-disable-theme="true"
+            class="_dsp_contents"
           >
-            To
+            <input
+              autocapitalize="none"
+              autocomplete="off"
+              autocorrect="off"
+              class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input _outlineWidth-0focus-0px _outlineStyle-0focus-none _borderTopWidth-0focus-0px _borderRightWidth-0focus-0px _borderBottomWidth-0focus-0px _borderLeftWidth-0focus-0px _boxShadow-0focus-none _borderBottomStyle-0focus-solid _borderTopStyle-0focus-solid _borderLeftStyle-0focus-solid _borderRightStyle-0focus-solid _outlineWidth-0focus-visible-0px _outlineStyle-0focus-visible-none _borderTopWidth-0focus-visible-0px _borderRightWidth-0focus-visible-0px _borderBottomWidth-0focus-visible-0px _borderLeftWidth-0focus-visible-0px _boxShadow-0focus-visible-none _borderBottomStyle-0focus-visible-solid _borderTopStyle-0focus-visible-solid _borderLeftStyle-0focus-visible-solid _borderRightStyle-0focus-visible-solid _outlineStyle-_platformweb_none _outlineWidth-_platformweb_0px _width-10037 _backgroundColor-transparent _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _outlineWidth-0px _pt-0px _pr-0px _pb-0px _pl-0px _fontSize-16px _fontWeight-500 _lineHeight-24px _color-neutral1 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid true "
+              data-disable-theme="true"
+              dir="auto"
+              enterkeyhint="done"
+              placeholder="Wallet address or ENS name"
+              rows="1"
+              spellcheck="false"
+              style="--placeholderTextColor: var(--neutral3);"
+              value=""
+              virtualkeyboardpolicy="auto"
+            />
           </span>
-          <input
-            autocapitalize="off"
-            autocomplete="off"
-            autocorrect="off"
-            class="c0"
-            pattern="^(0x[a-fA-F0-9]{40})$"
-            placeholder="Wallet address or ENS name"
-            spellcheck="false"
-            type="text"
-            value=""
-          />
-        </div>
+        </span>
       </div>
     </div>
   </div>

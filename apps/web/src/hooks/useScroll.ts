@@ -1,73 +1,52 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useSyncExternalStore } from 'react'
+import { getScrollY, subscribe } from '~/state/scroll/scrollStore'
 
 export enum ScrollDirection {
   UP = 'up',
   DOWN = 'down',
 }
-export function useScroll({ enabled = true }: { enabled?: boolean } = {}) {
-  const [direction, setDirection] = useState<ScrollDirection | undefined>()
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
-  const [height, setHeight] = useState(window.scrollY)
-  const rafIdRef = useRef<number | null>(null)
-  const scrollDataRef = useRef({ previousScrollPosition: window.scrollY, currentScrollPosition: window.scrollY })
 
-  useEffect(() => {
-    if (!enabled) {
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current)
-        rafIdRef.current = null
-      }
-      return undefined
+interface ScrollState {
+  direction: ScrollDirection | undefined
+  isScrolledDown: boolean
+}
+
+const SERVER_SNAPSHOT: ScrollState = { direction: undefined, isScrolledDown: false }
+
+export function useScroll(): ScrollState {
+  const stateRef = useRef<ScrollState>({
+    direction: undefined,
+    isScrolledDown: getScrollY() > 0,
+  })
+
+  const subscribeToStore = useCallback((onStoreChange: () => void) => {
+    let prevY = getScrollY()
+
+    stateRef.current = {
+      direction: stateRef.current.direction,
+      isScrolledDown: prevY > 0,
     }
 
-    const updateScrollState = () => {
-      // When a modal opens, ScrollLock sets body.position = 'fixed' which causes
-      // window.scrollY to become 0. In this case, we should preserve the last known
-      // scroll state to prevent the header from incorrectly becoming transparent.
-      const isScrollLocked = document.body.style.position === 'fixed'
-      if (isScrollLocked) {
-        rafIdRef.current = null
-        return
+    return subscribe(() => {
+      const y = getScrollY()
+      const isScrolledDown = y > 0
+
+      let { direction } = stateRef.current
+      if (prevY < y) {
+        direction = ScrollDirection.DOWN
+      } else if (prevY > y) {
+        direction = ScrollDirection.UP
       }
+      prevY = y
 
-      const scrollY = window.scrollY
-      const { previousScrollPosition } = scrollDataRef.current
-
-      setIsScrolledDown(scrollY > 0)
-      if (scrollY >= 0) {
-        setHeight(scrollY)
-        scrollDataRef.current.currentScrollPosition = scrollY
+      if (isScrolledDown !== stateRef.current.isScrolledDown || direction !== stateRef.current.direction) {
+        stateRef.current = { direction, isScrolledDown }
+        onStoreChange()
       }
+    })
+  }, [])
 
-      if (previousScrollPosition < scrollDataRef.current.currentScrollPosition) {
-        setDirection(ScrollDirection.DOWN)
-      } else if (previousScrollPosition > scrollDataRef.current.currentScrollPosition) {
-        setDirection(ScrollDirection.UP)
-      }
+  const getSnapshot = useCallback(() => stateRef.current, [])
 
-      scrollDataRef.current.previousScrollPosition = scrollDataRef.current.currentScrollPosition
-      rafIdRef.current = null
-    }
-
-    const scrollListener = () => {
-      if (rafIdRef.current !== null) {
-        return
-      }
-
-      rafIdRef.current = requestAnimationFrame(updateScrollState)
-    }
-
-    window.addEventListener('scroll', scrollListener, { passive: true })
-    // Check initial scroll position
-    updateScrollState()
-
-    return () => {
-      window.removeEventListener('scroll', scrollListener)
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current)
-        rafIdRef.current = null
-      }
-    }
-  }, [enabled])
-  return { direction, isScrolledDown, height }
+  return useSyncExternalStore(subscribeToStore, getSnapshot, () => SERVER_SNAPSHOT)
 }

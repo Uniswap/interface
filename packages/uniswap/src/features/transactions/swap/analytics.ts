@@ -1,10 +1,12 @@
 /* oxlint-disable max-lines */
+import { useQueryClient } from '@tanstack/react-query'
 import { Protocol } from '@uniswap/router-sdk'
 import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { TradingApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect } from 'react'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
@@ -12,9 +14,10 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getDisplayedPriceSource } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import type { PriceSourceTag, SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
@@ -312,11 +315,21 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 
   const { data: portfolioData } = usePortfolioTotalValue({ ...activeAddresses, fetchPolicy: 'cache-first' })
 
-  // oxlint-disable-next-line react/exhaustive-deps -- we only want to re-run this when we get a new `quoteId`
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
+  const queryClient = useQueryClient()
+
   useEffect(() => {
     if (!trade) {
       return
     }
+
+    const priceSource = getDisplayedPriceSource({
+      isCentralizedPricesEnabled,
+      surface: 'usdc',
+      chainId: trade.inputAmount.currency.chainId,
+      address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
+      queryClient,
+    })
 
     sendAnalyticsEvent(
       SwapEventName.SwapQuoteReceived,
@@ -327,6 +340,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
         currencyOutAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.output,
         portfolioBalanceUsd: portfolioData?.balanceUSD,
         trace,
+        priceSource,
       }),
     )
 
@@ -340,6 +354,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
           currencyOutAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.output,
           portfolioBalanceUsd: portfolioData?.balanceUSD,
           trace,
+          priceSource,
         }),
         category: trade.blockingError.category,
         error_code: trade.blockingError.code,
@@ -367,6 +382,7 @@ export function getBaseTradeAnalyticsProperties({
   isSmartWalletTransaction,
   swapStartTimestamp,
   isFinalStep,
+  priceSource,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
@@ -382,6 +398,7 @@ export function getBaseTradeAnalyticsProperties({
   isSmartWalletTransaction?: boolean
   swapStartTimestamp?: number
   isFinalStep?: boolean
+  priceSource?: PriceSourceTag
 }) {
   const portionAmount = trade.swapFee?.amount
 
@@ -443,6 +460,7 @@ export function getBaseTradeAnalyticsProperties({
     swap_start_timestamp: swapStartTimestamp,
     is_final_step: isFinalStep,
     is_cross_chain_swap: isNonBridgeCrossChainSwap(trade),
+    price_source: priceSource,
   } as const
 }
 
@@ -578,6 +596,8 @@ export function tradeRoutingToFillType({
       return 'classic'
     case TradingApi.Routing.BRIDGE:
       return 'bridge'
+    case TradingApi.Routing.CHAINED:
+      return 'chained'
     case TradingApi.Routing.JUPITER:
       return 'jupiter'
     default:

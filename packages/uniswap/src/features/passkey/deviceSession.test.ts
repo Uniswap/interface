@@ -1,11 +1,20 @@
 import {
   canonicalizeJSON,
   clearDeviceSession,
+  clearNeckMetadata,
+  deleteNeckSigningKey,
+  ensureNeckKeyPair,
   generateDeviceKeyPair,
   getDeviceSession,
+  hasActiveNeckKey,
+  loadNeckMetadata,
+  loadNeckSigningKey,
   setDeviceSession,
   signWithDeviceKey,
+  storeNeckMetadata,
+  storeNeckSigningKey,
 } from 'uniswap/src/features/passkey/deviceSession'
+import { vi } from 'vitest'
 
 describe('deviceSession', () => {
   afterEach(() => {
@@ -160,6 +169,174 @@ describe('deviceSession', () => {
     it('handles empty objects and arrays', () => {
       expect(canonicalizeJSON({})).toBe('{}')
       expect(canonicalizeJSON([])).toBe('[]')
+    })
+  })
+
+  describe('NECK metadata (localStorage)', () => {
+    afterEach(() => {
+      clearNeckMetadata()
+    })
+
+    it('returns null when no metadata stored', () => {
+      expect(loadNeckMetadata()).toBeNull()
+    })
+
+    it('stores and loads metadata', () => {
+      const metadata = { publicKeyBase64: 'abc123', walletId: 'wallet-1', deviceKeyQuorumId: 'quorum-1' }
+      storeNeckMetadata(metadata)
+      expect(loadNeckMetadata()).toEqual(metadata)
+    })
+
+    it('clears metadata', () => {
+      storeNeckMetadata({ publicKeyBase64: 'abc', walletId: 'w', deviceKeyQuorumId: '' })
+      clearNeckMetadata()
+      expect(loadNeckMetadata()).toBeNull()
+    })
+
+    it('returns null for corrupted localStorage data', () => {
+      localStorage.setItem('embedded-wallet-neck-meta', 'not-json')
+      expect(loadNeckMetadata()).toBeNull()
+    })
+
+    it('returns null when parsed shape is missing publicKeyBase64', () => {
+      localStorage.setItem('embedded-wallet-neck-meta', JSON.stringify({ walletId: 'w1', deviceKeyQuorumId: 'q1' }))
+      expect(loadNeckMetadata()).toBeNull()
+    })
+
+    it('returns null when parsed shape is missing walletId', () => {
+      localStorage.setItem(
+        'embedded-wallet-neck-meta',
+        JSON.stringify({ publicKeyBase64: 'k1', deviceKeyQuorumId: 'q1' }),
+      )
+      expect(loadNeckMetadata()).toBeNull()
+    })
+
+    it('defaults deviceKeyQuorumId to empty string when absent', () => {
+      localStorage.setItem('embedded-wallet-neck-meta', JSON.stringify({ publicKeyBase64: 'k1', walletId: 'w1' }))
+      expect(loadNeckMetadata()).toEqual({ publicKeyBase64: 'k1', walletId: 'w1', deviceKeyQuorumId: '' })
+    })
+
+    it('overwrites previous metadata', () => {
+      storeNeckMetadata({ publicKeyBase64: 'key1', walletId: 'w1', deviceKeyQuorumId: '' })
+      storeNeckMetadata({ publicKeyBase64: 'key2', walletId: 'w2', deviceKeyQuorumId: 'q2' })
+      expect(loadNeckMetadata()).toEqual({ publicKeyBase64: 'key2', walletId: 'w2', deviceKeyQuorumId: 'q2' })
+    })
+  })
+
+  describe('NECK signing key (in-memory)', () => {
+    afterEach(async () => {
+      // Clean up any keys set during tests so state doesn't leak across cases
+      deleteNeckSigningKey('mem-wallet-1')
+      deleteNeckSigningKey('mem-wallet-2')
+    })
+
+    it('returns null when no key is stored for the walletId', async () => {
+      expect(loadNeckSigningKey('mem-wallet-1')).toBeNull()
+      expect(hasActiveNeckKey('mem-wallet-1')).toBe(false)
+    })
+
+    it('stores and loads a CryptoKey handle in memory', async () => {
+      const { privateKey } = await generateDeviceKeyPair()
+      storeNeckSigningKey('mem-wallet-1', privateKey)
+
+      expect(hasActiveNeckKey('mem-wallet-1')).toBe(true)
+      expect(loadNeckSigningKey('mem-wallet-1')).toBe(privateKey)
+    })
+
+    it('keeps keys isolated per walletId', async () => {
+      const { privateKey: key1 } = await generateDeviceKeyPair()
+      const { privateKey: key2 } = await generateDeviceKeyPair()
+      storeNeckSigningKey('mem-wallet-1', key1)
+      storeNeckSigningKey('mem-wallet-2', key2)
+
+      expect(loadNeckSigningKey('mem-wallet-1')).toBe(key1)
+      expect(loadNeckSigningKey('mem-wallet-2')).toBe(key2)
+    })
+
+    it('removes a key with deleteNeckSigningKey', async () => {
+      const { privateKey } = await generateDeviceKeyPair()
+      storeNeckSigningKey('mem-wallet-1', privateKey)
+      expect(hasActiveNeckKey('mem-wallet-1')).toBe(true)
+
+      deleteNeckSigningKey('mem-wallet-1')
+      expect(hasActiveNeckKey('mem-wallet-1')).toBe(false)
+      expect(loadNeckSigningKey('mem-wallet-1')).toBeNull()
+    })
+
+    it('does not persist across module reload (simulates window close)', async () => {
+      const { privateKey } = await generateDeviceKeyPair()
+      storeNeckSigningKey('mem-wallet-1', privateKey)
+      expect(loadNeckSigningKey('mem-wallet-1')).toBe(privateKey)
+
+      // Simulate window close: module state is reset when vi re-imports.
+      vi.resetModules()
+      const fresh = await import('uniswap/src/features/passkey/deviceSession')
+      expect(fresh.loadNeckSigningKey('mem-wallet-1')).toBeNull()
+      expect(fresh.hasActiveNeckKey('mem-wallet-1')).toBe(false)
+    })
+  })
+
+  describe('ensureNeckKeyPair', () => {
+    afterEach(async () => {
+      clearNeckMetadata()
+      deleteNeckSigningKey('ensure-wallet-1')
+    })
+
+    it('reuses existing pair when metadata and in-memory key are both present (isFresh: false)', async () => {
+      const { privateKey, publicKeyBase64 } = await generateDeviceKeyPair()
+      storeNeckSigningKey('ensure-wallet-1', privateKey)
+      storeNeckMetadata({ publicKeyBase64, walletId: 'ensure-wallet-1', deviceKeyQuorumId: 'q1' })
+
+      const result = await ensureNeckKeyPair('ensure-wallet-1')
+
+      expect(result.privateKey).toBe(privateKey)
+      expect(result.publicKeyBase64).toBe(publicKeyBase64)
+      expect(result.isFresh).toBe(false)
+      // deviceKeyQuorumId preserved from prior metadata
+      expect(loadNeckMetadata()?.deviceKeyQuorumId).toBe('q1')
+    })
+
+    it('regenerates when metadata exists but in-memory key is missing — returns isFresh: true', async () => {
+      const { publicKeyBase64: oldPub } = await generateDeviceKeyPair()
+      storeNeckMetadata({ publicKeyBase64: oldPub, walletId: 'ensure-wallet-1', deviceKeyQuorumId: 'q1' })
+      // No key stored in the in-memory Map — simulates post window-close state
+
+      const result = await ensureNeckKeyPair('ensure-wallet-1')
+
+      expect(result.publicKeyBase64).not.toBe(oldPub)
+      expect(result.isFresh).toBe(true)
+      expect(hasActiveNeckKey('ensure-wallet-1')).toBe(true)
+      // Metadata overwritten with the fresh pub key, quorumId preserved
+      const meta = loadNeckMetadata()
+      expect(meta?.publicKeyBase64).toBe(result.publicKeyBase64)
+      expect(meta?.deviceKeyQuorumId).toBe('q1')
+    })
+
+    it('regenerates when metadata is missing entirely — returns isFresh: true', async () => {
+      expect(loadNeckMetadata()).toBeNull()
+
+      const result = await ensureNeckKeyPair('ensure-wallet-1')
+
+      expect(result.privateKey).toBeInstanceOf(CryptoKey)
+      expect(result.publicKeyBase64).toBeTruthy()
+      expect(result.isFresh).toBe(true)
+      expect(loadNeckMetadata()).toEqual({
+        publicKeyBase64: result.publicKeyBase64,
+        walletId: 'ensure-wallet-1',
+        deviceKeyQuorumId: '',
+      })
+    })
+
+    it('regenerates when metadata walletId does not match — returns isFresh: true', async () => {
+      const { privateKey, publicKeyBase64 } = await generateDeviceKeyPair()
+      storeNeckSigningKey('other-wallet', privateKey)
+      storeNeckMetadata({ publicKeyBase64, walletId: 'other-wallet', deviceKeyQuorumId: 'q1' })
+
+      const result = await ensureNeckKeyPair('ensure-wallet-1')
+
+      expect(result.publicKeyBase64).not.toBe(publicKeyBase64)
+      expect(result.isFresh).toBe(true)
+      expect(loadNeckMetadata()?.walletId).toBe('ensure-wallet-1')
     })
   })
 })

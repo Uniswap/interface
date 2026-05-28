@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { Trans } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
@@ -5,7 +6,6 @@ import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
 import { type useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function InsufficientNativeTokenBaseComponent({
   parsedInsufficientNativeTokenWarning,

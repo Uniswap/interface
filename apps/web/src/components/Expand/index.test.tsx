@@ -1,5 +1,5 @@
 import { noop } from 'utilities/src/react/noop'
-import Expand from '~/components/Expand'
+import { Expand } from '~/components/Expand'
 import { fireEvent, render, screen } from '~/test-utils/render'
 
 describe('Expand', () => {

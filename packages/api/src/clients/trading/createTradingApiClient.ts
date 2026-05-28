@@ -10,6 +10,8 @@ import type {
   CreateSwap7702Response,
   CreateSwapRequest,
   CreateSwapResponse,
+  Encode4337Request,
+  Encode4337Response,
   Encode7702ResponseBody,
   GetOrdersResponse,
   GetSwappableTokensResponse,
@@ -47,6 +49,7 @@ export const TRADING_API_PATHS = {
   wallet: {
     checkDelegation: 'wallet/check_delegation',
     encode7702: 'wallet/encode_7702',
+    encode4337: 'wallet/encode_4337',
   },
 }
 
@@ -54,6 +57,7 @@ export interface TradingClientContext {
   fetchClient: FetchClient
   getFeatureFlagHeaders: (
     tradingApiPath: (typeof TRADING_API_PATHS)[keyof typeof TRADING_API_PATHS],
+    chainId?: ChainId,
   ) => HeadersInit | Promise<HeadersInit>
   getApiPathPrefix: () => string
 }
@@ -64,7 +68,11 @@ export interface TradingApiClient {
   fetchSwap: (params: CreateSwapRequest) => Promise<CreateSwapResponse>
   fetchSwap5792: (params: CreateSwap5792Request) => Promise<CreateSwap5792Response>
   fetchSwap7702: (params: CreateSwap7702Request) => Promise<CreateSwap7702Response>
-  fetchSwaps: (params: { txHashes: TransactionHash[]; chainId: ChainId }) => Promise<GetSwapsResponse>
+  fetchSwaps: (params: {
+    txHashes?: TransactionHash[]
+    userOpHashes?: string[]
+    chainId: ChainId
+  }) => Promise<GetSwapsResponse>
   fetchCheckApproval: (params: ApprovalRequest) => Promise<ApprovalResponse>
   submitOrder: (params: OrderRequest) => Promise<OrderResponse>
   fetchOrders: (params: { orderIds: string[] }) => Promise<GetOrdersResponse>
@@ -75,6 +83,7 @@ export interface TradingApiClient {
   }) => Promise<GetOrdersResponse>
   fetchSwappableTokens: (params: SwappableTokensParams) => Promise<GetSwappableTokensResponse>
   fetchWalletEncoding7702: (params: WalletEncode7702RequestBody) => Promise<Encode7702ResponseBody>
+  fetchWalletEncoding4337: (params: Encode4337Request) => Promise<Encode4337Response>
   checkWalletDelegationWithoutBatching: (
     params: WalletCheckDelegationRequestBody,
   ) => Promise<WalletCheckDelegationResponseBody>
@@ -88,10 +97,14 @@ export interface PlanEndpoints {
   refreshExistingPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
 }
 
-type IndicativeQuoteRequest = Pick<
+type IndicativeQuoteBase = Pick<
   QuoteRequest,
   'type' | 'amount' | 'tokenInChainId' | 'tokenOutChainId' | 'tokenIn' | 'tokenOut' | 'swapper'
 >
+
+type IndicativeQuoteRequest =
+  | (IndicativeQuoteBase & Pick<QuoteRequest, 'autoSlippage'> & { slippageTolerance?: never })
+  | (IndicativeQuoteBase & Pick<QuoteRequest, 'slippageTolerance'> & { autoSlippage?: never })
 
 export function createTradingApiClient(ctx: TradingClientContext): TradingApiClient & PlanEndpoints {
   const { fetchClient: client, getFeatureFlagHeaders, getApiPathPrefix } = ctx
@@ -101,8 +114,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     client,
     url: getApiPath(TRADING_API_PATHS.quote),
     method: 'post',
-    transformRequest: async () => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.quote),
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.quote, params.tokenInChainId),
     }),
     on404: (params: QuoteRequest & { isUSDQuote?: boolean }) => {
       logger.warn('TradingApiClient', 'fetchQuote', 'Quote 404', {
@@ -129,8 +142,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     client,
     url: getApiPath(TRADING_API_PATHS.swap),
     method: 'post',
-    transformRequest: async () => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap),
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap, params.quote.chainId),
     }),
   })
 
@@ -138,8 +151,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     client,
     url: getApiPath(TRADING_API_PATHS.swap5792),
     method: 'post',
-    transformRequest: async () => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap5792),
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap5792, params.quote.chainId),
     }),
   })
 
@@ -147,8 +160,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     client,
     url: getApiPath(TRADING_API_PATHS.swap7702),
     method: 'post',
-    transformRequest: async () => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap7702),
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swap7702, params.quote.chainId),
     }),
   })
 
@@ -156,8 +169,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     client,
     url: getApiPath(TRADING_API_PATHS.approval),
     method: 'post',
-    transformRequest: async () => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.approval),
+    transformRequest: async ({ params }) => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.approval, params.chainId),
     }),
   })
 
@@ -214,7 +227,8 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
 
   const fetchSwaps = createFetcher<
     {
-      txHashes: TransactionHash[]
+      txHashes?: TransactionHash[]
+      userOpHashes?: string[]
       chainId: ChainId
     },
     GetSwapsResponse
@@ -223,9 +237,10 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     url: getApiPath(TRADING_API_PATHS.swaps),
     method: 'get',
     transformRequest: async ({ params }) => ({
-      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swaps),
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.swaps, params.chainId),
       params: {
-        txHashes: params.txHashes.join(','),
+        ...(params.txHashes ? { txHashes: params.txHashes.join(',') } : {}),
+        ...(params.userOpHashes ? { userOpHashes: params.userOpHashes.join(',') } : {}),
         chainId: params.chainId,
       },
     }),
@@ -237,6 +252,15 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     method: 'post',
     transformRequest: async () => ({
       headers: await getFeatureFlagHeaders(TRADING_API_PATHS.wallet.encode7702),
+    }),
+  })
+
+  const fetchWalletEncoding4337 = createFetcher<Encode4337Request, Encode4337Response>({
+    client,
+    url: getApiPath(TRADING_API_PATHS.wallet.encode4337),
+    method: 'post',
+    transformRequest: async () => ({
+      headers: await getFeatureFlagHeaders(TRADING_API_PATHS.wallet.encode4337),
     }),
   })
 
@@ -320,6 +344,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     fetchOrdersWithoutIds,
     fetchSwappableTokens,
     fetchWalletEncoding7702,
+    fetchWalletEncoding4337,
     checkWalletDelegationWithoutBatching,
     createNewPlan,
     fetchPlan,

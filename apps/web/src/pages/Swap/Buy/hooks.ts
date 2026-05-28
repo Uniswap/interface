@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -74,11 +73,9 @@ export function useFiatOnRampSupportedTokens(
   fiatCurrency: FiatCurrencyInfo,
   countryCode?: string,
 ): FiatOnRampCurrency[] {
-  const isSolanaEnabled = useFeatureFlag(FeatureFlags.Solana)
   const { data: quoteCurrencyOptions } = useFiatOnRampAggregatorSupportedTokensQuery({
     fiatCurrency: fiatCurrency.code,
     countryCode: countryCode ?? 'US',
-    isSolanaEnabled,
     rampDirection: RampDirection.ON_RAMP,
   })
   const { meldSupportedCurrencyToCurrencyInfo } = useMeldSupportedCurrencyToCurrencyInfo()

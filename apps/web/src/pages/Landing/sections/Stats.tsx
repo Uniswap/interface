@@ -5,9 +5,9 @@ import { Flex, styled, Text, useSporeColors } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { use24hProtocolVolume, useDailyTVLWithChange } from '~/features/Explore/state/protocolStats'
 import { LiveIcon, StatCard } from '~/pages/Landing/components/StatCard'
 import { useInView } from '~/pages/Landing/sections/useInView'
-import { use24hProtocolVolume, useDailyTVLWithChange } from '~/state/explore/protocolStats'
 import { ExternalLink } from '~/theme/components/Links'
 
 const Container = styled(Flex, {

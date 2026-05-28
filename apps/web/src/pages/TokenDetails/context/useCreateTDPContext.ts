@@ -7,15 +7,15 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { buildCurrencyId, buildNativeCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { gqlToCurrency } from '~/appGraphql/data/util'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useActiveAddresses } from '~/features/accounts/store/hooks'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
 import { useSrcColor } from '~/hooks/useColor'
-import { LoadedTDPContext, MultiChainMap, PendingTDPContext } from '~/pages/TokenDetails/context/TDPContext'
+import type { LoadedTDPContext, MultiChainMap, PendingTDPContext } from '~/pages/TokenDetails/context/TDPContext'
 import { getNativeTokenDBAddress } from '~/utils/nativeTokens'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const { tokenAddress } = useParams<{ tokenAddress: string; chainName: string }>()
@@ -53,7 +53,7 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     return undefined
   }, [tokenQuery.data?.token, isNative, currencyChainInfo.id])
 
-  const multiChainMap = useMultiChainMap(tokenQuery)
+  const { multiChainMap, balanceError } = useMultiChainMap(tokenQuery)
 
   // Extract color for page usage
   const colors = useSporeColors()
@@ -76,6 +76,7 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       address: (currency?.isNative ? NATIVE_CHAIN_ID : currency?.address) ?? tokenAddress,
       tokenQuery,
       multiChainMap,
+      balanceError,
       selectedMultichainChainId: undefined,
       tokenColor,
     }
@@ -86,23 +87,27 @@ export function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     tokenAddress,
     tokenQuery,
     multiChainMap,
+    balanceError,
     tokenColor,
   ])
 }
 
 /** Returns a map to store addresses and balances of the TDP token on other chains */
-function useMultiChainMap(tokenQuery: ReturnType<typeof GraphQLApi.useTokenWebQuery>) {
+function useMultiChainMap(tokenQuery: ReturnType<typeof GraphQLApi.useTokenWebQuery>): {
+  multiChainMap: MultiChainMap
+  balanceError?: Error
+} {
   const activeAddresses = useActiveAddresses()
   const evmAddress = activeAddresses.evmAddress
   const svmAddress = activeAddresses.svmAddress
 
-  const { data: balancesById } = usePortfolioBalances({
+  const { data: balancesById, error: balanceError } = usePortfolioBalances({
     evmAddress,
     svmAddress,
     skip: !evmAddress && !svmAddress,
   })
 
-  return useMemo(() => {
+  const multiChainMap = useMemo(() => {
     const tokensAcrossChains = tokenQuery.data?.token?.project?.tokens
     if (!tokensAcrossChains) {
       return {}
@@ -134,4 +139,6 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof GraphQLApi.useTokenWebQu
       return map
     }, {})
   }, [balancesById, tokenQuery.data?.token?.project?.tokens])
+
+  return { multiChainMap, balanceError }
 }

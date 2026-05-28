@@ -1,9 +1,9 @@
 import { defineConfig } from '@playwright/test'
 import ms from 'ms'
 
+// oxlint-disable-next-line eslint-js/no-restricted-syntax allow process.env access
 const IS_CI = process.env.CI === 'true'
 
-// oxlint-disable-next-line import/no-unused-modules
 export default defineConfig({
   testDir: '../tests',
   testMatch: '**/*.test.ts',

@@ -16,7 +16,7 @@ import {
   getStatsigClient,
 } from '@universe/gating'
 import JSBI from 'jsbi'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   CHAIN_GAS_STRATEGY_OVERRIDES,
   DEFAULT_GAS_STRATEGY,
@@ -25,9 +25,12 @@ import {
   URGENT_GAS_STRATEGY,
 } from 'uniswap/src/features/gas/consts'
 import { hasSufficientFundsIncludingTempoGas } from 'uniswap/src/features/gas/tempo'
-import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
+import { createEthersProviderFactory } from 'uniswap/src/features/providers/createEthersProvider'
+import { defaultResolveRpcConfig } from 'uniswap/src/features/providers/resolveRpcConfig'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { type Prettify } from 'viem'
+
+const createProvider = createEthersProviderFactory({ resolveRpcConfig: defaultResolveRpcConfig })
 
 export enum GasSpeed {
   Normal = 'normal',
@@ -242,7 +245,7 @@ export async function estimateGasWithClientSideProvider({
     if (!tx.chainId) {
       throw new Error('No chainId for clientside gas estimation')
     }
-    const provider = createEthersProvider({ chainId: tx.chainId })
+    const provider = createProvider({ chainId: tx.chainId, rpcType: RPCType.Public })
     if (!provider) {
       throw new Error('No provider for clientside gas estimation')
     }
@@ -279,13 +282,20 @@ export function extractGasFeeParams(estimate: GasEstimate): TransactionLegacyFee
 
 /**
  * Determines if gas estimation has failed for a transaction request.
- * Returns true when:
- * - The request is a transaction type that requires gas estimation
- * - Gas fee result has finished loading
- * - Either an error occurred OR no value was returned
+ *
+ * A missing `value` without an `error` is not a failure: React Query reports
+ * `isLoading: false` while a query is skipped (e.g. before the chainId resolves
+ * from an async hook), and treating that transient state as a failure flashes
+ * the error UI before the first real estimate resolves.
  */
 export function hasGasEstimationFailed(isTransactionRequest: boolean, gasFeeResult: GasFeeResult | undefined): boolean {
-  return (
-    isTransactionRequest && !!gasFeeResult && !gasFeeResult.isLoading && (!!gasFeeResult.error || !gasFeeResult.value)
-  )
+  return isTransactionRequest && !!gasFeeResult && !gasFeeResult.isLoading && !!gasFeeResult.error
+}
+
+// 20% gas buffer to avoid out-of-gas failures
+const GAS_BUFFER_NUMERATOR = BigInt(12)
+const GAS_BUFFER_DENOMINATOR = BigInt(10)
+
+export function applyGasBuffer(gas: bigint): bigint {
+  return (gas * GAS_BUFFER_NUMERATOR) / GAS_BUFFER_DENOMINATOR
 }

@@ -6,9 +6,9 @@ import { OrderDirection } from '~/appGraphql/data/util'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from '~/components/Table/shared/SortableHeader'
 import { getHeaderDescription, TokenSortMethod } from '~/components/Tokens/constants'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
-import { getChainIdFromChainUrlParam } from '~/features/params/chainParams'
 import { useExploreParams } from '~/pages/Explore/redirects'
 import { useTokenTableSortStoreActions } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
+import { getChainIdFromChainUrlParam } from '~/utils/params/chainParams'
 
 function getHeaderText({ t, category }: { t: (key: string) => string; category: TokenSortMethod }): string {
   const SORT_METHOD_LABEL_KEYS: Record<TokenSortMethod, string> = {

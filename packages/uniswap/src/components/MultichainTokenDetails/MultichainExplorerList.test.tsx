@@ -35,7 +35,7 @@ describe(MultichainExplorerList, () => {
     fireEvent.press(rows[0]!, ON_PRESS_EVENT_PAYLOAD)
 
     expect(onExplorerPress).toHaveBeenCalledTimes(1)
-    expect(onExplorerPress).toHaveBeenCalledWith(expect.stringContaining('etherscan.io'))
+    expect(onExplorerPress).toHaveBeenCalledWith(expect.stringContaining('etherscan.io'), TEST_ENTRIES[0]!.chainId)
   })
 
   it('renders without error when no onExplorerPress is provided', () => {

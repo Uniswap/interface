@@ -13,11 +13,11 @@ vi.mock('@wagmi/core', () => ({
   connect: vi.fn(),
 }))
 
-vi.mock('~/components/Web3Provider/wagmiConfig', () => ({
+vi.mock('~/connection/wagmiConfig', () => ({
   wagmiConfig: {},
 }))
 
-vi.mock('~/components/Web3Provider/walletConnect', () => ({
+vi.mock('~/connection/walletConnect', () => ({
   uniswapWalletConnect: vi.fn(() => ({ id: 'uniswap-wallet-connect' })),
 }))
 

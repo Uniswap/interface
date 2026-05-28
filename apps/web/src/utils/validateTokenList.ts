@@ -6,6 +6,7 @@ enum ValidationSchema {
   TOKENS = 'tokens',
 }
 
+// oxlint-disable-next-line no-shadow
 function getValidationErrors(validate: ValidateFunction | undefined): string {
   return (
     validate?.errors?.map((error) => [error.instancePath, error.message].filter(Boolean).join(' ')).join('; ') ??

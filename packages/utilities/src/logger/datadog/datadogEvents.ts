@@ -30,4 +30,9 @@ export const DDRumManualTiming = {
   RenderExploreSections: 'render_explore_sections',
   RenderActivityTabList: 'render_activity_tab_list',
   RenderTokenBalanceList: 'render_token_balance_list',
-}
+  SwapModalOpen: 'swap_modal_open',
+  SwapFormScreenMount: 'swap_form_screen_mount',
+  SwapFormContentRender: 'swap_form_content_render',
+  SwapDecimalPadLayout: 'swap_decimal_pad_layout',
+  SwapReviewScreenRender: 'swap_review_screen_render',
+} as const

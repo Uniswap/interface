@@ -1,7 +1,4 @@
-import { type PromiseClient } from '@connectrpc/connect'
-import { EmbeddedWalletService as OldEmbeddedWalletService } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_connect'
 import {
-  type ExportSeedPhraseResponse,
   type Action as OldAction,
   type AuthenticationTypes as OldAuthenticationTypes,
   type SecuredChallengeResponse,
@@ -9,17 +6,17 @@ import {
 import {
   type AddAuthenticatorResponse,
   type ChallengeResponse,
+  type CheckRecoveryAvailabilityResponse,
   type CreateWalletResponse,
   type DeleteAuthenticatorResponse,
   type DeleteRecoveryResponse,
   type DisconnectResponse,
   type ExecuteRecoveryResponse,
+  type ExportSeedPhraseResponse,
   type GetRecoveryConfigResponse,
   type ListAuthenticatorsResponse,
-  type Action as NewAction,
-  type AuthenticationTypes as NewAuthenticationTypes,
   type OprfEvaluateResponse,
-  type RegistrationOptions,
+  type PrepareAddAuthenticatorResponse,
   type ReportDecryptionResultResponse,
   type SetupRecoveryResponse,
   type SignMessageResponse,
@@ -28,156 +25,55 @@ import {
   type StartAuthenticatedSessionResponse,
   type WalletSignInResponse,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
+import type {
+  ChallengeRequestParams,
+  EmbeddedWalletApiClient,
+  EmbeddedWalletClientContext,
+  ExportSeedPhraseParams,
+  Sign7702AuthorizationParams,
+  Sign7702AuthorizationResult,
+  Sign7702TransactionParams,
+  SignAuth,
+} from '@universe/api/src/clients/embeddedWallet/createEmbeddedWalletApiClient.types'
 
-export type {
-  ExportSeedPhraseResponse,
-  SecuredChallengeResponse,
-} from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 export type {
   Action,
   AddAuthenticatorResponse,
   AuthenticationTypes,
   Authenticator,
   ChallengeResponse,
+  CheckRecoveryAvailabilityResponse,
   CreateWalletResponse,
   DeleteAuthenticatorResponse,
   DeleteRecoveryResponse,
   DisconnectResponse,
   ExecuteRecoveryResponse,
+  ExportSeedPhraseResponse,
   GetRecoveryConfigResponse,
   ListAuthenticatorsResponse,
   OprfEvaluateResponse,
+  PrepareAddAuthenticatorResponse,
   RecoveryMethod,
   RegistrationOptions,
   ReportDecryptionResultResponse,
   SetupRecoveryResponse,
+  Sign7702AuthorizationResponse,
+  Sign7702TransactionResponse,
   SignMessageResponse,
   SignTransactionResponse,
   SignTypedDataResponse,
   StartAuthenticatedSessionResponse,
   WalletSignInResponse,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
-
-export type SignAuth =
-  | { case: 'credential'; value: string }
-  | { case: 'deviceAuth'; value: { deviceSignature: string; walletId: string } }
-  | { case: undefined; value?: undefined }
-
-export interface EmbeddedWalletClientContext {
-  rpcClient: {
-    challenge: (req: Record<string, unknown>) => Promise<ChallengeResponse>
-    createWallet: (req: Record<string, unknown>) => Promise<CreateWalletResponse>
-    walletSignIn: (req: Record<string, unknown>) => Promise<WalletSignInResponse>
-    signMessage: (req: Record<string, unknown>) => Promise<SignMessageResponse>
-    signTransaction: (req: Record<string, unknown>) => Promise<SignTransactionResponse>
-    signTypedData: (req: Record<string, unknown>) => Promise<SignTypedDataResponse>
-    disconnect: (req: Record<string, unknown>) => Promise<DisconnectResponse>
-    listAuthenticators: (req: Record<string, unknown>) => Promise<ListAuthenticatorsResponse>
-    startAuthenticatedSession: (req: Record<string, unknown>) => Promise<StartAuthenticatedSessionResponse>
-    addAuthenticator: (req: Record<string, unknown>) => Promise<AddAuthenticatorResponse>
-    deleteAuthenticator: (req: Record<string, unknown>) => Promise<DeleteAuthenticatorResponse>
-    oprfEvaluate: (req: Record<string, unknown>) => Promise<OprfEvaluateResponse>
-    setupRecovery: (req: Record<string, unknown>) => Promise<SetupRecoveryResponse>
-    executeRecovery: (req: Record<string, unknown>) => Promise<ExecuteRecoveryResponse>
-    reportDecryptionResult: (req: Record<string, unknown>) => Promise<ReportDecryptionResultResponse>
-    getRecoveryConfig: (req: Record<string, unknown>) => Promise<GetRecoveryConfigResponse>
-    deleteRecovery: (req: Record<string, unknown>) => Promise<DeleteRecoveryResponse>
-  }
-  legacyRpcClient?: PromiseClient<typeof OldEmbeddedWalletService>
-}
-
-export interface EmbeddedWalletApiClient {
-  fetchChallengeRequest: (params: {
-    type: NewAuthenticationTypes
-    action: NewAction
-    options?: RegistrationOptions
-    walletId?: string
-    message?: string
-    transaction?: string
-    typedData?: string
-    authenticatorId?: string
-    devicePublicKey?: string
-    authPublicKey?: string
-    privyUserId?: string
-  }) => Promise<ChallengeResponse>
-
-  fetchCreateWalletRequest: (params: { credential: string; devicePublicKey: string }) => Promise<CreateWalletResponse>
-
-  fetchWalletSigninRequest: (params: { credential: string }) => Promise<WalletSignInResponse>
-
-  fetchSignMessagesRequest: (params: { messages: string[]; auth: SignAuth }) => Promise<{ signatures: string[] }>
-
-  fetchSignTransactionsRequest: (params: {
-    transactions: string[]
-    auth: SignAuth
-  }) => Promise<{ signatures: string[] }>
-
-  fetchSignTypedDataRequest: (params: { typedDataBatch: string[]; auth: SignAuth }) => Promise<{ signatures: string[] }>
-
-  fetchDisconnectRequest: () => Promise<DisconnectResponse>
-
-  fetchListAuthenticatorsRequest: (params: {
-    credential?: string
-    walletId?: string
-  }) => Promise<ListAuthenticatorsResponse>
-
-  fetchSecuredChallengeRequest: (params: {
-    type: OldAuthenticationTypes
-    action: OldAction
-    b64EncryptionPublicKey: string
-  }) => Promise<SecuredChallengeResponse>
-
-  fetchExportSeedPhraseRequest: (params: {
-    encryptionKey: string
-    credential: string
-  }) => Promise<ExportSeedPhraseResponse>
-
-  fetchStartAuthenticatedSessionRequest: (params: {
-    existingCredential: string
-    devicePublicKey: string
-  }) => Promise<StartAuthenticatedSessionResponse>
-
-  fetchAddAuthenticatorRequest: (params: {
-    newCredential: string
-    deviceSignature: string
-  }) => Promise<AddAuthenticatorResponse>
-
-  fetchDeleteAuthenticatorRequest: (params: {
-    credential: string
-    authenticatorId: string
-  }) => Promise<DeleteAuthenticatorResponse>
-
-  fetchOprfEvaluate: (params: {
-    blindedElement: string
-    isRecovery?: boolean
-    authMethodId?: string
-  }) => Promise<OprfEvaluateResponse>
-
-  fetchSetupRecovery: (params: {
-    credential: string
-    authMethodId: string
-    authMethodType?: string
-    encryptedKeyId?: string
-    authMethodIdentifier?: string
-  }) => Promise<SetupRecoveryResponse>
-
-  fetchExecuteRecovery: (params: {
-    authMethodId: string
-    newCredential: string
-    authKeySignature: string
-    recoveryAuthSignature: string
-  }) => Promise<ExecuteRecoveryResponse>
-
-  fetchReportDecryptionResult: (params: {
-    success: boolean
-    authMethodId: string
-    newPasskeyPublicKey?: string
-  }) => Promise<ReportDecryptionResultResponse>
-
-  fetchGetRecoveryConfig: (params: { authMethodId: string }) => Promise<GetRecoveryConfigResponse>
-
-  fetchDeleteRecovery: (params: { credential: string }) => Promise<DeleteRecoveryResponse>
-}
+export type {
+  ChallengeRequestParams,
+  EmbeddedWalletApiClient,
+  EmbeddedWalletClientContext,
+  Sign7702AuthorizationParams,
+  Sign7702AuthorizationResult,
+  Sign7702TransactionParams,
+  SignAuth,
+} from '@universe/api/src/clients/embeddedWallet/createEmbeddedWalletApiClient.types'
 
 export function createEmbeddedWalletApiClient({
   rpcClient,
@@ -185,32 +81,20 @@ export function createEmbeddedWalletApiClient({
 }: EmbeddedWalletClientContext): EmbeddedWalletApiClient {
   const inflightRequests = new Map<string, Promise<unknown>>()
 
-  async function fetchChallengeRequest({
-    type,
-    action,
-    options,
-    walletId,
-    message,
-    transaction,
-    typedData,
-    authenticatorId,
-    devicePublicKey,
-    authPublicKey,
-    privyUserId,
-  }: {
-    type: NewAuthenticationTypes
-    action: NewAction
-    options?: RegistrationOptions
-    walletId?: string
-    message?: string
-    transaction?: string
-    typedData?: string
-    authenticatorId?: string
-    devicePublicKey?: string
-    authPublicKey?: string
-    privyUserId?: string
-  }): Promise<ChallengeResponse> {
-    const cacheKey = `challenge:${type}:${action}:${walletId ?? 'no-wallet'}:${message ?? ''}:${transaction ?? ''}:${typedData ?? ''}:${authenticatorId ?? ''}:${devicePublicKey ?? ''}`
+  function requireSingle<T>(items: T[], label: string): T {
+    const [first] = items
+    if (first === undefined) {
+      throw new Error(`At least one ${label} required`)
+    }
+    if (items.length > 1) {
+      throw new Error(`Batch ${label} signing not yet supported - use single ${label}`)
+    }
+    return first
+  }
+
+  async function fetchChallengeRequest(params: ChallengeRequestParams): Promise<ChallengeResponse> {
+    const { type, action, walletId, message, transaction, typedData, authenticatorId, devicePublicKey } = params
+    const cacheKey = `challenge:${type}:${action}:${walletId ?? 'no-wallet'}:${message ?? ''}:${transaction ?? ''}:${typedData ?? ''}:${authenticatorId ?? ''}:${devicePublicKey ?? ''}:${params.encryptionKey ?? ''}:${params.authorizationContractAddress ?? ''}:${params.authorizationChainId ?? ''}:${params.authorizationNonce ?? ''}`
 
     const existingRequest = inflightRequests.get(cacheKey) as Promise<ChallengeResponse> | undefined
     if (existingRequest) {
@@ -219,24 +103,15 @@ export function createEmbeddedWalletApiClient({
 
     const request = rpcClient
       .challenge({
-        type,
-        action,
-        options,
-        walletId,
-        message,
-        transaction,
-        typedData,
-        authenticatorId,
-        devicePublicKey,
-        authPublicKey,
-        privyUserId,
+        ...params,
+        authorizationChainId: params.authorizationChainId ? BigInt(params.authorizationChainId) : undefined,
+        authorizationNonce: params.authorizationNonce ? BigInt(params.authorizationNonce) : undefined,
       })
       .finally(() => {
         inflightRequests.delete(cacheKey)
       })
 
     inflightRequests.set(cacheKey, request)
-
     return request
   }
 
@@ -261,16 +136,8 @@ export function createEmbeddedWalletApiClient({
     messages: string[]
     auth: SignAuth
   }): Promise<{ signatures: string[] }> {
-    if (messages.length === 0) {
-      throw new Error('At least one message required')
-    }
-    if (messages.length > 1) {
-      throw new Error('Batch message signing not yet supported - use single message')
-    }
-    const result = await rpcClient.signMessage({
-      message: messages[0],
-      auth,
-    })
+    const message = requireSingle(messages, 'message')
+    const result = await rpcClient.signMessage({ message, auth })
     return { signatures: [result.signature] }
   }
 
@@ -281,16 +148,8 @@ export function createEmbeddedWalletApiClient({
     transactions: string[]
     auth: SignAuth
   }): Promise<{ signatures: string[] }> {
-    if (transactions.length === 0) {
-      throw new Error('At least one transaction required')
-    }
-    if (transactions.length > 1) {
-      throw new Error('Batch transaction signing not yet supported - use single transaction')
-    }
-    const result = await rpcClient.signTransaction({
-      transaction: transactions[0],
-      auth,
-    })
+    const transaction = requireSingle(transactions, 'transaction')
+    const result = await rpcClient.signTransaction({ transaction, auth })
     return { signatures: [result.signature] }
   }
 
@@ -301,43 +160,39 @@ export function createEmbeddedWalletApiClient({
     typedDataBatch: string[]
     auth: SignAuth
   }): Promise<{ signatures: string[] }> {
-    if (typedDataBatch.length === 0) {
-      throw new Error('At least one typed data required')
-    }
-    if (typedDataBatch.length > 1) {
-      throw new Error('Batch typed data signing not yet supported - use single typed data')
-    }
-    const result = await rpcClient.signTypedData({
-      typedData: typedDataBatch[0],
-      auth,
-    })
+    const typedData = requireSingle(typedDataBatch, 'typed data')
+    const result = await rpcClient.signTypedData({ typedData, auth })
     return { signatures: [result.signature] }
   }
 
-  async function fetchDisconnectRequest(): Promise<DisconnectResponse> {
-    return await rpcClient.disconnect({})
+  async function fetchDisconnectRequest(params?: {
+    deviceAuth?: { deviceSignature: string; walletId: string; signingPayload?: string }
+  }): Promise<DisconnectResponse> {
+    // DisconnectRequest has `device_auth` as a top-level optional field (not a oneof).
+    return await rpcClient.disconnect(params?.deviceAuth ? { deviceAuth: params.deviceAuth } : {})
   }
 
   async function fetchListAuthenticatorsRequest({
     credential,
-    walletId,
+    deviceAuth,
   }: {
     credential?: string
-    walletId?: string
+    deviceAuth?: { deviceSignature: string; walletId: string; signingPayload?: string }
   }): Promise<ListAuthenticatorsResponse> {
-    const cacheKey = `listAuthenticators:${credential ?? walletId ?? 'no-key'}`
+    const cacheKey = `listAuthenticators:${credential ?? deviceAuth?.walletId ?? 'no-key'}`
 
     const existingRequest = inflightRequests.get(cacheKey) as Promise<ListAuthenticatorsResponse> | undefined
     if (existingRequest) {
       return existingRequest
     }
 
-    const request = rpcClient.listAuthenticators({ credential, walletId }).finally(() => {
+    // ListAuthenticatorsRequest has `credential` and `device_auth` as separate top-level
+    // optional fields (not a oneof) — send whichever is present directly.
+    const request = rpcClient.listAuthenticators({ credential, deviceAuth }).finally(() => {
       inflightRequests.delete(cacheKey)
     })
 
     inflightRequests.set(cacheKey, request)
-
     return request
   }
 
@@ -354,25 +209,14 @@ export function createEmbeddedWalletApiClient({
     if (!legacyRpcClient) {
       throw new Error('SecuredChallenge not supported in new API - legacy client required')
     }
-    return await legacyRpcClient.securedChallenge({
-      type,
-      action,
-      b64EncryptionPublicKey,
-    })
+    return await legacyRpcClient.securedChallenge({ type, action, b64EncryptionPublicKey })
   }
 
-  async function fetchExportSeedPhraseRequest({
-    encryptionKey,
-    credential,
-  }: {
-    encryptionKey: string
-    credential: string
-  }): Promise<ExportSeedPhraseResponse> {
-    if (!legacyRpcClient) {
-      throw new Error('ExportSeedPhrase not supported in new API - legacy client required')
-    }
-    return await legacyRpcClient.exportSeedPhrase({ credential, b64EncryptionPublicKey: encryptionKey })
-  }
+  const fetchExportSeedPhraseRequest = (params: ExportSeedPhraseParams): Promise<ExportSeedPhraseResponse> =>
+    rpcClient.exportSeedPhrase(params)
+
+  const fetchExportEncryptedSeedPhraseRequest = (params: ExportSeedPhraseParams): Promise<ExportSeedPhraseResponse> =>
+    rpcClient.exportSeedPhrase(params)
 
   async function fetchStartAuthenticatedSessionRequest({
     existingCredential,
@@ -384,11 +228,19 @@ export function createEmbeddedWalletApiClient({
     return await rpcClient.startAuthenticatedSession({ existingCredential, devicePublicKey })
   }
 
+  async function fetchPrepareAddAuthenticatorRequest({
+    newCredential,
+  }: {
+    newCredential: string
+  }): Promise<PrepareAddAuthenticatorResponse> {
+    return await rpcClient.prepareAddAuthenticator({ newCredential })
+  }
+
   async function fetchAddAuthenticatorRequest({
     newCredential,
     deviceSignature,
   }: {
-    newCredential: string
+    newCredential?: string
     deviceSignature: string
   }): Promise<AddAuthenticatorResponse> {
     return await rpcClient.addAuthenticator({ newCredential, deviceSignature })
@@ -404,66 +256,59 @@ export function createEmbeddedWalletApiClient({
     return await rpcClient.deleteAuthenticator({ credential, authenticatorId })
   }
 
-  async function fetchOprfEvaluate({
-    blindedElement,
-    isRecovery,
-    authMethodId,
-  }: {
-    blindedElement: string
-    isRecovery?: boolean
-    authMethodId?: string
-  }): Promise<OprfEvaluateResponse> {
-    return await rpcClient.oprfEvaluate({ blindedElement, isRecovery, authMethodId })
+  async function fetchOprfEvaluate(
+    params: {
+      blindedElement: string
+      authMethodId: string
+    },
+    accessToken: string,
+  ): Promise<OprfEvaluateResponse> {
+    return await rpcClient.oprfEvaluate(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
   }
 
-  async function fetchSetupRecovery({
-    credential,
-    authMethodId,
-    authMethodType,
-    encryptedKeyId,
-    authMethodIdentifier,
-  }: {
+  async function fetchCheckRecoveryAvailability(
+    params: { authMethodId: string },
+    accessToken: string,
+  ): Promise<CheckRecoveryAvailabilityResponse> {
+    return await rpcClient.checkRecoveryAvailability(params, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+  }
+
+  async function fetchSetupRecovery(params: {
     credential: string
     authMethodId: string
     authMethodType?: string
     encryptedKeyId?: string
     authMethodIdentifier?: string
   }): Promise<SetupRecoveryResponse> {
-    return await rpcClient.setupRecovery({
-      credential,
-      authMethodId,
-      authMethodType,
-      encryptedKeyId,
-      authMethodIdentifier,
-    })
+    return await rpcClient.setupRecovery(params)
   }
 
-  async function fetchExecuteRecovery({
-    authMethodId,
-    newCredential,
-    authKeySignature,
-    recoveryAuthSignature,
-  }: {
+  async function fetchExecuteRecovery(params: {
     authMethodId: string
     newCredential: string
     authKeySignature: string
     recoveryAuthSignature: string
   }): Promise<ExecuteRecoveryResponse> {
-    return await rpcClient.executeRecovery({
-      authMethodId,
-      newCredential,
-      authKeySignature,
-      recoveryAuthSignature,
-    })
+    return await rpcClient.executeRecovery(params)
   }
 
-  async function fetchReportDecryptionResult(params: {
+  const fetchReportDecryptionResult = (params: {
     success: boolean
     authMethodId: string
     newPasskeyPublicKey?: string
-  }): Promise<ReportDecryptionResultResponse> {
-    return await rpcClient.reportDecryptionResult(params)
-  }
+    encryptionKey?: string
+  }): Promise<ReportDecryptionResultResponse> => rpcClient.reportDecryptionResult(params)
+
+  const fetchExportSeedPhraseWithRecovery = (params: {
+    authMethodId: string
+    encryptionKey: string
+    authKeySignature: string
+    recoveryAuthSignature: string
+  }): Promise<ExportSeedPhraseResponse> => rpcClient.exportSeedPhraseWithRecovery(params)
 
   async function fetchGetRecoveryConfig(params: { authMethodId: string }): Promise<GetRecoveryConfigResponse> {
     return await rpcClient.getRecoveryConfig(params)
@@ -471,6 +316,42 @@ export function createEmbeddedWalletApiClient({
 
   async function fetchDeleteRecovery({ credential }: { credential: string }): Promise<DeleteRecoveryResponse> {
     return await rpcClient.deleteRecovery({ credential })
+  }
+
+  async function fetchSign7702AuthorizationRequest(
+    params: Sign7702AuthorizationParams,
+  ): Promise<Sign7702AuthorizationResult> {
+    const { contractAddress, chainId, nonce, auth } = params
+    const result = await rpcClient.sign7702Authorization({
+      contractAddress,
+      chainId: BigInt(chainId),
+      nonce: BigInt(nonce),
+      auth,
+    })
+    return {
+      contractAddress: result.contractAddress || contractAddress,
+      chainId: Number(result.chainId),
+      nonce: Number(result.nonce),
+      r: result.r,
+      s: result.s,
+      yParity: Number(result.yParity),
+    }
+  }
+
+  async function fetchSign7702TransactionRequest(
+    params: Sign7702TransactionParams,
+  ): Promise<{ signedTransaction: string }> {
+    const result = await rpcClient.sign7702Transaction({
+      ...params,
+      chainId: BigInt(params.chainId),
+      nonce: BigInt(params.nonce),
+      authorizationChainId: BigInt(params.authorizationChainId),
+      authorizationNonce: BigInt(params.authorizationNonce),
+    })
+    if (!result.signedTransaction) {
+      throw new Error('No signed transaction returned from backend')
+    }
+    return { signedTransaction: result.signedTransaction }
   }
 
   return {
@@ -482,16 +363,22 @@ export function createEmbeddedWalletApiClient({
     fetchSignTransactionsRequest,
     fetchSignTypedDataRequest,
     fetchExportSeedPhraseRequest,
+    fetchExportEncryptedSeedPhraseRequest,
     fetchDisconnectRequest,
     fetchListAuthenticatorsRequest,
     fetchStartAuthenticatedSessionRequest,
+    fetchPrepareAddAuthenticatorRequest,
     fetchAddAuthenticatorRequest,
     fetchDeleteAuthenticatorRequest,
     fetchOprfEvaluate,
+    fetchCheckRecoveryAvailability,
     fetchSetupRecovery,
     fetchExecuteRecovery,
     fetchReportDecryptionResult,
+    fetchExportSeedPhraseWithRecovery,
     fetchGetRecoveryConfig,
     fetchDeleteRecovery,
+    fetchSign7702AuthorizationRequest,
+    fetchSign7702TransactionRequest,
   }
 }

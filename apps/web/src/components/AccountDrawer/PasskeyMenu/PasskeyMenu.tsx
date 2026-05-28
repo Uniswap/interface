@@ -1,151 +1,106 @@
-import { useQuery } from '@tanstack/react-query'
+import Portal from '@reach/portal'
+import { type QueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Button, Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Loader, Popover, Text, TouchableArea } from 'ui/src'
+import { AppleLogo } from 'ui/src/components/icons/AppleLogo'
 import { Buoy } from 'ui/src/components/icons/Buoy'
-import { EnvelopeLock } from 'ui/src/components/icons/EnvelopeLock'
-import { GoogleLogo } from 'ui/src/components/icons/GoogleLogo'
+import { Envelope } from 'ui/src/components/icons/Envelope'
+import { GoogleLogoGradient } from 'ui/src/components/icons/GoogleLogoGradient'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
-import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Trash } from 'ui/src/components/icons/Trash'
-import { Windows } from 'ui/src/components/icons/Windows'
-import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
-import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
-import { iconSizes } from 'ui/src/theme'
-import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
-import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
+import { zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import type { Authenticator, RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
-import { AuthenticatorNameType, listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
+import type { RecoveryMethod } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import {
+  type AuthenticatorDisplay,
+  getListAuthenticatorsStorageKey,
+  useListAuthenticatorsQuery,
+} from '~/components/AccountDrawer/PasskeyMenu/hooks/useListAuthenticatorsQuery'
 import { MenuColumn } from '~/components/AccountDrawer/shared'
 import { SlideOutMenu } from '~/components/AccountDrawer/SlideOutMenu'
-import { AndroidLogo } from '~/components/Icons/AndroidLogo'
-import { AppleLogo } from '~/components/Icons/AppleLogo'
+import { getProviderIcon } from '~/components/Passkey/authenticatorProvider'
+import { getPrivyAppId } from '~/config'
 import { setOpenModal } from '~/state/application/reducer'
-import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { useAppDispatch } from '~/state/hooks'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
-function getPrivyAppId(): string | undefined {
-  return process.env.PRIVY_APP_ID
-}
-
-export const LIST_AUTHENTICATORS_QUERY_KEY = 'listAuthenticators'
-
-enum AuthenticatorProvider {
-  Google = 'Chrome',
-  Apple = 'iCloud',
-  Microsoft = 'Windows',
-  Android = 'Android',
-  Other = 'Other',
-}
-
-type AuthenticatorDisplay = Pick<Authenticator, 'credentialId' | 'providerName' | 'createdAt' | 'aaguid'> & {
-  provider: AuthenticatorProvider
-  label: string
-}
-
-function getProviderIcon(provider: AuthenticatorProvider, colors: UseSporeColorsReturn) {
-  switch (provider) {
-    case AuthenticatorProvider.Google:
-      return <GoogleChromeLogo size={iconSizes.icon20} />
-    case AuthenticatorProvider.Apple:
-      return <AppleLogo height={iconSizes.icon20} width={iconSizes.icon20} fill={colors.neutral1.val} />
-    case AuthenticatorProvider.Android:
-      return <AndroidLogo height={iconSizes.icon20} width={iconSizes.icon20} />
-    case AuthenticatorProvider.Microsoft:
-      return <Windows size="$icon.20" color="$neutral1" />
-    default:
-      return <Passkey size="$icon.20" color="$neutral1" />
-  }
-}
-
-function getProviderLabel(provider: AuthenticatorProvider, count?: number) {
-  switch (provider) {
-    case AuthenticatorProvider.Android:
-    case AuthenticatorProvider.Microsoft:
-    case AuthenticatorProvider.Apple:
-    case AuthenticatorProvider.Google: {
-      return provider
-    }
-    default: {
-      return i18n.t('common.passkey.count', { number: count })
-    }
-  }
-}
-
-function getProvider(
-  providerName: AuthenticatorNameType,
-  nameType: typeof AuthenticatorNameType,
-): AuthenticatorProvider {
-  switch (providerName) {
-    case nameType.GOOGLE_PASSWORD_MANAGER:
-      return AuthenticatorProvider.Android
-    case nameType.CHROME_MAC:
-      return AuthenticatorProvider.Google
-    case nameType.ICLOUD_KEYCHAIN:
-    case nameType.ICLOUD_KEYCHAIN_MANAGED:
-      return AuthenticatorProvider.Apple
-    case nameType.WINDOWS_HELLO:
-      return AuthenticatorProvider.Microsoft
-    default:
-      return AuthenticatorProvider.Other
-  }
-}
-
-function convertAuthenticatorsToDisplay(
-  authenticators: Authenticator[],
-  nameType: typeof AuthenticatorNameType,
-): AuthenticatorDisplay[] {
-  let otherPasskeyCount = 1
-  return authenticators.map((authenticator) => {
-    const provider = getProvider(authenticator.providerName, nameType)
-    const isOtherPasskey = provider === AuthenticatorProvider.Other
-    const label = getProviderLabel(provider, otherPasskeyCount)
-    isOtherPasskey && otherPasskeyCount++
-    return {
-      // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-      ...authenticator,
-      provider,
-      label,
-    }
+// Use resetQueries (not invalidateQueries) and manually clear the sessionStorage
+// mirror: the mirror's subscription only writes for active observers, so when
+// PasskeyMenu is unmounted a plain invalidate leaves stale sessionStorage that
+// rehydrates back into the cache on re-mount and masks the invalidation.
+export function resetListAuthenticators(queryClient: QueryClient, walletId: string | null | undefined): Promise<void> {
+  sessionStorage.removeItem(getListAuthenticatorsStorageKey(walletId))
+  return queryClient.resetQueries({
+    queryKey: [ReactQueryCacheKey.ListAuthenticators],
   })
 }
 
+// Uses Tamagui Popover directly (not the shared ContextMenu) because this row
+// can live inside the AccountDrawer's mweb bottom sheet, whose scroll/transform
+// ancestors clip ContextMenu's `strategy="absolute"` popover. `strategy="fixed"`
+// + an explicit z-index above the sheet keeps the menu visible everywhere.
 const OverflowMenu = ({ onRemove, testID }: { onRemove: () => void; testID?: string }) => {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
+  const handleRemove = useEvent(() => {
+    setIsOpen(false)
+    onRemove()
+  })
+
   return (
     <Flex ml="auto">
-      <ContextMenu
-        menuItems={[
-          {
-            label: t('common.button.remove'),
-            onPress: onRemove,
-            destructive: true,
-            Icon: Trash,
-            iconColor: '$statusCritical',
-          },
-        ]}
-        isOpen={isOpen}
-        closeMenu={() => setIsOpen(false)}
-        openMenu={() => setIsOpen(true)}
-        triggerMode={ContextMenuTriggerMode.Primary}
-        isPlacementRight
-        offsetY={4}
-        adaptToSheet={false}
-      >
-        <TouchableArea testID={testID}>
-          <MoreHorizontal size={20} color="$neutral2" />
-        </TouchableArea>
-      </ContextMenu>
+      <Popover open={isOpen} onOpenChange={setIsOpen} placement="bottom-end" allowFlip strategy="fixed" offset={4}>
+        <Popover.Trigger asChild>
+          <TouchableArea testID={testID} onPress={() => setIsOpen((v) => !v)}>
+            <MoreHorizontal size="$icon.20" color="$neutral2" />
+          </TouchableArea>
+        </Popover.Trigger>
+        <Portal>
+          <Popover.Content
+            zIndex={zIndexes.tooltip}
+            elevate
+            padding="$spacing4"
+            backgroundColor="$surface1"
+            borderRadius="$rounded16"
+            borderWidth="$spacing1"
+            borderColor="$surface3"
+            minWidth={200}
+            alignItems="stretch"
+            enterStyle={{ opacity: 0, scale: 0.95 }}
+            exitStyle={{ opacity: 0, scale: 0.95 }}
+            animation="100ms"
+            // Exclude color props: animating $-prefixed color tokens flashes on
+            // light/dark mode toggle. Only opacity + scale are animated here.
+            animateOnly={['transform', 'opacity']}
+          >
+            <TouchableArea
+              row
+              alignItems="center"
+              justifyContent="flex-start"
+              gap="$spacing8"
+              px="$spacing8"
+              py="$spacing8"
+              borderRadius="$rounded12"
+              hoverStyle={{ backgroundColor: '$surface2' }}
+              onPress={handleRemove}
+            >
+              <Trash size="$icon.16" color="$statusCritical" />
+              <Text variant="body3" color="$statusCritical">
+                {t('common.button.remove')}
+              </Text>
+            </TouchableArea>
+          </Popover.Content>
+        </Portal>
+      </Popover>
     </Flex>
   )
 }
@@ -153,11 +108,12 @@ const OverflowMenu = ({ onRemove, testID }: { onRemove: () => void; testID?: str
 const AuthenticatorRow = ({
   authenticator,
   handleDeletePasskey,
+  isOnlyPasskey,
 }: {
   authenticator: AuthenticatorDisplay
   handleDeletePasskey: (authenticator: AuthenticatorDisplay) => void
+  isOnlyPasskey: boolean
 }) => {
-  const colors = useSporeColors()
   const createdAtDate = authenticator.createdAt ? new Date(Number(authenticator.createdAt)) : undefined
   const isValidDate = createdAtDate instanceof Date && !isNaN(createdAtDate.getTime())
   const formattedDate = createdAtDate?.toLocaleDateString('en-US', {
@@ -176,7 +132,7 @@ const AuthenticatorRow = ({
         alignItems="center"
         justifyContent="center"
       >
-        {getProviderIcon(authenticator.provider, colors)}
+        {getProviderIcon(authenticator.provider)}
       </Flex>
       <Flex>
         <Text variant="body2">{authenticator.label}</Text>
@@ -186,14 +142,16 @@ const AuthenticatorRow = ({
           </Text>
         )}
       </Flex>
-      <OverflowMenu testID={TestID.DeletePasskey} onRemove={() => handleDeletePasskey(authenticator)} />
+      {!isOnlyPasskey && (
+        <OverflowMenu testID={TestID.DeletePasskey} onRemove={() => handleDeletePasskey(authenticator)} />
+      )}
     </Flex>
   )
 }
 
 function LoadingPasskeyRow() {
   return (
-    <Flex row gap="$gap12" alignItems="center" pb="$padding16">
+    <Flex row gap="$gap12" alignItems="center" pb="$padding16" testID={TestID.PasskeyLoadingRow}>
       <Loader.Box borderRadius="$roundedFull" height={40} width={40} opacity={0.5} />
       <Flex gap="$gap8">
         <Loader.Box borderRadius="$rounded12" height={14} width={72} opacity={0.5} />
@@ -203,14 +161,14 @@ function LoadingPasskeyRow() {
   )
 }
 
-function getRecoveryMethodIcon(type: string, colors: UseSporeColorsReturn) {
+function getRecoveryMethodIcon(type: string) {
   switch (type.toLowerCase()) {
     case 'google':
-      return <GoogleLogo size={iconSizes.icon20} />
+      return <GoogleLogoGradient size="$icon.20" />
     case 'apple':
-      return <AppleLogo height={iconSizes.icon20} width={iconSizes.icon20} fill={colors.neutral1.val} />
+      return <AppleLogo color="$neutral1" size="$icon.20" />
     default:
-      return <EnvelopeLock size="$icon.20" color="$neutral1" />
+      return <Envelope size="$icon.20" color="$neutral1" />
   }
 }
 
@@ -226,8 +184,6 @@ export function getRecoveryMethodLabel(type: string): string {
 }
 
 const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRemove: () => void }) => {
-  const colors = useSporeColors()
-
   return (
     <Flex row gap="$gap12" alignItems="center" pb="$padding16">
       <Flex
@@ -238,7 +194,7 @@ const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRem
         alignItems="center"
         justifyContent="center"
       >
-        {getRecoveryMethodIcon(method.type, colors)}
+        {getRecoveryMethodIcon(method.type)}
       </Flex>
       <Flex flex={1} minWidth={0}>
         <Text variant="body2">{getRecoveryMethodLabel(method.type)}</Text>
@@ -253,26 +209,32 @@ const RecoveryMethodRow = ({ method, onRemove }: { method: RecoveryMethod; onRem
   )
 }
 
-export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
+export function PasskeyMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { walletId } = useEmbeddedWalletState()
-  const { data, isLoading } = useQuery({
-    queryKey: [LIST_AUTHENTICATORS_QUERY_KEY, walletId],
-    queryFn: async () => {
-      const result = await listAuthenticators(walletId ?? undefined)
-      const display = convertAuthenticatorsToDisplay(result.authenticators, AuthenticatorNameType)
-      display.sort((a, b) => {
-        const aTime = Number(a.createdAt) || 0
-        const bTime = Number(b.createdAt) || 0
-        return aTime - bTime
-      })
-      return { authenticators: display, recoveryMethods: result.recoveryMethods }
-    },
-    enabled: !!walletId,
-  })
+  const { data, isLoading, isError } = useListAuthenticatorsQuery()
   const authenticators = data?.authenticators ?? []
   const recoveryMethods = data?.recoveryMethods ?? []
+  const lastExportedMs = data?.lastExportedMs
+
+  // Bail back to Settings if the listAuthenticators query errors or returns an
+  // empty response (no authenticators and no recovery methods). The passkey menu
+  // should never render with zero login methods, so empty == malformed here.
+  useEffect(() => {
+    if (isError) {
+      logger.error(new Error('PasskeyMenu: listAuthenticators query failed'), {
+        tags: { file: 'PasskeyMenu.tsx', function: 'PasskeyMenu' },
+      })
+      onClose()
+      return
+    }
+    if (!isLoading && data && authenticators.length + recoveryMethods.length === 0) {
+      logger.error(new Error('PasskeyMenu: malformed response with 0 authenticators and 0 recovery methods'), {
+        tags: { file: 'PasskeyMenu.tsx', function: 'PasskeyMenu' },
+      })
+      onClose()
+    }
+  }, [isError, isLoading, data, authenticators.length, recoveryMethods.length, onClose])
 
   const handleAddPasskey = useEvent(() => {
     dispatch(setOpenModal({ name: ModalName.AddPasskey }))
@@ -284,7 +246,10 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
         name: ModalName.DeletePasskey,
         initialState: {
           authenticatorId: authenticator.credentialId,
+          authenticatorLabel: authenticator.label,
+          authenticatorProvider: authenticator.provider,
           isLastAuthenticator: authenticators.length === 1,
+          lastExportedMs,
         },
       }),
     )
@@ -325,6 +290,7 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
               target="_blank"
               rel="noreferrer"
               href={uniswapUrls.helpArticleUrls.passkeysInfo}
+              height="$padding20"
               {...ClickableTamaguiStyle}
             >
               <Buoy size="$icon.20" color="$neutral2" />
@@ -345,6 +311,7 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
                   key={authenticator.credentialId}
                   authenticator={authenticator}
                   handleDeletePasskey={handleDeletePasskey}
+                  isOnlyPasskey={authenticators.length === 1}
                 />
               ))}
               <Flex row alignSelf="stretch">

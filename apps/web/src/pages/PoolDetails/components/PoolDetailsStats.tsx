@@ -13,7 +13,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { PoolData } from '~/appGraphql/data/pools/usePoolData'
 import { getTokenDetailsURL, unwrapToken } from '~/appGraphql/data/util'
 import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
-import CurrencyLogo from '~/components/Logo/CurrencyLogo'
+import { CurrencyLogo } from '~/components/Logo/CurrencyLogo'
 import { LoadingBubble } from '~/components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useCurrency } from '~/hooks/Tokens'
@@ -44,16 +44,6 @@ const StatsWrapper = styled(Flex, {
     py: '$padding20',
     justifyContent: 'space-between',
     mt: 0,
-  },
-  variants: {
-    loaded: {
-      true: {
-        mt: -24,
-        $xl: {
-          mt: 0,
-        },
-      },
-    },
   },
 })
 
@@ -235,7 +225,7 @@ export function PoolDetailsStats({
   }
 
   return (
-    <StatsWrapper loaded>
+    <StatsWrapper>
       <HeaderText>{t('common.stats')}</HeaderText>
       <StatItemColumn>
         <Text variant="body1" color="$neutral2">

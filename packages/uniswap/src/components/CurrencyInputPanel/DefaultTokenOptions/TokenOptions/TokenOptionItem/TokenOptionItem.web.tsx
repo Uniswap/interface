@@ -1,5 +1,4 @@
 import { Text, Tooltip } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { TokenIcon } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/TokenIcon'
 import type { TokenOptionItemProps } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/TokenOptions/TokenOptionItem/types'
 
@@ -26,7 +25,7 @@ export const TokenOptionItem = ({
           currencyField={currencyField}
         />
       </Tooltip.Trigger>
-      <Tooltip.Content zIndex={zIndexes.overlay}>
+      <Tooltip.Content>
         <Text variant="body4">{symbol}</Text>
         <Tooltip.Arrow />
       </Tooltip.Content>

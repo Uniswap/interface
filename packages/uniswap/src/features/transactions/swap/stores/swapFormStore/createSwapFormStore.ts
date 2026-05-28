@@ -1,3 +1,4 @@
+import { isDevEnv } from '@universe/environment'
 import type { MutableRefObject } from 'react'
 import { createRef } from 'react'
 import type { Dispatch } from 'redux'
@@ -9,7 +10,6 @@ import type {
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
@@ -66,8 +66,8 @@ export const createSwapFormStore = ({
         const exactAmountTokenRef = createRef<string>() as MutableRefObject<string>
 
         amountUpdatedTimeRef.current = 0
-        exactAmountFiatRef.current = ''
-        exactAmountTokenRef.current = ''
+        exactAmountFiatRef.current = initialState?.exactAmountFiat ?? ''
+        exactAmountTokenRef.current = initialState?.exactAmountToken ?? ''
 
         return {
           exactAmountFiat: undefined,

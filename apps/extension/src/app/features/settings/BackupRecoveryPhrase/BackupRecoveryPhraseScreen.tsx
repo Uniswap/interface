@@ -20,6 +20,7 @@ import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { mnemonicUnlockedQuery } from 'wallet/src/features/wallet/Keyring/queries'
+import { getExpectedMnemonicLength } from 'wallet/src/utils/mnemonics'
 
 enum ViewStep {
   Warning = 0,
@@ -48,11 +49,14 @@ function BackupRecoveryPhraseScreenSteps(): JSX.Element {
 
   const [viewStep, setViewStep] = useState(ViewStep.Warning)
 
-  const mnemonicId = useSignerAccounts()[0]?.mnemonicId
+  const signerAccount = useSignerAccounts()[0]
+  const mnemonicId = signerAccount?.mnemonicId
 
   if (!mnemonicId) {
     throw new Error('Invalid render of `ViewRecoveryPhraseScreen` without `mnemonicId`')
   }
+
+  const expectedWordCount = getExpectedMnemonicLength(signerAccount)
 
   const showPasswordModal = useCallback((): void => {
     setViewStep(ViewStep.Password)
@@ -117,13 +121,13 @@ function BackupRecoveryPhraseScreenSteps(): JSX.Element {
           nextButtonEnabled={isDisclaimerChecked}
           nextButtonText={t('common.button.continue')}
           nextButtonEmphasis="primary"
-          subtitle={t('onboarding.backup.view.subtitle.message2')}
+          subtitle={t('onboarding.backup.view.subtitle.message2', { count: expectedWordCount })}
           title={t('onboarding.backup.view.title')}
           titleColor="$neutral1"
           onNextPressed={() => setViewStep(ViewStep.Confirm)}
         >
           <Flex fill gap="$spacing24" pt="$spacing24">
-            <SeedPhraseDisplay mnemonicId={mnemonicId} />
+            <SeedPhraseDisplay mnemonicId={mnemonicId} expectedWordCount={expectedWordCount} />
 
             <TouchableArea onPress={toggleDisclaimer}>
               <Flex gap="$spacing12" row backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
@@ -192,6 +196,7 @@ function RecoveryPhraseVerificationStep({
               mnemonic={mnemonicArray}
               onComplete={onComplete}
               numberOfTests={NUMBER_OF_TESTS_FOR_RECOVERY_PHRASE_VERIFICATION}
+              // oxlint-disable-next-line no-shadow
               onWordVerified={(numberOfWordsVerified) => setNumberOfWordsVerified(numberOfWordsVerified)}
               setSubtitle={setSubtitle}
               setHasError={setHasError}

@@ -21,7 +21,6 @@ jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native')
   return {
     ...actualNav,
-    // oxlint-disable-next-line typescript/explicit-function-return-type
     useNavigation: () => mockedNavigation,
   }
 })

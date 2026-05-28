@@ -1,4 +1,3 @@
-/* oxlint-disable typescript/no-explicit-any -- legacy code needs review */
 import { GraphQLApi } from '@universe/api'
 import cloneDeepWith from 'lodash/cloneDeepWith'
 
@@ -76,7 +75,6 @@ export function queryResolvers<T extends GraphQLApi.QueryResolvers>(
             const resultObj = cloneDeepWith(resolvedValue, undefinedToNull) as ResolverReturnType<R>
 
             // Resolve the corresponding promise
-            // oxlint-disable-next-line typescript/no-unnecessary-condition
             if (promiseResolvers[key]) {
               promiseResolvers[key](resultObj)
             }

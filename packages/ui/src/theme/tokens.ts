@@ -1,6 +1,7 @@
 // until the web app needs all of tamagui, avoid heavy imports there
 // oxlint-disable-next-line no-restricted-imports -- until the web app needs all of tamagui, avoid heavy imports there
 import { type ColorTokens, createTokens } from '@tamagui/core'
+import { isProdEnv } from '@universe/environment'
 import type { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color/colors'
@@ -157,7 +158,7 @@ export const validateColorValue = (value: ColorValue): { isValid: boolean; error
 }
 
 export const validColor = (value: ColorValue): ColorTokens | undefined => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (!isProdEnv()) {
     const { isValid, error } = validateColorValue(value)
 
     if (!isValid) {

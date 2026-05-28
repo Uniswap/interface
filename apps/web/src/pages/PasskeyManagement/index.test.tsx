@@ -31,8 +31,8 @@ vi.mock('react-redux', () => ({
 }))
 
 vi.mock('~/pages/Swap', () => ({
-  __esModule: true,
-  default: () => null,
+  SwapPage: () => null,
+  Swap: () => null,
 }))
 
 describe('handleRouteToPasskeyManagement', () => {

@@ -1,6 +1,6 @@
+import { isWebApp } from '@universe/environment'
 import { forwardRef, useEffect } from 'react'
 import { Input, InputProps, Input as TextInputBase, useSporeColors } from 'ui/src'
-import { isWebApp } from 'utilities/src/platform'
 
 export type TextInputProps = InputProps
 
@@ -12,7 +12,6 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function Text
 ) {
   const colors = useSporeColors()
 
-  // oxlint-disable-next-line react/exhaustive-deps -- -ref, -ref.current (only run on mount since we only need to set this once)
   useEffect(() => {
     // Ensure virtualkeyboardpolicy is set to "auto" on the DOM element
     // otherwise the virtual keyboard will not show on android mobile

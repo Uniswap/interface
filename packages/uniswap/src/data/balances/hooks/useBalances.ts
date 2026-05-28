@@ -1,7 +1,7 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
 import { useMemo } from 'react'
-import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { usePortfolioBalances } from 'uniswap/src/features/portfolio/balances/hooks'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
 export function useBalances({

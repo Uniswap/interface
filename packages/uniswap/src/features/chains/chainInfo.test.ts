@@ -34,7 +34,6 @@ describe('getQuicknodeChainIdPathSuffix', () => {
     [UniverseChainId.Zora, '', 'Zora chain'],
   ]
 
-  // oxlint-disable-next-line max-params
   it.each(testCases)('returns correct path suffix for %s', (chainId, expectedSuffix, _testName) => {
     expect(getQuicknodeChainIdPathSuffix(chainId)).toBe(expectedSuffix)
   })

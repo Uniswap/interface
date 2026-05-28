@@ -1,3 +1,4 @@
+import { isIOS } from '@universe/environment'
 import React, { PropsWithChildren, useState } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
@@ -5,7 +6,6 @@ import { Screen, ScreenProps } from 'src/components/layout/Screen'
 import { Flex, flexStyles } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
-import { isIOS } from 'utilities/src/platform'
 
 type OnboardingScreenProps = ScreenProps & {
   header?: JSX.Element

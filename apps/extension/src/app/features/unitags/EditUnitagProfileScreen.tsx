@@ -88,7 +88,12 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
         <Flex gap="$spacing12" width="100%" pt="$spacing8">
           {unitag && (
             <>
-              <EditUnitagProfileContent address={address} unitag={unitag} entryPoint={UnitagScreens.EditProfile} />
+              <EditUnitagProfileContent
+                address={address}
+                unitag={unitag}
+                entryPoint={UnitagScreens.EditProfile}
+                onSave={refreshUnitags}
+              />
               <AnimatePresence>
                 {showDeleteUnitagModal && (
                   <DeleteUnitagModal

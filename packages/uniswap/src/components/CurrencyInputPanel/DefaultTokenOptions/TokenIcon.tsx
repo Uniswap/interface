@@ -1,3 +1,4 @@
+import { isHoverable } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import type { GestureResponderEvent } from 'react-native'
 import { Flex, TouchableArea } from 'ui/src'
@@ -14,7 +15,6 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useOnSelectCurrency } from 'uniswap/src/features/transactions/swap/form/hooks/useOnSelectCurrency'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isHoverable } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const TOUCHABLE_HOVER_STYLE = { backgroundColor: '$surface3Hovered', scale: WEB_HOVER_SCALE } as const

@@ -12,6 +12,7 @@ export function formatNftItems(data: GraphQLApi.NftsTabQuery | undefined): NFTIt
 
   const nfts = items
     .filter((item) => item.ownedAsset?.nftContract?.address && item.ownedAsset.tokenId)
+    // oxlint-disable-next-line complexity
     .map((item): NFTItem => {
       return {
         name: item.ownedAsset?.name ?? undefined,

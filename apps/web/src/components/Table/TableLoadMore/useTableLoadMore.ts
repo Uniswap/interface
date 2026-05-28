@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import useDebounce from '~/hooks/useDebounce'
+import { useDebounce } from '~/hooks/useDebounce'
 
 const SHOW_RETURN_TO_TOP_OFFSET = 500
 const LOAD_MORE_BOTTOM_OFFSET = 50

@@ -2,14 +2,13 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { Flex, ModalCloseIcon, styled, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
+import { Flex, ModalCloseIcon, styled, useMedia, useScrollbarStyles } from 'ui/src'
+import { Search } from 'ui/src/components/icons/Search'
 import { Text } from 'ui/src/components/text/Text'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { bubbleToTop } from 'utilities/src/primitives/array'
-import { ReactComponent as SearchIcon } from '~/assets/svg/search.svg'
 import { SearchInput } from '~/components/SearchModal/styled'
 import { CountryListRow } from '~/pages/Swap/Buy/CountryListRow'
 import { ContentWrapper } from '~/pages/Swap/Buy/shared'
@@ -39,7 +38,6 @@ export function CountryListModal({
 }: CountryListModalProps) {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const media = useMedia()
   const scrollbarStyles = useScrollbarStyles()
 
@@ -79,14 +77,18 @@ export function CountryListModal({
             <Text variant="body2">{t('common.selectRegion.label')}</Text>
             <ModalCloseIcon testId="CountryListModal-close" onClose={closeModal} />
           </Flex>
-          <Flex position="relative" height="100%" flex={1}>
-            <SearchIcon
-              fill={colors.neutral3.val}
-              style={{ position: 'absolute', left: '12px', top: '10px' }}
-              width={iconSizes.icon20}
-              height={iconSizes.icon20}
+          <Flex position="relative" width="100%" height="$spacing40">
+            <Flex
+              position="absolute"
+              left="$spacing12"
+              top={0}
+              bottom={0}
+              alignItems="center"
+              justifyContent="center"
               pointerEvents="none"
-            />
+            >
+              <Search size="$icon.20" color="$neutral3" />
+            </Flex>
             <SearchInput
               placeholder={t`swap.buy.countryModal.placeholder`}
               value={searchQuery}

@@ -1,7 +1,7 @@
-import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { logger } from 'utilities/src/logger/logger'
+import { parseUnits } from '~/chains'
 
 function truncateValue(value: string, decimals: number): string {
   const parts = value.split(/[.,]/)
@@ -16,7 +16,7 @@ function truncateValue(value: string, decimals: number): string {
  * Parses a CurrencyAmount from the passed string.
  * Returns the CurrencyAmount, or undefined if parsing fails.
  */
-export default function tryParseCurrencyAmount<T extends Currency>(
+export function tryParseCurrencyAmount<T extends Currency>(
   value?: string,
   currency?: Maybe<T>,
 ): CurrencyAmount<T> | undefined {

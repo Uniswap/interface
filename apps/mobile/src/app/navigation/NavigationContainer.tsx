@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native'
 import { useMutation } from '@tanstack/react-query'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isDatadogEnabled } from '@universe/environment'
 import React, { FC, PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { EmitterSubscription, Linking } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -19,7 +20,6 @@ import { useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileNavScreen } from 'uniswap/src/types/screens/mobile'
-import { datadogEnabledBuild } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { sleep } from 'utilities/src/time/timing'
@@ -55,7 +55,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         const initialRoute = navigationRef.getCurrentRoute()?.name as MobileNavScreen
         setRouteName(initialRoute)
 
-        if (datadogEnabledBuild) {
+        if (isDatadogEnabled()) {
           DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
         }
       }}

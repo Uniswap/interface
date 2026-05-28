@@ -1,4 +1,3 @@
-/* oxlint-disable import/no-unused-modules */
 export const MAX_STACKED_BANNERS = 3
 export const VERTICAL_OFFSET = 6 // pixels between each stacked banner
 export const SCALE_DECREMENT = 0.05 // each banner is 5% smaller than the one above

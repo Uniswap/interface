@@ -4,7 +4,7 @@ import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/Trading
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import {
   OnChainTransactionFields,
-  OnChainTransactionFieldsBatched,
+  OnChainTransactionFieldsWalletCall,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -20,8 +20,8 @@ export interface SwapTransactionStepAsync {
   getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined> // fetches tx request from trading api with signature
 }
 
-export interface SwapTransactionStepBatched extends OnChainTransactionFieldsBatched {
-  type: TransactionStepType.SwapTransactionBatched
+export interface SwapTransactionStepWalletCall extends OnChainTransactionFieldsWalletCall {
+  type: TransactionStepType.SwapTransactionWalletCall
 }
 
 export function createSwapTransactionStep(txRequest: ValidatedTransactionRequest): SwapTransactionStep {
@@ -50,10 +50,11 @@ export function createSwapTransactionAsyncStep(
   }
 }
 
-export function createSwapTransactionStepBatched(
+export function createSwapTransactionStepWalletCall(
   txRequests: ValidatedTransactionRequest[],
-): SwapTransactionStepBatched {
-  return { type: TransactionStepType.SwapTransactionBatched, batchedTxRequests: txRequests }
+  paymasterService?: TradingApi.PaymasterServiceCapability,
+): SwapTransactionStepWalletCall {
+  return { type: TransactionStepType.SwapTransactionWalletCall, walletCallTxRequests: txRequests, paymasterService }
 }
 
 export async function getSwapTxRequest(

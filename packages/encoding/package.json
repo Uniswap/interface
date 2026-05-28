@@ -1,0 +1,28 @@
+{
+  "name": "@universe/encoding",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "typescript": "5.9.2",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "test": "nx test encoding",
+    "typecheck": "nx typecheck encoding",
+    "check": "nx check encoding",
+    "check:fast": "nx check:fast encoding",
+    "check:deps:usage": "nx check:deps:usage encoding",
+    "format": "nx format encoding",
+    "format:check": "nx format:check encoding",
+    "lint": "nx lint encoding",
+    "lint:fix": "nx lint:fix encoding"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

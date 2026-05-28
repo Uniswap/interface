@@ -25,7 +25,6 @@ export function useContextMenuTracking({
   const trace = useTrace()
   const wasOpen = useRef(false)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- trace is static context, shouldn't trigger re-fire
   useEffect(() => {
     if (isOpen && !wasOpen.current && elementName && sectionName) {
       sendAnalyticsEvent(UniswapEventName.ContextMenuOpened, {

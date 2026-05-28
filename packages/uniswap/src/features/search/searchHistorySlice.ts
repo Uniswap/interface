@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import {
-  isPoolSearchHistoryResult,
+  isMultichainTokenSearchHistoryResult,
   isTokenSearchHistoryResult,
   SearchHistoryResult,
   SearchHistoryResultType,
@@ -10,21 +10,32 @@ import {
 
 const SEARCH_HISTORY_LENGTH = 5
 
-// oxlint-disable-next-line consistent-return
 export function searchResultId(searchResult: SearchHistoryResult): string {
-  const { type } = searchResult
-  const address = isPoolSearchHistoryResult(searchResult) ? searchResult.poolId : searchResult.address
-  const normalizedAddress = address ? normalizeTokenAddressForCache(address) : null
-
-  switch (type) {
-    case SearchHistoryResultType.Token:
+  switch (searchResult.type) {
+    case SearchHistoryResultType.Token: {
+      const normalizedAddress = searchResult.address ? normalizeTokenAddressForCache(searchResult.address) : null
       return `token-${searchResult.chainId}-${normalizedAddress}`
-    case SearchHistoryResultType.WalletByAddress:
+    }
+    case SearchHistoryResultType.WalletByAddress: {
+      const normalizedAddress = normalizeTokenAddressForCache(searchResult.address)
       return `wallet-${normalizedAddress}`
-    case SearchHistoryResultType.Etherscan:
+    }
+    case SearchHistoryResultType.Etherscan: {
+      const normalizedAddress = normalizeTokenAddressForCache(searchResult.address)
       return `etherscan-${normalizedAddress}`
-    case SearchHistoryResultType.Pool:
+    }
+    case SearchHistoryResultType.Pool: {
+      const normalizedAddress = normalizeTokenAddressForCache(searchResult.poolId)
       return `pool-${searchResult.chainId}-${normalizedAddress}-${searchResult.feeTier}`
+    }
+    case SearchHistoryResultType.MultichainToken: {
+      const suffix = searchResult.tdpChainFilter != null ? String(searchResult.tdpChainFilter) : 'all'
+      return `multichain-token-${searchResult.multichainId}-${suffix}`
+    }
+    default: {
+      const _unexpected: never = searchResult
+      throw new Error(`Unexpected search history type: ${String(_unexpected)}`)
+    }
   }
 }
 
@@ -45,6 +56,13 @@ const slice = createSlice({
 
       // Validate chainId for token results to prevent storing invalid data
       if (isTokenSearchHistoryResult(searchResult) && !isUniverseChainId(searchResult.chainId)) {
+        return
+      }
+
+      if (
+        isMultichainTokenSearchHistoryResult(searchResult) &&
+        (!searchResult.multichainId || !searchResult.tokenCurrencyIds.length)
+      ) {
         return
       }
 

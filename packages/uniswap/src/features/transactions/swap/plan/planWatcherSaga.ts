@@ -115,6 +115,7 @@ export class PlanWatcher {
     }
   }
 
+  // oxlint-disable-next-line typescript/explicit-function-return-type
   static *waitForPlanStatus(planId: string) {
     logPlanPollDebug({
       fileName: 'planWatcherSaga',

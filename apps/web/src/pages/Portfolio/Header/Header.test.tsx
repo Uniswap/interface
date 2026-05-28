@@ -35,10 +35,6 @@ vi.mock('~/hooks/useAppHeaderHeight', () => ({
   useAppHeaderHeight: vi.fn().mockReturnValue(72),
 }))
 
-vi.mock('~/pages/Portfolio/Header/useShouldHeaderBeCompact', () => ({
-  useShouldHeaderBeCompact: vi.fn().mockReturnValue(false),
-}))
-
 vi.mock('~/pages/Portfolio/Header/PortfolioAddressDisplay/PortfolioAddressDisplay', () => ({
   PortfolioAddressDisplay: ({ isCompact }: { isCompact: boolean }) => (
     <div data-testid="address-display" data-compact={isCompact}>
@@ -80,11 +76,11 @@ describe('PortfolioHeader', () => {
         isExternalWallet: false,
       })
 
-      const { container } = render(<PortfolioHeader />)
+      const { container } = render(<PortfolioHeader isCompact />)
       expect(container).toMatchSnapshot()
     })
 
-    it('should render header with scroll position', () => {
+    it('should render header in expanded state', () => {
       mocked(usePortfolioRoutes).mockReturnValue({
         tab: PortfolioTab.Tokens,
         chainId: undefined,
@@ -92,7 +88,7 @@ describe('PortfolioHeader', () => {
         isExternalWallet: false,
       })
 
-      const { container } = render(<PortfolioHeader scrollY={150} />)
+      const { container } = render(<PortfolioHeader isCompact={false} />)
       expect(container).toMatchSnapshot()
     })
   })
@@ -110,7 +106,7 @@ describe('PortfolioHeader', () => {
         isExternalWallet: true,
       })
 
-      const { container } = render(<PortfolioHeader />)
+      const { container } = render(<PortfolioHeader isCompact={false} />)
       expect(container).toMatchSnapshot()
     })
   })

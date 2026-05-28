@@ -1,12 +1,12 @@
 /* oxlint-disable max-params */
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
+import { HexString, isValidHexString } from '@universe/encoding'
 import { Bytes, providers, Signer, UnsignedTransaction, utils } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { areAddressesEqual, ensureLeading0x } from 'uniswap/src/utils/addresses'
-import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring.native'
 
 // A signer that uses native keystore to access keys

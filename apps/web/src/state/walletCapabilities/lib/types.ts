@@ -1,4 +1,4 @@
-import type { HexString } from 'utilities/src/addresses/hex'
+import type { HexString } from '@universe/encoding'
 
 export interface ChainCapabilities {
   [capabilityName: string]:

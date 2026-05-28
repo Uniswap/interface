@@ -5,7 +5,7 @@ import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Star } from 'ui/src/components/icons/Star'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
-import ValuePropCard from '~/pages/Landing/components/cards/ValuePropCard'
+import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
 import { Wallet } from '~/pages/Landing/components/Icons'
 
 export function DownloadWalletCard() {

@@ -1,8 +1,7 @@
 import { GraphQLApi } from '@universe/api'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
-import { Flex, LinearGradient, styled, Text, useSporeColors } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
+import { Flex, styled, Text } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { getProtocolColor, getProtocolName } from '~/appGraphql/data/util'
@@ -100,23 +99,6 @@ function HeaderTimeDisplay({ time, timePlaceholder }: HeaderTimeDisplayProps) {
   )
 }
 
-function ChartBackgroundGradient() {
-  const colors = useSporeColors()
-
-  return (
-    <LinearGradient
-      position="absolute"
-      colors={[colors.surface1.val, colors.surface1.val, 'transparent']}
-      locations={[0, 0.7, 1]}
-      start={{ x: 0, y: 1 }}
-      end={{ x: 1, y: 0 }}
-      width="100%"
-      height="100%"
-      zIndex={zIndexes.negative}
-    />
-  )
-}
-
 interface ChartHeaderProps extends HeaderValueDisplayProps, HeaderTimeDisplayProps {
   protocolData?: ChartHeaderProtocolInfo[]
   additionalFields?: ReactNode
@@ -135,7 +117,6 @@ export function ChartHeader({
   return (
     <Flex row position="absolute" width="100%" gap="$gap8" alignItems="flex-start" zIndex="$mask" id="chart-header">
       <Flex position="absolute" gap="$gap4" pb="$padding8" pr="$padding8" pointerEvents="none">
-        <ChartBackgroundGradient />
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
         <Flex row gap="$gap8" $sm={{ flexDirection: 'column' }} {...EllipsisTamaguiStyle}>
           {additionalFields}

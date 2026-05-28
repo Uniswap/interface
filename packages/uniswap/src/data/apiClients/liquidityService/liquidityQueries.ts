@@ -1,17 +1,7 @@
 import { type QueryKey, queryOptions } from '@tanstack/react-query'
 import type {
-  CheckApprovalLPRequest,
-  CheckApprovalLPResponse,
-  ClaimLPFeesRequest,
-  ClaimLPFeesResponse,
   ClaimLPRewardsRequest,
   ClaimLPRewardsResponse,
-  CreateLPPositionRequest,
-  CreateLPPositionResponse,
-  DecreaseLPPositionRequest,
-  DecreaseLPPositionResponse,
-  IncreaseLPPositionRequest,
-  IncreaseLPPositionResponse,
   MigrateV2ToV3LPPositionRequest,
   MigrateV2ToV3LPPositionResponse,
   MigrateV3ToV4LPPositionRequest,
@@ -57,22 +47,6 @@ function getPoolInfoQueryOptions(
   })
 }
 
-function getCheckLPApprovalDeprecatedQueryOptions(
-  client: typeof V1LiquidityServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<CheckApprovalLPRequest, CheckApprovalLPResponse>,
-): QueryOptionsResult<CheckApprovalLPResponse, Error, CheckApprovalLPResponse, QueryKey> {
-  return queryOptions({
-    queryKey: [ReactQueryCacheKey.LiquidityService, 'checkApproval', params],
-    queryFn: async () => {
-      if (!params) {
-        throw new Error('params required')
-      }
-      return client.checkApproval(params)
-    },
-    ...rest,
-  })
-}
-
 function getCheckLPApprovalQueryOptions(
   client: typeof V2LiquidityServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<LPApprovalRequest, LPApprovalResponse>,
@@ -84,22 +58,6 @@ function getCheckLPApprovalQueryOptions(
         throw new Error('params required')
       }
       return client.checkLPApproval(params)
-    },
-    ...rest,
-  })
-}
-
-function getClaimLPFeesDeprecatedQueryOptions(
-  client: typeof V1LiquidityServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<ClaimLPFeesRequest, ClaimLPFeesResponse>,
-): QueryOptionsResult<ClaimLPFeesResponse, Error, ClaimLPFeesResponse, QueryKey> {
-  return queryOptions({
-    queryKey: [ReactQueryCacheKey.LiquidityService, 'claimFees', params],
-    queryFn: async () => {
-      if (!params) {
-        throw new Error('params required')
-      }
-      return client.claimLpFees(params)
     },
     ...rest,
   })
@@ -137,22 +95,6 @@ function getClaimLPRewardsQueryOptions(
   })
 }
 
-function getDecreaseLPPositionDeprecatedQueryOptions(
-  client: typeof V1LiquidityServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<DecreaseLPPositionRequest, DecreaseLPPositionResponse>,
-): QueryOptionsResult<DecreaseLPPositionResponse, Error, DecreaseLPPositionResponse, QueryKey> {
-  return queryOptions({
-    queryKey: [ReactQueryCacheKey.LiquidityService, 'decreasePositionDeprecated', params],
-    queryFn: async () => {
-      if (!params) {
-        throw new Error('params required')
-      }
-      return client.decreaseLpPosition(params)
-    },
-    ...rest,
-  })
-}
-
 function getMigrateV2ToV3LPPositionQueryOptions(
   client: typeof V1LiquidityServiceClient,
   { params, ...rest }: UseQueryApiHelperHookArgs<MigrateV2ToV3LPPositionRequest, MigrateV2ToV3LPPositionResponse>,
@@ -180,22 +122,6 @@ function getMigrateV3ToV4LPPositionQueryOptions(
         throw new Error('params required')
       }
       return client.migrateV3ToV4LpPosition(params)
-    },
-    ...rest,
-  })
-}
-
-function getCreateLPPositionQueryOptions(
-  client: typeof V1LiquidityServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<CreateLPPositionRequest, CreateLPPositionResponse>,
-): QueryOptionsResult<CreateLPPositionResponse, Error, CreateLPPositionResponse, QueryKey> {
-  return queryOptions({
-    queryKey: [ReactQueryCacheKey.LiquidityService, 'createPositionDeprecated', params],
-    queryFn: async () => {
-      if (!params) {
-        throw new Error('params required')
-      }
-      return client.createLpPosition(params)
     },
     ...rest,
   })
@@ -265,22 +191,6 @@ function getIncreasePositionQueryOptions(
   })
 }
 
-function getIncreasePositionDeprecatedQueryOptions(
-  client: typeof V1LiquidityServiceClient,
-  { params, ...rest }: UseQueryApiHelperHookArgs<IncreaseLPPositionRequest, IncreaseLPPositionResponse>,
-): QueryOptionsResult<IncreaseLPPositionResponse, Error, IncreaseLPPositionResponse, QueryKey> {
-  return queryOptions({
-    queryKey: [ReactQueryCacheKey.LiquidityService, 'increasePositionDeprecated', params],
-    queryFn: async () => {
-      if (!params) {
-        throw new Error('params required')
-      }
-      return client.increaseLpPosition(params)
-    },
-    ...rest,
-  })
-}
-
 function provideLiquidityQueries(
   v1Client: typeof V1LiquidityServiceClient,
   v2Client: typeof V2LiquidityServiceClient,
@@ -288,15 +198,9 @@ function provideLiquidityQueries(
   poolInfo: (
     input: UseQueryApiHelperHookArgs<PoolInfoRequest, PoolInfoResponse>,
   ) => QueryOptionsResult<PoolInfoResponse, Error, PoolInfoResponse, QueryKey>
-  checkApprovalDeprecated: (
-    input: UseQueryApiHelperHookArgs<CheckApprovalLPRequest, CheckApprovalLPResponse>,
-  ) => QueryOptionsResult<CheckApprovalLPResponse, Error, CheckApprovalLPResponse, QueryKey>
   checkApproval: (
     input: UseQueryApiHelperHookArgs<LPApprovalRequest, LPApprovalResponse>,
   ) => QueryOptionsResult<LPApprovalResponse, Error, LPApprovalResponse, QueryKey>
-  claimLPFeesDeprecated: (
-    input: UseQueryApiHelperHookArgs<ClaimLPFeesRequest, ClaimLPFeesResponse>,
-  ) => QueryOptionsResult<ClaimLPFeesResponse, Error, ClaimLPFeesResponse, QueryKey>
   claimFees: (
     input: UseQueryApiHelperHookArgs<ClaimFeesRequest, ClaimFeesResponse>,
   ) => QueryOptionsResult<ClaimFeesResponse, Error, ClaimFeesResponse, QueryKey>
@@ -309,12 +213,6 @@ function provideLiquidityQueries(
   createPosition: (
     input: UseQueryApiHelperHookArgs<CreatePositionRequest, CreatePositionResponse>,
   ) => QueryOptionsResult<CreatePositionResponse, Error, CreatePositionResponse, QueryKey>
-  createPositionDeprecated: (
-    input: UseQueryApiHelperHookArgs<CreateLPPositionRequest, CreateLPPositionResponse>,
-  ) => QueryOptionsResult<CreateLPPositionResponse, Error, CreateLPPositionResponse, QueryKey>
-  decreaseLPPositionDeprecated: (
-    input: UseQueryApiHelperHookArgs<DecreaseLPPositionRequest, DecreaseLPPositionResponse>,
-  ) => QueryOptionsResult<DecreaseLPPositionResponse, Error, DecreaseLPPositionResponse, QueryKey>
   decreasePosition: (
     input: UseQueryApiHelperHookArgs<DecreasePositionRequest, DecreasePositionResponse>,
   ) => QueryOptionsResult<DecreasePositionResponse, Error, DecreasePositionResponse, QueryKey>
@@ -324,9 +222,6 @@ function provideLiquidityQueries(
   migrateV3ToV4: (
     input: UseQueryApiHelperHookArgs<MigrateV3ToV4LPPositionRequest, MigrateV3ToV4LPPositionResponse>,
   ) => QueryOptionsResult<MigrateV3ToV4LPPositionResponse, Error, MigrateV3ToV4LPPositionResponse, QueryKey>
-  increasePositionDeprecated: (
-    input: UseQueryApiHelperHookArgs<IncreaseLPPositionRequest, IncreaseLPPositionResponse>,
-  ) => QueryOptionsResult<IncreaseLPPositionResponse, Error, IncreaseLPPositionResponse, QueryKey>
   increasePosition: (
     input: UseQueryApiHelperHookArgs<IncreasePositionRequest, IncreasePositionResponse>,
   ) => QueryOptionsResult<IncreasePositionResponse, Error, IncreasePositionResponse, QueryKey>
@@ -334,12 +229,8 @@ function provideLiquidityQueries(
   return {
     poolInfo: (input: UseQueryApiHelperHookArgs<PoolInfoRequest, PoolInfoResponse>) =>
       getPoolInfoQueryOptions(v1Client, input),
-    checkApprovalDeprecated: (input: UseQueryApiHelperHookArgs<CheckApprovalLPRequest, CheckApprovalLPResponse>) =>
-      getCheckLPApprovalDeprecatedQueryOptions(v1Client, input),
     checkApproval: (input: UseQueryApiHelperHookArgs<LPApprovalRequest, LPApprovalResponse>) =>
       getCheckLPApprovalQueryOptions(v2Client, input),
-    claimLPFeesDeprecated: (input: UseQueryApiHelperHookArgs<ClaimLPFeesRequest, ClaimLPFeesResponse>) =>
-      getClaimLPFeesDeprecatedQueryOptions(v1Client, input),
     claimFees: (input: UseQueryApiHelperHookArgs<ClaimFeesRequest, ClaimFeesResponse>) =>
       getClaimFeesQueryOptions(v2Client, input),
     claimRewards: (input: UseQueryApiHelperHookArgs<ClaimLPRewardsRequest, ClaimLPRewardsResponse>) =>
@@ -349,11 +240,6 @@ function provideLiquidityQueries(
     ) => getCreateClassicPositionQueryOptions(v2Client, input),
     createPosition: (input: UseQueryApiHelperHookArgs<CreatePositionRequest, CreatePositionResponse>) =>
       getCreatePositionQueryOptions(v2Client, input),
-    createPositionDeprecated: (input: UseQueryApiHelperHookArgs<CreateLPPositionRequest, CreateLPPositionResponse>) =>
-      getCreateLPPositionQueryOptions(v1Client, input),
-    decreaseLPPositionDeprecated: (
-      input: UseQueryApiHelperHookArgs<DecreaseLPPositionRequest, DecreaseLPPositionResponse>,
-    ) => getDecreaseLPPositionDeprecatedQueryOptions(v1Client, input),
     decreasePosition: (input: UseQueryApiHelperHookArgs<DecreasePositionRequest, DecreasePositionResponse>) =>
       getDecreasePositionQueryOptions(v2Client, input),
     migrateV2ToV3: (
@@ -362,9 +248,6 @@ function provideLiquidityQueries(
     migrateV3ToV4: (
       input: UseQueryApiHelperHookArgs<MigrateV3ToV4LPPositionRequest, MigrateV3ToV4LPPositionResponse>,
     ) => getMigrateV3ToV4LPPositionQueryOptions(v1Client, input),
-    increasePositionDeprecated: (
-      input: UseQueryApiHelperHookArgs<IncreaseLPPositionRequest, IncreaseLPPositionResponse>,
-    ) => getIncreasePositionDeprecatedQueryOptions(v1Client, input),
     increasePosition: (input: UseQueryApiHelperHookArgs<IncreasePositionRequest, IncreasePositionResponse>) =>
       getIncreasePositionQueryOptions(v2Client, input),
   }

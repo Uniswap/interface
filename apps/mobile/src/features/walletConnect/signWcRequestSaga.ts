@@ -1,11 +1,14 @@
-/* oxlint-disable complexity */
+import { TradingApi } from '@universe/api'
 import { buildAuthObject, getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
+  isBatchedTransactionRequest,
+  isUserOpRequest,
   TransactionRequest,
   UwuLinkErc20Request,
   WalletSendCallsEncodedRequest,
+  WalletSendCallsUserOperationRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -16,16 +19,27 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
-import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DappRequestInfo, DappRequestType, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
+import { addWalletCallTransaction } from 'wallet/src/features/batchedTransactions/slice'
 import { SendCallsResult } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import {
+  ExecuteUserOpParams,
+  executeUserOpSaga,
+} from 'wallet/src/features/transactions/executeTransaction/executeUserOpSaga'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -48,7 +62,11 @@ type SignTransactionParams = {
   method: EthMethod.EthSendTransaction | EthMethod.WalletSendCalls
   dappRequestInfo: DappRequestInfo
   chainId: UniverseChainId
-  request: TransactionRequest | UwuLinkErc20Request | WalletSendCallsEncodedRequest
+  request:
+    | TransactionRequest
+    | UwuLinkErc20Request
+    | WalletSendCallsEncodedRequest
+    | WalletSendCallsUserOperationRequest
 }
 
 function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
@@ -65,19 +83,6 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         signerManager,
         signAsString: method === EthMethod.PersonalSign,
       })
-
-      // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
-      if (
-        params.dappRequestInfo.requestType === DappRequestType.UwULink &&
-        params.dappRequestInfo.name === 'Uniswap Cafe'
-      ) {
-        yield* put(
-          pushNotification({
-            type: AppNotificationType.Success,
-            title: 'Checked in',
-          }),
-        )
-      }
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
       result = yield* call(signTypedDataMessage, { message: params.message, account, signerManager })
     } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
@@ -122,7 +127,60 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         }),
       )
       // oxlint-disable-next-line typescript/no-unnecessary-condition
-    } else if (method === EthMethod.WalletSendCalls && params.request.type === EthMethod.WalletSendCalls) {
+    } else if (method === EthMethod.WalletSendCalls && isUserOpRequest(params.request)) {
+      // 4337 UserOp path — gas-sponsored dapp request
+      const typeInfo: TransactionTypeInfo = {
+        type: TransactionType.SendCalls,
+        unsignedUserOperation: params.request.unsignedUserOperation,
+        dappInfo: {
+          name: params.dappRequestInfo.name,
+          icon: params.dappRequestInfo.icon ?? undefined,
+        },
+      }
+      const userOpParams: ExecuteUserOpParams = {
+        userOp: params.request.unsignedUserOperation,
+        account,
+        chainId: params.request.chainId,
+        typeInfo,
+      }
+      const { userOpHash } = yield* call(executeUserOpSaga, userOpParams)
+
+      const txId = createTransactionId()
+      yield* put(
+        addTransaction({
+          routing: TradingApi.Routing.CLASSIC,
+          id: txId,
+          chainId: params.request.chainId,
+          typeInfo,
+          from: account.address,
+          addedTime: Date.now(),
+          status: TransactionStatus.Pending,
+          userOpHash,
+          options: { request: {} },
+          transactionOriginType: TransactionOriginType.External,
+        }),
+      )
+
+      result = { id: params.request.id }
+
+      yield* put(
+        addWalletCallTransaction({
+          batchId: params.request.id,
+          userOpHash,
+          requestId: params.request.requestId,
+          chainId: params.request.chainId,
+        }),
+      )
+
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.TransactionPending,
+          chainId: params.request.chainId,
+        }),
+      )
+      // oxlint-disable-next-line typescript/no-unnecessary-condition
+    } else if (method === EthMethod.WalletSendCalls && isBatchedTransactionRequest(params.request)) {
+      // 7702 encoded transaction path
       const txParams: ExecuteTransactionParams = {
         chainId: params.request.chainId,
         account,
@@ -149,7 +207,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
 
       // Store the batch transaction in Redux
       yield* put(
-        addBatchedTransaction({
+        addWalletCallTransaction({
           batchId: params.request.id,
           txHashes: [transactionHash],
           requestId: params.request.encodedRequestId,

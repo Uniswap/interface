@@ -8,6 +8,13 @@ const mockRNDeviceInfo = require('react-native-device-info/jest/react-native-dev
 // required polyfill for rtk-query baseQueryFn
 require('cross-fetch/polyfill')
 
+// Polyfill crypto.randomUUID for jsdom (not available in jest-environment-jsdom)
+if (typeof globalThis.crypto === 'undefined') {
+  globalThis.crypto = require('node:crypto')
+} else if (typeof globalThis.crypto.randomUUID !== 'function') {
+  globalThis.crypto.randomUUID = require('node:crypto').randomUUID
+}
+
 global.chrome = {
   storage: {
     ...storage, // mem-storage-area is a reimplementation of chrome.storage in memory

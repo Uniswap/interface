@@ -1,5 +1,4 @@
 /* oxlint-disable max-depth */
-/* oxlint-disable complexity */
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { formatUnits as formatUnitsEthers } from 'ethers/lib/utils'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'

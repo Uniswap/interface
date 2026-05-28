@@ -15,7 +15,7 @@ import { DeltaArrow } from '~/components/DeltaArrow/DeltaArrow'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useCurrency } from '~/hooks/Tokens'
 import { PillButton } from '~/pages/Landing/components/cards/PillButton'
-import ValuePropCard from '~/pages/Landing/components/cards/ValuePropCard'
+import { ValuePropCard } from '~/pages/Landing/components/cards/ValuePropCard'
 import { Computer } from '~/pages/Landing/components/Icons'
 
 const primary = '#2ABDFF'

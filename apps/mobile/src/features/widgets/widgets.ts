@@ -1,3 +1,4 @@
+import { isAndroid } from '@universe/environment'
 import { NativeModules } from 'react-native'
 import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
 import { getBuildVariant } from 'src/utils/version'
@@ -7,7 +8,6 @@ import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { WidgetEvent } from 'uniswap/src/types/widgets'
-import { isAndroid } from 'utilities/src/platform'
 // oxlint-disable-next-line no-restricted-imports -- Required for analytics initialization
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { Account } from 'wallet/src/features/wallet/accounts/types'

@@ -1,5 +1,4 @@
 import { act, renderHook } from '@testing-library/react'
-// oxlint-disable-next-line typescript/no-restricted-imports
 import { I18nManager } from 'react-native'
 import { useForceRTL } from 'utilities/src/storybook/hooks/useForceRTL'
 

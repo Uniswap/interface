@@ -2,9 +2,9 @@ import { connect } from '@wagmi/core'
 import { useUpdateAtom } from 'jotai/utils'
 import { useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/components/Web3Provider/constants'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
-import { uniswapWalletConnect } from '~/components/Web3Provider/walletConnect'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
+import { wagmiConfig } from '~/connection/wagmiConfig'
+import { uniswapWalletConnect } from '~/connection/walletConnect'
 import { ConnectionService } from '~/features/wallet/connection/services/IConnectionService'
 import { WalletConnectorMeta } from '~/features/wallet/connection/types/WalletConnectorMeta'
 import { useSignInWithPasskey } from '~/hooks/useSignInWithPasskey'
@@ -28,15 +28,18 @@ const APPLY_CUSTOM_CONNECTOR_META_MAP = {
  *
  */
 export function applyCustomConnectorMeta(walletConnectors: WalletConnectorMeta[]): WalletConnectorMeta[] {
-  return Object.values(APPLY_CUSTOM_CONNECTOR_META_MAP)
-    .reduce((acc, applyCustomConnectorMeta) => applyCustomConnectorMeta(acc), walletConnectors)
-    .map((connector) => {
-      const iconOverride = CONNECTOR_ICON_OVERRIDE_MAP[connector.name]
-      if (iconOverride) {
-        return { ...connector, icon: iconOverride }
-      }
-      return connector
-    })
+  return (
+    Object.values(APPLY_CUSTOM_CONNECTOR_META_MAP)
+      // oxlint-disable-next-line no-shadow
+      .reduce((acc, applyCustomConnectorMeta) => applyCustomConnectorMeta(acc), walletConnectors)
+      .map((connector) => {
+        const iconOverride = CONNECTOR_ICON_OVERRIDE_MAP[connector.name]
+        if (iconOverride) {
+          return { ...connector, icon: iconOverride }
+        }
+        return connector
+      })
+  )
 }
 
 // CUSTOM CONNECTOR FUNCTIONS

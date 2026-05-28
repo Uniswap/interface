@@ -59,6 +59,9 @@ export function TDPStoreContextProvider({ children }: TDPStoreContextProviderPro
     if (state.address !== derivedState.address) {
       actions.setAddress(derivedState.address)
     }
+    if (state.balanceError !== derivedState.balanceError) {
+      actions.setBalanceError(derivedState.balanceError)
+    }
   }, [derivedState, hasDerivedStateChanged, store, identity.tokenAddress, identity.chainName])
 
   useEffect(() => {

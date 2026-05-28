@@ -18,7 +18,7 @@ exports[`SplitLogo > renders without error 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-5px _borderTopRightRadius-5px _borderBottomRightRadius-5px _borderBottomLeftRadius-5px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -27,7 +27,7 @@ exports[`SplitLogo > renders without error 1`] = `
             <img
               height="10"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-              style="object-fit: contain; border-radius: 5px; z-index: 1;"
+              style="object-fit: contain; border-radius: 10px; z-index: 1;"
               width="10"
             />
           </div>
@@ -42,7 +42,7 @@ exports[`SplitLogo > renders without error 1`] = `
           data-testid="token-logo"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-5px _borderTopRightRadius-5px _borderBottomRightRadius-5px _borderBottomLeftRadius-5px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639"
           />
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -51,7 +51,7 @@ exports[`SplitLogo > renders without error 1`] = `
             <img
               height="10"
               src="https://token-icons.s3.amazonaws.com/eth.png"
-              style="object-fit: contain; border-radius: 5px; z-index: 1;"
+              style="object-fit: contain; border-radius: 10px; z-index: 1;"
               width="10"
             />
           </div>
@@ -62,7 +62,7 @@ exports[`SplitLogo > renders without error 1`] = `
       >
         <div
           class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _overflowX-hidden _overflowY-hidden _zIndex-10"
-          data-testid="network-logo"
+          data-testid="network-logo-42161"
           style="width: 7.2px; height: 7.2px; border-radius: 2.16px; border-width: 1.6px; border-style: solid;"
         >
           <div

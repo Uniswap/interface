@@ -144,10 +144,10 @@ exports[`TokenItem renders without error 1`] = `
             style={
               {
                 "backgroundColor": "#FFFFFF",
-                "borderBottomLeftRadius": 20,
-                "borderBottomRightRadius": 20,
-                "borderTopLeftRadius": 20,
-                "borderTopRightRadius": 20,
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
                 "flexDirection": "column",
                 "height": "96%",
                 "left": "2%",
@@ -171,7 +171,7 @@ exports[`TokenItem renders without error 1`] = `
             style={
               {
                 "aspectRatio": undefined,
-                "borderRadius": 20,
+                "borderRadius": 40,
                 "flex": undefined,
                 "zIndex": 1,
               }

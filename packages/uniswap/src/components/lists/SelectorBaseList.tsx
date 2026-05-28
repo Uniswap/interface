@@ -9,9 +9,10 @@ import {
   ItemRowInfo,
   OnchainItemList,
   OnchainItemListRef,
+  SectionRowInfo,
 } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { SectionHeader, SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
+import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function EmptyResults(): JSX.Element {
@@ -59,7 +60,6 @@ function SelectorBaseListInner<T extends OnchainItemListOption>({
   const { t } = useTranslation()
   const sectionListRef = useRef<OnchainItemListRef>(undefined)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +chainFilter
   useEffect(() => {
     if (sections?.length) {
       sectionListRef.current?.scrollToLocation({
@@ -71,7 +71,7 @@ function SelectorBaseListInner<T extends OnchainItemListOption>({
   }, [chainFilter, sections?.length])
 
   const renderSectionHeader = useCallback(
-    ({ section }: { section: SectionHeaderProps }): JSX.Element => (
+    ({ section }: SectionRowInfo): JSX.Element => (
       <SectionHeader
         rightElement={section.rightElement}
         endElement={section.endElement}

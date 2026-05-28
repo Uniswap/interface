@@ -10,7 +10,6 @@ export function initDynamicIntlPolyfills(): void {
  * We need to load them synchronously because the polyfills are needed for other code to run.
  * Polyfills affect the app startup time, so we need to load them selectively.
  */
-// oxlint-disable-next-line complexity
 function loadDynamicIntlPolyfills(locale: string): void {
   const baseCode = locale.split('-')[0]
 

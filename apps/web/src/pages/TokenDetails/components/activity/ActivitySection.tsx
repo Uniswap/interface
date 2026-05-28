@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
@@ -6,6 +7,7 @@ import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { TokenDetailsPoolsTable } from '~/pages/TokenDetails/components/activity/TokenDetailsPoolsTable'
 import { TransactionsTable } from '~/pages/TokenDetails/components/activity/TransactionsTable'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
+import { useTDPEffectiveCurrency } from '~/pages/TokenDetails/hooks/useTDPEffectiveCurrency'
 import { ClickableTamaguiStyle } from '~/theme/components/styles'
 
 const Tab = styled(Text, {
@@ -30,10 +32,13 @@ enum ActivityTab {
 
 export function ActivitySection() {
   const { t } = useTranslation()
-  const { currency: referenceCurrency, currencyChainId } = useTDPStore((s) => ({
-    currency: s.currency!,
+  const referenceCurrency = useTDPEffectiveCurrency()
+  const { currencyChainId, selectedMultichainChainId } = useTDPStore((s) => ({
     currencyChainId: s.currencyChainId,
+    selectedMultichainChainId: s.selectedMultichainChainId,
   }))
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+  const isMultichainView = multichainTokenUxEnabled && selectedMultichainChainId === undefined
 
   const [activityInView, setActivityInView] = useState(ActivityTab.Txs)
 
@@ -71,10 +76,14 @@ export function ActivitySection() {
         </Text>
       )}
       {activityInView === ActivityTab.Txs && (
-        <TransactionsTable chainId={referenceCurrency.chainId} referenceToken={referenceCurrency.wrapped} />
+        <TransactionsTable
+          chainId={referenceCurrency.chainId}
+          referenceToken={referenceCurrency.wrapped}
+          isMultichainView={isMultichainView}
+        />
       )}
       {activityInView === ActivityTab.Pools && !isSolanaToken && (
-        <TokenDetailsPoolsTable referenceCurrency={referenceCurrency} />
+        <TokenDetailsPoolsTable referenceCurrency={referenceCurrency} isMultichainView={isMultichainView} />
       )}
     </Flex>
   )

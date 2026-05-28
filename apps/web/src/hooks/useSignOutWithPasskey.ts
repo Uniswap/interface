@@ -1,10 +1,9 @@
 import { usePrivy } from '@privy-io/react-auth'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { logger } from 'utilities/src/logger/logger'
-import { useActiveWallet } from '~/features/accounts/store/hooks'
-import { usePasskeyAuthWithHelpModal } from '~/hooks/usePasskeyAuthWithHelpModal'
+import { resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { useIsEmbeddedWallet } from '~/hooks/useIsEmbeddedWallet'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 
 interface SignOutWithPasskeyOptions {
@@ -24,14 +23,14 @@ interface SignOutWithPasskeyOptions {
  * @returns Mutation object with signOutWithPasskey function and mutation states
  */
 export function useSignOutWithPasskey({ onSuccess, onError }: SignOutWithPasskeyOptions = {}) {
-  const { setIsConnected } = useEmbeddedWalletState()
+  const { walletId, setIsConnected } = useEmbeddedWalletState()
+  const queryClient = useQueryClient()
   const { logout, ready } = usePrivy()
-  const activeEVMWallet = useActiveWallet(Platform.EVM)
-  const connectedWithEmbeddedWallet = activeEVMWallet?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const connectedWithEmbeddedWallet = useIsEmbeddedWallet()
 
-  const { mutate: signOutWithPasskey, ...rest } = usePasskeyAuthWithHelpModal(
-    async () => {
-      await disconnectWallet()
+  const { mutate: signOutWithPasskey, ...rest } = useMutation({
+    mutationFn: async () => {
+      await disconnectWallet(walletId ?? undefined)
       if (connectedWithEmbeddedWallet && ready) {
         await logout().catch((err) => {
           logger.warn('useSignOutWithPasskey', 'Privy logout failed after disconnectWallet', err)
@@ -39,22 +38,23 @@ export function useSignOutWithPasskey({ onSuccess, onError }: SignOutWithPasskey
       }
       return true
     },
-    {
-      onSuccess: () => {
-        setIsConnected(false)
-        onSuccess?.()
-      },
-      onError: (error: Error) => {
-        logger.error(error, {
-          tags: {
-            file: 'useSignOutWithPasskey',
-            function: 'signOutWithPasskey',
-          },
-        })
-        onError?.(error)
-      },
+    onSuccess: () => {
+      setIsConnected(false)
+      // Drop cached authenticators (and their sessionStorage mirror) so the next user
+      // who signs in on this device gets a fresh listAuthenticators fetch.
+      resetListAuthenticators(queryClient, walletId)
+      onSuccess?.()
     },
-  )
+    onError: (error: Error) => {
+      logger.error(error, {
+        tags: {
+          file: 'useSignOutWithPasskey',
+          function: 'signOutWithPasskey',
+        },
+      })
+      onError?.(error)
+    },
+  })
 
   return { signOutWithPasskey, ...rest }
 }

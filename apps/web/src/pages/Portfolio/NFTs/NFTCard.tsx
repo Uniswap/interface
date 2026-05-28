@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isMobileWeb } from '@universe/environment'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -7,6 +8,7 @@ import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { zIndexes } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { GroupHoverTransition } from 'uniswap/src/components/GroupHoverTransition'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
@@ -18,14 +20,12 @@ import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constan
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getNftExplorerLink, getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
-import { isMobileWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { GroupHoverTransition } from '~/components/GroupHoverTransition'
 import { POPUP_MEDIUM_DISMISS_MS } from '~/components/Popups/constants'
-import { popupRegistry } from '~/components/Popups/registry'
-import { PopupType } from '~/components/Popups/types'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
 import { generateRotationStyle } from '~/pages/Portfolio/NFTs/generateRotationStyle'
+import { popupRegistry } from '~/state/popups/registry'
+import { PopupType } from '~/state/popups/types'
 import { filterDefinedWalletAddresses } from '~/utils/filterDefinedWalletAddresses'
 
 const FLOAT_UP_ON_HOVER_OFFSET = -4
@@ -243,8 +243,9 @@ function NFTCardInner(props: NftCardProps): JSX.Element {
           <GroupHoverTransition
             height={SUBTITLE_HEIGHT}
             useGroupItemHover
+            widthMode="container"
             defaultContent={
-              <Flex row alignItems="center" gap="$spacing4" justifyContent="space-between" height={SUBTITLE_HEIGHT}>
+              <Flex width="100%" row alignItems="center" gap="$spacing4" height={SUBTITLE_HEIGHT}>
                 <Text
                   variant="body4"
                   color="$neutral2"

@@ -2,7 +2,7 @@ import { transparentize } from 'polished'
 import { Fragment, memo, PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { Flex, Text } from 'ui/src'
 import { noop } from 'utilities/src/react/noop'
-import Popover, { PopoverProps } from '~/components/Popover'
+import { Popover, PopoverProps } from '~/components/Popover'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
 
 export enum TooltipSize {
@@ -12,7 +12,7 @@ export enum TooltipSize {
   Max = 'max-content',
 }
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 const getPaddingForSize = (size: TooltipSize) => {
   switch (size) {
     case TooltipSize.ExtraSmall:

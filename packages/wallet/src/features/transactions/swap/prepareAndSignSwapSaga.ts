@@ -65,6 +65,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
       const timestampBeforeSign = Date.now()
 
       let nonceIncrement = 0
+      // oxlint-disable-next-line typescript/explicit-function-return-type
       const getCurrentNonce = () => {
         if (calculatedNonce) {
           return calculatedNonce.nonce + nonceIncrement
@@ -187,6 +188,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
   }
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On

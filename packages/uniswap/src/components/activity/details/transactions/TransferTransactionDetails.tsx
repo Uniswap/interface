@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isWebPlatform } from '@universe/environment'
 import { Flex, Loader, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { NftTransactionDetails } from 'uniswap/src/components/activity/details/transactions/NftTransactionDetails'
@@ -18,7 +19,6 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function TransferTransactionDetails({
   transactionDetails,

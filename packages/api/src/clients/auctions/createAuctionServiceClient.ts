@@ -13,6 +13,8 @@ import {
   GetClearingPriceHistoryResponse,
   GetLatestCheckpointRequest,
   GetLatestCheckpointResponse,
+  GetTickDetailsRequest,
+  GetTickDetailsResponse,
   ListTopAuctionsRequest,
   ListTopAuctionsResponse,
 } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
@@ -28,6 +30,7 @@ export interface AuctionServiceClient {
   getBidsByWallet: (params: GetBidsByWalletRequest) => Promise<GetBidsByWalletResponse>
   getClearingPriceHistory: (params: GetClearingPriceHistoryRequest) => Promise<GetClearingPriceHistoryResponse>
   getLatestCheckpoint: (params: GetLatestCheckpointRequest) => Promise<GetLatestCheckpointResponse>
+  getTickDetails: (params: GetTickDetailsRequest) => Promise<GetTickDetailsResponse>
   listTopAuctions: (params: ListTopAuctionsRequest) => Promise<ListTopAuctionsResponse>
 }
 
@@ -39,6 +42,7 @@ export function createAuctionServiceClient({ rpcClient }: AuctionServiceClientCo
     getBidsByWallet: (params) => rpcClient.getBidsByWallet(params),
     getClearingPriceHistory: (params) => rpcClient.getClearingPriceHistory(params),
     getLatestCheckpoint: (params) => rpcClient.getLatestCheckpoint(params),
+    getTickDetails: (params) => rpcClient.getTickDetails(params),
     listTopAuctions: (params) => rpcClient.listTopAuctions(params),
   }
 }

@@ -1,3 +1,4 @@
+// oxlint-disable eslint-js/no-restricted-syntax
 import { z } from 'zod'
 
 export enum ETH_PROVIDER_CONFIG {
@@ -5,7 +6,6 @@ export enum ETH_PROVIDER_CONFIG {
   RESPONSE = 'ETHEREUM_PROVIDER_SCHEMA_RESPONSE',
 }
 
-/* oxlint-disable no-restricted-syntax  */
 const ExtensionResponseSchema = z
   .object({
     requestId: z.string(),

@@ -16,24 +16,26 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccountDrawer } from '~/components/AccountDrawer/MiniPortfolio/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
-import { CurrencySelector } from '~/components/Liquidity/Create/SelectTokenStep'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
-import { SwitchNetworkAction } from '~/components/Popups/types'
-import CurrencySearchModal from '~/components/SearchModal/CurrencySearchModal'
+import { CurrencySearchModal } from '~/components/SearchModal/CurrencySearchModal'
 import { V2Unsupported } from '~/components/V2Unsupported'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
+import { CurrencySelector } from '~/features/Liquidity/Create/SelectTokenStep'
 import { useAccount } from '~/hooks/useAccount'
 import { useNetworkSupportsV2 } from '~/hooks/useNetworkSupportsV2'
 import { useTotalSupply } from '~/hooks/useTotalSupply'
 import { useV2Pair } from '~/hooks/useV2Pairs'
 import { useTokenBalance } from '~/state/connection/hooks'
+import { SwitchNetworkAction } from '~/state/popups/types'
 import { usePairAdder } from '~/state/user/hooks'
 import { PositionField } from '~/types/position'
 
-export default function PoolFinder() {
+export function PoolFinder() {
   const account = useAccount()
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const breadcrumb = useEntryPointBreadcrumb()
   const [success, setSuccess] = useState(false)
 
   const [currency0, setCurrency0] = useState<Currency | undefined>(() =>
@@ -83,8 +85,8 @@ export default function PoolFinder() {
     <Trace logImpression page={InterfacePageName.PoolPage}>
       <Flex width="100%" py="$spacing48" px="$spacing40" maxWidth={650}>
         <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-          <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
-            <ArrowLeft size="$icon.16" /> {t('pool.positions.title')}
+          <BreadcrumbNavLink style={{ gap: '8px' }} to={breadcrumb.to}>
+            <ArrowLeft size="$icon.16" /> {breadcrumb.label}
           </BreadcrumbNavLink>
         </BreadcrumbNavContainer>
 
@@ -202,3 +204,5 @@ export default function PoolFinder() {
     </Trace>
   )
 }
+
+export default PoolFinder

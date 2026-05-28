@@ -1,8 +1,8 @@
 import type { TFunction } from 'i18next'
-import { Button, Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
+import { Passkey } from 'ui/src/components/icons/Passkey'
 import { ShieldCheck } from 'ui/src/components/icons/ShieldCheck'
-import { X } from 'ui/src/components/icons/X'
 import type { EncryptedRecoveryState } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -11,21 +11,33 @@ import { BackupMethodSummary, IconBox } from '~/components/Passkey/BackupLoginCo
 export function ConfirmPasscodeExtra({
   cryptoResult,
   handleSignInWithPasskey,
+  isEncrypting,
   isSigningIn,
   t,
 }: {
   cryptoResult: EncryptedRecoveryState | null
   handleSignInWithPasskey: () => void
+  isEncrypting: boolean
   isSigningIn: boolean
   t: TFunction
 }) {
-  if (!cryptoResult) {
+  const isReady = cryptoResult !== null
+  // Hidden until the user has submitted their passcode (encryption starts or has completed).
+  if (!isEncrypting && !isReady) {
     return null
   }
   return (
-    <Flex row alignSelf="stretch" pt="$spacing4">
-      <Button variant="branded" size="medium" onPress={handleSignInWithPasskey} isDisabled={isSigningIn}>
-        {isSigningIn ? <SpinningLoader size={20} /> : t('account.passkey.verify.button')}
+    <Flex row alignSelf="stretch">
+      <Button
+        variant="branded"
+        size="medium"
+        icon={<Passkey />}
+        loading={isSigningIn}
+        shouldAnimateBetweenLoadingStates={false}
+        onPress={handleSignInWithPasskey}
+        isDisabled={!isReady || isSigningIn}
+      >
+        {t('swap.button.submitting.passkey')}
       </Button>
     </Flex>
   )
@@ -49,9 +61,7 @@ export function SuccessStep({
   return (
     <Trace logImpression modal={ModalName.AddBackupLogin}>
       <Flex width="100%" alignItems="flex-end">
-        <TouchableArea variant="unstyled" onPress={handleClose}>
-          <X size="$icon.20" color="$neutral2" />
-        </TouchableArea>
+        <ModalCloseIcon size="$icon.20" onClose={handleClose} />
       </Flex>
       <Flex gap="$gap16" alignItems="center" width="100%" px="$padding4">
         <IconBox background="$statusSuccess2">

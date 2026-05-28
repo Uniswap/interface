@@ -1,4 +1,4 @@
-import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_connect'
+import { LiquidityService } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_connect'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
@@ -17,11 +17,6 @@ import { assume0xAddress } from '~/utils/wagmi'
 const test = getTest({ withAnvil: true })
 const WETH_ADDRESS = WETH.address
 
-function modifyRequestData(data: { v4CreateLpPosition: { simulateTransaction: boolean } }) {
-  data.v4CreateLpPosition.simulateTransaction = false
-  return data
-}
-
 test.describe(
   'Create position',
   {
@@ -35,15 +30,15 @@ test.describe(
     test('Create position with full range', async ({ page, anvil, graphql }) => {
       await stubLiquidityServiceEndpoint({
         page,
-        endpoint: LiquidityService.methods.createLPPosition,
-        modifyRequestData,
+        endpoint: LiquidityService.methods.createPosition,
+        service: LiquidityService,
       })
       await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto('/positions/create')
       await page.getByRole('button', { name: 'Choose token' }).click()
       await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-      // oxlint-disable-next-line
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
       await page.getByRole('button', { name: 'Continue' }).click()
       await graphql.waitForResponse('PoolPriceHistory')
@@ -55,15 +50,15 @@ test.describe(
     test('Create position with custom range', async ({ page, anvil, graphql }) => {
       await stubLiquidityServiceEndpoint({
         page,
-        endpoint: LiquidityService.methods.createLPPosition,
-        modifyRequestData,
+        endpoint: LiquidityService.methods.createPosition,
+        service: LiquidityService,
       })
       await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto('/positions/create')
       await page.getByRole('button', { name: 'Choose token' }).click()
       await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-      // oxlint-disable-next-line
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-USDT').first().click()
       await page.getByRole('button', { name: 'Continue' }).click()
       await graphql.waitForResponse('PoolPriceHistory')
@@ -120,8 +115,8 @@ test.describe(
       test('should approve tokens and create a V4 position', async ({ page, anvil, graphql }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.createLPPosition,
-          modifyRequestData,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
         })
         await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
@@ -129,6 +124,7 @@ test.describe(
         await page.goto('/positions/create')
         await page.getByRole('button', { name: 'Choose token' }).click()
         await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
+        // oxlint-disable-next-line eslint-js/no-restricted-syntax
         await page.getByTestId('token-option-1-USDT').first().click()
         await page.getByRole('button', { name: 'Continue' }).click()
         await graphql.waitForResponse('PoolPriceHistory')
@@ -148,14 +144,15 @@ test.describe(
       test('should handle approval when permit2 allowance is already set', async ({ page, anvil, graphql }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.createLPPosition,
-          modifyRequestData,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
         })
         await stubLiquidityServiceEndpoint({
           page,
           endpoint: LiquidityService.methods.checkLPApproval,
+          service: LiquidityService,
           modifyResponseData: (data) => {
-            return { ...data, token1Approval: null, permitBatchData: null }
+            return { ...data, transactions: [], v4BatchPermitData: null }
           },
         })
         await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
@@ -165,6 +162,7 @@ test.describe(
         await page.goto('/positions/create')
         await page.getByRole('button', { name: 'Choose token' }).click()
         await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
+        // oxlint-disable-next-line eslint-js/no-restricted-syntax
         await page.getByTestId('token-option-1-USDT').first().click()
         await page.getByRole('button', { name: 'Continue' }).click()
         await graphql.waitForResponse('PoolPriceHistory')
@@ -186,9 +184,10 @@ test.describe(
       test('should gracefully handle errors during review', async ({ page, anvil }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.createLPPosition,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
           modifyRequestData: (data) => {
-            data.v4CreateLpPosition.simulateTransaction = true
+            data.simulateTransaction = true
             return data
           },
         })
@@ -216,8 +215,8 @@ test.describe(
       test('should create a position with a custom fee tier', async ({ page, anvil }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.createLPPosition,
-          modifyRequestData,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}`)
@@ -236,8 +235,8 @@ test.describe(
         const HOOK_ADDRESS = '0x09DEA99D714A3a19378e3D80D1ad22Ca46085080'
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.createLPPosition,
-          modifyRequestData,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
         })
         await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
         await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}&hook=${HOOK_ADDRESS}`)
@@ -258,8 +257,12 @@ test.describe(
       test('shows low slippage warning for ETH/WEETH pool', async ({ page, anvil, graphql }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.createLPPosition,
-          modifyRequestData,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
+          modifyResponseData: (data) => {
+            data.slippage = 0.01
+            return data
+          },
         })
         await page.route('**/uniswap.liquidity.v1.LiquidityService/PoolInfo*', async (route) => {
           await route.fulfill({ path: Mocks.LiquidityService.pool_info_eth_weeth })
@@ -279,8 +282,8 @@ test.describe(
       test('shows very high slippage warning when backend returns extreme value', async ({ page, anvil, graphql }) => {
         await stubLiquidityServiceEndpoint({
           page,
-          endpoint: LiquidityService.methods.createLPPosition,
-          modifyRequestData,
+          endpoint: LiquidityService.methods.createPosition,
+          service: LiquidityService,
           modifyResponseData: (data) => {
             data.slippage = 25
             return data

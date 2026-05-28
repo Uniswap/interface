@@ -1,6 +1,10 @@
+import type { GetExportCredentialFn } from 'uniswap/src/features/passkey/embeddedWallet'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
-// oxlint-disable-next-line no-unused-vars -- biome-parity: oxlint is stricter here
-export async function exportSeedPhrase(walletId?: string): Promise<string | undefined> {
+export async function exportSeedPhrase(_options?: {
+  walletId?: string
+  signinCredential?: string
+  getCredential?: GetExportCredentialFn
+}): Promise<string | undefined> {
   throw new PlatformSplitStubError('exportSeedPhrase')
 }

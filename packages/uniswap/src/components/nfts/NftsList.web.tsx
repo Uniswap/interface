@@ -1,6 +1,7 @@
 import { NetworkStatus } from '@apollo/client'
 import { useWindowVirtualizer } from '@tanstack/react-virtual'
 import { isNonPollingRequestInFlight } from '@universe/api'
+import { isMobileWeb } from '@universe/environment'
 import { Fragment, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Loader, styled, Text, View } from 'ui/src'
@@ -13,6 +14,7 @@ import { NftsListProps } from 'uniswap/src/components/nfts/NftsList'
 import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
 import { NftListHeader } from 'uniswap/src/components/nfts/NftsListHeader'
 import { ShowNFTModal } from 'uniswap/src/components/nfts/ShowNFTModal'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import {
   NFT_GRID_DEFAULT_COLUMNS,
   NFT_GRID_MIN_COLUMN_WIDTH,
@@ -23,7 +25,6 @@ import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isMobileWeb } from 'utilities/src/platform'
 
 const estimateRowSize = (): number => NFT_GRID_ROW_HEIGHT
 
@@ -68,7 +69,6 @@ export function NftsList({
   nextFetchPolicy,
   onRefetchReady,
   onLoadingStateChange,
-  showHeader = false,
   SearchInputComponent,
   searchInputTestId,
   headerTestId,
@@ -77,6 +77,8 @@ export function NftsList({
   pollInterval,
 }: NftsListProps): JSX.Element {
   const { t } = useTranslation()
+  const { evmAddress, svmAddress } = useActiveAddresses()
+  const isExternalWallet = evmAddress !== owner && svmAddress !== owner
 
   const {
     numHidden: internalNumHidden,
@@ -116,6 +118,7 @@ export function NftsList({
     hiddenNftsExpanded,
     hasNextPage,
   })
+  const showHeader = shownNfts.length !== 0 || isLoadingState || isErrorState
 
   const keyExtractor = (item: NFTItem | string): string =>
     typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
@@ -295,7 +298,7 @@ export function NftsList({
     <Flex ref={containerRef} gap="$spacing24">
       {showHeader && (
         <NftListHeader
-          count={filteredShownCount}
+          isExternalWallet={isExternalWallet}
           SearchInputComponent={SearchInputComponent}
           searchInputTestId={searchInputTestId}
           headerTestId={headerTestId}

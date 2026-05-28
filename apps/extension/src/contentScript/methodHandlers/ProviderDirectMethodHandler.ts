@@ -41,7 +41,6 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
     )
 
     this.methodHandlers = {
-      /* oxlint-disable typescript/explicit-function-return-type */
       [ProviderDirectMethods.eth_getBalance]: (provider, params) => provider.getBalance(params[0]),
       [ProviderDirectMethods.eth_getCode]: (provider, params) => provider.getCode(params[0]),
       [ProviderDirectMethods.eth_getStorageAt]: (provider, params) => provider.getStorageAt(params[0], params[1]),
@@ -56,9 +55,8 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
         provider.getTransactionReceipt(params[0]),
       // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
       [ProviderDirectMethods.net_version]: async (provider, params) => provider.send('net_version', params),
-      // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
       [ProviderDirectMethods.web3_clientVersion]: async (provider, params) =>
-        // oxlint-disable-next-line typescript/no-unsafe-return -- biome-parity: oxlint is stricter here
+        // oxlint-disable-next-line typescript/no-unsafe-return
         provider.send('web3_clientVersion', params),
     }
   }

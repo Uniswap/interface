@@ -3,7 +3,8 @@ import { Flex } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { MultiBlockchainAddressDisplay } from '~/components/AccountDetails/MultiBlockchainAddressDisplay'
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
+import { HEADER_TRANSITION } from '~/components/StickyCollapsibleHeader/constants'
 import { useResolvedAddresses } from '~/pages/Portfolio/hooks/useResolvedAddresses'
 
 interface ConnectedAddressDisplayProps {
@@ -33,7 +34,7 @@ export function ConnectedAddressDisplay({ isCompact }: ConnectedAddressDisplayPr
 
   return (
     <Flex row alignItems="center" gap="$spacing12" shrink>
-      <StatusIcon address={primaryAddress} size={iconSize} showMiniIcons={false} />
+      <StatusIcon address={primaryAddress} size={iconSize} showMiniIcons={false} transition={HEADER_TRANSITION} />
       <MultiBlockchainAddressDisplay hideAddressInSubtitle={isCompact} externalAddress={externalAddress} />
     </Flex>
   )

@@ -8,9 +8,14 @@ const mockToken = new Token(1, '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', 18,
 
 vi.mock('uniswap/src/features/platforms/utils/chains')
 
+vi.mock('~/pages/TokenDetails/hooks/useTDPEffectiveCurrency', () => ({
+  useTDPEffectiveCurrency: () => mockToken,
+}))
+
 vi.mock('~/pages/TokenDetails/context/useTDPStore', () => ({
-  useTDPStore: (selector: (s: { currency: Token; currencyChainId: number }) => unknown) =>
-    selector({ currency: mockToken, currencyChainId: mockToken.chainId }),
+  useTDPStore: (
+    selector: (s: { currency: Token; currencyChainId: number; selectedMultichainChainId: undefined }) => unknown,
+  ) => selector({ currency: mockToken, currencyChainId: mockToken.chainId, selectedMultichainChainId: undefined }),
 }))
 
 describe('ActivitySection', () => {

@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ImageSourcePropType } from 'react-native'
@@ -24,7 +25,6 @@ import {
   DappRequestCardLoggingName,
   OnboardingCardLoggingName,
 } from 'uniswap/src/features/telemetry/types'
-import { isExtensionApp } from 'utilities/src/platform'
 
 const DESCRIPTION_LENGTH_THRESHOLD = 66
 

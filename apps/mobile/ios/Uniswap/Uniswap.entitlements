@@ -4,6 +4,10 @@
 <dict>
 	<key>aps-environment</key>
 	<string>development</string>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:uniswap.org</string>
@@ -11,7 +15,9 @@
 		<string>applinks:app.corn-staging.com</string>
 		<string>webcredentials:app.uniswap.org</string>
 		<string>webcredentials:uniswap.org</string>
+		<string>webcredentials:app.corn-staging.com</string>
 		<string>webcredentials:unihq.org</string>
+		<string>webcredentials:dev.ew.unihq.org</string>
 	</array>
 	<key>com.apple.developer.devicecheck.appattest-environment</key>
 	<string>production</string>

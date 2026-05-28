@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Gift } from 'ui/src/components/icons/Gift'
@@ -14,7 +15,6 @@ import { UniswapWrapped2025BannerProps } from 'uniswap/src/components/banners/Un
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useSnowflakeAnimation } from 'uniswap/src/hooks/useSnowflakeAnimation'
-import { isExtensionApp } from 'utilities/src/platform'
 
 const BannerWrapper = styled(Flex, {
   width: '100%',

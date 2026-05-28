@@ -7,7 +7,7 @@ import { ArrowUpCircle } from 'ui/src/components/icons/ArrowUpCircle'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { NATIVE_CHAIN_ID } from '~/constants/tokens'
 import { useActiveAccount } from '~/features/accounts/store/hooks'
-import useSelectChain from '~/hooks/useSelectChain'
+import { useSelectChain } from '~/hooks/useSelectChain'
 import { useTDPStore } from '~/pages/TokenDetails/context/useTDPStore'
 
 const TDP_ACTION_TABS_MAX_WIDTH = 780

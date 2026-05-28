@@ -105,7 +105,7 @@
       }
     },
     "start:absolute": {
-      "command": "bun run start:absolute:mac",
+      "command": "bun run scripts/startAbsolute.ts",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -118,6 +118,12 @@
     },
     "start:absolute:windows": {
       "command": "WXT_ABSOLUTE_OUTDIR=C:/ProgramData/stretch wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute:linux": {
+      "command": "WXT_ABSOLUTE_OUTDIR=/var/tmp/stretch wxt",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -156,12 +162,27 @@
       }
     },
     "build:e2e": {
-      "command": "webpack --node-env=production --env BUILD_ENV=dev BUILD_NUM=0",
+      "command": "wxt build -b chrome --mode production",
+      "options": {
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "BUILD_ENV": "dev",
+          "BUILD_NUM": "0"
+        }
+      },
+      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "outputs": ["{projectRoot}/.output/chrome-mv3"],
+      "cache": true,
+      "dependsOn": ["^build", "prepare"]
+    },
+    "build:e2e:webpack": {
+      "command": "webpack --node-env=production --env BUILD_ENV=dev --env BUILD_NUM=0",
       "options": {
         "cwd": "{projectRoot}"
       },
       "inputs": ["dependencies", "sourceFiles", "tsConfig"],
-      "outputs": ["{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/.next", "{projectRoot}/types"],
+      "outputs": ["{projectRoot}/build"],
       "cache": true,
       "dependsOn": ["^build", "prepare"]
     },
@@ -195,21 +216,27 @@
       "command": "nx playwright:ui extension",
       "dependsOn": ["build:e2e"]
     },
+    "diff:builds": {
+      "command": "bun run scripts/diffBuilds.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "validate:build": {
-      "command": "bunx tsx scripts/validateBuildOutput.ts",
+      "command": "bun run scripts/validateBuildOutput.ts",
       "options": {
         "cwd": "{projectRoot}"
       },
       "dependsOn": ["build:wxt"]
     },
     "validate:build:dev": {
-      "command": "bunx tsx scripts/validateBuildOutput.ts --dev",
+      "command": "bun run scripts/validateBuildOutput.ts --dev",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "validate:build:prod": {
-      "command": "bunx tsx scripts/validateBuildOutput.ts --prod",
+      "command": "bun run scripts/validateBuildOutput.ts --prod",
       "options": {
         "cwd": "{projectRoot}"
       },

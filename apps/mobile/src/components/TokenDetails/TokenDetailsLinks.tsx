@@ -1,4 +1,5 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { GraphQLApi } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo, useState } from 'react'
@@ -18,13 +19,16 @@ import { useOrderedMultichainEntries } from 'uniswap/src/components/MultichainTo
 import type { MultichainTokenEntry } from 'uniswap/src/components/MultichainTokenDetails/useOrderedMultichainEntries'
 import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, getTwitterLink, openUri } from 'uniswap/src/utils/linking'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const MIN_SHEET_HEIGHT = 520
 const INITIAL_SNAP_PERCENT = 0.65
@@ -65,6 +69,7 @@ function useMultichainTokenEntries(currencyId: string): MultichainTokenEntry[] {
 
 export function TokenDetailsLinks(): JSX.Element {
   const { t } = useTranslation()
+  const trace = useTrace()
 
   const {
     address,
@@ -95,10 +100,18 @@ export function TokenDetailsLinks(): JSX.Element {
 
   const [isExplorerSheetOpen, setIsExplorerSheetOpen] = useState(false)
 
-  const handleExplorerPress = useCallback(async (url: string) => {
-    await openUri({ uri: url })
-    setIsExplorerSheetOpen(false)
-  }, [])
+  const handleExplorerPress = useCallback(
+    async (url: string, explorerChainId: UniverseChainId) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        ...trace,
+        element: ElementName.TokenExplorerLink,
+        chain_name: getChainInfo(explorerChainId).urlParam,
+      })
+      await openUri({ uri: url })
+      setIsExplorerSheetOpen(false)
+    },
+    [trace],
+  )
 
   const links = useMemo((): LinkButtonProps[] => {
     const showMultichainDropdowns = multichainTokenUxEnabled && hasMultipleChains

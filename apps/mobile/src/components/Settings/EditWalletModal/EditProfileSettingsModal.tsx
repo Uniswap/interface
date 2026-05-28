@@ -2,9 +2,8 @@ import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { KeyboardStickyView } from 'react-native-keyboard-controller'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { AppStackScreenProp } from 'src/app/navigation/types'
+import type { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
@@ -39,7 +38,7 @@ export function EditProfileSettingsModal({
   const [showChangeUnitagModal, setShowChangeUnitagModal] = useState(false)
   const [isUpdatingWalletProfile, setIsUpdatingWalletProfile] = useState(false)
 
-  const onButtonClick = (): void => {
+  const onSave = (): void => {
     setIsUpdatingWalletProfile(true)
   }
 
@@ -62,7 +61,11 @@ export function EditProfileSettingsModal({
   const menuActions = useMemo(() => {
     return [
       { title: t('unitags.profile.action.edit'), systemIcon: 'pencil' },
-      { title: t('unitags.profile.action.delete'), systemIcon: 'trash', destructive: true },
+      {
+        title: t('unitags.profile.action.delete'),
+        systemIcon: 'trash',
+        destructive: true,
+      },
     ]
   }, [t])
   const onPressBack = (): void => {
@@ -110,9 +113,8 @@ export function EditProfileSettingsModal({
             address={address}
             unitag={unitag}
             entryPoint={entryPoint}
-            SaveButtonWrapper={KeyboardStickyView}
             onNavigate={onNavigate}
-            onButtonClick={onButtonClick}
+            onSave={onSave}
           />
         )}
       </Flex>

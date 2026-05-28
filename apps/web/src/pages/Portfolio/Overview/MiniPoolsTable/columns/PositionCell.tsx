@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { PositionInfo } from '~/components/Liquidity/types'
+import { PositionInfo } from 'uniswap/src/features/positions/types'
 import { Cell } from '~/components/Table/Cell'
 import { hasRow } from '~/components/Table/utils/hasRow'
 

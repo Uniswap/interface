@@ -5,7 +5,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 export const useUpdateSwapFormOnMountIfExactOutputWillFail = (exactOutputWillFail: boolean): void => {
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- Since we only want to run this on mount
   useEffect(() => {
     if (exactOutputWillFail) {
       updateSwapForm({

@@ -17,7 +17,7 @@ vi.mock('@wagmi/core', () => ({
   getConnectors: vi.fn(),
 }))
 
-vi.mock('~/components/Web3Provider/wagmiConfig', () => ({
+vi.mock('~/connection/wagmiConfig', () => ({
   wagmiConfig: {},
 }))
 

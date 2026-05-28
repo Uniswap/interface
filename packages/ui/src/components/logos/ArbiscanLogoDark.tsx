@@ -1,25 +1,4 @@
-import PropTypes from 'prop-types'
-import React, { memo, forwardRef } from 'react'
-import {
-  Svg,
-  SvgProps,
-  Ellipse,
-  G,
-  LinearGradient,
-  RadialGradient,
-  Line,
-  Path,
-  Polygon,
-  Polyline,
-  Rect,
-  Symbol,
-  Use,
-  Defs,
-  Stop,
-  ClipPath,
-  Text,
-  Circle,
-} from 'react-native-svg'
+import { G, Path, Svg } from 'react-native-svg'
 // oxlint-disable-next-line universe-custom/no-relative-import-paths
 import { createIcon } from '../factories/createIcon'
 

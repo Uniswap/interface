@@ -1,9 +1,13 @@
 import { useCallback, useState } from 'react'
-import { DEFAULT_CUSTOM_DEADLINE, MAX_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
+import { PlusMinusButtonType } from 'ui/src'
+import { DEFAULT_CUSTOM_DEADLINE, MAX_CUSTOM_DEADLINE, MIN_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
 import {
   useTransactionSettingsActions,
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
+import { useEvent } from 'utilities/src/react/hooks'
+
+const DEADLINE_INCREMENT = 5
 
 export function useDeadlineSettings(): {
   isEditingDeadline: boolean
@@ -13,6 +17,7 @@ export function useDeadlineSettings(): {
   onChangeDeadlineInput: (value: string) => void
   onFocusDeadlineInput: () => void
   onBlurDeadlineInput: () => void
+  onPressPlusMinusButton: (type: PlusMinusButtonType) => void
 } {
   const { customDeadline } = useTransactionSettingsStore((s) => ({ customDeadline: s.customDeadline }))
   const { setCustomDeadline } = useTransactionSettingsActions()
@@ -83,6 +88,15 @@ export function useDeadlineSettings(): {
     }
   }, [parsedInputDeadline, setCustomDeadline])
 
+  const onPressPlusMinusButton = useEvent((type: PlusMinusButtonType): void => {
+    const nextDeadline =
+      type === PlusMinusButtonType.Plus
+        ? Math.min(currentDeadlineNum + DEADLINE_INCREMENT, MAX_CUSTOM_DEADLINE)
+        : Math.max(currentDeadlineNum - DEADLINE_INCREMENT, MIN_CUSTOM_DEADLINE)
+    setInputDeadline(nextDeadline.toString())
+    setCustomDeadline(nextDeadline)
+  })
+
   return {
     isEditingDeadline,
     showDeadlineWarning,
@@ -91,5 +105,6 @@ export function useDeadlineSettings(): {
     onChangeDeadlineInput,
     onFocusDeadlineInput,
     onBlurDeadlineInput,
+    onPressPlusMinusButton,
   }
 }

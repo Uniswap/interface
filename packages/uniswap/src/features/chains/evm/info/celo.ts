@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { SwapConfigKey } from '@universe/gating'
 import { CELO_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
@@ -41,7 +41,6 @@ export const CELO_CHAIN_INFO = {
   explorer: {
     name: 'CeloScan',
     url: 'https://celoscan.io/',
-    apiURL: 'https://api.celoscan.io',
   },
   interfaceName: 'celo',
   label: 'Celo',
@@ -59,6 +58,7 @@ export const CELO_CHAIN_INFO = {
   pendingTransactionsRetryOptions: undefined,
   tokens,
   statusPage: undefined,
+  supportedURVersions: [TradingApi.UniversalRouterVersion._2_0, TradingApi.UniversalRouterVersion._2_1_1],
   supportsV4: true,
   supportsNFTs: false,
   urlParam: CHAIN_ID_TO_URL_PARAM[UniverseChainId.Celo],

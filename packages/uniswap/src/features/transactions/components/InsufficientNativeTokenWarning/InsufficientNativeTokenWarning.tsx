@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { GasFeeResult } from '@universe/api'
+import { isExtensionApp, isWebPlatform } from '@universe/environment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -21,7 +22,6 @@ import { InsufficientNativeTokenBaseComponent } from 'uniswap/src/features/trans
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
 
 export function InsufficientNativeTokenWarning({
   warnings,

@@ -1,10 +1,4 @@
-/* oxlint-disable max-lines */
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import {
-  CreateLPPositionRequest,
-  CreateLPPositionResponse,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
-import { V4CreateLPPosition } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import {
   CreateClassicPositionResponse,
   CreatePositionRequest,
@@ -46,16 +40,17 @@ import { TransactionStepType } from 'uniswap/src/features/transactions/steps/typ
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logger } from 'utilities/src/logger/logger'
-import { useDepositInfo } from '~/components/Liquidity/Create/hooks/useDepositInfo'
-import { useDynamicNativeSlippage } from '~/components/Liquidity/Create/hooks/useLPSlippageValues'
-import { useCreatePositionDependentAmountFallback } from '~/components/Liquidity/hooks/useDependentAmountFallback'
-import { generateLiquidityServiceCreateCalldataQueryParams } from '~/components/Liquidity/utils/generateLiquidityServiceCreateCalldata'
-import { getCheckLPApprovalRequestParams } from '~/components/Liquidity/utils/getCheckLPApprovalRequestParams'
-import { isInvalidRange, isOutOfRange } from '~/components/Liquidity/utils/priceRangeInfo'
+import { useDynamicNativeSlippage } from '~/features/Liquidity/Create/hooks/useLPSlippageValues'
+import { useIsLiquidityApprovalSimulationEnabled } from '~/features/Liquidity/hooks/preEstimatedLiquidityGasUtils'
+import { useCreatePositionDependentAmountFallback } from '~/features/Liquidity/hooks/useDependentAmountFallback'
+import { generateLiquidityServiceCreateCalldataQueryParams } from '~/features/Liquidity/utils/generateLiquidityServiceCreateCalldata'
+import { getCheckLPApprovalRequestParams } from '~/features/Liquidity/utils/getCheckLPApprovalRequestParams'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
+import { useCreatePositionDepositInfo } from '~/pages/CreatePosition/hooks/useCreatePositionDepositInfo'
 import { PositionField } from '~/types/position'
 
 /** @internal - exported for testing */
+// oxlint-disable-next-line complexity
 export function generateCreatePositionTxRequest({
   protocolVersion,
   approvalCalldata,
@@ -68,8 +63,8 @@ export function generateCreatePositionTxRequest({
 }: {
   protocolVersion: ProtocolVersion
   approvalCalldata?: NormalizedApprovalData
-  createCalldata?: CreateLPPositionResponse | CreateClassicPositionResponse | CreatePositionResponse
-  createCalldataQueryParams?: CreateLPPositionRequest | CreatePositionRequest
+  createCalldata?: CreateClassicPositionResponse | CreatePositionResponse
+  createCalldataQueryParams?: CreatePositionRequest
   currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   poolOrPair: Pair | undefined
   canBatchTransactions: boolean
@@ -108,29 +103,14 @@ export function generateCreatePositionTxRequest({
     return undefined
   }
 
-  let updatedCreateCalldataQueryParams: CreateLPPositionRequest | CreatePositionRequest | undefined
-  if (createCalldataQueryParams instanceof CreatePositionRequest) {
-    updatedCreateCalldataQueryParams = validatedPermitRequest
+  const updatedCreateCalldataQueryParams =
+    createCalldataQueryParams && validatedPermitRequest
       ? new CreatePositionRequest({
           // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
           ...createCalldataQueryParams,
           batchPermitData: validatedPermitRequest,
         })
       : createCalldataQueryParams
-  } else if (createCalldataQueryParams?.createLpPosition.case === 'v4CreateLpPosition') {
-    updatedCreateCalldataQueryParams = new CreateLPPositionRequest({
-      createLpPosition: {
-        case: 'v4CreateLpPosition',
-        value: new V4CreateLPPosition({
-          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-          ...createCalldataQueryParams.createLpPosition.value,
-          batchPermitData,
-        }),
-      },
-    })
-  } else {
-    updatedCreateCalldataQueryParams = createCalldataQueryParams
-  }
 
   return {
     type: LiquidityTransactionType.Create,
@@ -167,10 +147,12 @@ interface CreatePositionTxContextType {
   formattedAmounts?: { [field in PositionField]?: string }
   currencyAmountsUSDValue?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  preEstimatedGasFee?: string
 }
 
 const CreatePositionTxContext = createContext<CreatePositionTxContextType | undefined>(undefined)
 
+// oxlint-disable-next-line complexity
 export function CreatePositionTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const {
     protocolVersion,
@@ -185,40 +167,25 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     setRefetch,
   } = useCreateLiquidityContext()
   const evmAddress = useActiveAddress(Platform.EVM)
-  const { TOKEN0, TOKEN1 } = currencies.display
-  const { exactField } = depositState
-
-  const invalidRange = protocolVersion !== ProtocolVersion.V2 && isInvalidRange(ticks[0], ticks[1])
-  const depositInfoProps = useMemo(() => {
-    const [tickLower, tickUpper] = ticks
-    const outOfRange = isOutOfRange({
-      poolOrPair,
-      lowerTick: tickLower,
-      upperTick: tickUpper,
-    })
-
-    return {
-      protocolVersion,
-      poolOrPair,
-      address: evmAddress,
-      token0: TOKEN0,
-      token1: TOKEN1,
-      tickLower: protocolVersion !== ProtocolVersion.V2 ? (tickLower ?? undefined) : undefined,
-      tickUpper: protocolVersion !== ProtocolVersion.V2 ? (tickUpper ?? undefined) : undefined,
-      exactField,
-      exactAmounts: depositState.exactAmounts,
-      skipDependentAmount: protocolVersion === ProtocolVersion.V2 ? false : outOfRange || invalidRange,
-    }
-  }, [TOKEN0, TOKEN1, exactField, ticks, poolOrPair, depositState, evmAddress, protocolVersion, invalidRange])
 
   const {
     currencyMaxAmounts,
     currencyAmounts,
-    error: inputError,
+    inputError,
     formattedAmounts,
     currencyAmountsUSDValue,
     currencyBalances,
-  } = useDepositInfo(depositInfoProps)
+    preEstimatedGasFee,
+    invalidRange,
+  } = useCreatePositionDepositInfo({
+    evmAddress,
+    protocolVersion,
+    currencies,
+    ticks,
+    poolOrPair,
+    poolId,
+    depositState,
+  })
 
   const { customDeadline, customSlippageTolerance, isSlippageDirty } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
@@ -226,9 +193,6 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     isSlippageDirty: s.isSlippageDirty,
   }))
   const isLiquidityBatchedTransactionsEnabled = useFeatureFlag(FeatureFlags.LiquidityBatchedTransactions)
-  const isLpDynamicNativeSlippageEnabled = useFeatureFlag(FeatureFlags.LpDynamicNativeSlippage)
-  const isCreatePositionV2 = useFeatureFlag(FeatureFlags.CreatePositionV2)
-  const isCheckApprovalV2 = useFeatureFlag(FeatureFlags.CheckApprovalV2)
   const canBatchTransactions =
     (useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(poolOrPair?.chainId)) ?? false) &&
     poolOrPair?.chainId !== UniverseChainId.Monad &&
@@ -247,9 +211,8 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       currencyAmounts,
       canBatchTransactions,
       action: LPAction.CREATE,
-      isCheckApprovalV2,
     })
-  }, [evmAddress, protocolVersion, currencyAmounts, canBatchTransactions, isCheckApprovalV2])
+  }, [evmAddress, protocolVersion, currencyAmounts, canBatchTransactions])
 
   const {
     approvalData: approvalCalldata,
@@ -279,7 +242,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
   const gasFeeToken1PermitUSD = useUSDCurrencyAmountOfGasFee(poolOrPair?.chainId, gasFeeToken1Permit)
 
   const nativeTokenBalance = useMemo(() => {
-    if (!isLpDynamicNativeSlippageEnabled || protocolVersion !== ProtocolVersion.V4) {
+    if (protocolVersion !== ProtocolVersion.V4) {
       return undefined
     }
     // Only set native token balance if the token0 is the native token
@@ -288,9 +251,9 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       return currencyMaxAmounts.TOKEN0.quotient.toString()
     }
     return undefined
-  }, [isLpDynamicNativeSlippageEnabled, protocolVersion, currencyMaxAmounts])
+  }, [protocolVersion, currencyMaxAmounts])
 
-  const useV2Endpoints = isCreatePositionV2
+  const isApprovalSimEnabled = useIsLiquidityApprovalSimulationEnabled(poolOrPair?.chainId)
 
   const createCalldataQueryParams = useMemo(() => {
     return generateLiquidityServiceCreateCalldataQueryParams({
@@ -307,8 +270,8 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       slippageTolerance: nativeTokenBalance && !isSlippageDirty ? undefined : customSlippageTolerance,
       customDeadline,
       nativeTokenBalance,
-      useV2Endpoints,
       poolId,
+      isApprovalSimEnabled,
     })
   }, [
     evmAddress,
@@ -326,7 +289,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     protocolVersion,
     customDeadline,
     nativeTokenBalance,
-    useV2Endpoints,
+    isApprovalSimEnabled,
   ])
 
   const isUserCommittedToCreate =
@@ -349,7 +312,6 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     isQueryEnabled,
   })
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +createCalldataQueryParams, +addLiquidityApprovalParams
   useEffect(() => {
     setRefetch(() => (approvalError ? approvalRefetch : createError ? createRefetch : undefined)) // this must set it as a function otherwise it will actually call createRefetch immediately
   }, [
@@ -392,7 +354,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     exactField: depositState.exactField,
   })
 
-  const actualGasFee = createCalldata?.gasFee
+  const effectiveGasFee = createCalldata?.gasFee ?? preEstimatedGasFee
   const {
     token0Approval,
     token1Approval,
@@ -413,13 +375,13 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     token0PermitTransaction ||
     token1PermitTransaction,
   )
-  const { value: calculatedGasFee } = useTransactionGasFee({
+  const { displayValue: calculatedGasFee } = useTransactionGasFee({
     tx: createCalldata?.create,
-    skip: !!actualGasFee || needsApprovals,
+    skip: !!effectiveGasFee || needsApprovals,
   })
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     toSupportedChainId(createCalldata?.create?.chainId) ?? undefined,
-    actualGasFee || calculatedGasFee,
+    effectiveGasFee || calculatedGasFee,
   )
 
   const lastKnownGasFeeRef = useRef<CurrencyAmount<Currency> | undefined>(undefined)
@@ -446,10 +408,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       approvalCalldata,
       createCalldata,
       createCalldataQueryParams:
-        createCalldataQueryParams instanceof CreateLPPositionRequest ||
-        createCalldataQueryParams instanceof CreatePositionRequest
-          ? createCalldataQueryParams
-          : undefined,
+        createCalldataQueryParams instanceof CreatePositionRequest ? createCalldataQueryParams : undefined,
       currencyAmounts,
       poolOrPair: protocolVersion === ProtocolVersion.V2 ? poolOrPair : undefined,
       canBatchTransactions,
@@ -467,9 +426,8 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
   ])
 
   useDynamicNativeSlippage({
-    isEnabled: isLpDynamicNativeSlippageEnabled,
     nativeTokenBalance,
-    createCalldata: createCalldata instanceof CreateLPPositionResponse ? createCalldata : undefined,
+    slippage: createCalldata instanceof CreatePositionResponse ? createCalldata.slippage : undefined,
     isSlippageDirty,
   })
 
@@ -480,12 +438,9 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     if (createCalldata instanceof CreateClassicPositionResponse) {
       return createCalldata.dependentToken?.amount
     }
-    if (createCalldata instanceof CreatePositionResponse) {
-      const dependentField =
-        depositState.exactField === PositionField.TOKEN0 ? createCalldata.token1 : createCalldata.token0
-      return dependentField?.amount
-    }
-    return createCalldata?.dependentAmount
+    const dependentField =
+      depositState.exactField === PositionField.TOKEN0 ? createCalldata?.token1 : createCalldata?.token0
+    return dependentField?.amount
   }, [createCalldata, createError, dependentAmountFallback, depositState.exactField])
 
   const value = useMemo(
@@ -500,6 +455,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       formattedAmounts,
       currencyAmountsUSDValue,
       currencyBalances,
+      preEstimatedGasFee,
     }),
     [
       txInfo,
@@ -511,6 +467,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       formattedAmounts,
       currencyAmountsUSDValue,
       currencyBalances,
+      preEstimatedGasFee,
     ],
   )
 

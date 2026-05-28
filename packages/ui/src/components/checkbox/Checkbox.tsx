@@ -1,4 +1,5 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { isTestEnv } from '@universe/environment'
+import { ReactElement, useId, useMemo, useState } from 'react'
 import {
   AnimatePresence,
   GetThemeValueForKey,
@@ -10,8 +11,6 @@ import { Check } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { SporeComponentVariant } from 'ui/src/components/types'
 import { IconSizeTokens } from 'ui/src/theme'
-import { isTestEnv } from 'utilities/src/environment/env'
-import { v4 as uuid } from 'uuid'
 
 type CheckboxSizes = {
   FocusRing: number
@@ -59,6 +58,7 @@ export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...r
 
   const accentColor = getAccentColor(variant, isHovered)
   const sizes = useMemo(() => getSizes(size), [size])
+  const hoverIndicatorKey = useId()
 
   return (
     // This outer ring is only shown when the button is focused.
@@ -71,7 +71,6 @@ export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...r
       height={sizes.FocusRing}
       justifyContent="center"
       width={sizes.FocusRing}
-      testID={rest.testID}
     >
       <TamaguiCheckbox
         {...rest}
@@ -121,7 +120,7 @@ export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...r
           <AnimatePresence initial>
             {isHovered && !rest.disabled && (
               <Flex
-                key={`UnselectedHoverIndicator-${uuid()}`}
+                key={hoverIndicatorKey}
                 animation="simple"
                 backgroundColor="$neutral2"
                 borderRadius="$roundedFull"

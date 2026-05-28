@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import React from 'react'
 import { Trans } from 'react-i18next'
 import { Button, Flex, GetThemeValueForKey, Text } from 'ui/src'
@@ -6,7 +7,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isExtensionApp } from 'utilities/src/platform'
 
 type ButtonConfig =
   | (Pick<DialogButtonConfig, 'text' | 'variant' | 'emphasis'> & {
@@ -39,7 +39,6 @@ export interface SmartWalletModalProps {
   horizontalButtons?: boolean
 }
 
-// oxlint-disable-next-line complexity
 export function SmartWalletModal({
   isOpen,
   onClose,

@@ -1,63 +1,69 @@
 import { forwardRef, PropsWithChildren, ReactNode, useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { Trans } from 'react-i18next'
-import { AnimatableCopyIcon, ColorTokens, Flex, isTouchable, Text, TextProps } from 'ui/src'
-import { ReactComponent as TooltipTriangle } from '~/assets/svg/tooltip_triangle.svg'
-import useCopyClipboard from '~/hooks/useCopyClipboard'
+import { useTranslation } from 'react-i18next'
+import {
+  AnimatableCopyIcon,
+  ColorTokens,
+  Flex,
+  isTouchable,
+  Popover,
+  Text,
+  TextProps,
+  useShadowPropsMedium,
+  useSporeColors,
+} from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
+import { useCopyClipboard } from '~/hooks/useCopyClipboard'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from '~/theme/components/styles'
 
-const TOOLTIP_WIDTH = 60
-
-function Tooltip() {
-  return (
-    <Flex
-      alignItems="center"
-      position="absolute"
-      top="100%"
-      marginTop="$spacing8"
-      zIndex="$tooltip"
-      animation="quick"
-      enterStyle={{ opacity: 0, y: -5 }}
-      exitStyle={{ opacity: 0, y: -5 }}
-    >
-      <TooltipTriangle path="black" />
-      <Text
-        color="$white"
-        variant="body3"
-        borderRadius="$rounded8"
-        backgroundColor="$black"
-        textAlign="center"
-        justifyContent="center"
-        width={`${TOOLTIP_WIDTH}px`}
-        height="32px"
-        lineHeight="32px"
-      >
-        <Trans i18nKey="common.copied" />
-      </Text>
-    </Flex>
-  )
-}
-
 export function CopyToClipboard({ toCopy, children }: PropsWithChildren<{ toCopy: string }>) {
+  const { t } = useTranslation()
+  const shadowProps = useShadowPropsMedium()
+  const colors = useSporeColors()
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(toCopy)
   }, [toCopy, setCopied])
 
   return (
-    <Flex
-      row
-      onPress={copy}
-      justifyContent="center"
-      alignItems="center"
-      position="relative"
-      {...ClickableTamaguiStyle}
-      $platform-web={{
-        textDecoration: 'none',
-      }}
-    >
-      {children}
-      {isCopied && <Tooltip />}
-    </Flex>
+    <Popover open={isCopied} placement="bottom" offset={8}>
+      <Popover.Anchor>
+        <Flex
+          row
+          onPress={copy}
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+          {...ClickableTamaguiStyle}
+          $platform-web={{
+            textDecoration: 'none',
+          }}
+        >
+          {children}
+        </Flex>
+      </Popover.Anchor>
+      <Popover.Content
+        zIndex={zIndexes.popover}
+        borderRadius="$rounded12"
+        borderWidth="$spacing1"
+        borderColor="$surface3"
+        backgroundColor="$surface1"
+        p="$spacing8"
+        elevate
+        animation="fast"
+        enterStyle={{ scale: 0.95, opacity: 0 }}
+        exitStyle={{ scale: 0.95, opacity: 0 }}
+        animateOnly={['transform', 'opacity']}
+        {...shadowProps}
+      >
+        <Popover.Arrow
+          size="$spacing12"
+          backgroundColor={colors.surface1.val}
+          borderWidth="$spacing1"
+          borderColor={colors.surface3.val}
+        />
+        <Text variant="body3">{t('common.copied')}</Text>
+      </Popover.Content>
+    </Popover>
   )
 }
 
@@ -78,6 +84,7 @@ interface CopyHelperProps {
   disabled?: boolean
   children: ReactNode
   externalHover?: boolean
+  onCopy?: () => void
 }
 
 type CopyHelperRefType = { forceCopy: () => void }
@@ -97,17 +104,20 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
       disabled = false,
       children,
       externalHover = false,
+      onCopy,
     }: CopyHelperProps,
     ref,
   ) => {
+    const { t } = useTranslation()
     const [isCopied, setCopied] = useCopyClipboard(1000)
 
     const copy = useCallback(
       (e?: { preventDefault: () => void }) => {
         e?.preventDefault()
         setCopied(toCopy)
+        onCopy?.()
       },
-      [toCopy, setCopied],
+      [onCopy, toCopy, setCopied],
     )
 
     useImperativeHandle(ref, () => ({
@@ -157,7 +167,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
         <Flex ref={textRef} maxWidth={`calc(100% - ${offset + 'px'})`} {...EllipsisTamaguiStyle}>
           {isCopied && iconPosition === 'left' ? (
             <Text variant="body3" color="neutral3" {...textProps}>
-              <Trans i18nKey="common.copied" />
+              {t('common.copied')}
             </Text>
           ) : (
             children

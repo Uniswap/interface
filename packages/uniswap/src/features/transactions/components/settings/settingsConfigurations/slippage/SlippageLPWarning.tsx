@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
 import { SlippageWarning } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/SlippageWarning'
@@ -17,14 +16,12 @@ export function isLowSlippage({
   isNativePool,
   isSlippageDirty,
   effectiveSlippage,
-  isLpDynamicNativeSlippageEnabled,
 }: {
   isNativePool: boolean
   isSlippageDirty: boolean
   effectiveSlippage?: number
-  isLpDynamicNativeSlippageEnabled: boolean
 }): boolean {
-  if (!isLpDynamicNativeSlippageEnabled || effectiveSlippage === undefined) {
+  if (effectiveSlippage === undefined) {
     return false
   }
 
@@ -35,7 +32,6 @@ export function isLowSlippage({
 
 export function SlippageLPWarning({ isNativePool }: SlippageLPWarningProps): JSX.Element | null {
   const { t } = useTranslation()
-  const isLpDynamicNativeSlippageEnabled = useFeatureFlag(FeatureFlags.LpDynamicNativeSlippage)
   const { customSlippageTolerance, isSlippageDirty } = useTransactionSettingsStore((s) => ({
     customSlippageTolerance: s.customSlippageTolerance,
     isSlippageDirty: s.isSlippageDirty,
@@ -46,7 +42,6 @@ export function SlippageLPWarning({ isNativePool }: SlippageLPWarningProps): JSX
   const isLowSlippageWarning = isLowSlippage({
     isNativePool,
     isSlippageDirty,
-    isLpDynamicNativeSlippageEnabled,
     effectiveSlippage: effectiveSlippage ?? 0,
   })
 

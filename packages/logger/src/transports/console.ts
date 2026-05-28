@@ -21,15 +21,12 @@ export function createConsoleTransport(): LogTransport {
         switch (entry.level) {
           case 'error':
           case 'fatal':
-            // oxlint-disable-next-line no-console -- Logger transport implementation
             console.error(formatted, entry.error ?? '', extra)
             break
           case 'warn':
-            // oxlint-disable-next-line no-console -- Logger transport implementation
             console.warn(formatted, extra)
             break
           default:
-            // oxlint-disable-next-line no-console -- Logger transport implementation
             console.debug(formatted, extra)
             break
         }

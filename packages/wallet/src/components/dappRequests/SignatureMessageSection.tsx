@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
@@ -6,7 +7,6 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Signature } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 
 interface SignatureMessageSectionProps {

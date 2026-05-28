@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { useCallback, useMemo } from 'react'
 import { Flex } from 'ui/src'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenu'
@@ -6,7 +7,6 @@ import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
-import { isWebPlatform } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

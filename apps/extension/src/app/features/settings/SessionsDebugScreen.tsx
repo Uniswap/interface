@@ -9,6 +9,7 @@ import {
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { type LogEntry, useSessionsDebugStore } from 'src/app/features/settings/stores/sessionsDebugStore'
+import { createHashcashWorker } from 'src/workers/hashcashWorker'
 import { Button, Flex, ScrollView, Text, TouchableArea } from 'ui/src'
 import { CopyAlt } from 'ui/src/components/icons'
 import { setClipboard } from 'utilities/src/clipboard/clipboard'
@@ -365,11 +366,7 @@ export function SessionsDebugScreen(): JSX.Element {
         },
         getWorkerChannel: () =>
           createHashcashWorkerChannel({
-            getWorker: () =>
-              new Worker(
-                new URL('@universe/sessions/src/challenge-solvers/hashcash/worker/hashcash.worker.ts', import.meta.url),
-                { type: 'module' },
-              ),
+            getWorker: createHashcashWorker,
           }),
         onSolveCompleted: (data) => {
           completeHashcash(data)

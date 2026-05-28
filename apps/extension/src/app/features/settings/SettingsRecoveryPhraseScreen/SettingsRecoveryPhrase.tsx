@@ -4,7 +4,7 @@ import { Button, ButtonEmphasis, ButtonVariant, Flex, Square, Text } from 'ui/sr
 type SettingsRecoveryPhraseProps = {
   title: string
   titleColor?: ComponentProps<typeof Text>['color']
-  subtitle: string
+  subtitle: React.ReactNode
   icon: React.ReactNode
   iconBackgroundColor?: ComponentProps<typeof Square>['backgroundColor']
   nextButtonEnabled: boolean

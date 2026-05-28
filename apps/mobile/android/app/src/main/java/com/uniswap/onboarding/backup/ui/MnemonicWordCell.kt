@@ -49,8 +49,9 @@ fun MnemonicWordCell(
     Text(
       text = "${word.num}",
       color = UniswapTheme.colors.neutral2,
-      modifier = Modifier.defaultMinSize(minWidth = if (shouldShowSmallText) 14.dp else 16.dp),
+      modifier = Modifier.defaultMinSize(minWidth = if (shouldShowSmallText) 18.dp else 22.dp),
       style = textStyle,
+      maxLines = 1,
     )
     Spacer(modifier = Modifier.width(UniswapTheme.spacing.spacing16))
     Text(

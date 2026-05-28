@@ -3,6 +3,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 export const DATA_SERVICE_API_PATHS = {
   report: '/SubmitReport',
+  dataReport: '/SubmitDataReport',
 }
 
 export interface DataServiceApiClientContext {
@@ -11,12 +12,14 @@ export interface DataServiceApiClientContext {
 
 export interface DataServiceApiClient {
   submitTokenReport: (params: SubmitTokenReportParams) => Promise<void>
+  submitDataReport: (params: SubmitDataReportParams) => Promise<void>
 }
 
 export function createDataServiceApiClient(ctx: DataServiceApiClientContext): DataServiceApiClient {
   const { fetchClient } = ctx
   return {
     submitTokenReport: (params: SubmitTokenReportParams) => submitTokenReport({ ...params, fetchClient }),
+    submitDataReport: (params: SubmitDataReportParams) => submitDataReport({ ...params, fetchClient }),
   }
 }
 
@@ -35,11 +38,34 @@ export enum ReportAssetType {
   NFT = 'NFT',
 }
 
+export type DataReportType = 'token' | 'wallet'
+
+export interface SubmitDataReportParams {
+  reportType: DataReportType
+  tag: string
+  details?: string
+  walletAddress: string
+  chainId?: number
+  tokenAddress?: string
+  multichain?: boolean
+}
+
+interface SubmitDataReportRequestBody {
+  reportType: string
+  tag: string
+  details?: string
+  walletAddress: string
+  chainId?: number
+  tokenAddress?: string
+  multichain?: boolean
+}
+
 interface SubmitReportRequestBody {
   chainId: number
   address: string
   event: TokenReportEventType
   details: string
+  multichain?: boolean
 }
 
 interface SubmitTokenReportParams {
@@ -47,6 +73,7 @@ interface SubmitTokenReportParams {
   address: string
   event: TokenReportEventType
   assetType: ReportAssetType
+  multichain?: boolean
 }
 
 interface SubmitReportResponse {
@@ -56,6 +83,47 @@ interface SubmitReportResponse {
 const ASSET_TO_REPORT_STRING = {
   [ReportAssetType.Token]: 'User reported as a spam token',
   [ReportAssetType.NFT]: 'User reported as a spam NFT',
+}
+
+async function submitDataReport({
+  reportType,
+  tag,
+  details,
+  walletAddress,
+  chainId,
+  tokenAddress,
+  multichain,
+  fetchClient,
+}: SubmitDataReportParams & { fetchClient: FetchClient }): Promise<void> {
+  const requestBody: SubmitDataReportRequestBody = {
+    reportType,
+    tag,
+    walletAddress,
+    ...(details && { details }),
+    ...(chainId !== undefined && { chainId }),
+    ...(tokenAddress && { tokenAddress }),
+    ...(multichain === true && { multichain: true }),
+  }
+
+  try {
+    logger.debug('DataApiClient', 'submitDataReport', `Submitting data report: ${JSON.stringify(requestBody)}`)
+
+    const responseData = await fetchClient.post<SubmitReportResponse>(DATA_SERVICE_API_PATHS.dataReport, {
+      body: JSON.stringify(requestBody),
+    })
+
+    if (!responseData.success) {
+      throw new Error('API Error: Data report submission indicated failure')
+    }
+
+    logger.debug('DataApiClient', 'submitDataReport', 'Data report submitted successfully')
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'createDataServiceApiClient.ts', function: 'submitDataReport' },
+      extra: { url: `${fetchClient.context().baseUrl}${DATA_SERVICE_API_PATHS.dataReport}`, requestBody },
+    })
+    throw error
+  }
 }
 
 /**
@@ -69,6 +137,7 @@ async function submitTokenReport({
   address,
   event,
   assetType,
+  multichain,
   fetchClient,
 }: SubmitTokenReportParams & { fetchClient: FetchClient }): Promise<void> {
   const requestBody: SubmitReportRequestBody = {
@@ -76,6 +145,7 @@ async function submitTokenReport({
     address,
     event,
     details: ASSET_TO_REPORT_STRING[assetType],
+    ...(multichain === true && { multichain: true }),
   }
 
   try {

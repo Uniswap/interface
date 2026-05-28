@@ -1,6 +1,16 @@
-diff --git a/Users/tboba/Code/uniswap-universe/node_modules/@tamagui/portal/.bun-tag-de88d58b8fac55f8 b/.bun-tag-de88d58b8fac55f8
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/cjs/constants.native.js b/dist/cjs/constants.native.js
+index f0d5055a9307f4fd92aec8099729d20279d159bb..e70fd360e33e0cca2131e9272bbc5059a245cb1f 100644
+--- a/dist/cjs/constants.native.js
++++ b/dist/cjs/constants.native.js
+@@ -31,7 +31,7 @@ module.exports = __toCommonJS(constants_exports);
+ var import_constants = require("@tamagui/constants"),
+   _global__IS_FABRIC,
+   IS_FABRIC = typeof global < "u" && !!((_global__IS_FABRIC = global._IS_FABRIC) !== null && _global__IS_FABRIC !== void 0 ? _global__IS_FABRIC : global.nativeFabricUIManager),
+-  USE_NATIVE_PORTAL = process.env.TAMAGUI_USE_NATIVE_PORTAL && process.env.TAMAGUI_USE_NATIVE_PORTAL !== "false" ? !0 : !import_constants.isAndroid && !IS_FABRIC,
++  USE_NATIVE_PORTAL = process.env.TAMAGUI_USE_NATIVE_PORTAL && process.env.TAMAGUI_USE_NATIVE_PORTAL !== "false" ? !0 : false,
+   allPortalHosts = /* @__PURE__ */new Map(),
+   portalListeners = {};
+ //# sourceMappingURL=constants.native.js.map
 diff --git a/dist/esm/GorhomPortal.mjs b/dist/esm/GorhomPortal.mjs
 index b26368fa9d56a42ba4487180e666a7763bb1024a..349c2ed8ab44a8186cb345fc84b0e851504a17d7 100644
 --- a/dist/esm/GorhomPortal.mjs
@@ -43,3 +53,16 @@ index b26368fa9d56a42ba4487180e666a7763bb1024a..349c2ed8ab44a8186cb345fc84b0e851
      if (!(typeof window > "u")) return registerHost2(), () => {
        deregisterHost2();
      };
+diff --git a/dist/esm/constants.native.js b/dist/esm/constants.native.js
+index f39130a48b53722d4afea4182ef3b567aedaff79..6a16620c0ff53035a9827ff8587dc0eb0c2f7f32 100644
+--- a/dist/esm/constants.native.js
++++ b/dist/esm/constants.native.js
+@@ -1,7 +1,7 @@
+ import { isAndroid } from "@tamagui/constants";
+ var _global__IS_FABRIC,
+   IS_FABRIC = typeof global < "u" && !!((_global__IS_FABRIC = global._IS_FABRIC) !== null && _global__IS_FABRIC !== void 0 ? _global__IS_FABRIC : global.nativeFabricUIManager),
+-  USE_NATIVE_PORTAL = process.env.TAMAGUI_USE_NATIVE_PORTAL && process.env.TAMAGUI_USE_NATIVE_PORTAL !== "false" ? !0 : !isAndroid && !IS_FABRIC,
++  USE_NATIVE_PORTAL = process.env.TAMAGUI_USE_NATIVE_PORTAL && process.env.TAMAGUI_USE_NATIVE_PORTAL !== "false" ? !0 : false,
+   allPortalHosts = /* @__PURE__ */new Map(),
+   portalListeners = {};
+ export { IS_FABRIC, USE_NATIVE_PORTAL, allPortalHosts, portalListeners };

@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { GasStrategy, TradingApi } from '@universe/api'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
 import {
   isZeroAmount,
@@ -7,12 +8,13 @@ import {
 } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
 import type { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
+  buildUrgency,
+  DEFAULT_URGENCY_LEVEL,
   GetQuoteRoutingParams,
   GetQuoteSlippageParams,
   getTokenAddressForApi,
   QuoteRoutingParamsResult,
   QuoteSlippageParamsResult,
-  SWAP_GAS_URGENCY_OVERRIDE,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
@@ -23,7 +25,8 @@ export const UNCONNECTED_ADDRESS = '0xAAAA44272dc658575Ba38f43C438447dDED45358'
 export interface QuoteRequestResult {
   amount: string
   generatePermitAsTransaction?: boolean
-  gasStrategies: GasStrategy[]
+  // Flag-off path: legacy `gasStrategies` array. Omitted on the flag-on path.
+  gasStrategies?: GasStrategy[]
   isUSDQuote?: boolean
   swapper: string
   tokenIn: string
@@ -32,6 +35,7 @@ export interface QuoteRequestResult {
   tokenOutChainId: number
   type: TradingApi.TradeType
   urgency?: TradingApi.Urgency
+  walletExecutionContext?: TradingApi.WalletExecutionContext
   routingParams: QuoteRoutingParamsResult
   slippageParams: QuoteSlippageParamsResult
 }
@@ -49,6 +53,8 @@ export interface ValidatedTradeInput {
   tokenOutAddress: string
   generatePermitAsTransaction?: boolean
   isUSDQuote?: boolean
+  walletExecutionContext?: TradingApi.WalletExecutionContext
+  gasOverrides?: TradingApi.UrgencyOverrides
 }
 
 interface BuildQuoteRequestContext {
@@ -72,10 +78,12 @@ export function createBuildQuoteRequest(
       isUSDQuote: validatedInput.isUSDQuote,
     })
 
-    return {
+    // TODO(GasFeeOverrides): remove flag gate once the new urgency-based payload ships fully.
+    const shouldUseUrgency = getFeatureFlag(FeatureFlags.GasFeeOverrides)
+
+    const base = {
       amount: validatedInput.amount.quotient.toString(),
       generatePermitAsTransaction: validatedInput.generatePermitAsTransaction,
-      gasStrategies: [getActiveGasStrategy({ chainId: validatedInput.tokenInChainId, type: 'swap' })],
       isUSDQuote: validatedInput.isUSDQuote,
       swapper: validatedInput.activeAccountAddress ?? UNCONNECTED_ADDRESS,
       tokenIn: validatedInput.tokenInAddress,
@@ -83,9 +91,22 @@ export function createBuildQuoteRequest(
       tokenOut: validatedInput.tokenOutAddress,
       tokenOutChainId: validatedInput.tokenOutChainId,
       type: validatedInput.requestTradeType,
-      urgency: SWAP_GAS_URGENCY_OVERRIDE,
+      walletExecutionContext: validatedInput.walletExecutionContext,
       routingParams,
       slippageParams,
+    }
+
+    if (shouldUseUrgency) {
+      return {
+        ...base,
+        urgency: buildUrgency(validatedInput.gasOverrides),
+      }
+    }
+
+    return {
+      ...base,
+      gasStrategies: [getActiveGasStrategy({ chainId: validatedInput.tokenInChainId, type: 'swap' })],
+      urgency: DEFAULT_URGENCY_LEVEL,
     }
   }
 }
@@ -117,6 +138,8 @@ export interface ParsedTradeInput {
   tokenOutAddress?: string
   generatePermitAsTransaction?: boolean
   isUSDQuote?: boolean
+  walletExecutionContext?: TradingApi.WalletExecutionContext
+  gasOverrides?: TradingApi.UrgencyOverrides
 }
 
 export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTradeInput {
@@ -133,6 +156,8 @@ export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTr
     tokenOutAddress: getTokenAddressForApi(currencyOut),
     generatePermitAsTransaction: input.generatePermitAsTransaction,
     isUSDQuote: input.isUSDQuote ?? false,
+    walletExecutionContext: input.walletExecutionContext,
+    gasOverrides: input.gasOverrides,
   }
 }
 
@@ -168,6 +193,8 @@ export function validateParsedInput(input: ParsedTradeInput): ValidatedTradeInpu
     tokenOutAddress: input.tokenOutAddress,
     generatePermitAsTransaction: input.generatePermitAsTransaction,
     isUSDQuote: input.isUSDQuote,
+    walletExecutionContext: input.walletExecutionContext,
+    gasOverrides: input.gasOverrides,
   }
 }
 

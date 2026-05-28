@@ -32,7 +32,7 @@ interface UniswapContextValue {
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToSendFlow: (args: { chainId: UniverseChainId; currencyAddress?: Address; recipient?: Address }) => void
   navigateToReceive: () => void
-  navigateToTokenDetails: (currencyId: string) => void
+  navigateToTokenDetails: (currencyId: string, chainFilter?: UniverseChainId | null) => void
   navigateToExternalProfile: (args: { address: Address }) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToPoolDetails: (args: { poolId: Address; chainId: UniverseChainId }) => void

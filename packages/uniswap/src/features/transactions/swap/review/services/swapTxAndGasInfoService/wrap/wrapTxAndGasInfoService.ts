@@ -11,6 +11,7 @@ export function createWrapTxAndGasInfoService(ctx: {
   gasStrategy: GasStrategy
   transactionSettings: TransactionSettings
   v4SwapEnabled: boolean
+  hasOverrides?: boolean
 }): SwapTxAndGasInfoService<WrapTrade | UnwrapTrade> {
   const getEVMSwapTransactionRequestInfo = createGetEVMSwapTransactionRequestInfo(ctx)
 

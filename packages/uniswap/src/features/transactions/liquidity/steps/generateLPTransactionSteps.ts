@@ -11,13 +11,17 @@ import {
   createCreatePositionAsyncStep,
   createIncreasePositionAsyncStep,
   createIncreasePositionStep,
-  createIncreasePositionStepBatched,
+  createIncreasePositionStepWalletCall,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
 import {
   createMigratePositionAsyncStep,
   createMigratePositionStep,
+  createMigratePositionStepWalletCall,
 } from 'uniswap/src/features/transactions/liquidity/steps/migrate'
-import { orderMigrateLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/migrationSteps'
+import {
+  MigrationSteps,
+  orderMigrateLiquiditySteps,
+} from 'uniswap/src/features/transactions/liquidity/steps/migrationSteps'
 import {
   isValidLiquidityTxContext,
   LiquidityTransactionType,
@@ -81,9 +85,9 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
     })
 
     const approvalPositionToken = createApprovalTransactionStep({
-      amount: action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1).quotient.toString() : '0',
-      tokenAddress: action.liquidityToken?.wrapped.address,
-      chainId: action.liquidityToken?.chainId,
+      amount: action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1).quotient.toString() : '1',
+      tokenAddress: action.liquidityToken?.wrapped.address ?? approvePositionTokenRequest?.to,
+      chainId: action.liquidityToken?.chainId ?? action.currency0Amount.currency.chainId,
       txRequest: approvePositionTokenRequest,
       pair: [action.currency0Amount.currency, action.currency1Amount.currency],
     })
@@ -124,12 +128,23 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             approvalPositionToken: undefined,
           })
         } else {
-          return orderMigrateLiquiditySteps({
+          const migrateSteps = orderMigrateLiquiditySteps({
             permit: undefined,
             positionTokenPermitTransaction: positionTokenPermitTransactionStep,
             approvalPositionToken,
             migrate: createMigratePositionStep(txContext.txRequest),
           })
+
+          if (txContext.canBatchTransactions) {
+            const txRequests = migrateSteps
+              .filter(
+                (step): step is MigrationSteps & OnChainTransactionFields => 'txRequest' in step && !!step.txRequest,
+              )
+              .map((step) => step.txRequest)
+            return [createMigratePositionStepWalletCall(txRequests)]
+          }
+
+          return migrateSteps
         }
       case 'create':
       case 'increase':
@@ -166,7 +181,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             const txRequests = steps
               .filter((step): step is IncreaseLiquiditySteps & OnChainTransactionFields => 'txRequest' in step)
               .map((step) => step.txRequest)
-            return [createIncreasePositionStepBatched(txRequests)]
+            return [createIncreasePositionStepWalletCall(txRequests)]
           }
 
           return steps

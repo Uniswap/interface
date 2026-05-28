@@ -1,9 +1,10 @@
+import { isDevEnv } from '@universe/environment'
+import type { GasFeeOverrides } from 'uniswap/src/features/gas/types'
 import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
   type FrontendSupportedProtocol,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 import { create, type UseBoundStore } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
@@ -16,6 +17,7 @@ export const initialTransactionSettingsState: TransactionSettingsState = {
   slippageWarningModalSeen: false,
   isV4HookPoolsEnabled: true,
   isSlippageDirty: false,
+  gasOverrides: undefined,
 }
 
 export type TransactionSettingsStoreState = TransactionSettingsState & {
@@ -27,6 +29,8 @@ export type TransactionSettingsStoreState = TransactionSettingsState & {
     setIsV4HookPoolsEnabled: (enabled: boolean) => void
     setIsSlippageDirty: (dirty: boolean) => void
     toggleProtocol: (protocol: FrontendSupportedProtocol) => void
+    setGasOverrides: (overrides: GasFeeOverrides | undefined) => void
+    clearGasOverrides: () => void
   }
 }
 
@@ -53,6 +57,8 @@ export const createTransactionSettingsStore = (): { store: TransactionSettingsSt
               set({ selectedProtocols: [...selectedProtocols, protocol] })
             }
           },
+          setGasOverrides: (overrides: GasFeeOverrides | undefined): void => set({ gasOverrides: overrides }),
+          clearGasOverrides: (): void => set({ gasOverrides: undefined }),
         },
       })),
       {

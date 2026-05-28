@@ -1,8 +1,8 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
-import { getChainUrlParam } from '~/features/params/chainParams'
 import { isPortfolioTab, PortfolioTab } from '~/pages/Portfolio/types'
+import { getChainUrlParam } from '~/utils/params/chainParams'
 
 interface BuildPortfolioUrlOptions {
   tab?: PortfolioTab
@@ -38,6 +38,7 @@ export function pathToPortfolioTab(path: string): PortfolioTab | undefined {
   const PATHNAME_TO_TAB: Partial<Record<string, PortfolioTab>> = {
     '/portfolio': PortfolioTab.Overview,
     '/portfolio/tokens': PortfolioTab.Tokens,
+    '/portfolio/pools': PortfolioTab.Pools,
     '/portfolio/defi': PortfolioTab.Defi,
     '/portfolio/nfts': PortfolioTab.Nfts,
     '/portfolio/activity': PortfolioTab.Activity,

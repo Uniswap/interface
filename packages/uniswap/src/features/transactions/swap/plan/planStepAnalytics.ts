@@ -68,9 +68,9 @@ export function logUniswapXPlanOrderSubmitted(params: { analyticsWithPlanStepCon
   })
 }
 
-const TRADE_STEP_TYPES = new Set<TransactionStepType>([
+export const TRADE_STEP_TYPES = new Set<TransactionStepType>([
   TransactionStepType.SwapTransaction,
-  TransactionStepType.SwapTransactionBatched,
+  TransactionStepType.SwapTransactionWalletCall,
   TransactionStepType.UniswapXPlanSignature,
 ])
 
@@ -79,23 +79,34 @@ const TRADE_STEP_TYPES = new Set<TransactionStepType>([
  * the final step hash / order hash, and dispatches SwapTransactionCompleted or
  * SwapTransactionFailed analytics (with error logging for missing chainId/hash).
  *
- * Only logs for trade step types (SwapTransaction, SwapTransactionBatched,
+ * Only logs for trade step types (SwapTransaction, SwapTransactionWalletCall,
  * UniswapXPlanSignature). Non-trade steps (approvals, permits) are silently skipped.
+ *
+ * `semanticStepIndex` is the Trading API `stepIndex`, not the array index. Plan
+ * arrays can keep retry/error rows, so lookups must use that stable step identity.
  *
  * Used by both the inline non-last-step logging path and the forked last-step watcher.
  */
 export function logPlanStepTradeAnalytics(params: {
   stepType: TransactionStepType
   updatedSteps: TransactionAndPlanStep[] | undefined
-  stepIndex: number
+  semanticStepIndex: number
   hash: string | undefined
   chainId: number | undefined
   stepFailure: boolean
   analyticsWithPlanStepContext: PlanSagaAnalytics
   errorExtra?: Record<string, unknown>
 }): void {
-  const { stepType, updatedSteps, stepIndex, hash, chainId, stepFailure, analyticsWithPlanStepContext, errorExtra } =
-    params
+  const {
+    stepType,
+    updatedSteps,
+    semanticStepIndex,
+    hash,
+    chainId,
+    stepFailure,
+    analyticsWithPlanStepContext,
+    errorExtra,
+  } = params
 
   if (!TRADE_STEP_TYPES.has(stepType)) {
     return
@@ -103,11 +114,11 @@ export function logPlanStepTradeAnalytics(params: {
 
   // For UniswapX steps the proof (txHash = fill hash, orderId = order hash) is populated
   // by TAPI after submission; for classic steps updatedProof is harmlessly undefined.
-  const updatedProof = updatedSteps?.[stepIndex]?.proof
+  const updatedProof = updatedSteps?.find((step) => step.stepIndex === semanticStepIndex)?.proof
   const stepHash = hash ?? updatedProof?.txHash
   const orderHash = updatedProof?.orderId
 
-  const expandedErrorExtra = { ...errorExtra, chainId, stepIndex, stepHash, orderHash, updatedProof }
+  const expandedErrorExtra = { ...errorExtra, chainId, semanticStepIndex, stepHash, orderHash, updatedProof }
 
   if (!chainId) {
     logger.error(new Error('Missing chainId for plan step analytics'), {

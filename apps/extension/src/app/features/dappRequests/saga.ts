@@ -1,6 +1,7 @@
 /* oxlint-disable max-lines */
 import { type Provider } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
+import { TradingApi } from '@universe/api'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { createSearchParams } from 'react-router'
 import { changeChain } from 'src/app/features/dapp/changeChain'
@@ -52,21 +53,28 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionOriginType,
+  TransactionStatus,
   TransactionType,
   type TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
-import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
+import { addWalletCallTransaction } from 'wallet/src/features/batchedTransactions/slice'
 import { generateBatchId, getCapabilitiesResponse } from 'wallet/src/features/batchedTransactions/utils'
 import { type Call } from 'wallet/src/features/dappRequests/types'
 import {
   type ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import {
+  ExecuteUserOpParams,
+  executeUserOpSaga,
+} from 'wallet/src/features/transactions/executeTransaction/executeUserOpSaga'
 import { type SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
@@ -258,6 +266,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
         throw new Error('Chain ID on message does not match the chain ID set on the extension.')
       }
 
+      // oxlint-disable-next-line no-shadow
       const parsedCalls = requestParams.dappRequest.calls.map((call): Call | ParsedCall => ({
         ...call,
         ...(call.data ? getCalldataInfoFromTransaction({ data: call.data, to: call.to, chainId }) : {}),
@@ -575,7 +584,21 @@ export function* handleSendCalls({
   preSignedTransaction?: SignedTransactionRequest
 }) {
   const isSendCallTransaction = transactionTypeInfo?.type === TransactionType.SendCalls
-  if (!isSendCallTransaction || !transactionTypeInfo.encodedTransaction || !transactionTypeInfo.encodedRequestId) {
+  if (!isSendCallTransaction) {
+    const errorResponse: ErrorResponse = {
+      type: DappResponseType.ErrorResponse,
+      error: serializeError(rpcErrors.invalidInput()),
+      requestId: request.requestId,
+    }
+    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    return
+  }
+
+  const { unsignedUserOperation, encodedTransaction, encodedRequestId } = transactionTypeInfo
+  const is4337 = !!unsignedUserOperation
+  const is7702 = !!encodedTransaction && !!encodedRequestId
+
+  if (!is4337 && !is7702) {
     const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
       error: serializeError(rpcErrors.invalidInput()),
@@ -598,52 +621,106 @@ export function* handleSendCalls({
     }
 
     const activeAccount = getActiveSignerConnectedAccount(dappInfo.connectedAccounts, dappInfo.activeConnectedAddress)
-
-    // Generate or use provided batch ID
     const batchId = request.id || generateBatchId()
 
-    const { encodedTransaction, encodedRequestId } = transactionTypeInfo
-    const sendTransactionParams: ExecuteTransactionParams = {
-      chainId,
-      account: activeAccount,
-      typeInfo: {
+    if (is4337) {
+      // 4337 UserOp path — gas-sponsored dapp request
+      const typeInfo: TransactionTypeInfo = {
         type: TransactionType.SendCalls,
-        encodedTransaction,
-        encodedRequestId,
+        unsignedUserOperation,
         dappInfo: {
           name: dappInfo.displayName,
-          address: encodedTransaction.to,
           icon: dappInfo.iconUrl,
         },
-      },
-      options: {
-        request: encodedTransaction,
-      },
-      transactionOriginType: TransactionOriginType.External,
-      preSignedTransaction,
-    }
-
-    const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
-
-    yield* put(
-      addBatchedTransaction({
-        batchId,
-        txHashes: [transactionHash], // Assuming single tx for now, might need update if batching changes
-        requestId: encodedRequestId,
+      }
+      const executeUserOpParams: ExecuteUserOpParams = {
+        userOp: unsignedUserOperation,
+        account: activeAccount,
         chainId,
-      }),
-    )
+        typeInfo,
+      }
+      const { userOpHash } = yield* call(executeUserOpSaga, executeUserOpParams)
 
-    const response: SendCallsResponse = {
-      type: DappResponseType.SendCallsResponse,
-      requestId: request.requestId,
-      response: {
-        id: batchId,
-        capabilities: request.capabilities || {},
-      },
+      yield* put(
+        addTransaction({
+          routing: TradingApi.Routing.CLASSIC,
+          id: createTransactionId(),
+          chainId,
+          typeInfo,
+          from: activeAccount.address,
+          addedTime: Date.now(),
+          status: TransactionStatus.Pending,
+          userOpHash,
+          options: { request: {} },
+          transactionOriginType: TransactionOriginType.External,
+        }),
+      )
+
+      yield* put(
+        addWalletCallTransaction({
+          batchId,
+          userOpHash,
+          requestId: batchId,
+          chainId,
+        }),
+      )
+
+      const response: SendCallsResponse = {
+        type: DappResponseType.SendCallsResponse,
+        requestId: request.requestId,
+        response: { id: batchId },
+      }
+
+      yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+    } else if (is7702) {
+      // 7702 encoded transaction path
+      const sendTransactionParams: ExecuteTransactionParams = {
+        chainId,
+        account: activeAccount,
+        typeInfo: {
+          type: TransactionType.SendCalls,
+          encodedTransaction,
+          encodedRequestId,
+          dappInfo: {
+            name: dappInfo.displayName,
+            address: encodedTransaction.to,
+            icon: dappInfo.iconUrl,
+          },
+        },
+        options: {
+          request: encodedTransaction,
+        },
+        transactionOriginType: TransactionOriginType.External,
+        preSignedTransaction,
+      }
+
+      const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+
+      yield* put(
+        addWalletCallTransaction({
+          batchId,
+          txHashes: [transactionHash], // Assuming single tx for now, might need update if batching changes
+          requestId: encodedRequestId,
+          chainId,
+        }),
+      )
+
+      const response: SendCallsResponse = {
+        type: DappResponseType.SendCallsResponse,
+        requestId: request.requestId,
+        response: {
+          id: batchId,
+          capabilities: {
+            caip345: {
+              caip2: `eip155:${chainId}`,
+              transactionHashes: [transactionHash],
+            },
+          },
+        },
+      }
+
+      yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
     }
-
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
   } catch (error) {
     logger.error(error, {
       tags: { file: 'dappRequestSaga', function: 'handleSendCalls' },

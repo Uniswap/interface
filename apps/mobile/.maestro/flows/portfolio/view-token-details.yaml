@@ -49,8 +49,10 @@ env:
     id: ${output.testIds.TokenDetailsHeaderText}
 
 # Assert expected action buttons are shown for a native token
+# Note: under the multichain UX flag, the single Swap button is replaced by Buy/Sell.
+# We assert Buy here (Sell is also present); see TokenDetailsActionButtonsWrapper.
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
 
 # Note: Copy address button is present but disabled for native tokens
 
@@ -58,6 +60,13 @@ env:
 # Could be re-enabled if test wallet has multi-chain balances
 
 - waitForAnimationToEnd
+
+# RN 0.81 timing: wait for the back button's testID to settle in the
+# accessibility tree before tapping.
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.Back}
+    timeout: 15000
 
 # Go back to portfolio
 - tapOn:
@@ -100,9 +109,9 @@ env:
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
 
-# Assert expected action buttons are shown for a standard token
+# Assert expected action buttons are shown for a standard token (multichain UX: Buy/Sell)
 - assertVisible:
-    id: ${output.testIds.TokenDetailsSwapButton}
+    id: ${output.testIds.TokenDetailsBuyButton}
 
 # Standard tokens have a contract address to copy
 - assertVisible:
@@ -136,6 +145,13 @@ env:
       text: ".*[Cc]opied.*"
     timeout: 2000
     optional: true
+
+# Dismiss the MultichainAddressSheet opened by CopyAddress before
+# tapping the screen-level back button.
+- swipe:
+    direction: DOWN
+    duration: 300
+- waitForAnimationToEnd
 
 # Go back to portfolio
 - tapOn:

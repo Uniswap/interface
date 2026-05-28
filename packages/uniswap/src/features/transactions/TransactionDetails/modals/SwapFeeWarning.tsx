@@ -1,3 +1,4 @@
+import { isWebPlatform } from '@universe/environment'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -8,7 +9,6 @@ import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningI
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function SwapFeeWarning({
   noUniswapInterfaceFees,

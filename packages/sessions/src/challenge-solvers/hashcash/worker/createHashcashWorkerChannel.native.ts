@@ -14,3 +14,4 @@ function createHashcashWorkerChannel(_ctx: CreateHashcashWorkerChannelContext): 
 }
 
 export { createHashcashWorkerChannel }
+export { HashcashWorkerBootError } from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcashWorkerErrors'

@@ -88,13 +88,13 @@ export function useTDPPriceChartData({
   const loading =
     subgraphLoading || (priceChartType === PriceChartType.LINE && !variables.multichain && coinGeckoLoading)
 
+  // oxlint-disable-next-line complexity
   return useMemo(() => {
     const subgraphMarket = subgraphData?.token?.market
     const { ohlc, priceHistory: subgraphPriceHistory, price: subgraphPrice } = subgraphMarket ?? {}
 
     // Data source strategy: prefer CoinGecko for line charts, use subgraph for candlesticks
     // Prefer per-chain CoinGecko history when available so multi-chain tokens render correctly
-    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
     const coinGeckoProject = coinGeckoData?.tokenProjects?.[0]
     const coinGeckoMarket = coinGeckoProject?.markets?.[0]
     const coinGeckoTokenMarket = coinGeckoProject?.tokens.find((token) => token.chain === variables.chain)?.market
@@ -103,7 +103,8 @@ export function useTDPPriceChartData({
 
     // For line charts, prefer CoinGecko priceHistory but use PER-CHAIN current price
     // For candlestick charts, always use subgraph OHLC (only source)
-    const useCoinGeckoHistory = priceChartType === PriceChartType.LINE && coinGeckoPriceHistory && !variables.multichain
+    const useCoinGeckoHistory =
+      priceChartType === PriceChartType.LINE && coinGeckoPriceHistory?.length && !variables.multichain
     const priceHistory = useCoinGeckoHistory ? coinGeckoPriceHistory : subgraphPriceHistory
 
     // CRITICAL: Always use per-chain price from subgraph for multi-chain tokens

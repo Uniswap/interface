@@ -1,4 +1,5 @@
 import { useIsFocused } from '@react-navigation/core'
+import { isAndroid } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +31,6 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'

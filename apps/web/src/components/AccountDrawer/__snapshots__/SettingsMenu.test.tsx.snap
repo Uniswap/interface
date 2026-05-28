@@ -66,14 +66,14 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                     style="display: contents;"
                   >
                     <button
-                      aria-controls=":r2c:-content-system"
+                      aria-controls="«r29»-content-system"
                       aria-selected="true"
                       class="is_TabsTrigger  is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="active"
-                      id=":r2c:-trigger-system"
+                      id="«r29»-trigger-system"
                       role="button"
                       style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: center; align-items: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); cursor: pointer; border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; outline-color: transparent; text-decoration-line: none;"
                       tabindex="0"
@@ -97,14 +97,14 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                     style="display: contents;"
                   >
                     <button
-                      aria-controls=":r2c:-content-light"
+                      aria-controls="«r29»-content-light"
                       aria-selected="false"
                       class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="inactive"
-                      id=":r2c:-trigger-light"
+                      id="«r29»-trigger-light"
                       role="button"
                       tabindex="0"
                       type="button"
@@ -137,14 +137,14 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                     style="display: contents;"
                   >
                     <button
-                      aria-controls=":r2c:-content-dark"
+                      aria-controls="«r29»-content-dark"
                       aria-selected="false"
                       class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="inactive"
-                      id=":r2c:-trigger-dark"
+                      id="«r29»-trigger-dark"
                       role="button"
                       tabindex="0"
                       type="button"
@@ -179,7 +179,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
             class="is_TouchableArea  t_group_true"
             data-testid="local-currency-settings-button"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
@@ -235,7 +235,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
             class="is_TouchableArea  t_group_true"
             data-testid="language-settings-button"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
@@ -301,23 +301,31 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
             class="is_TouchableArea  t_group_true"
             data-testid="portfolio-balance-settings-button"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
               class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
             >
-              <svg
-                fill="currentColor"
-                stroke-width="8"
-                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-                viewBox="0 0 12 12"
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
               >
-                <path
-                  d="M6.33333 12H5.66667C5 12 4.66667 11.6667 4.66667 11V1C4.66667 0.333333 5 0 5.66667 0H6.33333C7 0 7.33333 0.333333 7.33333 1V11C7.33333 11.6667 7 12 6.33333 12ZM12 11V4.33333C12 3.66667 11.6667 3.33333 11 3.33333H10.3333C9.66667 3.33333 9.33333 3.66667 9.33333 4.33333V11C9.33333 11.6667 9.66667 12 10.3333 12H11C11.6667 12 12 11.6667 12 11ZM2.66667 11V7C2.66667 6.33333 2.33333 6 1.66667 6H1C0.333333 6 0 6.33333 0 7V11C0 11.6667 0.333333 12 1 12H1.66667C2.33333 12 2.66667 11.6667 2.66667 11Z"
+                <svg
                   fill="currentColor"
-                />
-              </svg>
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    transform="translate(2 2) scale(1.6667)"
+                  >
+                    <path
+                      d="M6.33333 12H5.66667C5 12 4.66667 11.6667 4.66667 11V1C4.66667 0.333333 5 0 5.66667 0H6.33333C7 0 7.33333 0.333333 7.33333 1V11C7.33333 11.6667 7 12 6.33333 12ZM12 11V4.33333C12 3.66667 11.6667 3.33333 11 3.33333H10.3333C9.66667 3.33333 9.33333 3.66667 9.33333 4.33333V11C9.33333 11.6667 9.66667 12 10.3333 12H11C11.6667 12 12 11.6667 12 11ZM2.66667 11V7C2.66667 6.33333 2.33333 6 1.66667 6H1C0.333333 6 0 6.33333 0 7V11C0 11.6667 0.333333 12 1 12H1.66667C2.33333 12 2.66667 11.6667 2.66667 11Z"
+                      fill="currentColor"
+                    />
+                  </g>
+                </svg>
+              </div>
               <span
                 class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
                 data-disable-theme="true"
@@ -361,7 +369,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
             class="is_TouchableArea  t_group_true"
             data-testid="passkey-settings"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
@@ -371,10 +379,64 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 fill="none"
                 stroke-width="8"
                 style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-                viewBox="0 0 19 20"
+                viewBox="0 0 24 24"
+              >
+                <g
+                  transform="translate(2.5 2)"
+                >
+                  <path
+                    d="M9.51807 0C7.27807 1.111 5.5 2 0.5 3C0.5 4.137 0.5 7.70192 0.5 8.88892C0.5 15.5559 6.167 18.889 9.5 20C12.833 18.889 18.5 15.5559 18.5 8.88892C18.5 7.66392 18.5 4.194 18.5 3C13.5 2 11.7221 1.111 9.51807 0ZM13.042 8.53003L9.04199 12.53C8.89599 12.676 8.70396 12.75 8.51196 12.75C8.31996 12.75 8.12793 12.677 7.98193 12.53L5.98193 10.53C5.68893 10.237 5.68893 9.76199 5.98193 9.46899C6.27493 9.17599 6.74997 9.17599 7.04297 9.46899L8.51294 10.939L11.9829 7.46899C12.2759 7.17599 12.7509 7.17599 13.0439 7.46899C13.3369 7.76199 13.335 8.23703 13.042 8.53003Z"
+                    fill="currentColor"
+                  />
+                </g>
+              </svg>
+              <span
+                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
+                data-disable-theme="true"
+              >
+                Login methods
+              </span>
+            </div>
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa94665589 _alignItems-center _width-min-content _color-accent3"
+            >
+              <div
+                style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); transform: rotate(180deg); transition: all 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.35);"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="is_TouchableArea  t_group_true"
+            data-testid="wallet-settings-recovery-phrase"
+            role="button"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
+            tabindex="0"
+          >
+            <div
+              class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                viewBox="0 0 24 24"
               >
                 <path
-                  d="M9.51807 0C7.27807 1.111 5.5 2 0.5 3C0.5 4.137 0.5 7.70192 0.5 8.88892C0.5 15.5559 6.167 18.889 9.5 20C12.833 18.889 18.5 15.5559 18.5 8.88892C18.5 7.66392 18.5 4.194 18.5 3C13.5 2 11.7221 1.111 9.51807 0ZM13.042 8.53003L9.04199 12.53C8.89599 12.676 8.70396 12.75 8.51196 12.75C8.31996 12.75 8.12793 12.677 7.98193 12.53L5.98193 10.53C5.68893 10.237 5.68893 9.76199 5.98193 9.46899C6.27493 9.17599 6.74997 9.17599 7.04297 9.46899L8.51294 10.939L11.9829 7.46899C12.2759 7.17599 12.7509 7.17599 13.0439 7.46899C13.3369 7.76199 13.335 8.23703 13.042 8.53003Z"
+                  d="M12.75 6V3.75L17.25 8.25H15C13.42 8.25 12.75 7.58 12.75 6ZM14.75 16.6V17C14.26 17.5 14 18.2 14 19.05V20.7C14 20.87 13.87 21 13.7 21H6C4 21 3 20 3 18V6C3 4 4 3 6 3H11.25V6C11.25 8.42 12.58 9.75 15 9.75H18V12.64C18 12.79 17.9 12.9 17.75 12.93C16.04 13.27 14.75 14.79 14.75 16.6ZM7.75 16C7.75 15.586 7.414 15.25 7 15.25C6.586 15.25 6.25 15.586 6.25 16C6.25 16.414 6.586 16.75 7 16.75C7.414 16.75 7.75 16.414 7.75 16ZM7.75 12C7.75 11.586 7.414 11.25 7 11.25C6.586 11.25 6.25 11.586 6.25 12C6.25 12.414 6.586 12.75 7 12.75C7.414 12.75 7.75 12.414 7.75 12ZM11.75 16C11.75 15.586 11.414 15.25 11 15.25H9.5C9.086 15.25 8.75 15.586 8.75 16C8.75 16.414 9.086 16.75 9.5 16.75H11C11.414 16.75 11.75 16.414 11.75 16ZM14.75 12C14.75 11.586 14.414 11.25 14 11.25H9.5C9.086 11.25 8.75 11.586 8.75 12C8.75 12.414 9.086 12.75 9.5 12.75H14C14.414 12.75 14.75 12.414 14.75 12ZM21.5 19.05V21.15C21.5 22.05 21.0499 22.5 20.1499 22.5H16.8501C15.9501 22.5 15.5 22.05 15.5 21.15V19.05C15.5 18.38 15.751 17.961 16.25 17.79V16.6C16.25 15.359 17.26 14.35 18.5 14.35C19.74 14.35 20.75 15.359 20.75 16.6V17.79C21.249 17.961 21.5 18.38 21.5 19.05ZM19.25 16.6C19.25 16.186 18.913 15.85 18.5 15.85C18.087 15.85 17.75 16.186 17.75 16.6V17.7H19.25V16.6Z"
                   fill="currentColor"
                 />
               </svg>
@@ -382,7 +444,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
                 class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
                 data-disable-theme="true"
               >
-                Login methods
+                Recovery phrase
               </span>
             </div>
             <div
@@ -420,7 +482,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
           <div
             class="is_TouchableArea  t_group_true"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
@@ -472,17 +534,21 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
             <div
               class="_maxWidth-_xl_7037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _maxWidth-8037"
             >
-              <svg
-                fill="none"
-                stroke-width="8"
-                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-                viewBox="0 0 19 18"
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
               >
-                <path
-                  d="M18.08 3.55996L15.9 5.73996C15.32 6.30996 14.37 6.30998 13.79 5.72998L12.77 4.70996C12.19 4.12996 12.19 3.17995 12.77 2.60995L14.94 0.419981C13.41 -0.190019 11.51 -0.210047 9.73 0.859953C9.01 1.28995 8.4 1.86997 7.97 2.56997C7.94 2.60997 7.91 2.64998 7.89 2.69998C7.11 3.98998 6.9 5.33996 7.08 6.55996C7.15 7.01996 6.99 7.47995 6.66 7.79995L1.34 13.13C0.779996 13.68 0.5 14.42 0.5 15.14C0.5 15.88 0.779996 16.6 1.34 17.16C2.45 18.28 4.25999 18.28 5.37 17.16L10.7 11.84C11.02 11.51 11.48 11.35 11.94 11.42C13.16 11.6 14.51 11.39 15.79 10.62C16.55 10.17 17.19 9.52997 17.63 8.77997C18.71 6.99997 18.69 5.08996 18.08 3.55996ZM3.52 16C2.97 16 2.52 15.55 2.52 15C2.52 14.45 2.95999 14 3.50999 14H3.52C4.07 14 4.52 14.45 4.52 15C4.52 15.55 4.07 16 3.52 16Z"
-                  fill="currentColor"
-                />
-              </svg>
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 19 18"
+                >
+                  <path
+                    d="M18.08 3.55996L15.9 5.73996C15.32 6.30996 14.37 6.30998 13.79 5.72998L12.77 4.70996C12.19 4.12996 12.19 3.17995 12.77 2.60995L14.94 0.419981C13.41 -0.190019 11.51 -0.210047 9.73 0.859953C9.01 1.28995 8.4 1.86997 7.97 2.56997C7.94 2.60997 7.91 2.64998 7.89 2.69998C7.11 3.98998 6.9 5.33996 7.08 6.55996C7.15 7.01996 6.99 7.47995 6.66 7.79995L1.34 13.13C0.779996 13.68 0.5 14.42 0.5 15.14C0.5 15.88 0.779996 16.6 1.34 17.16C2.45 18.28 4.25999 18.28 5.37 17.16L10.7 11.84C11.02 11.51 11.48 11.35 11.94 11.42C13.16 11.6 14.51 11.39 15.79 10.62C16.55 10.17 17.19 9.52997 17.63 8.77997C18.71 6.99997 18.69 5.08996 18.08 3.55996ZM3.52 16C2.97 16 2.52 15.55 2.52 15C2.52 14.45 2.95999 14 3.50999 14H3.52C4.07 14 4.52 14.45 4.52 15C4.52 15.55 4.07 16 3.52 16Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
               >
@@ -523,7 +589,7 @@ exports[`SettingsMenu > renders for embedded wallet user (Login Methods + Log ou
           </div>
         </div>
         <div
-          class="_alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _display-flex _mb-t-space-pad95589114"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _mb-t-space-pad95589114"
         >
           <button
             class="is_Button  t_group_item"
@@ -624,14 +690,14 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                     style="display: contents;"
                   >
                     <button
-                      aria-controls=":r8:-content-system"
+                      aria-controls="«r8»-content-system"
                       aria-selected="true"
                       class="is_TabsTrigger  is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="active"
-                      id=":r8:-trigger-system"
+                      id="«r8»-trigger-system"
                       role="button"
                       style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: center; align-items: center; border-top-left-radius: var(--t-radius-roundedFull); border-top-right-radius: var(--t-radius-roundedFull); border-bottom-right-radius: var(--t-radius-roundedFull); border-bottom-left-radius: var(--t-radius-roundedFull); cursor: pointer; border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; outline-color: transparent; text-decoration-line: none;"
                       tabindex="0"
@@ -655,14 +721,14 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                     style="display: contents;"
                   >
                     <button
-                      aria-controls=":r8:-content-light"
+                      aria-controls="«r8»-content-light"
                       aria-selected="false"
                       class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="inactive"
-                      id=":r8:-trigger-light"
+                      id="«r8»-trigger-light"
                       role="button"
                       tabindex="0"
                       type="button"
@@ -695,14 +761,14 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
                     style="display: contents;"
                   >
                     <button
-                      aria-controls=":r8:-content-dark"
+                      aria-controls="«r8»-content-dark"
                       aria-selected="false"
                       class="is_TabsTrigger _textDecorationLine-_platformweb_none _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _alignItems-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _cursor-pointer _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _outlineColor-transparent _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-t-size-spac100347300 _pt-t-space-spa94665587 _pb-t-space-spa94665587 is_TabsTrigger "
                       data-collection-item=""
                       data-disable-theme="true"
                       data-orientation="horizontal"
                       data-state="inactive"
-                      id=":r8:-trigger-dark"
+                      id="«r8»-trigger-dark"
                       role="button"
                       tabindex="0"
                       type="button"
@@ -737,7 +803,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
             class="is_TouchableArea  t_group_true"
             data-testid="local-currency-settings-button"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
@@ -793,7 +859,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
             class="is_TouchableArea  t_group_true"
             data-testid="language-settings-button"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
@@ -859,23 +925,31 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
             class="is_TouchableArea  t_group_true"
             data-testid="portfolio-balance-settings-button"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
               class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _color-accent3"
             >
-              <svg
-                fill="currentColor"
-                stroke-width="8"
-                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-                viewBox="0 0 12 12"
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
               >
-                <path
-                  d="M6.33333 12H5.66667C5 12 4.66667 11.6667 4.66667 11V1C4.66667 0.333333 5 0 5.66667 0H6.33333C7 0 7.33333 0.333333 7.33333 1V11C7.33333 11.6667 7 12 6.33333 12ZM12 11V4.33333C12 3.66667 11.6667 3.33333 11 3.33333H10.3333C9.66667 3.33333 9.33333 3.66667 9.33333 4.33333V11C9.33333 11.6667 9.66667 12 10.3333 12H11C11.6667 12 12 11.6667 12 11ZM2.66667 11V7C2.66667 6.33333 2.33333 6 1.66667 6H1C0.333333 6 0 6.33333 0 7V11C0 11.6667 0.333333 12 1 12H1.66667C2.33333 12 2.66667 11.6667 2.66667 11Z"
+                <svg
                   fill="currentColor"
-                />
-              </svg>
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 24 24"
+                >
+                  <g
+                    transform="translate(2 2) scale(1.6667)"
+                  >
+                    <path
+                      d="M6.33333 12H5.66667C5 12 4.66667 11.6667 4.66667 11V1C4.66667 0.333333 5 0 5.66667 0H6.33333C7 0 7.33333 0.333333 7.33333 1V11C7.33333 11.6667 7 12 6.33333 12ZM12 11V4.33333C12 3.66667 11.6667 3.33333 11 3.33333H10.3333C9.66667 3.33333 9.33333 3.66667 9.33333 4.33333V11C9.33333 11.6667 9.66667 12 10.3333 12H11C11.6667 12 12 11.6667 12 11ZM2.66667 11V7C2.66667 6.33333 2.33333 6 1.66667 6H1C0.333333 6 0 6.33333 0 7V11C0 11.6667 0.333333 12 1 12H1.66667C2.33333 12 2.66667 11.6667 2.66667 11Z"
+                      fill="currentColor"
+                    />
+                  </g>
+                </svg>
+              </div>
               <span
                 class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _fontWeight-f-weight-bo3548 _lineHeight-f-lineHeigh1269072494"
                 data-disable-theme="true"
@@ -928,7 +1002,7 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
           <div
             class="is_TouchableArea  t_group_true"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; justify-content: space-between; transform: scale(1);"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; justify-content: space-between; margin-right: -12px; margin-left: -12px; border-top-left-radius: var(--t-radius-rounded12); border-top-right-radius: var(--t-radius-rounded12); border-bottom-right-radius: var(--t-radius-rounded12); border-bottom-left-radius: var(--t-radius-rounded12); transform: scale(1);"
             tabindex="0"
           >
             <div
@@ -980,17 +1054,21 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
             <div
               class="_maxWidth-_xl_7037 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _maxWidth-8037"
             >
-              <svg
-                fill="none"
-                stroke-width="8"
-                style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
-                viewBox="0 0 19 18"
+              <div
+                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _width-t-icon-24 _height-t-icon-24"
               >
-                <path
-                  d="M18.08 3.55996L15.9 5.73996C15.32 6.30996 14.37 6.30998 13.79 5.72998L12.77 4.70996C12.19 4.12996 12.19 3.17995 12.77 2.60995L14.94 0.419981C13.41 -0.190019 11.51 -0.210047 9.73 0.859953C9.01 1.28995 8.4 1.86997 7.97 2.56997C7.94 2.60997 7.91 2.64998 7.89 2.69998C7.11 3.98998 6.9 5.33996 7.08 6.55996C7.15 7.01996 6.99 7.47995 6.66 7.79995L1.34 13.13C0.779996 13.68 0.5 14.42 0.5 15.14C0.5 15.88 0.779996 16.6 1.34 17.16C2.45 18.28 4.25999 18.28 5.37 17.16L10.7 11.84C11.02 11.51 11.48 11.35 11.94 11.42C13.16 11.6 14.51 11.39 15.79 10.62C16.55 10.17 17.19 9.52997 17.63 8.77997C18.71 6.99997 18.69 5.08996 18.08 3.55996ZM3.52 16C2.97 16 2.52 15.55 2.52 15C2.52 14.45 2.95999 14 3.50999 14H3.52C4.07 14 4.52 14.45 4.52 15C4.52 15.55 4.07 16 3.52 16Z"
-                  fill="currentColor"
-                />
-              </svg>
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 18px; height: 18px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 19 18"
+                >
+                  <path
+                    d="M18.08 3.55996L15.9 5.73996C15.32 6.30996 14.37 6.30998 13.79 5.72998L12.77 4.70996C12.19 4.12996 12.19 3.17995 12.77 2.60995L14.94 0.419981C13.41 -0.190019 11.51 -0.210047 9.73 0.859953C9.01 1.28995 8.4 1.86997 7.97 2.56997C7.94 2.60997 7.91 2.64998 7.89 2.69998C7.11 3.98998 6.9 5.33996 7.08 6.55996C7.15 7.01996 6.99 7.47995 6.66 7.79995L1.34 13.13C0.779996 13.68 0.5 14.42 0.5 15.14C0.5 15.88 0.779996 16.6 1.34 17.16C2.45 18.28 4.25999 18.28 5.37 17.16L10.7 11.84C11.02 11.51 11.48 11.35 11.94 11.42C13.16 11.6 14.51 11.39 15.79 10.62C16.55 10.17 17.19 9.52997 17.63 8.77997C18.71 6.99997 18.69 5.08996 18.08 3.55996ZM3.52 16C2.97 16 2.52 15.55 2.52 15C2.52 14.45 2.95999 14 3.50999 14H3.52C4.07 14 4.52 14.45 4.52 15C4.52 15.55 4.07 16 3.52 16Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
               >
@@ -1029,33 +1107,6 @@ exports[`SettingsMenu > renders for standard wallet user 1`] = `
               </span>
             </span>
           </div>
-        </div>
-        <div
-          class="_alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch _display-none _mb-t-space-pad95589114"
-        >
-          <button
-            class="is_Button  t_group_item"
-            dd-action-name="Log out"
-            style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: var(--t-radius-rounded16); border-top-right-radius: var(--t-radius-rounded16); border-bottom-right-radius: var(--t-radius-rounded16); border-bottom-left-radius: var(--t-radius-rounded16); gap: var(--t-space-spacing8); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1); transition: transform 100ms cubic-bezier(0.17, 0.67, 0.45, 1);"
-          >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 20.7px; height: 20.7px; color: rgba(19, 19, 19, 0.63);"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M8 7.3335C7.63133 7.3335 7.33333 7.03483 7.33333 6.66683V2.00016C7.33333 1.63216 7.63133 1.3335 8 1.3335C8.36867 1.3335 8.66667 1.63216 8.66667 2.00016V6.66683C8.66667 7.03483 8.36867 7.3335 8 7.3335ZM14 8.66683C14 6.5375 12.8506 4.5462 11.002 3.47087C10.6833 3.28553 10.2753 3.39343 10.0907 3.71143C9.90532 4.03009 10.0134 4.43822 10.3314 4.62288C11.772 5.46088 12.6667 7.01083 12.6667 8.66683C12.6667 11.2402 10.5727 13.3335 8 13.3335C5.42733 13.3335 3.33333 11.2402 3.33333 8.66683C3.33333 7.01083 4.22795 5.46088 5.66862 4.62288C5.98729 4.43822 6.09534 4.02943 5.90934 3.71143C5.72334 3.39343 5.31538 3.2842 4.99805 3.47087C3.14938 4.54687 2 6.5375 2 8.66683C2 11.9748 4.69133 14.6668 8 14.6668C11.3087 14.6668 14 11.9748 14 8.66683Z"
-                fill="currentColor"
-              />
-            </svg>
-            <span
-              class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-              line-height-disabled="false"
-            >
-              Log out
-            </span>
-          </button>
         </div>
       </div>
     </div>

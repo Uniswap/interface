@@ -103,7 +103,7 @@ describe(watchTransaction, () => {
       .provide([
         [call(getProvider, chainId), providerMock],
         // For non-bridge transactions, waitForTransactionStatus is called (Trading API polling)
-        [matchers.call.fn(waitForTransactionStatus), TransactionStatus.Success],
+        [matchers.call.fn(waitForTransactionStatus), { status: TransactionStatus.Success }],
         // Downstream helper inside finalizeTransaction
         [call(getEnabledChainIdsSaga, Platform.EVM), { chains: [] }],
       ])
@@ -233,7 +233,7 @@ describe(watchTransaction, () => {
       .provide([
         [call(getProvider, chainId), receiptProvider],
         // For non-bridge transactions, waitForTransactionStatus is called (Trading API polling)
-        [matchers.call.fn(waitForTransactionStatus), TransactionStatus.Success],
+        [matchers.call.fn(waitForTransactionStatus), { status: TransactionStatus.Success }],
         [call(logTransactionTimeout, transaction), undefined],
       ])
       .call(logTransactionTimeout, transaction)

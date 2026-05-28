@@ -8,6 +8,7 @@ export interface CreateAccountsParams {
   accounts: Account[]
 }
 
+// oxlint-disable-next-line typescript/explicit-function-return-type
 export function* createAccounts({ accounts }: CreateAccountsParams) {
   yield* put(addAccounts(accounts))
 

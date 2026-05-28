@@ -1,6 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { TradeType } from '@uniswap/sdk-core'
 import { FetchError } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getDisplayedPriceSource, type PriceSourceTag } from 'uniswap/src/features/prices/getDisplayedPriceSource'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants/features'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -19,8 +22,9 @@ function getSwapQuoteFailedAnalyticsProperties(params: {
   trade?: Trade
   trace: ITraceContext
   args: UseTradeArgs
+  priceSource?: PriceSourceTag
 }): UniverseEventProperties[SwapEventName.SwapQuoteFailed] | undefined {
-  const { error, trace, args } = params
+  const { error, trace, args, priceSource } = params
 
   const isExactIn = args.tradeType === TradeType.EXACT_INPUT
 
@@ -55,6 +59,7 @@ function getSwapQuoteFailedAnalyticsProperties(params: {
     allowed_slippage: slippageTolerance,
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     transactionOriginType: TransactionOriginType.Internal,
+    price_source: priceSource,
     ...trace,
   }
 }
@@ -65,9 +70,23 @@ function useSendSwapQuoteFailureAnalyticsEvent(): (params: {
   args: UseTradeArgs
 }) => void {
   const trace = useTrace()
+  const isCentralizedPricesEnabled = useFeatureFlag(FeatureFlags.CentralizedPrices)
+  const queryClient = useQueryClient()
 
   return useEvent((params: { error: Error; trade?: Trade; args: UseTradeArgs }) => {
-    const eventProperties = getSwapQuoteFailedAnalyticsProperties({ ...params, trace })
+    const isExactIn = params.args.tradeType === TradeType.EXACT_INPUT
+    const inputCurrency = isExactIn ? params.args.amountSpecified?.currency : params.args.otherCurrency
+    const priceSource = inputCurrency
+      ? getDisplayedPriceSource({
+          isCentralizedPricesEnabled,
+          surface: 'usdc',
+          chainId: inputCurrency.chainId,
+          address: getCurrencyAddressForAnalytics(inputCurrency),
+          queryClient,
+        })
+      : undefined
+
+    const eventProperties = getSwapQuoteFailedAnalyticsProperties({ ...params, trace, priceSource })
 
     if (!eventProperties) {
       return

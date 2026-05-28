@@ -8,13 +8,12 @@ import {
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
   TrafficFlows,
 } from '@universe/api'
+import { isWebApp, isBetaEnv, isDevEnv, isE2eTestEnv } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { config } from 'uniswap/src/config'
-import { isBetaEnv, isDevEnv, isPlaywrightEnv } from 'utilities/src/environment/env'
-import { isWebApp } from 'utilities/src/platform'
 
 function getComplianceApiBaseUrl(): string {
-  if (isPlaywrightEnv()) {
+  if (isE2eTestEnv()) {
     return PROD_ENTRY_GATEWAY_API_BASE_URL
   }
   // Dev and staging both use the staging compliance backend
@@ -25,10 +24,19 @@ function getComplianceApiBaseUrl(): string {
 }
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
-const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
+function getEmbeddedWalletHostname(): string {
+  if (isE2eTestEnv() || isDevEnv()) {
+    return 'dev.ew.unihq.org'
+  }
+  if (isBetaEnv()) {
+    return 'app.corn-staging.com'
+  }
+  return UNISWAP_WEB_HOSTNAME
+}
+const EMBEDDED_WALLET_HOSTNAME = getEmbeddedWalletHostname()
 
 function getPrivyEmbeddedWalletUrl(): string {
-  if (isPlaywrightEnv()) {
+  if (isE2eTestEnv()) {
     return PROD_ENTRY_GATEWAY_API_BASE_URL
   } else if (isBetaEnv()) {
     return STAGING_ENTRY_GATEWAY_API_BASE_URL
@@ -123,6 +131,7 @@ export const uniswapUrls = {
     smartWalletDelegation: createHelpArticleUrl('36391987158797'),
     swapProtection: createHelpArticleUrl('18814993155853'),
     swapSlippage: createHelpArticleUrl('8643879653261-What-is-Price-Slippage-'),
+    swapDeadline: createHelpArticleUrl('45320061462797'),
     toucanBidHelp: createHelpArticleUrl(
       '43106804833421-How-to-participate-in-token-auctions-on-Uniswap#bidding-in-an-auction',
     ),
@@ -199,8 +208,6 @@ export const uniswapUrls = {
     (isWebApp ? '/config' : getCloudflareApiBaseUrl({ flow: TrafficFlows.Gating, postfix: 'v1/statsig-proxy' })),
 
   // Feature service URL's
-  unitagsApiUrl:
-    config.unitagsApiUrlOverride || getCloudflareApiBaseUrl({ flow: TrafficFlows.Unitags, postfix: 'v2/unitags' }),
   scantasticApiUrl:
     config.scantasticApiUrlOverride ||
     getCloudflareApiBaseUrl({ flow: TrafficFlows.Scantastic, postfix: 'v2/scantastic' }),
@@ -224,20 +231,11 @@ export const uniswapUrls = {
   privyEmbeddedWalletUrl: getPrivyEmbeddedWalletUrl(),
 
   // API Paths
-  gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
     approval: `${tradingApiVersionPrefix}/check_approval`,
-    claimLpFees: `${tradingApiVersionPrefix}/lp/claim`,
-    claimRewards: `${tradingApiVersionPrefix}/lp/claim_rewards`,
-    createLp: `${tradingApiVersionPrefix}/lp/create`,
-    decreaseLp: `${tradingApiVersionPrefix}/lp/decrease`,
-    increaseLp: `${tradingApiVersionPrefix}/lp/increase`,
-    lpApproval: `${tradingApiVersionPrefix}/lp/approve`,
-    poolInfo: `${tradingApiVersionPrefix}/lp/pool_info`,
     order: `${tradingApiVersionPrefix}/order`,
     orders: `${tradingApiVersionPrefix}/orders`,
     plan: `${tradingApiVersionPrefix}/plan`,
-    priceDiscrepancy: `${tradingApiVersionPrefix}/lp/price_discrepancy`,
     quote: `${tradingApiVersionPrefix}/quote`,
     swap: `${tradingApiVersionPrefix}/swap`,
     swap5792: `${tradingApiVersionPrefix}/swap_5792`,
@@ -247,6 +245,7 @@ export const uniswapUrls = {
     wallet: {
       checkDelegation: `${tradingApiVersionPrefix}/wallet/check_delegation`,
       encode7702: `${tradingApiVersionPrefix}/wallet/encode_7702`,
+      encode4337: `${tradingApiVersionPrefix}/wallet/encode_4337`,
     },
   },
 
@@ -259,6 +258,10 @@ export const uniswapUrls = {
   appBaseUrl: UNISWAP_APP_URL,
   redirectUrlBase: UNISWAP_MOBILE_REDIRECT_URL,
   requestOriginUrl: UNISWAP_WEB_URL,
+
+  // Privy REST endpoints
+  // Docs: https://docs.privy.io/guide/api/encrypted-authorization-keys
+  privyEncryptedAuthorizationKeysUrl: `https://privy.${EMBEDDED_WALLET_HOSTNAME}/api/v1/encrypted_authorization_keys`,
 
   // Web Interface Urls
   webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,

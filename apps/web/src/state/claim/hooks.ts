@@ -79,7 +79,6 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
 const FETCH_CLAIM_FILE_PROMISES: { [startingAddress: string]: Promise<{ [address: string]: UserClaimData }> } = {}
 function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData }> {
   return (
-    // oxlint-disable-next-line typescript/no-unnecessary-condition
     FETCH_CLAIM_FILE_PROMISES[key] ??
     (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
       `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`,
@@ -101,7 +100,6 @@ function fetchClaim(account: string): Promise<UserClaimData> {
   }
 
   return (
-    // oxlint-disable-next-line typescript/no-unnecessary-condition
     FETCH_CLAIM_PROMISES[account] ??
     (FETCH_CLAIM_PROMISES[account] = fetchClaimMapping()
       .then((mapping) => {
@@ -150,6 +148,7 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
 
     fetchClaim(account)
       .then((accountClaimInfo) =>
+        // oxlint-disable-next-line no-shadow
         setClaimInfo((claimInfo) => {
           return {
             ...claimInfo,
@@ -158,6 +157,7 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
         }),
       )
       .catch(() => {
+        // oxlint-disable-next-line no-shadow
         setClaimInfo((claimInfo) => {
           return {
             ...claimInfo,

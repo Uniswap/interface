@@ -10,6 +10,7 @@ export enum ExtensionScreens {
   UnsupportedBrowserScreen = 'UnsupportedBrowserScreen',
   ManageDappConnectionsScreen = 'ManageDappConnectionsScreen',
   Settings = 'Settings',
+  SettingsDisclosures = 'SettingsDisclosures',
 }
 
 export enum ExtensionOnboardingFlow {

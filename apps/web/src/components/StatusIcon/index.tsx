@@ -1,4 +1,3 @@
-import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { breakpoints } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
@@ -6,7 +5,7 @@ import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import sockImg from '~/assets/svg/socks.svg'
-import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/components/Web3Provider/constants'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from '~/connection/constants'
 import { useActiveAddresses, useActiveWallet } from '~/features/accounts/store/hooks'
 import { useHasSocks } from '~/hooks/useSocksBalance'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
@@ -70,13 +69,8 @@ function MiniWalletIcon({ platform }: { platform: Platform }) {
     return null
   }
 
-  // Embedded wallet uses the Passkey React component so it respects theme colors
   if (wallet.name === CONNECTION_PROVIDER_NAMES.EMBEDDED_WALLET) {
-    return (
-      <MiniIconContainer $side="right" data-testid="MiniIcon">
-        <Passkey size={MINI_ICON_SIZE} color="$neutral1" />
-      </MiniIconContainer>
-    )
+    return null
   }
 
   // TODO(APPS-8471): this should use useConnectedWallet() which returns connected WalletConnectorMeta, which is post-icon-override-map transformation
@@ -97,7 +91,7 @@ function MiniConnectedIndicator() {
   )
 }
 
-export default function StatusIcon({
+export function StatusIcon({
   size = 16,
   showMiniIcons = true,
   showConnectedIndicator,
@@ -118,7 +112,7 @@ export default function StatusIcon({
 
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <AccountIcon address={addressToDisplay} size={size} transition={transition} />
+      <AccountIcon address={addressToDisplay} size={size} transition={transition} centered />
       {showConnectedIndicator ? <MiniConnectedIndicator /> : showMiniIcons && <MiniWalletIcon platform={platform} />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>

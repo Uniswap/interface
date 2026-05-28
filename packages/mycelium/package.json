@@ -10,6 +10,7 @@
     ".": "./src/index.ts",
     "./tailwind": "./tailwind.css",
     "./fonts": "./fonts.css",
+    "./fonts/*": "./fonts/*",
     "./cn": {
       "types": "./src/cn.d.ts",
       "default": "./src/index.ts"
@@ -46,12 +47,11 @@
     "tailwindcss": ">=4.0.0"
   },
   "devDependencies": {
-    "@types/node": "22.13.1",
-    "@typescript/native-preview": "7.0.0-dev.20260311.1",
-    "depcheck": "1.4.7",
-    "react": "19.0.3",
+    "@types/node": "22.19.17",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "react": "19.1.0",
     "tailwindcss": "4.1.16",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   },
   "scripts": {
     "typecheck": "nx typecheck @universe/mycelium",

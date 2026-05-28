@@ -6,6 +6,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import PopupApp from 'src/app/core/PopupApp'
+import { prefetchExtensionStatsigUserId } from 'src/app/core/StatsigProvider'
 import { initializeReduxStore } from 'src/store/store'
 // oxlint-disable-next-line typescript/no-explicit-any -- Global polyfill cleanup requires any type for runtime modification
 ;(globalThis as any).regeneratorRuntime = undefined
@@ -23,6 +24,7 @@ function makeFallbackPopup(): void {
     )
   }
 
+  prefetchExtensionStatsigUserId()
   initializeReduxStore({ readOnly: true })
   initFallbackPopup()
 }

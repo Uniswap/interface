@@ -54,6 +54,17 @@ describe('adjustItemWidths', () => {
     expect(result[1].id).toBe('low')
   })
 
+  it('keeps aggregate "other" last even when it is the largest segment', () => {
+    const items: PercentageAllocationItem[] = [
+      makeItem({ id: 'other', percentage: 60, label: 'Others' }),
+      makeItem({ id: 'chain-a', percentage: 25 }),
+      makeItem({ id: 'chain-b', percentage: 15 }),
+    ]
+    const result = adjustItemWidths({ t: mockT, items, chartWidth: 300, minBarWidth: 8 })
+
+    expect(result.map((r) => r.id)).toEqual(['chain-a', 'chain-b', 'other'])
+  })
+
   it('does not mutate the input items array', () => {
     const items: PercentageAllocationItem[] = [
       makeItem({ id: 'b', percentage: 40 }),
@@ -124,6 +135,7 @@ describe('adjustItemWidths', () => {
     expect(others?.label).toBe('Others')
     // One large (50%), four visible small (1% each), one "others" (1%)
     expect(result).toHaveLength(6)
+    expect(result[result.length - 1].id).toBe('others')
   })
 
   it('preserves item id, percentage, color, and label on each result', () => {

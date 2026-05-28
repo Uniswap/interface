@@ -43,7 +43,7 @@ export function LanguageMenuItems() {
   )
 }
 
-export default function LanguageMenu({ onClose }: { onClose: () => void }) {
+export function LanguageMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
 
   return (

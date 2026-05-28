@@ -1,18 +1,19 @@
 import '@walletconnect/react-native-compat'
 import { IWalletKit, WalletKit } from '@reown/walletkit'
+import { isBetaEnv, isDevEnv } from '@universe/environment'
 import { Core } from '@walletconnect/core'
+import { getConfig } from 'src/config'
 import { registerWCClientForPushNotifications } from 'src/features/walletConnect/api'
-import { config } from 'uniswap/src/config'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 
 // Export the wallet instance that will be initialized
 export let wcWeb3Wallet: IWalletKit
 
+const { walletConnectProjectId, walletConnectProjectIdDev, walletConnectProjectIdBeta } = getConfig()
 const PROJECT_ID = {
-  dev: config.walletConnectProjectIdDev,
-  beta: config.walletConnectProjectIdBeta,
-  default: config.walletConnectProjectId,
+  dev: walletConnectProjectIdDev,
+  beta: walletConnectProjectIdBeta,
+  default: walletConnectProjectId,
 }
 
 let wcWeb3WalletReadyResolve: () => void

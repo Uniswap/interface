@@ -4,7 +4,7 @@
   "compilerOptions": {
     "types": ["vitest/globals"],
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "isolatedModules": true
   }

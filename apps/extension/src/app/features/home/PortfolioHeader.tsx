@@ -8,9 +8,10 @@ import { selectPopupState } from 'src/app/features/popups/selectors'
 import { closePopup, openPopup, PopupName } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Circle, Flex, Popover, Text, TouchableArea, UniversalImage } from 'ui/src'
+import { Circle, Flex, Popover, TouchableArea, UniversalImage } from 'ui/src'
 import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
+import { DynamicSizeText } from 'ui/src/components/text/DynamicSizeText/DynamicSizeText'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
@@ -208,13 +209,14 @@ export const PortfolioHeader = memo(function PortfolioHeaderInner({ address }: P
         {walletHasName ? (
           <AnimatedUnitagDisplayName address={address} displayName={displayName} />
         ) : (
-          <TouchableArea testID="account-header/address-only" onPress={onPressCopyAddress}>
-            <Flex centered row shrink gap="$spacing4">
-              <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} variant="subheading1">
-                {formattedAddress}
-              </Text>
-              <CopyAlt color="$neutral3" size="$icon.16" />
-            </Flex>
+          <TouchableArea testID="account-header/address-only" onPress={onPressCopyAddress} width="100%">
+            <DynamicSizeText
+              variant="subheading1"
+              gap="$spacing4"
+              floatingSuffix={<CopyAlt color="$neutral3" size="$icon.16" />}
+            >
+              {formattedAddress}
+            </DynamicSizeText>
           </TouchableArea>
         )}
       </Flex>

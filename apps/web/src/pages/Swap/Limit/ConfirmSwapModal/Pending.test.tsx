@@ -95,7 +95,6 @@ describe('Pending - classic trade titles', () => {
     [false, false, undefined, TEST_TRADE_EXACT_INPUT, undefined, undefined, 'Confirm swap'],
   ])(
     'renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',
-    // oxlint-disable-next-line max-params
     async (approvalPending, revocationPending, wrapTxHash, trade, swapResult, swapTxStatus, expectedTitle) => {
       mocked(useSwapTransactionStatus).mockReturnValue(swapTxStatus)
       const { asFragment } = render(
@@ -120,7 +119,6 @@ describe('Pending - uniswapX trade titles', () => {
     [false, false, undefined, LIMIT_ORDER_TRADE, undefined, undefined, 'Confirm limit'],
   ])(
     'renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',
-    // oxlint-disable-next-line max-params
     async (approvalPending, revocationPending, wrapTxHash, trade, swapResult, orderDetails, expectedTitle) => {
       mocked(useUniswapXOrderByOrderHash).mockReturnValue(orderDetails)
       const { asFragment } = render(

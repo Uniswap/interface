@@ -7,7 +7,7 @@ export enum FiatOnRampTransactionStatus {
   FAILED = 'FAILED',
 }
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 export function backendStatusToFiatOnRampStatus(status: GraphQLApi.TransactionStatus) {
   switch (status) {
     case GraphQLApi.TransactionStatus.Confirmed:

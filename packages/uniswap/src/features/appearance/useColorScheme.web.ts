@@ -1,7 +1,6 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { type ColorScheme } from 'uniswap/src/features/appearance/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isBrowser } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 /**
@@ -19,10 +18,6 @@ import { useEvent } from 'utilities/src/react/hooks'
  * Creates a media query for dark mode preference and returns both the query and current preference
  */
 function getDarkModeMediaQuery(): { mediaQuery: MediaQueryList | null; colorScheme: ColorScheme } {
-  if (!isBrowser) {
-    return { mediaQuery: null, colorScheme: 'light' }
-  }
-
   try {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     return {
@@ -44,13 +39,7 @@ export function useColorScheme(): ColorScheme {
   })
 
   // Use useLayoutEffect for synchronous updates to prevent flashing
-  const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect
-
-  useIsomorphicLayoutEffect(() => {
-    if (!isBrowser) {
-      return
-    }
-
+  useLayoutEffect(() => {
     const { mediaQuery } = getDarkModeMediaQuery()
 
     if (!mediaQuery) {
@@ -63,7 +52,7 @@ export function useColorScheme(): ColorScheme {
       if (mediaQuery.addEventListener) {
         mediaQuery.addEventListener('change', handleChange)
 
-        // oxlint-disable-next-line consistent-return
+        // oxlint-disable-next-line typescript/consistent-return
         return (): void => {
           mediaQuery.removeEventListener('change', handleChange)
         }
@@ -73,7 +62,7 @@ export function useColorScheme(): ColorScheme {
       else if (mediaQuery.addListener) {
         mediaQuery.addListener(handleChange)
 
-        // oxlint-disable-next-line consistent-return
+        // oxlint-disable-next-line typescript/consistent-return
         return (): void => {
           mediaQuery.removeListener(handleChange)
         }
@@ -81,7 +70,7 @@ export function useColorScheme(): ColorScheme {
     } catch (error) {
       logger.warn('useColorScheme.web.tsx', 'getDarkModeMediaQuery', 'matchMedia is not supported:', error)
     }
-  }, [])
+  }, [handleChange])
 
   return colorScheme
 }

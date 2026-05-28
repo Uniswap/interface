@@ -25,7 +25,7 @@ export function SwapPendingNotification({ notification }: { notification: SwapPe
   )
 }
 
-// oxlint-disable-next-line consistent-return
+// oxlint-disable-next-line typescript/consistent-return
 function getNotificationText(wrapType: WrapType, t: TFunction): string {
   switch (wrapType) {
     case WrapType.NotApplicable:

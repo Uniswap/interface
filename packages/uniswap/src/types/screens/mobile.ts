@@ -1,4 +1,4 @@
-import { ExtensionOnboardingFlow, ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import type { ExtensionOnboardingFlow, ExtensionScreens } from 'uniswap/src/types/screens/extension'
 
 export enum MobileScreens {
   Activity = 'Activity',
@@ -12,12 +12,14 @@ export enum MobileScreens {
   Explore = 'Explore',
   Home = 'Home',
   OnboardingStack = 'OnboardingStack',
+  PortfolioChartDetails = 'PortfolioChartDetails',
   UnitagStack = 'UnitagStack',
   Settings = 'Settings',
   SettingsCloudBackupPasswordCreate = 'SettingsCloudBackupPasswordCreate',
   SettingsCloudBackupPasswordConfirm = 'SettingsCloudBackupPasswordConfirm',
   SettingsCloudBackupProcessing = 'SettingsCloudBackupProcessing',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
+  SettingsDisclosures = 'SettingsDisclosures',
   SettingsLanguage = 'SettingsLanguage',
   SettingsNotifications = 'SettingsNotifications',
   SettingsPrivacy = 'SettingsPrivacy',
@@ -46,6 +48,9 @@ export enum OnboardingScreens {
   Notifications = 'OnboardingNotifications',
   WelcomeWallet = 'WelcomeWallet',
   PasskeyImport = 'PasskeyImport',
+  // Recovery-based graduation (email/OAuth + PIN). Shown when the user lacks a passkey
+  // on this device; rejoins the standard import flow after decrypting the seed phrase.
+  RecoveryFlow = 'OnboardingRecoveryFlow',
   Security = 'OnboardingSecurity',
 
   // import

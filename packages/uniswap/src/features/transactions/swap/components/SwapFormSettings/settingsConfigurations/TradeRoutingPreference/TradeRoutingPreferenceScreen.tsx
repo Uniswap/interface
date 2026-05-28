@@ -1,4 +1,5 @@
 import { TradingApi } from '@universe/api'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { TFunction } from 'i18next'
 import type { ReactNode } from 'react'
@@ -34,7 +35,6 @@ import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactio
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function TradeRoutingPreferenceScreen(): JSX.Element {
@@ -437,6 +437,7 @@ function DefaultOptionTitle({ v4SwapEnabled }: { v4SwapEnabled: boolean }): JSX.
           caption: t('swap.settings.routingPreference.option.default.tooltip'),
           rejectText: t('common.button.close'),
           modalName: ModalName.SwapSettingsDefaultRoutingInfo,
+          zIndex: zIndexes.popover,
         }}
         tooltipProps={{
           text: t('swap.settings.routingPreference.option.default.tooltip'),

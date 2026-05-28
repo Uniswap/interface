@@ -10,6 +10,7 @@ export type SearchHistoryResult =
   | WalletByAddressSearchHistoryResult
   | EtherscanSearchHistoryResult
   | PoolSearchHistoryResult
+  | MultichainTokenSearchHistoryResult
 
 // do not change the order of these enum values without a migration since they are persisted in the redux store
 export enum SearchHistoryResultType {
@@ -18,6 +19,7 @@ export enum SearchHistoryResultType {
   // NFTCollection = 2, - removed, but should not be reintroduced for number stability of search history results
   WalletByAddress = 3,
   Pool = 4,
+  MultichainToken = 5,
 }
 
 interface SearchResultBase {
@@ -33,6 +35,22 @@ export interface TokenSearchHistoryResult extends SearchResultBase {
 
 export function isTokenSearchHistoryResult(x: SearchHistoryResult): x is TokenSearchHistoryResult {
   return x.type === SearchHistoryResultType.Token
+}
+
+export interface MultichainTokenSearchHistoryResult extends SearchResultBase {
+  type: SearchHistoryResultType.MultichainToken
+  multichainId: string
+  name: string
+  symbol: string
+  logoUrl?: string
+  /** Per-chain currency rows, first entry is the primary (same order as search UI). */
+  tokenCurrencyIds: CurrencyId[]
+  /** When set, TDP opens with this network selected (`?chain=`). */
+  tdpChainFilter?: UniverseChainId
+}
+
+export function isMultichainTokenSearchHistoryResult(x: SearchHistoryResult): x is MultichainTokenSearchHistoryResult {
+  return x.type === SearchHistoryResultType.MultichainToken
 }
 
 // TODO(CONS-419): Should not contain feeTier in saved redux state -- this can be dynamic and should be re-fetched at calltime

@@ -91,3 +91,18 @@ export function getWalletMeta(provider: JsonRpcProvider | FallbackProvider): Wal
     return getInjectedMeta(provider.provider)
   }
 }
+
+/**
+ * Read wallet metadata directly from an EIP-1193 external provider.
+ *
+ * Use this in analytics paths (e.g. WalletConnect connection tracking) instead
+ * of wrapping with `new Web3Provider(...)` purely to satisfy `getWalletMeta`'s
+ * Web3Provider signature — that wrap looks like a chain-RPC provider but never
+ * makes an RPC call, and trips RPC bypass lints for no actual reason.
+ */
+export function getWalletMetaFromExternal(provider: ExternalProvider): WalletMeta | undefined {
+  if (isWalletConnectProvider(provider)) {
+    return getWalletConnectMeta(provider)
+  }
+  return getInjectedMeta(provider as ExternalProvider & Record<string, unknown>)
+}

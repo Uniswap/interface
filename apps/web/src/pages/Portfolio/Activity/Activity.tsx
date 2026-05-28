@@ -1,6 +1,6 @@
 import { Row } from '@tanstack/react-table'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, TouchableArea } from 'ui/src'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -9,7 +9,6 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { useOpenTransactionDetailsModal } from '~/components/TopLevelModals/TransactionDetailsModalDispatcher'
 import { ActivityFilters } from '~/pages/Portfolio/Activity/ActivityFilters'
 import { ActivityTable } from '~/pages/Portfolio/Activity/ActivityTable/ActivityTable'
 import { ActivityFilterType, TimePeriod } from '~/pages/Portfolio/Activity/Filters/utils'
@@ -18,8 +17,10 @@ import { useActivityFiltering } from '~/pages/Portfolio/Activity/hooks/useActivi
 import { PaginationSkeletonRow } from '~/pages/Portfolio/Activity/PaginationSkeletonRow'
 import { usePortfolioRoutes } from '~/pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from '~/pages/Portfolio/hooks/usePortfolioAddresses'
+import { usePortfolioOutageContext } from '~/pages/Portfolio/PortfolioOutageContext'
+import { useOpenTransactionDetailsModal } from '~/state/transactionDetailsModalStore'
 
-export default function PortfolioActivity() {
+export function PortfolioActivity() {
   const trace = useTrace()
   const [selectedTransactionType, setSelectedTransactionType] = useState<string>(ActivityFilterType.All)
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<string>(TimePeriod.All)
@@ -29,14 +30,21 @@ export default function PortfolioActivity() {
   const { evmAddress, svmAddress } = usePortfolioAddresses()
   const { chainId, isExternalWallet } = usePortfolioRoutes()
 
-  const { transactionData, sectionData, showLoading, isFetchingNextPage, sentinelRef } = useActivityFiltering({
-    evmAddress,
-    svmAddress,
-    chainId,
-    selectedTransactionType,
-    selectedTimePeriod,
-    searchText,
-  })
+  const { transactionData, sectionData, showLoading, isFetchingNextPage, sentinelRef, error, dataUpdatedAt } =
+    useActivityFiltering({
+      evmAddress,
+      svmAddress,
+      chainId,
+      selectedTransactionType,
+      selectedTimePeriod,
+      searchText,
+    })
+
+  const { setActivityOutage } = usePortfolioOutageContext()
+  useEffect(() => {
+    setActivityOutage(error, dataUpdatedAt)
+    return () => setActivityOutage(undefined, undefined)
+  }, [error, dataUpdatedAt, setActivityOutage])
 
   // Handler to clear type and time filters
   const handleClearFilters = useCallback(() => {
@@ -56,8 +64,6 @@ export default function PortfolioActivity() {
     transactionDataLength: transactionData.length,
     onClearFilters: handleClearFilters,
   })
-
-  const error = false
 
   const tableData = useMemo(
     () =>
@@ -107,7 +113,12 @@ export default function PortfolioActivity() {
           ) : (
             <Trace section={SectionName.PortfolioActivityTab} element={ElementName.PortfolioActivityTable}>
               <>
-                <ActivityTable data={tableData} loading={showLoading} error={error} rowWrapper={rowWrapper} />
+                <ActivityTable
+                  data={tableData}
+                  loading={showLoading}
+                  error={!!error && !tableData.length}
+                  rowWrapper={rowWrapper}
+                />
 
                 {/* Show skeleton loading indicator while fetching next page */}
                 {isFetchingNextPage && <PaginationSkeletonRow />}

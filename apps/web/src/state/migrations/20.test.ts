@@ -35,6 +35,7 @@ const previousState: PersistAppStateV20 = {
     hideSpamTokens: true,
     hapticsEnabled: false,
     deviceAccessTimeout: DeviceAccessTimeout.ThirtyMinutes,
+    enableCustomGasFeeEntry: false,
   },
 }
 

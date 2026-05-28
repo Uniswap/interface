@@ -7,7 +7,7 @@ import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/e
 import {
   HandleApprovalStepParams,
   HandleSignatureStepParams,
-  HandleSwapBatchedStepParams,
+  HandleSwapWalletCallStepParams,
   HandleSwapStepSyncParams,
   HandleUniswapXPlanSignatureStepParams,
   SignatureTransactionStep,
@@ -27,8 +27,8 @@ export interface PlanParams extends SwapExecutionCallbacks {
   onTransactionHash?: (hash: string) => void
   handleApprovalTransactionStep: (params: HandleApprovalStepParams<TradingApi.PlanStep>) => SagaGenerator<string>
   handleSwapTransactionStep: (params: HandleSwapStepSyncParams<TradingApi.PlanStep>) => SagaGenerator<string>
-  handleSwapTransactionBatchedStep: (
-    params: HandleSwapBatchedStepParams,
+  handleSwapTransactionWalletCallStep: (
+    params: HandleSwapWalletCallStepParams,
   ) => SagaGenerator<{ batchId: string; hash?: string }>
   handleSignatureStep: (
     params: HandleSignatureStepParams<SignatureTransactionStep, TradingApi.PlanStep>,
@@ -39,6 +39,7 @@ export interface PlanParams extends SwapExecutionCallbacks {
    * web and wallet so each caller will not have the same implementation.
    */
   sendToast: (appNotification: AppNotification, planId: string) => SagaGenerator<void>
+  onPlanFinalized?: (planId: string) => void
   caip25Info: CAIP25Session | undefined
   getDisplayableError: ({
     error,

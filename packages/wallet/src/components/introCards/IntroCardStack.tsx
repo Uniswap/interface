@@ -1,6 +1,6 @@
+import { isExtensionApp } from '@universe/environment'
 import { useEffect } from 'react'
 import { SwipeableCardStack } from 'ui/src'
-import { isExtensionApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { IntroCard, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
 

@@ -60,7 +60,6 @@ export function Shine({ shimmerDurationSeconds = 2, children, disabled }: ShineP
     })()
 
     return [opacify(0, hexColorForOpacifying), opacify(44, hexColorForOpacifying), opacify(0, hexColorForOpacifying)]
-    // oxlint-disable-next-line react/exhaustive-deps -- biome-parity: oxlint is stricter here
   }, [colors.black.val])
 
   const maskedViewStyle = useMemo(() => ({ width: layout?.width, height: layout?.height }), [layout])

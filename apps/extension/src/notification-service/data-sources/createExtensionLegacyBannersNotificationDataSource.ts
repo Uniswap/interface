@@ -50,7 +50,7 @@ export function createExtensionLegacyBannersNotificationDataSource(
 ): NotificationDataSource {
   const { tracker, pollIntervalMs = 5000 } = ctx
 
-  let intervalId: NodeJS.Timeout | null = null
+  let intervalId: ReturnType<typeof setInterval> | null = null
   let currentCallback: ((notifications: InAppNotification[], source: string) => void) | null = null
   let hasMigratedLegacyState = false
 

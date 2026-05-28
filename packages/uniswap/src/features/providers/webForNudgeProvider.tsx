@@ -1,6 +1,6 @@
+import { isWebApp } from '@universe/environment'
 import React from 'react'
 import { useIsPortfolioZero } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsPortfolioZero'
-import { isWebApp } from 'utilities/src/platform'
 
 type StateContext = boolean
 type SetContext = (v: boolean) => void

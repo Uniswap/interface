@@ -1,4 +1,3 @@
-import { CheckApprovalLPResponse } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import {
   type NFTPermitData,
   type PermitBatchData,
@@ -44,43 +43,21 @@ export interface NormalizedApprovalData {
   gasFeeToken1Permit?: string
 }
 
-function normalizeV1Response(response: CheckApprovalLPResponse): NormalizedApprovalData {
-  return {
-    token0Approval: response.token0Approval,
-    token1Approval: response.token1Approval,
-    positionTokenApproval: response.positionTokenApproval,
-    token0Cancel: response.token0Cancel,
-    token1Cancel: response.token1Cancel,
-    token0PermitTransaction: response.token0PermitTransaction,
-    token1PermitTransaction: response.token1PermitTransaction,
-    v4BatchPermitData: response.permitData.case === 'permitBatchData' ? response.permitData.value : undefined,
-    v3NftPermitData: response.permitData.case === 'nftPermitData' ? response.permitData.value : undefined,
-    gasFeeToken0Approval: response.gasFeeToken0Approval,
-    gasFeeToken1Approval: response.gasFeeToken1Approval,
-    gasFeePositionTokenApproval: response.gasFeePositionTokenApproval,
-    gasFeeToken0Cancel: response.gasFeeToken0Cancel,
-    gasFeeToken1Cancel: response.gasFeeToken1Cancel,
-    gasFeeToken0Permit: response.gasFeeToken0Permit,
-    gasFeeToken1Permit: response.gasFeeToken1Permit,
-  }
-}
-
 export interface TokenAddresses {
   token0Address?: string
   token1Address?: string
   positionTokenAddress?: string
 }
 
-// Matches each transaction to the correct token by comparing the transaction's `to` address
-// against known token addresses in a single pass.
-function normalizeV2Response(response: LPApprovalResponse, tokenAddresses: TokenAddresses): NormalizedApprovalData {
+export function normalizeApprovalResponse(
+  response: LPApprovalResponse,
+  tokenAddresses: TokenAddresses,
+): NormalizedApprovalData {
   let token0Approval: ApprovalTransactionRequest | undefined
   let token1Approval: ApprovalTransactionRequest | undefined
   let positionTokenApproval: ApprovalTransactionRequest | undefined
   let token0Cancel: ApprovalTransactionRequest | undefined
   let token1Cancel: ApprovalTransactionRequest | undefined
-  // Permit transactions target the Permit2 contract, not the token contract,
-  // so they can't be matched by `to` address. Collect them positionally instead.
   const permits: ApprovalTransactionRequest[] = []
 
   for (const tx of response.transactions) {
@@ -126,19 +103,4 @@ function normalizeV2Response(response: LPApprovalResponse, tokenAddresses: Token
     gasFeeToken0Permit: permits[0]?.gasFee,
     gasFeeToken1Permit: permits[1]?.gasFee,
   }
-}
-
-export function normalizeApprovalResponse(
-  response: CheckApprovalLPResponse | LPApprovalResponse | undefined,
-  tokenAddresses?: TokenAddresses,
-): NormalizedApprovalData | undefined {
-  if (!response) {
-    return undefined
-  }
-
-  if (response instanceof CheckApprovalLPResponse) {
-    return normalizeV1Response(response)
-  }
-
-  return normalizeV2Response(response, tokenAddresses ?? {})
 }

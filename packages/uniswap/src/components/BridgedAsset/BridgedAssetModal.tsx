@@ -1,3 +1,4 @@
+import { isWebAppDesktop } from '@universe/environment'
 import { atom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +20,7 @@ import { Verified } from 'ui/src/components/icons/Verified'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -26,7 +28,6 @@ import { ElementName, ModalName, ModalNameType } from 'uniswap/src/features/tele
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebAppDesktop } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type BridgedAssetModalProps = {
@@ -34,11 +35,6 @@ export type BridgedAssetModalProps = {
   currencyInfo1?: CurrencyInfo
   onContinue?: () => void
   modalName?: ModalNameType
-}
-
-export type BaseModalProps = {
-  isOpen: boolean
-  onClose: () => void
 }
 
 export const BridgedAssetModalAtom = atom<BridgedAssetModalProps | undefined>(undefined)
@@ -146,7 +142,6 @@ export function BridgedAssetModal({
     return getContrastPassingTextColor(validTokenColor ?? colors.accent1.val)
   }, [colors.accent1.val, validTokenColor])
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +isOpen
   useEffect(() => {
     setShowingSecondCurrency(false)
   }, [isOpen])

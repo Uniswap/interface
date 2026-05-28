@@ -13,7 +13,6 @@ export const migration49 = (
     return undefined
   }
 
-  // oxlint-disable-next-line no-unused-vars -- we want to remove localWebTransactions
   const { localWebTransactions, ...restState } = state
 
   return {

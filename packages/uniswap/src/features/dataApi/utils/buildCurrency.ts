@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { type NativeCurrency, Token } from '@uniswap/sdk-core'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
@@ -43,7 +43,6 @@ const CURRENCY_CACHE = new Map<string, Token | NativeCurrency | undefined>()
  * @param params.sellFeeBps The sell fee in basis points. This parameter is optional.
  * @returns A new instance of Token or NativeCurrency if the parameters are valid, otherwise returns undefined.
  */
-// oxlint-disable-next-line complexity
 export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency | undefined {
   const { chainId, address, decimals, symbol, name, bypassChecksum = true, buyFeeBps, sellFeeBps } = args
 
@@ -52,7 +51,10 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
   }
 
   const cacheKey = JSON.stringify(
-    sortKeysRecursively({ ...args, address: normalizeTokenAddressForCache(address ?? null) }),
+    sortKeysRecursively({
+      ...args,
+      address: normalizeTokenAddressForCache(address ?? null),
+    }),
   )
 
   if (CURRENCY_CACHE.has(cacheKey)) {
@@ -69,7 +71,10 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
       } else if (
         areAddressesEqual({
           addressInput1: { address, chainId },
-          addressInput2: { address: WRAPPED_SOL_ADDRESS_SOLANA, chainId: UniverseChainId.Solana },
+          addressInput2: {
+            address: WRAPPED_SOL_ADDRESS_SOLANA,
+            chainId: UniverseChainId.Solana,
+          },
         })
       ) {
         // Return singleton WSOL for wrapped address

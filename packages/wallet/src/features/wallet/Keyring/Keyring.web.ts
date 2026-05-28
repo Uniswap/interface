@@ -1,7 +1,7 @@
-import { Buffer } from 'buffer'
 /* oxlint-disable max-params */
 /* oxlint-disable max-lines */
 import { HDKey } from '@scure/bip32'
+import { base64ToUint8, uint8ToBase64 } from '@universe/encoding'
 import { Signature, utils, Wallet } from 'ethers'
 import { defaultPath, joinSignature, SigningKey } from 'ethers/lib/utils'
 import { logger } from 'utilities/src/logger/logger'
@@ -73,7 +73,7 @@ export class WebKeyring implements IKeyring {
     )
     // Export the public key in 'spki' format to match BE expectations
     const publicKeySpki = await crypto.subtle.exportKey('spki', keyPair.publicKey)
-    const publicKeyBase64 = Buffer.from(publicKeySpki).toString('base64')
+    const publicKeyBase64 = uint8ToBase64(new Uint8Array(publicKeySpki))
     this.keysMap.set(publicKeyBase64, keyPair)
     return publicKeyBase64
   }
@@ -88,7 +88,7 @@ export class WebKeyring implements IKeyring {
         name: 'RSA-OAEP',
       },
       keyPair.privateKey,
-      Buffer.from(encryptedMnemonic, 'base64'),
+      base64ToUint8(encryptedMnemonic),
     )
     return new TextDecoder().decode(decryptedMnemonic)
   }

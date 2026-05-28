@@ -33,14 +33,16 @@ function useTokenSectionsForSend({
       return undefined
     }
     return (
-      <ExpandoRow
-        isExpanded={hiddenTokensExpanded}
-        label={t('hidden.tokens.info.text.button', { numHidden: hiddenTokensCount })}
-        mx="$spacing20"
-        onPress={(): void => {
-          setHiddenTokensExpanded(!hiddenTokensExpanded)
-        }}
-      />
+      <Flex backgroundColor="$surface1">
+        <ExpandoRow
+          isExpanded={hiddenTokensExpanded}
+          label={t('hidden.tokens.info.text.button', { numHidden: hiddenTokensCount })}
+          mx="$spacing20"
+          onPress={(): void => {
+            setHiddenTokensExpanded(!hiddenTokensExpanded)
+          }}
+        />
+      </Flex>
     )
   }, [hiddenTokensExpanded, hiddenPortfolioTokenOptions?.length, t])
 

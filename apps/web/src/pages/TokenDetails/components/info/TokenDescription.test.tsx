@@ -118,6 +118,7 @@ describe('TokenDescription', () => {
           ...validData.token,
           project: {
             ...validData.token?.project,
+            // oxlint-disable-next-line no-script-url
             homepageUrl: 'javascript:alert(1)',
           },
         },

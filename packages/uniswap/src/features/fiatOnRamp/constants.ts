@@ -1,9 +1,8 @@
+import { isMobileApp, REQUEST_SOURCE } from '@universe/environment'
 import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader } from 'uniswap/src/data/getVersionHeader'
-import { isMobileApp } from 'utilities/src/platform'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 /**
  * Get FOR API headers.

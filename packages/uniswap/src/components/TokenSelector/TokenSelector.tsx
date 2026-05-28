@@ -1,5 +1,6 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -34,7 +35,6 @@ import { isChainSupportedForChainedActions } from 'uniswap/src/features/transact
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'utilities/src/clipboard/clipboard'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useDebounce } from 'utilities/src/time/timing'
 
 export const TOKEN_SELECTOR_WEB_MAX_WIDTH = 400

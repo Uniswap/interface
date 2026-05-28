@@ -1,19 +1,19 @@
-beforeAll(() => {
-  vi.stubEnv('PRIVY_APP_ID', 'test-privy-app-id')
-})
-
-afterAll(() => {
-  vi.unstubAllEnvs()
-})
-
+import { QueryClient } from '@tanstack/react-query'
 import { fireEvent, waitFor } from '@testing-library/react'
 import type { PropsWithChildren, ReactNode } from 'react'
 import { listAuthenticators } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import PasskeyMenu from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { PasskeyMenu, resetListAuthenticators } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import { useEmbeddedWalletState } from '~/state/embeddedWallet/store'
 import { render, screen } from '~/test-utils/render'
+
+vi.mock('~/config', () => ({
+  getConfig: vi.fn(() => ({ privyAppId: 'test-privy-app-id' })),
+  getPrivyConfig: vi.fn(() => ({ appId: 'test-privy-app-id', clientId: 'test-privy-client-id' })),
+  getPrivyAppId: vi.fn(() => 'test-privy-app-id'),
+}))
 
 vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
   listAuthenticators: vi.fn(),
@@ -25,6 +25,7 @@ vi.mock('uniswap/src/features/passkey/embeddedWallet', () => ({
     GOOGLE_PASSWORD_MANAGER: 1,
     WINDOWS_HELLO: 3,
   },
+  RecoveryMethod: vi.fn().mockImplementation((args: Record<string, unknown>) => args),
 }))
 
 vi.mock('~/state/embeddedWallet/store', async (importOriginal) => ({
@@ -36,6 +37,10 @@ const mockDispatch = vi.fn()
 vi.mock('~/state/hooks', () => ({
   useAppDispatch: () => mockDispatch,
   useAppSelector: vi.fn(),
+}))
+
+vi.mock('ui/src/components/icons/IcloudPasswordLogo', () => ({
+  IcloudPasswordLogo: () => <span data-testid="icloud-password-logo" />,
 }))
 
 vi.mock('~/components/AccountDrawer/SlideOutMenu', () => ({
@@ -101,6 +106,8 @@ describe('PasskeyMenu', () => {
     vi.clearAllMocks()
     // PasskeyMenu logs an error when PRIVY_APP_ID is not set (always in test env)
     vi.spyOn(console, 'error').mockImplementation(() => {})
+    // SVG icon components (IcloudPasswordLogo, Image) emit warnings in jsdom
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
   })
 
   it('shows 3 skeleton rows while loading', () => {
@@ -145,6 +152,28 @@ describe('PasskeyMenu', () => {
     expect(overflowButtons).toHaveLength(2)
   })
 
+  it('hides delete overflow menu when only one passkey exists', async () => {
+    vi.mocked(useEmbeddedWalletState).mockReturnValue({
+      walletId: 'test-wallet-single-passkey',
+    } as ReturnType<typeof useEmbeddedWalletState>)
+    vi.mocked(listAuthenticators).mockResolvedValue({
+      authenticators: [
+        {
+          credentialId: mockAuthenticatorsDisplay[0].credentialId,
+          providerName: mockAuthenticatorsDisplay[0].providerName,
+          createdAt: mockAuthenticatorsDisplay[0].createdAt,
+          aaguid: mockAuthenticatorsDisplay[0].aaguid,
+        },
+      ],
+      recoveryMethods: [],
+    } as never)
+
+    render(<PasskeyMenu onClose={vi.fn()} />)
+    await screen.findByText('iCloud')
+
+    expect(screen.queryByTestId(TestID.DeletePasskey)).not.toBeInTheDocument()
+  })
+
   it('dispatches setOpenModal(AddPasskey) when Add passkey button is pressed', async () => {
     vi.mocked(useEmbeddedWalletState).mockReturnValue({
       walletId: 'test-wallet-id',
@@ -168,12 +197,12 @@ describe('PasskeyMenu', () => {
     render(<PasskeyMenu onClose={vi.fn()} />)
     await screen.findByText('iCloud')
 
-    // mouseDown opens the ContextMenu (Primary trigger mode)
+    // Click opens the Popover; menu content renders into a Portal under document.body.
     const overflowButtons = screen.getAllByTestId(TestID.DeletePasskey)
-    fireEvent.mouseDown(overflowButtons[0])
+    fireEvent.click(overflowButtons[0])
 
     // Click "Remove" in the popover
-    fireEvent.click(screen.getByText('Remove'))
+    fireEvent.click(await screen.findByText('Remove'))
 
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -190,7 +219,7 @@ describe('PasskeyMenu', () => {
 
   it('shows recovery method with correct label and identifier', async () => {
     vi.mocked(useEmbeddedWalletState).mockReturnValue({
-      walletId: 'test-wallet-id',
+      walletId: 'test-wallet-recovery-label',
     } as ReturnType<typeof useEmbeddedWalletState>)
     setupLoadedMock(mockRecoveryMethods)
 
@@ -230,11 +259,11 @@ describe('PasskeyMenu', () => {
       expect(screen.getByText('Google')).toBeInTheDocument()
     })
 
-    // mouseDown opens the ContextMenu (Primary trigger mode)
-    fireEvent.mouseDown(screen.getByTestId(TestID.RemoveBackupLoginOverflow))
+    // Click opens the Popover; menu content renders into a Portal under document.body.
+    fireEvent.click(screen.getByTestId(TestID.RemoveBackupLoginOverflow))
 
     // Click "Remove" in the popover
-    fireEvent.click(screen.getByText('Remove'))
+    fireEvent.click(await screen.findByText('Remove'))
 
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -251,7 +280,7 @@ describe('PasskeyMenu', () => {
 
   it('hides "Add a backup login" button when recovery methods exist', async () => {
     vi.mocked(useEmbeddedWalletState).mockReturnValue({
-      walletId: 'test-wallet-id',
+      walletId: 'test-wallet-hide-add-backup',
     } as ReturnType<typeof useEmbeddedWalletState>)
     setupLoadedMock(mockRecoveryMethods)
 
@@ -277,5 +306,43 @@ describe('PasskeyMenu', () => {
     })
     expect(screen.getByText('Backup login')).toBeInTheDocument()
     expect(screen.queryByText('user@gmail.com')).not.toBeInTheDocument()
+  })
+})
+
+describe('resetListAuthenticators', () => {
+  beforeEach(() => {
+    sessionStorage.clear()
+  })
+
+  it('removes the sessionStorage mirror and resets the query', async () => {
+    sessionStorage.setItem('listAuth:wallet-1', JSON.stringify({ authenticators: [], recoveryMethods: [] }))
+    const queryClient = new QueryClient()
+    const resetSpy = vi.spyOn(queryClient, 'resetQueries')
+
+    await resetListAuthenticators(queryClient, 'wallet-1')
+
+    expect(sessionStorage.getItem('listAuth:wallet-1')).toBeNull()
+    expect(resetSpy).toHaveBeenCalledWith({ queryKey: [ReactQueryCacheKey.ListAuthenticators] })
+  })
+
+  it('drops cached data so the next observer refetches', async () => {
+    const queryClient = new QueryClient()
+    queryClient.setQueryData([ReactQueryCacheKey.ListAuthenticators, 'wallet-1'], {
+      authenticators: [{ credentialId: 'cred-1' }],
+      recoveryMethods: [],
+    })
+
+    await resetListAuthenticators(queryClient, 'wallet-1')
+
+    expect(queryClient.getQueryData([ReactQueryCacheKey.ListAuthenticators, 'wallet-1'])).toBeUndefined()
+  })
+
+  it('handles a null walletId by clearing the empty-suffix sessionStorage key', async () => {
+    sessionStorage.setItem('listAuth:', JSON.stringify({ authenticators: [], recoveryMethods: [] }))
+    const queryClient = new QueryClient()
+
+    await resetListAuthenticators(queryClient, null)
+
+    expect(sessionStorage.getItem('listAuth:')).toBeNull()
   })
 })

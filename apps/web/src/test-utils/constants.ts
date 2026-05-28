@@ -17,7 +17,7 @@ import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { UseAccountReturnType, type Register as WagmiRegister } from 'wagmi'
-import { expiryToDeadlineSeconds } from '~/state/limit/expiryToDeadlineSeconds'
+import { expiryToDeadlineSeconds } from '~/features/Swap/state/limit/expiryToDeadlineSeconds'
 import {
   ClassicTrade,
   DutchOrderTrade,

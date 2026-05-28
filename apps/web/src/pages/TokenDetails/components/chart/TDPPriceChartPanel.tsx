@@ -4,7 +4,7 @@ import { TimePeriod, toHistoryDuration } from '~/appGraphql/data/util'
 import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChart } from '~/components/Charts/PriceChart'
 import { ChartType, PriceChartType } from '~/components/Charts/utils'
-import { EXPLORE_CHART_HEIGHT_PX } from '~/components/Explore/constants'
+import { EXPLORE_CHART_HEIGHT_PX } from '~/features/Explore/constants'
 import type { TDPChartQueryVariables } from '~/pages/TokenDetails/components/chart/hooks'
 import { useTDPPriceChartPanel } from '~/pages/TokenDetails/components/chart/useTDPPriceChartPanel'
 

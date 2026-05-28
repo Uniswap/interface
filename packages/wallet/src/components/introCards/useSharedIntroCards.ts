@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +16,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isExtensionApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
 import {

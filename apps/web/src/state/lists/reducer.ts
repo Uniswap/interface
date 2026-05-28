@@ -79,7 +79,6 @@ export default createReducer(initialState, (builder) =>
       }
     })
     .addCase(addList, (state, { payload: url }) => {
-      // oxlint-disable-next-line typescript/no-unnecessary-condition
       if (!state.byUrl[url]) {
         state.byUrl[url] = NEW_LIST_STATE
       }

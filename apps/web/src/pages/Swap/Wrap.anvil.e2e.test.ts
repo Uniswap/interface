@@ -39,11 +39,11 @@ test.describe(
       await page.goto(`/swap`)
 
       await page.getByTestId(TestID.ChooseInputToken).click()
-      // oxlint-disable-next-line
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-WETH').first().click()
 
       await page.getByTestId(TestID.ChooseOutputToken).click()
-      // oxlint-disable-next-line
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-ETH').first().click()
 
       await page.getByTestId(TestID.AmountInputIn).fill('0.01')
@@ -66,7 +66,7 @@ test.describe(
 
       await page.goto(`/swap`)
       await page.getByTestId(TestID.ChooseOutputToken).click()
-      // oxlint-disable-next-line
+      // oxlint-disable-next-line eslint-js/no-restricted-syntax
       await page.getByTestId('token-option-1-WETH').first().click()
 
       await page.getByTestId(TestID.AmountInputIn).click()

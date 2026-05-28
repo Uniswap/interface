@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { Block } from 'viem'
-import { wagmiConfig } from '~/components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from '~/connection/wagmiConfig'
 import { estimateFutureBlockTimestamp } from '~/utils/estimateFutureBlockTimestamp'
 
 /**

@@ -7,7 +7,7 @@ import { parseSendCallsPlanStepPayload } from 'uniswap/src/features/transactions
 import { createUniswapXPlanSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import {
   createSwapTransactionStep,
-  createSwapTransactionStepBatched,
+  createSwapTransactionStepWalletCall,
 } from 'uniswap/src/features/transactions/swap/steps/swap'
 import { isUniswapX, planStepTypeToTradingRoute } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { validatePermitTypeGuard, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -71,7 +71,7 @@ export const transformStep = (step: TradingApi.PlanStep): TransactionAndPlanStep
           ...step,
           ...(isSingleStep
             ? createSwapTransactionStep(firstStep)
-            : createSwapTransactionStepBatched(transactionRequests)),
+            : createSwapTransactionStepWalletCall(transactionRequests)),
         }
       }
       default:

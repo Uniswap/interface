@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ScrollView } from 'react-native'
@@ -13,6 +14,9 @@ import { getTokenValue } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
+import { useCanonicalFavoritesMigration } from 'uniswap/src/features/favorites/hooks/useCanonicalFavoritesMigration'
+import { useMultichainFavoritesRankings } from 'uniswap/src/features/favorites/hooks/useMultichainFavoritesRankings'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { setFavoriteTokens } from 'uniswap/src/features/favorites/slice'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
@@ -30,19 +34,24 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
   const { t } = useTranslation()
   const { hapticFeedback } = useHapticFeedback()
   const dispatch = useDispatch()
+  const multichainTokenUxEnabled = useFeatureFlag(FeatureFlags.MultichainTokenUx)
+
+  // Pull multichain rankings independent of the Explore network filter so badge visibility and the
+  // one-time migration see the same cross-chain data regardless of which chain pill is selected.
+  const { tokenRankingsData, networkCountByKey } = useMultichainFavoritesRankings()
+
+  useCanonicalFavoritesMigration({ multichainTokenUxEnabled, tokenRankingsData })
 
   const [isEditing, setIsEditing] = useState(false)
   const [showAll, setShowAll] = useState(false)
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
 
-  // Reset edit mode when there are no favorite tokens
   useEffect(() => {
     if (favoriteCurrencyIds.length === 0) {
       setIsEditing(false)
     }
   }, [favoriteCurrencyIds.length])
 
-  // Automatically expand when entering edit mode
   useEffect(() => {
     if (isEditing) {
       setShowAll(true)
@@ -65,7 +74,6 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
       if (showAll || !hasMoreTokens) {
         dispatch(setFavoriteTokens({ currencyIds: data }))
       } else {
-        // merge reordered visible tokens with hidden ones
         const hiddenTokens = favoriteCurrencyIds.slice(DEFAULT_TOKENS_TO_DISPLAY)
         dispatch(setFavoriteTokens({ currencyIds: [...data, ...hiddenTokens] }))
       }
@@ -75,16 +83,18 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
     ({ item: currencyId }): JSX.Element => {
+      const networkCount = networkCountByKey.get(normalizeCurrencyIdForMapLookup(currencyId))
       return (
         <FavoriteTokenCard
           showLoading={showLoading}
           currencyId={currencyId}
           isEditing={isEditing}
+          networkCount={networkCount}
           setIsEditing={setIsEditing}
         />
       )
     },
-    [isEditing, showLoading],
+    [isEditing, showLoading, networkCountByKey],
   )
 
   return (

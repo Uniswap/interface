@@ -1,3 +1,4 @@
+import { isWebApp } from '@universe/environment'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -9,7 +10,6 @@ import {
   useHideSpamTokensSetting,
 } from 'uniswap/src/features/settings/hooks'
 import { setHideReportedActivity, setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
-import { isWebApp } from 'utilities/src/platform'
 
 // avoids rendering during animation which makes it laggy
 // set to a bit above the Switch animation "simple" which is 80ms

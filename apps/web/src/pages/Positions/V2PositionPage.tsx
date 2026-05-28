@@ -12,24 +12,25 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { parseRestPosition } from 'uniswap/src/features/positions/parseRestPosition'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useEvent } from 'utilities/src/react/hooks'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from '~/components/BreadcrumbNav'
-import { useGetPoolTokenPercentage } from '~/components/Liquidity/hooks/useGetPoolTokenPercentage'
-import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from '~/components/Liquidity/LiquidityPositionInfo'
-import { TextLoader } from '~/components/Liquidity/Loader'
-import { PositionPageActionButtons } from '~/components/Liquidity/PositionPageActionButtons'
-import { parseRestPosition } from '~/components/Liquidity/utils/parseFromRest'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
-import { useChainIdFromUrlParam } from '~/features/params/chainParams'
+import { useEntryPointBreadcrumb } from '~/features/Liquidity/Create/hooks/useEntryPointBreadcrumb'
+import { useGetPoolTokenPercentage } from '~/features/Liquidity/hooks/useGetPoolTokenPercentage'
+import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from '~/features/Liquidity/LiquidityPositionInfo'
+import { TextLoader } from '~/features/Liquidity/Loader'
+import { PositionPageActionButtons } from '~/features/Liquidity/PositionPageActionButtons'
 import { useAccount } from '~/hooks/useAccount'
 import { usePositionOwnerV2 } from '~/hooks/usePositionOwnerV2'
 import { useDynamicMetatags } from '~/pages/metatags'
-import NotFound from '~/pages/NotFound'
+import { NotFound } from '~/pages/NotFound'
 import { MultichainContextProvider } from '~/state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from '~/state/transactions/hooks'
+import { useChainIdFromUrlParam } from '~/utils/params/chainParams'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -63,7 +64,7 @@ function RowLoader({ withIcon }: { withIcon?: boolean }) {
   )
 }
 
-export default function V2PositionPageWrapper() {
+export function V2PositionPageWrapper() {
   const chainId = useChainIdFromUrlParam()
 
   if (chainId && !isEVMChain(chainId)) {
@@ -77,12 +78,15 @@ export default function V2PositionPageWrapper() {
   )
 }
 
+export default V2PositionPageWrapper
+
 function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
   const chainInfo = getChainInfo(chainId ?? UniverseChainId.Mainnet)
+  const breadcrumb = useEntryPointBreadcrumb()
 
   const {
     data,
@@ -123,7 +127,6 @@ function V2PositionPage() {
   const token0USDValue = useUSDCValue(currency0Amount)
   const token1USDValue = useUSDCValue(currency1Amount)
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
-  // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
   const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : undefined
   const isOwner = usePositionOwnerV2({
     account: account.address,
@@ -152,8 +155,8 @@ function V2PositionPage() {
         }
         actionButton={
           <Flex row centered>
-            <Button width="fit-content" variant="branded" onPress={() => navigate('/positions')}>
-              {t('common.backToPositions')}
+            <Button width="fit-content" variant="branded" onPress={() => navigate(breadcrumb.to)}>
+              {breadcrumb.label}
             </Button>
           </Flex>
         }
@@ -178,8 +181,8 @@ function V2PositionPage() {
         <Flex gap="$gap20" width="100%">
           <Flex row width="100%" justifyContent="flex-start" alignItems="center">
             <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-              <BreadcrumbNavLink to="/positions">
-                {t('pool.positions.title')} <RotatableChevron direction="right" size="$icon.16" />
+              <BreadcrumbNavLink to={breadcrumb.to}>
+                {breadcrumb.label} <RotatableChevron direction="right" size="$icon.16" />
               </BreadcrumbNavLink>
               {positionInfo && <Text variant="subheading2">{shortenAddress({ address: positionInfo.poolId })}</Text>}
             </BreadcrumbNavContainer>

@@ -12,9 +12,11 @@ export enum MenuStateVariant {
   PORTFOLIO_BALANCE_SETTINGS = 'portfolio_balance_settings',
   LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
   PASSKEYS = 'passkeys',
+  RECOVERY_PHRASE = 'recovery_phrase',
+  RECOVERY_PHRASE_DOWNLOAD_PROMPT = 'recovery_phrase_download_prompt',
   OTHER_WALLETS = 'other_wallets',
-  ADVANCED_SETTINGS = 'advanced_settings',
   STORAGE_SETTINGS = 'storage_settings',
+  NETWORK_COST_SETTINGS = 'network_cost_settings',
 }
 
 type MenuState =

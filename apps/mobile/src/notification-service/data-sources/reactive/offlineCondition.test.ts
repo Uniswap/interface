@@ -57,7 +57,6 @@ describe('offlineCondition', () => {
         mockSelectSomeModalOpen.mockReturnValue(false)
 
         let capturedCallback: (state: NetInfoState) => void = jest.fn()
-        // oxlint-disable-next-line max-nested-callbacks
         mockAddEventListener.mockImplementation((callback: (state: NetInfoState) => void) => {
           capturedCallback = callback
           return jest.fn()

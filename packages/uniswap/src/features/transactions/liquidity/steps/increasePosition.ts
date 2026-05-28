@@ -1,26 +1,14 @@
 import {
-  CreateLPPositionRequest,
-  IncreaseLPPositionRequest,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
-import {
-  V2CreateLPPosition,
-  V3CreateLPPosition,
-  V4CreateLPPosition,
-} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
-import {
   CreatePositionRequest,
   IncreasePositionRequest,
 } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v2/api_pb'
-import {
-  V1LiquidityServiceClient,
-  V2LiquidityServiceClient,
-} from 'uniswap/src/data/apiClients/liquidityService/LiquidityServiceClient'
+import { V2LiquidityServiceClient } from 'uniswap/src/data/apiClients/liquidityService/LiquidityServiceClient'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import {
   OnChainTransactionFields,
-  OnChainTransactionFieldsBatched,
+  OnChainTransactionFieldsWalletCall,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -38,8 +26,8 @@ export interface IncreasePositionTransactionStepAsync {
   getTxRequest(signature: string): Promise<{ txRequest: ValidatedTransactionRequest | undefined }>
 }
 
-export interface IncreasePositionTransactionStepBatched extends OnChainTransactionFieldsBatched {
-  type: TransactionStepType.IncreasePositionTransactionBatched
+export interface IncreasePositionTransactionStepWalletCall extends OnChainTransactionFieldsWalletCall {
+  type: TransactionStepType.IncreasePositionTransactionWalletCall
 }
 
 export function createIncreasePositionStep(txRequest: ValidatedTransactionRequest): IncreasePositionTransactionStep {
@@ -50,7 +38,7 @@ export function createIncreasePositionStep(txRequest: ValidatedTransactionReques
 }
 
 export function createCreatePositionAsyncStep(
-  createPositionRequestArgs: CreateLPPositionRequest | CreatePositionRequest | undefined,
+  createPositionRequestArgs: CreatePositionRequest | undefined,
   delegatedAddress?: string | null,
 ): IncreasePositionTransactionStepAsync {
   return {
@@ -61,62 +49,14 @@ export function createCreatePositionAsyncStep(
       }
 
       try {
-        if (createPositionRequestArgs instanceof CreatePositionRequest) {
-          const updatedRequest = new CreatePositionRequest({
-            // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-            ...createPositionRequestArgs,
-            signature,
-            simulateTransaction: true,
-          })
-          const result = await V2LiquidityServiceClient.createPosition(updatedRequest)
-          return { txRequest: validateTransactionRequest(result.create) }
-        }
-
-        const { createLpPosition } = createPositionRequestArgs
-        let updatedCreateLpPosition
-
-        if (createLpPosition.case === 'v4CreateLpPosition') {
-          updatedCreateLpPosition = {
-            case: 'v4CreateLpPosition' as const,
-            value: new V4CreateLPPosition({
-              // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-              ...createLpPosition.value,
-              signature,
-              simulateTransaction: true,
-            }),
-          }
-        } else if (createLpPosition.case === 'v3CreateLpPosition') {
-          updatedCreateLpPosition = {
-            case: 'v3CreateLpPosition' as const,
-            value: new V3CreateLPPosition({
-              // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-              ...createLpPosition.value,
-              signature,
-              simulateTransaction: true,
-            }),
-          }
-        } else if (createLpPosition.case === 'v2CreateLpPosition') {
-          // V2 does not support signatures, only simulate flag
-          updatedCreateLpPosition = {
-            case: 'v2CreateLpPosition' as const,
-            value: new V2CreateLPPosition({
-              // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-              ...createLpPosition.value,
-              simulateTransaction: true,
-            }),
-          }
-        } else {
-          updatedCreateLpPosition = createLpPosition
-        }
-
-        const result = await V1LiquidityServiceClient.createLpPosition(
-          new CreateLPPositionRequest({
-            createLpPosition: updatedCreateLpPosition,
-          }),
-        )
-        const create = result.create
-
-        return { txRequest: validateTransactionRequest(create) }
+        const updatedRequest = new CreatePositionRequest({
+          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
+          ...createPositionRequestArgs,
+          signature,
+          simulateTransaction: true,
+        })
+        const result = await V2LiquidityServiceClient.createPosition(updatedRequest)
+        return { txRequest: validateTransactionRequest(result.create) }
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {
@@ -145,7 +85,7 @@ export function createCreatePositionAsyncStep(
 }
 
 export function createIncreasePositionAsyncStep(
-  increasePositionRequestArgs: IncreaseLPPositionRequest | IncreasePositionRequest | undefined,
+  increasePositionRequestArgs: IncreasePositionRequest | undefined,
   delegatedAddress?: string | null,
 ): IncreasePositionTransactionStepAsync {
   return {
@@ -156,40 +96,14 @@ export function createIncreasePositionAsyncStep(
       }
 
       try {
-        if (increasePositionRequestArgs instanceof IncreasePositionRequest) {
-          const updatedRequest = new IncreasePositionRequest({
-            // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-            ...increasePositionRequestArgs,
-            signature,
-            simulateTransaction: true,
-          })
-          const result = await V2LiquidityServiceClient.increasePosition(updatedRequest)
-          return { txRequest: validateTransactionRequest(result.increase) }
-        }
-
-        const { increaseLpPosition } = increasePositionRequestArgs
-        const updatedIncreaseLpPosition =
-          increaseLpPosition.case === 'v4IncreaseLpPosition'
-            ? {
-                case: 'v4IncreaseLpPosition' as const,
-                // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-                value: { ...increaseLpPosition.value, signature, simulateTransaction: true },
-              }
-            : increaseLpPosition.case === 'v3IncreaseLpPosition'
-              ? {
-                  case: 'v3IncreaseLpPosition' as const,
-                  // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
-                  value: { ...increaseLpPosition.value, signature, simulateTransaction: true },
-                }
-              : increaseLpPosition
-        const result = await V1LiquidityServiceClient.increaseLpPosition(
-          new IncreaseLPPositionRequest({
-            increaseLpPosition: updatedIncreaseLpPosition,
-          }),
-        )
-        const increase = result.increase
-
-        return { txRequest: validateTransactionRequest(increase) }
+        const updatedRequest = new IncreasePositionRequest({
+          // oxlint-disable-next-line typescript/no-misused-spread -- biome-parity: oxlint is stricter here
+          ...increasePositionRequestArgs,
+          signature,
+          simulateTransaction: true,
+        })
+        const result = await V2LiquidityServiceClient.increasePosition(updatedRequest)
+        return { txRequest: validateTransactionRequest(result.increase) }
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {
@@ -199,7 +113,7 @@ export function createIncreasePositionAsyncStep(
               function: 'createIncreasePositionAsyncStep',
             },
             extra: {
-              canBatchTransactions: false, // if in this step then the tx was not batched
+              canBatchTransactions: false,
               delegatedAddress: delegatedAddress ?? null,
             },
           })
@@ -216,11 +130,11 @@ export function createIncreasePositionAsyncStep(
   }
 }
 
-export function createIncreasePositionStepBatched(
+export function createIncreasePositionStepWalletCall(
   txRequests: ValidatedTransactionRequest[],
-): IncreasePositionTransactionStepBatched {
+): IncreasePositionTransactionStepWalletCall {
   return {
-    type: TransactionStepType.IncreasePositionTransactionBatched,
-    batchedTxRequests: txRequests,
+    type: TransactionStepType.IncreasePositionTransactionWalletCall,
+    walletCallTxRequests: txRequests,
   }
 }

@@ -21,7 +21,16 @@ export interface MonitorDefinition {
   name: string
 
   /** Monitor type */
-  type: 'query alert' | 'event-v2 alert' | 'composite' | 'log alert' | 'metric alert' | 'ci-pipelines alert'
+  type:
+    | 'query alert'
+    | 'event-v2 alert'
+    | 'composite'
+    | 'log alert'
+    | 'metric alert'
+    | 'ci-pipelines alert'
+    | 'ci-tests alert'
+    | 'rum alert'
+    | 'error-tracking alert'
 
   /** Datadog query */
   query: string
@@ -95,6 +104,20 @@ export interface MonitorDefinition {
 
   /** Additional tags beyond the standard ones */
   additionalTags?: string[]
+
+  /**
+   * Monitor variables (sub-queries referenced by the top-level `query` formula).
+   * Required for `rum alert` monitors that compute a ratio from two RUM queries,
+   * and for any monitor that uses formula-based queries referencing named sub-queries.
+   */
+  variables?: datadog.types.input.MonitorVariables
+
+  /**
+   * Additional Slack channels to notify beyond the team's default (from ESC).
+   * Each entry should include the `@slack-` prefix (e.g. '@slack-apps-alerts-swap-fe').
+   * Suppressed when `disableSlack` is true.
+   */
+  additionalSlackChannels?: string[]
 
   /** Include incident.io webhook (default: true) */
   includeIncidentWebhook?: boolean

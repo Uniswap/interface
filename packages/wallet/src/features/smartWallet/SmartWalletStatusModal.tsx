@@ -1,3 +1,4 @@
+import { isMobileApp, isWebPlatform } from '@universe/environment'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Text, TouchableArea } from 'ui/src'
@@ -11,7 +12,6 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { ActiveNetworkExpando } from 'wallet/src/features/smartWallet/ActiveNetworkExpando/ActiveNetworkExpando'
 import { useEnabledActiveNetworkDelegations } from 'wallet/src/features/smartWallet/hooks/useEnabledActiveNetworkDelegations'
@@ -43,7 +43,6 @@ export function SmartWalletStatusModal({
     setFalse: collapseActiveNetworks,
   } = useBooleanState(false)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- -wallet
   useEffect(() => {
     collapseActiveNetworks()
   }, [collapseActiveNetworks, wallet])
@@ -76,15 +75,17 @@ export function SmartWalletStatusModal({
         maxHeight="100%"
         {...(isWebPlatform && { flex: 1, overflowY: 'hidden' })}
       >
-        <TouchableArea
-          position="absolute"
-          top="$spacing2"
-          right="$spacing2"
-          zIndex={zIndexes.default}
-          onPress={onClose}
-        >
-          <X size="$icon.16" color="$neutral2" />
-        </TouchableArea>
+        {!isMobileApp && (
+          <TouchableArea
+            position="absolute"
+            top="$spacing2"
+            right="$spacing2"
+            zIndex={zIndexes.default}
+            onPress={onClose}
+          >
+            <X size="$icon.16" color="$neutral2" />
+          </TouchableArea>
+        )}
         <Flex row alignItems="center" gap="$spacing12">
           <AccountIcon address={walletAddress} size={iconSizes.icon40} />
           <Flex>

@@ -5,6 +5,13 @@
   "tui": {
     "enabled": false
   },
+  "s3": {
+    "region": "us-east-2",
+    "bucket": "uniswap-nx-remote-cache-prod",
+    "cacheKeyPrefix": "nx-cache/universe/",
+    "localMode": "no-cache",
+    "ciMode": "no-cache"
+  },
   "targetDefaults": {
     "prepare": {
       "inputs": ["dependencies"],
@@ -95,30 +102,21 @@
       "cache": false
     },
     "lint:oxlint": {
-      "command": "oxlint --threads=4 --type-aware .",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
+      "command": "oxlint --threads=4 -c oxlint.config.ts {projectRoot}",
       "dependsOn": ["prepare"],
       "cache": true,
-      "inputs": ["default", "lintConfig", "{projectRoot}/.oxlintrc.json"]
+      "inputs": ["default", "lintConfig"]
     },
     "lint:oxlint:fix": {
-      "command": "oxlint --fix-dangerously --threads=4 --type-aware .",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
+      "command": "oxlint --fix --threads=4 -c oxlint.config.ts {projectRoot}",
       "dependsOn": ["prepare"],
       "cache": false
     },
     "lint:oxlint:fast": {
-      "command": "oxlint --threads=4 -c .oxlintrc.fast.json .",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
+      "command": "ENABLE_FAST_LINT=true oxlint --threads=4 -c oxlint.config.ts {projectRoot}",
       "dependsOn": ["prepare"],
       "cache": true,
-      "inputs": ["default", "lintConfig", "{projectRoot}/.oxlintrc.json", "{projectRoot}/.oxlintrc.fast.json"]
+      "inputs": ["default", "lintConfig"]
     },
     "lint:typeaware-custom": {
       "dependsOn": ["prepare"],
@@ -151,11 +149,17 @@
       "cache": true
     },
     "check:deps:usage": {
-      "command": "depcheck",
+      "command": "bun --preload ./scripts/silence-deprecation-warnings.js ./node_modules/.bin/knip-bun --include dependencies,devDependencies --no-progress --no-config-hints --workspace {projectRoot}",
       "options": {
-        "cwd": "{projectRoot}"
+        "cwd": "{workspaceRoot}"
       },
-      "inputs": ["sourceFiles", "{projectRoot}/package.json", "{projectRoot}/.depcheckrc"],
+      "inputs": [
+        "sourceFiles",
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/knip.json",
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/bun.lock"
+      ],
       "cache": true
     },
     "test": {
@@ -227,11 +231,7 @@
       "!{projectRoot}/**/*.stories.ts"
     ],
     "sharedGlobals": ["{workspaceRoot}/tsconfig.base.json", "{workspaceRoot}/tsconfig.json"],
-    "lintConfig": [
-      "{workspaceRoot}/.oxfmtrc.json",
-      "{workspaceRoot}/.oxlintrc.json",
-      "{workspaceRoot}/.oxlintrc.fast.json"
-    ],
+    "lintConfig": ["{workspaceRoot}/.oxfmtrc.json", "{workspaceRoot}/oxlint.config.ts"],
     "mobileGlobals": ["{workspaceRoot}/metro.config.*", "{workspaceRoot}/Gemfile*"],
     "sourceFiles": [
       "sharedGlobals",

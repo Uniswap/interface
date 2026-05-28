@@ -1,4 +1,5 @@
 import { EventConsumer, EventMapBase } from '@react-navigation/core'
+import { isChrome, isMobileApp, isMobileWeb, isWebPlatform } from '@universe/environment'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
@@ -13,7 +14,8 @@ import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
-import { getUnitagFormatError, useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
+import { getUnitagFormatError } from 'uniswap/src/features/unitags/getUnitagFormatError'
+import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
 import { UnitagInfoModal } from 'uniswap/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { getYourNameString } from 'uniswap/src/features/unitags/utils'
@@ -27,7 +29,6 @@ import {
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isChrome, isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -56,7 +57,6 @@ const WEB_STYLING: FlexProps = isWebPlatform
       borderColor: '$surface3',
       py: '$spacing12',
       px: '$spacing20',
-      mb: '$spacing20',
       width: '100%',
     }
   : {}
@@ -123,6 +123,7 @@ export function ClaimUnitagContent({
   const debouncedInputValue = useDebounce(unitagInputValue, VERIFICATION_DEBOUNCE_MS)
   const { error: canClaimUnitagNameError, loading: isCheckingUnitag } = useCanClaimUnitagName(
     debouncedInputValue || undefined, // set to undefined if the input is empty to clear the error
+    unitagAddress,
   )
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing({
@@ -203,6 +204,11 @@ export function ClaimUnitagContent({
       })
       sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'select' })
 
+      // Clear availability UI once the user commits; refetches can otherwise report "taken"
+      // after a successful claim and repopulate error state while this screen is still mounted.
+      setUnitagAvailableError(undefined)
+      setAddressError(undefined)
+
       // Animate the Unitag logo in and text input out
       setShowTextInputView(false)
 
@@ -230,6 +236,12 @@ export function ClaimUnitagContent({
   )
 
   useEffect(() => {
+    // Do not sync username availability into error state after the user has continued past the input
+    // (query refetch after claim can report unavailable for the chosen name).
+    if (!showTextInputView) {
+      return
+    }
+
     if (!!debouncedInputValue && !isCheckingUnitag) {
       // If unitagError or addressError is defined, it's rendered in UI
       if (entryPoint === OnboardingScreens.Landing && !unitagAddress) {
@@ -250,7 +262,7 @@ export function ClaimUnitagContent({
         setUnitagAvailableError(canClaimUnitagNameError)
       }
     }
-  }, [canClaimUnitagNameError, debouncedInputValue, isCheckingUnitag, entryPoint, unitagAddress, t])
+  }, [canClaimUnitagNameError, debouncedInputValue, isCheckingUnitag, entryPoint, unitagAddress, t, showTextInputView])
 
   const shouldBlockContinue = (entryPoint === OnboardingScreens.Landing && !unitagAddress) || !unitagInputValue
 
@@ -315,7 +327,7 @@ export function ClaimUnitagContent({
                   // @ts-expect-error - field-sizing is a web CSS prop, not yet registered as a valid prop,
                   // that allows to automatically resize the input width to the content
                   style={supportsFieldSizing ? { fieldSizing: 'content' } : undefined}
-                  autoFocus={!isMobileApp}
+                  autoFocus={!isMobileApp && !isMobileWeb}
                   blurOnSubmit={!isWebPlatform}
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -339,9 +351,9 @@ export function ClaimUnitagContent({
                   onChangeText={onChangeTextInput}
                   onSubmitEditing={onPressContinue}
                   onLayout={getInitialUnitagNameInputWidth}
-                  // field-sizing css prop is supported only on Chrome. On other browsers, we want to
-                  // fully expand the username TextInput to the available space.
-                  {...(isWebPlatform && !supportsFieldSizing && { flexGrow: 1 })}
+                  // Always expand the TextInput on web so the .uni.eth suffix is right-aligned.
+                  // field-sizing: content still controls min-width on Chrome.
+                  {...(isWebPlatform && { flexGrow: 1 })}
                 />
                 <Flex
                   animation="lazy"
@@ -385,12 +397,12 @@ export function ClaimUnitagContent({
         )}
 
         <AvailabilityStatus
-          unitagAvailableError={unitagAvailableError}
+          unitagAvailableError={showTextInputView ? unitagAvailableError : undefined}
           addressError={addressError}
           isUnitagAvailable={isUnitagAvailable}
           showTextInputView={showTextInputView}
-          mt="$spacing4"
-          mb={unitagAddress ? undefined : '$spacing20'}
+          mt="$spacing12"
+          mb={unitagAddress ? undefined : '$spacing12'}
         />
       </Flex>
       {/* Wrap button in a TouchableArea to add onPress capabilities when the button is disabled. */}

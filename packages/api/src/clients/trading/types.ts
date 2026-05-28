@@ -47,11 +47,6 @@ export interface GasEstimateEip1559 extends TransactionEip1559FeeParams {
 
 export type GasEstimate = GasEstimateLegacy | GasEstimateEip1559
 
-// GasFeeResponse is the type that comes directly from the Gas Service API
-export type GasFeeResponse = {
-  gasEstimates: GasEstimate[]
-}
-
 export type FormattedUniswapXGasFeeInfo = {
   approvalFeeFormatted?: string
   swapFeeFormatted: string

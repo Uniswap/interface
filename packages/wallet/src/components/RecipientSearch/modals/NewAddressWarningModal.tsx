@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, GetProps, ScrollView, Text } from 'ui/src'
@@ -13,7 +14,6 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isMobileApp } from 'utilities/src/platform'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type NewAddressWarningModalProps = {

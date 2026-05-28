@@ -1,3 +1,4 @@
+import { isExtensionApp } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import Animated, { Easing, FadeIn, FadeInDown, RotateInUpLeft } from 'react-native-reanimated'
 import { Button, Flex, Text } from 'ui/src'
@@ -5,7 +6,6 @@ import { Unitag } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { isExtensionApp } from 'utilities/src/platform'
 
 export function WelcomeSplash({
   address,

@@ -56,7 +56,6 @@ describe('useAddressNotificationToggle', () => {
     mockUseDispatch.mockReturnValue(mockDispatch)
   })
 
-  // oxlint-disable-next-line typescript/explicit-function-return-type
   function setupHook({
     osPermissionStatus = NotificationPermission.Enabled,
     firebaseEnabled = true,

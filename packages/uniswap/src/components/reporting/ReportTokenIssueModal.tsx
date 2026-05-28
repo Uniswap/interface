@@ -1,21 +1,22 @@
 import { Currency } from '@uniswap/sdk-core'
 import { ReportAssetType, TokenReportEventType } from '@universe/api'
+import { isProdEnv } from '@universe/environment'
 import { atom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flag } from 'ui/src/components/icons/Flag'
-import { BaseModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import type { BaseModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ReportModal, ReportOption } from 'uniswap/src/components/reporting/ReportModal'
 import { DataServiceApiClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { submitTokenIssueReport, TokenReportOption } from 'uniswap/src/features/reporting/reports'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { currencyId, NATIVE_ANALYTICS_ADDRESS_VALUE } from 'uniswap/src/utils/currencyId'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -23,11 +24,17 @@ export type ReportTokenModalProps = {
   currency?: Currency
   source?: 'portfolio' | 'token-details'
   isMarkedSpam?: Maybe<boolean>
+  isMultichainAsset?: boolean
+  shouldReportMultichainAsset?: boolean
   onReportSuccess?: () => void
 }
 
 export const ReportTokenIssueModalPropsAtom = atom<
-  Pick<ReportTokenModalProps, 'source' | 'currency' | 'isMarkedSpam'> | undefined
+  | Pick<
+      ReportTokenModalProps,
+      'source' | 'currency' | 'isMarkedSpam' | 'isMultichainAsset' | 'shouldReportMultichainAsset'
+    >
+  | undefined
 >(undefined)
 
 export function ReportTokenIssueModal({
@@ -35,6 +42,8 @@ export function ReportTokenIssueModal({
   isOpen,
   source = 'token-details',
   isMarkedSpam,
+  isMultichainAsset = false,
+  shouldReportMultichainAsset = false,
   onReportSuccess,
   onClose,
 }: ReportTokenModalProps & BaseModalProps): JSX.Element {
@@ -53,10 +62,16 @@ export function ReportTokenIssueModal({
         return
       }
 
+      const normalizedCurrencyId = normalizeCurrencyIdForMapLookup(currencyId(currency))
+
       // Update the visibility of the token in the portfolio
-      dispatch(
-        setTokenVisibility({ currencyId: normalizeCurrencyIdForMapLookup(currencyId(currency)), isVisible: false }),
-      )
+      dispatch(setTokenVisibility({ currencyId: normalizedCurrencyId, isVisible: false }))
+
+      sendAnalyticsEvent(WalletEventName.TokenVisibilityChanged, {
+        currencyId: normalizedCurrencyId,
+        visible: false,
+        is_multichain_asset: isMultichainAsset,
+      })
 
       // Submit report to amplitude
       submitTokenIssueReport({
@@ -65,6 +80,7 @@ export function ReportTokenIssueModal({
         tokenAddress: currency.isNative ? NATIVE_ANALYTICS_ADDRESS_VALUE : currency.address,
         tokenName: currency.name,
         isMarkedSpam,
+        isMultichainAsset,
         reportOptions: Array.from(checkedItems),
         reportTexts,
       })
@@ -76,6 +92,7 @@ export function ReportTokenIssueModal({
           address: currency.address,
           event: TokenReportEventType.FalseNegative,
           assetType: ReportAssetType.Token,
+          ...(shouldReportMultichainAsset && { multichain: true }),
         }).catch((error: unknown) => {
           // Still show success since analytics and local hiding succeeded, but log the issue for monitoring
           logger.warn('ReportTokenIssueModal', 'submitReport', 'Failed to submit token report to backend', {

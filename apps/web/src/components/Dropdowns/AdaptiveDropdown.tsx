@@ -4,7 +4,6 @@ import {
   Flex,
   FlexProps,
   styled,
-  Text,
   useMedia,
   useScrollbarStyles,
   useShadowPropsMedium,
@@ -19,7 +18,7 @@ import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 // Gap between the trigger element and the dropdown content
 const DROPDOWN_OFFSET = 10
 
-const DropdownContent = styled(Text, {
+const DropdownContent = styled(Flex, {
   display: 'flex',
   flexDirection: 'column',
   minWidth: 150,
@@ -29,7 +28,6 @@ const DropdownContent = styled(Text, {
   borderColor: '$surface3',
   borderRadius: '$rounded12',
   p: '$spacing8',
-  fontSize: 16,
   zIndex: zIndexes.dropdown,
   animation: 'fastHeavy',
   '$platform-web': { overflow: 'auto' },
@@ -61,13 +59,12 @@ const DropdownContent = styled(Text, {
   },
 })
 
-const DropdownContainer = styled(Text, {
+const DropdownContainer = styled(Flex, {
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
   borderWidth: '$none',
-  textAlign: 'left',
   width: '100%',
 })
 
@@ -126,7 +123,6 @@ export function AdaptiveDropdown({
   const [flipVertical, setFlipVertical] = useState(false)
   const [dropdownMaxHeight, setDropdownMaxHeight] = useState<number | undefined>(undefined)
 
-  // oxlint-disable-next-line react/exhaustive-deps -- +dropdownNode, +node
   useEffect(() => {
     if (isOpen && !isSheet && node.current) {
       const rect = node.current.getBoundingClientRect()

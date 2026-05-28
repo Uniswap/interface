@@ -1,13 +1,31 @@
+import { isWebPlatform } from '@universe/environment'
 import { Fragment, useCallback } from 'react'
 import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, FlexProps, getMenuItemColor, Separator } from 'ui/src'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenu'
 import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isWebPlatform } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const MENU_MIN_WIDTH = 200
 const MENU_MAX_WIDTH = 250
+
+/**
+ * `containerStyles` to apply to {@link MenuContent} when the surrounding `ContextMenu`
+ * adapts to a `WebBottomSheet` on mWeb. Neutralises the default popover frame so the
+ * sheet is the only visual card.
+ */
+export const MENU_CONTENT_SHEET_CONTAINER_STYLES: FlexProps = {
+  p: '$none',
+  pb: '$spacing16',
+  backgroundColor: 'transparent',
+  borderWidth: '$none',
+  gap: '$spacing8',
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  minWidth: undefined,
+  maxWidth: undefined,
+}
 
 type MenuContentProps = {
   items: MenuOptionItem[]
@@ -85,6 +103,7 @@ export function MenuContent({
               <Fragment key={index}>
                 {showDivider && <Separator my="$spacing6" />}
                 <DropdownMenuSheetItem
+                  allowMultiline
                   role="none"
                   variant={isWebPlatform ? 'small' : 'medium'}
                   icon={

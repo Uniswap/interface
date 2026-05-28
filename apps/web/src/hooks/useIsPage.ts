@@ -38,13 +38,14 @@ export enum PageType {
   MIGRATE_V2 = '/migrate/v2',
   POSITIONS = '/positions',
   CREATE_POSITION = '/positions/create',
+  ADD_LIQUIDITY = '/positions/add',
+  ADD_LIQUIDITY_NEW = '/positions/add/new',
   SEND = '/send',
   SWAP = '/swap',
   SELL = '/sell',
   PORTFOLIO = '/portfolio',
 }
 
-// oxlint-disable-next-line import/no-unused-modules -- currently used in a test file
 export enum MatchType {
   EXACT = 0,
   STARTS_WITH = 1,
@@ -62,6 +63,8 @@ const pageMatchDefaults: Record<PageType, MatchType> = {
   [PageType.MIGRATE_V2]: MatchType.INCLUDES,
   [PageType.POSITIONS]: MatchType.INCLUDES,
   [PageType.CREATE_POSITION]: MatchType.INCLUDES,
+  [PageType.ADD_LIQUIDITY]: MatchType.INCLUDES,
+  [PageType.ADD_LIQUIDITY_NEW]: MatchType.INCLUDES,
   [PageType.SEND]: MatchType.ENDS_WITH,
   [PageType.SWAP]: MatchType.ENDS_WITH,
   [PageType.SELL]: MatchType.ENDS_WITH,

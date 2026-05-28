@@ -1,5 +1,6 @@
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import type { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { isWarmLoadingStatus } from '@universe/api'
+import { isWebPlatform } from '@universe/environment'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, RefreshButton, Shine, Text, useIsDarkMode } from 'ui/src'
@@ -8,15 +9,16 @@ import AnimatedNumber, {
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
+import { PortfolioBalancePart } from 'uniswap/src/data/rest/getWalletBalances/getWalletBalances'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { usePortfolioBalancePart } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { chartPeriodToTimeLabel } from 'uniswap/src/features/portfolio/chartPeriod'
 import i18next from 'uniswap/src/i18n'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { isWebPlatform } from 'utilities/src/platform'
 
 interface PortfolioBalanceProps {
   evmOwner?: Address
@@ -32,6 +34,7 @@ interface PortfolioBalanceProps {
   overrideAbsoluteChangeUSD?: number
   /** When true, hides the percent change (absolute change still shown) */
   hidePercentChange?: boolean
+  part?: PortfolioBalancePart
 }
 
 export const PortfolioBalance = memo(function PortfolioBalanceInner({
@@ -44,9 +47,11 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   overridePercentChange,
   overrideAbsoluteChangeUSD,
   hidePercentChange,
+  part = PortfolioBalancePart.Total,
 }: PortfolioBalanceProps): JSX.Element {
   const { t } = useTranslation()
-  const { data, loading, networkStatus, refetch } = usePortfolioTotalValue({
+  const { data, loading, error, networkStatus, refetch } = usePortfolioBalancePart({
+    part,
     evmAddress: evmOwner,
     svmAddress: svmOwner,
     chainIds,
@@ -62,7 +67,7 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   const currencyComponents = useAppFiatCurrencyInfo()
   const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
 
-  const isLoading = loading && !data
+  const isLoading = !data && (loading || !!error)
   const isWarmLoading = !!data && isWarmLoadingStatus(networkStatus)
 
   const { percentChange: backendPercentChange, absoluteChangeUSD: backendAbsoluteChangeUSD, balanceUSD } = data || {}
@@ -87,7 +92,7 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
   }, [loading, refetch])
 
   return (
-    <Flex gap="$spacing4">
+    <Flex gap="$spacing4" testID={TestID.PortfolioBalance}>
       <AnimatedNumber
         balance={displayBalanceUSD}
         colorIndicationDuration={overrideBalanceUSD !== undefined ? 0 : BALANCE_CHANGE_INDICATION_DURATION}
@@ -107,8 +112,8 @@ export const PortfolioBalance = memo(function PortfolioBalanceInner({
             arrowSize="$icon.16"
             change={percentChange}
             loading={isLoading}
-            negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
-            positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
+            negativeChangeColor={isWarmLoading || !!error ? '$neutral2' : '$statusCritical'}
+            positiveChangeColor={isWarmLoading || !!error ? '$neutral2' : '$statusSuccess'}
             variant="body3"
           />
         </Shine>

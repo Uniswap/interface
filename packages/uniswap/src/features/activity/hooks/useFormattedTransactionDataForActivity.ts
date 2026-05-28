@@ -3,6 +3,7 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { FiatOnRampParams } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { TransactionTypeFilter } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { GraphQLApi } from '@universe/api'
+import { isAndroid } from '@universe/environment'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,16 +21,17 @@ import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/sel
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
-import { isAndroid } from 'utilities/src/platform'
 
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
 const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]
 
-const MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 250
+// Native FlatList performance degrades with large lists; callers that don't have this constraint
+// (e.g. web) can pass a higher maxItems value
+const MOBILE_MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 250
 
-function hasReachedLimit(transactions: TransactionDetails[] | undefined): boolean {
+function hasReachedLimit(transactions: TransactionDetails[] | undefined, maxItems: number): boolean {
   const currentTransactionCount = transactions?.length ?? 0
-  return currentTransactionCount >= MAX_ACTIVITY_ITEMS
+  return currentTransactionCount >= maxItems
 }
 
 // Contract for returning Transaction data
@@ -49,6 +51,7 @@ interface UseFormattedTransactionDataOptions {
   chainIds?: UniverseChainId[]
   filterTransactionTypes?: TransactionTypeFilter[]
   searchText?: string
+  maxItems?: number
 }
 
 type FormattedTransactionInputs = UseFormattedTransactionDataOptions &
@@ -60,11 +63,13 @@ export interface FormattedTransactionDataResult extends PaginationControls {
   hasData: boolean
   isLoading: boolean
   isFetching: boolean
-  isError: Error | undefined
+  error: Error | undefined
   sectionData: ActivityItem[] | undefined
   keyExtractor: (item: ActivityItem) => string
   onRetry: () => Promise<void>
   skip?: boolean
+  /** Epoch ms when transaction data was last successfully fetched. */
+  dataUpdatedAt?: number
 }
 
 /**
@@ -80,6 +85,7 @@ export function useFormattedTransactionDataForActivity({
   chainIds,
   filterTransactionTypes,
   searchText,
+  maxItems = MOBILE_MAX_ACTIVITY_ITEMS,
   showLoadingOnRefetch = false,
   ...queryOptions
 }: FormattedTransactionInputs): FormattedTransactionDataResult {
@@ -98,6 +104,7 @@ export function useFormattedTransactionDataForActivity({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    dataUpdatedAt,
   } = useListTransactions({
     evmAddress,
     svmAddress,
@@ -194,13 +201,14 @@ export function useFormattedTransactionDataForActivity({
     onRetry,
     sectionData: memoizedSectionData,
     hasData,
-    isError: error ?? undefined,
+    error: error ?? undefined,
     isLoading: showLoading,
     isFetching,
     keyExtractor,
     fetchNextPage,
-    hasNextPage: hasNextPage && !hasReachedLimit(transactions),
+    hasNextPage: hasNextPage && !hasReachedLimit(transactions, maxItems),
     isFetchingNextPage,
+    dataUpdatedAt,
   }
 }
 

@@ -62,6 +62,7 @@ function getListTransactionsMockPath({
     return defaultPath
   }
   // Only serve filtered mocks when using the full list_transactions mock (not empty or other variants)
+  // oxlint-disable-next-line no-shadow
   const base = path.basename(defaultPath, path.extname(defaultPath))
   if (base !== 'list_transactions') {
     return defaultPath
@@ -81,7 +82,10 @@ function getListTransactionsMockPath({
 export const test = base.extend<DataApiFixture>({
   async dataApi({ page }, use) {
     const intercept = async (method: DataApiMethodDescriptor, mockPath: string) => {
-      const urlPattern = `**/v2/${getServiceMethodPath(method)}`
+      // Pattern matches both `/v2/{service}/{method}` and `/{service}/{method}` — DataApi routes
+      // through the entry gateway (no `/v2` prefix) in some environments. See
+      // packages/api/src/clients/base/urls.ts for the routing logic.
+      const urlPattern = `**/${getServiceMethodPath(method)}`
       await page.route(urlPattern, async (route) => {
         const request = route.request()
         const url = request.url()

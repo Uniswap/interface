@@ -1,4 +1,5 @@
 import { createTradingApiClient, TradingApi, type TradingApiClient as TradingApiClientType } from '@universe/api'
+import { ChainId } from '@universe/api/src/clients/trading/__generated__'
 import { TRADING_API_PATHS } from '@universe/api/src/clients/trading/createTradingApiClient'
 import {
   EthAsErc20UniswapXProperties,
@@ -12,8 +13,10 @@ import {
 import { config } from 'uniswap/src/config'
 import { tradingApiVersionPrefix, uniswapUrls } from 'uniswap/src/constants/urls'
 import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 const TradingFetchClient = createUniswapFetchClient({
   baseUrl: uniswapUrls.tradingApiUrl,
@@ -51,10 +54,17 @@ export enum TradingApiHeaders {
  */
 export const getFeatureFlaggedHeaders = async (
   tradingApiPath: (typeof TRADING_API_PATHS)[keyof typeof TRADING_API_PATHS],
+  tradingApiChainId?: ChainId,
 ): Promise<HeadersInit> => {
   await waitForStatsigReady()
+  const chainId = tradingApiToUniverseChainId(tradingApiChainId)
+  const chainSupports211 =
+    chainId && getChainInfo(chainId).supportedURVersions.includes(TradingApi.UniversalRouterVersion._2_1_1)
+  const useUR211 = getFeatureFlag(FeatureFlags.UseUniversalRouterVersion211) && chainSupports211
   const headers: Record<string, string> = {
-    [TradingApiHeaders.UniversalRouterVersion]: TradingApi.UniversalRouterVersion._2_0,
+    [TradingApiHeaders.UniversalRouterVersion]: useUR211
+      ? TradingApi.UniversalRouterVersion._2_1_1
+      : TradingApi.UniversalRouterVersion._2_0,
   }
   const uniquoteEnabled = getFeatureFlag(FeatureFlags.UniquoteEnabled)
   const viemProviderEnabled = getFeatureFlag(FeatureFlags.ViemProviderEnabled)

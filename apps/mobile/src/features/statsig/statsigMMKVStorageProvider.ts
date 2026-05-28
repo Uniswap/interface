@@ -1,6 +1,6 @@
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from 'react-native-mmkv'
 
-const mmkv = new MMKV()
+const mmkv = createMMKV()
 
 export const statsigMMKVStorageProvider = {
   isReady: (): boolean => true,
@@ -9,5 +9,7 @@ export const statsigMMKVStorageProvider = {
   getAllKeys: (): string[] => mmkv.getAllKeys(),
   getItem: (key: string): string | null => mmkv.getString(key) ?? null,
   setItem: (key: string, value: string): void => mmkv.set(key, value),
-  removeItem: (key: string): void => mmkv.delete(key),
+  removeItem: (key: string): void => {
+    mmkv.remove(key)
+  },
 }

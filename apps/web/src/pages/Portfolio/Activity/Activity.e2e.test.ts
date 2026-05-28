@@ -36,8 +36,9 @@ async function goToPortfolioActivity({
   const params = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
   const query = chain ? `${params}&chain=${chain}` : params
 
+  const listTransactionsResponse = page.waitForResponse((res) => res.url().includes('ListTransactions'))
   await page.goto(`${base}?${query}`)
-  await page.waitForResponse((res) => res.url().includes('ListTransactions'))
+  await listTransactionsResponse
 }
 
 test.describe(

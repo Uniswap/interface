@@ -1,4 +1,4 @@
-import { type MultichainToken } from '@uniswap/client-search/dist/search/v1/api_pb'
+import { MultichainToken } from '@uniswap/client-data-api/dist/data/v1/searchTypes_pb'
 import { parseProtectionInfo, parseSafetyLevel } from '@universe/api'
 import { chainTokenToCurrencyInfo } from 'uniswap/src/data/rest/searchTokensAndPools'
 import { type CurrencyInfo, type MultichainSearchResult } from 'uniswap/src/features/dataApi/types'

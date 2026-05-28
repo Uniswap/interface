@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isWebPlatform } from '@universe/environment'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -17,7 +18,6 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isWebPlatform } from 'utilities/src/platform'
 
 export function ApproveTransactionDetails({
   transactionDetails,

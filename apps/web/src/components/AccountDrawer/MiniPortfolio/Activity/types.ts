@@ -1,5 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
+import type { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import type { ReactNode } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOptions,
@@ -22,14 +23,13 @@ export type Activity = {
   timestamp: number
   title: string
   descriptor?: string | JSX.Element
-  logos?: Array<string | undefined>
+  portfolioLogoCustomIcon?: ReactNode
   // TODO(WEB-3839): replace Currency with CurrencyInfo
   currencies?: Array<Currency | undefined>
   otherAccount?: string
   from: string
   options?: TransactionOptions
-  prefixIconSrc?: string
-  suffixIconSrc?: string
+  isUniswapX?: boolean
   isSpam?: boolean
   type?: GraphQLApi.TransactionType
 }

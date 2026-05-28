@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ContractInteraction, RotatableChevron } from 'ui/src/components/icons'
+import { TransactionRequestDetails } from 'uniswap/src/components/transactions/requests/TransactionRequestDetails'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { TransactionApprovingSection } from 'wallet/src/components/dappRequests/TransactionApprovingSection'
@@ -10,7 +11,6 @@ import {
   TransactionErrorType,
 } from 'wallet/src/components/dappRequests/TransactionErrorSection'
 import { TransactionReceivingSection } from 'wallet/src/components/dappRequests/TransactionReceivingSection'
-import { TransactionRequestDetails } from 'wallet/src/components/dappRequests/TransactionRequestDetails'
 import { TransactionSendingSection } from 'wallet/src/components/dappRequests/TransactionSendingSection'
 import {
   TransactionRiskLevel,
@@ -123,14 +123,14 @@ export function TransactionPreviewCard({
             </TouchableArea>
 
             {isDetailsExpanded && (
-              <Flex pt="$spacing12">
+              <Flex pt="$spacing12" px="$spacing16">
                 <TransactionRequestDetails
                   functionName={functionName}
                   contractName={contractName}
                   contractAddress={contractAddress}
                   rawData={rawData}
                   chainId={chainId}
-                  riskLevel={riskLevel}
+                  valueColor={riskLevel === TransactionRiskLevel.Warning ? '$statusWarning' : '$neutral1'}
                 />
               </Flex>
             )}

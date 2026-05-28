@@ -24,6 +24,7 @@ describe('useListTransactions', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    window.localStorage.clear()
 
     // Default REST mock
     mockUseListTransactionsQuery.mockReturnValue({
@@ -177,6 +178,56 @@ describe('useListTransactions', () => {
         fiatOnRampParams: undefined,
       },
       enabled: true,
+    })
+  })
+
+  describe('dataUpdatedAt', () => {
+    it('should return dataUpdatedAt from query', () => {
+      mockUseListTransactionsQuery.mockReturnValue({
+        data: { pages: [{ transactions: [] }] },
+        isLoading: false,
+        isFetching: false,
+        error: undefined,
+        refetch: vi.fn(),
+        status: 'success',
+        dataUpdatedAt: 1710000000000,
+        fetchNextPage: vi.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
+      })
+
+      const { result } = renderHookWithProviders(() =>
+        useListTransactions({
+          evmAddress: mockAddress,
+          pageSize: mockPageSize,
+        }),
+      )
+
+      expect(result.current.dataUpdatedAt).toBe(1710000000000)
+    })
+
+    it('should return dataUpdatedAt as undefined when query has no timestamp', () => {
+      mockUseListTransactionsQuery.mockReturnValue({
+        data: undefined,
+        isLoading: false,
+        isFetching: false,
+        error: undefined,
+        refetch: vi.fn(),
+        status: 'success',
+        dataUpdatedAt: 0,
+        fetchNextPage: vi.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
+      })
+
+      const { result } = renderHookWithProviders(() =>
+        useListTransactions({
+          evmAddress: mockAddress,
+          pageSize: mockPageSize,
+        }),
+      )
+
+      expect(result.current.dataUpdatedAt).toBeUndefined()
     })
   })
 })

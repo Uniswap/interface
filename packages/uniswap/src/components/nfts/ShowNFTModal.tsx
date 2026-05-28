@@ -1,3 +1,4 @@
+import { isMobileApp } from '@universe/environment'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
@@ -7,7 +8,6 @@ import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isMobileApp } from 'utilities/src/platform'
 
 export function ShowNFTModal(): JSX.Element {
   const { t } = useTranslation()

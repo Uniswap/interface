@@ -32,13 +32,16 @@ env:
     id: ${output.testIds.PortfolioChartExpanded}
 
 - assertNotVisible:
+    id: ${output.testIds.PortfolioChartDetailsScreen}
+
+- assertNotVisible:
     id: ${output.testIds.PortfolioChartPeriodPrefix}1w
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tapOn'
-      TARGET: 'PortfolioChartToggleExpand'
+      TARGET: 'PortfolioChartOpenDetails'
       PHASE: 'start'
 - tapOn:
     id: ${output.testIds.PortfolioChartToggle}
@@ -46,9 +49,12 @@ env:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tapOn'
-      TARGET: 'PortfolioChartToggleExpand'
+      TARGET: 'PortfolioChartOpenDetails'
       PHASE: 'end'
 - waitForAnimationToEnd
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartDetailsScreen}
 
 - assertVisible:
     id: ${output.testIds.PortfolioChartExpanded}
@@ -58,6 +64,9 @@ env:
 
 - assertVisible:
     id: ${output.testIds.PortfolioPerformance}
+
+- assertVisible:
+    id: ${output.testIds.PortfolioChartDetailsMoreButton}
 
 - assertVisible:
     id: ${output.testIds.PortfolioChartPeriodPrefix}1h
@@ -120,17 +129,20 @@ env:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tapOn'
-      TARGET: 'PortfolioChartToggleCollapse'
+      TARGET: 'PortfolioChartCloseDetails'
       PHASE: 'start'
 - tapOn:
-    id: ${output.testIds.PortfolioChartToggle}
+    id: ${output.testIds.Back}
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
       ACTION: 'tapOn'
-      TARGET: 'PortfolioChartToggleCollapse'
+      TARGET: 'PortfolioChartCloseDetails'
       PHASE: 'end'
 - waitForAnimationToEnd
+
+- assertNotVisible:
+    id: ${output.testIds.PortfolioChartDetailsScreen}
 
 - assertVisible:
     id: ${output.testIds.PortfolioChartCollapsed}

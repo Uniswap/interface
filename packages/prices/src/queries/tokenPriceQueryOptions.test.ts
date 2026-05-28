@@ -40,7 +40,7 @@ describe('tokenPriceQueryOptions', () => {
         getIsWsConnected: () => true,
       })
 
-      const mockQuery = { state: { data: { price: 2000, timestamp: Date.now() } } }
+      const mockQuery = { state: { data: { price: 2000, timestamp: Date.now(), source: 'aurora_ws' } } }
       const interval =
         typeof options.refetchInterval === 'function'
           ? options.refetchInterval(mockQuery as never, {} as never)
@@ -58,7 +58,9 @@ describe('tokenPriceQueryOptions', () => {
       })
 
       const mockQuery = {
-        state: { data: { price: 2000, timestamp: Date.now() - STALE_PRICE_THRESHOLD_MS - 1_000 } },
+        state: {
+          data: { price: 2000, timestamp: Date.now() - STALE_PRICE_THRESHOLD_MS - 1_000, source: 'aurora_ws' },
+        },
       }
       const interval =
         typeof options.refetchInterval === 'function'
@@ -96,7 +98,9 @@ describe('tokenPriceQueryOptions', () => {
       // Use a small buffer (1s) inside the threshold so the test isn't
       // sensitive to wall-clock drift between setup and assertion.
       const mockQuery = {
-        state: { data: { price: 2000, timestamp: Date.now() - STALE_PRICE_THRESHOLD_MS + 1_000 } },
+        state: {
+          data: { price: 2000, timestamp: Date.now() - STALE_PRICE_THRESHOLD_MS + 1_000, source: 'aurora_ws' },
+        },
       }
       const interval =
         typeof options.refetchInterval === 'function'
@@ -128,33 +132,29 @@ describe('tokenPriceQueryOptions', () => {
 
   describe('queryFn cache shortcircuit', () => {
     it('skips REST fetch when cache has a recent WS update', async () => {
-      const batcher = createMockBatcher({ price: 999, timestamp: Date.now() })
+      const batcher = createMockBatcher({ price: 999, timestamp: Date.now(), source: 'aurora_rest_fallback' })
       const queryClient = new QueryClient()
       const recentTimestamp = Date.now() - 5_000 // 5 seconds ago
 
-      queryClient.setQueryData(priceKeys.token(chainId, address), {
-        price: 2000,
-        timestamp: recentTimestamp,
-      })
+      const cached: TokenPriceData = { price: 2000, timestamp: recentTimestamp, source: 'aurora_ws' }
+      queryClient.setQueryData(priceKeys.token(chainId, address), cached)
 
       const options = tokenPriceQueryOptions({ chainId, address, restBatcher: batcher, queryClient })
       const queryFn = options.queryFn as () => Promise<TokenPriceData | null>
       const result = await queryFn()
 
-      expect(result).toEqual({ price: 2000, timestamp: recentTimestamp })
+      expect(result).toEqual(cached)
       expect(batcher.fetch).not.toHaveBeenCalled()
     })
 
     it('calls REST when cache data is stale', async () => {
-      const freshPrice: TokenPriceData = { price: 2100, timestamp: Date.now() }
+      const freshPrice: TokenPriceData = { price: 2100, timestamp: Date.now(), source: 'aurora_rest_fallback' }
       const batcher = createMockBatcher(freshPrice)
       const queryClient = new QueryClient()
       const staleTimestamp = Date.now() - REST_POLL_INTERVAL_MS - 1_000
 
-      queryClient.setQueryData(priceKeys.token(chainId, address), {
-        price: 2000,
-        timestamp: staleTimestamp,
-      })
+      const stale: TokenPriceData = { price: 2000, timestamp: staleTimestamp, source: 'aurora_ws' }
+      queryClient.setQueryData(priceKeys.token(chainId, address), stale)
 
       const options = tokenPriceQueryOptions({ chainId, address, restBatcher: batcher, queryClient })
       const queryFn = options.queryFn as () => Promise<TokenPriceData | null>
@@ -165,7 +165,7 @@ describe('tokenPriceQueryOptions', () => {
     })
 
     it('calls REST when cache is empty', async () => {
-      const freshPrice: TokenPriceData = { price: 2100, timestamp: Date.now() }
+      const freshPrice: TokenPriceData = { price: 2100, timestamp: Date.now(), source: 'aurora_rest_fallback' }
       const batcher = createMockBatcher(freshPrice)
       const queryClient = new QueryClient()
 
@@ -178,21 +178,23 @@ describe('tokenPriceQueryOptions', () => {
     })
 
     it('keeps existing data when REST returns older timestamp', async () => {
-      const batcher = createMockBatcher({ price: 1900, timestamp: Date.now() - 60_000 })
+      const batcher = createMockBatcher({
+        price: 1900,
+        timestamp: Date.now() - 60_000,
+        source: 'aurora_rest_fallback',
+      })
       const queryClient = new QueryClient()
       const existingTimestamp = Date.now() - REST_POLL_INTERVAL_MS - 1_000
 
-      queryClient.setQueryData(priceKeys.token(chainId, address), {
-        price: 2000,
-        timestamp: existingTimestamp,
-      })
+      const existing: TokenPriceData = { price: 2000, timestamp: existingTimestamp, source: 'aurora_ws' }
+      queryClient.setQueryData(priceKeys.token(chainId, address), existing)
 
       const options = tokenPriceQueryOptions({ chainId, address, restBatcher: batcher, queryClient })
       const queryFn = options.queryFn as () => Promise<TokenPriceData | null>
       const result = await queryFn()
 
       expect(batcher.fetch).toHaveBeenCalled()
-      expect(result).toEqual({ price: 2000, timestamp: existingTimestamp })
+      expect(result).toEqual(existing)
     })
 
     it('uses WS update that arrived during REST fetch (race condition)', async () => {
@@ -202,20 +204,17 @@ describe('tokenPriceQueryOptions', () => {
       const wsTimestamp = Date.now()
 
       // Cache starts stale so the short-circuit is bypassed
-      queryClient.setQueryData(priceKeys.token(chainId, address), {
-        price: 2000,
-        timestamp: staleTimestamp,
-      })
+      const stale: TokenPriceData = { price: 2000, timestamp: staleTimestamp, source: 'aurora_ws' }
+      queryClient.setQueryData(priceKeys.token(chainId, address), stale)
+
+      const wsUpdate: TokenPriceData = { price: 2200, timestamp: wsTimestamp, source: 'aurora_ws' }
 
       // Simulate WS writing to cache while REST fetch is in flight
       const batcher = {
         fetch: vi.fn().mockImplementation(async () => {
           // WS update arrives during the fetch
-          queryClient.setQueryData(priceKeys.token(chainId, address), {
-            price: 2200,
-            timestamp: wsTimestamp,
-          })
-          return { price: 2100, timestamp: restTimestamp }
+          queryClient.setQueryData(priceKeys.token(chainId, address), wsUpdate)
+          return { price: 2100, timestamp: restTimestamp, source: 'aurora_rest_fallback' } satisfies TokenPriceData
         }),
       } as unknown as RestPriceBatcher
 
@@ -224,7 +223,7 @@ describe('tokenPriceQueryOptions', () => {
       const result = await queryFn()
 
       // Should return the WS update (2200), not the REST response (2100)
-      expect(result).toEqual({ price: 2200, timestamp: wsTimestamp })
+      expect(result).toEqual(wsUpdate)
     })
   })
 })

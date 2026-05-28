@@ -15,7 +15,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { PlatformAddress } from 'uniswap/src/features/platforms/types/PlatformSpecificAddress'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
-import StatusIcon from '~/components/StatusIcon'
+import { StatusIcon } from '~/components/StatusIcon'
 import { useAccountsStore, useActiveAddresses } from '~/features/accounts/store/hooks'
 import { CopyHelper } from '~/theme/components/CopyHelper'
 import { EllipsisTamaguiStyle } from '~/theme/components/styles'
@@ -106,9 +106,7 @@ function TooltipAccountRow({ account }: { account: AccountItem }) {
   const numberOfSupportedEVMChains = evmChains.length
 
   const multipleWalletsConnected = useAccountsStore((state) => {
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
     const evmWalletId = state.activeConnectors.evm?.session?.walletId
-    // oxlint-disable-next-line typescript/no-unnecessary-condition -- biome-parity: oxlint is stricter here
     const svmWalletId = state.activeConnectors.svm?.session?.walletId
     return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
   })

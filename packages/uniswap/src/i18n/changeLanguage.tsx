@@ -1,6 +1,6 @@
+import { isWebApp } from '@universe/environment'
 import i18n from 'i18next'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { isWebApp } from 'utilities/src/platform'
 
 let changingTo = ''
 export async function changeLanguage(locale: Locale): Promise<void> {

@@ -1,4 +1,4 @@
-import { isWebApp } from 'utilities/src/platform'
+import { isWebApp } from '@universe/environment'
 // oxlint-disable-next-line no-restricted-imports -- Platform-specific implementation needs internal types
 import { type TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 

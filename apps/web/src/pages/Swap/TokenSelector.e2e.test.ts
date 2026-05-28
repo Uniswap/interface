@@ -1,5 +1,6 @@
 import { FeatureFlags } from '@universe/gating'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
 import { createTestUrlBuilder } from '~/playwright/fixtures/urls'
@@ -108,10 +109,10 @@ test.describe(
       await expect(page.getByText('Crosschain swaps are here')).toBeVisible()
 
       // Click on chain selector dropdown
-      await page.getByTestId('chain-selector').click()
+      await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
 
       // Select Polygon (chain ID 137) which doesn't support chained actions
-      await page.getByTestId('network-button-137').click()
+      await page.getByTestId(`${ElementName.NetworkButton}-137`).click()
 
       // Verify the banner is no longer visible after filtering to unsupported chain
       await expect(page.getByText('Crosschain swaps are here')).not.toBeVisible()

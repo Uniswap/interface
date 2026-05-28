@@ -8,6 +8,7 @@
  */
 
 import type { ProofResult } from '@universe/sessions/src/challenge-solvers/hashcash/core'
+import { HashcashWorkerBootError } from '@universe/sessions/src/challenge-solvers/hashcash/worker/hashcashWorkerErrors'
 import type {
   CreateHashcashWorkerChannelContext,
   FindProofParams,
@@ -20,8 +21,28 @@ import { createChannel } from 'bidc'
 let sharedWorker: Worker | null = null
 let sharedChannel: ReturnType<typeof createChannel> | null = null
 let referenceCount = 0
-// Track pending operations to reject on terminate
+// Track pending operations to reject on terminate or worker error
 const pendingOperations = new Set<(err: Error) => void>()
+
+function resetSharedWorker(): void {
+  if (sharedWorker) {
+    try {
+      sharedWorker.terminate()
+    } catch {
+      // Worker may already be dead; ignore.
+    }
+  }
+  sharedWorker = null
+  sharedChannel = null
+  referenceCount = 0
+}
+
+function rejectAllPending(error: Error): void {
+  for (const reject of pendingOperations) {
+    reject(error)
+  }
+  pendingOperations.clear()
+}
 
 /**
  * Creates (or reuses) a channel to the hashcash worker.
@@ -36,6 +57,22 @@ function createHashcashWorkerChannel(ctx: CreateHashcashWorkerChannelContext): H
   if (!sharedWorker) {
     sharedWorker = ctx.getWorker()
     sharedChannel = createChannel(sharedWorker)
+
+    // Surface worker failures (e.g. `importScripts` NetworkError on boot) as
+    // rejections of every pending operation. Without this hook, `send()`
+    // would sit waiting for a response that never arrives. Also poison the
+    // shared-worker cache so the next caller gets a fresh worker instead of
+    // reusing the dead one.
+    const handleWorkerError = (event: Event): void => {
+      const message = typeof (event as ErrorEvent).message === 'string' ? (event as ErrorEvent).message : ''
+      const error = new HashcashWorkerBootError(message || 'Hashcash worker failed', event)
+      ctx.onWorkerError?.(error)
+      rejectAllPending(error)
+      resetSharedWorker()
+    }
+
+    sharedWorker.addEventListener('error', handleWorkerError)
+    sharedWorker.addEventListener('messageerror', handleWorkerError)
   }
 
   referenceCount++
@@ -79,19 +116,11 @@ function createHashcashWorkerChannel(ctx: CreateHashcashWorkerChannelContext): H
       // Only terminate when no more references
       if (referenceCount <= 0 && sharedWorker) {
         // Reject any pending operations before terminating
-        const error = new Error('Worker terminated while operation in progress')
-        for (const reject of pendingOperations) {
-          reject(error)
-        }
-        pendingOperations.clear()
-
-        sharedWorker.terminate()
-        sharedWorker = null
-        sharedChannel = null
-        referenceCount = 0
+        rejectAllPending(new Error('Worker terminated while operation in progress'))
+        resetSharedWorker()
       }
     },
   }
 }
 
-export { createHashcashWorkerChannel }
+export { createHashcashWorkerChannel, HashcashWorkerBootError }

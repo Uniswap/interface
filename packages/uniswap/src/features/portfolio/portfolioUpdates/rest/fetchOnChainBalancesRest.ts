@@ -171,6 +171,7 @@ async function getDenominatedValueRest({
     tokenIn: tokenAddress,
     tokenOut: stablecoinCurrency.address,
     swapper: accountAddress,
+    autoSlippage: TradingApi.AutoSlippage.DEFAULT,
   })
 
   const amountOut =
